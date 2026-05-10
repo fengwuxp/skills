@@ -1,165 +1,120 @@
-# 编码规范（阿里巴巴 Java 开发手册核心条款 + 项目补充）
+# Java 编码强规约
 
-## 命名规范（强制）
+本文档用于约束 Java 代码的基础写法，定位为“写代码时必须遵守的硬规约”。模块划分、服务分层、CRUD 命名、MyBatis Flex 详细实践、数据库设计、日志体系、测试体系和 Git 流程，统一以 `project-governance-standards.md`、`workflow.md` 为准；禁止项清单以 `negative-constraints.md` 为准。
 
-- 代码中的命名均不能以下划线或美元符号开始/结束。
-- 严禁使用拼音与英文混合的方式，更不允许直接使用中文。
-- 类名使用 `UpperCamelCase`，但 DO/BO/DTO/VO/AO/PO/UID 等除外。
-- 方法名、参数名、成员变量、局部变量使用 `lowerCamelCase`。
-- 常量命名全部大写，单词间用下划线隔开（如 `MAX_STOCK_COUNT`）。
-- 抽象类命名使用 `Abstract` 或 `Base` 开头；异常类命名使用 `Exception` 结尾；测试类命名以它要测试的类名开头，以 `Test` 结尾。
-- POJO 类中布尔类型变量都不要加 `is` 前缀（如用 `success` 而非 `isSuccess`）。
-- 如果模块/接口/类/方法使用了设计模式，在命名时需体现出具体模式。
+## 1. 命名规范
 
-## 常量定义
-- 【强制】不允许任何魔法值（即未经预先定义的常量）直接出现在代码中。
-- 【强制】long或者Long初始赋值时，使用大写的L，不能是小写的l，小写容易跟数字1混淆，造成误解。
-- 【推荐】不要使用一个常量类维护所有常量，按常量功能进行归类，分开维护。
-     说明：大而全的常量类，非得使用查找功能才能定位到修改的常量，不利于理解和维护。
-     正例：缓存相关常量放在类CacheConsts下；系统配置相关常量放在类ConfigConsts下。
-- 【推荐】常量的复用层次有五层：跨应用共享常量、应用内共享常量、子工程内共享常量、包内共享常量、类内共享常量。
-  (1） 跨应用共享常量：放置在二方库中，通常是client.jar中的constant目录下。
-  (2） 应用内共享常量：放置在一方库中，通常是子模块中的constant目录下。
-   反例：易懂变量也要统一定义成应用内共享常量，两位攻城师在两个类中分别定义了表示“是”的变量：
-```text
-  类A中：public static final String YES = "yes";
-    类B中：public static final String YES = "y";
-    A.YES.equals(B.YES) 预期是true，但实际返回为false，导致线上问题。
-```
-   (3） 子工程内部共享常量：即在当前子工程的constant目录下。
-   (4） 包内共享常量：即在当前包下单独的constant目录下。
-   (5） 类内共享常量：直接在类内部private static final定义。
-- 【推荐】如果变量值仅在一个固定范围内变化用enum类型来定义。 说明：如果存在名称之外的延伸属性使用enum类型，下面正例中的数字就是延伸信息，表示一年中的第几个季节。
+- 【强制】代码命名不得以下划线或美元符号开始或结束。
+- 【强制】严禁拼音与英文混用，不允许直接使用中文命名。
+- 【强制】类名使用 `UpperCamelCase`，但 `DO`、`BO`、`DTO`、`VO`、`AO`、`PO`、`UID` 等通用缩写除外。
+- 【强制】方法名、参数名、成员变量、局部变量使用 `lowerCamelCase`。
+- 【强制】常量命名使用 `UPPER_UNDERSCORE`，例如 `MAX_STOCK_COUNT`。
+- 【强制】抽象类使用 `Abstract` 或 `Base` 开头；异常类使用 `Exception` 结尾；测试类以被测类名开头、`Test` 结尾。
+- 【强制】POJO 布尔类型变量不要加 `is` 前缀，避免序列化和框架识别歧义。
+- 【推荐】如果模块、接口、类或方法使用设计模式，命名时体现模式语义，例如 `XxxStrategy`、`XxxFactory`、`XxxAdapter`。
 
-## OOP 规约（强制）
+## 2. 常量与枚举
 
-- 所有覆写方法，必须加 `@Override` 注解。
-- 禁止使用过时的类或方法（deprecated）。
-- 禁止使用 Java 标准库中的过时集合类（`Vector`、`Hashtable`、`Stack`），使用 `ArrayList`、`HashMap` 等替代。
-- 禁止使用 `BigDecimal` 的构造方法 `new BigDecimal(double)`，应使用 `BigDecimal.valueOf(double)` 或 `new BigDecimal(String)`。
-- 外部正在调用或者二方库依赖的接口，不允许修改方法签名。
+- 【强制】不允许魔法值直接出现在代码中。
+- 【强制】`long` 或 `Long` 初始赋值使用大写 `L`，不得使用小写 `l`。
+- 【推荐】不要使用一个大而全的常量类维护所有常量，应按功能和作用域归类。
+- 【推荐】常量按复用层次放置：跨应用共享、应用内共享、子工程内共享、包内共享、类内私有。
+- 【推荐】取值范围固定且有业务含义时，优先使用枚举。
+- 【推荐】业务枚举应提供清晰描述能力，例如实现 `DescriptiveEnum` 或项目等价接口。
 
-## 集合处理（强制）
+## 3. OOP 规约
 
-- 判断集合元素是否为空，使用 `isEmpty()` 而非 `size() == 0`。
-- 使用 `Arrays.asList()` 转换的数组不能使用 `add`/`remove`/`clear` 方法。
-- 不要在 `foreach` 循环里进行元素的 `remove`/`add`，应使用 `Iterator`。
-- `ArrayList` 的 `subList` 结果不可强转成 `ArrayList`。
+- 【强制】所有覆写方法必须加 `@Override` 注解。
+- 【强制】禁止使用过时的类或方法；外部接口兼容场景除外，但必须说明原因。
+- 【强制】禁止使用 `Vector`、`Hashtable`、`Stack` 等过时集合类。
+- 【强制】外部正在调用或二方库依赖的接口，不允许随意修改方法签名。
+- 【推荐】优先组合而非继承；继承必须表达稳定的“是一个”关系。
+- 【推荐】接口表达能力边界，实现类承载技术细节，不要把实现约束泄露到调用方。
 
-## 并发处理（强制）
+## 4. 集合处理
 
-- 获取单例对象需要保证线程安全。
-- 线程资源必须通过线程池提供，不允许自行显式创建线程。
-- `SimpleDateFormat` 是线程不安全的，定义为 `static` 必须加锁，或使用 `DateTimeFormatter` 替代。
-- 高并发时，优先用无锁数据结构，锁区块尽量小。
+- 【强制】判断集合是否为空，使用 `isEmpty()`，不要使用 `size() == 0`。
+- 【强制】`Arrays.asList()` 返回的列表不能执行 `add`、`remove`、`clear`。
+- 【强制】不要在 `foreach` 循环中直接 `add` 或 `remove` 元素，应使用 `Iterator` 或收集后统一处理。
+- 【强制】`subList` 结果不可强转为 `ArrayList`，且要注意它与原列表的视图关系。
+- 【推荐】对外返回集合时返回空集合，不返回 `null`。
+- 【推荐】集合入参需要明确是否允许空集合、重复元素和顺序语义。
 
-## 编码原则
-- 【强制】测试和实现只能依赖接口已经声明的能力；需要新字段时，先补接口契约，再补实现和测试。
-- 【强制】类型引用优先：import：字段、方法参数、返回值、泛型、局部变量中不要直接写全限定类名，除非存在无法避免的同名冲突。
-- 【强制】注解作用域要清晰：普通字段、参数、返回值使用 import 后的 @Nullable / @NonNull；只有 type-use 位置存在作用域歧义时，才允许用 @org.jspecify.annotations.Nullable 明确标注。
-- 【强制】测试代码同样遵守生产代码规范：mock、匿名类、测试辅助类也不能把全限定类名当临时写法。
-- 【强制】值对象和行为接口不能混用：看到 Spec、DTO、Request 先确认它是数据模型还是函数式能力，不要把普通类写成 lambda。
-- 【强制】接口变更必须闭环，例如：Spec 字段 -> Assembler 填充 -> MapStruct 转换 -> Entity 落库 -> 测试断言 必须一次性串起来。
-- 【强制】clean 验证：接口、重命名、注解、测试支撑类变更后，必须跑 clean test-compile，不能信 Maven 增量结果。
+## 5. 并发处理
 
-## 代码格式（强制）
+- 【强制】线程资源必须通过线程池提供，不允许在业务代码中随意显式创建线程。
+- 【强制】单例对象、缓存对象、共享状态必须保证线程安全。
+- 【强制】禁止将线程不安全对象定义为静态共享实例，例如未加保护的 `SimpleDateFormat`。
+- 【推荐】时间格式化优先使用 `DateTimeFormatter`。
+- 【推荐】高并发场景优先减少共享状态，锁区块只覆盖必要代码。
+- 【推荐】异步任务必须明确线程池、超时、异常处理、上下文传递和关闭策略。
 
-- `if`/`for`/`while`/`switch`/`do` 等保留字与括号之间必须有空格。
-- 二目、三目运算符左右两边加空格。
-- 注释的双斜线与注释内容之间有且仅有一个空格。
-- 单行字符数不超过 120 个。
-- 所有覆写方法必须加 `@Override` 注解。
-- 对于超过 5 个参数的公有方法应抽取 DTO 对象（如 `XxxRequest`）。
+## 6. 代码格式
 
-## 异常与日志（强制）
+- 【强制】`if`、`for`、`while`、`switch`、`do` 等保留字与括号之间必须有空格。
+- 【强制】二目、三目运算符左右两边必须有空格。
+- 【强制】注释的双斜线与注释内容之间保留一个空格。
+- 【强制】单行字符数不超过 120 个；确因链式调用或测试数据需要超出时，应保证可读性。
+- 【强制】普通类型引用优先使用 `import`，不要在字段、方法参数、返回值、泛型和局部变量中随意写全限定类名。
+- 【推荐】超过 5 个参数的公有方法必须抽取参数对象；超过 3 个参数时优先评估是否需要参数对象。
+- 【推荐】项目格式化规则以 `.editorconfig`、IDEA Code Style、Checkstyle 或项目现有配置为准。
 
-- 不要捕获 `RuntimeException` 的子类（如 `IndexOutOfBoundsException`、`NullPointerException`），由代码检查来规避。
-- 事务场景中如果异常被捕获，要注意手动回滚；或在 `catch` 块中重新抛出异常。
-- 禁止直接使用 `e.printStackTrace()`，必须使用日志框架（SLF4J + Logback）。
-- 日志命名遵循 `logger` 或 `LOG` 作为统一命名。
+## 7. 空值与类型契约
 
-### 日志打印示例
+- 【强制】公共 API 的空值语义必须明确，必要时使用 `@Nullable`、`@NonNull`、`@NotNull`、`@NotBlank` 等注解表达契约。
+- 【强制】不要把 `Optional` 用作字段、DTO 属性或序列化模型属性。
+- 【推荐】可能不存在的查询结果使用 `findXxx` 或 `Optional<T>` 表达。
+- 【推荐】必然存在的查询使用 `getXxx` 表达；查不到时抛业务异常。
+- 【推荐】普通字段、参数、返回值使用 import 后的注解；只有 type-use 位置存在歧义时，才使用全限定注解。
 
-- INFO: `logger.info("Processing trade with id : {} and symbol : {}", id, symbol);`
-- ERROR: `logger.error("handled xxx error, xxx : {}, message : {}", id, exception.getMessage(), exception);`
-- 错误日志必须输出错误消息和异常堆栈。
+## 8. 异常处理
 
-## 数据库规约（强制）
+- 【强制】不要捕获 `NullPointerException`、`IndexOutOfBoundsException` 等运行时异常来替代代码检查。
+- 【强制】禁止吞异常；捕获异常后必须处理、包装、补充上下文或重新抛出。
+- 【强制】事务方法中捕获异常后，必须重新抛出或显式回滚。
+- 【强制】禁止直接使用 `e.printStackTrace()`。
+- 【推荐】断言优先于手动抛异常：参数校验、状态校验、业务前置条件优先使用 Bean Validation 或项目统一断言工具，例如 `AssertUtils`。
+- 【推荐】手动抛异常只用于断言工具无法清晰表达的场景，例如需要组合复杂上下文、包装第三方异常或构造特定错误码。
+- 【推荐】业务异常继承或使用项目统一的 `BaseException`。
+- 【推荐】包装第三方异常时保留 cause，避免丢失原始诊断信息。
 
-- 表名、字段名必须使用小写字母或数字，禁止数字开头，禁止两个下划线中间只出现数字。
-- 表达是与否概念的字段，使用 `is_xxx` 命名，数据类型为 `unsigned tinyint`（1 是，0 否）。
-- 表必备三个字段：`id`、`create_time`、`update_time`。
-- 禁止使用外键与级联更新/删除，一切外键概念在应用层解决。
-- 业务唯一约束必须使用数据库唯一键约束。
-- 新增字段如果为必填，必须有默认值，否则字段要可空。
+## 9. 日志基础规则
 
-### 通用表字段
+- 【强制】统一使用 SLF4J 门面，不使用 `System.out.println` 打印日志。
+- 【强制】日志使用占位符，不使用字符串拼接。
+- 【强制】错误日志必须包含错误消息和异常堆栈，异常对象作为最后一个参数传入。
+- 【强制】日志不得输出密码、token、密钥、身份证、银行卡、手机号等敏感信息；必要时脱敏。
+- 【推荐】日志变量名统一使用 `logger` 或 `LOG`。
+- 【推荐】日志内容采用 key/value 风格，保留 traceId、业务 ID、用户 ID、外部调用目标等关键上下文。
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | bigint(20) | 主键（强制） |
-| `gmt_create` | datetime | 创建时间（强制） |
-| `gmt_modified` | datetime | 最后更新时间（强制） |
-| `creator` | - | 创建人（可选） |
-| `modifier` | - | 修改人（可选） |
-| `order_index` | int(11) | 排序（可选） |
-
-## 项目级补充规范
-
-### 模块包名结构
-```text
-具体模块下的包名按功能划分，例如：
--dal：数据库操作相关
---entities：实体类
---enums：和实体相关枚举
---mapper：mybatis plus mapper
--services 服务层
---impl：服务实现
---mapstruct: mapstruct 相关的 DTO Converter
---model：DTO 、Request 、Query 对象
----dto：
----request
----query
+```java
+logger.info("Processing trade, tradeId = {}, symbol = {}", tradeId, symbol);
+logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, exception.getMessage(), exception);
 ```
 
-### CRUD 方法命名
+## 10. 时间与金额
 
-- 不区分创建/更新：`saveXxx`
-- 区分创建/更新：`createXxx` / `updateXxx`
-- 分页/列表：`query{实体复数}`（如 `queryRoles`）
-- 单个对象：`queryXxxById`（原则上不返回空，若可能为空需用 `@Nullable` 标注并断言）
-- 删除：`deleteXxxById` / `deleteXxxByIds`
+- 【强制】金额使用 `BigDecimal`，禁止使用 `new BigDecimal(double)`。
+- 【强制】金额字段必须明确币种、精度和舍入规则。
+- 【推荐】新代码优先使用 `LocalDateTime`、`LocalDate`、`LocalTime`，避免继续引入 `Date`。
+- 【推荐】跨系统传输时间时明确时区、格式和精度。
+- 【推荐】涉及当前时间、随机数、ID 生成的逻辑，应考虑可测试性和可替换性。
 
-### 模型对象命名
+## 11. 数据库基础规约
 
-- 请求对象（不区分）：`SaveXxxRequest`
-- 区分：`CreateXxxRequest` / `UpdateXxxRequest`
-- 查询对象：`XxxQuery`
-- 枚举：实现 `DescriptiveEnum` 接口
+- 【强制】表名、字段名使用小写字母、数字和下划线，禁止数字开头。
+- 【强制】表必须包含 `id`、`gmt_create`、`gmt_modified`。
+- 【强制】禁止数据库外键和级联删除，外键关系在应用层维护。
+- 【强制】业务唯一约束必须使用数据库唯一键保证。
+- 【强制】新增必填字段必须有默认值，否则字段应允许为空并配合兼容逻辑。
+- 【推荐】表达是与否概念的字段使用 `is_xxx` 命名，具体类型以项目数据库规范为准。
 
-### MyBatis Flex 最佳实践
+## 12. 项目细则入口
 
-- **禁止使用 `LambdaQueryWrapper`**，必须使用 `XxxRefs` 生成的字段常量类。
-- 时间对象统一使用 `LocalDateTime`。
-- 插入/更新方法选择：
-    - `insertSelective` / `update` / `insertOrUpdateSelective` 推荐（忽略 null）
-    - 需手动处理更新时间及空值场景。
-- 查询排序：使用抽象基类 `AbstractPageQuery`，支持 `orderFields` + `orderTypes` 数组排序。
+以下内容不在本文档展开，避免重复和冲突：
 
-### 异常处理
-
-- 异常应继承 `BaseException`。
-- 优先使用 `AssertUtils` 进行断言（`notNull`、`hasText`、`isTrue` 等），减少 if 判断。
-- Controller / API / ApplicationService 对外不允许暴露实体类型对象，应返回 DTO/VO/Result；DomainService 和基础服务可在模块内部使用实体。
-
-### 测试规约
-
-- 测试写在 `tests` 模块下，类名以 `Test` 结尾，方法以 `test` 开头。
-- 包名与被测试类相同。
-- 每个测试方法最少一个断言，建议一个方法只测试一个逻辑分支。
-- 继承 `AbstractServiceTest` 按需加载 Spring 上下文。
-- 使用 `@VisibleForTesting` 标注为测试而放宽可见性的方法。
-
-### 依赖管理
-
-- 根 pom 的 `dependencyManagement` 中统一声明所有依赖版本（包括第三方和项目自身模块）。子模块依赖时不再写版本号。
+- 模块划分、依赖管理、服务分层、CRUD 命名：见 `project-governance-standards.md`。
+- Query 字段命名、模型命名、API 命名、安全规范：见 `project-governance-standards.md`。
+- MyBatis Flex 使用方式、`XxxRefs`、分页排序、更新空值：见 `project-governance-standards.md`。
+- 测试目录、测试命名、覆盖率、PR 检查：见 `project-governance-standards.md` 和 `workflow.md`。
+- 禁止行为和权限边界：见 `negative-constraints.md`。
