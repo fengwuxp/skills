@@ -663,6 +663,8 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 ## 13. 测试实践
 
+测试驱动设计、测试分层、测试代码整洁、测试资产治理和 Review 清单详见 `testing.md`。本节只保留项目级落地规则。
+
 ### 13.1 测试分层
 
 | 类型 | 目标 | 工具 |
@@ -681,8 +683,11 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 强制：测试方法以 `test` 开头。
 - 强制：测试类包名与被测试类保持一致。
 - 强制：每个测试方法至少一个断言。
+- 强制：测试代码等同生产代码维护，命名、结构、测试数据、辅助方法和断言都必须清晰。
+- 强制：每个测试用例必须能表达测试场景、业务意图、输入条件和期望输出；复杂场景使用注释或局部变量名说明。
 - 推荐：一个测试只验证一个逻辑分支。
 - 推荐：异常和边界场景使用 `testXxxWithYyy` 命名。
+- 推荐：测试结构采用 Given/When/Then 或 Arrange/Act/Assert，避免准备、执行和断言混杂。
 - 推荐：Spring 上下文按需加载，不滥用全量启动。
 
 ### 13.3 可测试设计
@@ -691,6 +696,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 私有复杂逻辑优先提取为可测试的小对象；确需放宽可见性时使用 `@VisibleForTesting`。
 - 新增缺陷修复必须补回归测试。
 - 修改接口契约时，测试、实现、转换、落库、断言必须闭环。
+- 测试坏味道、慢测试、脆弱测试、过度 Mock 和测试资产治理要求统一参考 `testing.md`。
 
 ## 14. 前端项目协作规范
 
