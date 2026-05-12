@@ -45,6 +45,41 @@ description: |
 ### 6. 目标驱动
 **【强制】给可验证的结果，不给模糊步骤** – 完成任务时必须输出可验证的产物或验收条件。不输出“尝试性的代码”或“需要你手动补全”的半成品。
 
+## 架构红线
+
+1. **【强制】边界不清不拆服务** – 没有明确业务边界、数据归属、调用关系、发布运维能力和故障隔离方案时，不得建议或实施微服务拆分。
+2. **【强制】核心业务不依赖外部细节** – 领域规则和核心用例不得直接依赖 Controller、Mapper、ORM Entity、第三方 SDK、MQ、缓存、HTTP Client 或具体框架实现。
+3. **【强制】禁止循环依赖和反向依赖** – core/domain 不依赖 web/infrastructure/bootstrap；web 不直接访问 Repository/Mapper；业务代码通过端口隔离外部系统。
+4. **【强制】数据模型先保护业务不变量** – 不得只按页面或数据库表机械建模；涉及金额、库存、账户、权限、状态机、审计等核心数据时必须定义不变量和一致性边界。
+5. **【强制】可靠性不是补丁** – 对外调用、异步消息、批处理、定时任务和分布式事务必须考虑超时、重试、幂等、去重、补偿、降级、告警和人工兜底。
+6. **【强制】不做不可验证的架构** – 架构方案必须能落到模块结构、接口契约、测试、静态检查、监控指标或评审清单；不能只有图和口号。
+7. **【强制】不为未知未来过度设计** – 不得为尚未确认的需求添加通用平台、规则引擎、插件体系、多租户、分库分表、中台或复杂扩展点。
+
+## 编码红线
+
+1. **【强制】禁止吞异常和丢上下文** – 不得空 catch、只打印日志后继续、事务内捕获异常不回滚；包装异常必须保留 cause 和关键业务上下文。
+2. **【强制】禁止裸日志和敏感信息泄露** – 不用 `System.out.println`、`e.printStackTrace()`；日志不得输出密码、token、密钥、身份证、银行卡、手机号等敏感信息原文。
+3. **【强制】金额、时间、ID 不得随意处理** – 金额不用浮点和 `new BigDecimal(double)`；时间必须明确时区和精度；ID 生成必须考虑唯一性、可追踪和并发。
+4. **【强制】公共契约不可随意破坏** – 对外 API、DTO、枚举、错误码、配置项、消息体、数据库字段的破坏性变更必须给兼容方案、迁移路径和废弃周期。
+5. **【强制】不得返回模糊契约** – 公共 API 的空值、异常、权限、幂等和分页语义必须明确；列表默认返回空集合，不以 `null` 表示空列表。
+6. **【强制】不得把业务规则塞进错误层次** – Controller 不写领域规则，Mapper/Repository 不写业务决策，通用工具类不沉淀业务规则。
+7. **【强制】不得引入无主依赖** – 新增依赖、starter、中间件、代码生成器或运行时代理前必须说明必要性、替代方案、版本风险和维护责任。
+
+## 数据与安全红线
+
+1. **【强制】生产数据操作先确认** – 涉及删除、批量更新、迁移、修数、重放消息、重建索引、清理缓存等操作，必须先给 dry-run、备份、回滚和影响范围。
+2. **【强制】权限与租户边界不可省略** – 用户身份、角色权限、数据归属、租户隔离和越权访问必须在设计和测试中体现。
+3. **【强制】密钥和配置不可硬编码** – token、密钥、密码、生产地址、个人凭证不得写入代码、测试数据、日志或版本库。
+4. **【强制】审计链路不可缺失** – 涉及资金、权限、配置、审批、用户敏感数据和后台高危操作时，必须记录操作者、对象、前后值、时间和来源。
+5. **【强制】数据一致性必须有边界** – 不能用“最终一致”掩盖无补偿、无对账、无重试、无告警的问题。
+
+## 交付红线
+
+1. **【强制】未验证不交付** – 代码变更后必须说明已执行的编译、测试、静态检查或无法执行的原因；不把未验证代码包装成完成品。
+2. **【强制】不混入无关修改** – 不借修 Bug 之名重排格式、改命名、升级依赖、重构旧模块或修改 CI/CD。
+3. **【强制】生产发布要可回滚** – 涉及生产行为、数据结构、配置开关、外部依赖或兼容性变化时，必须给灰度、回滚、监控和告警方案。
+4. **【强制】高风险决策留痕** – 数据库选型、服务拆分、协议变更、核心模型调整、跨团队契约变化必须沉淀 ADR、技术方案或评审记录。
+
 ## 必备技能概览
 
 - **Java 核心**：Java 8+ / 21、25、集合、泛型、Stream、Optional、CompletableFuture、JUC、JVM、GC 与性能诊断。
@@ -64,8 +99,20 @@ description: |
 - `references/clean-code.md` – 代码整洁原则与评审启发，覆盖 Clean Code、Clean Architecture、命名、函数、注释、对象、错误处理、测试、系统演进和并发。
 - `references/coding-standards.md` – Java 编码强规约，覆盖命名、常量、OOP、集合、并发、格式、空值、异常、日志、时间、金额和数据库基础规则。
 - `references/testing.md` – 测试驱动设计与测试资产治理，覆盖 TDD、测试分层、测试代码整洁、测试坏味道、长期演进价值和 Review 清单。
-- `references/workflow.md` – 工作流程约束（编译、测试、规约扫描）、PR 提交、Git 规范、提交信息格式、决策表。
+- `references/workflow.md` – 工作流程约束（编译、测试、规约扫描）、验证命令选择矩阵、PR 提交、Git 规范、提交信息格式、决策表。
+- `references/review-and-output-templates.md` – Review 输出、架构方案、实施计划、生产变更、兼容性治理和常见反模式模板。
+- `references/acceptance-scenarios.md` – 技能验收场景与模拟用例，用于验证输出是否一致、自解释、可执行、克制且具备生产意识。
 - `references/negative-constraints.md` – 禁止行为清单、权限边界表（直接执行/询问后执行/禁止执行）。
 - `references/wind-projects-patterns.md` – Wind 项目族实践提炼，覆盖 wind-middleware、wind-integration、wind-security 的 API 风格、模块边界、架构模式、扩展点和评审清单。
 - `references/skill-tree.md` – Java 资深架构师技能树，覆盖架构原则、业务建模、模块管理、设计能力、编码能力、质量保障、评审、稳定性、工程治理和技术领导力。
 - `references/knowledge-graph.md` – Java 架构师知识图谱，覆盖业务知识、架构理论、Java/JVM、Spring 生态、数据访问、分布式、基础设施、安全、可观测性和 AI 协作。
+
+## 场景路由
+
+| 用户任务 | 必读参考 | 输出要求 |
+| --- | --- | --- |
+| 代码 Review / PR Review | `references/review-and-output-templates.md`、`references/coding-standards.md`、`references/clean-code.md` | 问题优先，按 P0-P3 排序，必须给文件行号、风险、建议和验证。 |
+| 架构设计 / 技术方案 | `references/architecture.md`、`references/review-and-output-templates.md`、`references/project-governance-standards.md` | 先说明目标、约束、边界和不变量，再给模块、接口、数据、可靠性、验证和发布方案。 |
+| 代码修改 / Bug 修复 | `references/workflow.md`、`references/coding-standards.md`、`references/testing.md` | 小步修改，避免无关重构；完成后说明编译、测试、规约扫描或未执行原因。 |
+| 生产变更 / 数据修复 / 上线评审 | `references/review-and-output-templates.md`、`references/negative-constraints.md`、`references/workflow.md` | 必须包含影响范围、dry-run、备份、灰度、监控、审计、回滚和验收标准。 |
+| 技能自检 / 模拟验收 | `references/acceptance-scenarios.md`、`references/skill-tree.md` | 使用验收场景检查一致性、自解释性、可执行性、克制性和生产意识。 |

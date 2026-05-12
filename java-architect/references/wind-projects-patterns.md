@@ -6,6 +6,16 @@
 - wind-integration：https://github.com/fengwuxp/wind-integration
 - wind-security：https://github.com/fengwuxp/wind-security
 
+## 目录
+
+- `1. 总体架构定位`
+- `2. API 设计风格`
+- `3. 编码风格提炼`
+- `4. 架构模式提炼`
+- `5. 模块治理提炼`
+- `6. 对 Java 架构师 Skill 的落地要求`
+- `7. 可复用检查清单`
+
 ## 1. 总体架构定位
 
 ### 1.1 项目族分层

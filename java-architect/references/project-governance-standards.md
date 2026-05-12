@@ -2,6 +2,30 @@
 
 本文面向 Java 企业项目的长期维护、团队协作和架构演进，融合团队现有规范、Wind 项目族实践、Clean Code、Clean Architecture、重构实践，以及 SOFAStack 模块化/可扩展架构思想。
 
+## 目录
+
+- `0. 规范目标`
+- `1. 核心设计原则`
+- `2. 代码库类型分层治理`
+- `3. 工程模块划分`
+- `4. 依赖管理`
+- `5. 服务层划分与调用关系`
+- `6. 服务方法命名`
+- `7. Query DTO 与查询字段命名`
+- `8. API 设计规范`
+- `9. 编码原则`
+- `10. 数据访问与数据库规范`
+- `11. 日志规范`
+- `12. 安全规范`
+- `13. 测试实践`
+- `14. 前端项目协作规范`
+- `15. Git 协作与 PR`
+- `16. 代码评审与设计评审`
+- `17. 重构与演进`
+- `18. 容器化与 Kubernetes 落地规范`
+- `19. SOFAStack 参考实践吸收`
+- `20. 最小落地门禁`
+
 ## 0. 规范目标
 
 项目规范的目标不是“统一格式”这么窄，而是让项目具备以下长期能力：
@@ -972,9 +996,9 @@ SOFAStack 的启发主要体现在三点：
 
 每个项目至少具备以下门禁：
 
-- 编译通过：`mvn compile`。
-- 相关单测通过：`mvn test -Dtest=<相关测试类>`。
-- 接口/实体/注解/重命名类变更后：`mvn clean test-compile`。
+- 编译通过：执行项目对应编译命令；Maven 示例为 `mvn compile`，Gradle 示例为 `./gradlew compileJava` 或项目约定任务。
+- 相关单测通过：执行项目对应测试命令；Maven 示例为 `mvn test -Dtest=<相关测试类>`，Gradle 示例为 `./gradlew test --tests <相关测试类>`。
+- 接口/实体/注解/重命名类变更后：执行测试编译；Maven 示例为 `mvn clean test-compile`，Gradle 示例为 `./gradlew testClasses`。
 - 静态检查：P3C / PMD / SpotBugs / SonarLint 至少一种。
 - PR 清单：说明改动、测试、风险、回滚。
 - 禁止项扫描：`System.out.println`、`e.printStackTrace()`、密钥、token、`.env`。
