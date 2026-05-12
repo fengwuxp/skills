@@ -4,4 +4,4 @@
 
 ## AI Skills
 - [senior-software-architect](./senior-software-architect) 资深架构师（Java/Spring 核心专长）
-- [payment-product-expert](./payment-product-expert) 支付产品与清结算专家
+- [payment-product-expert](./payment-product-expert) 支付产品与资金系统专家
