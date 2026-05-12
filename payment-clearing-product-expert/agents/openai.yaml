@@ -1,0 +1,7 @@
+interface:
+  display_name: "支付产品与清结算专家"
+  short_description: "支付系统、清结算、账务、对账与资金方案设计评审专家"
+  brand_color: "#2563EB"
+  default_prompt: "Use $支付产品与清结算专家 为我设计一个包含账户、账务、对账和结算规则的支付产品方案。"
+policy:
+  allow_implicit_invocation: true
