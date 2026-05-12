@@ -81,14 +81,13 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 
 ### 2.3 空值与参数约束
 
-- 大量使用 `org.jspecify.annotations.Nullable` / `@NonNull` 表达空值契约。
-- 使用 `jakarta.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 表达 API 入参约束。
+- 内部服务、领域服务、应用服务和不会暴露到 API 层的端口契约，使用 `org.jspecify.annotations.Nullable` / `@NonNull` / `@NullMarked` 表达空值契约。
+- 会暴露到 API 层的参数、Request/Response/DTO/Query/Command 等数据模型，使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 表达 API 入参和字段约束；项目已迁移 Jakarta EE / Spring Boot 3+ 时使用 `jakarta.validation` 等价注解。
 - 查询对象、实体和接口均通过注解说明契约，而不是依赖口头约定。
 
 落地原则：
 
-- 公共 API 必须显式声明 nullability。
-- 入参约束优先使用标准注解，业务断言使用 `AssertUtils`。
+- 内部 Java 契约用 JSpecify，API 数据契约用 Bean Validation，其他前置条件和状态条件用 `AssertUtils`。
 - 可空返回值必须通过注解或 Optional 明确表达。
 
 ## 3. 编码风格提炼

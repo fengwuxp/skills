@@ -551,7 +551,8 @@ Lombok 使用规则：
 - 简单数据载体（DTO、VO、Query、Command、Event、配置属性）可使用 `@Getter`、`@Setter`、`@NoArgsConstructor`、`@AllArgsConstructor`、`@Builder`。
 - 领域对象、聚合根、状态机对象、有业务不变量的类，不使用 `@Data` 和全量 `@Setter`；应通过有语义的方法表达状态变化。
 - Entity 使用 Lombok 时必须谨慎处理 `equals`、`hashCode`、`toString`，避免把数据库 ID、懒加载关联、大字段或敏感字段带入默认实现。
-- Spring Bean 推荐使用 `final` 字段 + `@RequiredArgsConstructor` 做构造器注入；禁止为了省代码牺牲依赖显式性。
+- Spring Bean 推荐使用 `final` 依赖字段 + `@AllArgsConstructor` 做构造器注入；禁止字段注入，禁止为了省代码牺牲依赖显式性。
+- 当 Bean 中存在非依赖状态、可选依赖或特殊构造逻辑时，应改用显式构造器并说明原因，避免 `@AllArgsConstructor` 把非依赖字段错误纳入注入契约。
 - 对外契约类即使使用 Lombok，也必须通过字段命名、Javadoc、校验注解和测试说明空值、默认值、枚举和兼容语义。
 
 MapStruct 使用规则：
@@ -607,8 +608,9 @@ UserDetailDTO getUserDetail(Long userId);
 
 ### 9.6 空值与断言
 
-- 公共 API 使用 `@Nullable` / `@NonNull` / `@NotNull` / `@NotBlank` 表达契约。
-- 参数校验优先使用 `AssertUtils` 或 Bean Validation。
+- 不会暴露到 API 层的内部服务、领域服务、应用服务和端口契约，使用 `org.jspecify.annotations` 相关注解表达 nullability。
+- 会暴露到 API 层的参数、Request/Response/DTO/Query/Command 等数据模型，使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 等 Bean Validation 注解；项目已迁移 Jakarta EE / Spring Boot 3+ 时，使用 `jakarta.validation` 等价注解。
+- 其他业务前置条件、状态条件、不可达分支和内部防御式编程，优先使用项目统一的 `AssertUtils`。
 - 返回集合时返回空集合，不返回 null。
 - `findXxx` 推荐返回 `Optional<T>`。
 - `getXxx` 查不到必须抛业务异常。
@@ -730,7 +732,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 强制：测试类包名与被测试类保持一致。
 - 强制：每个测试方法至少一个断言。
 - 强制：测试代码等同生产代码维护，命名、结构、测试数据、辅助方法和断言都必须清晰。
-- 强制：每个测试用例必须能表达测试场景、业务意图、输入条件和期望输出；复杂场景使用注释或局部变量名说明。
+- 强制：每个测试用例必须能表达测试场景、业务意图、输入条件、触发行为、输出结果和预期断言；复杂场景的说明写在测试方法 Javadoc 或方法级注释上，不写在方法体内部。
 - 推荐：一个测试只验证一个逻辑分支。
 - 推荐：异常和边界场景使用 `testXxxWithYyy` 命名。
 - 推荐：测试结构采用 Given/When/Then 或 Arrange/Act/Assert，避免准备、执行和断言混杂。

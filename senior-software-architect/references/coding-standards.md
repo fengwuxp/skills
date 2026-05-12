@@ -77,8 +77,11 @@
 
 ## 7. 空值与类型契约
 
-- 【强制】公共 API 的空值语义必须明确，必要时使用 `@Nullable`、`@NonNull`、`@NotNull`、`@NotBlank` 等注解表达契约。
+- 【强制】空值处理按边界分层：内部服务、领域服务、应用服务等不会暴露到 API 层的 Java 契约，使用 `org.jspecify.annotations` 相关注解表达 nullability；会暴露到 API 层的参数、Request/Response/DTO/Query/Command 等数据模型，使用 Bean Validation 注解表达入参和字段约束；其他业务前置条件、状态条件和不可达分支优先使用项目统一的 `AssertUtils` 断言。
+- 【强制】公共 API 的空值语义必须明确，必要时使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 等验证注解；项目已迁移 Jakarta EE / Spring Boot 3+ 时，可使用 `jakarta.validation` 等价注解，但不得在同一模块内混用两套 validation 包。
+- 【强制】内部 Java 契约优先使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked` 等注解表达可空与非空语义；不要只靠方法名、口头约定或运行时 NPE 暴露契约。
 - 【强制】不要把 `Optional` 用作字段、DTO 属性或序列化模型属性。
+- 【强制】不得用 Bean Validation 替代所有内部断言：Validation 面向 API 契约和数据模型，`AssertUtils` 面向业务前置条件、状态校验和内部防御式编程。
 - 【推荐】可能不存在的查询结果使用 `findXxx` 或 `Optional<T>` 表达。
 - 【推荐】必然存在的查询使用 `getXxx` 表达；查不到时抛业务异常。
 - 【推荐】普通字段、参数、返回值使用 import 后的注解；只有 type-use 位置存在歧义时，才使用全限定注解。
@@ -89,7 +92,7 @@
 - 【强制】禁止吞异常；捕获异常后必须处理、包装、补充上下文或重新抛出。
 - 【强制】事务方法中捕获异常后，必须重新抛出或显式回滚。
 - 【强制】禁止直接使用 `e.printStackTrace()`。
-- 【推荐】断言优先于手动抛异常：参数校验、状态校验、业务前置条件优先使用 Bean Validation 或项目统一断言工具，例如 `AssertUtils`。
+- 【推荐】断言优先于手动抛异常：API 数据模型约束使用 Bean Validation；业务前置条件、状态校验和内部防御式编程使用项目统一断言工具，例如 `AssertUtils`。
 - 【推荐】手动抛异常只用于断言工具无法清晰表达的场景，例如需要组合复杂上下文、包装第三方异常或构造特定错误码。
 - 【推荐】业务异常继承或使用项目统一的 `BaseException`。
 - 【推荐】包装第三方异常时保留 cause，避免丢失原始诊断信息。
@@ -131,7 +134,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 【强制】领域对象、有业务行为的类、继承层次复杂的类，不得无脑使用 `@Data`、`@Setter`、`@AllArgsConstructor`。
 - 【强制】`@ToString`、`@EqualsAndHashCode` 必须避开敏感字段、大字段、双向关联和懒加载对象，避免信息泄露、递归和性能问题。
 - 【推荐】简单 DTO、VO、Query、Command、Event 可使用 `@Getter`、`@Setter`、`@NoArgsConstructor`、`@Builder`，但公共契约语义必须清晰。
-- 【推荐】Spring 依赖注入优先使用 `final` 字段 + `@RequiredArgsConstructor`，避免字段注入。
+- 【推荐】Spring Bean 构造注入优先使用 `final` 依赖字段 + Lombok `@AllArgsConstructor`，避免字段注入；若类中存在非依赖状态、可选依赖或特殊构造逻辑，应改用显式构造器并说明原因。
 - 【强制】MapStruct 只负责模型转换，不承载业务规则、外部调用、数据库查询、权限判断或状态流转。
 - 【强制】跨层模型转换优先集中在 Converter/MapStruct 层，禁止在业务代码中散落 `BeanUtils`、反射拷贝或手写重复转换。
 - 【强制】有语义差异、字段重命名、枚举转换、空值策略、默认值的映射必须显式声明，并补充测试覆盖。
