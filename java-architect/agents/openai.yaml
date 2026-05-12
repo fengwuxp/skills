@@ -1,5 +1,0 @@
-interface:
-  display_name: "Java 资深架构师"
-  short_description: "Java 架构、编码、评审、测试、治理与生产风险专家"
-  brand_color: "#0F766E"
-  default_prompt: "Use $Java 资深架构师 帮我审查这个 Java 方案的架构边界、编码红线、生产风险和验证计划。"

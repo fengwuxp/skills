@@ -15,7 +15,8 @@
 - `9. 日志基础规则`
 - `10. 时间与金额`
 - `11. 数据库基础规约`
-- `12. 项目细则入口`
+- `12. Lombok 与 MapStruct 基础规约`
+- `13. 项目细则入口`
 
 ## 1. 命名规范
 
@@ -24,7 +25,7 @@
 - 【强制】类名使用 `UpperCamelCase`，但 `DO`、`BO`、`DTO`、`VO`、`AO`、`PO`、`UID` 等通用缩写除外。
 - 【强制】方法名、参数名、成员变量、局部变量使用 `lowerCamelCase`。
 - 【强制】常量命名使用 `UPPER_UNDERSCORE`，例如 `MAX_STOCK_COUNT`。
-- 【强制】抽象类使用 `Abstract` 或 `Base` 开头；异常类使用 `Exception` 结尾；测试类以被测类名开头、`Test` 结尾。
+- 【强制】抽象类使用 `Abstract` 或 `Base` 开头；异常类使用 `Exception` 结尾；测试类以被测类名开头、`Tests` 结尾。
 - 【强制】POJO 布尔类型变量不要加 `is` 前缀，避免序列化和框架识别歧义。
 - 【推荐】如果模块、接口、类或方法使用设计模式，命名时体现模式语义，例如 `XxxStrategy`、`XxxFactory`、`XxxAdapter`。
 
@@ -124,12 +125,23 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 【强制】新增必填字段必须有默认值，否则字段应允许为空并配合兼容逻辑。
 - 【推荐】表达是与否概念的字段使用 `is_xxx` 命名，具体类型以项目数据库规范为准。
 
-## 12. 项目细则入口
+## 12. Lombok 与 MapStruct 基础规约
+
+- 【强制】Lombok 只用于减少样板代码，不得隐藏业务不变量、状态变更、副作用和领域行为。
+- 【强制】领域对象、有业务行为的类、继承层次复杂的类，不得无脑使用 `@Data`、`@Setter`、`@AllArgsConstructor`。
+- 【强制】`@ToString`、`@EqualsAndHashCode` 必须避开敏感字段、大字段、双向关联和懒加载对象，避免信息泄露、递归和性能问题。
+- 【推荐】简单 DTO、VO、Query、Command、Event 可使用 `@Getter`、`@Setter`、`@NoArgsConstructor`、`@Builder`，但公共契约语义必须清晰。
+- 【推荐】Spring 依赖注入优先使用 `final` 字段 + `@RequiredArgsConstructor`，避免字段注入。
+- 【强制】MapStruct 只负责模型转换，不承载业务规则、外部调用、数据库查询、权限判断或状态流转。
+- 【强制】跨层模型转换优先集中在 Converter/MapStruct 层，禁止在业务代码中散落 `BeanUtils`、反射拷贝或手写重复转换。
+- 【强制】有语义差异、字段重命名、枚举转换、空值策略、默认值的映射必须显式声明，并补充测试覆盖。
+
+## 13. 项目细则入口
 
 以下内容不在本文档展开，避免重复和冲突：
 
 - 模块划分、依赖管理、服务分层、CRUD 命名：见 `project-governance-standards.md`。
-- Query 字段命名、模型命名、API 命名、安全规范：见 `project-governance-standards.md`。
+- Query 字段命名、模型命名、API 命名、Lombok/MapStruct 使用边界、安全规范：见 `project-governance-standards.md`。
 - MyBatis Flex 使用方式、`XxxRefs`、分页排序、更新空值：见 `project-governance-standards.md`。
 - 测试目录、测试命名、覆盖率、PR 检查：见 `project-governance-standards.md` 和 `workflow.md`。
 - 禁止行为和权限边界：见 `negative-constraints.md`。

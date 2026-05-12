@@ -201,6 +201,7 @@ TDD 对架构的价值：
 - `project-governance-standards.md`：承载模块划分、服务分层、命名、测试、Git、前端、K8s 等落地细则。
 - `skill-tree.md`：承载架构师完整能力地图。
 - `knowledge-graph.md`：承载架构师知识图谱和资料归类方式。
-- `coding-standards.md`：承载 Java 编码与项目级补充规范。
+- `language-agnostic-architecture.md`：承载跨语言架构判断框架和技术栈识别原则。
+- `coding-standards.md`：承载 Java/JVM 项目的编码与项目级补充规范。
 - `workflow.md`：承载修改、验证、PR 和 Git 流程。
 - `negative-constraints.md`：承载禁止行为和权限边界。

@@ -1,6 +1,6 @@
 # Wind 项目族架构与 API 提炼
 
-本文从以下仓库提炼 Java 架构师能力中的项目级实践样本：
+本文从以下仓库提炼资深架构师在 Java/Spring/Wind 项目中的项目级实践样本：
 
 - wind-middleware：https://github.com/fengwuxp/wind-middleware
 - wind-integration：https://github.com/fengwuxp/wind-integration
@@ -13,7 +13,7 @@
 - `3. 编码风格提炼`
 - `4. 架构模式提炼`
 - `5. 模块治理提炼`
-- `6. 对 Java 架构师 Skill 的落地要求`
+- `6. 对资深架构师 Skill 的 Java/Wind 落地要求`
 - `7. 可复用检查清单`
 
 ## 1. 总体架构定位
@@ -273,7 +273,7 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 - `captcha`：验证码类型、内容生成、存储、发送、流控、自动装配。
 - `mfa`：TOTP、MFA 状态管理、MFA 注解与方法拦截。
 
-## 6. 对 Java 架构师 Skill 的落地要求
+## 6. 对资深架构师 Skill 的 Java/Wind 落地要求
 
 在处理使用 Wind 项目族的 Java 项目时，应优先遵循以下规则：
 
