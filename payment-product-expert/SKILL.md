@@ -97,6 +97,10 @@ description: |
 - `references/glossary.md`：术语口径，覆盖清算/结算、日期口径、在途、长短款、挂账、冲正、退款等。
 - `references/payment-methodology.md`：支付产品分析方法、场景拆解、产品文档产出模式。
 - `references/clearing-settlement.md`：内部清分/清算、结算、清结算、对账、在途、账务和结算系统设计。
+- `references/payment-rails-ach-and-bank-transfers.md`：ACH 与银行转账轨道参考，覆盖角色、授权/结算时序、return/NOC/reversal、Same Day ACH、IAT 和银行转账风险；当场景涉及 ACH、代扣代发、银行转账或本地清算网络时优先读取。
+- `references/card-network-and-card-rails.md`：卡组织与卡支付轨道参考，覆盖四方模型、授权/清算/结算、争议与拒付、tokenization、PCI 边界和费用口径；当场景涉及银行卡收单、企业卡、虚拟卡或卡组织网络时优先读取。
+- `references/formance-reference-patterns.md`：Formance Wallets、Ledger、Reconciliation、Connectivity、Numscript、Flows 的公开设计参考，提炼钱包层、账本层、对账层、连接器、规则表达和流程编排模式；用于钱包、账务核心和对账系统设计，不作为唯一实现或合规依据。
+- `references/highnote-reference-patterns.md`：Highnote 的公开设计参考，提炼发卡、账户入网、授权控制、交易生命周期、按需供资、报表、事件集成和收单对象模式；用于企业卡、员工卡、虚拟卡、共享额度卡和收单产品设计，不作为唯一实现或合规依据。
 - `references/global-payment-emerging.md`：公众号公开索引主题补充，覆盖银行核心、全球支付清算、跨境、稳定币、Web3 和 AI 代理支付。
 - `references/design-checklists.md`：PRD、方案、账务矩阵、对账方案和风险评审清单。
 - `references/source-map.md`：公开资料来源、提炼边界和版权注意事项；当用户要求“按陈天宇宙资料/来源”展开时先读。
