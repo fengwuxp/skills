@@ -776,7 +776,16 @@ public interface {name}Service {{
      *
      * @param id {lower_desc} ID
      */
-    void delete{name}ById(@NonNull Long id);
+    default void delete{name}ById(@NonNull Long id) {{
+        delete{name}ByIds(id);
+    }}
+
+    /**
+     * Delete {lower_desc} by IDs.
+     *
+     * @param ids {lower_desc} IDs
+     */
+    void delete{name}ByIds(@NonNull Long... ids);
 
     /**
      * Query {lower_desc} by ID.
@@ -849,6 +858,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 /**
  * {desc} service implementation.
  *
@@ -890,14 +901,15 @@ public class {name}ServiceImpl implements {name}Service {{
     }}
 
     /**
-     * Delete {lower_desc} by ID.
+     * Delete {lower_desc} by IDs.
      *
-     * @param id {lower_desc} ID
+     * @param ids {lower_desc} IDs
      */
     @Override
-    public void delete{name}ById(@NonNull Long id) {{
-        AssertUtils.notNull(id, "argument id must not null");
-        AssertUtils.isTrue({var}Mapper.deleteById(id) == 1, "Failed to delete {lower_desc}");
+    public void delete{name}ByIds(@NonNull Long... ids) {{
+        AssertUtils.notEmpty(ids, "argument ids must not empty");
+        int total = {var}Mapper.deleteBatchByIds(Arrays.asList(ids));
+        AssertUtils.isTrue(total == ids.length, "Failed to delete {lower_desc}");
     }}
 
     /**

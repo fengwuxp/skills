@@ -121,6 +121,9 @@ Use `--class-name` when the table name does not produce the desired Java class n
 - Service parameter style:
   - Service interface and implementation parameters use `org.jspecify.annotations.NonNull`.
   - Public service implementation methods must assert required parameters with `AssertUtils.notNull(param, "argument param must not null")`; collection/array parameters should use `AssertUtils.notEmpty(param, "argument param must not empty")`.
+  - Generated services must include a batch delete method `void deleteXxxByIds(@NonNull Long... ids);`.
+  - The single-ID delete method should be a default method in the service interface and directly call the batch method, for example `default void deleteXxxById(@NonNull Long id) { deleteXxxByIds(id); }`.
+  - Service implementations should implement only `deleteXxxByIds(@NonNull Long... ids)`, assert `AssertUtils.notEmpty(ids, "argument ids must not empty")`, and delete with `mapper.deleteBatchByIds(Arrays.asList(ids))`.
 
 ## MyBatis-Flex Column Rules
 
