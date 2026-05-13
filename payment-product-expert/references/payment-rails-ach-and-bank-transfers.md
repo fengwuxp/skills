@@ -46,6 +46,26 @@
 - 对 IAT、跨境相关或高风险场景，要额外说明合规、信息字段和筛查要求。
 - 返回码、未达账、拒付、撤销授权和 disputed debit 要有标准化运营动作。
 
+## ACH 授权与争议举证日志
+
+ACH debit / 代扣场景必须把授权证据作为一等对象设计。可复用 `dispute-refund-and-chargeback-operations.md` 中的 Dispute Evidence Activity Log，但证据包必须按 ACH / 银行转账语义生成，不得套用卡 chargeback 模板。
+
+ACH 证据日志至少覆盖：
+
+- debit authorization 展示版本、确认动作、授权时间、授权主体、授权金额、扣款频次、扣款日期和撤销方式。
+- 账户绑定、micro-deposit、instant verification、routing/account 校验、账户持有人匹配和验证结果。
+- 授权撤销、取消代扣、退款申请、客服沟通、投诉处理和通知用户记录。
+- ACH entry、batch、file、trace number、ODFI/RDFI、settlement date、return code、NOC、reversal 和 retry 决策。
+- 对 unauthorized return、disputed debit、administrative return、insufficient funds、account closed 等原因码的差异化处理。
+
+设计原则：
+
+- 前端勾选或点击只能作为辅助证据，不能替代授权凭证、授权文本、服务端确认记录和账户验证结果。
+- return、NOC、reversal、refund、retry 必须分开建模；不同动作对应不同规则、时限、账务和用户通知。
+- 重试扣款前必须检查授权是否仍有效、return code 是否允许、账户主数据是否被 NOC 更新、是否触发风控或人工复核。
+- ACH evidence package 应面向银行、ODFI/RDFI、通道或内部风控调查组织材料，不应直接提交全量行为日志或无关个人信息。
+- Nacha Operating Rules、银行协议、ODFI/RDFI 要求和通道规则具有时效性；return code、授权保留和重试限制必须按最新规则核验。
+
 ## 银行转账与跨境特有设计点
 
 - 要区分消息网络、账户网络和资金网络，不能把 SWIFT 报文发送成功当作资金到账。
@@ -61,7 +81,9 @@
 5. 是否有批次号、文件号、网络参考号、业务事件号和防重复机制。
 6. 是否说明 Same Day / 普通批次 / 实时轨道在时效和费用上的差异。
 7. 是否覆盖失败重试、退回重发、主数据纠正、人工处理和告警。
-8. 跨境或银行转账场景下，是否说明消息网络、资金网络、费用路径和退汇路径。
+8. 是否有 ACH 授权与争议举证日志，覆盖授权文本版本、确认动作、账户验证、授权撤销、return code、NOC、reversal 和 retry 决策。
+9. ACH evidence package 是否按银行、ODFI/RDFI、通道或 Nacha 规则裁剪，而不是套用卡争议证据包。
+10. 跨境或银行转账场景下，是否说明消息网络、资金网络、费用路径和退汇路径。
 
 ## 官方参考方向
 
