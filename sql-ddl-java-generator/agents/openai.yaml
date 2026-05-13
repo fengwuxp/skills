@@ -1,0 +1,5 @@
+interface:
+  display_name: "SQL DDL Java 生成器"
+  short_description: "从建表 DDL 生成 Nobe Java 模版代码"
+  brand_color: "#2563EB"
+  default_prompt: "Use $sql-ddl-java-generator 根据 schema 文件、表名和业务模块自动分析参数并生成 Nobe 项目的 Java 模版代码。"
