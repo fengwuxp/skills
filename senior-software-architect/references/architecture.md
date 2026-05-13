@@ -210,6 +210,12 @@ TDD 对架构的价值：
 - `skill-tree.md`：承载架构师完整能力地图。
 - `knowledge-graph.md`：承载架构师知识图谱和资料归类方式。
 - `language-agnostic-architecture.md`：承载跨语言架构判断框架和技术栈识别原则。
+- `scenario-routing.md`：承载架构任务的场景识别、参考路由、输出路由和红线。
+- `production-readiness.md`：承载生产就绪、非功能、发布回滚、监控告警和 Runbook 检查。
+- `adr-and-tradeoff.md`：承载 ADR、技术选型、架构取舍、复审和回滚触发条件。
+- `distributed-consistency.md`：承载事务边界、消息一致性、幂等、补偿、对账和最终一致窗口。
+- `evolutionary-architecture.md`：承载遗留系统改造、防腐层、迁移、双写、回填、切流和微服务拆分门槛。
+- `security-architecture.md`：承载认证授权、租户隔离、敏感数据、密钥、审计和安全测试。
 - `coding-standards.md`：承载 Java/JVM 项目的编码与项目级补充规范。
 - `workflow.md`：承载修改、验证、PR 和 Git 流程。
 - `negative-constraints.md`：承载禁止行为和权限边界。

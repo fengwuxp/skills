@@ -95,15 +95,22 @@ description: |
 ## 遵循的规范（详见 references/）
 
 - `references/language-agnostic-architecture.md` – 语言无关架构能力，覆盖技术栈识别、架构共性、模块治理、数据一致性、可靠性、安全、可观测性、验证交付和跨语言适配。
+- `references/scenario-routing.md` – 架构场景识别与方案路由；用于根据任务类型、技术栈、风险等级和目标产物选择最小参考集、输出形式和红线。
 - `references/architecture.md` – 架构师核心原则与职责边界，覆盖架构师应该/不应该做的事、核心抽象、决策原则、质量属性和落地机制。
 - `references/project-governance-standards.md` – 项目长期演进规范，融合团队现有规范、模块划分、依赖管理、服务划分、编码原则、API、数据库、日志、安全、测试、Git 协作和 SOFAStack 模块化实践。
 - `references/system-analysis-design.md` – 团队系分设计约规，覆盖需求背景、目标、概要设计、详细设计、非功能设计、研发计划、评审清单和常见反模式。
 - `references/product-design.md` – 产品设计与产品文档能力，覆盖产品文档结构、产品架构、能力地图、图文表达、开发/测试友好性和设计严谨性。
 - `references/clean-code.md` – 代码整洁原则与评审启发，覆盖 Clean Code、Clean Architecture、命名、函数、注释、对象、错误处理、测试、系统演进和并发。
-- `references/coding-standards.md` – Java 编码强规约，覆盖命名、常量、OOP、集合、并发、格式、空值、异常、日志、时间、金额、数据库基础规则、Lombok 与 MapStruct 使用底线；仅在 Java/JVM 项目中作为硬规约。
+- `references/coding-standards.md` – Java 编码规约 2.0，以阿里巴巴 Java 开发手册 / P3C 为基础，融合团队 Java/Spring/Wind 约规、契约、异常日志、分层模型、Lombok/MapStruct、测试、Review 定级和自动化检查。
+- `references/coding-review-deep-dive.md` – 编码约规深化与 Review 方法；用于把编码强规约转化为业务语义、边界方向、契约完整性、失败路径和工程一致性的审查路径。
 - `references/testing.md` – 测试驱动设计与测试资产治理，覆盖 TDD、测试分层、测试代码整洁、测试坏味道、长期演进价值和 Review 清单。
 - `references/workflow.md` – 工作流程约束（编译、测试、规约扫描）、验证命令选择矩阵、PR 提交、Git 规范、提交信息格式、决策表。
 - `references/review-and-output-templates.md` – Review 输出、架构方案、实施计划、生产变更、兼容性治理和常见反模式模板。
+- `references/production-readiness.md` – 生产就绪与非功能专项；覆盖 SLO、容量、压测、可靠性、可观测性、发布回滚、数据变更、外部依赖和 Runbook。
+- `references/adr-and-tradeoff.md` – ADR 与技术取舍；用于技术选型、服务拆分、重大重构、公共契约和高风险决策的备选方案、取舍、验证与复审。
+- `references/distributed-consistency.md` – 分布式数据一致性专项；覆盖事务边界、Outbox、Saga、TCC、幂等、消息一致性、对账、补偿和人工兜底。
+- `references/evolutionary-architecture.md` – 演进式架构与遗留系统改造；覆盖防腐层、绞杀者模式、双写、回填、切流、契约测试、模块化单体和微服务拆分门槛。
+- `references/security-architecture.md` – 安全架构专项；覆盖认证、授权、租户隔离、敏感数据、密钥、常见 Web/API 风险、审计和安全测试。
 - `references/acceptance-scenarios.md` – 技能验收场景与模拟用例，用于验证输出是否一致、自解释、可执行、克制且具备生产意识。
 - `references/negative-constraints.md` – 禁止行为清单、权限边界表（直接执行/询问后执行/禁止执行）。
 - `references/wind-projects-patterns.md` – Wind 项目族实践提炼，覆盖 wind-middleware、wind-integration、wind-security 的 API 风格、模块边界、架构模式、扩展点和评审清单。
@@ -112,20 +119,24 @@ description: |
 
 ## 技术栈识别原则
 
-1. 用户未指定语言或仓库技术栈不明时，先读取 `references/language-agnostic-architecture.md`，按语言无关原则分析。
-2. 识别到 Java、JVM、Spring、Maven、Gradle、MyBatis、Wind 项目族时，再加载 Java 专项规范。
-3. 识别到 Go、Node.js、Python、Rust、前端、数据工程等技术栈时，优先尊重项目已有构建、测试、lint、格式化、部署和目录约定，不强套 Java/Spring 规则。
-4. 代码修改后必须按项目技术栈选择验证命令；无法运行时说明原因和替代验证。
+1. 复杂任务先读取 `references/scenario-routing.md`，按任务类型、技术栈、风险等级和目标产物选择最小参考集。
+2. 用户未指定语言或仓库技术栈不明时，先读取 `references/language-agnostic-architecture.md`，按语言无关原则分析。
+3. 识别到 Java、JVM、Spring、Maven、Gradle、MyBatis、Wind 项目族时，再加载 Java 专项规范。
+4. 识别到 Go、Node.js、Python、Rust、前端、数据工程等技术栈时，优先尊重项目已有构建、测试、lint、格式化、部署和目录约定，不强套 Java/Spring 规则。
+5. 代码修改后必须按项目技术栈选择验证命令；无法运行时说明原因和替代验证。
 
 ## 场景路由
 
 | 用户任务 | 必读参考 | 输出要求 |
 | --- | --- | --- |
-| 通用架构设计 / 跨语言方案 / 技术选型 | `references/language-agnostic-architecture.md`、`references/architecture.md`、`references/review-and-output-templates.md` | 先识别技术栈和约束，再给边界、契约、数据、可靠性、安全、验证、发布和取舍。 |
-| 代码 Review / PR Review | `references/review-and-output-templates.md`、`references/language-agnostic-architecture.md`、`references/clean-code.md` | 问题优先，按 P0-P3 排序，必须给文件行号、风险、建议和验证；Java 项目额外加载 `coding-standards.md`。 |
-| 系分设计 / 系统分析设计 / 设计文档 | `references/system-analysis-design.md`、`references/architecture.md`、`references/product-design.md` | 按背景、目标、概要设计、详细设计、非功能、研发计划、参考资料组织，必须达到可评审、可编码、可验证状态。 |
-| 架构设计 / 技术方案 | `references/architecture.md`、`references/review-and-output-templates.md`、`references/project-governance-standards.md` | 先说明目标、约束、边界和不变量，再给模块、接口、数据、可靠性、验证和发布方案。 |
-| Java/Spring 项目设计、Review、修改 | `references/coding-standards.md`、`references/project-governance-standards.md`、`references/workflow.md` | 使用 Java/Spring/Wind 约规，小步修改，完成后说明编译、测试、规约扫描或未执行原因。 |
+| 通用架构设计 / 跨语言方案 / 技术选型 | `references/scenario-routing.md`、`references/language-agnostic-architecture.md`、`references/architecture.md`、`references/review-and-output-templates.md` | 先识别技术栈和约束，再给边界、契约、数据、可靠性、安全、验证、发布和取舍。 |
+| 代码 Review / PR Review | `references/review-and-output-templates.md`、`references/language-agnostic-architecture.md`、`references/clean-code.md`、`references/coding-review-deep-dive.md` | 问题优先，按 P0-P3 排序，必须给文件行号、风险、建议和验证；Java 项目额外加载 `coding-standards.md`。 |
+| 系分设计 / 系统分析设计 / 设计文档 | `references/system-analysis-design.md`、`references/architecture.md`、`references/product-design.md`、`references/production-readiness.md` | 按背景、目标、概要设计、详细设计、非功能、研发计划、参考资料组织，必须达到可评审、可编码、可验证状态。 |
+| 架构设计 / 技术方案 | `references/architecture.md`、`references/review-and-output-templates.md`、`references/project-governance-standards.md`、`references/adr-and-tradeoff.md` | 先说明目标、约束、边界和不变量，再给模块、接口、数据、可靠性、验证、发布和取舍。 |
+| Java/Spring 项目设计、Review、修改 | `references/coding-standards.md`、`references/coding-review-deep-dive.md`、`references/project-governance-standards.md`、`references/workflow.md` | 使用 Java/Spring/Wind 约规，小步修改，优先检查业务语义、边界、契约、失败路径和验证。 |
 | 非 Java 代码修改 / Bug 修复 | `references/language-agnostic-architecture.md`、`references/workflow.md`、项目本地规范 | 小步修改，遵循项目语言生态，完成后说明对应构建、测试、lint 或未执行原因。 |
-| 生产变更 / 数据修复 / 上线评审 | `references/review-and-output-templates.md`、`references/negative-constraints.md`、`references/workflow.md` | 必须包含影响范围、dry-run、备份、灰度、监控、审计、回滚和验收标准。 |
+| 分布式一致性 / MQ / 对账 / 补偿 | `references/distributed-consistency.md`、`references/production-readiness.md`、`references/review-and-output-templates.md` | 明确业务不变量、事务边界、幂等、去重、补偿、对账、告警、人工兜底和一致性窗口。 |
+| 遗留系统改造 / 迁移 / 服务拆分 | `references/evolutionary-architecture.md`、`references/adr-and-tradeoff.md`、`references/production-readiness.md` | 小步迁移，给防腐、契约测试、双写/回填/切流、灰度、回滚和下线条件。 |
+| 安全架构 / 权限 / 租户 / 敏感数据 | `references/security-architecture.md`、`references/negative-constraints.md`、`references/production-readiness.md` | 识别资产、主体、边界和威胁，给认证授权、数据隔离、密钥、审计、测试和红线。 |
+| 生产变更 / 数据修复 / 上线评审 | `references/production-readiness.md`、`references/review-and-output-templates.md`、`references/negative-constraints.md`、`references/workflow.md` | 必须包含影响范围、dry-run、备份、灰度、监控、审计、回滚和验收标准。 |
 | 技能自检 / 模拟验收 | `references/acceptance-scenarios.md`、`references/skill-tree.md` | 使用验收场景检查一致性、自解释性、可执行性、克制性和生产意识。 |
