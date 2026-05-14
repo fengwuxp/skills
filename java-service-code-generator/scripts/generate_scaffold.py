@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import argparse
+import csv
 import dataclasses
 import datetime as dt
 import hashlib
+import io
 import os
 import re
 import sys
@@ -107,7 +109,7 @@ def find_matching_paren(text: str, open_index: int) -> int:
             if depth == 0:
                 return i
         i += 1
-    raise ValueError("Parentheses are not balanced")
+    raise ValueError("SQL 括号不匹配")
 
 
 def extract_create_table(schema_sql: str, table_name: str) -> str:
@@ -126,7 +128,7 @@ def extract_create_table(schema_sql: str, table_name: str) -> str:
         if semicolon == -1:
             semicolon = len(sql)
         return sql[match.start():semicolon + 1]
-    raise ValueError(f"CREATE TABLE for '{table_name}' was not found")
+    raise ValueError(f"未找到表 `{table_name}` 对应的 CREATE TABLE 语句")
 
 
 def unquote_identifier(value: str) -> str:
@@ -153,7 +155,7 @@ def parse_ddl(ddl: str) -> Table:
         re.IGNORECASE,
     )
     if not create:
-        raise ValueError("No CREATE TABLE statement found")
+        raise ValueError("未找到 CREATE TABLE 语句")
     table_name = unquote_identifier(create.group("name").split(".")[-1])
     body_start = create.end()
     i = find_matching_paren(ddl, body_start - 1)
@@ -194,6 +196,278 @@ def parse_ddl(ddl: str) -> Table:
     return Table(table_name, table_comment, columns, primary_keys)
 
 
+def extract_annotation_value(annotation: str, key: str) -> str:
+    match = re.search(rf"\b{re.escape(key)}\s*=\s*\"([^\"]+)\"", annotation)
+    if match:
+        return match.group(1)
+    if key == "value":
+        match = re.search(r"\(\s*\"([^\"]+)\"", annotation)
+        if match:
+            return match.group(1)
+    return ""
+
+
+def annotation_block(text: str, index: int) -> str:
+    start = text.rfind("\n\n", 0, index)
+    start = 0 if start == -1 else start + 2
+    return text[start:index]
+
+
+def sql_type_from_java_type(java_type_name: str) -> str:
+    base = java_type_name.split(".")[-1]
+    if base in {"Long", "long"}:
+        return "bigint"
+    if base in {"Integer", "int", "Short", "short", "Byte", "byte"}:
+        return "int"
+    if base in {"Boolean", "boolean"}:
+        return "tinyint(1)"
+    if base in {"BigDecimal"}:
+        return "decimal(18,2)"
+    if base in {"Float", "float"}:
+        return "float"
+    if base in {"Double", "double"}:
+        return "double"
+    if base in {"LocalDateTime", "Date", "Instant", "OffsetDateTime", "ZonedDateTime"}:
+        return "datetime"
+    if base in {"LocalDate"}:
+        return "date"
+    if base in {"LocalTime"}:
+        return "time"
+    if base in {"byte[]", "Byte[]"}:
+        return "blob"
+    return "varchar(255)"
+
+
+def java_annotation_indicates_auto_increment(annotations: str) -> bool:
+    return bool(re.search(r"KeyType\.Auto|GeneratedValue|autoIncrement\s*=\s*true", annotations, re.IGNORECASE))
+
+
+def extract_java_doc_before(text: str, index: int) -> str:
+    prefix = text[:index]
+    docs = list(re.finditer(r"/\*\*(.*?)\*/", prefix, re.DOTALL))
+    if not docs:
+        return ""
+    match = docs[-1]
+    between = prefix[match.end():]
+    between = re.sub(r"@[\w.]+(?:\([^)]*\))?", "", between, flags=re.DOTALL).strip()
+    if between:
+        return ""
+    lines = []
+    for line in match.group(1).splitlines():
+        line = re.sub(r"^\s*\*\s?", "", line).strip()
+        if line and not line.startswith("@"):
+            lines.append(line)
+    return " ".join(lines).strip()
+
+
+def parse_java_class(java_source: str, table_name: str | None = None, table_comment: str = "") -> Table:
+    class_match = re.search(r"\b(?:class|record)\s+([A-Z][A-Za-z0-9_]*)\b", java_source)
+    if not class_match:
+        raise ValueError("未找到 Java class 或 record 定义")
+    class_name = base_class_name(class_match.group(1))
+    class_annotations = annotation_block(java_source, class_match.start())
+    actual_table_comment = table_comment or extract_java_doc_before(java_source, class_match.start())
+    annotated_table = extract_annotation_value(class_annotations, "value") or extract_annotation_value(class_annotations, "name")
+    actual_table_name = table_name or annotated_table or f"t_{camel_to_snake(class_name)}"
+
+    columns: list[Column] = []
+    primary_keys: list[str] = []
+    field_pattern = re.compile(
+        r"(?P<annotations>(?:\s*@[\w.]+(?:\([^;{}]*\))?\s*)*)"
+        r"\s*(?:private|protected|public)\s+(?:final\s+)?(?P<type>[\w.<>, ?\[\]]+)\s+(?P<name>[a-zA-Z_][\w]*)\s*(?:=[^;]*)?;",
+        re.MULTILINE,
+    )
+    for match in field_pattern.finditer(java_source):
+        field_name = match.group("name")
+        if field_name in {"serialVersionUID", "TABLE_NAME"}:
+            continue
+        annotations = match.group("annotations") or ""
+        raw_type = re.sub(r"<.*>", "", match.group("type")).strip()
+        column_name = extract_annotation_value(annotations, "value") or extract_annotation_value(annotations, "name") or camel_to_snake(field_name)
+        comment = extract_java_doc_before(java_source, match.start()) or extract_annotation_value(annotations, "description")
+        primary = "@Id" in annotations or "@TableId" in annotations
+        nullable = not any(token in annotations for token in ("@NotNull", "@NotBlank", "@NotEmpty"))
+        column = Column(
+            name=column_name,
+            sql_type=sql_type_from_java_type(raw_type),
+            nullable=nullable,
+            auto_increment=primary and java_annotation_indicates_auto_increment(annotations),
+            primary=primary,
+            comment=comment,
+        )
+        column.java_name = field_name
+        columns.append(column)
+        if primary:
+            primary_keys.append(column_name)
+    if not columns:
+        raise ValueError("Java 类中未识别到可生成的字段")
+    return Table(actual_table_name, actual_table_comment, columns, primary_keys)
+
+
+def normalize_header(value: str) -> str:
+    value = value.strip().lower().replace(" ", "").replace("_", "").replace("-", "")
+    aliases = {
+        "字段名": "name",
+        "列名": "name",
+        "column": "name",
+        "columnname": "name",
+        "field": "java_name",
+        "fieldname": "java_name",
+        "属性名": "java_name",
+        "javaname": "java_name",
+        "类型": "sql_type",
+        "字段类型": "sql_type",
+        "sql类型": "sql_type",
+        "sqltype": "sql_type",
+        "数据库类型": "sql_type",
+        "javatype": "java_type",
+        "java类型": "java_type",
+        "说明": "comment",
+        "描述": "comment",
+        "备注": "comment",
+        "comment": "comment",
+        "description": "comment",
+        "是否主键": "primary",
+        "主键": "primary",
+        "pk": "primary",
+        "是否必填": "required",
+        "必填": "required",
+        "是否为空": "nullable",
+        "可空": "nullable",
+        "nullable": "nullable",
+        "默认值": "default",
+        "default": "default",
+        "是否自增": "auto_increment",
+        "自增": "auto_increment",
+        "autoincrement": "auto_increment",
+    }
+    return aliases.get(value, value)
+
+
+def truthy(value: str) -> bool:
+    return value.strip().lower() in {"1", "true", "yes", "y", "是", "是的", "主键", "必填", "非空", "自增"}
+
+
+def falsy(value: str) -> bool:
+    return value.strip().lower() in {"0", "false", "no", "n", "否", "不是", "可空", "空"}
+
+
+def read_table_rows(text: str) -> list[dict[str, str]]:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    markdown_lines = [line for line in lines if "|" in line]
+    if markdown_lines:
+        rows = []
+        for line in markdown_lines:
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if all(re.fullmatch(r":?-{3,}:?", cell.replace(" ", "")) for cell in cells):
+                continue
+            rows.append(cells)
+        if len(rows) < 2:
+            raise ValueError("字段表格至少需要表头和一行字段")
+        headers = [normalize_header(cell) for cell in rows[0]]
+        return [dict(zip(headers, row)) for row in rows[1:]]
+
+    sample = "\n".join(lines)
+    delimiter = "\t" if "\t" in sample else ","
+    reader = csv.DictReader(io.StringIO(sample), delimiter=delimiter)
+    if not reader.fieldnames:
+        raise ValueError("字段表格缺少表头")
+    reader.fieldnames = [normalize_header(name) for name in reader.fieldnames]
+    return [dict(row) for row in reader]
+
+
+def parse_field_table(text: str, table_name: str | None = None, table_comment: str = "") -> Table:
+    rows = read_table_rows(text)
+    columns: list[Column] = []
+    primary_keys: list[str] = []
+    for row in rows:
+        name = (row.get("name") or "").strip()
+        java_name = (row.get("java_name") or "").strip()
+        if not name and java_name:
+            name = camel_to_snake(java_name)
+        if not name:
+            continue
+        sql_type = (row.get("sql_type") or "").strip()
+        java_type_name = (row.get("java_type") or "").strip()
+        if not sql_type:
+            sql_type = sql_type_from_java_type(java_type_name) if java_type_name else "varchar(255)"
+        primary = truthy(row.get("primary") or "")
+        required = row.get("required") or ""
+        nullable_value = row.get("nullable") or ""
+        nullable = False if truthy(required) else True
+        if nullable_value:
+            nullable = not falsy(nullable_value)
+        column = Column(
+            name=name,
+            sql_type=sql_type,
+            nullable=nullable,
+            auto_increment=truthy(row.get("auto_increment") or ""),
+            primary=primary,
+            comment=(row.get("comment") or "").strip(),
+            default=(row.get("default") or "").strip(),
+        )
+        column.java_name = java_name or field_name_from_column(name)
+        columns.append(column)
+        if primary:
+            primary_keys.append(name)
+    if not columns:
+        raise ValueError("字段表格中未识别到有效字段")
+    if not table_name:
+        raise ValueError("字段表格输入必须通过 --table-name 指定目标表名")
+    return Table(table_name, table_comment, columns, primary_keys)
+
+
+def render_ddl(table: Table) -> str:
+    lines = [f"CREATE TABLE `{table.name}` ("]
+    definitions = []
+    for column in table.columns:
+        definition = f"  `{column.name}` {column.sql_type}"
+        definition += " NOT NULL" if column.primary or not column.nullable else " NULL"
+        if column.auto_increment:
+            definition += " AUTO_INCREMENT"
+        if column.default:
+            definition += f" DEFAULT {column.default}"
+        if column.comment:
+            escaped = column.comment.replace("'", "\\'")
+            definition += f" COMMENT '{escaped}'"
+        definitions.append(definition)
+    if table.primary_keys:
+        keys = ", ".join(f"`{key}`" for key in table.primary_keys)
+        definitions.append(f"  PRIMARY KEY ({keys})")
+    lines.append(",\n".join(definitions))
+    suffix = ""
+    if table.comment:
+        escaped_table_comment = table.comment.replace("'", "\\'")
+        suffix = f" COMMENT='{escaped_table_comment}'"
+    lines.append(f"){suffix};")
+    return "\n".join(lines) + "\n"
+
+
+def infer_input_type(text: str, source_path: Path | None = None) -> str:
+    suffix = source_path.suffix.lower() if source_path else ""
+    if suffix == ".java":
+        return "java"
+    if suffix in {".csv", ".tsv"}:
+        return "table"
+    if re.search(r"\bCREATE\s+TABLE\b", text, re.IGNORECASE):
+        return "ddl"
+    if re.search(r"\b(?:class|record)\s+[A-Z][A-Za-z0-9_]*\b", text):
+        return "java"
+    if "|" in text or "\t" in text:
+        return "table"
+    return "ddl"
+
+
+def table_from_input(text: str, input_type: str, table_name: str | None = None, table_comment: str = "") -> Table:
+    if input_type == "ddl":
+        return parse_ddl(text)
+    if input_type == "java":
+        return parse_java_class(text, table_name, table_comment)
+    if input_type == "table":
+        return parse_field_table(text, table_name, table_comment)
+    raise ValueError(f"不支持的输入类型：{input_type}")
+
+
 def snake_to_pascal(name: str) -> str:
     return "".join(part[:1].upper() + part[1:].lower() for part in re.split(r"[_\-\s]+", name) if part)
 
@@ -201,6 +475,16 @@ def snake_to_pascal(name: str) -> str:
 def snake_to_camel(name: str) -> str:
     pascal = snake_to_pascal(name)
     return pascal[:1].lower() + pascal[1:] if pascal else name
+
+
+def camel_to_snake(name: str) -> str:
+    value = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", name)
+    value = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", value)
+    return value.replace("-", "_").lower()
+
+
+def base_class_name(name: str) -> str:
+    return re.sub(r"(DTO|DO|VO|PO|BO|Entity|Request|Query)$", "", name)
 
 
 def class_name_from_table(table_name: str) -> str:
@@ -256,12 +540,12 @@ def infer_base_package(face_src: Path, impl_src: Path, business_module: str | No
             return matches[0]
     if merged:
         options = ", ".join(sorted(merged))
-        raise ValueError(f"Base package is ambiguous. Choose one of: {options}")
+        raise ValueError(f"基础包名存在歧义，请选择其中一个：{options}")
     if business_module:
         module_name = business_module.split("/")[-1]
         base = re.sub(r"-(face|impl)$", "", module_name)
         return f"com.capte.nobe.{kebab_to_camel(base)}"
-    raise ValueError("Unable to infer base package; pass --base-package")
+    raise ValueError("无法推断基础包名，请传入 --base-package")
 
 
 def resolve_module_layout(repo_root: Path, business_module: str, base_package: str | None, table_name: str | None = None) -> ModuleLayout:
@@ -303,7 +587,7 @@ def resolve_module_layout(repo_root: Path, business_module: str, base_package: s
             pairs = exact_pairs
         if len(pairs) > 1 and requested_name == root.name:
             names = ", ".join(pair[0] for pair in pairs)
-            raise ValueError(f"Business module '{business_module}' is ambiguous. Choose one of: {names}")
+            raise ValueError(f"业务模块 `{business_module}` 存在歧义，请选择其中一个：{names}")
         for _, face_module, impl_module in pairs:
             face_src = face_module / "src/main/java"
             impl_src = impl_module / "src/main/java"
@@ -312,8 +596,8 @@ def resolve_module_layout(repo_root: Path, business_module: str, base_package: s
         return layouts[0]
     if len(layouts) > 1:
         names = ", ".join(str(layout.face_src.parent.parent.parent.name) for layout in layouts)
-        raise ValueError(f"Business module '{business_module}' is ambiguous. Choose a specific module: {names}")
-    raise ValueError(f"Unable to resolve face/impl modules for business module '{business_module}'")
+        raise ValueError(f"业务模块 `{business_module}` 存在歧义，请指定具体模块：{names}")
+    raise ValueError(f"无法解析业务模块 `{business_module}` 对应的 face/impl 模块")
 
 
 def field_name_from_column(column_name: str) -> str:
@@ -385,7 +669,7 @@ def extract_sql_type(rest: str) -> str:
         result.append(token)
         i += 1
     if not result:
-        raise ValueError(f"Unable to parse SQL type from: {rest}")
+        raise ValueError(f"无法解析 SQL 类型：{rest}")
     if len(result) >= 2 and result[0].lower() == "double" and result[1].lower() == "precision":
         return "double precision"
     if len(result) >= 2 and result[0].lower() == "timestamp" and result[1].lower() in {"with", "without"}:
@@ -456,6 +740,15 @@ def java_doc(comment: str, indent: str = "    ") -> str:
     return "\n".join(lines) + "\n"
 
 
+def zh_sentence(text: str) -> str:
+    value = text.strip()
+    if not value:
+        return ""
+    if value.endswith(("。", "！", "？", ".", "!", "?")):
+        return value
+    return value + "。"
+
+
 def words_from_identifier(value: str) -> str:
     value = re.sub(r"^t_", "", value)
     value = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", value)
@@ -469,21 +762,12 @@ def human_name(name: str) -> str:
     return words[:1].upper() + words[1:] if words else name
 
 
-def lower_human_name(name: str) -> str:
-    words = words_from_identifier(name)
-    return words.lower() if words else name
-
-
 def class_desc(name: str) -> str:
     return human_name(name)
 
 
 def table_desc(table: Table, name: str) -> str:
     return table.comment.strip() if table.comment and table.comment.strip() else class_desc(name)
-
-
-def field_desc(column: Column) -> str:
-    return column.comment.strip() if column.comment and column.comment.strip() else human_name(column.java_name or column.name)
 
 
 def render_lines(lines: list[str]) -> str:
@@ -517,7 +801,7 @@ def render_entity(base_package: str, table: Table, name: str, author: str) -> st
     lines = [f"package {base_package}.dal.entities;", ""]
     lines.extend(f"import {imp};" for imp in sorted(imports))
     lines.extend(["", "/**"])
-    lines.append(f" * {table_desc(table, name)} entity.")
+    lines.append(f" * {table_desc(table, name)}实体。")
     lines.append(" *")
     lines.append(f" * @author {author}")
     lines.append(f" * @date {dt.date.today().isoformat()}")
@@ -530,7 +814,7 @@ def render_entity(base_package: str, table: Table, name: str, author: str) -> st
     lines.append("")
     for column in table.columns:
         if column.comment and column.comment.strip():
-            lines.append(java_doc(column.comment.strip() + ".", "    ").rstrip())
+            lines.append(java_doc(zh_sentence(column.comment), "    ").rstrip())
         if column.primary:
             if column.auto_increment:
                 lines.append("    @Id(keyType = KeyType.Auto)")
@@ -559,7 +843,7 @@ import com.mybatisflex.core.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * {comment} Mapper.
+ * {comment}Mapper。
  *
  * @author {author}
  * @date {today}
@@ -584,7 +868,7 @@ def render_dto(base_package: str, table: Table, name: str, author: str) -> str:
     lines = [f"package {base_package}.model.dto;", ""]
     lines.extend(f"import {imp};" for imp in sorted(imports))
     lines.extend(["", "/**"])
-    lines.append(f" * {table_desc(table, name)} DTO.")
+    lines.append(f" * {table_desc(table, name)}DTO。")
     lines.append(" *")
     lines.append(f" * @author {author}")
     lines.append(f" * @date {today}")
@@ -593,7 +877,7 @@ def render_dto(base_package: str, table: Table, name: str, author: str) -> str:
     for column in table.columns:
         description = column.comment.strip() if column.comment and column.comment.strip() else ""
         if description:
-            lines.append(java_doc(description + ".", "    ").rstrip())
+            lines.append(java_doc(zh_sentence(description), "    ").rstrip())
             lines.append(f'    @Schema(description = "{description}")')
         ann = "@NotNull" if column.primary else validation_annotation(column)
         if ann:
@@ -606,6 +890,7 @@ def render_dto(base_package: str, table: Table, name: str, author: str) -> str:
 
 def render_request(base_package: str, table: Table, name: str, author: str, kind: str) -> str:
     class_name = f"{kind}{name}Request"
+    action = "创建" if kind == "Create" else "更新"
     today = dt.date.today().isoformat()
     columns = table.columns if kind == "Update" else [c for c in table.columns if not c.primary and c.name not in {"gmt_create", "gmt_modified"}]
     imports = {
@@ -619,11 +904,11 @@ def render_request(base_package: str, table: Table, name: str, author: str, kind
     imports |= imports_for_types(columns, False)
     lines = [f"package {base_package}.model.request;", ""]
     lines.extend(f"import {imp};" for imp in sorted(imports))
-    lines.extend(["", "/**", f" * {table_desc(table, name)} {kind.lower()} request.", " *", f" * @author {author}", f" * @date {today}", " */", "@Data", f"public class {class_name} {{", ""])
+    lines.extend(["", "/**", f" * {table_desc(table, name)}{action}请求。", " *", f" * @author {author}", f" * @date {today}", " */", "@Data", f"public class {class_name} {{", ""])
     for column in columns:
         description = column.comment.strip() if column.comment and column.comment.strip() else ""
         if description:
-            lines.append(java_doc(description + ".", "    ").rstrip())
+            lines.append(java_doc(zh_sentence(description), "    ").rstrip())
             lines.append(f'    @Schema(description = "{description}")')
         ann = "@NotNull" if column.primary else ("" if kind == "Update" else validation_annotation(column))
         if ann:
@@ -642,7 +927,7 @@ def render_query(base_package: str, table: Table, name: str, author: str) -> str
     today = dt.date.today().isoformat()
     lines = [f"package {base_package}.model.query;", ""]
     lines.extend(f"import {imp};" for imp in sorted(imports))
-    lines.extend(["", "/**", f" * {table_desc(table, name)} query.", " *", f" * @author {author}", f" * @date {today}", " */", "@Data", f"public class {name}Query {{", ""])
+    lines.extend(["", "/**", f" * {table_desc(table, name)}查询条件。", " *", f" * @author {author}", f" * @date {today}", " */", "@Data", f"public class {name}Query {{", ""])
     for column in columns:
         if column.comment and column.comment.strip():
             lines.append(f'    @Schema(description = "{column.comment.strip()}")')
@@ -666,7 +951,8 @@ def render_query(base_package: str, table: Table, name: str, author: str) -> str
     return render_lines(lines)
 
 
-def render_converter(base_package: str, name: str, author: str) -> str:
+def render_converter(base_package: str, table: Table, name: str, author: str) -> str:
+    desc = table_desc(table, name)
     today = dt.date.today().isoformat()
     return f"""package {base_package}.services.mapstruct;
 
@@ -680,7 +966,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * {name} Converter.
+ * {desc}转换器。
  *
  * @author {author}
  * @date {today}
@@ -691,42 +977,42 @@ public interface {name}Converter {{
     {name}Converter INSTANCE = Mappers.getMapper({name}Converter.class);
 
     /**
-     * Convert DTO to {name} entity.
+     * DTO 转换为{desc}实体。
      *
-     * @param dto source DTO
-     * @return converted entity
+     * @param dto DTO
+     * @return {desc}实体
      */
     {name} convertToEntity({name}DTO dto);
 
     /**
-     * Convert create request to {name} entity.
+     * 创建请求转换为{desc}实体。
      *
-     * @param request create request
-     * @return converted entity
+     * @param request 创建请求
+     * @return {desc}实体
      */
     {name} convertToEntity(Create{name}Request request);
 
     /**
-     * Convert update request to {name} entity.
+     * 更新请求转换为{desc}实体。
      *
-     * @param request update request
-     * @return converted entity
+     * @param request 更新请求
+     * @return {desc}实体
      */
     {name} convertToEntity(Update{name}Request request);
 
     /**
-     * Convert {name} entity to DTO.
+     * {desc}实体转换为 DTO。
      *
-     * @param entity source entity
-     * @return converted DTO
+     * @param entity {desc}实体
+     * @return {desc}DTO
      */
     {name}DTO convertToDTO({name} entity);
 
     /**
-     * Convert {name} entity list to DTO list.
+     * {desc}实体列表转换为 DTO 列表。
      *
-     * @param entities source entity list
-     * @return converted DTO list
+     * @param entities {desc}实体列表
+     * @return {desc}DTO 列表
      */
     List<{name}DTO> convertToDTOList(List<{name}> entities);
 }}
@@ -734,8 +1020,7 @@ public interface {name}Converter {{
 
 
 def render_service(base_package: str, table: Table, name: str, author: str) -> str:
-    desc = class_desc(name)
-    lower_desc = lower_human_name(name)
+    desc = table_desc(table, name)
     today = dt.date.today().isoformat()
     return f"""package {base_package}.services;
 
@@ -749,7 +1034,7 @@ import com.wind.common.query.supports.QueryOrderField;
 import org.jspecify.annotations.NonNull;
 
 /**
- * {desc} service.
+ * {desc}服务。
  *
  * @author {author}
  * @date {today}
@@ -757,50 +1042,50 @@ import org.jspecify.annotations.NonNull;
 public interface {name}Service {{
 
     /**
-     * Create {lower_desc}.
+     * 创建{desc}。
      *
-     * @param request create request
-     * @return {lower_desc} ID
+     * @param request 创建请求
+     * @return {desc}ID
      */
     Long create{name}(@NonNull Create{name}Request request);
 
     /**
-     * Update {lower_desc}.
+     * 更新{desc}。
      *
-     * @param request update request
+     * @param request 更新请求
      */
     void update{name}(@NonNull Update{name}Request request);
 
     /**
-     * Delete {lower_desc} by ID.
+     * 根据 ID 删除{desc}。
      *
-     * @param id {lower_desc} ID
+     * @param id {desc}ID
      */
     default void delete{name}ById(@NonNull Long id) {{
         delete{name}ByIds(id);
     }}
 
     /**
-     * Delete {lower_desc} by IDs.
+     * 根据 ID 批量删除{desc}。
      *
-     * @param ids {lower_desc} IDs
+     * @param ids {desc}ID 列表
      */
     void delete{name}ByIds(@NonNull Long... ids);
 
     /**
-     * Query {lower_desc} by ID.
+     * 根据 ID 查询{desc}。
      *
-     * @param id {lower_desc} ID
-     * @return {name}DTO
+     * @param id {desc}ID
+     * @return {desc}DTO
      */
     {name}DTO query{name}ById(@NonNull Long id);
 
     /**
-     * Query {lower_desc} page.
+     * 分页查询{desc}。
      *
-     * @param query query condition
-     * @param options query options
-     * @return {lower_desc} page result
+     * @param query 查询条件
+     * @param options 查询选项
+     * @return {desc}分页结果
      */
     @NonNull
     WindPagination<{name}DTO> query{name}s(@NonNull {name}Query query, @NonNull WindQuery<? extends QueryOrderField> options);
@@ -827,14 +1112,13 @@ def render_query_conditions(table: Table, var: str) -> str:
 
 def render_service_impl(base_package: str, table: Table, name: str, author: str) -> str:
     var = name[:1].lower() + name[1:]
-    desc = class_desc(name)
-    lower_desc = lower_human_name(name)
+    desc = table_desc(table, name)
     today = dt.date.today().isoformat()
     deleted = next((c for c in table.columns if c.column_annotation and "isLogicDelete" in c.column_annotation), None)
     deleted_check = ""
     if deleted:
         getter = "get" + deleted.java_name[:1].upper() + deleted.java_name[1:] + "()"
-        deleted_check = f'\n        AssertUtils.isFalse(Boolean.TRUE.equals(result.{getter}), "{desc} does not exist or has been deleted");'
+        deleted_check = f'\n        AssertUtils.isFalse(Boolean.TRUE.equals(result.{getter}), "{desc}不存在或已删除");'
     query_conditions = render_query_conditions(table, var)
     return f"""package {base_package}.services.impl;
 
@@ -861,7 +1145,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 
 /**
- * {desc} service implementation.
+ * {desc}服务实现。
  *
  * @author {author}
  * @date {today}
@@ -874,68 +1158,68 @@ public class {name}ServiceImpl implements {name}Service {{
     private final {name}Mapper {var}Mapper;
 
     /**
-     * Create {lower_desc}.
+     * 创建{desc}。
      *
-     * @param request create request
-     * @return {lower_desc} ID
+     * @param request 创建请求
+     * @return {desc}ID
      */
     @Override
     public Long create{name}(@NonNull Create{name}Request request) {{
-        AssertUtils.notNull(request, "argument request must not null");
+        AssertUtils.notNull(request, "参数 request 不能为空");
         {name} entity = {name}Converter.INSTANCE.convertToEntity(request);
-        AssertUtils.isTrue({var}Mapper.insertSelective(entity) > 0, "Failed to create {lower_desc}");
+        AssertUtils.isTrue({var}Mapper.insertSelective(entity) > 0, "创建{desc}失败");
         return entity.getId();
     }}
 
     /**
-     * Update {lower_desc}.
+     * 更新{desc}。
      *
-     * @param request update request
+     * @param request 更新请求
      */
     @Override
     public void update{name}(@NonNull Update{name}Request request) {{
-        AssertUtils.notNull(request, "argument request must not null");
+        AssertUtils.notNull(request, "参数 request 不能为空");
         find{name}(request.getId());
         {name} entity = {name}Converter.INSTANCE.convertToEntity(request);
-        AssertUtils.isTrue({var}Mapper.update(entity) == 1, "Failed to update {lower_desc}");
+        AssertUtils.isTrue({var}Mapper.update(entity) == 1, "更新{desc}失败");
     }}
 
     /**
-     * Delete {lower_desc} by IDs.
+     * 根据 ID 批量删除{desc}。
      *
-     * @param ids {lower_desc} IDs
+     * @param ids {desc}ID 列表
      */
     @Override
     public void delete{name}ByIds(@NonNull Long... ids) {{
-        AssertUtils.notEmpty(ids, "argument ids must not empty");
+        AssertUtils.notEmpty(ids, "参数 ids 不能为空");
         int total = {var}Mapper.deleteBatchByIds(Arrays.asList(ids));
-        AssertUtils.isTrue(total == ids.length, "Failed to delete {lower_desc}");
+        AssertUtils.isTrue(total == ids.length, "删除{desc}失败");
     }}
 
     /**
-     * Query {lower_desc} by ID.
+     * 根据 ID 查询{desc}。
      *
-     * @param id {lower_desc} ID
-     * @return {name}DTO
+     * @param id {desc}ID
+     * @return {desc}DTO
      */
     @Override
     public {name}DTO query{name}ById(@NonNull Long id) {{
-        AssertUtils.notNull(id, "argument id must not null");
+        AssertUtils.notNull(id, "参数 id 不能为空");
         return {name}Converter.INSTANCE.convertToDTO(find{name}(id));
     }}
 
     /**
-     * Query {lower_desc} page.
+     * 分页查询{desc}。
      *
-     * @param query query condition
-     * @param options query options
-     * @return {lower_desc} page result
+     * @param query 查询条件
+     * @param options 查询选项
+     * @return {desc}分页结果
      */
     @Override
     @NonNull
     public WindPagination<{name}DTO> query{name}s(@NonNull {name}Query query, @NonNull WindQuery<? extends QueryOrderField> options) {{
-        AssertUtils.notNull(query, "argument query must not null");
-        AssertUtils.notNull(options, "argument options must not null");
+        AssertUtils.notNull(query, "参数 query 不能为空");
+        AssertUtils.notNull(options, "参数 options 不能为空");
         {name}NameRefs {var} = {name}NameRefs.{var};
         QueryWrapper queryWrapper = MybatisQueryHelper.from(options).select()
                 .from({var}){query_conditions};
@@ -948,15 +1232,15 @@ public class {name}ServiceImpl implements {name}Service {{
     }}
 
     /**
-     * Find {lower_desc} entity by ID.
+     * 根据 ID 查询{desc}实体。
      *
-     * @param id {lower_desc} ID
-     * @return {name} entity
+     * @param id {desc}ID
+     * @return {desc}实体
      */
     private {name} find{name}(@NonNull Long id) {{
-        AssertUtils.notNull(id, "argument id must not null");
+        AssertUtils.notNull(id, "参数 id 不能为空");
         {name} result = {var}Mapper.selectOneById(id);
-        AssertUtils.notNull(result, "{desc} does not exist");{deleted_check}
+        AssertUtils.notNull(result, "{desc}不存在");{deleted_check}
         return result;
     }}
 }}
@@ -976,34 +1260,49 @@ def write_file(path: Path, content: str, overwrite: bool) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate Nobe Java scaffold from CREATE TABLE DDL")
-    parser.add_argument("--ddl-file", help="DDL file path. Reads stdin when omitted.")
-    parser.add_argument("--schema-file", help="Schema file containing multiple CREATE TABLE statements")
-    parser.add_argument("--table-name", help="Table name to extract from --schema-file")
-    parser.add_argument("--business-module", help="Business module path/name, for example user-domain or user-domain/user-face")
-    parser.add_argument("--repo-root", default=".", help="Repository root used with --business-module")
-    parser.add_argument("--base-package", help="Base package, for example com.capte.nobe.kyc")
+    parser = argparse.ArgumentParser(description="根据 DDL、Java 类或字段表格生成 Wind/Nobe 风格 Java 模板代码")
+    parser.add_argument("--input-file", help="输入文件路径，支持 DDL/SQL、Java 类、Markdown/CSV/TSV 字段表格")
+    parser.add_argument("--input-type", choices=["auto", "ddl", "java", "table"], default="auto", help="输入类型，默认自动识别")
+    parser.add_argument("--ddl-file", help="DDL 文件路径；未传入时读取标准输入")
+    parser.add_argument("--schema-file", help="包含多个 CREATE TABLE 语句的 schema 文件")
+    parser.add_argument("--table-name", help="目标表名；schema 输入时用于提取 CREATE TABLE，Java/字段表格输入时用于指定生成表名")
+    parser.add_argument("--table-comment", default="", help="Java/字段表格输入时的表中文说明")
+    parser.add_argument("--business-module", help="业务模块路径或名称，例如 user-domain 或 user-domain/user-face")
+    parser.add_argument("--repo-root", default=".", help="配合 --business-module 使用的仓库根目录")
+    parser.add_argument("--base-package", help="基础包名，例如 com.capte.nobe.kyc")
     parser.add_argument("--author", default=os.environ.get("USER", "codex"))
     parser.add_argument("--class-name")
-    parser.add_argument("--output-dir", help="Review output directory. Used when face-src/impl-src are omitted.")
-    parser.add_argument("--face-src", help="Face module src/main/java root")
-    parser.add_argument("--impl-src", help="Impl module src/main/java root")
+    parser.add_argument("--output-dir", help="评审输出目录；未传入 face-src/impl-src 时使用")
+    parser.add_argument("--face-src", help="Face 模块 src/main/java 根目录")
+    parser.add_argument("--impl-src", help="Impl 模块 src/main/java 根目录")
+    parser.add_argument("--emit-ddl", help="将 Java 类或字段表格归一后生成 DDL 草案到指定路径")
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
 
+    source_path = None
     if args.schema_file:
         if not args.table_name:
-            parser.error("--table-name is required with --schema-file")
+            parser.error("使用 --schema-file 时必须同时传入 --table-name")
         ddl = extract_create_table(Path(args.schema_file).read_text(encoding="utf-8"), args.table_name)
+        input_type = "ddl"
+    elif args.input_file:
+        source_path = Path(args.input_file)
+        ddl = source_path.read_text(encoding="utf-8")
+        input_type = infer_input_type(ddl, source_path) if args.input_type == "auto" else args.input_type
     elif args.ddl_file:
         ddl = Path(args.ddl_file).read_text(encoding="utf-8")
+        input_type = "ddl" if args.input_type == "auto" else args.input_type
     else:
         ddl = sys.stdin.read()
-    table = parse_ddl(ddl)
+        input_type = infer_input_type(ddl) if args.input_type == "auto" else args.input_type
+    table = table_from_input(ddl, input_type, args.table_name, args.table_comment)
     name = prepare(table, args.class_name)
 
+    if args.emit_ddl:
+        write_file(Path(args.emit_ddl), render_ddl(table), args.overwrite)
+
     if bool(args.face_src) != bool(args.impl_src):
-        parser.error("--face-src and --impl-src must be supplied together")
+        parser.error("--face-src 和 --impl-src 必须同时传入")
     base_package = args.base_package
     if args.face_src:
         face_root = Path(args.face_src)
@@ -1020,12 +1319,12 @@ def main() -> int:
         face_root = out / "face"
         impl_root = out / "impl"
         if not base_package:
-            parser.error("--base-package is required when module roots cannot be inferred")
+            parser.error("无法推断模块根目录时必须传入 --base-package")
 
     files = [
         (package_path(impl_root, f"{base_package}.dal.entities") / f"{name}.java", render_entity(base_package, table, name, args.author)),
         (package_path(impl_root, f"{base_package}.dal.mapper") / f"{name}Mapper.java", render_mapper(base_package, table, name, args.author)),
-        (package_path(impl_root, f"{base_package}.services.mapstruct") / f"{name}Converter.java", render_converter(base_package, name, args.author)),
+        (package_path(impl_root, f"{base_package}.services.mapstruct") / f"{name}Converter.java", render_converter(base_package, table, name, args.author)),
         (package_path(impl_root, f"{base_package}.services.impl") / f"{name}ServiceImpl.java", render_service_impl(base_package, table, name, args.author)),
         (package_path(face_root, f"{base_package}.model.dto") / f"{name}DTO.java", render_dto(base_package, table, name, args.author)),
         (package_path(face_root, f"{base_package}.model.request") / f"Create{name}Request.java", render_request(base_package, table, name, args.author, "Create")),
@@ -1042,5 +1341,5 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except Exception as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
+        print(f"错误：{exc}", file=sys.stderr)
         raise SystemExit(1)
