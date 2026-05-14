@@ -5,6 +5,7 @@
 - 先识别项目构建工具和变更类型，再选择验证命令。
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
+- 用户显式开启受控自治开发模式（CAD Mode）时，必须先形成 OpenSpec、Harness Plan 和 Execution Grant；未确认 Execution Grant 前不得自动逐轮提交。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。
 - 仅文档、注释、说明类修改可跳过编译，但最终回复必须说明未运行编译的原因。
@@ -50,6 +51,10 @@ scope: 模块名称（如 service, controller, mapper）
 ## Git 规约
 - 【强制】提交前运行项目对应测试命令，确保相关测试通过；无法运行全量测试时必须说明原因和替代验证。
 - 【推荐】用户未明确要求执行 Git 写操作时，只做验证、审查和确认；最终告诉用户是否已经可以提交，并给出建议提交信息。`git add`、`git commit`、`git push`、创建 PR 等操作默认由用户执行。
+- 【例外】用户显式开启 CAD Mode，并在 Execution Grant 中授权自动 `git add` / `git commit` 时，可以在每轮验证通过后自动提交本轮相关变更；该授权仅限当前任务链，不包含 `git push`、创建 PR、merge、rebase、reset hard 或强制覆盖历史。
+- 【强制】CAD Mode 每轮结束后默认等待 5 秒作为人工中断窗口；若用户未打断且未触发停止条件，才自动进入下一轮。
+- 【强制】CAD Mode 中发生严重错误时必须立即停止自动推进，不得等待下一轮、不得自动提交、不得继续修复掩盖问题；严重错误包括可能造成数据破坏、资金损失、权限绕过、敏感信息泄露、生产不可用、仓库状态不可控或验证可信度丧失的问题。
+- 【强制】自动提交前必须检查 `git status` 和 `git diff`，确认只包含本轮相关文件；如发现用户已有改动混入同一文件或无法区分来源，必须暂停并请求确认。
 - 【建议】做小而美的提交，每次控制在 30 个文件内。
 - 【强制】禁止提交 .env 文件、密钥、token 到版本控制。
 - 【强制】废弃的 API 必须提供迁移指引，并在下一个主要版本中删除。

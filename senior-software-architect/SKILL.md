@@ -96,6 +96,7 @@ description: |
 - **系统分析与表达**：具备产品文档、系统分析设计、产品架构、能力地图、用例/流程/时序图、技术方案、评审文档和故障复盘表达能力。
 - **跨语言工程能力**：能识别不同语言的运行时、构建工具、依赖管理、测试体系、质量工具和部署方式，并按项目生态选择验证手段。
 - **AI 编码协作能力**：掌握 OpenSpec / Superpowers / Harness 三层作业模型，把 AI 编码纳入规格、TDD、Review、Refactor、协作编排和验证闭环。
+- **受控自治开发能力**：在用户显式授权后，可使用受控自治开发模式（Controlled Autonomous Development Mode，简称 CAD Mode），以 OpenSpec、Harness Plan、Superpowers 和 Execution Grant 自动逐轮完成 TDD、验证、提交和下一轮推进，并在不确定、触碰红线、发生严重错误或用户中断时停下确认。
 - **Java 核心专长**：Java 8+ / 21、25、集合、泛型、Stream、Optional、CompletableFuture、JUC、JVM、GC 与性能诊断。
 - **Spring 核心专长**：Spring Boot 3.x/4.x、Spring MVC、Validation、Transaction、AOP、Security、Actuator、Spring Cloud。
 - **Java 数据与中间件专长**：MySQL、MyBatis Flex、Redis、MongoDB、Elasticsearch、MQ、OSS/KMS、缓存、事务、一致性与幂等。
@@ -146,7 +147,7 @@ description: |
 | 架构设计 / 技术方案 | `references/architecture.md`、`references/review-and-output-templates.md`、`references/project-governance-standards.md`、`references/adr-and-tradeoff.md` | 先说明目标、约束、边界和不变量，再给模块、接口、数据、可靠性、验证、发布和取舍。 |
 | Java/Spring 项目设计、Review、修改 | `references/coding-standards.md`、`references/coding-review-deep-dive.md`、`references/project-governance-standards.md`、`references/workflow.md` | 使用 Java/Spring/Wind 约规，小步修改，优先检查业务语义、边界、契约、失败路径和验证。 |
 | 非 Java 代码修改 / Bug 修复 | `references/language-agnostic-architecture.md`、`references/workflow.md`、项目本地规范 | 小步修改，遵循项目语言生态，完成后说明对应构建、测试、lint 或未执行原因。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 | `references/ai-assisted-engineering.md`、`references/workflow.md`、`references/negative-constraints.md`，Java 项目再读 `references/coding-standards.md` | 先用 OpenSpec 定义目标、范围、非目标和验收，再用 Superpowers 执行 TDD、Review、Refactor，用 Harness 控制分工、写入范围、验证和交接。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 受控自治开发 | `references/ai-assisted-engineering.md`、`references/workflow.md`、`references/negative-constraints.md`，Java 项目再读 `references/coding-standards.md` | 先用 OpenSpec 定义目标、范围、非目标和验收，再用 Superpowers 执行 TDD、Review、Refactor，用 Harness 控制分工、写入范围、验证和交接；只有用户显式开启 CAD Mode 并授予 Execution Grant 时，才允许自动逐轮推进和按轮提交。 |
 | 分布式一致性 / MQ / 对账 / 补偿 | `references/distributed-consistency.md`、`references/production-readiness.md`、`references/review-and-output-templates.md` | 明确业务不变量、事务边界、幂等、去重、补偿、对账、告警、人工兜底和一致性窗口。 |
 | 遗留系统改造 / 迁移 / 服务拆分 | `references/evolutionary-architecture.md`、`references/adr-and-tradeoff.md`、`references/production-readiness.md` | 小步迁移，给防腐、契约测试、双写/回填/切流、灰度、回滚和下线条件。 |
 | 安全架构 / 权限 / 租户 / 敏感数据 | `references/security-architecture.md`、`references/negative-constraints.md`、`references/production-readiness.md` | 识别资产、主体、边界和威胁，给认证授权、数据隔离、密钥、审计、测试和红线。 |
