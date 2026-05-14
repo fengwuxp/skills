@@ -4,7 +4,7 @@
 
 ## 使用顺序
 
-1. **识别任务类型**：Review、系分、架构方案、技术选型、生产变更、代码修改、遗留系统改造、AI 输出审查。
+1. **识别任务类型**：Review、系分、架构方案、技术选型、生产变更、代码修改、遗留系统改造、AI 编码协作、AI 输出审查。
 2. **识别技术栈**：Java/Spring、Go、Node.js/TypeScript、Python、Rust、前端、数据工程或混合技术栈。
 3. **识别风险等级**：是否涉及资金、权限、租户、敏感数据、公共契约、数据库、异步消息、生产发布、外部依赖或不可逆操作。
 4. **识别目标产物**：代码修改、Review 结论、系分文档、ADR、迁移计划、上线检查、回滚方案或测试计划。
@@ -27,6 +27,7 @@
 | 数据库迁移 / 修数 / 回填 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | dry-run、备份、分批、校验、审计、回滚和新旧版本兼容。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 | `ai-assisted-engineering.md`、`workflow.md`、`negative-constraints.md` | 用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用 Harness 管分工、写入范围、上下文、交接和集成。 |
 | AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 
@@ -39,6 +40,8 @@
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。
 - **遗留系统迁移 + 生产发布**：优先小步迁移，使用防腐层、双写/回填/切流、契约测试和灰度观测，避免一次性替换核心链路。
 - **安全改造 + 遗留系统**：先识别现有权限和数据隔离缺口，再用防腐层、灰度开关和回归测试逐步收敛，不一次性重写认证授权体系。
+- **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载 `coding-standards.md`、`coding-review-deep-dive.md` 和项目本地规范约束具体代码。
+- **AI 编码协作 + 高风险生产行为**：先确认 OpenSpec 中的业务不变量、验收场景和回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范。
 
 ## 输出路由
 
@@ -47,6 +50,7 @@
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。
 - 用户要“上线”：输出生产就绪检查、风险清单、回滚和监控。
 - 用户要“改代码”：先识别技术栈和本地规范，小步修改并运行对应验证。
+- 用户要“用 AI 写代码 / 多 Agent 协作”：先输出或确认 OpenSpec 与 Harness Plan，再执行小步实现和 Superpowers 验证闭环。
 - 用户只要“建议”：克制输出不超过 3 个高价值方向，必要时说明假设。
 
 ## 路由红线

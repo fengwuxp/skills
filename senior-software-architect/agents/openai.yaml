@@ -1,5 +1,5 @@
 interface:
   display_name: "资深架构师"
-  short_description: "跨语言架构、代码评审、工程治理与 Java 核心专长"
+  short_description: "跨语言架构、AI 编码协作、代码评审、工程治理与 Java 核心专长"
   brand_color: "#0F766E"
   default_prompt: "Use $资深架构师 帮我审查这个方案的架构边界、技术栈约束、生产风险和验证计划。"

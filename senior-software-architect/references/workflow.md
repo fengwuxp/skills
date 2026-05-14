@@ -3,6 +3,8 @@
 ## 代码修改前
 
 - 先识别项目构建工具和变更类型，再选择验证命令。
+- AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
+- 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。
 - 仅文档、注释、说明类修改可跳过编译，但最终回复必须说明未运行编译的原因。
@@ -13,6 +15,7 @@
 2. **单元测试**：仅运行与修改相关的测试；Java 示例为 `mvn test -Dtest=<相关测试类>` 或 `./gradlew test --tests <相关测试类>`，其他语言使用项目已有测试脚本。
 3. **规约扫描**：使用项目已有 formatter、linter、static analysis 或规约工具；Java 项目可运行 P3C、PMD、SpotBugs 或项目约定命令。
 4. **覆盖率**（CI 阶段强制）：核心业务模块单测覆盖率 ≥ 70%；单元测试整体 ≥ 80%，集成测试 ≥ 60%，或遵循项目已有覆盖率门禁。
+5. **AI 产物复核**：AI 生成或重构的代码必须复核是否存在幻觉 API、越界修改、无主依赖、缺失测试、放宽断言、敏感信息泄露或伪造验证结果。
 
 ## 验证命令选择矩阵
 
@@ -26,6 +29,7 @@
 | 构建配置、依赖、插件、版本升级 | 干净构建 + 相关测试 + 依赖检查 | Java: `mvn clean test`；Node: `npm ci && npm test`；Python: `pip/poetry` 项目命令；Rust: `cargo test` | 新增依赖需说明必要性、维护责任、许可和安全风险。 |
 | 框架配置、starter、plugin、中间件装配 | 启动/上下文/集成测试 | Spring/Next/FastAPI/Gin 等项目约定测试命令 | 关注配置默认值、条件装配、启动失败路径和环境差异。 |
 | MQ、异步任务、批处理、定时任务 | 幂等/重试/补偿测试 + 本地集成验证 | 项目约定测试命令 | 必须覆盖重复消息、超时、失败重试和人工兜底。 |
+| AI 编码协作 / 多 Agent 修改 | OpenSpec/Harness Plan + 目标技术栈验证 + AI 产物复核 | 结合具体语言执行编译、测试、lint；Java 参考 `mvn test` / `./gradlew test` | 必须检查写入范围、分工边界、测试保护、无关修改、幻觉 API、无主依赖和交接说明。 |
 
 ## PR 提交前检查
 

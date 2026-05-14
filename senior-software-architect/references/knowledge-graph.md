@@ -17,6 +17,7 @@
 - 凤凰架构：https://icyfenix.cn/
 - 产品设计与产品文档能力：`references/product-design.md`
 - 测试驱动设计与测试资产治理：`references/testing.md`
+- AI 编码协作与三层作业模型：`references/ai-assisted-engineering.md`
 - Wind 项目族实践：`references/wind-projects-patterns.md`
 - 项目长期演进规范：`references/project-governance-standards.md`
 
@@ -42,7 +43,7 @@
 ├── 可观测性与运维
 ├── Wind 项目族实践
 ├── 项目治理规范
-└── AI 协作与规范沉淀
+└── AI 编码协作与规范沉淀
 ```
 
 ## 2. 业务知识
@@ -325,8 +326,12 @@
 - 告警：阈值、趋势、异常检测、告警收敛、值班响应。
 - 故障处理：定位、止血、恢复、复盘、永久修复。
 
-## 18. AI 协作与规范沉淀
+## 18. AI 编码协作与规范沉淀
 
+- 三层模型：OpenSpec 定标准，Superpowers 保纪律，Harness 管团队。
+- OpenSpec：把需求转为目标、范围、非目标、业务规则、接口契约、数据约束、验收场景和验证方式。
+- Superpowers：用 TDD、Review、Refactor、编码红线、测试门禁和 AI 输出审查约束实现过程。
+- Harness：管理任务拆分、Owner、写入范围、只读范围、依赖顺序、并行限制、交接说明和验证矩阵。
 - Prompt 模板：任务目标、上下文文件、修改范围、禁止行为、验证命令、输出格式。
 - Skill/AGENTS.md：沉淀项目规范、架构边界、常见坑、验证流程。
 - 自动化检查：把 Review 规则转为测试、静态扫描或脚本。
