@@ -205,7 +205,7 @@ sync_one() {
     echo "    target does not exist; it will be created"
   fi
 
-  rsync_args=(-av --delete --exclude '.DS_Store' --exclude '.idea')
+  rsync_args=(-av --delete --exclude '.DS_Store' --exclude '.idea' --exclude '__pycache__' --exclude '*.pyc')
   if [[ "${DRY_RUN}" == "true" ]]; then
     rsync_args+=(--dry-run)
   else
