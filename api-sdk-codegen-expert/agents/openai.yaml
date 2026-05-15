@@ -1,5 +1,0 @@
-interface:
-  display_name: "API SDK 代码生成专家"
-  short_description: "Java/Spring、OpenAPI 与多语言 API SDK 实际生成、配置和审查"
-  brand_color: "#2563EB"
-  default_prompt: "Use $API SDK 代码生成专家 帮我根据当前接口契约实际生成 SDK，并审查生成结果的类型、兼容性和契约一致性。"

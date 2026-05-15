@@ -46,4 +46,3 @@ git clone 代码后，通过执行 `sync-skills.sh` 可以同步技能到 Codex 
 - [senior-software-architect](./senior-software-architect) 资深架构师（Java/Spring 核心专长）
 - [payment-product-expert](./payment-product-expert) 支付产品与资金系统专家
 - [java-service-code-generator](./java-service-code-generator) Java Service 代码生成
-- [api-sdk-codegen-expert](./api-sdk-codegen-expert) API SDK 代码生成专家
