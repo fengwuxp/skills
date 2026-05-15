@@ -13,7 +13,7 @@ Environment:
   CODEX_HOME  Codex home directory. Defaults to "$HOME/.codex".
 
 Notes:
-  - Source skills are discovered from <repo-root>/skills/*/SKILL.md.
+  - Source skills are discovered from skill directories next to this script.
   - Installed skills are synced to "$CODEX_HOME/skills/<skill-dir>".
   - Existing installed skills are backed up before sync.
 USAGE
@@ -37,22 +37,18 @@ for arg in "$@"; do
 done
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-SEARCH_DIR="${SCRIPT_DIR}"
-REPO_ROOT=""
-while [[ "${SEARCH_DIR}" != "/" ]]; do
-  if [[ -d "${SEARCH_DIR}/skills" ]]; then
-    REPO_ROOT="${SEARCH_DIR}"
-    break
-  fi
-  SEARCH_DIR="$(dirname "${SEARCH_DIR}")"
-done
+REPO_ROOT="${SCRIPT_DIR}"
+SKILLS_DIR="${REPO_ROOT}"
 
-if [[ -z "${REPO_ROOT}" ]]; then
-  echo "Cannot locate repository root: no skills directory found above ${SCRIPT_DIR}" >&2
+if find "${SKILLS_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | grep -q .; then
+  :
+elif [[ -d "${SCRIPT_DIR}/skills" ]] && find "${SCRIPT_DIR}/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | grep -q .; then
+  SKILLS_DIR="${SCRIPT_DIR}/skills"
+else
+  echo "Cannot locate skills: no */SKILL.md found under ${SCRIPT_DIR} or ${SCRIPT_DIR}/skills" >&2
   exit 1
 fi
 
-SKILLS_DIR="${REPO_ROOT}/skills"
 CODEX_HOME_DIR="${CODEX_HOME:-${HOME}/.codex}"
 TARGET_ROOT="${CODEX_HOME_DIR}/skills"
 BACKUP_ROOT="${TARGET_ROOT}/.backups"

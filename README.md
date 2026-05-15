@@ -1,9 +1,58 @@
 
 # Skills
 
-## 使用指南
+本仓库用于维护可安装到 Codex 的 Skills。技能定义放在各一级目录中，详细知识、模板和方法论放在对应技能的 `references/` 中，确定性生成能力放在 `scripts/` 中。
 
-git clone 代码后，通过执行 `sync-skills.sh` 可以同步技能到 Codex 的 skills 目录，重启 Codex 后通过 `$` 调用。
+## 5 分钟上手
+
+```bash
+git clone https://github.com/fengwuxp/skills.git
+cd skills
+
+# 先预览，不写入 ~/.codex/skills
+./sync-skills.sh --dry-run all
+
+# 同步单个技能
+./sync-skills.sh senior-software-architect
+
+# 同步全部技能
+./sync-skills.sh all
+
+# 同步后重启 Codex 或开启新会话，再通过 $ 调用技能
+```
+
+仓库目录名可以自定义，不要求必须叫 `skills`。`sync-skills.sh` 会优先把脚本所在目录识别为技能仓库根，并同步同级的技能目录。
+
+如需同步到非默认 Codex Home：
+
+```bash
+CODEX_HOME=/path/to/codex-home ./sync-skills.sh --dry-run all
+CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
+```
+
+## 验证
+
+修改技能、同步脚本或代码生成器后，建议执行统一验证：
+
+```bash
+./scripts/validate.sh
+```
+
+该脚本会检查：
+
+- `sync-skills.sh` Bash 语法。
+- `SKILL.md` frontmatter 和 `agents/openai.yaml` YAML。
+- `SKILL.md` 中引用的 `references/` 文件是否存在。
+- `java-service-code-generator` Python 编译。
+- DDL、Java 类、Markdown 字段表格三组代码生成 fixture。
+- `sync-skills.sh --dry-run all`。
+- `git diff --check` 空白问题。
+
+## 同步安全
+
+`sync-skills.sh` 使用 `rsync --delete` 保持安装目录和仓库技能目录一致。正式同步前会备份已有目标技能目录到 `$CODEX_HOME/skills/.backups/`，但仍建议先执行 `--dry-run`，确认 `CODEX_HOME` 和目标技能列表正确。
+
+不要把使用者长期学习数据放在本仓库或安装后的技能目录中；技能同步可能删除安装目录里的额外文件。长期学习数据应保存在用户目录 `~/.skill-learning/`，或由 `SKILL_LEARNING_HOME` 指定的位置。
 
 ## 本地协作学习机制
 
