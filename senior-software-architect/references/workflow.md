@@ -12,7 +12,7 @@
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
 - 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，必须等待用户明确确认。
-- 用户显式开启受控自治开发模式（CAD Mode）时，必须先检查进入门禁：产品设计、系分设计、OpenSpec、Harness Plan、Superpowers 执行纪律和 Execution Grant 均已形成；任一条件不满足时，即使用户主动要求开启，也不得进入自动推进，只能提示缺口并先补齐设计与计划。CAD Mode 默认每轮记录变更摘要，不自动提交。
+- 用户显式开启受控自治开发模式（CAD Mode）时，必须先检查进入门禁：产品设计、系分设计、OpenSpec、Harness Plan、Superpowers 执行纪律和 Execution Grant 均已形成；任一条件不满足时，即使用户主动要求开启，也不得进入自动推进，只能提示缺口并先补齐设计与计划。CAD Mode 必须在 Round 0 明确 Git 策略：有 `git add` / `git commit` 权限时每轮验证后自动提交并进入下一轮；无权限或权限被拒绝时每轮记录摘要并进入下一轮，最终由用户主动提交。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。
 - 仅文档、注释、说明类修改可跳过编译，但最终回复必须说明未运行编译的原因。
@@ -60,8 +60,9 @@ scope: 模块名称（如 service, controller, mapper）
 - 【推荐】用户未明确要求执行 Git 写操作时，只做验证、审查和确认；最终告诉用户是否已经可以提交，并给出建议提交信息。`git add`、`git commit`、`git push`、创建 PR 等操作默认由用户执行。
 - 【推荐】当产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律和验证边界已经较完整时，可以建议用户进入 CAD Mode；不得把建议视为自动推进授权。
 - 【强制】CAD Mode 进入门禁不满足时，不得因用户主动要求开启而直接进入；必须明确说明缺少的产品设计、系分设计、OpenSpec、Harness Plan、Superpowers 执行纪律或 Execution Grant，并先补齐 Round 0。
-- 【强制】CAD Mode 默认不执行 `git add` / `git commit`；每轮结束只记录变更摘要、验证结果、风险和待确认项，任务完成或中断时输出建议提交信息和每轮摘要，由用户主动提交。
-- 【强制】如果用户在 CAD Mode 之外另行明确要求助手提交，必须按普通 Git 规约单独处理：先确认提交范围、运行验证、使用非交互式提交信息，并按工具权限规则请求授权。
+- 【强制】CAD Mode 的 Git 策略必须由 Execution Grant 和工具层权限共同决定：`auto_commit` 表示有权限时每轮验证后自动执行 `git add` / `git commit` 并进入下一轮；`summary_only` 表示无权限、权限被拒绝或工具层不可用时，每轮只记录摘要并进入下一轮，任务完成或中断时由用户主动提交。
+- 【强制】CAD Mode 自动提交前必须检查 `git status` 和 `git diff`，确认只包含本轮授权范围内变更，且相关验证已通过；如发现用户已有改动混入同一文件、验证失败、权限不足或 `.git` 状态异常，必须停止自动提交，切换为 `summary_only` 或暂停确认。
+- 【强制】CAD Mode 自动提交只允许 `git add` / `git commit`；不包含 `git push`、创建 PR、merge、rebase、reset hard 或强制覆盖历史。
 - 【强制】CAD Mode 每轮结束后默认等待 5 秒作为人工中断窗口；若用户未打断且未触发停止条件，才自动进入下一轮。
 - 【强制】CAD Mode 中发生严重错误时必须立即停止自动推进，不得等待下一轮、不得继续修复掩盖问题；严重错误包括可能造成数据破坏、资金损失、权限绕过、敏感信息泄露、生产不可用、仓库状态不可控或验证可信度丧失的问题。
 - 【强制】输出提交建议前必须检查 `git status` 和 `git diff`，确认建议范围只包含本任务相关文件；如发现用户已有改动混入同一文件或无法区分来源，必须暂停并请求确认。
