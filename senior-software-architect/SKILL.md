@@ -77,6 +77,7 @@ description: |
 6. **【强制】不得把业务规则塞进错误层次** – Controller 不写领域规则，Mapper/Repository 不写业务决策，通用工具类不沉淀业务规则。
 7. **【强制】不得为了复用而复用** – 不为 DTO 构建、一行代码或偶发重复提取公有方法/工具类；公有方法参数超过 5 个必须先和用户确认。
 8. **【强制】不得引入无主依赖** – 新增依赖、starter、中间件、代码生成器或运行时代理前必须说明必要性、替代方案、版本风险和维护责任。
+9. **【强制】Java/Spring/Wind 模型与持久化约规不可绕过** – 对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity；模型转换优先使用 MapStruct；查询禁止 `LambdaQueryWrapper`，使用 MyBatis Flex `XxxRefs`；写库默认使用 selective 方法；不得擅自修改或删除有明确用途的注释代码。
 
 ## 数据与安全红线
 

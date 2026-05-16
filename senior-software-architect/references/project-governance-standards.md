@@ -280,12 +280,12 @@ com.xxx.user
 │   ├── query
 │   ├── request
 │   └── vo
-├── converter / mapstruct         # 模型转换
+├── mapstruct                     # 模型转换，项目历史包名为 converter 时可保留但新代码优先 mapstruct
 ├── enums
 └── event
 ```
 
-如果项目沿用 `dal/services/model/mapstruct` 风格，可以保留，但必须保证职责不混乱。
+如果项目沿用 `dal/services/model/mapstruct` 风格，可以保留，但必须保证职责不混乱；新建模型转换优先放入 `mapstruct` 包。
 
 ### 3.5 模块命名
 
@@ -557,7 +557,7 @@ Lombok 使用规则：
 
 MapStruct 使用规则：
 
-- 转换器放在 `converter` / `mapstruct` 包或模块，命名为 `XxxConverter`，方法命名遵循 `convertToXxx`、`convertToXxxDTO`、`convertToEntity`。
+- 转换器放在 `mapstruct` 包或项目既有等价转换包中，命名为 `XxxConverter`，方法命名遵循 `convertToXxx`、`convertToXxxDTO`、`convertToEntity`。
 - MapStruct 只做模型转换，不做业务校验、数据库查询、远程调用、权限判断、状态流转和审计写入。
 - 字段名不同、语义不同、类型不同、枚举转换、默认值、空值处理、忽略字段必须显式使用 `@Mapping` 或配置说明。
 - 更新已有对象时必须明确 null 处理策略，避免把源对象的 null 意外覆盖到目标对象。
@@ -637,7 +637,7 @@ UserDetailDTO getUserDetail(Long userId);
 
 - 强制：查询禁止使用 `LambdaQueryWrapper`，优先使用生成的字段常量类，如 `XxxRefs`。
 - 一般插入使用 `insertSelective`。
-- 一般更新使用 `update` 或指定列更新，注意 null 忽略行为。
+- 一般更新默认使用 selective 方法，避免无意覆盖空值；确需更新为 null 时必须显式指定更新列。
 - 需要将字段更新为 null 时必须显式指定更新列，并处理 `gmt_modified`。
 - QueryWrapper 构造逻辑应集中在 helper 或基础服务，避免到处手写条件。
 

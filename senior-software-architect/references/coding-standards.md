@@ -127,7 +127,7 @@
 - 【强制】公共接口、公有方法、DTO/Request/Query、配置属性、扩展点必须有 Javadoc。
 - 【推荐】注释、Javadoc、测试方法说明和代码内业务解释默认使用中文，优先说明业务语义、边界、风险和示例；协议字段、标准术语、框架 API、类名、方法名、错误码和外部系统名称保持原文。
 - 【强制】注释说明“为什么这样做、边界是什么、风险是什么”，不重复代码显而易见的行为。
-- 【强制】禁止保留大段注释掉的废弃代码。
+- 【强制】禁止保留大段注释掉的废弃代码；但不得擅自修改或删除有明确用途的注释代码，例如兼容性说明、历史协议样例、待启用配置、临时降级开关说明、测试夹具说明、迁移参考或用户明确要求保留的代码片段。确需清理时，必须先询问用户并获得确认。
 - 【推荐】复杂规则应给出业务语义、输入输出、边界条件和示例。
 - 【推荐】临时方案应标注原因、影响范围、替代方案或计划清理时间。
 
@@ -196,6 +196,8 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 - 【强制】MapStruct 只负责模型转换，不承载业务规则、外部调用、数据库查询、权限判断、状态流转或审计写入。
 - 【强制】跨层模型转换优先集中在 Converter/MapStruct 层，禁止在业务代码中散落 `BeanUtils`、反射拷贝或手写重复转换。
+- 【强制】Converter 放在 `mapstruct` 包或项目既有等价转换包中，命名为 `XxxConverter`；Wind/Nobe 风格项目优先使用 `services.mapstruct` 包。
+- 【强制】MapStruct 方法命名使用 `convertToXxx`、`convertToXxxDTO`、`convertToEntity` 等能表达目标模型的名称，不使用 `to`、`build`、`copy` 这类语义过弱的方法名。
 - 【强制】有语义差异、字段重命名、枚举转换、空值策略、默认值的映射必须显式声明，并补充测试覆盖。
 - 【强制】更新已有对象时必须明确 null 处理策略，避免源对象的 null 意外覆盖目标对象。
 - 【推荐】关键转换测试覆盖字段完整性、枚举、空值、默认值、嵌套对象和集合转换。
@@ -232,11 +234,12 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 ## 12. MyBatis / MyBatis Flex 规约
 
-- 【强制】查询禁止随意使用裸字符串字段名；MyBatis Flex 项目优先使用生成的字段常量类，如 `XxxRefs`。
+- 【强制】MyBatis Flex 项目禁止使用 `LambdaQueryWrapper`；查询条件必须使用 MyBatis Flex 生成的 `XxxRefs` 常量类，或项目统一的查询 helper 基于 `XxxRefs` 构造条件。
+- 【强制】查询禁止随意使用裸字符串字段名；只有兼容历史 SQL、动态字段白名单或框架限制等特殊场景才可使用字符串字段名，并必须说明原因和保护措施。
 - 【强制】QueryWrapper 构造逻辑应集中在 helper 或基础服务，避免到处手写条件。
 - 【强制】需要将字段更新为 null 时必须显式指定更新列，并处理 `gmt_modified`。
 - 【推荐】一般插入使用 `insertSelective`。
-- 【推荐】一般更新使用 `update` 或指定列更新，注意 null 忽略行为。
+- 【推荐】一般更新默认使用 selective 方法，避免无意覆盖空值；确需将字段更新为 null 时，必须显式指定更新列、说明业务语义，并处理 `gmt_modified`。
 - 【推荐】复杂 SQL 必须说明索引、分页、排序、数据量和慢查询风险。
 
 ## 13. 分层与模型规约
@@ -264,6 +267,11 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 | VO | `XxxVO` |
 | 事件 | `XxxEvent` |
 | 转换器 | `XxxConverter` |
+
+- 【强制】Query 使用 `XxxQuery`，Request 使用 `XxxRequest`，DTO 使用 `XxxDTO`；创建、更新、保存等语义通过 `CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest` 等前缀区分。
+- 【强制】对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity、Mapper、Repository、内部状态机对象或持久化实现细节。
+- 【强制】Controller / Web API / face/api 对外契约禁止直接接收或返回 Entity；ApplicationService、DomainQueryService 对外返回 DTO/VO/Result，不把 Entity 泄露到模块边界外。
+- 【推荐】模块内部基础服务可以使用 Entity，但跨层、跨模块、跨系统传递时必须通过 Converter 转为 DTO、Request、Query、Command 或 Event。
 
 ## 14. 安全编码规约
 
