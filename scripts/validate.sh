@@ -12,6 +12,10 @@ trap cleanup EXIT
 
 echo "==> bash syntax"
 bash -n sync-skills.sh
+bash -n scripts/audit-skills.sh
+
+echo "==> skill audit"
+scripts/audit-skills.sh
 
 echo "==> skill frontmatter and agent yaml"
 ruby <<'RB'

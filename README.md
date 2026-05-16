@@ -1,7 +1,9 @@
 
 # Skills
 
-本仓库用于维护可安装到 Codex 的 Skills。技能定义放在各一级目录中，详细知识、模板和方法论放在对应技能的 `references/` 中，确定性生成能力放在 `scripts/` 中。
+本仓库用于维护可安装到 Codex 的 Skills。它不是轻量 prompt 集，而是一套可长期演进的 Agent 运行时资产库。
+
+仓库采用分层治理：`AGENTS.md` 保存每个会话都应知道的默认规则和安全边界；各技能的 `SKILL.md` 保存特定任务的入口、路由和红线；详细知识、模板和方法论放在对应技能的 `references/` 中；确定性生成、验证、同步和安全检查放在 `scripts/` 中；使用者长期学习数据只保存在用户目录 `~/.skill-learning/` 或 `SKILL_LEARNING_HOME`，不进入仓库。
 
 ## 5 分钟上手
 
@@ -41,6 +43,7 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 该脚本会检查：
 
 - `sync-skills.sh` Bash 语法。
+- Skill 脚本是否包含需要人工复核的高风险模式。
 - `SKILL.md` frontmatter 和 `agents/openai.yaml` YAML。
 - `SKILL.md` 中引用的 `references/` 文件是否存在。
 - `java-service-code-generator` Python 编译。
