@@ -1,7 +1,0 @@
-interface:
-  display_name: "支付产品与资金系统专家"
-  short_description: "支付系统、账本、清结算、VCC、风控与资金方案专家"
-  brand_color: "#2563EB"
-  default_prompt: "Use $支付产品与资金系统专家 为我设计一个包含账户、账务、对账、结算和风控规则的支付产品方案。"
-policy:
-  allow_implicit_invocation: true

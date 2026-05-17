@@ -1,4 +1,4 @@
-# 支付场景识别与方案路由
+# 支付与资金场景识别与方案路由
 
 本文用于在回答前快速判断支付问题属于哪类场景、应读取哪些参考、输出什么产物、优先检查哪些红线。它是知识路由，不是支付交易路由；不要把本文中的“路由”理解为生产系统里的通道路由规则。
 
@@ -20,16 +20,16 @@
 | --- | --- | --- |
 | 支付术语、清算/结算/备付金口径不清 | `glossary.md`, `regulatory-baseline.md` | 术语定义、主体语境、风险提示 |
 | 收单、支付订单、支付尝试、在线支付 | `payment-methodology.md`, `card-network-and-card-rails.md`, `highnote-reference-patterns.md` | 支付流程、状态机、订单/尝试模型、事件集成 |
-| 清结算、商户结算、分账分润、结算周期 | `clearing-settlement.md`, `design-checklists.md` | 清结算方案、账户科目、账务矩阵、结算规则 |
+| 清结算、商户结算、分账分润、结算周期 | `clearing-settlement.md`, `payment-design-checklists.md` | 清结算方案、账户科目、账务矩阵、结算规则 |
 | 钱包、余额、账本、资金账户、内部转账 | `formance-reference-patterns.md`, `clearing-settlement.md` | 钱包/账本模型、账户关系、账务事件矩阵 |
-| 对账、差错、长短款、批处理、资金到账 | `clearing-settlement.md`, `formance-reference-patterns.md`, `design-checklists.md` | 对账方案、差错生命周期、重跑和核销机制 |
+| 对账、差错、长短款、批处理、资金到账 | `clearing-settlement.md`, `formance-reference-patterns.md`, `payment-design-checklists.md` | 对账方案、差错生命周期、重跑和核销机制 |
 | 多 PSP/多银行/多支付方式、通道路由、降级 | `payment-channel-routing-and-operations.md` | 通道路由方案、通道健康、熔断、成本/成功率口径 |
 | 商户入网、KYB、欺诈、拒付率、准备金 | `payment-risk-fraud-and-merchant-operations.md`, `regulatory-baseline.md` | 风控方案、商户生命周期、风险规则和运营闭环 |
 | 退款、撤销、拒付、争议、证据、chargeback | `dispute-refund-and-chargeback-operations.md`, `card-network-and-card-rails.md` | 逆向交易状态机、证据模型、争议运营流程 |
 | ACH debit/credit、银行代扣、批量付款、return/NOC/reversal | `payment-rails-ach-and-bank-transfers.md`, `dispute-refund-and-chargeback-operations.md`, `payment-risk-fraud-and-merchant-operations.md` | ACH 轨道方案、授权证据、return/NOC/reversal 处理 |
 | 卡组织、银行卡收单、预授权、tokenization、PCI | `card-network-and-card-rails.md`, `dispute-refund-and-chargeback-operations.md` | 卡交易流程、授权/清算/结算、争议和 PCI 边界 |
 | 企业卡、员工卡、VCC、共享额度、一次性卡 | `virtual-card-and-vcc.md`, `highnote-reference-patterns.md`, `card-network-and-card-rails.md` | VCC 产品方案、授权控制、卡账务、证据和报表 |
-| 报表、数据共享、运营数据面、负余额监控 | `highnote-reference-patterns.md`, `design-checklists.md`, `clearing-settlement.md` | 报表模型、字段口径、异步生成、数据面边界 |
+| 报表、数据共享、运营数据面、负余额监控 | `highnote-reference-patterns.md`, `payment-design-checklists.md`, `clearing-settlement.md` | 报表模型、字段口径、异步生成、数据面边界 |
 | 跨境支付、多币种、Swift、代理行、本地清算网络 | `global-payment-emerging.md`, `regulatory-baseline.md`, `clearing-settlement.md` | 跨境资金流、币种/汇率/费用、合规待确认项 |
 | 稳定币/Web3、链上链下账本、托管钱包 | `global-payment-emerging.md`, `regulatory-baseline.md`, `formance-reference-patterns.md` | 链上链下账户映射、出入金、合规红线 |
 | AI 代理支付、自动付款、代理授权 | `global-payment-emerging.md`, `regulatory-baseline.md`, `payment-risk-fraud-and-merchant-operations.md` | 授权范围、限额、人工确认、审计和撤销机制 |
@@ -38,7 +38,7 @@
 
 - **ACH 争议 / unauthorized return**：读 `payment-rails-ach-and-bank-transfers.md` + `dispute-refund-and-chargeback-operations.md` + `payment-risk-fraud-and-merchant-operations.md`。重点输出 debit authorization evidence、账户验证、return code、NOC、reversal、retry、证据包和用户通知。
 - **VCC 争议 / 企业卡拒付**：读 `virtual-card-and-vcc.md` + `card-network-and-card-rails.md` + `dispute-refund-and-chargeback-operations.md`。重点输出 cardholder、卡、授权控制、清算、退款、争议证据和 PCI 边界。
-- **收单 + 商户结算 + 对账**：读 `payment-methodology.md` + `clearing-settlement.md` + `card-network-and-card-rails.md` + `design-checklists.md`。重点输出支付单据、清分规则、结算批次、通道对账和资金到账对账。
+- **收单 + 商户结算 + 对账**：读 `payment-methodology.md` + `clearing-settlement.md` + `card-network-and-card-rails.md` + `payment-design-checklists.md`。重点输出支付单据、清分规则、结算批次、通道对账和资金到账对账。
 - **多通道收款优化**：读 `payment-channel-routing-and-operations.md` + `payment-risk-fraud-and-merchant-operations.md` + 对应支付轨道文件。重点输出路由决策、健康熔断、成本口径、风险约束和通道对账。
 - **钱包/账本 + 清结算**：读 `formance-reference-patterns.md` + `clearing-settlement.md`。重点输出钱包层、账本层、对账层、账户科目和账务矩阵。
 - **跨境 + 多币种 + 商户结算**：读 `global-payment-emerging.md` + `regulatory-baseline.md` + `clearing-settlement.md`。重点输出法域、主体、币种、汇率、费用、清算路径和待确认项。
@@ -57,7 +57,7 @@
 ## 输出路由
 
 - **用户要方案**：输出背景、范围、角色、四流、状态机、账户/账务、对账、结算、风险、验收标准。
-- **用户要评审**：优先使用 `design-checklists.md`，按资质、资金、账务、对账、风控、隐私、外部规则时效性排序。
+- **用户要评审**：优先使用 `payment-design-checklists.md`，按资质、资金、账务、对账、风控、隐私、外部规则时效性排序。
 - **用户要账务**：输出账户科目、余额方向、业务事件、借贷分录、真实资金动作和对账来源。
 - **用户要争议/证据**：输出争议类型、原因码、证据模型、EvidenceActivityLog、EvidencePackage、脱敏和提交审计。
 - **用户要学习路径**：使用 `skill-tree.md`，按基础、产品、账务、对账、清结算、风控、架构、跨境、新支付形态分层。

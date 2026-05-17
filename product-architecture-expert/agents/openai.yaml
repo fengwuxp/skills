@@ -1,0 +1,7 @@
+interface:
+  display_name: "产品架构专家"
+  short_description: "复杂业务产品架构、PRD、能力地图、流程规则与支付资金专项"
+  brand_color: "#2563EB"
+  default_prompt: "Use $产品架构专家 帮我把这个复杂业务需求拆成产品架构方案，包含角色、能力地图、对象模型、流程、状态机、规则、数据指标、风险和验收标准。"
+policy:
+  allow_implicit_invocation: true

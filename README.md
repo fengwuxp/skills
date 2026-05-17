@@ -96,5 +96,5 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 ## AI Skills
 
 - [senior-software-architect](./senior-software-architect) 资深架构师（Java/Spring 核心专长）
-- [payment-product-expert](./payment-product-expert) 支付产品与资金系统专家
+- [product-architecture-expert](./product-architecture-expert) 产品架构专家（支付与资金系统为重点垂直能力）
 - [java-service-code-generator](./java-service-code-generator) Java Service 代码生成

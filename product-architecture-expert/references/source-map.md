@@ -1,4 +1,6 @@
-# 公开资料来源与提炼边界
+# 公开资料来源与支付专项提炼边界
+
+本文主要约束产品架构专家中支付与资金垂直分支的公开资料来源、引用边界和时效性风险。通用产品架构方法见 `product-architecture-methodology.md`，产品方案与 PRD 结构见 `product-design-and-prd.md`。
 
 ## 已参考的公开来源
 
