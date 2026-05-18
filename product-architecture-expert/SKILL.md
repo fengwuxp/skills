@@ -16,21 +16,19 @@ description: |
 
 ## 本地协作学习机制
 
-本地协作学习机制默认关闭。只有用户明确同意启用，且本地学习目录存在 `consent.md` 并标记为启用、授权当前技能或全局范围时，才读取或写入学习记录。默认目录为 `~/.skill-learning/`；如设置了 `SKILL_LEARNING_HOME`，则优先使用该目录。
-
-如果尚未启用，应先按仓库 `AGENTS.md` 中的学习时机判定算法判断当前任务是否已经出现稳定偏好、团队约规、业务背景、反复决策方式等长期沉淀价值；只有达到问询阈值，且不会打断关键任务时，才可以用一句话询问用户是否启用。用户拒绝时，不创建目录或文件，不在当前会话再次提示，除非用户主动提及。
-
-用户在当前技能场景下同意时，默认只开启 `product-architecture-expert`；只有用户明确要求“所有技能”或“全局开启”时，才对所有技能生效。启用后默认采用混合模式与协作型学习模型：记录前必须先经过候选识别、价值评分、风险门禁和动作决策；低风险常规观察可静默进入 `Pending Observations`，可能影响长期行为、跨技能复用、业务/合规/隐私边界或强约束偏好的记录必须显示确认；应按当前话题动态判断用户专业程度来校准解释深度和纠偏强度，但不得固化为全局标签；发现用户判断或设计可能存在错误、逻辑漏洞或红线风险时，必须显示提示并讨论改进方式。未经用户明确确认，不得提升为 `Confirmed Agreements`，也不得提交、上传或共享到远程。学习记录不得写入本技能目录或 Codex 的技能安装目录。
+本地协作学习机制默认关闭。只有用户明确同意启用，且 `~/.skill-learning/consent.md`（或 `SKILL_LEARNING_HOME` 指向目录中的 `consent.md`）标记为启用并授权当前技能或全局范围时，才读取或写入学习记录；未启用时仅按仓库 `AGENTS.md` 的学习时机判定算法判断是否适合询问。默认只开启当前技能 `product-architecture-expert`；跨技能、强约束、业务/合规/隐私边界或提升为 `Confirmed Agreements` 必须显示确认；学习记录不得写入本技能目录、Codex 技能安装目录或远程仓库。
 
 ## 核心道法
 
-1. **场景先于功能**：先定义用户、主体、业务目标、使用场景、成功标准和非目标，再设计功能列表。
-2. **对象先于页面**：先识别业务对象、生命周期、状态、关系和不变量，再设计表单、页面和操作入口。
-3. **流程先于按钮**：先画主流程、逆向流程、异常流程、人工处理流程和跨团队协作，再设计交互动作。
-4. **规则先于实现**：先定义计费、权限、额度、审批、状态迁移、风控、通知、报表和验收规则，再谈系统实现。
-5. **异常先于主路径**：复杂产品的质量体现在失败、撤销、补偿、争议、超时、重复、并发、灰度和回滚。
-6. **指标和审计先于上线**：产品必须可度量、可追踪、可复盘；关键操作、规则版本和数据口径必须可解释。
-7. **垂直知识服从语境**：支付、资金、风控、数据产品、SaaS、交易市场等垂直能力必须先定主体、法域、业务模式和验收方，不能套模板。
+产品架构是把业务意图、用户行为、组织协作、规则约束和系统能力，由虚向实、由散入整的过程。道法用于统摄产品判断，不替代用户研究、业务确认、合规审查和工程验证。
+
+1. **体用合一**：业务目标、用户价值和风险边界为体，PRD、流程、规则、后台、数据和验收为用；分析时可以想深，交付时必须可评审、可开发、可验证。
+2. **场景生功能**：场景先于功能，先定义用户、主体、业务目标、使用场景、成功标准和非目标，再设计功能列表、页面入口和操作按钮。
+3. **对象定边界**：对象先于页面，先识别业务对象、生命周期、状态、关系、不变量和权限边界，再设计表单、字段、操作和数据口径。
+4. **流程载规则**：流程先于按钮，规则先于实现；主流程、逆向流程、异常流程、人工流程、状态迁移、计费、额度、审批、风控、通知和验收规则必须成体系。
+5. **阴阳求平衡**：产品取舍多为成对张力：增长与风控、效率与审计、自动化与人工兜底、体验与合规、通用能力与场景清晰；不可偏执一端，应在业务语境中求中道。
+6. **整体观与可追溯**：产品不是孤立功能，而是用户、商户、平台、运营、风控、财务、法务、外部机构和系统能力共同作用的整体；关键操作、规则版本、资金/数据口径、指标和审计必须可解释、可追踪、可复盘。
+7. **垂直知识服从语境**：支付、资金、风控、数据产品、SaaS、交易市场等垂直能力必须先定主体、法域、业务模式、资金/数据归属和验收方；局部最佳实践不得破坏整体业务闭环。
 
 ## 工作原则
 
@@ -65,7 +63,7 @@ description: |
 
 当场景涉及支付、账户、账本、清结算、对账、商户结算、分账分润、通道路由、银行卡/卡组织、ACH/银行转账、收单/发卡、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化时，再读取 `references/payment-scenario-routing.md` 进入支付与资金专项。
 
-不要把知识路由、产品功能路由、生产系统通道路由和资金清结算路由混为一谈。用户问题涉及多场景时，按业务目标、资金风险、合规风险和交付目标分层回答，不要一次加载所有参考。
+不要把知识路由、产品功能路由、生产系统通道路由和资金清结算路由混为一谈。用户问题涉及多场景时，按业务目标、资金风险、合规风险和交付目标分层回答，不一次加载所有 reference。
 
 ## 核心工作法
 
@@ -92,28 +90,36 @@ description: |
 - 运营后台方案：查询、审核、复核、调账/修正、导出、权限、日志、告警、工单和审计。
 - 支付与资金方案：账户模型、账务矩阵、资金流、清结算、对账、结算、风控、争议、报表和金融红线。
 
-## 必读参考
+## 参考路由
 
-- `references/product-scenario-routing.md`：产品架构场景识别与参考路由；用于判断是否为通用产品架构、PRD、业务流程、规则矩阵、运营后台、数据指标或支付专项。
-- `references/product-architecture-methodology.md`：产品架构方法论，覆盖目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
+通用产品架构：
+
+- `references/product-scenario-routing.md`：产品场景识别与最小参考集选择。
+- `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。
-- `references/product-prd-template.md`：产品 PRD 文档模板；当用户要求产出 PRD、产品需求文档、评审文档或模板时读取。
-- `references/skill-tree.md`：产品架构专家技能树；用于能力评估、学习路径、岗位画像和复杂任务拆解。
-- `references/payment-scenario-routing.md`：支付与资金场景识别与方案路由；当场景涉及支付、账户、账本、清结算、对账、VCC、ACH、卡组织、风控或争议时读取。
-- `references/regulatory-baseline.md`：金融业务监管、安全、数据、反洗钱、客户资金与新支付形态基线；涉及真实资金时先读。
-- `references/glossary.md`：支付与资金术语口径，覆盖清算/结算、日期口径、在途、长短款、挂账、冲正、退款等。
-- `references/payment-methodology.md`：支付产品分析方法、场景拆解、产品文档产出模式。
-- `references/clearing-settlement.md`：内部清分/清算、结算、清结算、对账、在途、账务和结算系统设计。
-- `references/payment-design-checklists.md`：支付 PRD、资金方案、账务矩阵、对账方案和风险评审清单。
-- `references/payment-channel-routing-and-operations.md`：支付通道、支付路由、通道账户、降级熔断、成本优化、通道对账和配置治理。
-- `references/payment-risk-fraud-and-merchant-operations.md`：交易风控、欺诈治理、商户入网/KYB、风险评级、准备金、ACH return、拒付率和运营证据闭环。
-- `references/dispute-refund-and-chargeback-operations.md`：退款、撤销、冲正、return、争议、拒付、证据提交、商户准备金、负余额和逆向账务。
-- `references/payment-rails-ach-and-bank-transfers.md`：ACH 与银行转账轨道参考。
-- `references/card-network-and-card-rails.md`：卡组织与卡支付轨道参考。
-- `references/virtual-card-and-vcc.md`：VCC 与虚拟卡产品参考。
-- `references/formance-reference-patterns.md`：Formance Wallets、Ledger、Reconciliation、Connectivity、Numscript、Flows 的公开设计参考。
-- `references/highnote-reference-patterns.md`：Highnote 的公开设计参考。
-- `references/global-payment-emerging.md`：银行核心、全球支付清算、跨境、稳定币、Web3 和 AI 代理支付补充。
+- `references/product-prd-template.md`：PRD、产品需求文档、评审文档或模板。
+- `references/skill-tree.md`：能力评估、学习路径、岗位画像和复杂任务拆解。
+
+支付与资金专项：
+
+- `references/payment-scenario-routing.md`：支付与资金场景识别和专项路由。
+- `references/regulatory-baseline.md`：金融监管、安全、数据、AML、客户资金和新支付形态基线。
+- `references/glossary.md`：支付与资金术语口径。
+- `references/payment-methodology.md`：支付产品分析方法和产品文档模式。
+- `references/clearing-settlement.md`：清分、清算、结算、对账、账务和结算系统设计。
+- `references/payment-design-checklists.md`：支付 PRD、资金方案、账务矩阵、对账和风险评审清单。
+- `references/payment-channel-routing-and-operations.md`：支付通道、路由、降级熔断、成本和通道对账。
+- `references/payment-risk-fraud-and-merchant-operations.md`：交易风控、欺诈、商户运营、ACH return 和拒付率。
+- `references/dispute-refund-and-chargeback-operations.md`：退款、撤销、冲正、return、争议、拒付和证据闭环。
+- `references/payment-rails-ach-and-bank-transfers.md`：ACH 与银行转账轨道。
+- `references/card-network-and-card-rails.md`：卡组织与卡支付轨道。
+- `references/virtual-card-and-vcc.md`：VCC 与虚拟卡产品。
+
+公开参考与边界：
+
+- `references/formance-reference-patterns.md`：Formance 公开设计参考。
+- `references/highnote-reference-patterns.md`：Highnote 公开设计参考。
+- `references/global-payment-emerging.md`：银行核心、全球支付、跨境、稳定币、Web3 和 AI 代理支付补充。
 - `references/source-map.md`：公开资料来源、提炼边界和版权注意事项。
 
 ## 不适用场景
