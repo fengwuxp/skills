@@ -326,6 +326,38 @@ public abstract class AbstractServiceTest {
         }
     }
 }
+
+@Configuration
+public class TestMockRedissonConfiguration {
+
+    private static final RedisServer redisServer;
+
+    static {
+        try {
+            redisServer = new RedisServer(6379);
+            redisServer.start();
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (redisServer.isActive()) {
+                        try {
+                            redisServer.stop();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        return Redisson.create();
+    }
+}
 ```
 
 服务测试子类示例：
