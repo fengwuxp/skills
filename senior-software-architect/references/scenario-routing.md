@@ -4,7 +4,7 @@
 
 ## 使用顺序
 
-1. **识别任务类型**：Review、系分、架构方案、技术选型、生产变更、代码修改、遗留系统改造、AI 编码协作、AI 输出审查。
+1. **识别任务类型**：Review、系分、架构方案、技术选型、写测试、补测试、加测试、按 TDD 推进、测试选择、测试分层、生产变更、代码修改、遗留系统改造、AI 编码协作、AI 输出审查。
 2. **识别技术栈**：Java/Spring、Go、Node.js/TypeScript、Python、Rust、前端、数据工程或混合技术栈。
 3. **识别风险等级**：是否涉及资金、权限、租户、敏感数据、公共契约、数据库、异步消息、生产发布、外部依赖或不可逆操作。
 4. **识别目标产物**：代码修改、Review 结论、系分文档、ADR、迁移计划、上线检查、回滚方案或测试计划。
@@ -17,6 +17,7 @@
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
 | 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先识别本地生态，再迁移通用原则，不强套 Java/Spring 规则。 |
 | Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | Java 约规、空值契约、Lombok/MapStruct、测试与验证；涉及模块/服务/API/DB 综合治理时再读 `project-governance-standards.md`。 |
+| 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 | `testing.md`，Java 项目再读 `coding-standards.md` | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、保护对象、风险来源、真实链路和替身边界；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
 | 代码 Review / PR Review | `review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 问题优先，按 P0-P3 给文件行号、风险、证据、建议和验证。 |
 | 系统分析设计 / 系分 | `system-analysis-design.md`、`architecture.md`、`production-readiness.md` | 背景、目标、概要、详细、非功能、研发计划、评审清单。 |
 | 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件。 |
@@ -37,6 +38,7 @@
 - **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
 - **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再回到具体强规约。
+- **DDD/分层架构 + 写测试/TDD**：先用 `testing.md` 第 2 节选择测试形态，再用第 6 节定位保护事实和测试层级；只有命中 Domain Service / Policy / Specification、Application Service / Use Case、Repository / DAO / Mapper 或第 12 节专项条件时，再读 `testing-practices.md`。
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。
 - **遗留系统迁移 + 生产发布**：优先小步迁移，使用防腐层、双写/回填/切流、契约测试和灰度观测，避免一次性替换核心链路。
 - **安全改造 + 遗留系统**：先识别现有权限和数据隔离缺口，再用防腐层、灰度开关和回归测试逐步收敛，不一次性重写认证授权体系。
@@ -47,6 +49,7 @@
 
 - 用户要“审查”：输出问题优先的 Review，给严重级别、证据、建议和验证。
 - 用户要“设计”：输出架构方案或系分结构，必须包含目标、非目标、边界、数据、可靠性、安全、验证和发布。
+- 用户要“写测试 / 补测试 / 加测试 / 按 TDD 推进”：先输出或执行测试选择，说明测试层级、真实链路、替身边界、断言事实和验证命令；TDD 场景先构造失败测试，再推进实现。
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。
 - 用户要“上线”：输出生产就绪检查、风险清单、回滚和监控。
 - 用户要“改代码”：先识别技术栈和本地规范，小步修改并运行对应验证。

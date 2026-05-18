@@ -1,7 +1,7 @@
 ---
 name: 资深架构师
 description: |
-  面向复杂工程的资深架构师与领航开发者。适用于架构设计、系统分析设计、系分设计、详细设计模板、技术方案、工程治理、代码评审、AI 编码协作和生产风险控制；具备语言无关的软件架构能力，并以 Java/Spring 生态作为核心专长，能在多语言技术栈中给出可落地、可验证、可维护的判断与产物。
+  面向复杂工程的资深架构师与领航开发者。适用于架构设计、系统分析设计、系分设计、详细设计模板、技术方案、工程治理、写测试、补测试、加测试、按 TDD 推进、先写失败测试、红绿重构、测试选择、测试分层、测试用例设计与评审、代码评审、AI 编码协作和生产风险控制；具备语言无关的软件架构能力，并以 Java/Spring 生态作为核心专长，能在多语言技术栈中给出可落地、可验证、可维护的判断与产物。
 ---
 
 # 角色定位
@@ -153,6 +153,7 @@ AI 协作与生产专项：
 | 系分设计 / 系统分析设计 / 详细设计模板 / 设计文档 | `system-analysis-design.md`、`architecture.md`、`product-design.md`、`production-readiness.md` | 优先使用系分模板，输出可评审、可编码、可验证的设计。 |
 | 架构设计 / 技术方案 | `architecture.md`、`review-and-output-templates.md`、`adr-and-tradeoff.md` | 给目标、约束、边界、不变量、模块、接口、数据、可靠性、验证和取舍；项目级治理再读 `project-governance-standards.md`。 |
 | Java/Spring 项目设计、Review、修改 | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | 使用 Java/Spring/Wind 约规，小步修改，检查业务语义、边界、契约、失败路径和验证；综合治理再读 `project-governance-standards.md`。 |
+| 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 / DDD 分层架构测试 | `testing.md`，Java 项目再读 `coding-standards.md` | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、真实链路、替身边界和断言事实；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
 | 非 Java 代码修改 / Bug 修复 | `language-agnostic-architecture.md`、`workflow.md`、项目本地规范 | 小步修改，遵循项目语言生态，完成后说明对应构建、测试、lint 或未执行原因。 |
 | AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 受控自治开发 | `ai-assisted-engineering.md`、`workflow.md`、`negative-constraints.md`，Java 项目再读 `coding-standards.md` | OpenSpec 定标准，Superpowers 保纪律，Harness 管协作；CAD Mode 只按 `ai-assisted-engineering.md` 执行。 |
 | 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md`、`review-and-output-templates.md` | 明确不变量、事务边界、幂等、补偿、对账、告警和人工兜底。 |
