@@ -74,6 +74,134 @@ Wind 实践提炼：
 - `IpAccessControlFilterTests` 直接测试过滤器，不启动 Web 容器，断言状态码和错误消息。
 - `RestfulApiRespFactoryTests` 通过测试消息源和 Locale 验证统一响应与国际化。
 
+Controller 测试基类与子类模板：
+
+```java
+@ContextConfiguration(classes = {AbstractControllerTest.TestConfig.class})
+@SpringJUnitConfig
+@WebAppConfiguration
+@TestPropertySource(properties = "spring.cloud.nacos.config.enabled=false")
+public abstract class AbstractControllerTest {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    protected MockMvc mvc;
+
+    @BeforeEach
+    void setup() {
+        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    @Configuration
+    static class TestConfig {
+    }
+}
+
+@Import(ExampleControllerTests.TestConfig.class)
+class ExampleControllerTests extends AbstractControllerTest {
+
+    @Autowired
+    private ExampleApplicationService exampleApplicationService;
+
+    /**
+     * 场景：创建 Example。
+     * 输入：合法 JSON 请求、Header 和查询参数。
+     * 行为：调用 Controller 创建 Example。
+     * 输出：HTTP 200，响应包含业务 ID。
+     * 红线：请求参数不能丢失，Controller 不直接写业务规则。
+     */
+    @Test
+    void testCreateExample() throws Exception {
+        Mockito.when(exampleApplicationService.createExample(Mockito.any()))
+                .thenReturn(new ExampleDTO("example-id", "created"));
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/v1/examples/{accountId}/items",
+                                "example-account")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.HOST, "localhost")
+                        .header("X-Request-Id", "request-001")
+                        .queryParam("source", "example")
+                        .content("""
+                                {
+                                  "name": "demo",
+                                  "amount": 100
+                                }
+                                """))
+                .andReturn();
+
+        Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
+        Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("example-id"));
+    }
+
+    /**
+     * 场景：请求参数不合法。
+     * 输入：缺少必填字段的 JSON 请求。
+     * 行为：触发参数绑定和校验。
+     * 输出：HTTP 4xx，响应包含错误信息。
+     * 红线：非法请求不能进入业务服务。
+     */
+    @Test
+    void testRejectInvalidExampleRequest() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/v1/examples/{accountId}/items",
+                                "example-account")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content("{}"))
+                .andReturn();
+
+        Assertions.assertTrue(mvcResult.getResponse().getStatus() >= 400);
+        Mockito.verifyNoInteractions(exampleApplicationService);
+    }
+
+    /**
+     * 场景：查询 Example 详情。
+     * 输入：路径参数和查询参数。
+     * 行为：调用 Controller 查询详情。
+     * 输出：HTTP 200，响应为指定 ID 的详情。
+     * 红线：不能串账号、不能忽略路径参数。
+     */
+    @Test
+    void testGetExampleDetail() throws Exception {
+        Mockito.when(exampleApplicationService.getExampleDetail("example-account", "example-id", "zh-CN"))
+                .thenReturn(new ExampleDTO("example-id", "created"));
+
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/api/v1/examples/{accountId}/items/{exampleId}",
+                                "example-account", "example-id")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .queryParam("locale", "zh-CN"))
+                .andReturn();
+
+        Assertions.assertEquals(200, mvcResult.getResponse().getStatus());
+        Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("example-id"));
+    }
+
+    @Configuration
+    @Import(ExampleController.class)
+    static class TestConfig {
+
+        @Bean
+        public ExampleApplicationService exampleApplicationService() {
+            return Mockito.mock(ExampleApplicationService.class);
+        }
+
+        @Bean
+        public I18nMetadataService i18nMetadataService() {
+            return Mockito.mock(I18nMetadataService.class);
+        }
+    }
+}
+```
+
+使用要点：
+
+- 基类负责 Web 测试底座：`WebApplicationContext`、`MockMvc` 构建、测试属性和通用 Web 配置。
+- 子类负责目标 Controller、必要配置和外部依赖替身；不要把全量业务 Bean、远程客户端、MQ、Redis、Nacos 等带进 Controller 测试。
+- `@WebMvcTest` 适合验证单个或少量 Controller 的 HTTP 行为；如果使用 `@WebMvcTest`，不要再混入会扫描全应用的 `@SpringBootApplication(scanBasePackages = ...)`。
+- 使用 `@ContextConfiguration` 基类时，子类优先通过精确 `@Import(ExampleController.class)` 装配目标 Controller；确需 `scanBasePackages` 时使用真实基础包名，不使用通配符表达式。
+- 每个测试方法上方写清场景、输入、行为、输出和红线；不要把说明塞进方法体内部。
+- 断言至少覆盖 HTTP 状态、响应内容、错误码/错误消息、Header、路径参数、查询参数、请求体绑定和校验结果；不要只断言响应非空。
+- Controller 测试可以 mock 应用服务或外部端口，但不能 mock 掉参数绑定、校验、序列化、异常处理和安全拦截这些 HTTP 层语义。
+
 ### 1.4 Spring 应用服务流程测试
 
 适用对象：
@@ -90,6 +218,193 @@ Wind 实践提炼：
 - 只替换第三方通道、远程 HTTP、MQ、Redis、时间、ID 生成器等外部依赖或测试基础设施。
 - 避免手工 new 内部链路，避免绕过真实 Spring 装配、事务、AOP、条件 Bean 和配置约束。
 - 只有需要验证完整自动装配、切面、全局配置或跨模块集成时，才升级到更重的 Spring Boot 测试。
+
+Spring Boot 4.x 服务测试基类最佳实践：
+
+- 可参考 `wind-integration` 的 `AbstractServiceTest`，把服务测试公共基础设施沉淀为抽象基类，面向 Spring Boot 4.x、H2、MyBatis Flex、事务、缓存、锁、国际化、审计和测试上下文统一治理。
+- 基类负责“测试运行底座”，不负责“业务测试目标”：统一 `@SpringJUnitConfig`、`@ImportAutoConfiguration`、`@TestPropertySource`、`@Transactional(rollbackFor = Exception.class)`、`@EnableAspectJAutoProxy`、数据源、事务管理、SQL 初始化、`JdbcTemplate`、测试锁、测试缓存、测试事件发布器和基础上下文工具。
+- H2 数据源建议在统一 `DataSource` Bean 创建时执行 `H2FunctionInitializer.initialize(dataSource)`，保证 SQL 初始化、Mapper 测试和 Service 流程测试都能使用 MySQL 兼容函数。
+- MyBatis Flex 测试配置可集中处理 `@MapperScan`、`ConfigurationCustomizer`、`LocaleTypeHandler`、SQL 审计日志、字段行为函数和测试态加解密 TypeHandler；这些是测试基础设施，不应散落到每个用例。
+- 需要租户、用户、区域、语言、审计上下文时，在基类 `@PostConstruct` 建立，在 `@PreDestroy` 清理；禁止让线程上下文、租户 ID、静态工具类或审计配置污染其他测试。
+- 对 `SpringApplicationContextUtils`、`SpringEventPublishUtils` 这类静态工具的测试态初始化，应集中在基类或测试配置中，并明确这是为了兼容历史基础设施，不作为新代码设计范式。
+- 基类可以提供 `LockFactory`、`LockTemplate`、`CacheManager`、`LoggingMeterRegistry`、`WindMessageSourceProperties` 等稳定测试基础设施；外部通道、远程 HTTP、MQ、Redis、第三方 SDK 仍由子类或专项测试配置显式替换。
+- 子类结合 `@ContextConfiguration(classes = ...)`、`@Import` 或测试专用配置类，精确实例化测试目标类需要的内部依赖；不在基类中默认扫描整个业务包，不把所有业务 Bean 都塞进公共上下文。
+- 子类仍必须按业务行为断言状态、落库事实、事务回滚、幂等、副作用和输出结果，不能因为继承了基类就只验证“调用成功”。
+
+服务测试基类结构示例：
+
+```java
+@SpringJUnitConfig
+@Import(AbstractServiceTest.TestConfig.class)
+@ImportAutoConfiguration({
+        DataSourceTransactionManagerAutoConfiguration.class,
+        JdbcTemplateAutoConfiguration.class,
+        DataSourceInitializationAutoConfiguration.class,
+        AbstractServiceTest.H2InitializationAutoConfiguration.class,
+        MybatisFlexAutoConfiguration.class
+})
+@Transactional(rollbackFor = Exception.class)
+@TestPropertySource(locations = {"classpath:application-h2.properties", "classpath:application-test.properties"})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+public abstract class AbstractServiceTest {
+
+    @Configuration
+    @Import({MybatisTestConfiguration.class, TestMockRedissonConfiguration.class})
+    static class TestConfig {
+
+        @Autowired
+        private ApplicationContext applicationContext;
+
+        @PostConstruct
+        public void init() {
+            ThreadContextTenantIdHolder.setTenantId(1L);
+            new SpringApplicationContextUtils().setApplicationContext(applicationContext);
+            mockPublishEvent();
+            AuditManager.setAuditEnable(true);
+        }
+
+        @PreDestroy
+        public void stop() {
+            ThreadContextTenantIdHolder.remove();
+        }
+
+        @Bean
+        public LockFactory lockFactory() {
+            return new JdkLockFactory();
+        }
+
+        @Bean
+        @Primary
+        public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+            return new JdbcTemplate(dataSource);
+        }
+
+        @Bean
+        public CacheManager cacheManager() {
+            return new CaffeineCacheManager();
+        }
+    }
+
+    @AllArgsConstructor
+    @AutoConfiguration
+    @EnableConfigurationProperties({DataSourceProperties.class, SqlInitializationProperties.class})
+    public static class H2InitializationAutoConfiguration {
+
+        @Bean
+        public DataSource dataSource(DataSourceProperties properties) {
+            properties.setType(HikariDataSource.class);
+            DataSource dataSource = properties.initializeDataSourceBuilder().build();
+            H2FunctionInitializer.initialize(dataSource);
+            return dataSource;
+        }
+    }
+
+    @EnableTransactionManagement
+    @Configuration
+    @MapperScan({"com.wind.**.dal.mapper"})
+    public static class MybatisTestConfiguration {
+
+        static {
+            AbstractEncryptBaseTypeHandler.setTextEncryptor(new TextEncryptor() {
+                @Override
+                public String encrypt(String text) {
+                    return text;
+                }
+
+                @Override
+                public String decrypt(String encryptedText) {
+                    return encryptedText;
+                }
+            });
+            QueryColumnBehavior.setIgnoreFunction(MybatisFlexQueryBehaviorFuncs::ignoreFunction);
+        }
+
+        @Bean
+        public ConfigurationCustomizer configurationCustomizer() {
+            return configuration -> configuration.getTypeHandlerRegistry()
+                    .register(Locale.class, LocaleTypeHandler.class);
+        }
+    }
+}
+```
+
+服务测试子类示例：
+
+```java
+@ContextConfiguration(classes = ExampleMessageServiceTests.TestConfig.class)
+class ExampleMessageServiceTests extends AbstractServiceTest {
+
+    @Autowired
+    private ExampleMessageService exampleMessageService;
+
+    private ExampleMessageDTO exampleMessage;
+
+    @BeforeEach
+    void setup() {
+        ExampleMessage message = ExampleMessage.builder()
+                .id(RandomStringUtils.secure().nextAlphanumeric(12))
+                .sender(ExampleMessageActor.ofUser(RandomStringUtils.secure().nextAlphanumeric(12)))
+                .body(List.of(ExampleMessageContent.of(ExampleMessageContentType.TEXT, "hello world")))
+                .gmtCreate(LocalDateTime.now())
+                .sessionId(RandomStringUtils.secure().nextAlphanumeric(12))
+                .sequenceId(RandomUtils.secure().randomLong())
+                .build();
+        exampleMessage = exampleMessageService.getExampleMessageById(exampleMessageService.createExampleMessage(message));
+    }
+
+    /**
+     * 场景：更新消息状态。
+     * 输入：已存在的消息 ID，目标状态为 UNREAD。
+     * 行为：调用服务更新消息状态。
+     * 输出：再次查询时状态已变更为 UNREAD。
+     * 红线：不能更新不存在的消息，不能影响其他会话消息。
+     */
+    @Test
+    void testUpdateExampleMessageState() {
+        exampleMessageService.updateExampleMessageState(exampleMessage.getId(), ExampleMessageState.UNREAD);
+
+        ExampleMessageDTO current = exampleMessageService.getExampleMessageById(exampleMessage.getId());
+
+        Assertions.assertEquals(ExampleMessageState.UNREAD, current.getState());
+    }
+
+    /**
+     * 场景：撤销消息。
+     * 输入：已存在的消息 ID、发送者 ID 和撤销时间。
+     * 行为：调用服务撤销消息。
+     * 输出：再次查询时状态为 REVOKED。
+     * 红线：非发送者不能撤销，超过撤销窗口不能撤销。
+     */
+    @Test
+    void testRevokeExampleMessage() {
+        exampleMessageService.revokeExampleMessage(exampleMessage.getId(), exampleMessage.getSenderId(), LocalDateTime.now());
+
+        ExampleMessageDTO current = exampleMessageService.getExampleMessageById(exampleMessage.getId());
+
+        Assertions.assertEquals(ExampleMessageState.REVOKED, current.getState());
+    }
+
+    /**
+     * 场景：查询会话最新消息。
+     * 输入：已存在消息所属的会话 ID。
+     * 行为：调用服务查询会话最新消息。
+     * 输出：返回该会话最新消息。
+     * 红线：不能串到其他会话，不能返回已物理删除数据。
+     */
+    @Test
+    void testFindSessionLatestExampleMessage() {
+        ExampleMessageDTO latestMessage = exampleMessageService.findSessionLatestExampleMessage(exampleMessage.getSessionId());
+
+        Assertions.assertNotNull(latestMessage);
+        Assertions.assertEquals(exampleMessage.getSessionId(), latestMessage.getSessionId());
+    }
+
+    @Configuration
+    @Import({ExampleMessageServiceImpl.class})
+    static class TestConfig {
+    }
+}
+```
 
 流程测试必须断言：
 
