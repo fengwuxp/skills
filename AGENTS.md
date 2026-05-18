@@ -10,6 +10,26 @@
 - 更新技能时同步检查 `agents/openai.yaml` 是否仍匹配技能定位。
 - 修改后至少执行 YAML、引用和同步 dry-run 等轻量校验。
 
+## Skill 三级加载机制
+
+Skill 必须按渐进式加载设计，不得把所有知识一次性塞进 Agent 上下文。Agent 的上下文窗口有限，Skill 维护者必须让 Agent 先用轻量元数据识别技能，再在技能触发后读取正文，只有需要细节时才读取 bundled resources。
+
+| 层级 | 内容 | 规范 | 设计要求 |
+| --- | --- | --- | --- |
+| Level 1：Metadata | `SKILL.md` frontmatter 中的 `name` + `description`，以及与其一致的 `agents/openai.yaml` 展示信息。 | 约 100 词，始终在上下文中。 | 用于触发识别，必须短、准、覆盖核心场景；不得放长流程、细节清单、模板或领域知识。 |
+| Level 2：Skill Body | `SKILL.md` 正文。 | 建议 500 行以内，Skill 触发后加载。 | 承载角色定位、核心工作流、场景路由、何时读取 reference、必要红线和不适用场景；不得复制 `references/` 的长知识。 |
+| Level 3：Bundled Resources | `references/`、`scripts/`、`assets/`。 | 无固定大小限制，按需读取或执行。 | 承载详细方法论、模板、清单、示例、确定性脚本和输出资产；必须由 `SKILL.md` 明确读取时机。 |
+
+三级加载落地规则：
+
+- 新建或重构 Skill 时，先判断内容属于 Level 1、Level 2 还是 Level 3，再决定写入位置。
+- `description` 只服务触发和识别，不承担完整说明书职责；过长、过窄或关键词堆砌都会降低触发质量。
+- `SKILL.md` 只保留 Agent 执行当前任务必须立即知道的内容；超过 500 行或出现多个专题细节时，应拆入 `references/`。
+- `references/` 必须一层直连，可由 `SKILL.md` 找到；长文件应在开头说明使用时机或目录，方便按需读取。
+- 可确定、可重复、容易写错或需要真实解析/生成/校验的能力，应优先沉淀到 `scripts/`，而不是写成长段自然语言步骤。
+- 同一规则只保留一个权威来源；其他层只做摘要和链接，避免 Level 2 与 Level 3 内容漂移。
+- 审查 Skill 时必须检查三级加载是否成立：Metadata 能否触发、Skill Body 是否可执行、Bundled Resources 是否按需可发现。
+
 ## Agent 运行时分层
 
 本仓库中的 Skill 不是一次性提示词，而是 Agent 运行时资产的一部分。维护技能时必须先判断经验、规则或工具应该进入哪一层，避免把所有内容都塞进 `SKILL.md`。

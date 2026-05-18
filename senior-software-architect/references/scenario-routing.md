@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
 | 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先识别本地生态，再迁移通用原则，不强套 Java/Spring 规则。 |
-| Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`project-governance-standards.md`、`workflow.md` | Java 约规、模块边界、服务分层、空值契约、Lombok/MapStruct、测试与验证。 |
+| Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | Java 约规、空值契约、Lombok/MapStruct、测试与验证；涉及模块/服务/API/DB 综合治理时再读 `project-governance-standards.md`。 |
 | 代码 Review / PR Review | `review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 问题优先，按 P0-P3 给文件行号、风险、证据、建议和验证。 |
 | 系统分析设计 / 系分 | `system-analysis-design.md`、`architecture.md`、`production-readiness.md` | 背景、目标、概要、详细、非功能、研发计划、评审清单。 |
 | 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件。 |
@@ -35,7 +35,7 @@
 
 - **系分 + 生产变更**：先用 `system-analysis-design.md` 固定背景、目标、边界和详细设计，再用 `production-readiness.md` 检查 SLO、容量、灰度、监控、应急和回滚。
 - **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
-- **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `project-governance-standards.md` 查代码与分层，再用 `review-and-output-templates.md` 检查兼容性治理。
+- **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再回到具体强规约。
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。
 - **遗留系统迁移 + 生产发布**：优先小步迁移，使用防腐层、双写/回填/切流、契约测试和灰度观测，避免一次性替换核心链路。

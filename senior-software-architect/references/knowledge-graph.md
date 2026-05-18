@@ -17,6 +17,7 @@
 - 凤凰架构：https://icyfenix.cn/
 - 产品设计与产品文档能力：`references/product-design.md`
 - 测试驱动设计与测试资产治理：`references/testing.md`
+- 测试专项实践：`references/testing-practices.md`
 - AI 编码协作与三层作业模型：`references/ai-assisted-engineering.md`
 - Wind 项目族实践：`references/wind-projects-patterns.md`
 - 项目长期演进规范：`references/project-governance-standards.md`

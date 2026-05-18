@@ -711,7 +711,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 ## 13. 测试实践
 
-测试驱动设计、测试分层、测试代码整洁、测试资产治理和 Review 清单详见 `testing.md`。本节只保留项目级落地规则。
+测试驱动设计、测试分层、测试代码整洁、测试资产治理和 Review 清单详见 `testing.md`；Java/Spring/Wind、复杂业务、资金域和非 Java 适配实践见 `testing-practices.md`。本节只保留项目级落地规则。
 
 ### 13.1 测试分层
 
@@ -744,7 +744,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 私有复杂逻辑优先提取为可测试的小对象；确需放宽可见性时使用 `@VisibleForTesting`。
 - 新增缺陷修复必须补回归测试。
 - 修改接口契约时，测试、实现、转换、落库、断言必须闭环。
-- 测试坏味道、慢测试、脆弱测试、过度 Mock 和测试资产治理要求统一参考 `testing.md`。
+- 测试坏味道、慢测试、脆弱测试、过度 Mock 和测试资产治理要求统一参考 `testing.md`；具体落地实践参考 `testing-practices.md`。
 
 ## 14. 前端项目协作规范
 
