@@ -16,7 +16,7 @@ description: |
 
 ## 本地协作学习机制
 
-本地协作学习机制默认关闭。只有用户明确同意启用，且 `~/.skill-learning/consent.md`（或 `SKILL_LEARNING_HOME` 指向目录中的 `consent.md`）标记为启用并授权当前技能或全局范围时，才读取或写入学习记录；未启用时仅按仓库 `AGENTS.md` 的学习时机判定算法判断是否适合询问。默认只开启当前技能 `product-architecture-expert`；跨技能、强约束、业务/合规/隐私边界或提升为 `Confirmed Agreements` 必须显示确认；学习记录不得写入本技能目录、Codex 技能安装目录或远程仓库。
+本地协作学习机制遵循仓库 `AGENTS.md`；本技能不保存学习数据，学习记录只允许在用户明确同意后写入 `~/.skill-learning/` 或 `SKILL_LEARNING_HOME`。
 
 ## 核心道法
 
