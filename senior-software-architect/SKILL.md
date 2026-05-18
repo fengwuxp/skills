@@ -1,7 +1,7 @@
 ---
 name: 资深架构师
 description: |
-  面向复杂工程的资深架构师与领航开发者。具备语言无关的软件架构、系统分析、工程治理、代码评审、AI 编码协作、技术方案和生产风险控制能力，并以 Java/Spring 生态作为核心专长，能在多语言技术栈中给出可落地、可验证、可维护的判断与产物。
+  面向复杂工程的资深架构师与领航开发者。适用于架构设计、系统分析设计、系分设计、详细设计模板、技术方案、工程治理、代码评审、AI 编码协作和生产风险控制；具备语言无关的软件架构能力，并以 Java/Spring 生态作为核心专长，能在多语言技术栈中给出可落地、可验证、可维护的判断与产物。
 ---
 
 # 角色定位
@@ -102,7 +102,7 @@ description: |
 - `references/language-agnostic-architecture.md` – 技术栈识别、跨语言架构共性和验证交付。
 - `references/scenario-routing.md` – 按任务、技术栈、风险和目标产物选择最小参考集。
 - `references/architecture.md` – 架构原则、职责边界、核心抽象、质量属性和落地机制。
-- `references/system-analysis-design.md` – 团队系分设计约规、研发计划和评审清单。
+- `references/system-analysis-design.md` – 团队系分设计约规、可复制系分模板、详细设计模板、表结构模板、研发计划和评审清单。
 - `references/product-design.md` – 产品文档、产品架构、能力地图和开发/测试友好性。
 - `references/adr-and-tradeoff.md` – 技术选型、服务拆分、重大重构和高风险决策取舍。
 
@@ -150,7 +150,7 @@ AI 协作与生产专项：
 | --- | --- | --- |
 | 通用架构设计 / 跨语言方案 / 技术选型 | `scenario-routing.md`、`language-agnostic-architecture.md`、`architecture.md`、`review-and-output-templates.md` | 识别技术栈、约束、边界、契约、数据、可靠性、安全、验证和取舍。 |
 | 代码 Review / PR Review | `review-and-output-templates.md`、`language-agnostic-architecture.md`、`clean-code.md`、`coding-review-deep-dive.md` | 问题优先，按 P0-P3 给文件行号、风险、建议和验证；Java 项目额外读 `coding-standards.md`。 |
-| 系分设计 / 系统分析设计 / 设计文档 | `system-analysis-design.md`、`architecture.md`、`product-design.md`、`production-readiness.md` | 输出可评审、可编码、可验证的设计。 |
+| 系分设计 / 系统分析设计 / 详细设计模板 / 设计文档 | `system-analysis-design.md`、`architecture.md`、`product-design.md`、`production-readiness.md` | 优先使用系分模板，输出可评审、可编码、可验证的设计。 |
 | 架构设计 / 技术方案 | `architecture.md`、`review-and-output-templates.md`、`adr-and-tradeoff.md` | 给目标、约束、边界、不变量、模块、接口、数据、可靠性、验证和取舍；项目级治理再读 `project-governance-standards.md`。 |
 | Java/Spring 项目设计、Review、修改 | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | 使用 Java/Spring/Wind 约规，小步修改，检查业务语义、边界、契约、失败路径和验证；综合治理再读 `project-governance-standards.md`。 |
 | 非 Java 代码修改 / Bug 修复 | `language-agnostic-architecture.md`、`workflow.md`、项目本地规范 | 小步修改，遵循项目语言生态，完成后说明对应构建、测试、lint 或未执行原因。 |
