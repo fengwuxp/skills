@@ -2,6 +2,27 @@
 
 本文用于在处理架构、评审、编码、生产变更和技术治理任务前，快速判断应读取哪些 reference、输出什么产物、守住哪些红线。它是知识路由，不是组织流程审批，也不是生产变更授权。
 
+## 使用时机
+
+- 用户任务同时涉及任务类型、技术栈、风险等级或目标产物选择。
+- 不确定应读取 `architecture.md`、`testing.md`、`debugging-diagnosis.md`、`production-readiness.md` 还是其他专项 reference。
+- 需要做触发路径自检、模拟验收或防止一次性加载过多 reference。
+
+## 不适用场景
+
+- 用户只问单个 reference 内的具体规则，且入口已经明确。
+- 项目本地 `AGENTS.md`、OpenSpec、Harness Plan 或代码上下文已经给出更具体的执行路径。
+
+## 读取后必须产出
+
+- 当前任务类型、技术栈、风险等级和目标产物判断。
+- 最小 reference 集合，以及不读取其他 reference 的理由。
+- 对应输出形态和关键红线。
+
+## 需要继续读取的 reference
+
+- 按“快速路由表”和“组合场景处理”选择；不要为了完整性继续读取所有 reference。
+
 ## 使用顺序
 
 1. **识别任务类型**：Review、系分、架构方案、技术选型、Bug 修复、调试诊断、根因分析、写测试、补测试、加测试、按 TDD 推进、测试选择、测试分层、生产变更、代码修改、遗留系统改造、AI 编码协作、AI 输出审查。
@@ -28,9 +49,10 @@
 | 生产变更 / 上线评审 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | 影响范围、灰度、开关、监控、应急、回滚、审计、验收。 |
 | 生产现象 / 线上异常 / 故障排查 | `debugging-diagnosis.md`、`production-readiness.md`、`negative-constraints.md` | 先定影响面、时间线、止血和只读证据，再做根因假设、最小修复、回滚和复盘。 |
 | 数据库迁移 / 修数 / 回填 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | dry-run、备份、分批、校验、审计、回滚和新旧版本兼容。 |
+| 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 | `ai-assisted-engineering.md`、`workflow.md`、`negative-constraints.md` | 用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用 Harness 管分工、写入范围、上下文、交接和集成。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 | `workflow.md`、`ai-assisted-engineering.md`、`negative-constraints.md` | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用 Harness 管分工、写入范围、上下文、交接和集成。 |
 | AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 
@@ -38,6 +60,7 @@
 
 - **系分 + 生产变更**：先用 `system-analysis-design.md` 固定背景、目标、边界和详细设计，再用 `production-readiness.md` 检查 SLO、容量、灰度、监控、应急和回滚。
 - **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
+- **外部 API / SDK / 云产品版本变化**：先用 `workflow.md` 的外部知识时效性门禁核验权威来源、版本、生效/发布日期和本地实际依赖，再用 `adr-and-tradeoff.md`、`production-readiness.md` 和 `negative-constraints.md` 检查兼容、安全、成本、上线和回滚。
 - **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再回到具体强规约。
 - **Bug 修复 + TDD**：先用 `debugging-diagnosis.md` 建立稳定失败反馈环，再用 `testing.md` 选择回归测试形态；修复后必须证明原失败路径通过且旧行为未回退。
@@ -57,8 +80,8 @@
 - 用户要“修 Bug / 查异常 / 诊断失败”：先输出或执行复现与证据计划，说明反馈环、假设、插桩边界、最小修复和回归验证。
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。
 - 用户要“上线”：输出生产就绪检查、风险清单、回滚和监控。
-- 用户要“改代码”：先识别技术栈和本地规范，小步修改并运行对应验证。
-- 用户要“用 AI 写代码 / 多 Agent 协作”：先输出或确认 OpenSpec 与 Harness Plan，再执行小步实现和 Superpowers 验证闭环。
+- 用户要“改代码”：先按 `workflow.md` 过 Clarify、Design、Plan、Build、Verify、Review/Ship 生命周期门禁，再识别技术栈和本地规范，小步修改并运行对应验证。
+- 用户要“用 AI 写代码 / 多 Agent 协作”：先按 `workflow.md` 过生命周期门禁，再输出或确认 OpenSpec 与 Harness Plan，执行小步实现和 Superpowers 验证闭环。
 - 用户只要“建议”：克制输出不超过 3 个高价值方向，必要时说明假设。
 
 ## 路由红线

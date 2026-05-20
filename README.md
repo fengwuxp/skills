@@ -46,6 +46,7 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 - Skill 脚本是否包含需要人工复核的高风险模式。
 - `SKILL.md` frontmatter 和 `agents/openai.yaml` YAML。
 - `SKILL.md` 中引用的 `references/` 文件是否存在。
+- 架构师和产品专家关键触发路径、三级加载、reference 头部和核心门禁是否保持一致。
 - `java-service-code-generator` Python 编译。
 - DDL、Java 类、Markdown 字段表格三组代码生成 fixture。
 - `sync-skills.sh --dry-run all`。

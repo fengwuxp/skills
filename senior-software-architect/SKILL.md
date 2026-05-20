@@ -93,6 +93,12 @@ description: |
 
 优先通过 `references/scenario-routing.md` 选择最小参考集，不一次性加载所有 reference。
 
+运行时按三步加载：
+
+1. 先用本文件判断是否触发 `资深架构师`，并守住工作原则、红线和不适用场景。
+2. 复杂任务先读 `references/scenario-routing.md`，按任务、技术栈、风险和目标产物选择 reference。
+3. 只读取当前任务必要的 reference；代码修改、测试、诊断、生产变更和 AI 协作必须回到验证结果闭环。
+
 通用架构与表达：
 
 - `references/language-agnostic-architecture.md` – 技术栈识别、跨语言架构共性和验证交付。

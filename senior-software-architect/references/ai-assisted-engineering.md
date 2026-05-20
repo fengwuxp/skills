@@ -2,6 +2,30 @@
 
 本文定义资深架构师在 AI 时代的编码协作方式。AI 可以提升产出速度，但不能替代规格、纪律、验证和工程判断。架构师必须把 AI 编码纳入可解释、可审查、可测试、可回滚的工程系统中。
 
+## 使用时机
+
+- 用户要求 AI 参与代码生成、Bug 修复、重构、测试补充、迁移改造或文档到代码转换。
+- 任务需要 OpenSpec、Superpowers、Harness、CAD Mode、Execution Grant 或多 Agent 协作。
+- 需要审查 AI 生成代码是否越界、幻觉、缺测试、放宽断言或伪造验证。
+
+## 不适用场景
+
+- 低风险的一行文案、注释、格式修正或只读概念解释。
+- 需求仍处探索阶段，尚未进入实现承诺。
+- 用户明确要求只做普通代码 Review，此时优先读 `coding-review-deep-dive.md`。
+
+## 读取后必须产出
+
+- 当前任务属于轻量执行、OpenSpec、Harness Plan、CAD Mode 还是只读审查。
+- 写入范围、禁止事项、验证命令和停止条件。
+- AI 产物复核重点：边界、契约、测试、验证、依赖、安全和生产风险。
+
+## 需要继续读取的 reference
+
+- Java/Spring 代码读 `coding-standards.md` 和 `coding-review-deep-dive.md`。
+- 测试/TDD 读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
+- 生产变更读 `production-readiness.md` 和 `negative-constraints.md`。
+
 ## 1. 核心定位
 
 AI 编码不是“让工具直接写代码”，而是把需求、规范、测试、实现、审查、重构和交付串成受控闭环：
@@ -26,6 +50,21 @@ OpenSpec 定目标
 -> Superpowers 用 TDD 推进
 -> Execution Grant 控制可自动执行的权限边界
 ```
+
+## 工程生命周期映射
+
+AI 编码协作必须服从 `workflow.md` 的 `Clarify -> Design -> Plan -> Build -> Verify -> Review/Ship` 生命周期；OpenSpec、Superpowers、Harness 和 CAD Mode 是生命周期上的工程化增强，不是绕过澄清、设计、验证或人工确认的捷径。
+
+| 生命周期阶段 | AI 协作映射 |
+| --- | --- |
+| Clarify | 判断任务风险、适用轻量执行 / OpenSpec / Harness Plan / CAD Mode，并列出关键假设、待确认点和禁止事项。 |
+| Design | 用 OpenSpec 固定目标、范围、非目标、契约、边界、异常路径、测试用例和验收标准。 |
+| Plan | 用 Harness Plan 明确 Owner、写入范围、只读范围、依赖顺序、验证命令、停止条件和交接方式。 |
+| Build | 按最小实现推进，不扩大重构，不编造 API，不引入无主依赖，不越过项目本地约规。 |
+| Verify | 用 Superpowers 执行 TDD、Review、Refactor、编译、测试、lint、静态检查和 AI 产物复核。 |
+| Review/Ship | 输出行为影响、验证证据、残余风险、回滚/监控边界、Git 策略和需要用户判断的事项。 |
+
+CAD Mode 只是在上述生命周期满足门禁后进行受控自动推进；不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Execution Grant、验证或高风险人工确认点。
 
 ## 2. 适用场景
 

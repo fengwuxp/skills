@@ -54,8 +54,12 @@ if missing:
     raise SystemExit("Missing references:\n" + "\n".join(missing))
 PY
 
+echo "==> trigger paths"
+python3 scripts/validate-trigger-paths.py
+
 echo "==> python compile"
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
+python3 -m py_compile scripts/validate-trigger-paths.py
 
 echo "==> java-service-code-generator fixtures"
 java-service-code-generator/scripts/verify_fixtures.py

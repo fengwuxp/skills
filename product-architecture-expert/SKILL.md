@@ -62,6 +62,12 @@ description: |
 
 处理复杂产品问题时，先读取 `references/product-scenario-routing.md`，按任务目标、业务复杂度、风险等级和目标产物选择最小参考集。
 
+运行时按三步加载：
+
+1. 先用本文件判断是否触发 `产品架构专家`，并守住产品、支付资金和合规红线。
+2. 复杂产品问题先读 `references/product-scenario-routing.md`，按业务场景和目标产物选择 reference。
+3. 只读取当前任务必要的 reference；PRD、支付资金和外部规则场景必须把待确认项、验收口径和专业确认方写清楚。
+
 当用户要求写作、生成、完善、补全、改写或评审 PRD、产品需求文档、需求说明书、需求文档模板、PRD 模板、产品方案模板，或要求“输出一份可评审的产品文档”时，必须读取 `references/product-prd-template.md`，并结合 `references/product-design-and-prd.md` 输出可复制、可评审、可开发、可测试、可运营的 PRD；不要只给提纲或说明。
 
 当场景涉及支付、账户、账本、清结算、对账、商户结算、分账分润、通道路由、银行卡/卡组织、ACH/银行转账、收单/发卡、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化时，再读取 `references/payment-scenario-routing.md` 进入支付与资金专项。
