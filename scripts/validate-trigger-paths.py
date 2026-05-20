@@ -88,21 +88,10 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = [
-    "产品",
-    "PRD",
-    "模板",
-    "清结算",
-    "对账",
-    "合规",
-    "商户",
-    "SaaS",
-    "B2B",
-    "业务流程",
-    "能力地图",
-    "运营后台",
-    "规则矩阵",
-]
+product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵"]
+product_general_route_terms = ["SaaS", "B2B", "业务流程", "能力地图", "运营后台", "规则矩阵"]
+payment_terms = ["清结算", "对账", "支付", "资金", "商户", "合规"]
+external_dependency_terms = ["SDK", "API", "云产品", "版本", "升级"]
 
 reference_headers = [
     senior_routing,
@@ -318,12 +307,7 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"},
     ),
     RouteFixture(
-        name="external sdk freshness",
-        prompt="升级 Gemini SDK 并确认最新 API 用法和兼容性",
-        routes={"senior", "workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"},
-    ),
-    RouteFixture(
-        name="external sdk lowercase freshness",
+        name="external sdk freshness ignores case",
         prompt="升级 gemini sdk 并确认最新 api 用法和兼容性",
         routes={"senior", "workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"},
     ),
@@ -338,56 +322,31 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
-        name="saas b2b product architecture",
-        prompt="设计一个 SaaS B2B 审批工作流产品方案，包含角色权限、能力地图、业务流程和验收标准",
+        name="complex non-payment product",
+        prompt="设计一个 SaaS B2B 运营后台产品方案，包含角色权限、能力地图、规则矩阵和验收标准",
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(
-        name="operations console product",
-        prompt="规划一个运营后台，包含审核、复核、规则矩阵、报表指标和审计追溯",
-        routes={"product", "product-scenario-routing.md"},
-    ),
-    RouteFixture(
-        name="java service generator",
-        prompt="根据这段 CREATE TABLE DDL 给 payment_order 表生成 Wind/Nobe 风格 Service、Mapper、DTO、Request、Query 和 Converter",
+        name="java service generator structured input",
+        prompt="根据 sql 建表语句和 schema 表结构生成 wind/nobe 配套代码",
         routes=codegen_route,
     ),
     RouteFixture(
-        name="java service generator concise prompt",
-        prompt="根据字段说明生成 Wind/Nobe 配套代码",
+        name="java service generator field table",
+        prompt="根据字段说明转换成 Wind/Nobe Entity 和 Service",
         routes=codegen_route,
     ),
     RouteFixture(
-        name="java service generator lowercase sql",
-        prompt="根据 sql 建表语句生成 wind/nobe 配套代码",
-        routes=codegen_route,
-    ),
-    RouteFixture(
-        name="java service generator schema structure",
-        prompt="把这个 schema 表结构转换成 Wind/Nobe Entity 和 Service",
-        routes=codegen_route,
-    ),
-    RouteFixture(
-        name="java service generator overwrite guard",
-        prompt="根据这段 DDL 生成 Wind/Nobe Service，如果已有文件会覆盖先确认影响范围",
-        routes=codegen_safety_route,
-    ),
-    RouteFixture(
-        name="java service generator ambiguous module guard",
-        prompt="根据字段表格生成 Wind/Nobe 配套代码，但目标业务里有多个 face/impl 模块对",
+        name="java service generator safety guard",
+        prompt="根据 DDL 生成 Wind/Nobe Service，但已有文件会覆盖且有多个 face/impl 模块对",
         routes=codegen_safety_route,
     ),
 ]
 
 negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
-        name="codegen on java service tests",
-        prompt="给这个 Java 类的 Application Service 补测试",
-        routes=codegen_route,
-    ),
-    RouteFixture(
-        name="codegen on java service review",
-        prompt="对这个 Java 类的 Service 做一次 CR，重点看契约和空值",
+        name="codegen on java service review or tests",
+        prompt="对这个 Java 类的 Service 做一次 CR 并补测试，重点看契约和空值",
         routes=codegen_route,
     ),
 ]
@@ -430,13 +389,13 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
     if contains_any(prompt, ["OpenSpec", "Agent", "CAD"]):
         route.update({"workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"})
-    if contains_any(prompt, ["SDK", "API", "云产品", "版本", "升级"]):
+    if contains_any(prompt, external_dependency_terms):
         route.update({"workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"})
     if contains_any(prompt, ["PRD", "模板"]):
         route.update({"product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"})
-    if contains_any(prompt, ["清结算", "对账", "支付", "资金", "商户", "合规"]):
+    if contains_any(prompt, payment_terms):
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
-    if contains_any(prompt, ["SaaS", "B2B", "业务流程", "能力地图", "运营后台", "规则矩阵"]):
+    if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
     if routes_codegen(prompt):
         route.update(codegen_route)
