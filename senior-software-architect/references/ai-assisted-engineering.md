@@ -356,6 +356,7 @@ Git 范围：auto_commit 仅允许每轮验证后执行 git add/commit；summary
 
 - `coding-standards.md` 是 Java/Spring 编码行为的主规范；AI 生成 Java 代码必须遵守。
 - `testing.md` 是 TDD、测试分层、测试代码整洁和测试资产治理的主规范；`testing-practices.md` 是具体测试实践参考；AI 编码必须把测试作为安全网。
+- `debugging-diagnosis.md` 是 Bug 修复、复杂异常、测试失败和生产现象诊断的主规范；AI 修复问题必须先建立反馈环、最小复现和证据链。
 - `workflow.md` 是修改前后验证、PR、Git 和交付要求的主规范；AI 编码不得降低验证标准。
 - `negative-constraints.md` 是禁止行为和权限边界的主规范；AI 协作不得扩大权限。
 - `scenario-routing.md` 负责判断什么时候加载本文，以及是否需要补充安全、生产、分布式一致性、演进式架构等专项规范。
@@ -371,5 +372,6 @@ Git 范围：auto_commit 仅允许每轮验证后执行 git add/commit；summary
 - 业务规则、权限、租户、幂等、金额、状态机和审计是否被测试覆盖。
 - API、DTO、错误码、配置、消息体和数据库字段是否保持兼容或给出迁移策略。
 - 异常、日志、敏感信息、事务和外部调用是否符合红线。
+- Bug 修复是否有可重复反馈环、最小复现、证据链和回归测试。
 - 重构是否行为保持，有测试保护。
 - 验证命令是否真实运行，失败或无法运行是否说明原因和替代验证。

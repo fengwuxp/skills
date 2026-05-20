@@ -4,7 +4,7 @@
 
 ## 使用顺序
 
-1. **识别任务类型**：Review、系分、架构方案、技术选型、写测试、补测试、加测试、按 TDD 推进、测试选择、测试分层、生产变更、代码修改、遗留系统改造、AI 编码协作、AI 输出审查。
+1. **识别任务类型**：Review、系分、架构方案、技术选型、Bug 修复、调试诊断、根因分析、写测试、补测试、加测试、按 TDD 推进、测试选择、测试分层、生产变更、代码修改、遗留系统改造、AI 编码协作、AI 输出审查。
 2. **识别技术栈**：Java/Spring、Go、Node.js/TypeScript、Python、Rust、前端、数据工程或混合技术栈。
 3. **识别风险等级**：是否涉及资金、权限、租户、敏感数据、公共契约、数据库、异步消息、生产发布、外部依赖或不可逆操作。
 4. **识别目标产物**：代码修改、Review 结论、系分文档、ADR、迁移计划、上线检查、回滚方案或测试计划。
@@ -17,6 +17,7 @@
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
 | 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先识别本地生态，再迁移通用原则，不强套 Java/Spring 规则。 |
 | Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | Java 约规、空值契约、Lombok/MapStruct、测试与验证；涉及模块/服务/API/DB 综合治理时再读 `project-governance-standards.md`。 |
+| Bug 修复 / 调试诊断 / 根因分析 / 测试失败 | `debugging-diagnosis.md`、`testing.md`、`workflow.md`，Java 项目再读 `coding-standards.md` | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试。 |
 | 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 | `testing.md`，Java 项目再读 `coding-standards.md` | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、保护对象、风险来源、真实链路和替身边界；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
 | 代码 Review / PR Review | `review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 问题优先，按 P0-P3 给文件行号、风险、证据、建议和验证。 |
 | 系统分析设计 / 系分 | `system-analysis-design.md`、`architecture.md`、`production-readiness.md` | 背景、目标、概要、详细、非功能、研发计划、评审清单。 |
@@ -25,6 +26,7 @@
 | 遗留系统改造 / 迁移 | `evolutionary-architecture.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 防腐层、契约测试、双写/回填/切流、灰度、回滚、下线标准。 |
 | 安全架构 / 权限 / 租户 / 敏感数据 | `security-architecture.md`、`negative-constraints.md` | 资产、主体、边界、威胁、认证授权、隔离、密钥、审计和安全测试。 |
 | 生产变更 / 上线评审 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | 影响范围、灰度、开关、监控、应急、回滚、审计、验收。 |
+| 生产现象 / 线上异常 / 故障排查 | `debugging-diagnosis.md`、`production-readiness.md`、`negative-constraints.md` | 先定影响面、时间线、止血和只读证据，再做根因假设、最小修复、回滚和复盘。 |
 | 数据库迁移 / 修数 / 回填 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | dry-run、备份、分批、校验、审计、回滚和新旧版本兼容。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
@@ -38,6 +40,8 @@
 - **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
 - **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再回到具体强规约。
+- **Bug 修复 + TDD**：先用 `debugging-diagnosis.md` 建立稳定失败反馈环，再用 `testing.md` 选择回归测试形态；修复后必须证明原失败路径通过且旧行为未回退。
+- **生产现象 + 代码修复**：先只读采集影响面、时间线、日志、指标和数据事实，再按 `debugging-diagnosis.md` 收敛根因；需要上线或数据处理时补充 `production-readiness.md` 和 `negative-constraints.md`。
 - **DDD/分层架构 + 写测试/TDD**：先用 `testing.md` 第 2 节选择测试形态，再用第 6 节定位保护事实和测试层级；只有命中 Domain Service / Policy / Specification、Application Service / Use Case、Repository / DAO / Mapper 或第 12 节专项条件时，再读 `testing-practices.md`。
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。
 - **遗留系统迁移 + 生产发布**：优先小步迁移，使用防腐层、双写/回填/切流、契约测试和灰度观测，避免一次性替换核心链路。
@@ -50,6 +54,7 @@
 - 用户要“审查”：输出问题优先的 Review，给严重级别、证据、建议和验证。
 - 用户要“设计”：输出架构方案或系分结构，必须包含目标、非目标、边界、数据、可靠性、安全、验证和发布。
 - 用户要“写测试 / 补测试 / 加测试 / 按 TDD 推进”：先输出或执行测试选择，说明测试层级、真实链路、替身边界、断言事实和验证命令；TDD 场景先构造失败测试，再推进实现。
+- 用户要“修 Bug / 查异常 / 诊断失败”：先输出或执行复现与证据计划，说明反馈环、假设、插桩边界、最小修复和回归验证。
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。
 - 用户要“上线”：输出生产就绪检查、风险清单、回滚和监控。
 - 用户要“改代码”：先识别技术栈和本地规范，小步修改并运行对应验证。
@@ -65,3 +70,4 @@
 5. 不得对生产变更给“可直接上线”结论，除非已覆盖验证、灰度、监控、回滚和残余风险。
 6. 不得把安全、数据一致性和遗留系统迁移当作普通 CRUD 或简单重构处理。
 7. 不得为了完整性加载所有 reference；只加载对当前判断有用的最小集合。
+8. 不得在没有复现、证据或可验证假设时直接大范围改代码。

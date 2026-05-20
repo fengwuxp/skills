@@ -1,5 +1,5 @@
 interface:
   display_name: "资深架构师"
-  short_description: "架构设计、系分详细设计、写测试/TDD/测试用例、代码评审、工程治理、AI 编码协作与 Java 核心专长"
+  short_description: "架构设计、系分详细设计、Bug 修复/调试诊断、写测试/TDD、代码评审、工程治理、AI 编码协作与 Java 核心专长"
   brand_color: "#0F766E"
-  default_prompt: "Use $资深架构师 按测试驱动设计推进：先根据业务行为选择测试形态，补充失败测试、测试用例、测试分层和验证方案，再审查架构边界与生产风险。"
+  default_prompt: "Use $资深架构师 按测试驱动设计推进：先根据业务行为或失败现象建立反馈环，补充失败测试、测试分层和验证方案，再审查架构边界与生产风险。"
