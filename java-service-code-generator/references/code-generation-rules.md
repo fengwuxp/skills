@@ -160,8 +160,8 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 
 - Service 接口和实现方法参数使用 `org.jspecify.annotations.NonNull`。
 - 会暴露到 API 的模型字段使用 `jakarta.validation`/`javax.validation` 校验注解；内部服务参数使用 `org.jspecify.annotations.NonNull`。
-- ServiceImpl 公共方法必须使用 `AssertUtils` 对必填参数做运行时断言，例如 `AssertUtils.notNull(request, "参数 request 不能为空")`。
-- 集合或数组参数使用 `AssertUtils.notEmpty(ids, "参数 ids 不能为空")`。
+- ServiceImpl 不对已经由 `@NonNull` 表达的普通参数重复生成 `AssertUtils.notNull`；只有集合或数组的非空/非空集合约束、状态条件、查不到数据等运行时业务事实才使用 `AssertUtils`。
+- 集合或数组参数使用 `AssertUtils.notEmpty(ids, "参数 ids 不能为空")`，用于表达集合内容约束，而不是重复表达 JSpecify 的 nullability。
 - 生成批量删除方法 `void deleteXxxByIds(@NonNull Long... ids);`。
 - 单 ID 删除方法作为 Service 接口 default 方法直接委托批量删除：`default void deleteXxxById(@NonNull Long id) { deleteXxxByIds(id); }`。这是稳定服务契约，不视为无意义的一行方法复用。
 - ServiceImpl 只实现批量删除方法，使用 `mapper.deleteBatchByIds(Arrays.asList(ids))`，并断言影响行数与传入 ID 数一致。

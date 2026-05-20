@@ -139,6 +139,7 @@
 - 【强制】空值处理按边界分层：内部 Java 契约使用 `org.jspecify.annotations` 相关注解；会暴露到 API 层的数据模型使用 Bean Validation；其他业务前置条件、状态条件和不可达分支优先使用 `AssertUtils`。
 - 【强制】公共 API 的空值语义必须明确，必要时使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 等验证注解；项目已迁移 Jakarta EE / Spring Boot 3+ 时，可使用 `jakarta.validation` 等价注解，但不得在同一模块内混用两套 validation 包。
 - 【强制】内部 Java 契约优先使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked` 等注解表达可空与非空语义。
+- 【强制】已由 JSpecify 标注为非空的参数、返回值和字段，不再额外添加无业务语义的 `AssertUtils.notNull` 或同类空判断；只有业务前置条件、状态条件、集合内容约束、查不到数据、不可达分支等运行时业务事实才使用断言。
 - 【强制】不要把 `Optional` 用作字段、DTO 属性或序列化模型属性。
 - 【强制】不得用 Bean Validation 替代所有内部断言；Validation 面向 API 契约和数据模型，`AssertUtils` 面向业务前置条件、状态校验和内部防御式编程。
 - 【推荐】可能不存在的查询结果使用 `findXxx` 或 `Optional<T>` 表达。

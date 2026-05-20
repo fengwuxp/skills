@@ -614,6 +614,7 @@ UserDetailDTO getUserDetail(Long userId);
 
 - 不会暴露到 API 层的内部服务、领域服务、应用服务和端口契约，使用 `org.jspecify.annotations` 相关注解表达 nullability。
 - 会暴露到 API 层的参数、Request/Response/DTO/Query/Command 等数据模型，使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 等 Bean Validation 注解；项目已迁移 Jakarta EE / Spring Boot 3+ 时，使用 `jakarta.validation` 等价注解。
+- 已由 JSpecify 标注为非空的普通参数、返回值和字段，不再重复写无业务语义的空判断。
 - 其他业务前置条件、状态条件、不可达分支和内部防御式编程，优先使用项目统一的 `AssertUtils`。
 - 返回集合时返回空集合，不返回 null。
 - `findXxx` 推荐返回 `Optional<T>`。

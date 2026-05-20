@@ -49,6 +49,7 @@ Review 输出要说明真实后果，不只写“建议优化”。
 - 内部契约使用 `org.jspecify.annotations` 表达 nullability。
 - API 参数、Request、Response、DTO、Query、Command 使用 Bean Validation 表达字段约束。
 - 业务前置条件、状态条件和不可达分支优先使用 `AssertUtils`。
+- 已由 JSpecify 标注为非空的普通参数、返回值和字段，不再重复写无业务语义的空判断。
 - 集合返回空集合，不返回 `null`。
 - `Optional` 不用于字段、DTO 属性和序列化模型属性。
 

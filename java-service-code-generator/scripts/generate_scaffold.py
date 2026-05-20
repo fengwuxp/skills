@@ -1165,7 +1165,6 @@ public class {name}ServiceImpl implements {name}Service {{
      */
     @Override
     public Long create{name}(@NonNull Create{name}Request request) {{
-        AssertUtils.notNull(request, "参数 request 不能为空");
         {name} entity = {name}Converter.INSTANCE.convertToEntity(request);
         AssertUtils.isTrue({var}Mapper.insertSelective(entity) > 0, "创建{desc}失败");
         return entity.getId();
@@ -1178,7 +1177,6 @@ public class {name}ServiceImpl implements {name}Service {{
      */
     @Override
     public void update{name}(@NonNull Update{name}Request request) {{
-        AssertUtils.notNull(request, "参数 request 不能为空");
         find{name}(request.getId());
         {name} entity = {name}Converter.INSTANCE.convertToEntity(request);
         AssertUtils.isTrue({var}Mapper.update(entity) == 1, "更新{desc}失败");
@@ -1204,7 +1202,6 @@ public class {name}ServiceImpl implements {name}Service {{
      */
     @Override
     public {name}DTO query{name}ById(@NonNull Long id) {{
-        AssertUtils.notNull(id, "参数 id 不能为空");
         return {name}Converter.INSTANCE.convertToDTO(find{name}(id));
     }}
 
@@ -1218,8 +1215,6 @@ public class {name}ServiceImpl implements {name}Service {{
     @Override
     @NonNull
     public WindPagination<{name}DTO> query{name}s(@NonNull {name}Query query, @NonNull WindQuery<? extends QueryOrderField> options) {{
-        AssertUtils.notNull(query, "参数 query 不能为空");
-        AssertUtils.notNull(options, "参数 options 不能为空");
         {name}NameRefs {var} = {name}NameRefs.{var};
         QueryWrapper queryWrapper = MybatisQueryHelper.from(options).select()
                 .from({var}){query_conditions};
@@ -1238,7 +1233,6 @@ public class {name}ServiceImpl implements {name}Service {{
      * @return {desc}实体
      */
     private {name} find{name}(@NonNull Long id) {{
-        AssertUtils.notNull(id, "参数 id 不能为空");
         {name} result = {var}Mapper.selectOneById(id);
         AssertUtils.notNull(result, "{desc}不存在");{deleted_check}
         return result;

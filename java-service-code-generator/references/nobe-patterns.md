@@ -49,7 +49,7 @@
 ## Service / ServiceImpl
 
 - Spring Bean 构造注入优先使用 Lombok `@AllArgsConstructor`。
-- 内部服务参数使用 `org.jspecify.annotations.NonNull`，实现方法内继续用 `AssertUtils` 做运行时断言。
+- 内部服务参数使用 `org.jspecify.annotations.NonNull`；实现方法内不再重复写无业务语义的 `AssertUtils.notNull`，只对集合内容、状态条件和查不到数据等运行时业务事实使用断言。
 - 单 ID 删除可以作为接口 default 方法委托批量删除，这是服务契约便利方法；ServiceImpl 只实现批量删除。
 - 查询实现优先内联 `QueryWrapper` 构造，除非本地已有复杂分支，不为了“复用”提取一行方法或伪工具类。
 - 公共方法参数不得超过 5 个。生成代码当前以 Request/Query/Options 聚合参数，避免长参数列表。
@@ -60,5 +60,5 @@
 - 避免无意义的一行方法复用和过深调用链。
 - MapStruct 只做对象转换，不承载业务判断或副作用。
 - Lombok 只用于减少样板代码，不隐藏关键领域约束。
-- API 模型使用验证注解，内部服务参数使用 JSpecify 注解和 `AssertUtils`。
+- API 模型使用验证注解，内部服务参数使用 JSpecify 注解；业务前置条件、集合内容和状态事实使用 `AssertUtils`。
 - 生成结果必须可读、可审查、可按本地项目规范继续演进。
