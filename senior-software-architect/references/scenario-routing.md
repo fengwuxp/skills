@@ -22,6 +22,7 @@
 ## 需要继续读取的 reference
 
 - 按“快速路由表”和“组合场景处理”选择；不要为了完整性继续读取所有 reference。
+- 图形化架构交付读 `diagram-output.md`，再按任务风险选择架构、系分、生产、迁移、安全或 AI 协作专项 reference。
 
 ## 使用顺序
 
@@ -36,6 +37,7 @@
 | 场景 | 必读参考 | 输出重点 |
 | --- | --- | --- |
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
+| 架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物 | `diagram-output.md`，按场景再读 `architecture.md`、`system-analysis-design.md`、`production-readiness.md` 或专项 reference | 图形目标、图形类型、工程落点、Mermaid 或 SVG/PNG 输出、验证动作和剩余风险。 |
 | 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先识别本地生态，再迁移通用原则，不强套 Java/Spring 规则。 |
 | Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | Java 约规、空值契约、Lombok/MapStruct、测试与验证；涉及模块/服务/API/DB 综合治理时再读 `project-governance-standards.md`。 |
 | Bug 修复 / 调试诊断 / 根因分析 / 测试失败 | `debugging-diagnosis.md`、`testing.md`、`workflow.md`，Java 项目再读 `coding-standards.md` | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试。 |
@@ -76,6 +78,7 @@
 
 - 用户要“审查”：输出问题优先的 Review，给严重级别、证据、建议和验证。
 - 用户要“设计”：输出架构方案或系分结构，必须包含目标、非目标、边界、数据、可靠性、安全、验证和发布。
+- 用户要“画图 / 图形化产物”：读取 `diagram-output.md`，先说明图形目标、图形类型和工程落点；优先输出 Mermaid，需要图片文件时再生成 SVG/PNG 并报告验证结论。
 - 用户要“写测试 / 补测试 / 加测试 / 按 TDD 推进”：先输出或执行测试选择，说明测试层级、真实链路、替身边界、断言事实和验证命令；TDD 场景先构造失败测试，再推进实现。
 - 用户要“修 Bug / 查异常 / 诊断失败”：先输出或执行复现与证据计划，说明反馈环、假设、插桩边界、最小修复和回归验证。
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。

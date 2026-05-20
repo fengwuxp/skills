@@ -44,6 +44,16 @@ def has_all(path: str, texts: list[str]) -> bool:
     return all(text in body for text in texts)
 
 
+def frontmatter(path: str) -> str:
+    text = read(path)
+    if not text.startswith("---\n"):
+        return ""
+    parts = text.split("---\n", 2)
+    if len(parts) < 3:
+        return ""
+    return parts[1]
+
+
 def has_reference_header(path: str) -> bool:
     return has_all(
         path,
@@ -69,7 +79,9 @@ def expected_absent(name: str, actual: set[str], unexpected: set[str]) -> None:
 
 
 senior_skill = "senior-software-architect/SKILL.md"
+senior_agent = "senior-software-architect/agents/openai.yaml"
 senior_routing = "senior-software-architect/references/scenario-routing.md"
+senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
 ai_engineering = "senior-software-architect/references/ai-assisted-engineering.md"
 testing = "senior-software-architect/references/testing.md"
@@ -77,7 +89,9 @@ coding = "senior-software-architect/references/coding-standards.md"
 review = "senior-software-architect/references/coding-review-deep-dive.md"
 
 product_skill = "product-architecture-expert/SKILL.md"
+product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
+product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
 regulatory = "product-architecture-expert/references/regulatory-baseline.md"
 
@@ -88,18 +102,21 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵"]
-product_general_route_terms = ["SaaS", "B2B", "业务流程", "能力地图", "运营后台", "规则矩阵"]
+product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图"]
+product_general_route_terms = ["SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵"]
 payment_terms = ["清结算", "对账", "支付", "资金", "商户", "合规"]
 external_dependency_terms = ["SDK", "API", "云产品", "版本", "升级"]
+diagram_terms = ["画图", "图形化", "可视化", "架构图", "流程图", "时序图", "状态机", "ER 图", "类图", "部署图", "迁移图", "关系图", "资金流图"]
 
 reference_headers = [
     senior_routing,
+    senior_diagram,
     workflow,
     ai_engineering,
     testing,
     "senior-software-architect/references/debugging-diagnosis.md",
     product_routing,
+    product_diagram,
     product_prd,
     regulatory,
 ]
@@ -119,6 +136,28 @@ check(
     ),
 )
 check(
+    "senior skill routes diagram output",
+    has_all(
+        senior_skill,
+        [
+            "references/diagram-output.md",
+            "系统架构图",
+            "优先输出可维护 Mermaid",
+        ],
+    ),
+)
+check(
+    "senior metadata triggers diagram output",
+    all(
+        term in frontmatter(senior_skill)
+        for term in ["架构图", "时序图", "状态机", "Mermaid", "SVG/PNG"]
+    ),
+)
+check(
+    "senior openai yaml mentions visual output",
+    has_all(senior_agent, ["图形化交付", "Mermaid", "SVG/PNG"]),
+)
+check(
     "product skill uses three-step loading",
     has_all(
         product_skill,
@@ -126,6 +165,75 @@ check(
             "运行时按三步加载",
             "复杂产品问题先读 `references/product-scenario-routing.md`",
             "只读取当前任务必要的 reference",
+        ],
+    ),
+)
+check(
+    "product skill routes diagram output",
+    has_all(
+        product_skill,
+        [
+            "references/diagram-output.md",
+            "产品架构图",
+            "优先输出可维护 Mermaid",
+        ],
+    ),
+)
+check(
+    "product metadata triggers diagram output",
+    all(
+        term in frontmatter(product_skill)
+        for term in ["产品架构图", "流程图", "状态机", "Mermaid", "SVG/PNG"]
+    ),
+)
+check(
+    "product openai yaml mentions visual output",
+    has_all(product_agent, ["流程状态图", "Mermaid", "SVG/PNG"]),
+)
+check(
+    "senior diagram reference keeps delivery and safety boundaries",
+    has_all(
+        senior_diagram,
+        [
+            "图是工程判断的表达面，不是架构本身",
+            "## 卓越图形能力要求",
+            "## 视觉风格路由",
+            "## 语义形状和箭头",
+            "## 稳定提示配方",
+            "Markdown Mermaid",
+            "SVG/PNG",
+            "工程落点",
+            "AI Agent Systems",
+            "供应链安全审查",
+        ],
+    ),
+)
+check(
+    "product diagram reference keeps delivery and safety boundaries",
+    has_all(
+        product_diagram,
+        [
+            "图形化交付是产品表达的一部分",
+            "## 卓越图形能力要求",
+            "## 视觉风格路由",
+            "## 语义形状和箭头",
+            "## 稳定提示配方",
+            "Markdown Mermaid",
+            "SVG/PNG",
+            "Finance Ledger",
+            "支付资金四流",
+            "供应链安全审查",
+        ],
+    ),
+)
+check(
+    "README records fireworks tech graph reference source",
+    has_all(
+        "README.md",
+        [
+            "yizhiyanhua-ai/fireworks-tech-graph",
+            "图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG/PNG 导出和渲染校验思路",
+            "供应链安全审查",
         ],
     ),
 )
@@ -196,6 +304,17 @@ check(
     ),
 )
 check(
+    "senior route sends visual deliverables to diagram output",
+    has_all(
+        senior_routing,
+        [
+            "图形化架构交付读 `diagram-output.md`",
+            "架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物",
+            "图形目标、图形类型、工程落点",
+        ],
+    ),
+)
+check(
     "write tests route enters testing before practices",
     has_all(
         senior_routing,
@@ -248,6 +367,17 @@ check(
             "外部规则、政策、通道协议、卡组织/ACH/银行规则、云产品限制、第三方平台 API 或 SDK 版本会随时间变化",
             "来源、版本或发布日期、适用范围、核验日期和确认方",
             "继续读取 `regulatory-baseline.md`",
+        ],
+    ),
+)
+check(
+    "product route sends visual deliverables to diagram output",
+    has_all(
+        product_routing,
+        [
+            "图形化产品交付读 `diagram-output.md`",
+            "画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物",
+            "用途、假设、验证和待确认项",
         ],
     ),
 )
@@ -307,6 +437,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"},
     ),
     RouteFixture(
+        name="architecture diagram output",
+        prompt="画一张系统架构图和状态机，说明工程落点和验证方式",
+        routes={"senior", "diagram-output.md"},
+    ),
+    RouteFixture(
         name="external sdk freshness ignores case",
         prompt="升级 gemini sdk 并确认最新 api 用法和兼容性",
         routes={"senior", "workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"},
@@ -325,6 +460,21 @@ scenario_fixtures: list[RouteFixture] = [
         name="complex non-payment product",
         prompt="设计一个 SaaS B2B 运营后台产品方案，包含角色权限、能力地图、规则矩阵和验收标准",
         routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="product diagram output",
+        prompt="为 SaaS B2B 运营后台画能力地图、流程图和状态机，输出可视化产物",
+        routes={"product", "product-scenario-routing.md", "diagram-output.md"},
+    ),
+    RouteFixture(
+        name="product capability map diagram",
+        prompt="画一张能力地图，说明角色、业务流程图和验收路径",
+        routes={"product", "product-scenario-routing.md", "diagram-output.md"},
+    ),
+    RouteFixture(
+        name="payment funds flow diagram",
+        prompt="画一张资金流图，区分业务流、支付信息流、账务流和真实资金流",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md", "diagram-output.md"},
     ),
     RouteFixture(
         name="java service generator structured input",
@@ -378,6 +528,14 @@ def route_fixture(prompt: str) -> set[str]:
             "CAD",
             "SDK",
             "API",
+            "架构图",
+            "流程图",
+            "时序图",
+            "状态机",
+            "ER 图",
+            "类图",
+            "部署图",
+            "迁移图",
         ],
     ):
         route.add("senior")
@@ -397,6 +555,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
     if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
+    if contains_any(prompt, diagram_terms):
+        route.add("diagram-output.md")
     if routes_codegen(prompt):
         route.update(codegen_route)
         if contains_any(prompt, codegen_safety_terms):

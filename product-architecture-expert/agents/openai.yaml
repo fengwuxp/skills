@@ -1,7 +1,7 @@
 interface:
   display_name: "产品架构专家"
-  short_description: "写作/完善/评审 PRD、产品需求文档模板、产品架构、流程规则与支付资金专项"
+  short_description: "PRD/产品架构、能力地图、流程状态图与支付资金专项"
   brand_color: "#2563EB"
-  default_prompt: "Use $产品架构专家 帮我基于这个需求生成一份可复制、可评审、可开发、可测试的 PRD/产品需求文档；请套用 PRD 模板，包含角色、范围、能力地图、对象模型、流程、状态机、规则、数据指标、风险、待确认项和验收标准。"
+  default_prompt: "Use $产品架构专家 帮我基于这个需求生成可评审的 PRD/产品架构方案，包含角色、范围、能力地图、流程、状态机、规则、数据指标、风险、验收标准，并在需要时输出 Mermaid 或 SVG/PNG 图形化产物。"
 policy:
   allow_implicit_invocation: true
