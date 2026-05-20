@@ -6,6 +6,7 @@ It is not a natural-language router or a complete prompt evaluation suite.
 Keep checks focused on durable invariants that should survive wording changes.
 """
 
+from typing import NamedTuple
 from pathlib import Path
 
 
@@ -21,6 +22,17 @@ checks: list[tuple[str, bool]] = []
 
 def check(name: str, condition: bool) -> None:
     checks.append((name, bool(condition)))
+
+
+class RouteFixture(NamedTuple):
+    name: str
+    prompt: str
+    routes: set[str]
+
+
+def contains_any(text: str, needles: list[str]) -> bool:
+    folded_text = text.casefold()
+    return any(needle.casefold() in folded_text for needle in needles)
 
 
 def contains(path: str, text: str) -> bool:
@@ -46,7 +58,14 @@ def has_reference_header(path: str) -> bool:
 
 def expected_subset(name: str, actual: set[str], expected: set[str]) -> None:
     missing = expected - actual
-    check(f"scenario fixture routes {name}", not missing)
+    detail = f" missing={sorted(missing)}" if missing else ""
+    check(f"scenario fixture routes {name}{detail}", not missing)
+
+
+def expected_absent(name: str, actual: set[str], unexpected: set[str]) -> None:
+    present = unexpected & actual
+    detail = f" present={sorted(present)}" if present else ""
+    check(f"scenario fixture avoids {name}{detail}", not present)
 
 
 senior_skill = "senior-software-architect/SKILL.md"
@@ -61,6 +80,29 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
 regulatory = "product-architecture-expert/references/regulatory-baseline.md"
+
+codegen_skill = "java-service-code-generator/SKILL.md"
+codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
+codegen_safety_route = codegen_route | {"requires-confirmation"}
+codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", "字段表格", "字段说明", "Java 类", "表结构"]
+codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
+codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
+codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
+product_terms = [
+    "产品",
+    "PRD",
+    "模板",
+    "清结算",
+    "对账",
+    "合规",
+    "商户",
+    "SaaS",
+    "B2B",
+    "业务流程",
+    "能力地图",
+    "运营后台",
+    "规则矩阵",
+]
 
 reference_headers = [
     senior_routing,
@@ -242,46 +284,130 @@ check(
         ],
     ),
 )
+check(
+    "java service generator routes structured input to deterministic script",
+    has_all(
+        codegen_skill,
+        [
+            "DDL/SQL",
+            "schema 文件路径",
+            "Java 类",
+            "字段说明表格",
+            "references/code-generation-rules.md",
+            "references/nobe-patterns.md",
+            "scripts/generate_scaffold.py",
+            "不访问网络、不上传文件、不读取密钥",
+        ],
+    ),
+)
 
-scenario_fixtures: list[tuple[str, str, set[str]]] = [
-    (
-        "write tests",
-        "给这个 Application Service 补一组 TDD 测试，先写失败测试",
-        {"senior", "testing.md", "coding-standards.md", "workflow.md"},
+scenario_fixtures: list[RouteFixture] = [
+    RouteFixture(
+        name="write tests",
+        prompt="给这个 Application Service 补一组 TDD 测试，先写失败测试",
+        routes={"senior", "testing.md", "coding-standards.md", "workflow.md"},
     ),
-    (
-        "bug diagnosis",
-        "线上出现 NullPointerException，帮我定位根因并补回归测试",
-        {"senior", "debugging-diagnosis.md", "testing.md", "workflow.md"},
+    RouteFixture(
+        name="bug diagnosis",
+        prompt="线上出现 NullPointerException，帮我定位根因并补回归测试",
+        routes={"senior", "debugging-diagnosis.md", "testing.md", "workflow.md"},
     ),
-    (
-        "AI coding CAD",
-        "根据 OpenSpec 用多 Agent 推进这批代码实现，可以进入 CAD Mode 吗",
-        {"senior", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"},
+    RouteFixture(
+        name="AI coding CAD",
+        prompt="根据 OpenSpec 用多 Agent 推进这批代码实现，可以进入 CAD Mode 吗",
+        routes={"senior", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"},
     ),
-    (
-        "external sdk freshness",
-        "升级 Gemini SDK 并确认最新 API 用法和兼容性",
-        {"senior", "workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"},
+    RouteFixture(
+        name="external sdk freshness",
+        prompt="升级 Gemini SDK 并确认最新 API 用法和兼容性",
+        routes={"senior", "workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"},
     ),
-    (
-        "PRD",
-        "帮我生成一份产品 PRD 模板，包含验收标准",
-        {"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
+    RouteFixture(
+        name="external sdk lowercase freshness",
+        prompt="升级 gemini sdk 并确认最新 api 用法和兼容性",
+        routes={"senior", "workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"},
     ),
-    (
-        "payment product",
-        "设计商户清结算和对账产品方案，注意外部规则和合规",
-        {"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    RouteFixture(
+        name="PRD",
+        prompt="帮我生成一份产品 PRD 模板，包含验收标准",
+        routes={"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
+        name="payment product",
+        prompt="设计商户清结算和对账产品方案，注意外部规则和合规",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="saas b2b product architecture",
+        prompt="设计一个 SaaS B2B 审批工作流产品方案，包含角色权限、能力地图、业务流程和验收标准",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="operations console product",
+        prompt="规划一个运营后台，包含审核、复核、规则矩阵、报表指标和审计追溯",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="java service generator",
+        prompt="根据这段 CREATE TABLE DDL 给 payment_order 表生成 Wind/Nobe 风格 Service、Mapper、DTO、Request、Query 和 Converter",
+        routes=codegen_route,
+    ),
+    RouteFixture(
+        name="java service generator concise prompt",
+        prompt="根据字段说明生成 Wind/Nobe 配套代码",
+        routes=codegen_route,
+    ),
+    RouteFixture(
+        name="java service generator lowercase sql",
+        prompt="根据 sql 建表语句生成 wind/nobe 配套代码",
+        routes=codegen_route,
+    ),
+    RouteFixture(
+        name="java service generator schema structure",
+        prompt="把这个 schema 表结构转换成 Wind/Nobe Entity 和 Service",
+        routes=codegen_route,
+    ),
+    RouteFixture(
+        name="java service generator overwrite guard",
+        prompt="根据这段 DDL 生成 Wind/Nobe Service，如果已有文件会覆盖先确认影响范围",
+        routes=codegen_safety_route,
+    ),
+    RouteFixture(
+        name="java service generator ambiguous module guard",
+        prompt="根据字段表格生成 Wind/Nobe 配套代码，但目标业务里有多个 face/impl 模块对",
+        routes=codegen_safety_route,
+    ),
+]
+
+negative_route_fixtures: list[RouteFixture] = [
+    RouteFixture(
+        name="codegen on java service tests",
+        prompt="给这个 Java 类的 Application Service 补测试",
+        routes=codegen_route,
+    ),
+    RouteFixture(
+        name="codegen on java service review",
+        prompt="对这个 Java 类的 Service 做一次 CR，重点看契约和空值",
+        routes=codegen_route,
     ),
 ]
 
 
+def routes_codegen(prompt: str) -> bool:
+    """Structured input becomes codegen only with source, action, and target intent."""
+    return (
+        contains_any(prompt, codegen_source_terms)
+        and contains_any(prompt, codegen_action_terms)
+        and contains_any(prompt, codegen_target_terms)
+    )
+
+
 def route_fixture(prompt: str) -> set[str]:
+    """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if any(
-        word in prompt
-        for word in [
+    if contains_any(
+        prompt,
+        [
             "代码",
             "测试",
             "TDD",
@@ -293,28 +419,37 @@ def route_fixture(prompt: str) -> set[str]:
             "CAD",
             "SDK",
             "API",
-        ]
+        ],
     ):
         route.add("senior")
-    if any(word in prompt for word in ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户"]):
+    if contains_any(prompt, product_terms):
         route.add("product")
-    if any(word in prompt for word in ["测试", "TDD", "失败测试"]):
+    if contains_any(prompt, ["测试", "TDD", "失败测试"]):
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
-    if any(word in prompt for word in ["NullPointerException", "根因", "线上"]):
+    if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
-    if any(word in prompt for word in ["OpenSpec", "Agent", "CAD"]):
+    if contains_any(prompt, ["OpenSpec", "Agent", "CAD"]):
         route.update({"workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"})
-    if any(word in prompt for word in ["SDK", "API", "云产品", "版本", "升级"]):
+    if contains_any(prompt, ["SDK", "API", "云产品", "版本", "升级"]):
         route.update({"workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"})
-    if any(word in prompt for word in ["PRD", "模板"]):
+    if contains_any(prompt, ["PRD", "模板"]):
         route.update({"product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"})
-    if any(word in prompt for word in ["清结算", "对账", "支付", "资金", "商户", "合规"]):
+    if contains_any(prompt, ["清结算", "对账", "支付", "资金", "商户", "合规"]):
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
+    if contains_any(prompt, ["SaaS", "B2B", "业务流程", "能力地图", "运营后台", "规则矩阵"]):
+        route.update({"product-scenario-routing.md"})
+    if routes_codegen(prompt):
+        route.update(codegen_route)
+        if contains_any(prompt, codegen_safety_terms):
+            route.add("requires-confirmation")
     return route
 
 
-for name, prompt, expected in scenario_fixtures:
-    expected_subset(name, route_fixture(prompt), expected)
+for fixture in scenario_fixtures:
+    expected_subset(fixture.name, route_fixture(fixture.prompt), fixture.routes)
+
+for fixture in negative_route_fixtures:
+    expected_absent(fixture.name, route_fixture(fixture.prompt), fixture.routes)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
