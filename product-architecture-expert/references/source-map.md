@@ -15,6 +15,18 @@
 - 人人都是产品经理文章《万字：“清算、结算、清结算”的区别》：`https://www.woshipm.com/pd/6046875.html`。公开内容强调清算、结算概念需要先约定语境。
 - 人人都是产品经理文章《拆解支付产品经理的3大底层能力》：`https://www.woshipm.com/pd/5892058.html`。公开内容聚焦支付流分析、模式化设计和架构能力。
 - 人人都是产品经理文章《清算系统设计方法》：`https://www.woshipm.com/pd/4620599.html`。公开内容介绍清算系统、利益计算和分配。
+- 微信公众号文章《3.5万字：一文搞懂“支付系统”》：`https://mp.weixin.qq.com/s/7sZhZPeBE7XmBLjik8al8w`。公开内容用于参考支付系统五层拆解、支付核心主流程、收银台、路由、通道管理、退款和广义通道等支付产品架构视角。
+- 微信公众号文章《图解支付清算生态全景》：`https://mp.weixin.qq.com/s/4P1PuButME_rr5anXeK2ng`。公开内容用于参考支付清算生态分层、交易平台七段链路、跨机构清算、备付金/额度口径、清算机构、商业银行和央行支付系统等宏观架构视角。
+- 微信公众号文章《一文搞懂“全球支付清算”基础原理，建立国际支付底层认知》：`https://mp.weixin.qq.com/s/86gPuhw8eUYb65gRhALH6A`。公开内容用于参考全球支付清算基础、Nostro/Vostro、外清内结、清算行/代理行/NRA 模式、Swift/GPI 与跨境到账追踪。
+- 微信公众号文章《全球支付「信息流和资金流」5层分析法，一张图掌握最底层的原理！》：`https://mp.weixin.qq.com/s/FM6h2bbN5xLXZQLJYG-cWg`。公开内容用于参考全球支付信息流和资金流五层拆解：交易层、支付处理层、代理结算层、清算网络层和最终清算层。
+- 微信公众号文章《理解了这2个字，就悟透了支付！》：`https://mp.weixin.qq.com/s/r2bUyLICOvWV40GOIfBbGw`。公开内容用于参考支付账本观、多套账本、清算/结算双层、代理结算模式和客户备付金/内部账本关系。
+- 微信公众号文章《500个支付知识点，看完秒变支付大师！》：`https://mp.weixin.qq.com/s/atTMCmIoQaG0EIsed2TATg`。公开内容仅用于支付知识体系主题索引和能力地图校准，不复制知识点清单或原文结构。
+- 微信公众号文章《一文搞懂：全球卡组织「支付清结算」原理》：`https://mp.weixin.qq.com/s/NVmy4mKSB83bP18u6XEzHA`。公开内容用于参考卡组织支付清结算、四方/三方模式、BIN/IIN 路由、授权、清算、结算、跨境卡汇率与费用口径。
+- 微信公众号文章《21张图，讲清楚三方机构「支付全链路」处理逻辑与架构》：`https://mp.weixin.qq.com/s/ZhKc64tXXguEFJYxozuMtw`。公开内容用于参考三方支付机构全链路、接入层/业务层/交易层/支付处理层/风控层/通道层，以及收款、付款、退款、清算、结算、账务处理。
+- 微信公众号文章《做好支付，需要懂的会计基础》：`https://mp.weixin.qq.com/s/04oIhVhypiZv7sRWygtOoA`。公开内容用于参考会计恒等式、会计循环、总账/明细账、日记账、凭证、科目、借贷方向和试算平衡。
+- 微信公众号文章《详解账务核心，从入门到精通》：`https://mp.weixin.qq.com/s/WWhjG9ACi3qmqeqPFvBaaA`。公开内容用于参考账务核心架构、账户体系、热点账户、并户、会计日切、营销账务、清结算账务和外围系统驱动。
+- 微信公众号文章《一文搞懂「支付合规」全局：反洗钱、KYC、KYT、大额交易……》：`https://mp.weixin.qq.com/s/FVx1lUcxCF3jUl0Xh6UydA`。公开内容用于参考支付合规、KYC/KYB/KYT/KYA、持续监控、交易限额、AML/CFT、欺诈和 Web3 合规主题。
+- 微信公众号文章《一文说清楚“清算、结算、清结算”的区别》：`https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw`。公开内容用于参考清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异。
 - 《支付之门：支付原理、架构与产品全链路设计》公开图书页：如当当云阅读 `https://e.dangdang.com/products/1901384633.html`。公开简介说明其面向支付系统底层逻辑、会计知识和支付系统设计方法论。
 - Formance Wallets Introduction：`https://docs.formance.com/modules/wallets/introduction`。公开文档用于参考业务钱包、余额和钱包操作的分层设计。
 - Formance Ledger Introduction：`https://docs.formance.com/modules/ledger/introduction`。公开文档用于参考产品账本、账户、交易、分录和元数据设计。

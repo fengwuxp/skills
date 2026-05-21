@@ -94,6 +94,14 @@ product_routing = "product-architecture-expert/references/product-scenario-routi
 product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
 regulatory = "product-architecture-expert/references/regulatory-baseline.md"
+payment_methodology = "product-architecture-expert/references/payment-methodology.md"
+clearing_settlement = "product-architecture-expert/references/clearing-settlement.md"
+global_payment = "product-architecture-expert/references/global-payment-emerging.md"
+card_network = "product-architecture-expert/references/card-network-and-card-rails.md"
+payment_risk = "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md"
+payment_routing = "product-architecture-expert/references/payment-scenario-routing.md"
+product_skill_tree = "product-architecture-expert/references/skill-tree.md"
+product_source_map = "product-architecture-expert/references/source-map.md"
 
 codegen_skill = "java-service-code-generator/SKILL.md"
 codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
@@ -116,6 +124,7 @@ reference_headers = [
     testing,
     "senior-software-architect/references/debugging-diagnosis.md",
     product_routing,
+    payment_routing,
     product_diagram,
     product_prd,
     regulatory,
@@ -423,6 +432,196 @@ check(
 check(
     "payment route keeps regulatory baseline",
     has_all(product_routing, ["payment-scenario-routing.md", "regulatory-baseline.md"]),
+)
+check(
+    "product route sends payment clearing ecosystem to clearing reference",
+    has_all(
+        "product-architecture-expert/references/payment-scenario-routing.md",
+        [
+            "支付清算生态、网联/银联/央行/银行、备付金、跨机构清算",
+            "生态参与者分层、跨机构清算链路、备付金/额度口径、待专业确认项",
+        ],
+    ),
+)
+check(
+    "product route sends global payment and compliance signals to references",
+    has_all(
+        "product-architecture-expert/references/payment-scenario-routing.md",
+        [
+            "支付合规、KYC/KYB/KYT/KYA、AML/CFT、大额交易、可疑交易",
+            "卡组织、银行卡收单、预授权、tokenization、PCI、BIN/IIN、三方/四方模式",
+            "跨境支付、多币种、Swift/GPI、Nostro/Vostro、代理行、本地清算网络、外清内结",
+            "跨境五层拆解、资金流、币种/汇率/费用、合规待确认项",
+        ],
+    ),
+)
+check(
+    "product payment methodology keeps payment system architecture frames",
+    has_all(
+        payment_methodology,
+        [
+            "## 支付系统五层拆解",
+            "支付渠道层",
+            "支付网关层",
+            "支付核心层",
+            "统一支付能力层",
+            "支付接入层",
+            "## 十二字能力地图",
+            "买、收、付、退、充、提、转、调、算、结、管、对",
+            "## 支付核心主流程检查",
+            "## 收银台与接入产品检查",
+            "## 广义通道与支付创新",
+        ],
+    ),
+)
+check(
+    "product clearing reference keeps payment clearing ecosystem frames",
+    has_all(
+        clearing_settlement,
+        [
+            "## 支付清算生态分层",
+            "交易平台层",
+            "支付服务层",
+            "清算服务层",
+            "金融服务层",
+            "央行/金融基础设施层",
+            "## 交易平台七段全链路",
+            "## 跨机构清算四步",
+            "联机交易",
+            "实时清算",
+            "定时结算",
+            "日终处理",
+            "## 备付金与额度口径",
+            "集中存管账户余额",
+            "映射额度",
+            "可用额度",
+        ],
+    ),
+)
+check(
+    "product global payment reference keeps cross-border frames",
+    has_all(
+        global_payment,
+        [
+            "## 跨境支付五层分析法",
+            "交易层",
+            "支付处理层",
+            "代理结算层",
+            "清算网络层",
+            "最终清算层",
+            "## Nostro/Vostro 与跨境三模式",
+            "清算行模式",
+            "代理行模式",
+            "NRA/非居民账户模式",
+            "外清、内结",
+        ],
+    ),
+)
+check(
+    "product clearing reference keeps settlement and accounting frames",
+    has_all(
+        clearing_settlement,
+        [
+            "## 清算、结算、清结算辨析",
+            "理论二元语境",
+            "机构命名语境",
+            "平台产品语境",
+            "内部核算语境",
+            "## 账务核心与会计基础",
+            "外围驱动",
+            "凭证规则",
+            "会计循环",
+            "总分核对",
+        ],
+    ),
+)
+check(
+    "product card network reference keeps card organization clearing frames",
+    has_all(
+        card_network,
+        [
+            "## 卡组织网络与三/四方模式",
+            "四方模式",
+            "三方模式",
+            "卡 BIN / IIN 路由",
+            "专线与前置系统",
+            "跨境卡交易还要额外区分四个口径",
+        ],
+    ),
+)
+check(
+    "product regulatory baseline keeps KYC lifecycle",
+    has_all(
+        regulatory,
+        [
+            "## KYC / KYB / KYT / KYA 生命周期",
+            "**KYC**",
+            "**KYB**",
+            "**KYT**",
+            "**KYA**",
+            "持续监控",
+        ],
+    ),
+)
+check(
+    "product risk reference points to KYC lifecycle",
+    has_all(
+        payment_risk,
+        [
+            "KYC/KYB/KYT/KYA 生命周期",
+            "入网前确认主体与业务真实性",
+            "结算前评估退款、拒付、负余额和准备金",
+        ],
+    ),
+)
+check(
+    "product skill tree exposes payment system architecture frames",
+    has_all(
+        product_skill_tree,
+        [
+            "支付五层：支付渠道层、支付网关层、支付核心层、统一支付能力层、支付接入层",
+            "跨境支付五层：交易层、支付处理层、代理结算层、清算网络层、最终清算层",
+            "支付十二字能力地图：买、收、付、退、充、提、转、调、算、结、管、对",
+            "支付账本观：支付本质是多方账本、账户归属和真实资金路径的协同变化",
+            "卡组织清结算：四方/三方模式、BIN/IIN 路由、授权、清算、结算、跨境汇率和网络费用",
+            "账务核心：外围驱动、凭证规则、账户结构、会计循环、总分核对和日切批处理",
+            "支付清算生态：交易平台层、支付服务层、清算服务层、金融服务层、央行/金融基础设施层",
+            "跨机构清算：联机交易、实时清算、定时结算、日终处理",
+            "KYC/KYB/KYT/KYA：身份、商户/业务、交易、地址和持续监控",
+        ],
+    ),
+)
+check(
+    "product source map records payment system article reference",
+    has_all(
+        product_source_map,
+        [
+            "https://mp.weixin.qq.com/s/7sZhZPeBE7XmBLjik8al8w",
+            "支付系统五层拆解、支付核心主流程、收银台、路由、通道管理、退款和广义通道",
+            "https://mp.weixin.qq.com/s/4P1PuButME_rr5anXeK2ng",
+            "支付清算生态分层、交易平台七段链路、跨机构清算、备付金/额度口径",
+            "https://mp.weixin.qq.com/s/86gPuhw8eUYb65gRhALH6A",
+            "全球支付清算基础、Nostro/Vostro、外清内结、清算行/代理行/NRA 模式",
+            "https://mp.weixin.qq.com/s/FM6h2bbN5xLXZQLJYG-cWg",
+            "全球支付信息流和资金流五层拆解",
+            "https://mp.weixin.qq.com/s/r2bUyLICOvWV40GOIfBbGw",
+            "支付账本观、多套账本、清算/结算双层",
+            "https://mp.weixin.qq.com/s/atTMCmIoQaG0EIsed2TATg",
+            "支付知识体系主题索引和能力地图校准",
+            "https://mp.weixin.qq.com/s/NVmy4mKSB83bP18u6XEzHA",
+            "卡组织支付清结算、四方/三方模式、BIN/IIN 路由",
+            "https://mp.weixin.qq.com/s/ZhKc64tXXguEFJYxozuMtw",
+            "三方支付机构全链路",
+            "https://mp.weixin.qq.com/s/04oIhVhypiZv7sRWygtOoA",
+            "会计恒等式、会计循环、总账/明细账",
+            "https://mp.weixin.qq.com/s/WWhjG9ACi3qmqeqPFvBaaA",
+            "账务核心架构、账户体系、热点账户",
+            "https://mp.weixin.qq.com/s/FVx1lUcxCF3jUl0Xh6UydA",
+            "支付合规、KYC/KYB/KYT/KYA",
+            "https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw",
+            "清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异",
+        ],
+    ),
 )
 check(
     "regulatory baseline requires professional confirmation",
