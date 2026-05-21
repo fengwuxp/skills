@@ -2,4 +2,4 @@ interface:
   display_name: "资深架构师"
   short_description: "架构/系分、图形化交付、Bug/TDD、代码评审、AI协作与Java专长"
   brand_color: "#0F766E"
-  default_prompt: "Use $资深架构师 帮我做架构设计/评审：先构造用例和验证标准，必要时输出 Mermaid 架构图、时序图、状态机或 SVG/PNG 图形化产物，再审查边界、测试和生产风险。"
+  default_prompt: "Use $资深架构师 帮我做架构设计/评审：先构造用例和验证标准，必要时默认输出 SVG 架构图、时序图或状态机；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需明确提出，再审查边界、测试和生产风险。"

@@ -63,7 +63,7 @@
 | 产品方向、业务目标、产品边界不清 | `product-architecture-methodology.md` | 目标、用户、范围、非目标、成功指标、关键风险 |
 | 写 PRD、生成 PRD、完善 PRD、评审 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
 | 能力地图、模块关系、产品架构 | `product-architecture-methodology.md` | 能力地图、模块边界、前后台能力、交付拆分 |
-| 画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物 | `diagram-output.md`，按场景再读 `product-architecture-methodology.md`、`product-design-and-prd.md` 或支付资金专项 reference | 可维护 Mermaid；需要图片文件时生成 SVG/PNG，报告用途、假设、验证和待确认项 |
+| 画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物 | `diagram-output.md`，按场景再读 `product-architecture-methodology.md`、`product-design-and-prd.md` 或支付资金专项 reference | 默认生成 SVG，报告用途、假设、验证和待确认项；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出 |
 | 复杂业务流程、跨角色协作 | `product-architecture-methodology.md`, `product-design-and-prd.md` | 主流程、逆向流程、异常流程、人工流程、SLA |
 | 状态机、生命周期、对象建模 | `product-architecture-methodology.md` | 对象模型、状态机、状态迁移、事件和不变量 |
 | 规则体系、额度、计费、审批、风控 | `product-architecture-methodology.md`, `product-design-and-prd.md` | 规则矩阵、优先级、版本、灰度、回滚和验收样例 |
@@ -91,7 +91,7 @@
 ## 输出路由
 
 - **用户要产品架构方案**：输出背景、目标、范围、用户、角色、能力地图、对象模型、流程、状态机、规则、权限、数据、运营、风险和验收。
-- **用户要图形化产物**：读取 `diagram-output.md`，先判断图形目标和图形类型；优先输出 Mermaid，只有用户要求图片文件或评审材料需要图片时才生成 SVG/PNG，并报告验证结论。
+- **用户要图形化产物**：读取 `diagram-output.md`，先判断图形目标和图形类型；正式图形化交付默认只生成 SVG；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式只在用户明确提出时生成，并报告验证结论。
 - **用户要写作、生成、完善或评审 PRD / 产品需求文档 / 需求说明书 / 模板**：优先读取 `product-prd-template.md`，输出可复制 PRD，覆盖问题背景、用户故事、功能范围、业务规则、页面/交互说明、异常处理、埋点报表、权限、非功能和验收标准；信息不足时保留“待确认”，不要只给提纲。
 - **用户要从模糊想法直接出方案**：先过产品语义门禁，输出关键假设、待确认项和最小可评审结构；不要把假设写成已确认事实。
 - **用户要流程**：输出角色、触发条件、主流程、逆向流程、异常流程、人工处理、通知、SLA 和审计。

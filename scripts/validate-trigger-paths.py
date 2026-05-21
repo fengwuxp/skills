@@ -142,7 +142,7 @@ check(
         [
             "references/diagram-output.md",
             "系统架构图",
-            "优先输出可维护 Mermaid",
+            "正式图形化交付默认只生成 SVG",
         ],
     ),
 )
@@ -150,12 +150,12 @@ check(
     "senior metadata triggers diagram output",
     all(
         term in frontmatter(senior_skill)
-        for term in ["架构图", "时序图", "状态机", "Mermaid", "SVG/PNG"]
+        for term in ["架构图", "时序图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图"]
     ),
 )
 check(
     "senior openai yaml mentions visual output",
-    has_all(senior_agent, ["图形化交付", "Mermaid", "SVG/PNG"]),
+    has_all(senior_agent, ["默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图"]),
 )
 check(
     "product skill uses three-step loading",
@@ -175,7 +175,7 @@ check(
         [
             "references/diagram-output.md",
             "产品架构图",
-            "优先输出可维护 Mermaid",
+            "正式图形化交付默认只生成 SVG",
         ],
     ),
 )
@@ -183,12 +183,12 @@ check(
     "product metadata triggers diagram output",
     all(
         term in frontmatter(product_skill)
-        for term in ["产品架构图", "流程图", "状态机", "Mermaid", "SVG/PNG"]
+        for term in ["产品架构图", "流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图"]
     ),
 )
 check(
     "product openai yaml mentions visual output",
-    has_all(product_agent, ["流程状态图", "Mermaid", "SVG/PNG"]),
+    has_all(product_agent, ["流程状态图", "默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图"]),
 )
 check(
     "senior diagram reference keeps delivery and safety boundaries",
@@ -200,10 +200,14 @@ check(
             "## 视觉风格路由",
             "## 语义形状和箭头",
             "## 稳定提示配方",
-            "Markdown Mermaid",
-            "SVG/PNG",
+            "默认使用 SVG 作为正式图形化交付物",
+            "Mermaid/Markdown 草图",
+            "正式图形化交付默认只生成 SVG",
+            "PNG/PDF/截图等其他格式",
             "工程落点",
             "AI Agent Systems",
+            "可选续作：fireworks-tech-graph",
+            "调用 `$fireworks-tech-graph`",
             "供应链安全审查",
         ],
     ),
@@ -218,10 +222,14 @@ check(
             "## 视觉风格路由",
             "## 语义形状和箭头",
             "## 稳定提示配方",
-            "Markdown Mermaid",
-            "SVG/PNG",
+            "默认使用 SVG 作为正式图形化交付物",
+            "Mermaid/Markdown 草图",
+            "正式图形化交付默认只生成 SVG",
+            "PNG/PDF/截图等其他格式",
             "Finance Ledger",
             "支付资金四流",
+            "可选续作：fireworks-tech-graph",
+            "调用 `$fireworks-tech-graph`",
             "供应链安全审查",
         ],
     ),
@@ -232,7 +240,8 @@ check(
         "README.md",
         [
             "yizhiyanhua-ai/fireworks-tech-graph",
-            "图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG/PNG 导出和渲染校验思路",
+            "图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG 导出和渲染校验思路",
+            "PNG/PDF/截图等派生格式只在使用者明确提出时处理",
             "供应链安全审查",
         ],
     ),
