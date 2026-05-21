@@ -116,6 +116,7 @@
 ### 4.7 复用与方法抽取
 
 - 【强制】不得单纯为了“看起来复用”而提取公有方法或工具类；提取前必须确认复用的是稳定业务语义、算法规则、协议转换或基础能力，而不只是重复的几行代码形状。
+- 【强制】字符串、集合、数组、对象等基础判空和判文本工具，不得手写 `hasText`、`isBlank`、`isEmpty` 等同义工具；优先使用 Spring Framework 或 Apache Commons 已提供的成熟工具，例如 `org.springframework.util.StringUtils`、`org.springframework.util.CollectionUtils`、`org.apache.commons.lang3.StringUtils`、`org.apache.commons.lang3.ObjectUtils`、`org.apache.commons.lang3.ArrayUtils`。只有项目已有统一工具层或需要承载明确业务语义时，才允许包装，并必须说明差异语义、依赖取舍和测试覆盖。
 - 【强制】公有方法参数不得超过 5 个；编码或重构时如果确实需要超过 5 个参数，必须先和用户确认原因、调用方数量、兼容影响和替代方案。
 - 【强制】不得为了隐藏复杂度而制造过深调用链；抽取方法后仍应能从调用点理解业务主流程、状态变化和副作用。
 - 【推荐】DTO、VO、Request、Response、Query、Command 等模型的构建逻辑通常没有跨业务复用价值；除非存在稳定映射规则、兼容转换或多处强一致契约，否则不要提取为公有工具方法。

@@ -364,6 +364,28 @@ check(
         ],
     ),
 )
+check(
+    "Java common utility reuse rule is encoded in coding standards",
+    has_all(
+        coding,
+        [
+            "不得手写 `hasText`、`isBlank`、`isEmpty` 等同义工具",
+            "优先使用 Spring Framework 或 Apache Commons 已提供的成熟工具",
+            "`org.springframework.util.StringUtils`",
+            "`org.apache.commons.lang3.StringUtils`",
+        ],
+    ),
+)
+check(
+    "Java common utility reuse rule is encoded in review guidance",
+    has_all(
+        review,
+        [
+            "检查是否手写 `hasText`、`isBlank`、`isEmpty` 等基础工具",
+            "优先使用 Spring Framework 或 Apache Commons 成熟工具",
+        ],
+    ),
+)
 
 product_gates = ["术语", "主体", "目标", "对象", "流程", "规则", "数据", "风险", "验收"]
 check("product route defines semantic gate", contains(product_routing, "## 产品语义门禁"))
