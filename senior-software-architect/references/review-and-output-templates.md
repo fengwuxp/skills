@@ -16,6 +16,8 @@
 
 代码 Review 需要进一步判断业务语义、分层边界、契约完整性、失败路径和工程一致性时，结合 `coding-review-deep-dive.md`。
 
+正式、完整、可评审、提交前、CR 或触发验证场景中，架构方案、代码 Review 或生产变更必须运行 `scripts/check_architecture_deliverable.py --kind architecture-plan`、`--kind code-review` 或 `--kind production-change` 检查本地文本或显式传入的本地文件。该脚本只检查必备结构，不联网、不写文件、不替代架构判断、代码阅读、测试验证或生产审批；无法运行时必须说明原因、人工检查结果和残余风险。
+
 ## 输出格式约定
 
 - 文档结构优先保证可读、可扫读、可评审：先给结论或摘要，再给依据、方案、风险和待确认项。

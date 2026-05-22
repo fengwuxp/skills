@@ -60,17 +60,25 @@ python3 scripts/validate-trigger-paths.py
 echo "==> python compile"
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
+python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
+python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
+python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/validate-trigger-paths.py
 
 echo "==> java-service-code-generator fixtures"
 java-service-code-generator/scripts/verify_fixtures.py
 
 echo "==> product external rule checker"
-product-architecture-expert/scripts/check_external_rules.py --text "规则来源：Nacha 官方规则；版本：2026；适用法域：US ACH；核验日期：2026-05-22；确认方：法务/合规/通道。"
-if product-architecture-expert/scripts/check_external_rules.py --text "规则来源：Nacha 官方规则。" >/dev/null 2>&1; then
-  echo "external rule checker should fail when required fields are missing" >&2
-  exit 1
-fi
+product-architecture-expert/scripts/check_external_rules.py --self-test
+
+echo "==> product deliverable checker"
+product-architecture-expert/scripts/check_product_deliverable.py --self-test
+
+echo "==> architecture deliverable checker"
+senior-software-architect/scripts/check_architecture_deliverable.py --self-test
+
+echo "==> reference index audit"
+scripts/audit-reference-indexes.py
 
 echo "==> sync dry-run"
 CODEX_HOME="${tmp_dir}/codex-home" ./sync-skills.sh --dry-run all

@@ -1,4 +1,4 @@
-package com.capte.nobe.payment.model;
+package com.example.skill.codegen.model;
 
 import com.mybatisflex.annotation.Id;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * 支付通道。
+ * 示例通道。
  */
-public class PaymentChannel {
+public class SampleChannel {
 
     /**
      * 主键 ID

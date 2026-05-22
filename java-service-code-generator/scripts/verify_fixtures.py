@@ -3,6 +3,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import hashlib
+import re
 from pathlib import Path
 
 
@@ -10,76 +12,104 @@ ROOT = Path(__file__).resolve().parents[2]
 SKILL_DIR = ROOT / "java-service-code-generator"
 GENERATOR = SKILL_DIR / "scripts" / "generate_scaffold.py"
 FIXTURE_DIR = SKILL_DIR / "fixtures"
+BASE_PACKAGE = "com.example.skill.codegen"
 
 
 CASES = [
     {
         "name": "ddl",
-        "args": ["--ddl-file", str(FIXTURE_DIR / "payment_order.sql")],
-        "table": "t_payment_order",
-        "class": "PaymentOrder",
+        "args": ["--ddl-file", str(FIXTURE_DIR / "sample_order.sql")],
+        "table": "t_sample_order",
+        "class": "SampleOrder",
         "checks": {
-            "impl/com/capte/nobe/payment/dal/entities/PaymentOrder.java": [
-                '@Table(PaymentOrder.TABLE_NAME)',
+            "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": [
+                '@Table(SampleOrder.TABLE_NAME)',
                 'private Long id;',
                 '@Column(value = "is_deleted", isLogicDelete = true)',
             ],
-            "face/com/capte/nobe/payment/model/request/CreatePaymentOrderRequest.java": [
+            "face/com/example/skill/codegen/model/request/CreateSampleOrderRequest.java": [
                 "private String orderNo;",
                 "private BigDecimal amount;",
             ],
+        },
+        "golden_hashes": {
+            "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": "f479d6c499120a007d44cbca52fbfdf66f61991e544eaf4942e4239a516eeadd",
+            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": "094adffcae1930c131f4b8d69142f25336cfa81f89b285fcf54ae06d208d5ecd",
+            "face/com/example/skill/codegen/services/SampleOrderService.java": "779ae03f0eb627618d1ea66a71d507983eff9869f432eb8686f66304b7e34ebb",
         },
     },
     {
         "name": "java",
         "args": [
             "--input-file",
-            str(FIXTURE_DIR / "PaymentChannel.java"),
+            str(FIXTURE_DIR / "SampleChannel.java"),
             "--input-type",
             "java",
             "--table-name",
-            "t_payment_channel",
+            "t_sample_channel",
             "--table-comment",
-            "支付通道",
+            "示例通道",
         ],
-        "table": "t_payment_channel",
-        "class": "PaymentChannel",
+        "table": "t_sample_channel",
+        "class": "SampleChannel",
         "emit_ddl": True,
         "checks": {
-            "impl/com/capte/nobe/payment/dal/entities/PaymentChannel.java": [
-                "public class PaymentChannel implements Serializable",
+            "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": [
+                "public class SampleChannel implements Serializable",
                 "private String channelCode;",
                 "private Boolean enabled;",
             ],
+        },
+        "golden_hashes": {
+            "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": "a13d32ee0a7d3e3ad5cde36ee65c97cd6bb81f140339a49bfa1fa530f24fb16d",
+            "impl/com/example/skill/codegen/services/mapstruct/SampleChannelConverter.java": "e21e1307512adef43d2dabdb2e01b2af7e83bbc0388328c4497ccb8eafa5c03a",
+            "face/com/example/skill/codegen/model/query/SampleChannelQuery.java": "6ae445ced82b7eb419fab48c2b7cfe3862dad643a754df7ec25b502361b73a1e",
         },
     },
     {
         "name": "table",
         "args": [
             "--input-file",
-            str(FIXTURE_DIR / "settlement_batch_fields.md"),
+            str(FIXTURE_DIR / "sample_batch_fields.md"),
             "--input-type",
             "table",
             "--table-name",
-            "t_settlement_batch",
+            "t_sample_batch",
             "--table-comment",
-            "结算批次",
+            "示例批次",
         ],
-        "table": "t_settlement_batch",
-        "class": "SettlementBatch",
+        "table": "t_sample_batch",
+        "class": "SampleBatch",
         "emit_ddl": True,
         "checks": {
-            "impl/com/capte/nobe/payment/dal/entities/SettlementBatch.java": [
-                "public class SettlementBatch implements Serializable",
+            "impl/com/example/skill/codegen/dal/entities/SampleBatch.java": [
+                "public class SampleBatch implements Serializable",
                 "private String batchNo;",
                 "private BigDecimal totalAmount;",
             ],
-            "face/com/capte/nobe/payment/services/SettlementBatchService.java": [
-                "WindPagination<SettlementBatchDTO> querySettlementBatchs",
+            "face/com/example/skill/codegen/services/SampleBatchService.java": [
+                "WindPagination<SampleBatchDTO> querySampleBatchs",
             ],
+        },
+        "golden_hashes": {
+            "impl/com/example/skill/codegen/dal/entities/SampleBatch.java": "595864b4760c4fff7a374d15d187bd74c45fc709874efbfded0a3aeef474735f",
+            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": "0abe2690604252ec05ae60b0bd7d5cd427952c1be729be2fb323b376a2f94cd9",
+            "face/com/example/skill/codegen/services/SampleBatchService.java": "f771b55830adbce3f755ec318b3ef10c326b91690424d990241b9e2cc523d509",
         },
     },
 ]
+
+
+def normalized_generated_text(text: str) -> str:
+    text = text.replace("\r\n", "\n")
+    text = re.sub(r"@date \d{4}-\d{2}-\d{2}", "@date <DATE>", text)
+    text = re.sub(r"private static final long serialVersionUID = -?\d+L;", "private static final long serialVersionUID = <SERIAL>;", text)
+    return text
+
+
+def generated_hash(path: Path) -> str:
+    text = normalized_generated_text(path.read_text(encoding="utf-8"))
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def run_case(case: dict[str, object], base_tmp: Path) -> None:
@@ -90,7 +120,7 @@ def run_case(case: dict[str, object], base_tmp: Path) -> None:
         str(GENERATOR),
         *case["args"],
         "--base-package",
-        "com.capte.nobe.payment",
+        BASE_PACKAGE,
         "--author",
         "codex",
         "--output-dir",
@@ -111,6 +141,13 @@ def run_case(case: dict[str, object], base_tmp: Path) -> None:
         for snippet in snippets:
             if snippet not in text:
                 raise AssertionError(f"{case['name']}: {rel} missing snippet: {snippet}")
+    for rel, expected_hash in case.get("golden_hashes", {}).items():
+        target = out / rel
+        if not target.exists():
+            raise AssertionError(f"{case['name']}: missing golden file {rel}")
+        actual_hash = generated_hash(target)
+        if actual_hash != expected_hash:
+            raise AssertionError(f"{case['name']}: {rel} golden hash changed: {actual_hash}")
     if case.get("emit_ddl"):
         ddl = ddl_out.read_text(encoding="utf-8")
         if f"CREATE TABLE `{case['table']}`" not in ddl:
@@ -141,7 +178,7 @@ def expect_failure(name: str, args: list[str], expected: str) -> None:
 def create_ambiguous_module_repo(base_tmp: Path) -> Path:
     repo = base_tmp / "ambiguous-repo"
     module = repo / "multi-domain"
-    for stem in ("payment", "settlement"):
+    for stem in ("sample-alpha", "sample-beta"):
         (module / f"{stem}-face" / "src/main/java").mkdir(parents=True)
         (module / f"{stem}-impl" / "src/main/java").mkdir(parents=True)
     return repo
@@ -151,9 +188,9 @@ def run_negative_cases(base_tmp: Path) -> None:
     overwrite_out = base_tmp / "negative-overwrite"
     overwrite_args = [
         "--ddl-file",
-        str(FIXTURE_DIR / "payment_order.sql"),
+        str(FIXTURE_DIR / "sample_order.sql"),
         "--base-package",
-        "com.capte.nobe.payment",
+        BASE_PACKAGE,
         "--author",
         "codex",
         "--output-dir",
@@ -169,7 +206,7 @@ def run_negative_cases(base_tmp: Path) -> None:
         "ambiguous face impl module pairs",
         [
             "--ddl-file",
-            str(FIXTURE_DIR / "payment_order.sql"),
+            str(FIXTURE_DIR / "sample_order.sql"),
             "--business-module",
             "multi-domain",
             "--repo-root",
@@ -183,11 +220,11 @@ def run_negative_cases(base_tmp: Path) -> None:
         "field table requires table name",
         [
             "--input-file",
-            str(FIXTURE_DIR / "settlement_batch_fields.md"),
+            str(FIXTURE_DIR / "sample_batch_fields.md"),
             "--input-type",
             "table",
             "--base-package",
-            "com.capte.nobe.payment",
+            BASE_PACKAGE,
             "--output-dir",
             str(base_tmp / "negative-missing-table"),
         ],

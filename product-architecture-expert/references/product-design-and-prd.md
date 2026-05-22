@@ -40,6 +40,8 @@
 
 生成或评审 PRD 前，先按 `product-scenario-routing.md` 的产品语义门禁检查。信息不足时仍可产出草案，但必须把不确定内容放入“待确认项”，并说明影响范围。
 
+正式、完整、可评审、提交前、CR 或触发验证场景中，PRD 或产品架构方案必须运行 `scripts/check_product_deliverable.py --kind prd` 或 `scripts/check_product_deliverable.py --kind product-architecture` 检查本地文本或显式传入的本地文件。该脚本只检查目标范围、角色主体、对象状态、流程规则、数据审计、风险确认和验收等必备结构，不联网、不写文件、不替代产品判断、业务确认或合规审查；无法运行时必须说明原因、人工检查结果和残余风险。
+
 最低门禁：
 
 - 目标和非目标可验证。

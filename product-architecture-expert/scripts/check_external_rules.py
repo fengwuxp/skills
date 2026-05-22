@@ -22,6 +22,9 @@ REQUIRED_FIELDS: list[tuple[str, list[str]]] = [
     ("confirming_party", ["确认方", "待确认方", "专业确认方", "法务", "合规", "通道", "持牌机构"]),
 ]
 
+VALID_SELF_TEST = "规则来源：Nacha 官方规则；版本：2026；适用法域：US ACH；核验日期：2026-05-22；确认方：法务/合规/通道。"
+INVALID_SELF_TEST = "规则来源：Nacha 官方规则。"
+
 
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().lower()
@@ -44,11 +47,32 @@ def read_input(args: argparse.Namespace) -> str:
     return sys.stdin.read()
 
 
+def run_self_test() -> int:
+    valid_missing = missing_fields(VALID_SELF_TEST)
+    invalid_missing = missing_fields(INVALID_SELF_TEST)
+    failures: list[str] = []
+    if valid_missing:
+        failures.append("valid fixture missing " + ", ".join(valid_missing))
+    if not invalid_missing:
+        failures.append("invalid fixture unexpectedly passed")
+    if failures:
+        print("FAIL external rule self-test", file=sys.stderr)
+        for failure in failures:
+            print(f"- {failure}", file=sys.stderr)
+        return 1
+    print("OK external rule self-test")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="检查外部规则核验字段是否完整")
     parser.add_argument("--file", help="待检查的本地 Markdown/文本文件")
     parser.add_argument("--text", help="直接传入待检查文本")
+    parser.add_argument("--self-test", action="store_true", help="运行内置正反例自测")
     args = parser.parse_args()
+
+    if args.self_test:
+        return run_self_test()
 
     text = read_input(args)
     if not text.strip():

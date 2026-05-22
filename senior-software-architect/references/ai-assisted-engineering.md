@@ -26,6 +26,17 @@
 - 测试/TDD 读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
 - 生产变更读 `production-readiness.md` 和 `negative-constraints.md`。
 
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 判断是否需要 AI 协作流程 | 使用时机、读取后必须产出、1、2、6 | CAD Mode 细节 |
+| 写 OpenSpec 或规格门禁 | 3、6、8、10 | Harness 和 CAD 细节 |
+| Harness Plan / 多 Agent 协作 | 4、5、6、8 | OpenSpec 示例细节 |
+| CAD Mode 候选判断与授权 | 7、8、10 | 基础三层模型解释 |
+| 审查 AI 生成代码 | 4、6、10，并按需读 Review/测试 reference | CAD 执行流程细节 |
+| 生产或高风险自动推进 | 6、7、8、9、10 | 低风险轻量执行内容 |
+
 ## 1. 核心定位
 
 AI 编码不是“让工具直接写代码”，而是把需求、规范、测试、实现、审查、重构和交付串成受控闭环：

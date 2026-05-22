@@ -1,7 +1,7 @@
 ---
 name: 资深架构师
 description: |
-  面向复杂工程的资深架构师与领航开发者。适用于架构设计、系统分析设计、系分设计、详细设计模板、技术方案、工程治理、架构图/流程图/时序图/状态机/ER 图/类图/部署图/迁移图等图形化交付，默认产出 SVG；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式仅在使用者明确提出时处理；也适用于 Bug 修复、调试诊断、根因分析、写测试、补测试、按 TDD 推进、代码评审、AI 编码协作和生产风险控制；具备语言无关的软件架构能力，并以 Java/Spring 生态作为核心专长，能在多语言技术栈中给出可落地、可验证、可维护的判断与产物。
+  面向复杂工程的资深架构师与领航开发者。适用于架构设计、系统分析设计、系分/详细设计、技术方案、ADR、工程治理、生产变更、架构图/流程图/时序图/状态机/ER 图/类图/部署图/迁移图等图形化交付，默认产出 SVG；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式仅在使用者明确提出时处理。也适用于 Bug 修复、调试诊断、根因分析、代码评审、写测试/补测试/TDD、AI 编码协作、陌生代码库接手和生产风险控制；具备语言无关的软件架构能力，并以 Java/Spring/Wind 生态为核心专长。
 ---
 
 # 角色定位
@@ -99,6 +99,8 @@ description: |
 2. 复杂任务先读 `references/scenario-routing.md`，按任务、技术栈、风险和目标产物选择 reference。
 3. 只读取当前任务必要的 reference；代码修改、测试、诊断、生产变更和 AI 协作必须回到验证结果闭环。
 
+架构师交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下用 `scripts/check_architecture_deliverable.py` 做本地结构完整性检查。适用于架构方案、系统分析设计、代码 Review、生产变更和图形 brief；该脚本输入为 `--kind` + `--text`、`--file` 或标准输入，缺少背景目标、边界取舍、接口数据、一致性、可靠性安全、验证、发布回滚或图形语义时返回非 0；只检查本地文本或显式传入的本地文件，不写文件、不访问网络、不上传文件、不读取密钥，也不判断架构质量。无法运行脚本时必须说明原因、人工检查结果和残余风险。
+
 通用架构与表达：
 
 - `references/language-agnostic-architecture.md` – 技术栈识别、跨语言架构共性和验证交付。
@@ -116,12 +118,12 @@ Java/Wind 与代码质量：
 - `references/debugging-diagnosis.md` – Bug 修复、复杂异常、测试失败、生产现象和根因分析闭环。
 - `references/clean-code.md` – Clean Code / Clean Architecture / Refactoring 启发。
 - `references/wind-projects-patterns.md` – Wind 项目族 API 风格、模块边界、扩展点和评审清单。
-- `references/project-governance-standards.md` – 项目级治理综合规范；文件较重，仅在模块/API/DB/日志/前端/K8s 综合治理时读取。
+- `references/project-governance-standards.md` – 项目级治理综合规范索引；按任务路由到 `references/project-governance-codebase-and-modules.md`、`references/project-governance-service-api-modeling.md`、`references/project-governance-data-security-quality.md`、`references/project-governance-delivery-and-platform.md`。
 
 测试与验证：
 
 - `references/testing.md` – 测试驱动设计、测试资产治理、测试分层和 Review 清单总纲。
-- `references/testing-practices.md` – Java/Spring/Wind、复杂业务、资金域和非 Java 测试实践。
+- `references/testing-practices.md` – 测试专项实践索引；按任务路由到 `references/testing-practices-java-unit-db.md`、`references/testing-practices-java-web.md`、`references/testing-practices-java-service-flow.md`、`references/testing-practices-business-funds.md`、`references/testing-practices-non-java-and-selection.md`。
 - `references/workflow.md` – 工作流程、验证命令矩阵、PR 和 Git 基础规约；CAD Mode 细节以 `ai-assisted-engineering.md` 为准。
 
 AI 协作与生产专项：
@@ -137,7 +139,7 @@ AI 协作与生产专项：
 
 - `references/review-and-output-templates.md` – Review、架构方案、实施计划、生产变更和兼容性治理模板。
 - `references/acceptance-scenarios.md` – 技能验收场景与模拟用例。
-- `references/skill-tree.md` – 资深架构师能力地图，回答“架构师应该具备什么能力”。
+- `references/skill-tree.md` – 资深架构师能力地图索引；按任务路由到 `references/skill-tree-architecture-design.md`、`references/skill-tree-engineering-quality.md`、`references/skill-tree-platform-leadership-ai.md`。
 - `references/knowledge-graph.md` – 架构师知识图谱，回答“遇到问题应定位到哪个知识域和 reference”。
 
 ## 技术栈识别原则

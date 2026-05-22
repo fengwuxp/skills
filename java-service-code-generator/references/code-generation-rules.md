@@ -29,7 +29,7 @@
 - `--table-comment`：Java/字段表格输入时的表中文说明。
 - `--business-module`：用户提供的模块目录或模块名。
 - `--repo-root`：当前仓库根目录。
-- `--base-package`：从模块已有 Java 文件推断；如果同一模块存在多个限界上下文，先检查相邻代码，仍不明确时再问用户。
+- `--base-package`：从模块已有 Java 文件推断；如果同一模块存在多个限界上下文，先检查相邻代码，仍不明确时再问用户；无法从源码推断时必须要求显式传入，不使用真实项目包名兜底。
 - `--face-src` / `--impl-src`：通常不询问用户，优先从 `*-face/src/main/java` 和 `*-impl/src/main/java` 推断；只有自动推断存在歧义时才显式传入。
 - `--class-name`：DDL/字段表格默认由表名去掉前缀 `t_` 后转为 PascalCase；Java 类默认使用类名去掉 DTO/DO/VO/PO/BO/Entity/Request/Query 后缀。
 - `--author`：默认使用当前系统用户名；如果项目已有明确作者约定或用户指定作者，则遵循已有约定。
@@ -51,36 +51,36 @@
 ```bash
 python3 java-service-code-generator/scripts/generate_scaffold.py \
   --schema-file /path/to/schema.sql \
-  --table-name t_kyc_persona_verification \
-  --business-module user-domain \
+  --table-name t_sample_verification \
+  --business-module sample-domain \
   --repo-root /path/to/repo \
-  --author wuxp
+  --author codex
 ```
 
 通过 Java 类生成，并额外输出 DDL 草案：
 
 ```bash
 python3 java-service-code-generator/scripts/generate_scaffold.py \
-  --input-file /path/to/PaymentOrder.java \
+  --input-file /path/to/SampleOrder.java \
   --input-type java \
-  --table-name t_payment_order \
-  --table-comment 支付订单 \
-  --base-package com.capte.nobe.payment \
-  --emit-ddl /tmp/payment_order.sql \
-  --output-dir /tmp/nobe-ddl-generated
+  --table-name t_sample_order \
+  --table-comment 示例订单 \
+  --base-package com.example.skill.codegen \
+  --emit-ddl /tmp/sample_order.sql \
+  --output-dir /tmp/skill-codegen-sample
 ```
 
 通过 Markdown/CSV/TSV 字段表格生成：
 
 ```bash
 python3 java-service-code-generator/scripts/generate_scaffold.py \
-  --input-file /path/to/payment_order_fields.md \
+  --input-file /path/to/sample_order_fields.md \
   --input-type table \
-  --table-name t_payment_order \
-  --table-comment 支付订单 \
-  --base-package com.capte.nobe.payment \
-  --emit-ddl /tmp/payment_order.sql \
-  --output-dir /tmp/nobe-ddl-generated
+  --table-name t_sample_order \
+  --table-comment 示例订单 \
+  --base-package com.example.skill.codegen \
+  --emit-ddl /tmp/sample_order.sql \
+  --output-dir /tmp/skill-codegen-sample
 ```
 
 先生成到评审目录：
@@ -88,9 +88,9 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 ```bash
 python3 java-service-code-generator/scripts/generate_scaffold.py \
   --ddl-file /path/to/table.sql \
-  --base-package com.capte.nobe.kyc \
-  --author wuxp \
-  --output-dir /tmp/nobe-ddl-generated
+  --base-package com.example.skill.codegen \
+  --author codex \
+  --output-dir /tmp/skill-codegen-sample
 ```
 
 直接生成到 face/impl 模块：
@@ -98,13 +98,23 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 ```bash
 python3 java-service-code-generator/scripts/generate_scaffold.py \
   --ddl-file /path/to/table.sql \
-  --base-package com.capte.nobe.kyc \
-  --author wuxp \
-  --face-src user-domain/user-face/src/main/java \
-  --impl-src user-domain/user-impl/src/main/java
+  --base-package com.example.skill.codegen \
+  --author codex \
+  --face-src sample-domain/sample-face/src/main/java \
+  --impl-src sample-domain/sample-impl/src/main/java
 ```
 
 只有在表名无法生成期望类名时才使用 `--class-name`。只有检查过已有文件并确认允许覆盖后才使用 `--overwrite`。
+
+## Fixture 与黄金输出契约
+
+本仓库维护代码生成器时，`scripts/verify_fixtures.py` 是确定性回归入口，不只是 smoke test。它必须同时覆盖：
+
+- DDL、Java 类和字段表格三类输入。
+- 关键生成文件的 normalized golden hash，过滤 `@date` 和 `serialVersionUID` 这类运行时噪声后比较模板结构。
+- 负向路径：已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名。
+
+当确实需要调整模板结构时，先人工审查生成 diff，再同步更新 golden hash；不得只为通过验证而更新 hash。
 
 ## 代码生成规程
 

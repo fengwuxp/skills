@@ -44,6 +44,11 @@ def has_all(path: str, texts: list[str]) -> bool:
     return all(text in body for text in texts)
 
 
+def has_none(path: str, texts: list[str]) -> bool:
+    body = read(path)
+    return all(text not in body for text in texts)
+
+
 def frontmatter(path: str) -> str:
     text = read(path)
     if not text.startswith("---\n"):
@@ -90,6 +95,29 @@ review = "senior-software-architect/references/coding-review-deep-dive.md"
 debugging = "senior-software-architect/references/debugging-diagnosis.md"
 language_agnostic = "senior-software-architect/references/language-agnostic-architecture.md"
 security = "senior-software-architect/references/security-architecture.md"
+architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
+reference_index_audit = "scripts/audit-reference-indexes.py"
+codegen_generator = "java-service-code-generator/scripts/generate_scaffold.py"
+codegen_fixture_verifier = "java-service-code-generator/scripts/verify_fixtures.py"
+codegen_rules = "java-service-code-generator/references/code-generation-rules.md"
+project_governance_refs = [
+    "senior-software-architect/references/project-governance-codebase-and-modules.md",
+    "senior-software-architect/references/project-governance-service-api-modeling.md",
+    "senior-software-architect/references/project-governance-data-security-quality.md",
+    "senior-software-architect/references/project-governance-delivery-and-platform.md",
+]
+testing_practice_refs = [
+    "senior-software-architect/references/testing-practices-java-unit-db.md",
+    "senior-software-architect/references/testing-practices-java-web.md",
+    "senior-software-architect/references/testing-practices-java-service-flow.md",
+    "senior-software-architect/references/testing-practices-business-funds.md",
+    "senior-software-architect/references/testing-practices-non-java-and-selection.md",
+]
+skill_tree_refs = [
+    "senior-software-architect/references/skill-tree-architecture-design.md",
+    "senior-software-architect/references/skill-tree-engineering-quality.md",
+    "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
+]
 
 product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
@@ -106,6 +134,7 @@ payment_routing = "product-architecture-expert/references/payment-scenario-routi
 product_skill_tree = "product-architecture-expert/references/skill-tree.md"
 product_source_map = "product-architecture-expert/references/source-map.md"
 product_rule_checker = "product-architecture-expert/scripts/check_external_rules.py"
+product_deliverable_checker = "product-architecture-expert/scripts/check_product_deliverable.py"
 
 codegen_skill = "java-service-code-generator/SKILL.md"
 codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
@@ -132,7 +161,7 @@ reference_headers = [
     product_diagram,
     product_prd,
     regulatory,
-]
+] + project_governance_refs + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
@@ -174,12 +203,12 @@ check(
     "senior metadata triggers diagram output",
     all(
         term in frontmatter(senior_skill)
-        for term in ["架构图", "时序图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图"]
+        for term in ["架构图", "时序图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图", "ADR", "生产变更", "陌生代码库"]
     ),
 )
 check(
     "senior openai yaml mentions visual output",
-    has_all(senior_agent, ["默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图"]),
+    has_all(senior_agent, ["默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图", "发布回滚和生产风险"]),
 )
 check(
     "product skill uses three-step loading",
@@ -207,16 +236,74 @@ check(
     "product metadata triggers diagram output",
     all(
         term in frontmatter(product_skill)
-        for term in ["产品架构图", "流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图", "外卡收单", "Mastercard"]
+        for term in ["PRD", "需求说明", "产品架构图", "业务流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图", "外卡收单", "Mastercard", "合规待确认", "工程实现"]
     ),
 )
 check(
     "product openai yaml mentions visual output",
-    has_all(product_agent, ["流程状态图", "默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图"]),
+    has_all(product_agent, ["能力流程状态图", "默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图", "待确认项"]),
 )
 check(
     "product openai yaml mentions acquiring specialty",
     has_all(product_agent, ["支付资金与外卡收单专项"]),
+)
+check(
+    "codegen metadata triggers only structured generation",
+    has_all(
+        codegen_skill,
+        [
+            "DDL/SQL",
+            "schema 文件",
+            "字段表格",
+            "MyBatis-Flex Entity",
+            "ServiceImpl",
+            "仅在用户明确要求“生成/转换/脚手架/配套代码”时触发",
+            "代码评审、Bug 修复和补测试优先交给架构师",
+        ],
+    )
+    and has_all(
+        "java-service-code-generator/agents/openai.yaml",
+        [
+            "DDL/schema",
+            "字段表格",
+            "Wind/Nobe Service 脚手架",
+            "Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl",
+        ],
+    ),
+)
+check(
+    "large references expose task-level reading indexes",
+    all(
+        has_all(
+            path,
+            [
+                "## 按任务读取索引",
+                "| 任务 | 优先读取 | 跳过 |",
+            ],
+        )
+        for path in [
+            "senior-software-architect/references/project-governance-standards.md",
+            *project_governance_refs,
+            "senior-software-architect/references/testing-practices.md",
+            *testing_practice_refs,
+            "senior-software-architect/references/skill-tree.md",
+            *skill_tree_refs,
+            "senior-software-architect/references/system-analysis-design.md",
+            "senior-software-architect/references/ai-assisted-engineering.md",
+            "senior-software-architect/references/knowledge-graph.md",
+            "senior-software-architect/references/coding-standards.md",
+            "product-architecture-expert/references/product-prd-template.md",
+        ]
+    )
+    and has_all(
+        reference_index_audit,
+        [
+            "REQUIRED_INDEX_THRESHOLD",
+            "REQUIRED_HEADING",
+            "REQUIRED_INDEX_FILES",
+            "OK reference index audit",
+        ],
+    ),
 )
 check(
     "senior diagram reference keeps delivery and safety boundaries",
@@ -814,7 +901,7 @@ check(
 check(
     "senior skill tree exposes architecture diagram literacy",
     has_all(
-        "senior-software-architect/references/skill-tree.md",
+        "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
         [
             "技术架构图必须区分整体、子领域和应用粒度",
             "架构图要表达职责、关系、同步/异步、数据流、容量或瓶颈",
@@ -913,12 +1000,130 @@ check(
     and has_all(
         product_rule_checker,
         [
+            "--self-test",
+            "VALID_SELF_TEST",
+            "INVALID_SELF_TEST",
             "REQUIRED_FIELDS",
             "rule_source",
             "version_or_publish_date",
             "jurisdiction_or_scope",
             "verified_at",
             "confirming_party",
+        ],
+    ),
+)
+check(
+    "product skill exposes deterministic deliverable checker",
+    has_all(
+        product_skill,
+        [
+            "scripts/check_product_deliverable.py",
+            "PRD、产品架构方案和图形 brief",
+            "正式、完整、可评审、提交前、CR 或触发验证场景",
+            "不写文件、不访问网络、不上传文件、不读取密钥",
+            "不判断方案业务质量",
+            "无法运行脚本时必须说明原因、人工检查结果和残余风险",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "scripts/check_product_deliverable.py",
+            "--kind prd",
+            "--kind product-architecture",
+            "--kind diagram-brief",
+            "必须运行",
+            "只做本地文本完整性检查",
+            "不联网、不写文件",
+            "无法运行时必须说明原因、人工检查结果和残余风险",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "scripts/check_product_deliverable.py --kind prd",
+            "scripts/check_product_deliverable.py --kind product-architecture",
+            "必须运行",
+            "不替代产品判断、业务确认或合规审查",
+        ],
+    )
+    and has_all(
+        product_diagram,
+        [
+            "scripts/check_product_deliverable.py --kind diagram-brief",
+            "图形目标、目标读者、图形类型、节点/分组、箭头语义",
+            "必须运行",
+            "不判断图形美观度、业务正确性或渲染质量",
+        ],
+    )
+    and has_all(
+        product_deliverable_checker,
+        [
+            "--self-test",
+            "SELF_TESTS",
+            '"prd"',
+            '"product-architecture"',
+            '"diagram-brief"',
+            "goal_and_scope",
+            "risk_and_confirmation",
+            "output_format",
+        ],
+    ),
+)
+check(
+    "senior skill exposes deterministic architecture deliverable checker",
+    has_all(
+        senior_skill,
+        [
+            "scripts/check_architecture_deliverable.py",
+            "架构方案、系统分析设计、代码 Review、生产变更和图形 brief",
+            "正式、完整、可评审、提交前、CR 或触发验证场景",
+            "不写文件、不访问网络、不上传文件、不读取密钥",
+            "不判断架构质量",
+            "无法运行脚本时必须说明原因、人工检查结果和残余风险",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/review-and-output-templates.md",
+        [
+            "scripts/check_architecture_deliverable.py --kind architecture-plan",
+            "--kind code-review",
+            "--kind production-change",
+            "必须运行",
+            "不替代架构判断、代码阅读、测试验证或生产审批",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "scripts/check_architecture_deliverable.py --kind system-design",
+            "背景目标、边界、概要设计、详细设计、流程状态、非功能、测试和研发计划",
+            "必须运行",
+            "不替代架构评审或工程验证",
+        ],
+    )
+    and has_all(
+        senior_diagram,
+        [
+            "scripts/check_architecture_deliverable.py --kind diagram-brief",
+            "图形目标、目标读者、图形类型、工程落点、节点/分组、箭头语义",
+            "必须运行",
+            "不判断架构质量、视觉美观度或渲染质量",
+        ],
+    )
+    and has_all(
+        architecture_deliverable_checker,
+        [
+            "--self-test",
+            "SELF_TESTS",
+            '"architecture-plan"',
+            '"system-design"',
+            '"code-review"',
+            '"production-change"',
+            '"diagram-brief"',
+            "background_and_goal",
+            "release_and_risk",
+            "engineering_anchor",
         ],
     ),
 )
@@ -938,6 +1143,46 @@ check(
             "已有文件不允许覆盖",
             "多个 face/impl 模块对存在歧义",
             "字段表格缺少目标表名",
+        ],
+    ),
+)
+check(
+    "java service generator keeps public-safe fixtures",
+    has_all(
+        codegen_fixture_verifier,
+        [
+            'BASE_PACKAGE = "com.example.skill.codegen"',
+            "sample_order.sql",
+            "SampleChannel.java",
+            "sample_batch_fields.md",
+            "SampleOrder",
+            "SampleChannel",
+            "SampleBatch",
+        ],
+    )
+    and has_all(
+        codegen_generator,
+        [
+            "无法推断基础包名，请传入 --base-package",
+            "基础包名，例如 com.example.skill.codegen",
+        ],
+    )
+    and has_all(
+        codegen_rules,
+        [
+            "com.example.skill.codegen",
+            "t_sample_order",
+            "/tmp/skill-codegen-sample",
+        ],
+    )
+    and has_none(
+        codegen_fixture_verifier,
+        [
+            "com." + "capte",
+            "com/" + "capte",
+            "payment_" + "order.sql",
+            "Payment" + "Channel.java",
+            "settlement_" + "batch_fields.md",
         ],
     ),
 )

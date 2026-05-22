@@ -541,10 +541,6 @@ def infer_base_package(face_src: Path, impl_src: Path, business_module: str | No
     if merged:
         options = ", ".join(sorted(merged))
         raise ValueError(f"基础包名存在歧义，请选择其中一个：{options}")
-    if business_module:
-        module_name = business_module.split("/")[-1]
-        base = re.sub(r"-(face|impl)$", "", module_name)
-        return f"com.capte.nobe.{kebab_to_camel(base)}"
     raise ValueError("无法推断基础包名，请传入 --base-package")
 
 
@@ -1263,7 +1259,7 @@ def main() -> int:
     parser.add_argument("--table-comment", default="", help="Java/字段表格输入时的表中文说明")
     parser.add_argument("--business-module", help="业务模块路径或名称，例如 user-domain 或 user-domain/user-face")
     parser.add_argument("--repo-root", default=".", help="配合 --business-module 使用的仓库根目录")
-    parser.add_argument("--base-package", help="基础包名，例如 com.capte.nobe.kyc")
+    parser.add_argument("--base-package", help="基础包名，例如 com.example.skill.codegen")
     parser.add_argument("--author", default=os.environ.get("USER", "codex"))
     parser.add_argument("--class-name")
     parser.add_argument("--output-dir", help="评审输出目录；未传入 face-src/impl-src 时使用")
@@ -1313,7 +1309,7 @@ def main() -> int:
         face_root = out / "face"
         impl_root = out / "impl"
         if not base_package:
-            parser.error("无法推断模块根目录时必须传入 --base-package")
+            parser.error("无法推断基础包名，请传入 --base-package")
 
     files = [
         (package_path(impl_root, f"{base_package}.dal.entities") / f"{name}.java", render_entity(base_package, table, name, args.author)),
