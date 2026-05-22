@@ -87,6 +87,9 @@ ai_engineering = "senior-software-architect/references/ai-assisted-engineering.m
 testing = "senior-software-architect/references/testing.md"
 coding = "senior-software-architect/references/coding-standards.md"
 review = "senior-software-architect/references/coding-review-deep-dive.md"
+debugging = "senior-software-architect/references/debugging-diagnosis.md"
+language_agnostic = "senior-software-architect/references/language-agnostic-architecture.md"
+security = "senior-software-architect/references/security-architecture.md"
 
 product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
@@ -122,7 +125,7 @@ reference_headers = [
     workflow,
     ai_engineering,
     testing,
-    "senior-software-architect/references/debugging-diagnosis.md",
+    debugging,
     product_routing,
     payment_routing,
     product_diagram,
@@ -152,6 +155,17 @@ check(
             "references/diagram-output.md",
             "系统架构图",
             "正式图形化交付默认只生成 SVG",
+        ],
+    ),
+)
+check(
+    "senior skill delegates complete routing to scenario reference",
+    has_all(
+        senior_skill,
+        [
+            "`references/scenario-routing.md` 是本技能唯一完整路由表",
+            "复杂产品语义",
+            "优先使用 `产品架构专家`",
         ],
     ),
 )
@@ -272,6 +286,22 @@ check(
         ],
     ),
 )
+check(
+    "README records Ivy skills reference source",
+    has_all(
+        "README.md",
+        [
+            "Ivy-piger/Ivy-skills",
+            "陌生代码库侦察",
+            "Java 架构坏味启发式扫描",
+            "生产故障时间线",
+            "5-Why 复盘草稿",
+            "Spring Boot 安全检查清单",
+            "不安装或复制 Claude Code 专用 frontmatter",
+            "供应链安全审查",
+        ],
+    ),
+)
 
 lifecycle_stages = ["Clarify", "Design", "Plan", "Build", "Verify", "Review/Ship"]
 check("workflow defines engineering lifecycle gate", contains(workflow, "## 工程生命周期门禁"))
@@ -346,6 +376,91 @@ check(
             "图形化架构交付读 `diagram-output.md`",
             "架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物",
             "图形目标、图形类型、工程落点",
+        ],
+    ),
+)
+check(
+    "senior route sends codebase onboarding to language agnostic reconnaissance",
+    has_all(
+        senior_routing,
+        [
+            "陌生代码库接手 / 项目现状分析",
+            "项目清单、技术指纹、入口路径、目录语义、配置、测试、数据和运行链路侦察",
+        ],
+    ),
+)
+check(
+    "language agnostic reference defines codebase reconnaissance",
+    has_all(
+        language_agnostic,
+        [
+            "## 2. 技术栈识别",
+            "### 2.1 陌生代码库侦察",
+            "项目清单",
+            "技术指纹",
+            "入口路径",
+            "目录语义",
+            "测试与质量",
+            "关键链路",
+            "不要自动创建新的上手文档",
+        ],
+    ),
+)
+check(
+    "senior route sends architecture smell scan to review guidance",
+    has_all(
+        senior_routing,
+        [
+            "架构坏味 / 深度代码质量扫描",
+            "上帝类、循环依赖、过长方法、Feature Envy、Data Clumps",
+        ],
+    ),
+)
+check(
+    "review guidance defines architecture smell heuristic scan",
+    has_all(
+        review,
+        [
+            "## Java 架构坏味启发式扫描",
+            "上帝类 / God Class",
+            "循环依赖",
+            "过长方法",
+            "Feature Envy",
+            "Data Clumps",
+            "公共模块垃圾桶",
+            "以下阈值是提示信号，不是机械定罪",
+        ],
+    ),
+)
+check(
+    "debugging reference defines incident timeline and 5 why",
+    has_all(
+        debugging,
+        [
+            "## 生产故障时间线",
+            "事实、假设、判断分开写",
+            "顺序推测",
+            "## 5-Why 复盘草稿",
+            "证据等级和待人工确认项",
+            "短期止血",
+            "中期加固",
+            "长期预防",
+        ],
+    ),
+)
+check(
+    "security reference defines Spring Boot security checklist",
+    has_all(
+        security,
+        [
+            "## Spring Boot 安全落地检查",
+            "SecurityFilterChain",
+            "方法级授权",
+            "CSRF",
+            "CORS",
+            "X-Forwarded-For",
+            "限流与滥用",
+            "错误响应",
         ],
     ),
 )
@@ -707,6 +822,18 @@ check(
     ),
 )
 check(
+    "senior product design stays engineering scoped",
+    has_all(
+        "senior-software-architect/references/product-design.md",
+        [
+            "不是 PRD 生成指南",
+            "不替代 `产品架构专家`",
+            "工程设计",
+            "产品语义",
+        ],
+    ),
+)
+check(
     "product source map records payment system article reference",
     has_all(
         product_source_map,
@@ -782,6 +909,31 @@ check(
 )
 
 scenario_fixtures: list[RouteFixture] = [
+    RouteFixture(
+        name="codebase onboarding reconnaissance",
+        prompt="这个陌生代码库我不熟，帮我先做架构现状分析和接手侦察",
+        routes={"senior", "language-agnostic-architecture.md", "workflow.md"},
+    ),
+    RouteFixture(
+        name="architecture smell scan",
+        prompt="这批 Java 代码帮我做一次深度质量扫描，看看有没有架构坏味、上帝类和循环依赖",
+        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md", "coding-standards.md"},
+    ),
+    RouteFixture(
+        name="incident timeline and 5 why",
+        prompt="昨晚线上故障帮我整理时间线并做 5-Why 复盘",
+        routes={"senior", "debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
+        name="incident postmortem",
+        prompt="帮我做一次生产故障复盘，给出止血、根因、改进和验证",
+        routes={"senior", "debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
+        name="spring security review",
+        prompt="帮我看一下这个 Spring Boot 后台的 Spring Security、CSRF 和 CORS 安全设计",
+        routes={"senior", "security-architecture.md", "negative-constraints.md"},
+    ),
     RouteFixture(
         name="write tests",
         prompt="给这个 Application Service 补一组 TDD 测试，先写失败测试",
@@ -887,6 +1039,22 @@ def route_fixture(prompt: str) -> set[str]:
             "测试",
             "TDD",
             "失败测试",
+            "陌生代码库",
+            "架构现状",
+            "接手侦察",
+            "架构坏味",
+            "深度质量扫描",
+            "上帝类",
+            "循环依赖",
+            "时间线",
+            "5-Why",
+            "故障复盘",
+            "事故复盘",
+            "线上复盘",
+            "生产复盘",
+            "Spring Security",
+            "CSRF",
+            "CORS",
             "NullPointerException",
             "根因",
             "OpenSpec",
@@ -905,6 +1073,16 @@ def route_fixture(prompt: str) -> set[str]:
         ],
     ):
         route.add("senior")
+    if contains_any(prompt, ["陌生代码库", "架构现状", "接手侦察"]):
+        route.update({"language-agnostic-architecture.md", "workflow.md"})
+    if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖"]):
+        route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
+        if contains_any(prompt, ["Java", "Spring"]):
+            route.add("coding-standards.md")
+    if contains_any(prompt, ["时间线", "5-Why", "故障复盘", "事故复盘", "线上复盘", "生产复盘"]):
+        route.update({"debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"})
+    if contains_any(prompt, ["Spring Security", "CSRF", "CORS"]):
+        route.update({"security-architecture.md", "negative-constraints.md"})
     if contains_any(prompt, product_terms):
         route.add("product")
     if contains_any(prompt, ["测试", "TDD", "失败测试"]):

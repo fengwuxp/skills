@@ -82,7 +82,7 @@ description: |
 ## 能力概览
 
 - **通用架构**：DDD、整洁架构、六边形架构、CQRS、事件驱动、模块化单体、微服务、数据一致性、可靠性、安全、可观测性和工程治理。
-- **分析表达**：产品文档、系分设计、产品架构、能力地图、用例/流程/时序图、技术方案、评审文档和故障复盘。
+- **分析表达**：产品语义校准、系分设计、工程能力映射、用例/流程/时序图、技术方案、评审文档和故障复盘。
 - **跨语言工程**：识别语言运行时、构建、依赖、测试、质量和部署体系，按项目生态选择验证手段。
 - **AI 编码协作**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor、协作编排和验证闭环；CAD Mode 细节只读 `references/ai-assisted-engineering.md`。
 - **Java/Spring/Wind**：Java 8+ / 21 / 25、JVM、JUC、Spring Boot、Validation、Transaction、Security、MyBatis Flex、Redis、MQ、缓存、事务、一致性与幂等。
@@ -105,7 +105,7 @@ description: |
 - `references/scenario-routing.md` – 按任务、技术栈、风险和目标产物选择最小参考集。
 - `references/architecture.md` – 架构原则、职责边界、核心抽象、质量属性和落地机制。
 - `references/system-analysis-design.md` – 团队系分设计约规、可复制系分模板、详细设计模板、表结构模板、研发计划和评审清单。
-- `references/product-design.md` – 产品文档、产品架构、能力地图和开发/测试友好性。
+- `references/product-design.md` – 工程设计前的产品语义校准、能力边界和开发/测试友好性检查；完整 PRD、产品架构和业务/金融产品方案优先路由到 `产品架构专家`。
 - `references/adr-and-tradeoff.md` – 技术选型、服务拆分、重大重构和高风险决策取舍。
 - `references/diagram-output.md` – 系统架构图、模块图、时序图、状态机、ER 图、部署图、迁移图和验证闭环图的图形化交付。
 
@@ -150,20 +150,11 @@ AI 协作与生产专项：
 
 ## 场景路由
 
-| 用户任务 | 必读参考 | 输出要求 |
-| --- | --- | --- |
-| 通用架构设计 / 跨语言方案 / 技术选型 | `scenario-routing.md`、`language-agnostic-architecture.md`、`architecture.md`、`review-and-output-templates.md` | 识别技术栈、约束、边界、契约、数据、可靠性、安全、验证和取舍。 |
-| 代码 Review / PR Review | `review-and-output-templates.md`、`language-agnostic-architecture.md`、`clean-code.md`、`coding-review-deep-dive.md` | 问题优先，按 P0-P3 给文件行号、风险、建议和验证；Java 项目额外读 `coding-standards.md`。 |
-| 系分设计 / 系统分析设计 / 详细设计模板 / 设计文档 | `system-analysis-design.md`、`architecture.md`、`product-design.md`、`production-readiness.md` | 优先使用系分模板，输出可评审、可编码、可验证的设计。 |
-| 架构设计 / 技术方案 | `architecture.md`、`review-and-output-templates.md`、`adr-and-tradeoff.md` | 给目标、约束、边界、不变量、模块、接口、数据、可靠性、验证和取舍；项目级治理再读 `project-governance-standards.md`。 |
-| 架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 | `diagram-output.md`，按场景再读 `architecture.md`、`system-analysis-design.md`、`production-readiness.md` 或专项 reference | 正式图形化交付默认只生成 SVG；仅当使用者明确要求 Mermaid/Markdown 草图、PNG、PDF、截图或其他格式时才额外处理，并说明工程落点、验证动作和剩余风险。 |
-| Java/Spring 项目设计、Review、修改 | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | 使用 Java/Spring/Wind 约规，小步修改，检查业务语义、边界、契约、失败路径和验证；综合治理再读 `project-governance-standards.md`。 |
-| Bug 修复 / 调试诊断 / 根因分析 / 测试失败 / 生产现象 | `debugging-diagnosis.md`、`testing.md`、`workflow.md`，Java 项目再读 `coding-standards.md` | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试；生产问题补充影响面、止血、回滚和复盘。 |
-| 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 / DDD 分层架构测试 | `testing.md`，Java 项目再读 `coding-standards.md` | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、真实链路、替身边界和断言事实；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
-| 非 Java 代码修改 | `language-agnostic-architecture.md`、`workflow.md`、项目本地规范；Bug 修复再读 `debugging-diagnosis.md` | 小步修改，遵循项目语言生态，完成后说明对应构建、测试、lint 或未执行原因。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 受控自治开发 | `ai-assisted-engineering.md`、`workflow.md`、`negative-constraints.md`，Java 项目再读 `coding-standards.md` | OpenSpec 定标准，Superpowers 保纪律，Harness 管协作；CAD Mode 只按 `ai-assisted-engineering.md` 执行。 |
-| 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md`、`review-and-output-templates.md` | 明确不变量、事务边界、幂等、补偿、对账、告警和人工兜底。 |
-| 遗留系统改造 / 迁移 / 服务拆分 | `evolutionary-architecture.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 小步迁移，给防腐、契约测试、双写/回填/切流、灰度、回滚和下线条件。 |
-| 安全架构 / 权限 / 租户 / 敏感数据 | `security-architecture.md`、`negative-constraints.md`、`production-readiness.md` | 识别资产、主体、边界和威胁，给认证授权、隔离、密钥、审计、测试和红线。 |
-| 生产变更 / 数据修复 / 上线评审 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md`、`workflow.md` | 给影响范围、dry-run、备份、灰度、监控、审计、回滚和验收标准。 |
-| 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 检查一致性、自解释性、可执行性、克制性和生产意识。 |
+`references/scenario-routing.md` 是本技能唯一完整路由表。处理复杂任务时不要按本文件的旧表机械判断，必须先读取 `scenario-routing.md` 再选择最小 reference 集合。
+
+本文件只保留最高频入口提示：
+
+- 架构设计、技术方案、系分、详细设计、架构图、迁移、生产变更：先走 `scenario-routing.md`，再按风险读取架构、系分、图形化、生产、迁移或安全专项 reference；正式图形化交付默认只生成 SVG。
+- 代码 Review、Java/Spring 修改、架构坏味、Bug 修复、调试诊断、根因分析、故障复盘、写测试和 TDD：先走 `scenario-routing.md`，再读取对应 Review、编码、诊断、测试和 workflow reference。
+- 陌生代码库、非 Java 技术栈、外部 API/SDK/云产品、AI 编码协作或多 Agent 推进：先走 `scenario-routing.md`，识别本地生态、外部知识时效性、协作门禁和验证边界。
+- 复杂产品语义、PRD、产品架构、规则矩阵、运营后台、数据指标、支付/资金/清结算/对账/VCC/ACH/卡组织等任务：优先使用 `产品架构专家` 定义产品语义和验收，再由本技能承接工程结构、系统设计、代码落地、测试和生产风险。
