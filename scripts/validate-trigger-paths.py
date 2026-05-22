@@ -105,6 +105,7 @@ payment_risk = "product-architecture-expert/references/payment-risk-fraud-and-me
 payment_routing = "product-architecture-expert/references/payment-scenario-routing.md"
 product_skill_tree = "product-architecture-expert/references/skill-tree.md"
 product_source_map = "product-architecture-expert/references/source-map.md"
+product_rule_checker = "product-architecture-expert/scripts/check_external_rules.py"
 
 codegen_skill = "java-service-code-generator/SKILL.md"
 codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
@@ -892,6 +893,36 @@ check(
     ),
 )
 check(
+    "product skill exposes deterministic external rule checker",
+    has_all(
+        product_skill,
+        [
+            "scripts/check_external_rules.py",
+            "不访问网络、不上传文件、不读取密钥",
+            "规则真实性、适用性和可上线性",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "scripts/check_external_rules.py",
+            "只做完整性检查",
+            "不联网、不写文件",
+        ],
+    )
+    and has_all(
+        product_rule_checker,
+        [
+            "REQUIRED_FIELDS",
+            "rule_source",
+            "version_or_publish_date",
+            "jurisdiction_or_scope",
+            "verified_at",
+            "confirming_party",
+        ],
+    ),
+)
+check(
     "java service generator routes structured input to deterministic script",
     has_all(
         codegen_skill,
@@ -904,6 +935,9 @@ check(
             "references/nobe-patterns.md",
             "scripts/generate_scaffold.py",
             "不访问网络、不上传文件、不读取密钥",
+            "已有文件不允许覆盖",
+            "多个 face/impl 模块对存在歧义",
+            "字段表格缺少目标表名",
         ],
     ),
 )
@@ -915,8 +949,18 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "language-agnostic-architecture.md", "workflow.md"},
     ),
     RouteFixture(
+        name="non java node service diagnosis",
+        prompt="这个 Node.js 服务我第一次接手，先帮我识别技术栈、入口路径、测试命令和部署链路，不要套 Java 规则",
+        routes={"senior", "language-agnostic-architecture.md", "workflow.md"},
+    ),
+    RouteFixture(
         name="architecture smell scan",
         prompt="这批 Java 代码帮我做一次深度质量扫描，看看有没有架构坏味、上帝类和循环依赖",
+        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md", "coding-standards.md"},
+    ),
+    RouteFixture(
+        name="service layer architecture smell",
+        prompt="这个 Spring Service 有跨层调用、事务边界混乱和公共模块垃圾桶问题，帮我做架构坏味 CR",
         routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md", "coding-standards.md"},
     ),
     RouteFixture(
@@ -927,6 +971,11 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="incident postmortem",
         prompt="帮我做一次生产故障复盘，给出止血、根因、改进和验证",
+        routes={"senior", "debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
+        name="production incident readonly evidence",
+        prompt="线上订单回调大量超时，先只读分析影响面、日志指标、时间线、止血方案和回滚风险",
         routes={"senior", "debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"},
     ),
     RouteFixture(
@@ -1042,16 +1091,24 @@ def route_fixture(prompt: str) -> set[str]:
             "陌生代码库",
             "架构现状",
             "接手侦察",
+            "Node.js",
+            "技术栈",
+            "入口路径",
+            "部署链路",
             "架构坏味",
             "深度质量扫描",
             "上帝类",
             "循环依赖",
+            "跨层调用",
+            "事务边界混乱",
+            "公共模块垃圾桶",
             "时间线",
             "5-Why",
             "故障复盘",
             "事故复盘",
             "线上复盘",
             "生产复盘",
+            "回调大量超时",
             "Spring Security",
             "CSRF",
             "CORS",
@@ -1073,13 +1130,13 @@ def route_fixture(prompt: str) -> set[str]:
         ],
     ):
         route.add("senior")
-    if contains_any(prompt, ["陌生代码库", "架构现状", "接手侦察"]):
+    if contains_any(prompt, ["陌生代码库", "架构现状", "接手侦察", "Node.js", "技术栈", "入口路径", "部署链路"]):
         route.update({"language-agnostic-architecture.md", "workflow.md"})
-    if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖"]):
+    if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶"]):
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
-    if contains_any(prompt, ["时间线", "5-Why", "故障复盘", "事故复盘", "线上复盘", "生产复盘"]):
+    if contains_any(prompt, ["时间线", "5-Why", "故障复盘", "事故复盘", "线上复盘", "生产复盘", "回调大量超时", "影响面", "止血"]):
         route.update({"debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"})
     if contains_any(prompt, ["Spring Security", "CSRF", "CORS"]):
         route.update({"security-architecture.md", "negative-constraints.md"})

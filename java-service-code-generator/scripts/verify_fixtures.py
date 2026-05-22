@@ -118,6 +118,83 @@ def run_case(case: dict[str, object], base_tmp: Path) -> None:
     print(f"OK fixture {case['name']}")
 
 
+def run_generator(args: list[str], cwd: Path = ROOT) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, str(GENERATOR), *args],
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+
+def expect_failure(name: str, args: list[str], expected: str) -> None:
+    result = run_generator(args)
+    output = result.stdout + result.stderr
+    if result.returncode == 0:
+        raise AssertionError(f"{name}: expected command to fail")
+    if expected not in output:
+        raise AssertionError(f"{name}: expected error containing {expected!r}, got {output!r}")
+    print(f"OK negative fixture {name}")
+
+
+def create_ambiguous_module_repo(base_tmp: Path) -> Path:
+    repo = base_tmp / "ambiguous-repo"
+    module = repo / "multi-domain"
+    for stem in ("payment", "settlement"):
+        (module / f"{stem}-face" / "src/main/java").mkdir(parents=True)
+        (module / f"{stem}-impl" / "src/main/java").mkdir(parents=True)
+    return repo
+
+
+def run_negative_cases(base_tmp: Path) -> None:
+    overwrite_out = base_tmp / "negative-overwrite"
+    overwrite_args = [
+        "--ddl-file",
+        str(FIXTURE_DIR / "payment_order.sql"),
+        "--base-package",
+        "com.capte.nobe.payment",
+        "--author",
+        "codex",
+        "--output-dir",
+        str(overwrite_out),
+    ]
+    first = run_generator(overwrite_args)
+    if first.returncode != 0:
+        raise AssertionError(f"overwrite guard setup failed: {first.stdout}{first.stderr}")
+    expect_failure("existing file requires overwrite", overwrite_args, "exists; pass --overwrite")
+
+    ambiguous_repo = create_ambiguous_module_repo(base_tmp)
+    expect_failure(
+        "ambiguous face impl module pairs",
+        [
+            "--ddl-file",
+            str(FIXTURE_DIR / "payment_order.sql"),
+            "--business-module",
+            "multi-domain",
+            "--repo-root",
+            str(ambiguous_repo),
+            "--author",
+            "codex",
+        ],
+        "存在歧义",
+    )
+    expect_failure(
+        "field table requires table name",
+        [
+            "--input-file",
+            str(FIXTURE_DIR / "settlement_batch_fields.md"),
+            "--input-type",
+            "table",
+            "--base-package",
+            "com.capte.nobe.payment",
+            "--output-dir",
+            str(base_tmp / "negative-missing-table"),
+        ],
+        "字段表格输入必须通过 --table-name",
+    )
+
+
 def main() -> int:
     if not GENERATOR.exists():
         raise SystemExit(f"missing generator: {GENERATOR}")
@@ -127,6 +204,7 @@ def main() -> int:
     try:
         for case in CASES:
             run_case(case, base_tmp)
+        run_negative_cases(base_tmp)
     finally:
         shutil.rmtree(base_tmp)
     return 0

@@ -65,6 +65,7 @@ description: 根据 DDL/SQL、Java 类、字段表格等结构化输入生成 Wi
 ## 生成后验证
 
 - 至少使用代表性 DDL、Java 类和字段表格分别跑一次脚本或对应 fixture，检查生成文件是否稳定输出。
+- 本仓库维护时，`scripts/verify_fixtures.py` 还必须覆盖负向路径：已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名。
 - Java 类或字段表格输入如果生成 DDL 草案，必须提示用户该 DDL 是推断结果，需要 DBA/架构师确认。
 - 检查 Entity、Request、Query、Service、ServiceImpl、Converter 是否符合 `references/code-generation-rules.md` 与 `资深架构师` 编码约规。
 - 如果写入真实项目模块，条件允许时运行受影响模块的定向 Maven 编译或测试。
