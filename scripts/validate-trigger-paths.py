@@ -110,9 +110,9 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图"]
+product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
 product_general_route_terms = ["SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵"]
-payment_terms = ["清结算", "对账", "支付", "资金", "商户", "合规"]
+payment_terms = ["清结算", "对账", "支付", "资金", "商户", "合规", "外卡收单", "Mastercard", "Clearing Core", "Financial Presentment", "商户到账", "merchant payout", "收单风控"]
 external_dependency_terms = ["SDK", "API", "云产品", "版本", "升级"]
 diagram_terms = ["画图", "图形化", "可视化", "架构图", "流程图", "时序图", "状态机", "ER 图", "类图", "部署图", "迁移图", "关系图", "资金流图"]
 
@@ -192,12 +192,16 @@ check(
     "product metadata triggers diagram output",
     all(
         term in frontmatter(product_skill)
-        for term in ["产品架构图", "流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图"]
+        for term in ["产品架构图", "流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图", "外卡收单", "Mastercard"]
     ),
 )
 check(
     "product openai yaml mentions visual output",
     has_all(product_agent, ["流程状态图", "默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图"]),
+)
+check(
+    "product openai yaml mentions acquiring specialty",
+    has_all(product_agent, ["支付资金与外卡收单专项"]),
 )
 check(
     "senior diagram reference keeps delivery and safety boundaries",
@@ -206,15 +210,28 @@ check(
         [
             "图是工程判断的表达面，不是架构本身",
             "## 卓越图形能力要求",
+            "## 技术架构图三级视图",
+            "整体技术架构图",
+            "子领域技术架构图",
+            "应用粒度技术架构图",
+            "## 从业务到技术的六步推导",
+            "从业务架构推演技术骨架",
+            "从用例和验收场景推导非功能模块",
             "## 视觉风格路由",
             "## 语义形状和箭头",
+            "布局语义保持稳定",
             "## 稳定提示配方",
+            "## 常见反模式",
+            "组件堆叠图",
+            "粒度混乱",
             "默认使用 SVG 作为正式图形化交付物",
             "Mermaid/Markdown 草图",
             "正式图形化交付默认只生成 SVG",
             "PNG/PDF/截图等其他格式",
             "工程落点",
             "AI Agent Systems",
+            "微信公众号文章《如何画架构图：技术负责人带你画技术（系统）架构》",
+            "第二篇《如何画架构图：业务架构的画法》当前链接只能访问校验页",
             "可选续作：fireworks-tech-graph",
             "调用 `$fireworks-tech-graph`",
             "供应链安全审查",
@@ -411,6 +428,17 @@ check(
     ),
 )
 check(
+    "product top-level route sends acquiring signals to payment specialty",
+    has_all(
+        product_routing,
+        [
+            "外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控同样先进入支付资金专项",
+            "外卡收单、Mastercard、Clearing Core、商户到账",
+            "支付、资金、账本、清结算、对账、VCC、ACH、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、争议",
+        ],
+    ),
+)
+check(
     "product route sends visual deliverables to diagram output",
     has_all(
         product_routing,
@@ -449,7 +477,10 @@ check(
         "product-architecture-expert/references/payment-scenario-routing.md",
         [
             "支付合规、KYC/KYB/KYT/KYA、AML/CFT、大额交易、可疑交易",
-            "卡组织、银行卡收单、预授权、tokenization、PCI、BIN/IIN、三方/四方模式",
+            "卡组织、银行卡收单、预授权、Stand-In/SAF、open-to-buy、tokenization、PCI、BIN/IIN、三方/四方模式",
+            "卡交易流程、授权/清算/结算、授权恢复、争议、网络费用和 PCI 边界",
+            "外卡收单、Mastercard、卡网络角色、Authorization Core、Financial Presentment、Clearing Core、ARN、scheme fee、merchant payout、收单风控",
+            "卡网络角色定位、授权核心、清算账务承接、商户可用资金、结算净额和风控闭环",
             "跨境支付、多币种、Swift/GPI、Nostro/Vostro、代理行、本地清算网络、外清内结",
             "跨境五层拆解、资金流、币种/汇率/费用、合规待确认项",
         ],
@@ -546,6 +577,78 @@ check(
             "卡 BIN / IIN 路由",
             "专线与前置系统",
             "跨境卡交易还要额外区分四个口径",
+            "## 授权网络与前置裁决",
+            "authorization request/response",
+            "authorization advice",
+            "network management",
+            "## Stand-In、SAF 与授权恢复",
+            "代理裁决不是默认放行",
+            "SAF / advice 如何把临时授权结果送回 issuer",
+            "open-to-buy",
+            "## 授权数据与生命周期追踪",
+            "Trace ID",
+            "Original Data Elements",
+            "授权数据准确性",
+            "## 卡网络能力栈与角色定位",
+            "Transaction processing",
+            "Participant role",
+            "Responsibility management",
+            "Cost and billing",
+            "Network governance",
+            "## 授权核心建模",
+            "Authorization Lifecycle",
+            "Authorization / Hold / Reference Chain",
+            "Network session boundary",
+            "scheme adapter",
+            "## Clearing Core 与账务承接",
+            "Financial Presentment",
+            "Matching Core",
+            "ARN / Reference Model",
+            "Fee & Amount Decomposition",
+            "Posting Model",
+            "## Settlement 与商户可用资金",
+            "Network member settlement",
+            "Platform allocation and netting",
+            "Merchant settlement / payout",
+            "Bank arrival",
+            "## 收单风控闭环",
+            "merchant onboarding",
+            "capture / fulfillment",
+            "dispute feedback",
+        ],
+    ),
+)
+check(
+    "product clearing reference keeps acquiring settlement frames",
+    has_all(
+        clearing_settlement,
+        [
+            "## 外卡收单结算补充",
+            "Clearing / Financial Presentment",
+            "Network member settlement",
+            "Platform allocation and netting",
+            "Merchant settlement / payout",
+            "Bank arrival",
+            "gross settlement basis",
+            "net settlement amount",
+            "withheld amount",
+            "in-transit amount",
+        ],
+    ),
+)
+check(
+    "product risk reference keeps acquiring risk lifecycle",
+    has_all(
+        payment_risk,
+        [
+            "## 外卡收单风控闭环",
+            "Merchant onboarding risk",
+            "Transaction risk",
+            "Capture and fulfillment risk",
+            "Settlement and funds risk",
+            "Dispute feedback risk",
+            "3DS 是认证增强和部分责任划分能力",
+            "rules、risk scoring、manual review、funds strategy、case management",
         ],
     ),
 )
@@ -583,11 +686,23 @@ check(
             "跨境支付五层：交易层、支付处理层、代理结算层、清算网络层、最终清算层",
             "支付十二字能力地图：买、收、付、退、充、提、转、调、算、结、管、对",
             "支付账本观：支付本质是多方账本、账户归属和真实资金路径的协同变化",
-            "卡组织清结算：四方/三方模式、BIN/IIN 路由、授权、清算、结算、跨境汇率和网络费用",
+            "卡组织清结算：四方/三方模式、BIN/IIN 路由、授权前置裁决、Authorization Core、Stand-In/SAF、open-to-buy、Financial Presentment、Matching/ARN、费用拆分、Posting、结算与网络费用",
+            "外卡收单风控：商户准入、3DS/规则/评分、capture / fulfillment 控制、保证金/延迟结算、争议反馈和商户风险闭环",
             "账务核心：外围驱动、凭证规则、账户结构、会计循环、总分核对和日切批处理",
             "支付清算生态：交易平台层、支付服务层、清算服务层、金融服务层、央行/金融基础设施层",
             "跨机构清算：联机交易、实时清算、定时结算、日终处理",
             "KYC/KYB/KYT/KYA：身份、商户/业务、交易、地址和持续监控",
+        ],
+    ),
+)
+check(
+    "senior skill tree exposes architecture diagram literacy",
+    has_all(
+        "senior-software-architect/references/skill-tree.md",
+        [
+            "技术架构图必须区分整体、子领域和应用粒度",
+            "架构图要表达职责、关系、同步/异步、数据流、容量或瓶颈",
+            "图形应随代码、接口、部署、监控和关键决策演进",
         ],
     ),
 )
@@ -620,6 +735,22 @@ check(
             "支付合规、KYC/KYB/KYT/KYA",
             "https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw",
             "清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异",
+            "https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng",
+            "Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性",
+            "https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A",
+            "Mastercard 作为 payment network、transaction processing、participant role、responsibility management、cost/billing 和 network governance 的能力栈视角",
+            "https://mp.weixin.qq.com/s/rgZSbR_2zfkISFhSuHmMPg",
+            "Authorization Core、Authorization Lifecycle、Hold/Reference Chain、network session boundary、ISO 8583 semantic carrier、scheme adapter、SAF recovery 和授权可观测性",
+            "https://mp.weixin.qq.com/s/uuEwioL-Xx3JKeGvG7AyCg",
+            "Clearing 不是文件状态更新，而是 Financial Presentment、账务确认、费用责任和后续争议追溯的入口",
+            "https://mp.weixin.qq.com/s/iSvq8LO0zjHlW20ZUf_S6Q",
+            "Matching Core、ARN / Reference Model、Fee & Amount Decomposition、Posting Model、异常隔离和清算到账务承接",
+            "https://mp.weixin.qq.com/s/Y1O4BsLo4DD0HgkKYSRQnw",
+            "外卡收单中 authorization、clearing、settlement 的语义差异，以及清算连接交易、账务、费用、责任、对账和争议的产品视角",
+            "https://mp.weixin.qq.com/s/hilJTPiiakSQvDLYAzHtuA",
+            "settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理",
+            "https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ",
+            "外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截",
         ],
     ),
 )
@@ -684,6 +815,11 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="payment product",
         prompt="设计商户清结算和对账产品方案，注意外部规则和合规",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="acquiring mastercard product",
+        prompt="设计外卡收单 Mastercard 清算和商户到账产品方案，覆盖 Clearing Core、merchant payout 和收单风控",
         routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(

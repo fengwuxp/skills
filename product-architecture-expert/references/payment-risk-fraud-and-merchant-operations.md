@@ -35,6 +35,18 @@
 - **结算前**：按商户、通道、币种、批次、争议订单、负余额和资金风险决定是否可结算。
 - **运营后**：复盘拒付、欺诈、投诉、差错和损失，把结果反哺规则、模型、准入和通道路由。
 
+## 外卡收单风控闭环
+
+外卡收单不是“把钱收进来”，而是在交易真实性、商户履约、卡组织规则、结算链路、争议窗口和合规要求都不确定的前提下承接风险。产品方案不要把风控缩成支付前的拦截按钮，至少按五段建模：
+
+1. **Merchant onboarding risk**：主体、受益所有人、MCC、网站/App、商品服务、国家地区、履约周期、禁限售行业和历史风险。
+2. **Transaction risk**：3DS、AVS/CVV、设备/IP、BIN、速度、金额、国家、支付方式、商户画像、规则和评分。
+3. **Capture and fulfillment risk**：授权成功后是否允许自动 capture、是否需要订单审核、发货前核验、人工复核或高风险履约延迟。
+4. **Settlement and funds risk**：是否暂停结算、提高保证金、设置 rolling reserve、延迟结算、限制部分资金释放或调整商户结算策略。
+5. **Dispute feedback risk**：RDR / Ethoca、Inquiry、Retrieval、Chargeback、representment 结果回流到商户评级、交易规则、结算模板和证据要求。
+
+3DS 是认证增强和部分责任划分能力，不是完整风控体系。成熟收单方案应组合 rules、risk scoring、manual review、funds strategy、case management 和反馈复盘，并监控成功率、欺诈率、拒付率、退款率、误杀率、保证金压力、争议败诉率和损失金额。
+
 ## ACH 与银行转账风险补充
 
 - debit/代扣场景必须说明授权取得、授权留存、授权撤销和 unauthorized return 处理。
@@ -65,3 +77,5 @@
 5. 是否覆盖 ACH return、卡拒付、异常退款、账户接管、重复出款和 credit-push fraud。
 6. 是否把风控证据与争议、对账、结算、客服和审计串起来。
 7. 是否把 AML、制裁筛查、卡组织/Nacha/通道协议和本地监管列为待确认项。
+8. 外卡收单场景是否覆盖准入、交易、capture / fulfillment、settlement / reserve 和 dispute feedback 的全链路闭环。
+9. 是否把 3DS、规则、评分、人工复核、资金策略和争议反馈组合使用，而不是依赖单点工具。

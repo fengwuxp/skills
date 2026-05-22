@@ -171,6 +171,18 @@
 - 风控限制：黑名单、冻结、超限、资料过期、争议订单、负余额、商户风险等级。
 - 失败处理：退票、卡异常、通道失败、部分成功、重复出款拦截、人工复核。
 
+## 外卡收单结算补充
+
+外卡收单场景下，Clearing、Settlement、商户到账必须分开表达：
+
+- **Clearing / Financial Presentment**：让授权后的交易进入卡网络正式账务和责任链路，形成网络可识别的 financial claim。
+- **Network member settlement**：issuer、acquirer 等成员之间按网络规则完成应收应付和资金义务。
+- **Platform allocation and netting**：收单机构或平台基于上游结算结果、商户、门店、币种、费率、退款、拒付、保证金和风险规则计算商户净额。
+- **Merchant settlement / payout**：平台按商户账期、结算模板、risk reserve、rolling reserve、delayed settlement 和最低出款门槛释放可结金额。
+- **Bank arrival**：银行或本地清算网络完成最终入账，商户看到银行到账或可提余额更新。
+
+产品方案中要区分 `cleared amount`、`gross settlement basis`、`deductions`、`net settlement amount`、`withheld amount`、`available amount`、`in-transit amount` 和 `paid amount`。多币种场景还要区分交易币种、清算币种、商户结算币种、出款币种、锁汇汇率、结算汇率和银行实际出款汇率。
+
 ## 账务矩阵模板
 
 ```text

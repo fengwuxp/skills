@@ -24,7 +24,7 @@
 - PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`。
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 图形化产品交付读 `diagram-output.md`。
-- 支付资金场景读 `payment-scenario-routing.md` 和 `regulatory-baseline.md`。
+- 支付资金场景读 `payment-scenario-routing.md` 和 `regulatory-baseline.md`；外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控同样先进入支付资金专项。
 
 ## 使用方式
 
@@ -36,7 +36,7 @@
 4. **风险等级**：资金、合规、隐私、安全、权限、生产运营、跨团队契约、外部机构规则。
 5. **目标产物**：产品架构方案、PRD、能力地图、业务流程图、状态机、规则矩阵、指标口径、运营后台方案、验收标准。
 
-如果涉及支付、账户、账本、清结算、对账、商户结算、分账分润、通道路由、银行卡/卡组织、ACH/银行转账、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化，再读取 `payment-scenario-routing.md`。
+如果涉及支付、账户、账本、清结算、对账、商户结算、分账分润、通道路由、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、ACH/银行转账、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化，再读取 `payment-scenario-routing.md`。
 
 ## 产品语义门禁
 
@@ -69,7 +69,7 @@
 | 规则体系、额度、计费、审批、风控 | `product-architecture-methodology.md`, `product-design-and-prd.md` | 规则矩阵、优先级、版本、灰度、回滚和验收样例 |
 | 运营后台、人工处理、审批复核 | `product-design-and-prd.md` | 后台功能、权限、审批、复核、日志、导出、告警 |
 | 指标、报表、数据产品、经营分析 | `product-architecture-methodology.md`, `product-design-and-prd.md` | 指标口径、事件埋点、报表模型、数据验收 |
-| 支付、资金、账本、清结算、对账、VCC、ACH、卡组织、争议 | `payment-scenario-routing.md`, `regulatory-baseline.md` | 支付与资金产品架构、账户/账务、资金流、金融红线 |
+| 支付、资金、账本、清结算、对账、VCC、ACH、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、争议 | `payment-scenario-routing.md`, `regulatory-baseline.md` | 支付与资金产品架构、账户/账务、资金流、金融红线 |
 | 用户要求学习路径或能力评估 | `skill-tree.md` | 能力树、分级、短板、学习路径 |
 
 ## 通用场景识别问题

@@ -54,7 +54,8 @@
 | 支付合规、KYC/KYB/KYT/KYA、AML/CFT、大额交易、可疑交易 | `regulatory-baseline.md`, `payment-risk-fraud-and-merchant-operations.md` | 合规生命周期、客户/商户/交易/地址尽调、持续监控、待专业确认项 |
 | 退款、撤销、拒付、争议、证据、chargeback | `dispute-refund-and-chargeback-operations.md`, `card-network-and-card-rails.md` | 逆向交易状态机、证据模型、争议运营流程 |
 | ACH debit/credit、银行代扣、批量付款、return/NOC/reversal | `payment-rails-ach-and-bank-transfers.md`, `dispute-refund-and-chargeback-operations.md`, `payment-risk-fraud-and-merchant-operations.md` | ACH 轨道方案、授权证据、return/NOC/reversal 处理 |
-| 卡组织、银行卡收单、预授权、tokenization、PCI、BIN/IIN、三方/四方模式 | `card-network-and-card-rails.md`, `dispute-refund-and-chargeback-operations.md` | 卡交易流程、授权/清算/结算、争议、网络费用和 PCI 边界 |
+| 卡组织、银行卡收单、预授权、Stand-In/SAF、open-to-buy、tokenization、PCI、BIN/IIN、三方/四方模式 | `card-network-and-card-rails.md`, `dispute-refund-and-chargeback-operations.md` | 卡交易流程、授权/清算/结算、授权恢复、争议、网络费用和 PCI 边界 |
+| 外卡收单、Mastercard、卡网络角色、Authorization Core、Financial Presentment、Clearing Core、ARN、scheme fee、merchant payout、收单风控 | `card-network-and-card-rails.md`, `clearing-settlement.md`, `payment-risk-fraud-and-merchant-operations.md`, `dispute-refund-and-chargeback-operations.md` | 卡网络角色定位、授权核心、清算账务承接、商户可用资金、结算净额和风控闭环 |
 | 企业卡、员工卡、VCC、共享额度、一次性卡 | `virtual-card-and-vcc.md`, `highnote-reference-patterns.md`, `card-network-and-card-rails.md` | VCC 产品方案、授权控制、卡账务、证据和报表 |
 | 报表、数据共享、运营数据面、负余额监控 | `highnote-reference-patterns.md`, `payment-design-checklists.md`, `clearing-settlement.md` | 报表模型、字段口径、异步生成、数据面边界 |
 | 跨境支付、多币种、Swift/GPI、Nostro/Vostro、代理行、本地清算网络、外清内结 | `global-payment-emerging.md`, `regulatory-baseline.md`, `clearing-settlement.md` | 跨境五层拆解、资金流、币种/汇率/费用、合规待确认项 |

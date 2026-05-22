@@ -27,6 +27,14 @@
 - 微信公众号文章《详解账务核心，从入门到精通》：`https://mp.weixin.qq.com/s/WWhjG9ACi3qmqeqPFvBaaA`。公开内容用于参考账务核心架构、账户体系、热点账户、并户、会计日切、营销账务、清结算账务和外围系统驱动。
 - 微信公众号文章《一文搞懂「支付合规」全局：反洗钱、KYC、KYT、大额交易……》：`https://mp.weixin.qq.com/s/FVx1lUcxCF3jUl0Xh6UydA`。公开内容用于参考支付合规、KYC/KYB/KYT/KYA、持续监控、交易限额、AML/CFT、欺诈和 Web3 合规主题。
 - 微信公众号文章《一文说清楚“清算、结算、清结算”的区别》：`https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw`。公开内容用于参考清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异。
+- 微信公众号文章《Mastercard 授权体系的真正重点》：`https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng`。公开内容用于参考 Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性等产品架构视角；具体规则、字段、费用和适用条件以 Mastercard 官方规则、CIS/授权手册或机构合同为准。
+- 微信公众号文章《Mastercard 到底在做什么？》：`https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A`。公开内容用于参考 Mastercard 作为 payment network、transaction processing、participant role、responsibility management、cost/billing 和 network governance 的能力栈视角；文中商业数据、时间点和产品路线需以 Mastercard 官方资料和最新合同规则复核。
+- 微信公众号文章《Mastercard全栈深度解析（3）：Mastercard授权架构设计（构建可扩展的卡支付实时交易核心）》：`https://mp.weixin.qq.com/s/rgZSbR_2zfkISFhSuHmMPg`。公开内容用于参考 Authorization Core、Authorization Lifecycle、Hold/Reference Chain、network session boundary、ISO 8583 semantic carrier、scheme adapter、SAF recovery 和授权可观测性。
+- 微信公众号文章《Mastercard全栈深度解析（4）：Mastercard Clearing 体系设计（上篇）》：`https://mp.weixin.qq.com/s/uuEwioL-Xx3JKeGvG7AyCg`。公开内容用于参考 Clearing 不是文件状态更新，而是 Financial Presentment、账务确认、费用责任和后续争议追溯的入口。
+- 微信公众号文章《Mastercard全栈深度解析（4）：Mastercard Clearing 体系设计（中篇）》：`https://mp.weixin.qq.com/s/iSvq8LO0zjHlW20ZUf_S6Q`。公开内容用于参考 Matching Core、ARN / Reference Model、Fee & Amount Decomposition、Posting Model、异常隔离和清算到账务承接。
+- 微信公众号文章《外卡收单体系全景（4）：清算之网》：`https://mp.weixin.qq.com/s/Y1O4BsLo4DD0HgkKYSRQnw`。公开内容用于参考外卡收单中 authorization、clearing、settlement 的语义差异，以及清算连接交易、账务、费用、责任、对账和争议的产品视角。
+- 微信公众号文章《外卡收单体系全景（5）：结算之路》：`https://mp.weixin.qq.com/s/hilJTPiiakSQvDLYAzHtuA`。公开内容用于参考 settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理。
+- 微信公众号文章《外卡收单体系全景（6）：风控之盾》：`https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ`。公开内容用于参考外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截。
 - 《支付之门：支付原理、架构与产品全链路设计》公开图书页：如当当云阅读 `https://e.dangdang.com/products/1901384633.html`。公开简介说明其面向支付系统底层逻辑、会计知识和支付系统设计方法论。
 - Formance Wallets Introduction：`https://docs.formance.com/modules/wallets/introduction`。公开文档用于参考业务钱包、余额和钱包操作的分层设计。
 - Formance Ledger Introduction：`https://docs.formance.com/modules/ledger/introduction`。公开文档用于参考产品账本、账户、交易、分录和元数据设计。
