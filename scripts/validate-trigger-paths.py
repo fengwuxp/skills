@@ -671,6 +671,8 @@ check(
         [
             "支付清算生态、网联/银联/央行/银行、备付金、跨机构清算",
             "生态参与者分层、跨机构清算链路、备付金/额度口径、待专业确认项",
+            "多业务线清结算全局规划、线下 Excel 核算、财务人工打款、清结算中台",
+            "现状问题盘点、资金路径、五中心能力切分、分期迁移路线、全局规划图",
         ],
     ),
 )
@@ -766,6 +768,35 @@ check(
             "凭证规则",
             "会计循环",
             "总分核对",
+        ],
+    ),
+)
+check(
+    "product clearing reference keeps global planning frame",
+    has_all(
+        clearing_settlement,
+        [
+            "## 跨业务线清结算全局规划",
+            "现状盘点",
+            "线上线下两层皮",
+            "系统只出报表不记账",
+            "对账只对不处理",
+            "五中心能力切分",
+            "清算中心",
+            "账务中心",
+            "账户中心",
+            "结算中心",
+            "对账中心",
+            "专业化",
+            "模块化",
+            "配置化",
+            "线上化先行",
+            "清算中心跟进",
+            "账务账户收口",
+            "业务接入层",
+            "场景解决方案层",
+            "核心能力层",
+            "基础连接层",
         ],
     ),
 )
@@ -950,6 +981,8 @@ check(
             "支付合规、KYC/KYB/KYT/KYA",
             "https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw",
             "清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异",
+            "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
+            "多业务线清结算全局规划、现状问题盘点、清算/账务/账户/结算/对账五中心能力切分、专业化/模块化/配置化原则和分期迁移路线",
             "https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng",
             "Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性",
             "https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A",

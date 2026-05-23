@@ -27,6 +27,7 @@
 - 微信公众号文章《详解账务核心，从入门到精通》：`https://mp.weixin.qq.com/s/WWhjG9ACi3qmqeqPFvBaaA`。公开内容用于参考账务核心架构、账户体系、热点账户、并户、会计日切、营销账务、清结算账务和外围系统驱动。
 - 微信公众号文章《一文搞懂「支付合规」全局：反洗钱、KYC、KYT、大额交易……》：`https://mp.weixin.qq.com/s/FVx1lUcxCF3jUl0Xh6UydA`。公开内容用于参考支付合规、KYC/KYB/KYT/KYA、持续监控、交易限额、AML/CFT、欺诈和 Web3 合规主题。
 - 微信公众号文章《一文说清楚“清算、结算、清结算”的区别》：`https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw`。公开内容用于参考清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异。
+- 微信公众号文章《头部大厂，怎么做清结算全局规划，分享一个真实案例！》：`https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q`。公开内容用于参考多业务线清结算全局规划、现状问题盘点、清算/账务/账户/结算/对账五中心能力切分、专业化/模块化/配置化原则和分期迁移路线。
 - 微信公众号文章《Mastercard 授权体系的真正重点》：`https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng`。公开内容用于参考 Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性等产品架构视角；具体规则、字段、费用和适用条件以 Mastercard 官方规则、CIS/授权手册或机构合同为准。
 - 微信公众号文章《Mastercard 到底在做什么？》：`https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A`。公开内容用于参考 Mastercard 作为 payment network、transaction processing、participant role、responsibility management、cost/billing 和 network governance 的能力栈视角；文中商业数据、时间点和产品路线需以 Mastercard 官方资料和最新合同规则复核。
 - 微信公众号文章《Mastercard全栈深度解析（3）：Mastercard授权架构设计（构建可扩展的卡支付实时交易核心）》：`https://mp.weixin.qq.com/s/rgZSbR_2zfkISFhSuHmMPg`。公开内容用于参考 Authorization Core、Authorization Lifecycle、Hold/Reference Chain、network session boundary、ISO 8583 semantic carrier、scheme adapter、SAF recovery 和授权可观测性。
