@@ -42,6 +42,7 @@
 - Java/Spring 企业应用实践：DDD、模块化单体、微服务、Spring Boot、MyBatis/JPA、数据库、缓存、消息、可观测性、安全和工程治理。
 - 多语言工程实践：Go、Node.js/TypeScript、Python、Rust、前端和数据工程中的构建、测试、lint、部署、可观测性和生产治理方式。
 - AI 编码协作实践：以 OpenSpec 定标准、Superpowers 保纪律、Harness 管团队，把 AI 编码纳入需求规格、TDD、Review、Refactor、协作编排和验证闭环。
+- 公开 AI Skill 方法论：参考 `obra/superpowers`（https://github.com/obra/superpowers）、`multica-ai/andrej-karpathy-skills`（https://github.com/multica-ai/andrej-karpathy-skills）和 `mattpocock/skills`（https://github.com/mattpocock/skills）中可迁移的工程纪律，例如先澄清再编码、简单优先、最小变更、目标驱动验证、领域语言对齐、TDD、诊断闭环和 Review 防越界；只吸收原则，不复制仓库结构、安装流程或技能菜单。
 
 ## 总定义
 

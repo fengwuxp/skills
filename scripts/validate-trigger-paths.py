@@ -200,6 +200,17 @@ check(
     ),
 )
 check(
+    "senior skill anchors context-responsive architecture",
+    has_all(
+        senior_skill,
+        [
+            "因境制宜",
+            "业务阶段、组织能力、代码现状、运行环境和验证成本",
+            "外部方法论只能辅助判断",
+        ],
+    ),
+)
+check(
     "senior metadata triggers diagram output",
     all(
         term in frontmatter(senior_skill)
@@ -229,6 +240,18 @@ check(
             "references/diagram-output.md",
             "产品架构图",
             "正式图形化交付默认只生成 SVG",
+        ],
+    ),
+)
+check(
+    "product skill anchors simplicity over complexity",
+    has_all(
+        product_skill,
+        [
+            "执简驭繁",
+            "用最少稳定对象、流程、规则和验收口径统摄复杂业务",
+            "复杂知识下沉到 references",
+            "可重复、可审计动作交给 scripts",
         ],
     ),
 )
@@ -424,6 +447,23 @@ check(
             "不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Execution Grant、验证或高风险人工确认点",
         ],
     ),
+)
+check(
+    "AI engineering absorbs external skill methods without becoming a menu",
+    has_all(
+        ai_engineering,
+        [
+            "外部 AI Skill 方法论只作为工程纪律参考，不作为本技能的新能力菜单",
+            "先澄清再编码、简单优先、最小变更、目标驱动验证、领域语言对齐、TDD、诊断闭环和 Review 防越界",
+            "每个实现步骤都必须回指当前 OpenSpec、用户目标或验收标准",
+            "不默认创建额外 `CONTEXT.md`",
+            "不允许把外部 Skill 的工作流、术语或自动化步骤凌驾于当前仓库 `AGENTS.md`、OpenSpec、Harness Plan、测试和用户授权之上",
+        ],
+    ),
+)
+check(
+    "workflow requires diff traceability to goals",
+    contains(workflow, "每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景"),
 )
 check(
     "senior route sends code changes through workflow",
@@ -953,6 +993,30 @@ check(
             "技术架构图必须区分整体、子领域和应用粒度",
             "架构图要表达职责、关系、同步/异步、数据流、容量或瓶颈",
             "图形应随代码、接口、部署、监控和关键决策演进",
+        ],
+    ),
+)
+check(
+    "senior skill tree records external AI skill method boundary",
+    has_all(
+        "senior-software-architect/references/skill-tree.md",
+        [
+            "公开 AI Skill 方法论",
+            "`obra/superpowers`",
+            "`multica-ai/andrej-karpathy-skills`",
+            "`mattpocock/skills`",
+            "只吸收原则，不复制仓库结构、安装流程或技能菜单",
+        ],
+    ),
+)
+check(
+    "product route keeps semantic questioning product-scoped",
+    has_all(
+        product_routing,
+        [
+            "语义追问：当用户目标、对象、流程或规则含混时",
+            "不要用工程代理式执行计划替代产品语义澄清",
+            "共享语言服务于产品对象、规则和验收，不是额外文档本身",
         ],
     ),
 )
