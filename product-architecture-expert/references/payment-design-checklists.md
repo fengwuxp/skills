@@ -153,6 +153,10 @@
 - 是否覆盖 preauth、incremental auth、partial capture、void、refund、chargeback 等多事件链路。
 - 是否能画出标准卡交易时序，并解释 authorization hold、capture、presentment、issuer posting、network settlement 之间的关系。
 - 是否区分 PAN、token 和各自生命周期、责任边界与 PCI 范围。
+- 是否把 Clearing Core 视为 transaction lifecycle、accounting consistency、reference continuity、dispute traceability、replay / investigation 的治理系统。
+- reconciliation 是否验证金额一致性、关系一致性、结构一致性和锚点一致性，而不是只比金额和状态。
+- 清算异常是否按 Authorization -> Clearing、Clearing -> Posting、Posting -> Settlement、Reference chain -> Dispute、Time chain 分类并隔离处理。
+- 多卡组扩展是否把 clearing event model、matching、amount / fee decomposition、posting、replay 和 investigation 放在核心层，把文件、引用、费用和争议规则差异放进 scheme adapter。
 
 ## 跨境与多币种补充
 

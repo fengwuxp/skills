@@ -135,6 +135,49 @@ Clearing Core 至少要覆盖四个核心能力：
 
 匹配结果不要只输出 `matched=true`，而要输出 lifecycle context、amount interpretation、hold completion / release、posting readiness 和 exception classification。匹配失败、金额差异、重复清算、漏清算、迟到清算或引用缺失，应进入异常隔离、人工复核和审计轨迹，而不是直接落账或静默丢弃。
 
+## Clearing Core 生命周期治理
+
+Mastercard / 卡网络 clearing 不能只按文件解析、金额计算和 posting 生成来设计。成熟 Clearing Core 要能在 refund、retrieval、chargeback、replay、audit 或 investigation 进入时，沿同一条交易链恢复 authorization、clearing、posting、settlement、statement 和 dispute 上下文。
+
+产品方案至少要覆盖五类治理目标：
+
+- **transaction lifecycle**：授权、清算、入账、结算、退款、调单、拒付和调查能串成连续生命周期。
+- **accounting consistency**：gross、net、interchange、scheme fee、processing fee、adjustment、reserve 和 FX 进入正确账务层。
+- **reference continuity**：ARN、STAN、RRN、DE90、Business Date、Reconciliation Date 等锚点持续可追踪。
+- **dispute traceability**：retrieval、chargeback、representment 和调查能回到原始 authorization / clearing / posting chain。
+- **replay / investigation**：历史文件、规则版本、入账事件和结算归属可重放、可解释、可审计。
+
+生命周期对账不是只比流水金额，而是验证交易链是否仍然成立：
+
+| 关系 | 产品检查问题 |
+| --- | --- |
+| Authorization -> Clearing | presentment 是否来自正确授权；partial presentment 是否仍属于原交易；incremental capture 是否正确关闭 hold；correction 是否沿原链处理。 |
+| Clearing -> Posting | gross / net / fee 是否正确拆分；adjustment 是否污染原始入账；interchange、scheme fee、processing fee 和 FX 是否进入正确科目。 |
+| Posting -> Settlement | posting 是否进入正确 settlement cycle；跨日、滞后、carry-over、账期和会计期间是否拆清。 |
+| Merchant statement -> Internal ledger | 商户可见费用、商户结算净额、平台内部成本和内部账务归因是否能相互解释。 |
+| Reference chain -> Dispute | ARN、RRN、STAN、DE90 等锚点是否能恢复原始授权、清算上下文、posting chain 和争议证据。 |
+
+成熟 reconciliation 至少验证四层一致性：
+
+| 层级 | 关注点 |
+| --- | --- |
+| 金额一致性 | principal、gross、net、fee、settlement amount、FX 和 adjustment 合计关系正确。 |
+| 关系一致性 | clearing 归属正确 authorization，posting 来自正确 clearing，settlement 属于正确应收应付链。 |
+| 结构一致性 | interchange、scheme fee、processing fee、reserve、FX、correction 和 adjustment 不混入错误层级。 |
+| 锚点一致性 | ARN、STAN、RRN、DE90、Business Date、Reconciliation Date 可持续追踪，并能支撑 replay / archive / investigation。 |
+
+清算异常更适合按破坏的交易链分类，而不是只按字段分类：
+
+| 影响链路 | 常见异常 |
+| --- | --- |
+| Authorization -> Clearing | 找不到原授权、迟到清算、partial presentment 归属错误、重复 presentment。 |
+| Clearing -> Posting | 金额拆分错误、费用层级错误、correction 重复入账、adjustment 污染原始 posting。 |
+| Posting -> Settlement | 结算周期错误、跨日归属错误、netting 错误、商户可用资金解释断裂。 |
+| Reference chain -> Dispute | ARN / RRN / STAN / DE90 缺失或挂错，导致 refund、retrieval、chargeback 和 investigation 无法追溯。 |
+| Time chain | Business Date、Clearing Date、Posting Date、Settlement Date、Accounting Date 混用，导致对账和会计期间错位。 |
+
+多卡组扩展时，不要过度统一字段，而要统一生命周期语义。Clearing Core 保持 network-neutral 的 clearing event model、transaction matching、amount / fee decomposition、posting event generation、transaction chain recovery、reconciliation、replay 和 investigation；Mastercard、Visa、Diners、JCB 或本地网络的文件结构、引用规则、费用分类、correction / reversal 规则和 dispute mapping 放进 scheme adapter。
+
 ## Settlement 与商户可用资金
 
 Settlement 不是“给商户打一笔款”，而是从网络成员资金结果到商户可用资金的连续链路。外卡收单方案至少拆出五段：
@@ -204,8 +247,11 @@ Settlement 不是“给商户打一笔款”，而是从网络成员资金结果
 11. 是否先识别 issuer、acquirer、processor、gateway、sponsor/affiliate、principal member 等参与角色和责任边界。
 12. 是否建立 Authorization Core，而不是把卡组织报文适配层当成交易核心。
 13. 是否把 Financial Presentment、Matching Core、ARN / Reference Model、Fee & Amount Decomposition 和 Posting Model 纳入 Clearing Core。
-14. 是否区分 network member settlement、平台清分净额、商户可结算、merchant payout 和 bank arrival。
-15. 是否把收单风控贯穿准入、交易、请款/履约、结算和争议反馈，而不是只做交易前规则拦截。
+14. 是否把 Clearing Core 设计成生命周期治理系统，覆盖 amount、relationship、structure、anchor 四层 reconciliation。
+15. 是否按 Authorization -> Clearing、Clearing -> Posting、Posting -> Settlement、Reference chain -> Dispute 和 Time chain 分类清算异常。
+16. 是否把多卡组差异收敛到 scheme adapter，而核心保留统一 clearing event model、reference continuity、replay / investigation 和账务语义。
+17. 是否区分 network member settlement、平台清分净额、商户可结算、merchant payout 和 bank arrival。
+18. 是否把收单风控贯穿准入、交易、请款/履约、结算和争议反馈，而不是只做交易前规则拦截。
 
 ## 官方参考方向
 
