@@ -104,7 +104,7 @@ description: |
 7. **定规则**：状态迁移、计费、额度、审批、通知、风控、数据留存、报表口径和规则版本。
 8. **定验收**：用户验收、业务验收、运营验收、数据验收、风险验收、技术交接条件。
 
-支付与资金产品在上述基础上增加“四流 + 多账本 + 可核对”：业务流、支付信息流、账户/账务流、真实资金流；账户模型、账务矩阵、对账规则、结算规则、异常清单和资金安全验收。
+支付与资金产品在上述基础上增加“金融业务主轴 + 四流 + 多账本 + 可核对”：先回答谁的钱、因什么业务、沿哪条支付轨道、如何记账结算、谁承担风险、谁最终确认，再展开业务流、支付信息流、账户/账务流、真实资金流；账户模型、账务矩阵、对账规则、结算规则、异常清单和资金安全验收。
 
 ## 输出偏好
 
@@ -133,7 +133,7 @@ description: |
 - `references/payment-scenario-routing.md`：支付与资金场景识别和专项路由。
 - `references/regulatory-baseline.md`：金融监管、安全、数据、AML、客户资金和新支付形态基线。
 - `references/glossary.md`：支付与资金术语口径。
-- `references/payment-methodology.md`：支付产品分析方法和产品文档模式。
+- `references/payment-methodology.md`：支付金融业务总纲、四流、单据、能力地图和产品文档模式。
 - `references/clearing-settlement.md`：清分、清算、结算、对账、账务和结算系统设计。
 - `references/payment-design-checklists.md`：支付 PRD、资金方案、账务矩阵、对账和风险评审清单。
 - `references/payment-channel-routing-and-operations.md`：支付通道、路由、降级熔断、成本和通道对账。

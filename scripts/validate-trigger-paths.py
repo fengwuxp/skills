@@ -131,6 +131,7 @@ global_payment = "product-architecture-expert/references/global-payment-emerging
 card_network = "product-architecture-expert/references/card-network-and-card-rails.md"
 payment_risk = "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md"
 payment_routing = "product-architecture-expert/references/payment-scenario-routing.md"
+payment_checklists = "product-architecture-expert/references/payment-design-checklists.md"
 product_skill_tree = "product-architecture-expert/references/skill-tree.md"
 product_source_map = "product-architecture-expert/references/source-map.md"
 product_rule_checker = "product-architecture-expert/scripts/check_external_rules.py"
@@ -705,6 +706,19 @@ check(
     has_all(product_routing, ["payment-scenario-routing.md", "regulatory-baseline.md"]),
 )
 check(
+    "product payment routing enters financial business master frame",
+    has_all(
+        payment_routing,
+        [
+            "复杂或高风险支付资金问题",
+            "金融业务总纲",
+            "谁的钱，因什么业务，在什么主体和账户下，沿哪条支付轨道，以什么规则流转，何时可用，谁承担风险，谁最终确认",
+            "支付/资金方案的总纲、四流、单据、能力地图和专家交付口径",
+            "主轴不清时，先输出假设、澄清问题、待确认项和最小补齐计划",
+        ],
+    ),
+)
+check(
     "product route sends payment clearing ecosystem to clearing reference",
     has_all(
         "product-architecture-expert/references/payment-scenario-routing.md",
@@ -747,6 +761,39 @@ check(
             "## 支付核心主流程检查",
             "## 收银台与接入产品检查",
             "## 广义通道与支付创新",
+        ],
+    ),
+)
+check(
+    "product payment methodology keeps financial business master frame",
+    has_all(
+        payment_methodology,
+        [
+            "## 金融业务总纲",
+            "谁的钱，因什么业务，在什么主体和账户下，沿哪条支付轨道，以什么规则流转，何时可用，谁承担风险，谁最终确认",
+            "支付与资金产品语境",
+            "不扩展为信贷、证券、保险等全域金融方案",
+            "主体与资质",
+            "资金归属与账户",
+            "业务事实与支付事件",
+            "账务与清结算",
+            "风控合规与外部规则",
+            "数据证据与运营闭环",
+            "支付成功、清算入账、清账完成、结算出款和资金到账不得混写",
+        ],
+    ),
+)
+check(
+    "product payment checklist keeps financial expert gate",
+    has_all(
+        payment_checklists,
+        [
+            "## 金融业务专家总检",
+            "谁的钱、因什么业务、在什么主体和账户下、沿哪条支付轨道、以什么规则流转、何时可用、谁承担风险、谁最终确认",
+            "客户资金、商户待结算资金、平台自有资金、保证金、准备金、授信额度、预算额度、手续费收入和通道成本",
+            "业务确认、支付受理、授权成功、清算入账、清账完成、结算出款、资金到账、财务确认",
+            "四流、单据状态、账户/账务、清结算/对账、风险合规、数据证据和验收确认方",
+            "法域、主体资质、外部规则版本、数据边界和待专业确认项",
         ],
     ),
 )
@@ -808,6 +855,23 @@ check(
             "凭证规则",
             "会计循环",
             "总分核对",
+        ],
+    ),
+)
+check(
+    "product clearing reference keeps clearing settlement reconciliation gate",
+    has_all(
+        clearing_settlement,
+        [
+            "## 清账、结算、对账三段门禁",
+            "先清账，再结算",
+            "结算只认清账结果",
+            "先对清账，再对结算",
+            "交易/订单、手续费、退款、调账、冲正、补结、扣回、拒付或退单",
+            "渠道、银行或清算机构文件中的负项、调账项和非正常交易不能只在结算层处理",
+            "渠道到账金额、银行流水或上游结算文件只能用于合理性校验和资金对账",
+            "对账顺序必须区分清账对账和结算对账",
+            "结算系统不得把渠道或银行到账金额当作商户应结金额的直接来源",
         ],
     ),
 )
@@ -1063,6 +1127,8 @@ check(
             "清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
             "多业务线清结算全局规划、现状问题盘点、清算/账务/账户/结算/对账五中心能力切分、专业化/模块化/配置化原则和分期迁移路线",
+            "https://mp.weixin.qq.com/s/oXTAGAvE_OwNJfq1JXLZ0w",
+            "先清账再结算、先对清账再对结算、调账/冲正/负项必须进入清账模型",
             "https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng",
             "Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性",
             "https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A",
