@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/fengwuxp/skills/schemas/skillx-candidate.schema.json",
+  "title": "SkillX Candidate Package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "skill_id",
+    "display_name",
+    "description",
+    "source",
+    "planning_skills",
+    "functional_skills",
+    "atomic_skills",
+    "safety"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "maxLength": 80
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "repository_or_paper", "generated_at", "reviewer"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["skillx", "manual", "mixed"]
+        },
+        "repository_or_paper": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "generated_at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      }
+    },
+    "planning_skills": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "trigger", "plan_steps", "branch_rules", "stop_conditions"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "trigger": { "$ref": "#/$defs/textOrTextList" },
+          "plan_steps": { "$ref": "#/$defs/textOrTextList" },
+          "branch_rules": { "$ref": "#/$defs/textOrTextList" },
+          "stop_conditions": { "$ref": "#/$defs/textOrTextList" }
+        }
+      }
+    },
+    "functional_skills": {
+      "type": "array",
+      "maxItems": 80,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "task", "inputs", "outputs", "workflow", "references"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "task": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "inputs": { "$ref": "#/$defs/textOrTextList" },
+          "outputs": { "$ref": "#/$defs/textOrTextList" },
+          "workflow": { "$ref": "#/$defs/textOrTextList" },
+          "references": { "$ref": "#/$defs/textOrTextList" }
+        }
+      }
+    },
+    "atomic_skills": {
+      "type": "array",
+      "maxItems": 120,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "tool_or_script", "schema", "constraints", "failure_modes", "negative_cases"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "tool_or_script": { "type": "string", "minLength": 1, "maxLength": 240 },
+          "schema": { "$ref": "#/$defs/textOrTextList" },
+          "constraints": { "$ref": "#/$defs/textOrTextList" },
+          "failure_modes": { "$ref": "#/$defs/textOrTextList" },
+          "negative_cases": { "$ref": "#/$defs/textOrTextList" }
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contains_private_data",
+        "contains_external_code",
+        "requires_network",
+        "requires_user_consent"
+      ],
+      "properties": {
+        "contains_private_data": { "type": "boolean" },
+        "contains_external_code": { "type": "boolean" },
+        "requires_network": { "type": "boolean" },
+        "requires_user_consent": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "textOrTextList": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 80,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      ]
+    }
+  }
+}

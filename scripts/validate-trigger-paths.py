@@ -101,6 +101,7 @@ reference_index_audit = "scripts/audit-reference-indexes.py"
 skillx_export_spec = "references/skillx-to-codex-skill-package.md"
 skillx_export_adapter = "scripts/skillx_export_adapter.py"
 skillx_export_fixture = "fixtures/skillx/sample-candidate.json"
+skillx_export_schema = "schemas/skillx-candidate.schema.json"
 codegen_generator = "java-service-code-generator/scripts/generate_scaffold.py"
 codegen_fixture_verifier = "java-service-code-generator/scripts/verify_fixtures.py"
 codegen_rules = "java-service-code-generator/references/code-generation-rules.md"
@@ -455,8 +456,10 @@ check(
             "SkillX 到 Codex Skill Package 导出规范",
             "输入契约、安全门禁、三层映射、生成流程和验证流程",
             "不自动读取历史轨迹、不采集用户数据、不引入外部训练流水线",
+            "schemas/skillx-candidate.schema.json",
             "scripts/skillx_export_adapter.py",
             "fixtures/skillx/sample-candidate.json",
+            "fixtures/trigger-prompts.md",
         ],
     ),
 )
@@ -479,9 +482,11 @@ check(
             "## 质量门禁",
             "## 验证流程",
             "## Adapter 第一版范围",
+            "schemas/skillx-candidate.schema.json",
             "scripts/skillx_export_adapter.py",
             "fixtures/skillx/sample-candidate.json",
             "人工审查后的 SkillX JSON",
+            "fixtures/trigger-prompts.md",
             "用户历史对话、私人目录、密钥、token、客户数据、内部合同、生产配置、生产日志或不可公开组织信息",
             "第一版 adapter 只做离线转换",
         ],
@@ -494,13 +499,34 @@ check(
         [
             "Offline adapter from reviewed SkillX candidate JSON to a Codex Skill package",
             "Network: never",
+            "SCHEMA = ROOT / \"schemas\" / \"skillx-candidate.schema.json\"",
             "OFFLINE_ONLY = \"第一版 adapter 只做离线转换\"",
+            "validate_candidate_schema(data)",
+            "validate_trigger_fixture",
             "safety.{field} must be false for offline conversion",
             "source.reviewer must identify a completed human review",
             "sensitive or private-looking content rejected",
             "requires_network",
             "--dry-run",
             "--self-test",
+        ],
+    ),
+)
+check(
+    "SkillX export schema defines strict reviewed input",
+    has_all(
+        skillx_export_schema,
+        [
+            "\"title\": \"SkillX Candidate Package\"",
+            "\"additionalProperties\": false",
+            "\"skill_id\"",
+            "\"planning_skills\"",
+            "\"functional_skills\"",
+            "\"atomic_skills\"",
+            "\"safety\"",
+            "\"contains_private_data\"",
+            "\"requires_network\"",
+            "\"textOrTextList\"",
         ],
     ),
 )

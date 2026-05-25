@@ -64,7 +64,7 @@ SkillX 候选技能
 
 ## 输入契约
 
-SkillX 输出进入转换前，应先归一化为候选包：
+SkillX 输出进入转换前，应先归一化为候选包，并满足 `schemas/skillx-candidate.schema.json`：
 
 ```text
 skill_id: 稳定目录名，使用小写字母、数字和连字符
@@ -190,7 +190,7 @@ git diff --check
 
 ## Adapter 第一版范围
 
-第一版 adapter 只做离线转换，不做训练、不做自动轨迹采集、不做联网探索。当前仓库入口是 `scripts/skillx_export_adapter.py`，示例输入是 `fixtures/skillx/sample-candidate.json`：
+第一版 adapter 只做离线转换，不做训练、不做自动轨迹采集、不做联网探索。当前仓库入口是 `scripts/skillx_export_adapter.py`，输入契约是 `schemas/skillx-candidate.schema.json`，示例输入是 `fixtures/skillx/sample-candidate.json`：
 
 ```bash
 python3 scripts/skillx_export_adapter.py --input fixtures/skillx/sample-candidate.json --output-dir /tmp/skillx-out --dry-run
@@ -209,4 +209,5 @@ python3 scripts/skillx_export_adapter.py --self-test
 - 能生成一个可被 `./scripts/validate.sh` 检查的候选技能目录。
 - 能把 Planning / Functional / Atomic 三类经验放到正确层级。
 - 能拒绝含敏感数据、未知工具、未知网络访问或外部未审查代码的输入。
+- 能用 `fixtures/trigger-prompts.md` 对生成 Skill 的正负触发样例做回归检查。
 - 能输出清晰的人工待确认项，而不是假装自动判断完毕。

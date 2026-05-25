@@ -20,6 +20,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "fixtures" / "skillx" / "sample-candidate.json"
+SCHEMA = ROOT / "schemas" / "skillx-candidate.schema.json"
 
 OFFLINE_ONLY = "第一版 adapter 只做离线转换"
 SAFETY_FIELDS = (
@@ -47,6 +48,24 @@ class AdapterError(ValueError):
     pass
 
 
+def schema_type_name(value: Any) -> str:
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, str):
+        return "string"
+    if isinstance(value, list):
+        return "array"
+    if isinstance(value, dict):
+        return "object"
+    if value is None:
+        return "null"
+    if isinstance(value, int) and not isinstance(value, bool):
+        return "integer"
+    if isinstance(value, float):
+        return "number"
+    return type(value).__name__
+
+
 def read_json(path: Path) -> dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -55,6 +74,10 @@ def read_json(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise AdapterError("candidate root must be a JSON object")
     return data
+
+
+def read_schema() -> dict[str, Any]:
+    return read_json(SCHEMA)
 
 
 def compact(value: Any) -> str:
@@ -130,6 +153,86 @@ def validate_no_sensitive_strings(data: dict[str, Any]) -> None:
                 raise AdapterError(f"sensitive or private-looking content rejected at {path}")
 
 
+def resolve_schema_ref(schema: dict[str, Any], ref: str) -> dict[str, Any]:
+    if not ref.startswith("#/"):
+        raise AdapterError(f"unsupported schema ref: {ref}")
+    current: Any = schema
+    for part in ref[2:].split("/"):
+        if not isinstance(current, dict) or part not in current:
+            raise AdapterError(f"invalid schema ref: {ref}")
+        current = current[part]
+    if not isinstance(current, dict):
+        raise AdapterError(f"schema ref does not resolve to object: {ref}")
+    return current
+
+
+def validate_schema_node(value: Any, node: dict[str, Any], root_schema: dict[str, Any], path: str) -> None:
+    if "$ref" in node:
+        validate_schema_node(value, resolve_schema_ref(root_schema, str(node["$ref"])), root_schema, path)
+        return
+
+    if "oneOf" in node:
+        errors = []
+        for child in node["oneOf"]:
+            try:
+                validate_schema_node(value, child, root_schema, path)
+                return
+            except AdapterError as exc:
+                errors.append(str(exc))
+        raise AdapterError(f"{path} does not match any allowed schema: {'; '.join(errors)}")
+
+    expected_type = node.get("type")
+    if expected_type:
+        actual_type = schema_type_name(value)
+        if actual_type != expected_type:
+            raise AdapterError(f"{path} must be {expected_type}, got {actual_type}")
+
+    if isinstance(value, dict):
+        required = node.get("required", [])
+        for key in required:
+            if key not in value:
+                raise AdapterError(f"{path}.{key} is required by schema")
+        properties = node.get("properties", {})
+        if node.get("additionalProperties") is False:
+            extra = sorted(set(value) - set(properties))
+            if extra:
+                raise AdapterError(f"{path} has unknown field(s): {', '.join(extra)}")
+        for key, child in properties.items():
+            if key in value:
+                validate_schema_node(value[key], child, root_schema, f"{path}.{key}")
+
+    if isinstance(value, list):
+        min_items = node.get("minItems")
+        max_items = node.get("maxItems")
+        if min_items is not None and len(value) < int(min_items):
+            raise AdapterError(f"{path} must contain at least {min_items} item(s)")
+        if max_items is not None and len(value) > int(max_items):
+            raise AdapterError(f"{path} must contain at most {max_items} item(s)")
+        item_schema = node.get("items")
+        if isinstance(item_schema, dict):
+            for index, item in enumerate(value):
+                validate_schema_node(item, item_schema, root_schema, f"{path}[{index}]")
+
+    if isinstance(value, str):
+        min_length = node.get("minLength")
+        max_length = node.get("maxLength")
+        pattern = node.get("pattern")
+        enum = node.get("enum")
+        if min_length is not None and len(value) < int(min_length):
+            raise AdapterError(f"{path} must be at least {min_length} character(s)")
+        if max_length is not None and len(value) > int(max_length):
+            raise AdapterError(f"{path} must be at most {max_length} character(s)")
+        if pattern is not None and not re.fullmatch(str(pattern), value):
+            raise AdapterError(f"{path} does not match pattern {pattern}")
+        if enum is not None and value not in enum:
+            raise AdapterError(f"{path} must be one of {enum}")
+
+
+def validate_candidate_schema(data: dict[str, Any]) -> None:
+    schema = read_schema()
+    validate_schema_node(data, schema, schema, "$")
+
+
 def validate_source(data: dict[str, Any]) -> None:
     source = data.get("source")
     if not isinstance(source, dict):
@@ -158,6 +261,7 @@ def validate_safety(data: dict[str, Any]) -> None:
 
 
 def validate_candidate(data: dict[str, Any]) -> None:
+    validate_candidate_schema(data)
     skill_id = require_text(data, "skill_id")
     if not SKILL_ID_RE.fullmatch(skill_id):
         raise AdapterError("skill_id must use lowercase letters, digits, and hyphens")
@@ -362,6 +466,50 @@ def render_trigger_fixture(data: dict[str, Any]) -> str:
 """
 
 
+def parse_trigger_fixture(text: str) -> tuple[list[str], list[str]]:
+    sections: dict[str, list[str]] = {"positive": [], "negative": []}
+    current = ""
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped == "## Positive Prompts":
+            current = "positive"
+            continue
+        if stripped == "## Negative Prompts":
+            current = "negative"
+            continue
+        if current and stripped.startswith("- "):
+            sections[current].append(stripped[2:].strip())
+    return sections["positive"], sections["negative"]
+
+
+def route_generated_skill(prompt: str, skill: dict[str, Any]) -> bool:
+    folded_prompt = prompt.casefold()
+    route_phrases = []
+    for item in require_list(skill, "planning_skills"):
+        for trigger in markdown_lines(item.get("trigger")):
+            route_phrases.append(trigger.casefold())
+    if not route_phrases:
+        route_phrases.append(require_text(skill, "description").casefold())
+    for phrase in route_phrases:
+        if phrase and (phrase in folded_prompt or folded_prompt in phrase):
+            return True
+    return False
+
+
+def validate_trigger_fixture(path: Path, skill: dict[str, Any]) -> None:
+    positive, negative = parse_trigger_fixture(path.read_text(encoding="utf-8"))
+    if not positive:
+        raise AdapterError(f"{path} must contain positive prompts")
+    if not negative:
+        raise AdapterError(f"{path} must contain negative prompts")
+    missed = [prompt for prompt in positive if not route_generated_skill(prompt, skill)]
+    if missed:
+        raise AdapterError(f"{path} positive prompt(s) did not route: {missed}")
+    false_positive = [prompt for prompt in negative if route_generated_skill(prompt, skill)]
+    if false_positive:
+        raise AdapterError(f"{path} negative prompt(s) routed unexpectedly: {false_positive}")
+
+
 def build_files(data: dict[str, Any]) -> dict[str, str]:
     planning = require_list(data, "planning_skills")
     functional = require_list(data, "functional_skills")
@@ -485,6 +633,8 @@ def self_test() -> int:
                 "帮我读取历史对话并自动总结长期偏好",
             ],
         )
+        validate_trigger_fixture(target / "fixtures" / "trigger-prompts.md", data)
+        print("OK fixture trigger routing")
         if not plan["review_checklist"] or "fixtures/trigger-prompts.md" not in plan["files"]:
             raise AssertionError("plan must include review checklist and trigger fixture")
         try:
@@ -506,7 +656,7 @@ def self_test() -> int:
 
     unknown = json.loads(json.dumps(data))
     unknown["safety"]["requires_network"] = "unknown"
-    expect_validation_failure("unknown safety rejected", unknown, "safety.requires_network must be false")
+    expect_validation_failure("unknown safety rejected", unknown, "$.safety.requires_network must be boolean")
 
     private = json.loads(json.dumps(data))
     private["safety"]["contains_private_data"] = True
@@ -529,6 +679,14 @@ def self_test() -> int:
     empty["functional_skills"] = []
     empty["atomic_skills"] = []
     expect_validation_failure("empty candidate rejected", empty, "at least one planning")
+
+    extra = json.loads(json.dumps(data))
+    extra["unexpected"] = "field"
+    expect_validation_failure("unknown schema field rejected", extra, "unknown field")
+
+    wrong_type = json.loads(json.dumps(data))
+    wrong_type["safety"]["requires_network"] = "false"
+    expect_validation_failure("schema type rejected", wrong_type, "$.safety.requires_network must be boolean")
 
     print("SkillX export adapter self-test passed.")
     return 0
