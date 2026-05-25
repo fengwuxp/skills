@@ -60,7 +60,14 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 
 ## SkillX 导出规范
 
-如需把 SkillX 或类似系统生成的规划技能、功能技能、原子技能转换为 Codex Skill Package，先按 [SkillX 到 Codex Skill Package 导出规范](./references/skillx-to-codex-skill-package.md) 做输入契约、安全门禁、三层映射、生成流程和验证流程审查。第一版只允许离线转换人工审查后的 JSON/Markdown，不自动读取历史轨迹、不采集用户数据、不引入外部训练流水线，也不自动同步到 Codex。
+如需把 SkillX 或类似系统生成的规划技能、功能技能、原子技能转换为 Codex Skill Package，先按 [SkillX 到 Codex Skill Package 导出规范](./references/skillx-to-codex-skill-package.md) 做输入契约、安全门禁、三层映射、生成流程和验证流程审查。第一版只允许离线转换人工审查后的 JSON，不自动读取历史轨迹、不采集用户数据、不引入外部训练流水线，也不自动同步到 Codex。
+
+离线候选包可用 `scripts/skillx_export_adapter.py` 生成可评审的 Skill 目录草案：
+
+```bash
+python3 scripts/skillx_export_adapter.py --input fixtures/skillx/sample-candidate.json --output-dir /tmp/skillx-out --dry-run
+python3 scripts/skillx_export_adapter.py --input fixtures/skillx/sample-candidate.json --output-dir /tmp/skillx-out
+```
 
 ## 外部参考来源
 

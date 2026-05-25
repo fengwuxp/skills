@@ -6,7 +6,7 @@
 
 - 需要把 SkillX 或类似系统提炼出的技能知识库转换为本仓库技能目录。
 - 需要评审自动生成的 Skill 候选包是否符合三级加载、供应链安全、隐私边界和验证要求。
-- 需要设计后续 `SkillX -> Codex Skill Package` adapter 或导出脚本。
+- 需要设计或执行 `SkillX -> Codex Skill Package` adapter 或导出脚本。
 
 ## 不适用场景
 
@@ -32,7 +32,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断 SkillX 输出能否进入转换 | 目标边界、安全门禁、输入契约 | 目录结构细节 |
-| 设计导出脚本 | 输入契约、映射规则、生成流程、验证流程 | 背景说明 |
+| 设计或执行导出脚本 | 输入契约、映射规则、生成流程、验证流程、Adapter 第一版范围 | 背景说明 |
 | 评审生成的 Skill 包 | 质量门禁、安全门禁、验证流程 | 输入 schema 示例 |
 | 只想理解三层映射 | 映射规则 | 生成流程和脚本约束 |
 
@@ -190,10 +190,15 @@ git diff --check
 
 ## Adapter 第一版范围
 
-第一版 adapter 只做离线转换，不做训练、不做自动轨迹采集、不做联网探索：
+第一版 adapter 只做离线转换，不做训练、不做自动轨迹采集、不做联网探索。当前仓库入口是 `scripts/skillx_export_adapter.py`，示例输入是 `fixtures/skillx/sample-candidate.json`：
+
+```bash
+python3 scripts/skillx_export_adapter.py --input fixtures/skillx/sample-candidate.json --output-dir /tmp/skillx-out --dry-run
+python3 scripts/skillx_export_adapter.py --self-test
+```
 
 ```text
-输入：人工审查后的 SkillX JSON / Markdown
+输入：人工审查后的 SkillX JSON
 输出：候选 Codex Skill Package 目录
 动作：生成文件、生成验证 fixture、输出人工审查清单
 禁止：读取历史对话、调用生产系统、安装依赖、执行外部代码、自动同步到 Codex

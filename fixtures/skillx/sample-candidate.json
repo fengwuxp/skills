@@ -1,0 +1,86 @@
+{
+  "skill_id": "skillx-product-reviewer",
+  "display_name": "SkillX 产品评审助手",
+  "description": "用于把人工审查后的 SkillX 产品评审经验转换为 Codex Skill 的示例候选包，覆盖规划路由、评审工作流和本地文件校验约束。",
+  "source": {
+    "type": "skillx",
+    "repository_or_paper": "https://github.com/zjunlp/SkillX",
+    "generated_at": "2026-05-25",
+    "reviewer": "repo-maintainer"
+  },
+  "planning_skills": [
+    {
+      "name": "产品方案评审路由",
+      "trigger": [
+        "用户要求评审 PRD、产品方案、能力地图或业务流程。",
+        "用户要求把产品经验沉淀为可复用 Skill。"
+      ],
+      "plan_steps": [
+        "确认目标用户、业务主体、边界、交付物和验收标准。",
+        "按规划、功能、原子三层拆分候选经验。",
+        "输出待确认项、拒绝项和验证项。"
+      ],
+      "branch_rules": [
+        "涉及支付、清结算或合规时转入金融业务专项评审。",
+        "涉及代码实现时转交架构师或代码生成技能。"
+      ],
+      "stop_conditions": [
+        "发现敏感数据、未知网络访问或未审查外部代码。",
+        "输入缺少人工审查者或安全字段为 unknown。"
+      ]
+    }
+  ],
+  "functional_skills": [
+    {
+      "name": "产品交付物一致性评审",
+      "task": "检查产品交付物是否具备目标、范围、业务规则、流程、状态、指标、风险和验收标准。",
+      "inputs": [
+        "用户提供的 PRD、产品方案或结构化需求。",
+        "已确认的业务边界和待确认问题。"
+      ],
+      "outputs": [
+        "结构性问题清单。",
+        "可执行优化建议。",
+        "必要的待确认项。"
+      ],
+      "workflow": [
+        "先评审纲目是否完整。",
+        "再评审关键规则是否可验证。",
+        "最后评审交付物是否适合进入设计或开发。"
+      ],
+      "references": [
+        "产品专家场景路由。",
+        "产品 PRD 模板。",
+        "支付专项方法论。"
+      ]
+    }
+  ],
+  "atomic_skills": [
+    {
+      "name": "本地交付物结构检查",
+      "tool_or_script": "check_product_deliverable.py",
+      "schema": [
+        "input_file: 本地 Markdown 文件路径。",
+        "mode: self-test 或 check。"
+      ],
+      "constraints": [
+        "只能读取用户显式提供的本地 Markdown 或 JSON。",
+        "不得联网、上传文件、读取密钥或访问生产环境。"
+      ],
+      "failure_modes": [
+        "缺少目标、范围、验收标准或待确认项。",
+        "输入文件不存在或不是文本文件。"
+      ],
+      "negative_cases": [
+        "空文件必须失败。",
+        "只包含标题但缺少规则和验收标准必须失败。"
+      ]
+    }
+  ],
+  "safety": {
+    "contains_private_data": false,
+    "contains_external_code": false,
+    "requires_network": false,
+    "requires_user_consent": false
+  }
+}
