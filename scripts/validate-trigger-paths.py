@@ -98,6 +98,7 @@ language_agnostic = "senior-software-architect/references/language-agnostic-arch
 security = "senior-software-architect/references/security-architecture.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
 reference_index_audit = "scripts/audit-reference-indexes.py"
+skillx_export_spec = "references/skillx-to-codex-skill-package.md"
 codegen_generator = "java-service-code-generator/scripts/generate_scaffold.py"
 codegen_fixture_verifier = "java-service-code-generator/scripts/verify_fixtures.py"
 codegen_rules = "java-service-code-generator/references/code-generation-rules.md"
@@ -440,6 +441,42 @@ check(
             "规划技能、功能技能、原子技能",
             "经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证",
             "不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码",
+        ],
+    ),
+)
+check(
+    "README routes SkillX export specification",
+    has_all(
+        "README.md",
+        [
+            "## SkillX 导出规范",
+            "SkillX 到 Codex Skill Package 导出规范",
+            "输入契约、安全门禁、三层映射、生成流程和验证流程",
+            "不自动读取历史轨迹、不采集用户数据、不引入外部训练流水线",
+        ],
+    ),
+)
+check(
+    "SkillX export spec defines package governance",
+    has_all(
+        skillx_export_spec,
+        [
+            "# SkillX 到 Codex Skill Package 导出规范",
+            "## 使用时机",
+            "## 不适用场景",
+            "## 读取后必须产出",
+            "## 需要继续读取的 reference",
+            "## 按任务读取索引",
+            "## 输入契约",
+            "Planning Skills -> 路由与计划",
+            "Functional Skills -> Reference 方法",
+            "Atomic Skills -> 脚本、fixture 与工具约束",
+            "## 安全门禁",
+            "## 质量门禁",
+            "## 验证流程",
+            "## Adapter 第一版范围",
+            "用户历史对话、私人目录、密钥、token、客户数据、内部合同、生产配置、生产日志或不可公开组织信息",
+            "第一版 adapter 只做离线转换",
         ],
     ),
 )
