@@ -430,6 +430,32 @@ check(
         ],
     ),
 )
+check(
+    "README records SkillX reference source",
+    has_all(
+        "README.md",
+        [
+            "zjunlp/SkillX",
+            "SkillX: Automatically Constructing Skill Knowledge Bases for Agents",
+            "规划技能、功能技能、原子技能",
+            "经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证",
+            "不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码",
+        ],
+    ),
+)
+check(
+    "AGENTS defines skill experience layering",
+    has_all(
+        "AGENTS.md",
+        [
+            "Skill 经验抽象可按三类归位",
+            "规划层经验：任务识别、触发路由、阶段顺序、依赖关系、分支门禁和停止条件",
+            "功能层经验：可复用子任务流程、模板、评审清单、输出结构、领域方法论和组合模式",
+            "原子层经验：工具调用约束、脚本参数、输入输出 schema、常见失败模式、负例、fixture 和确定性校验",
+            "过滤一次性探索、回退、试错、临时偏好和未验证结论",
+        ],
+    ),
+)
 
 lifecycle_stages = ["Clarify", "Design", "Plan", "Build", "Verify", "Review/Ship"]
 check("workflow defines engineering lifecycle gate", contains(workflow, "## 工程生命周期门禁"))
@@ -472,7 +498,15 @@ check(
         [
             "外部 AI Skill 方法论只作为工程纪律参考，不作为本技能的新能力菜单",
             "先澄清再编码、简单优先、最小变更、目标驱动验证、领域语言对齐、TDD、诊断闭环和 Review 防越界",
+            "SkillX 类技能知识库方法只作为 AI 经验沉淀参考",
+            "规划技能、功能技能、原子技能三分法",
             "每个实现步骤都必须回指当前 OpenSpec、用户目标或验收标准",
+            "## AI 经验沉淀门禁",
+            "规划层经验",
+            "功能层经验",
+            "原子层经验",
+            "过滤探索噪音、回退路径、一次性修补、临时偏好和未经验证的模型猜测",
+            "未获明确同意不得写入 `~/.skill-learning/`",
             "不默认创建额外 `CONTEXT.md`",
             "不允许把外部 Skill 的工作流、术语或自动化步骤凌驾于当前仓库 `AGENTS.md`、OpenSpec、Harness Plan、测试和用户授权之上",
         ],
