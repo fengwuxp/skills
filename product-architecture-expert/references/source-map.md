@@ -38,6 +38,9 @@
 - 微信公众号文章《外卡收单体系全景（4）：清算之网》：`https://mp.weixin.qq.com/s/Y1O4BsLo4DD0HgkKYSRQnw`。公开内容用于参考外卡收单中 authorization、clearing、settlement 的语义差异，以及清算连接交易、账务、费用、责任、对账和争议的产品视角。
 - 微信公众号文章《外卡收单体系全景（5）：结算之路》：`https://mp.weixin.qq.com/s/hilJTPiiakSQvDLYAzHtuA`。公开内容用于参考 settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理。
 - 微信公众号文章《外卡收单体系全景（6）：风控之盾》：`https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ`。公开内容用于参考外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截。
+- 微信公众号文章《你不是在接卡组，你是在组织一张网》：`https://mp.weixin.qq.com/s/IpEWgr-8pMzUP480TDWlFw`。公开内容用于参考外卡收单从接卡组/API 升级为全球支付编排能力，覆盖卡组、钱包、本地支付方式、APM/RTP/A2A、PSP/网关、认证风控、结算资金、争议治理和运营闭环；涉及 Visa、Mastercard、稳定币结算或 PSP 趋势的时效性判断必须回到官方公开资料和合同规则复核。
+- 微信公众号文章《清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484523&idx=1&sn=bab6c18e89728feaf921bccbc5cb88d3`。公开内容用于参考外卡/跨境收单清算文件延迟排查，覆盖交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject、批次 ID、三段链路归因和资金链路事故升级信号。
+- 微信公众号文章《外卡收单钱收到了，战争才刚开始》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484517&idx=1&sn=a171eb833dc25e6e83be75c407ad69ff`。公开内容用于参考外卡收单争议治理，覆盖 Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration 链路、卡争议与非卡争议分轨、争议率/CB 率红线、止血/组证/representment 决策和反馈回流；Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准。
 - 微信公众号文章《Agent Skills 实战：把 PRD 需求文档写成 Skill》：`https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ`。公开内容用于参考 PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式、必填章节检查、用户故事/验收标准可验证性和 scripts/reference 分层；不复制原文模板或另建重复 PRD Skill。
 - 《支付之门：支付原理、架构与产品全链路设计》公开图书页：如当当云阅读 `https://e.dangdang.com/products/1901384633.html`。公开简介说明其面向支付系统底层逻辑、会计知识和支付系统设计方法论。
 - Formance Wallets Introduction：`https://docs.formance.com/modules/wallets/introduction`。公开文档用于参考业务钱包、余额和钱包操作的分层设计。

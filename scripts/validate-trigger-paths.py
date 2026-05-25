@@ -132,6 +132,7 @@ clearing_settlement = "product-architecture-expert/references/clearing-settlemen
 global_payment = "product-architecture-expert/references/global-payment-emerging.md"
 card_network = "product-architecture-expert/references/card-network-and-card-rails.md"
 payment_risk = "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md"
+dispute_refund = "product-architecture-expert/references/dispute-refund-and-chargeback-operations.md"
 payment_routing = "product-architecture-expert/references/payment-scenario-routing.md"
 payment_checklists = "product-architecture-expert/references/payment-design-checklists.md"
 product_skill_tree = "product-architecture-expert/references/skill-tree.md"
@@ -823,8 +824,26 @@ check(
             "卡交易流程、授权/清算/结算、授权恢复、争议、网络费用和 PCI 边界",
             "外卡收单、Mastercard、卡网络角色、Authorization Core、Financial Presentment、Clearing Core、ARN、scheme fee、merchant payout、收单风控",
             "卡网络角色定位、授权核心、清算生命周期治理、商户可用资金、结算净额、replay / investigation 和风控闭环",
+            "全球支付接受能力、Global Payment Orchestration、外卡收单 + 钱包 + 本地支付方式 + APM/RTP/A2A、多国家收款编排",
+            "全球支付编排方案，覆盖卡轨、钱包轨、本地轨、认证、风控、结算、争议、资金控制和运营治理",
             "跨境支付、多币种、Swift/GPI、Nostro/Vostro、代理行、本地清算网络、外清内结",
             "跨境五层拆解、资金流、币种/汇率/费用、合规待确认项",
+        ],
+    ),
+)
+check(
+    "product payment channel reference keeps global orchestration frame",
+    has_all(
+        "product-architecture-expert/references/payment-channel-routing-and-operations.md",
+        [
+            "## 全球支付编排不是通道清单",
+            "Global Payment Orchestration",
+            "接受入口",
+            "服务商分层",
+            "认证与风控",
+            "资金控制",
+            "争议与证据",
+            "全球覆盖 × 本地适配 × 数据与风控 × 资金控制 × 争议治理",
         ],
     ),
 )
@@ -881,6 +900,25 @@ check(
     ),
 )
 check(
+    "product payment checklist keeps clearing delay and dispute gates",
+    has_all(
+        payment_checklists,
+        [
+            "清算文件未按预期到达、迟到、缺失或处理状态异常",
+            "交易日、清算日、入账/结算日",
+            "accepted but delayed",
+            "rejected / held",
+            "三段链路归因",
+            "同一 MID 大面积 reject",
+            "卡争议与非卡争议",
+            "Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration",
+            "争议率/CB 率",
+            "分型、止血、按原因码组证、判断 representment",
+            "前置预防、预警处置、正式争议、反馈回流",
+        ],
+    ),
+)
+check(
     "product clearing reference keeps payment clearing ecosystem frames",
     has_all(
         clearing_settlement,
@@ -905,6 +943,23 @@ check(
     ),
 )
 check(
+    "product clearing reference keeps clearing file delay gate",
+    has_all(
+        clearing_settlement,
+        [
+            "## 清算文件异常延迟排查门禁",
+            "清算文件未按预期到达、迟到、缺失或处理状态异常时，不能先归因于网关慢",
+            "交易日、清算日、入账/结算日",
+            "Processing Calendar / Holiday Schedule",
+            "accepted but delayed",
+            "rejected / held",
+            "ACK、确认号、批次 ID",
+            "商户/PSP 到收单处理、卡组织/清算网络、银行/代理行/币种中转",
+            "连续多批次缺失、同一 MID 大面积 reject、金额轧差突然偏离",
+        ],
+    ),
+)
+check(
     "product global payment reference keeps cross-border frames",
     has_all(
         global_payment,
@@ -920,6 +975,26 @@ check(
             "代理行模式",
             "NRA/非居民账户模式",
             "外清、内结",
+        ],
+    ),
+)
+check(
+    "product dispute reference keeps acquiring dispute governance",
+    has_all(
+        dispute_refund,
+        [
+            "## 外卡争议治理链路",
+            "资金归属权的后半场",
+            "卡争议",
+            "非卡争议",
+            "Alert -> Inquiry / Retrieval -> Chargeback -> Representment -> Pre-arbitration / Arbitration",
+            "分型",
+            "止血",
+            "按原因码组证",
+            "判断 representment",
+            "结果回流",
+            "前置预防、预警处置、正式争议、反馈回流",
+            "具体阈值、区域、生效日、排除项必须按 Visa/Mastercard/收单行/通道最新官方规则确认",
         ],
     ),
 )
@@ -1124,6 +1199,8 @@ check(
             "支付十二字能力地图：买、收、付、退、充、提、转、调、算、结、管、对",
             "支付账本观：支付本质是多方账本、账户归属和真实资金路径的协同变化",
             "卡组织清结算：四方/三方模式、BIN/IIN 路由、授权前置裁决、Authorization Core、Stand-In/SAF、open-to-buy、Financial Presentment、Matching/ARN、费用拆分、Posting、生命周期对账、reference continuity、replay / investigation、结算与网络费用",
+            "全球支付编排：把卡轨、钱包、本地支付、APM/RTP/A2A、PSP/网关、认证、风控、结算、争议和资金控制组织成可运营网络",
+            "全球覆盖、本地适配、数据与风控、资金控制和争议治理",
             "外卡收单风控：商户准入、3DS/规则/评分、capture / fulfillment 控制、保证金/延迟结算、争议反馈和商户风险闭环",
             "账务核心：外围驱动、凭证规则、账户结构、会计循环、总分核对和日切批处理",
             "支付清算生态：交易平台层、支付服务层、清算服务层、金融服务层、央行/金融基础设施层",
@@ -1230,6 +1307,16 @@ check(
             "settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理",
             "https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ",
             "外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截",
+            "https://mp.weixin.qq.com/s/IpEWgr-8pMzUP480TDWlFw",
+            "外卡收单从接卡组/API 升级为全球支付编排能力",
+            "卡组、钱包、本地支付方式、APM/RTP/A2A、PSP/网关、认证风控、结算资金、争议治理和运营闭环",
+            "清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题",
+            "bab6c18e89728feaf921bccbc5cb88d3",
+            "交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject",
+            "外卡收单钱收到了，战争才刚开始",
+            "a171eb833dc25e6e83be75c407ad69ff",
+            "Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration",
+            "Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准",
             "https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ",
             "PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式",
             "不复制原文模板或另建重复 PRD Skill",

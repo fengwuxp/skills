@@ -55,6 +55,7 @@
 | 钱包、余额、账本、资金账户、内部转账 | `formance-reference-patterns.md`, `clearing-settlement.md` | 钱包/账本模型、账户关系、账务事件矩阵 |
 | 对账、差错、长短款、批处理、资金到账 | `clearing-settlement.md`, `formance-reference-patterns.md`, `payment-design-checklists.md` | 对账方案、差错生命周期、重跑和核销机制 |
 | 多 PSP/多银行/多支付方式、通道路由、降级 | `payment-channel-routing-and-operations.md` | 通道路由方案、通道健康、熔断、成本/成功率口径 |
+| 全球支付接受能力、Global Payment Orchestration、外卡收单 + 钱包 + 本地支付方式 + APM/RTP/A2A、多国家收款编排 | `payment-channel-routing-and-operations.md`, `card-network-and-card-rails.md`, `global-payment-emerging.md`, `payment-risk-fraud-and-merchant-operations.md` | 全球支付编排方案，覆盖卡轨、钱包轨、本地轨、认证、风控、结算、争议、资金控制和运营治理 |
 | 商户入网、KYB、欺诈、拒付率、准备金 | `payment-risk-fraud-and-merchant-operations.md`, `regulatory-baseline.md` | 风控方案、商户生命周期、风险规则和运营闭环 |
 | 支付合规、KYC/KYB/KYT/KYA、AML/CFT、大额交易、可疑交易 | `regulatory-baseline.md`, `payment-risk-fraud-and-merchant-operations.md` | 合规生命周期、客户/商户/交易/地址尽调、持续监控、待专业确认项 |
 | 退款、撤销、拒付、争议、证据、chargeback | `dispute-refund-and-chargeback-operations.md`, `card-network-and-card-rails.md` | 逆向交易状态机、证据模型、争议运营流程 |
@@ -74,6 +75,7 @@
 - **收单 + 商户结算 + 对账**：读 `payment-methodology.md` + `clearing-settlement.md` + `card-network-and-card-rails.md` + `payment-design-checklists.md`。重点输出支付单据、清分规则、结算批次、通道对账和资金到账对账。
 - **多业务线清结算全局规划**：读 `clearing-settlement.md` + `payment-design-checklists.md` + `diagram-output.md`。重点输出线下线上断点、报表不记账、对账无差错闭环、能力重复建设、五中心能力边界、迁移优先级和全局规划图。
 - **多通道收款优化**：读 `payment-channel-routing-and-operations.md` + `payment-risk-fraud-and-merchant-operations.md` + 对应支付轨道文件。重点输出路由决策、健康熔断、成本口径、风险约束和通道对账。
+- **全球支付编排 / 外卡收单升级**：读 `payment-channel-routing-and-operations.md` + `card-network-and-card-rails.md` + `global-payment-emerging.md` + `payment-risk-fraud-and-merchant-operations.md`。重点输出全球覆盖、本地适配、支付方式组合、认证与风控、资金控制、争议治理和运营闭环。
 - **钱包/账本 + 清结算**：读 `formance-reference-patterns.md` + `clearing-settlement.md`。重点输出钱包层、账本层、对账层、账户科目和账务矩阵。
 - **跨境 + 多币种 + 商户结算**：读 `global-payment-emerging.md` + `regulatory-baseline.md` + `clearing-settlement.md`。重点输出法域、主体、币种、汇率、费用、清算路径和待确认项。
 
