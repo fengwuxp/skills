@@ -194,13 +194,14 @@ git diff --check
 
 ```bash
 python3 scripts/skillx_export_adapter.py --input fixtures/skillx/sample-candidate.json --output-dir /tmp/skillx-out --dry-run
+python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skillx-product-reviewer --input fixtures/skillx/sample-candidate.json
 python3 scripts/skillx_export_adapter.py --self-test
 ```
 
 ```text
 输入：人工审查后的 SkillX JSON
 输出：候选 Codex Skill Package 目录
-动作：生成文件、生成验证 fixture、输出人工审查清单
+动作：生成文件、生成验证 fixture、输出 `REVIEW.md` 人工审查报告和可用性摘要
 禁止：读取历史对话、调用生产系统、安装依赖、执行外部代码、自动同步到 Codex
 ```
 
@@ -210,4 +211,5 @@ python3 scripts/skillx_export_adapter.py --self-test
 - 能把 Planning / Functional / Atomic 三类经验放到正确层级。
 - 能拒绝含敏感数据、未知工具、未知网络访问或外部未审查代码的输入。
 - 能用 `fixtures/trigger-prompts.md` 对生成 Skill 的正负触发样例做回归检查。
+- 能用 `--validate-output` 单独复核已生成候选目录的必要文件、触发样例和输入一致性。
 - 能输出清晰的人工待确认项，而不是假装自动判断完毕。

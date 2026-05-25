@@ -466,6 +466,99 @@ def render_trigger_fixture(data: dict[str, Any]) -> str:
 """
 
 
+def review_checklist() -> list[str]:
+    return [
+        "确认 description 是否短、准、覆盖核心触发场景。",
+        "确认 SKILL.md 只保留入口、路由、红线和 reference 读取时机。",
+        "确认 references 是否一层直连，且没有复制长知识到 SKILL.md。",
+        "确认 fixtures/trigger-prompts.md 的正负例能守住触发边界。",
+        "确认没有敏感数据、未知网络访问、未审查外部代码或自动同步行为。",
+        "确认生成目录通过 --validate-output 后，再纳入正式技能目录。",
+    ]
+
+
+def validation_commands() -> list[str]:
+    return [
+        "python3 scripts/skillx_export_adapter.py --validate-output <generated-skill-dir> --input <candidate.json>",
+        "python3 scripts/validate-trigger-paths.py",
+        "./scripts/validate.sh",
+        "git diff --check",
+        "./sync-skills.sh --dry-run all",
+    ]
+
+
+def usability_summary(data: dict[str, Any], files: dict[str, str]) -> dict[str, Any]:
+    planning = require_list(data, "planning_skills")
+    functional = require_list(data, "functional_skills")
+    atomic = require_list(data, "atomic_skills")
+    refs = [name for name in files if name.startswith("references/")]
+    return {
+        "status": "candidate-generated",
+        "human_review_required": True,
+        "progressive_disclosure": {
+            "metadata": "generated",
+            "skill_body": "generated",
+            "references": sorted(refs),
+            "trigger_fixture": "fixtures/trigger-prompts.md",
+        },
+        "capability_counts": {
+            "planning": len(planning),
+            "functional": len(functional),
+            "atomic": len(atomic),
+        },
+        "known_limits": [
+            "仅支持人工审查后的本地 JSON 输入。",
+            "不会自动安装依赖、同步到 Codex 或读取历史轨迹。",
+            "触发验证是候选 Skill 的启发式回归，不能替代人工 CR。",
+        ],
+    }
+
+
+def render_review_md(data: dict[str, Any], files: dict[str, str]) -> str:
+    source = data["source"]
+    summary = usability_summary(data, files)
+    file_lines = "".join(f"- `{name}`\n" for name in sorted(files))
+    checklist_lines = "".join(f"- [ ] {item}\n" for item in review_checklist())
+    command_lines = "\n".join(validation_commands())
+    limits = "".join(f"- {item}\n" for item in summary["known_limits"])
+    return f"""# SkillX Candidate Review
+
+该文件由 `scripts/skillx_export_adapter.py` 生成，用于人工评审候选 Skill。它不是审批结论。
+
+## Source
+
+- skill_id: `{require_text(data, "skill_id")}`
+- display_name: {require_text(data, "display_name")}
+- source_type: {one_line(source.get("type"))}
+- source: {one_line(source.get("repository_or_paper"), 500)}
+- generated_at: {one_line(source.get("generated_at"))}
+- reviewer: {one_line(source.get("reviewer"))}
+
+## Generated Files
+
+{file_lines}
+## Usability
+
+- status: {summary["status"]}
+- human_review_required: {str(summary["human_review_required"]).lower()}
+- planning_skills: {summary["capability_counts"]["planning"]}
+- functional_skills: {summary["capability_counts"]["functional"]}
+- atomic_skills: {summary["capability_counts"]["atomic"]}
+
+## Known Limits
+
+{limits}
+## Review Checklist
+
+{checklist_lines}
+## Validation Commands
+
+```bash
+{command_lines}
+```
+"""
+
+
 def parse_trigger_fixture(text: str) -> tuple[list[str], list[str]]:
     sections: dict[str, list[str]] = {"positive": [], "negative": []}
     current = ""
@@ -528,6 +621,7 @@ def build_files(data: dict[str, Any]) -> dict[str, str]:
         "fixtures/trigger-prompts.md": render_trigger_fixture(data),
     }
     files.update(refs)
+    files["REVIEW.md"] = render_review_md(data, files)
     return files
 
 
@@ -555,23 +649,54 @@ def convert(input_file: Path, output_dir: Path, overwrite: bool, dry_run: bool) 
         "target": str(target),
         "files": sorted(files),
         "offline_only": True,
-        "validation_commands": [
-            "python3 scripts/validate-trigger-paths.py",
-            "./scripts/validate.sh",
-            "git diff --check",
-            "./sync-skills.sh --dry-run all",
-        ],
-        "review_checklist": [
-            "确认 description 是否短、准、覆盖核心触发场景。",
-            "确认 SKILL.md 只保留入口、路由、红线和 reference 读取时机。",
-            "确认 references 是否一层直连，且没有复制长知识到 SKILL.md。",
-            "确认 fixtures/trigger-prompts.md 的正负例能守住触发边界。",
-            "确认没有敏感数据、未知网络访问、未审查外部代码或自动同步行为。",
-        ],
+        "validation_commands": validation_commands(),
+        "review_checklist": review_checklist(),
+        "usability": usability_summary(data, files),
     }
     if not dry_run:
         write_files(target, files, overwrite)
     return plan
+
+
+def validate_generated_output(skill_dir: Path, input_file: Path | None = None) -> dict[str, Any]:
+    skill_dir = skill_dir.resolve()
+    required_files = [
+        "SKILL.md",
+        "agents/openai.yaml",
+        "fixtures/trigger-prompts.md",
+        "REVIEW.md",
+    ]
+    missing = [rel for rel in required_files if not (skill_dir / rel).exists()]
+    if missing:
+        raise AdapterError(f"{skill_dir} missing generated file(s): {', '.join(missing)}")
+
+    skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+    if "本地协作学习机制" not in skill_text:
+        raise AdapterError(f"{skill_dir}/SKILL.md missing local learning pointer")
+    if "references/" in skill_text and not (skill_dir / "references").exists():
+        raise AdapterError(f"{skill_dir}/SKILL.md references files but references/ is missing")
+
+    if input_file:
+        data = read_json(input_file)
+        validate_candidate(data)
+        expected = build_files(data)
+        expected_files = sorted(expected)
+        actual_files = sorted(str(path.relative_to(skill_dir)) for path in skill_dir.rglob("*") if path.is_file())
+        missing_expected = sorted(set(expected_files) - set(actual_files))
+        if missing_expected:
+            raise AdapterError(f"{skill_dir} missing expected generated file(s): {', '.join(missing_expected)}")
+        validate_trigger_fixture(skill_dir / "fixtures" / "trigger-prompts.md", data)
+    else:
+        positive, negative = parse_trigger_fixture((skill_dir / "fixtures" / "trigger-prompts.md").read_text(encoding="utf-8"))
+        if not positive or not negative:
+            raise AdapterError(f"{skill_dir}/fixtures/trigger-prompts.md must include positive and negative prompts")
+
+    return {
+        "skill_dir": str(skill_dir),
+        "status": "valid-generated-skill-candidate",
+        "input_checked": input_file is not None,
+        "files_checked": required_files,
+    }
 
 
 def assert_contains(path: Path, snippets: list[str]) -> None:
@@ -633,10 +758,25 @@ def self_test() -> int:
                 "帮我读取历史对话并自动总结长期偏好",
             ],
         )
+        assert_contains(
+            target / "REVIEW.md",
+            [
+                "SkillX Candidate Review",
+                "Review Checklist",
+                "Validation Commands",
+                "--validate-output <generated-skill-dir>",
+            ],
+        )
         validate_trigger_fixture(target / "fixtures" / "trigger-prompts.md", data)
         print("OK fixture trigger routing")
-        if not plan["review_checklist"] or "fixtures/trigger-prompts.md" not in plan["files"]:
-            raise AssertionError("plan must include review checklist and trigger fixture")
+        output_check = validate_generated_output(target, FIXTURE)
+        if output_check["status"] != "valid-generated-skill-candidate":
+            raise AssertionError("generated output validation failed")
+        print("OK fixture output validation")
+        if not plan["review_checklist"] or "fixtures/trigger-prompts.md" not in plan["files"] or "REVIEW.md" not in plan["files"]:
+            raise AssertionError("plan must include review checklist, trigger fixture, and review report")
+        if not plan["usability"]["human_review_required"]:
+            raise AssertionError("plan must require human review")
         try:
             convert(FIXTURE, output_dir, overwrite=False, dry_run=False)
         except AdapterError as exc:
@@ -696,6 +836,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Offline SkillX JSON to Codex Skill package adapter.")
     parser.add_argument("--input", type=Path, help="Reviewed local SkillX candidate JSON.")
     parser.add_argument("--output-dir", type=Path, help="Directory where the candidate skill folder will be created.")
+    parser.add_argument("--validate-output", type=Path, help="Validate a generated candidate skill directory.")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite generated files if the target skill folder exists.")
     parser.add_argument("--dry-run", action="store_true", help="Print the generation plan without writing files.")
     parser.add_argument("--self-test", action="store_true", help="Run built-in safe fixture and negative cases.")
@@ -706,8 +847,12 @@ def main(argv: list[str]) -> int:
     args = parse_args(argv)
     if args.self_test:
         return self_test()
+    if args.validate_output:
+        result = validate_generated_output(args.validate_output, args.input)
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
     if not args.input or not args.output_dir:
-        raise AdapterError("--input and --output-dir are required unless --self-test is used")
+        raise AdapterError("--input and --output-dir are required unless --self-test or --validate-output is used")
     plan = convert(args.input, args.output_dir, args.overwrite, args.dry_run)
     print(json.dumps(plan, ensure_ascii=False, indent=2))
     return 0
