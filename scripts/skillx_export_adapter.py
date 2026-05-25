@@ -514,6 +514,22 @@ def usability_summary(data: dict[str, Any], files: dict[str, str]) -> dict[str, 
     }
 
 
+def candidate_input_report(data: dict[str, Any]) -> dict[str, Any]:
+    validate_candidate(data)
+    files = build_files(data)
+    return {
+        "skill_id": require_text(data, "skill_id"),
+        "status": "valid-reviewed-skillx-candidate",
+        "offline_only": True,
+        "write_required": False,
+        "schema": str(SCHEMA),
+        "expected_files": sorted(files),
+        "review_checklist": review_checklist(),
+        "validation_commands": validation_commands(),
+        "usability": usability_summary(data, files),
+    }
+
+
 def render_review_md(data: dict[str, Any], files: dict[str, str]) -> str:
     source = data["source"]
     summary = usability_summary(data, files)
@@ -640,7 +656,7 @@ def write_files(target: Path, files: dict[str, str], overwrite: bool) -> None:
 
 def convert(input_file: Path, output_dir: Path, overwrite: bool, dry_run: bool) -> dict[str, Any]:
     data = read_json(input_file)
-    validate_candidate(data)
+    input_report = candidate_input_report(data)
     files = build_files(data)
     skill_id = require_text(data, "skill_id")
     target = output_path(output_dir, skill_id)
@@ -649,9 +665,9 @@ def convert(input_file: Path, output_dir: Path, overwrite: bool, dry_run: bool) 
         "target": str(target),
         "files": sorted(files),
         "offline_only": True,
-        "validation_commands": validation_commands(),
-        "review_checklist": review_checklist(),
-        "usability": usability_summary(data, files),
+        "validation_commands": input_report["validation_commands"],
+        "review_checklist": input_report["review_checklist"],
+        "usability": input_report["usability"],
     }
     if not dry_run:
         write_files(target, files, overwrite)
@@ -726,6 +742,12 @@ def self_test() -> int:
         target = output_dir / data["skill_id"]
         if plan["target"] != str(target.resolve()):
             raise AssertionError("plan target mismatch")
+        input_report = candidate_input_report(data)
+        if input_report["status"] != "valid-reviewed-skillx-candidate" or input_report["write_required"]:
+            raise AssertionError("input report should be valid and read-only")
+        if "REVIEW.md" not in input_report["expected_files"]:
+            raise AssertionError("input report must list expected review report")
+        print("OK fixture input report")
         assert_contains(
             target / "SKILL.md",
             [
@@ -836,6 +858,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Offline SkillX JSON to Codex Skill package adapter.")
     parser.add_argument("--input", type=Path, help="Reviewed local SkillX candidate JSON.")
     parser.add_argument("--output-dir", type=Path, help="Directory where the candidate skill folder will be created.")
+    parser.add_argument("--check-input", action="store_true", help="Validate and summarize the candidate JSON without writing files.")
     parser.add_argument("--validate-output", type=Path, help="Validate a generated candidate skill directory.")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite generated files if the target skill folder exists.")
     parser.add_argument("--dry-run", action="store_true", help="Print the generation plan without writing files.")
@@ -847,12 +870,18 @@ def main(argv: list[str]) -> int:
     args = parse_args(argv)
     if args.self_test:
         return self_test()
+    if args.check_input:
+        if not args.input:
+            raise AdapterError("--input is required with --check-input")
+        result = candidate_input_report(read_json(args.input))
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
     if args.validate_output:
         result = validate_generated_output(args.validate_output, args.input)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     if not args.input or not args.output_dir:
-        raise AdapterError("--input and --output-dir are required unless --self-test or --validate-output is used")
+        raise AdapterError("--input and --output-dir are required unless --self-test, --check-input, or --validate-output is used")
     plan = convert(args.input, args.output_dir, args.overwrite, args.dry_run)
     print(json.dumps(plan, ensure_ascii=False, indent=2))
     return 0
