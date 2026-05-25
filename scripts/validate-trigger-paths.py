@@ -93,6 +93,7 @@ testing = "senior-software-architect/references/testing.md"
 coding = "senior-software-architect/references/coding-standards.md"
 review = "senior-software-architect/references/coding-review-deep-dive.md"
 debugging = "senior-software-architect/references/debugging-diagnosis.md"
+adr_tradeoff = "senior-software-architect/references/adr-and-tradeoff.md"
 language_agnostic = "senior-software-architect/references/language-agnostic-architecture.md"
 security = "senior-software-architect/references/security-architecture.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
@@ -122,6 +123,7 @@ skill_tree_refs = [
 product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
+product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
 regulatory = "product-architecture-expert/references/regulatory-baseline.md"
@@ -414,6 +416,19 @@ check(
         ],
     ),
 )
+check(
+    "README records cg0x frame analysis reference source",
+    has_all(
+        "README.md",
+        [
+            "cg0x-skills/cg0x-frame-analysis",
+            "探索期反路径锁定、多框架分析、假设/盲区/失败条件自检",
+            "不引入 `alwaysApply`、`/on` `/off` 开关",
+            "复杂问题先展开问题地图",
+            "正式交付仍必须回到可评审、可验证、可验收的产物",
+        ],
+    ),
+)
 
 lifecycle_stages = ["Clarify", "Design", "Plan", "Build", "Verify", "Review/Ship"]
 check("workflow defines engineering lifecycle gate", contains(workflow, "## 工程生命周期门禁"))
@@ -465,6 +480,23 @@ check(
 check(
     "workflow requires diff traceability to goals",
     contains(workflow, "每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景"),
+)
+check(
+    "senior ADR reference keeps multi-frame exploration gate",
+    has_all(
+        adr_tradeoff,
+        [
+            "## 探索期多框架分析",
+            "过早推荐单一方案会锁死后续设计",
+            "保留 3-5 个真正不同的判断框架",
+            "默认假设是什么",
+            "容易忽略哪些成本、风险或组织能力",
+            "与其他框架冲突在哪里",
+            "什么条件下该框架失效",
+            "不要把同一个结论包装成多个框架",
+            "收敛到备选方案、选择理由、放弃理由、风险缓解、验证方式和复审条件",
+        ],
+    ),
 )
 check(
     "senior route sends code changes through workflow",
@@ -698,8 +730,59 @@ check(
     has_all(product_routing, ["product-prd-template.md", "product-design-and-prd.md"]),
 )
 check(
+    "product architecture methodology keeps multi-frame exploration gate",
+    has_all(
+        product_architecture,
+        [
+            "## 2. 设计顺序",
+            "### 2.0 探索期多框架分析",
+            "避免过早把问题锁进单一路径",
+            "保留 3-5 个真正不同的框架",
+            "关注什么问题",
+            "默认假设是什么",
+            "与其他框架的冲突点在哪里",
+            "在什么条件下会失效",
+            "不要为了显得完整制造伪多样性",
+            "形成可评审交付物",
+        ],
+    ),
+)
+check(
     "PRD generation gate points to semantic gate",
     has_all(product_prd, ["## 0.1 PRD 生成门禁", "产品语义门禁"]),
+)
+check(
+    "PRD reference keeps generation completion and compliance review modes",
+    has_all(
+        product_prd,
+        [
+            "## 0.2 PRD 生成、补全与符合性评审模式",
+            "生成、补全还是评审",
+            "符合项 / 必改 / 建议 / 可选",
+            "用户故事是否包含角色、能力和价值",
+            "成功指标是否可衡量",
+            "验收标准是否能回到需求 ID",
+            "scripts/check_product_deliverable.py --kind prd",
+            "脚本发现的结构缺口合并进“必改”",
+        ],
+    ),
+)
+check(
+    "PRD template keeps acceptability and priority gates",
+    has_all(
+        "product-architecture-expert/references/product-prd-template.md",
+        [
+            "优先级口径",
+            "P0：没有它不能上线",
+            "P1：核心体验或主流程必须具备",
+            "P2：增强体验、运营效率或后续扩展能力",
+            "### 22.1 可验收性门禁",
+            "### 22.2 已有 PRD 符合性评审输出",
+            "符合项：已经满足模板、可验收性或专项门禁的内容",
+            "必改：会阻断评审、研发、测试、上线或专业确认的缺口",
+            "每条评审项必须说明章节或位置、问题、影响和建议改法",
+        ],
+    ),
 )
 check(
     "payment route keeps regulatory baseline",
@@ -1147,6 +1230,9 @@ check(
             "settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理",
             "https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ",
             "外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截",
+            "https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ",
+            "PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式",
+            "不复制原文模板或另建重复 PRD Skill",
         ],
     ),
 )

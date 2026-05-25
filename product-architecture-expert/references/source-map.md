@@ -38,6 +38,7 @@
 - 微信公众号文章《外卡收单体系全景（4）：清算之网》：`https://mp.weixin.qq.com/s/Y1O4BsLo4DD0HgkKYSRQnw`。公开内容用于参考外卡收单中 authorization、clearing、settlement 的语义差异，以及清算连接交易、账务、费用、责任、对账和争议的产品视角。
 - 微信公众号文章《外卡收单体系全景（5）：结算之路》：`https://mp.weixin.qq.com/s/hilJTPiiakSQvDLYAzHtuA`。公开内容用于参考 settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理。
 - 微信公众号文章《外卡收单体系全景（6）：风控之盾》：`https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ`。公开内容用于参考外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截。
+- 微信公众号文章《Agent Skills 实战：把 PRD 需求文档写成 Skill》：`https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ`。公开内容用于参考 PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式、必填章节检查、用户故事/验收标准可验证性和 scripts/reference 分层；不复制原文模板或另建重复 PRD Skill。
 - 《支付之门：支付原理、架构与产品全链路设计》公开图书页：如当当云阅读 `https://e.dangdang.com/products/1901384633.html`。公开简介说明其面向支付系统底层逻辑、会计知识和支付系统设计方法论。
 - Formance Wallets Introduction：`https://docs.formance.com/modules/wallets/introduction`。公开文档用于参考业务钱包、余额和钱包操作的分层设计。
 - Formance Ledger Introduction：`https://docs.formance.com/modules/ledger/introduction`。公开文档用于参考产品账本、账户、交易、分录和元数据设计。
