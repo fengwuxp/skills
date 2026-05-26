@@ -644,6 +644,23 @@ check(
     ),
 )
 check(
+    "README keeps user guide anchors",
+    has_all(
+        "README.md",
+        [
+            "## 用户使用指南",
+            "[资深架构师](./senior-software-architect)",
+            "[产品架构专家](./product-architecture-expert)",
+            "[java-service-code-generator](./java-service-code-generator)",
+            "默认产出 SVG",
+            "sync-skills.sh --dry-run all",
+            "./scripts/validate.sh",
+            "先定业务和验收",
+            "先输出到 /tmp/order-scaffold 评审目录",
+        ],
+    ),
+)
+check(
     "README records fireworks tech graph reference source",
     has_all(
         "README.md",
