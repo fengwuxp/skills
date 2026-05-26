@@ -101,6 +101,7 @@ architecture_deliverable_checker = "senior-software-architect/scripts/check_arch
 reference_index_audit = "scripts/audit-reference-indexes.py"
 source_archive = "scripts/archive-source-evidence.py"
 source_map_audit = "scripts/audit-source-map.py"
+skill_evaluator = "scripts/evaluate-skills.py"
 skillx_export_spec = "references/skillx-to-codex-skill-package.md"
 skillx_export_adapter = "scripts/skillx_export_adapter.py"
 skillx_export_fixture = "fixtures/skillx/sample-candidate.json"
@@ -438,6 +439,32 @@ check(
         "scripts/audit-skills.sh",
         [
             "scripts/archive-source-evidence\\.py:.*shutil\\.copy2",
+        ],
+    ),
+)
+check(
+    "skill evaluator tracks structure metrics without replacing review",
+    has_all(
+        skill_evaluator,
+        [
+            "Evaluate local Codex skills with deterministic structure metrics",
+            "offline and read-only",
+            "does not grade domain truth",
+            "metadata_trigger",
+            "progressive_loading",
+            "reference_quality",
+            "deterministic_execution",
+            "trigger_fixtures",
+            "Overall skill score",
+            "OK skill evaluation self-test",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "python3 -m py_compile scripts/evaluate-skills.py",
+            "==> skill evaluation",
+            "scripts/evaluate-skills.py --self-test",
         ],
     ),
 )
@@ -977,6 +1004,40 @@ check(
         [
             "检查是否手写 `hasText`、`isBlank`、`isEmpty` 等基础工具",
             "优先使用 Spring Framework 或 Apache Commons 成熟工具",
+        ],
+    ),
+)
+check(
+    "Java DTO atomic field ban is encoded in coding standards",
+    has_all(
+        coding,
+        [
+            "数据传输对象的成员变量不得使用 `boolean`",
+            "`int`",
+            "`long`",
+            "Java 原生基本类型",
+            "不得使用 `AtomicInteger`",
+            "`AtomicLong`",
+            "`AtomicBoolean`",
+            "`AtomicReference`",
+            "`LongAdder`",
+            "`DoubleAdder`",
+            "数据传输对象是序列化契约和数据快照",
+            "可缺省、默认值、精度和序列化语义",
+        ],
+    ),
+)
+check(
+    "Java DTO atomic field ban is encoded in review guidance",
+    has_all(
+        review,
+        [
+            "数据传输对象的成员变量不得使用 `boolean`",
+            "Java 原生基本类型",
+            "不得使用 `AtomicInteger`",
+            "可缺省、默认值、精度和序列化语义",
+            "契约污染",
+            "线程安全增强",
         ],
     ),
 )

@@ -78,6 +78,7 @@ Review 输出要说明真实后果，不只写“建议优化”。
 
 - 值对象、配置、规则参数、领域事件、审计快照、API 输出模型、缓存 Key、跨线程传递对象优先不可变。
 - ORM Entity、MyBatis DO、状态机对象、批量填充模型和强反射框架对象不机械追求不可变。
+- DTO、VO、Request、Response、Query、Command、Event 等数据传输对象的成员变量不得使用 `boolean`、`byte`、`short`、`int`、`long`、`float`、`double`、`char` 等 Java 原生基本类型，也不得使用 `AtomicInteger`、`AtomicLong`、`AtomicBoolean`、`AtomicReference`、`LongAdder`、`DoubleAdder` 等并发原子类型；Review 时应检查字段契约是否需要可缺省、默认值、精度和序列化语义，并把并发原子类型视为契约污染，而不是线程安全增强。
 - 不可变对象持有集合、数组、`Date` 等可变成员时，必须防御性拷贝。
 - 不可变对象跨服务、缓存、MQ、落库时，必须验证 Jackson、Kryo、Protobuf 等序列化/反序列化能力。
 
