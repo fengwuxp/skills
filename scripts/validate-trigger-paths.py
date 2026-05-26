@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+agents_rules = "AGENTS.md"
 
 
 def read(path: str) -> str:
@@ -98,6 +99,7 @@ language_agnostic = "senior-software-architect/references/language-agnostic-arch
 security = "senior-software-architect/references/security-architecture.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
 reference_index_audit = "scripts/audit-reference-indexes.py"
+source_map_audit = "scripts/audit-source-map.py"
 skillx_export_spec = "references/skillx-to-codex-skill-package.md"
 skillx_export_adapter = "scripts/skillx_export_adapter.py"
 skillx_export_fixture = "fixtures/skillx/sample-candidate.json"
@@ -153,7 +155,39 @@ codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Que
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
 product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
 product_general_route_terms = ["SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵"]
-payment_terms = ["清结算", "对账", "支付", "资金", "商户", "合规", "外卡收单", "Mastercard", "Clearing Core", "Financial Presentment", "商户到账", "merchant payout", "收单风控"]
+payment_terms = [
+    "清结算",
+    "对账",
+    "支付",
+    "资金",
+    "商户",
+    "合规",
+    "外卡收单",
+    "Mastercard",
+    "Clearing Core",
+    "Financial Presentment",
+    "商户到账",
+    "merchant payout",
+    "收单风控",
+    "Airwallex",
+    "Global Accounts",
+    "Connected Accounts",
+    "Payouts",
+    "Issuing",
+    "Global Treasury",
+    "BaaS",
+    "Payments for Platforms",
+    "全球金融平台",
+    "嵌入式金融",
+    "白标金融",
+    "平台责任边界",
+    "Transactional FX",
+    "换汇",
+    "汇率",
+    "多币种",
+    "费用舍入",
+    "全球金融平台交付包",
+]
 external_dependency_terms = ["SDK", "API", "云产品", "版本", "升级"]
 diagram_terms = ["画图", "图形化", "可视化", "架构图", "流程图", "时序图", "状态机", "ER 图", "类图", "部署图", "迁移图", "关系图", "资金流图"]
 
@@ -333,6 +367,40 @@ check(
             "REQUIRED_HEADING",
             "REQUIRED_INDEX_FILES",
             "OK reference index audit",
+        ],
+    ),
+)
+check(
+    "source map audit guards unverifiable external articles",
+    has_all(
+        source_map_audit,
+        [
+            "Audit source-map attribution and unverifiable-source boundaries",
+            "does not access the",
+            "network",
+            "KNOWN_UNVERIFIABLE_URLS",
+            "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
+            "2026-05-26 Playwright 核验结果为页面已被发布者删除",
+            "正文不可复核",
+            "不得作为已吸收来源",
+            "stale attribution for deleted clearing article",
+            "--self-test",
+            "absorbed-unverifiable",
+            "missing-audit-date",
+            "missing-downgrade-term",
+            "stale-deleted-clearing-attribution",
+            "duplicate-url",
+            "wechat-missing-readable-or-audit-status",
+            "OK source map audit",
+            "OK source map self-test",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "==> source map audit",
+            "scripts/audit-source-map.py",
+            "scripts/audit-source-map.py --self-test",
         ],
     ),
 )
@@ -570,13 +638,26 @@ check(
 check(
     "AGENTS defines skill experience layering",
     has_all(
-        "AGENTS.md",
+        agents_rules,
         [
             "Skill 经验抽象可按三类归位",
             "规划层经验：任务识别、触发路由、阶段顺序、依赖关系、分支门禁和停止条件",
             "功能层经验：可复用子任务流程、模板、评审清单、输出结构、领域方法论和组合模式",
             "原子层经验：工具调用约束、脚本参数、输入输出 schema、常见失败模式、负例、fixture 和确定性校验",
             "过滤一次性探索、回退、试错、临时偏好和未验证结论",
+        ],
+    ),
+)
+check(
+    "AGENTS requires Playwright fallback for unreadable external articles",
+    has_all(
+        agents_rules,
+        [
+            "## 外部文章读取约规",
+            "必须以实际读取到的正文为依据",
+            "常规抓取、网页搜索或 `curl` 无法取得正文",
+            "必须改用 Playwright 或等价浏览器自动化加载页面",
+            "不得把未读取到正文的文章写成已吸收结论",
         ],
     ),
 )
@@ -990,6 +1071,20 @@ check(
     ),
 )
 check(
+    "product route sends Airwallex-style platform signals to references",
+    has_all(
+        "product-architecture-expert/references/payment-scenario-routing.md",
+        [
+            "Airwallex 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms",
+            "全球金融产品能力地图、平台账户/客户主体、账户收款、付款、发卡、嵌入式金融边界和待确认项",
+            "全球付款、Payouts、受益人管理、付款审批、批量付款、付款失败和回执",
+            "transfer / beneficiary / payer / batch / approval 对象模型、付款状态机、失败处理、回执和出款对账",
+            "Airwallex 类全球金融平台能力分析",
+            "状态事件、报表、沙盒验证、复杂性承接和客户侧确定性",
+        ],
+    ),
+)
+check(
     "product payment channel reference keeps global orchestration frame",
     has_all(
         "product-architecture-expert/references/payment-channel-routing-and-operations.md",
@@ -1002,6 +1097,20 @@ check(
             "资金控制",
             "争议与证据",
             "全球覆盖 × 本地适配 × 数据与风控 × 资金控制 × 争议治理",
+        ],
+    ),
+)
+check(
+    "product payment channel reference keeps platform operations closure",
+    has_all(
+        "product-architecture-expert/references/payment-channel-routing-and-operations.md",
+        [
+            "## 平台文档的运营闭环抽象",
+            "状态参考",
+            "事件参考",
+            "报表参考",
+            "验证参考",
+            "状态、webhook、报表、错误码、沙盒模拟和上线检查纳入产品验收",
         ],
     ),
 )
@@ -1044,6 +1153,198 @@ check(
     ),
 )
 check(
+    "product payment methodology keeps payment ledger perspective",
+    has_all(
+        payment_methodology,
+        [
+            "## 账本观",
+            "哪一本账在说话",
+            "付款人账本减少、收款人账本增加",
+            "信息流驱动各方账本变化，再由资金流验证和校正",
+            "客户可见账",
+            "平台内部账本",
+            "外部机构账",
+            "真实资金账",
+            "会计账",
+            "实体资金户",
+            "内部虚拟账本",
+            "不能把客户可见余额、内部账本余额、通道清算结果和银行真实到账都叫“余额正确”",
+        ],
+    ),
+)
+check(
+    "product payment methodology keeps Airwallex-style platform abstraction",
+    has_all(
+        payment_methodology,
+        [
+            "Airwallex 类全球金融平台或公开产品文档分析场景",
+            "Connected Accounts、Accounts、Payments、Transactional FX、Payouts、Issuing、Spend 和 Embedded Finance",
+            "产品专家吸收的是能力地图、对象边界、状态事件、报表和验证闭环",
+            "## 全球账户与付款补充",
+            "Global Accounts、平台账户、全球收款、供应商付款、商户出款、批量付款或多币种资金运营",
+        ],
+    ),
+)
+check(
+    "product payment methodology keeps embedded finance responsibility and FX gates",
+    has_all(
+        payment_methodology,
+        [
+            "嵌入式金融、平台收单、BaaS、Global Treasury 或白标金融能力场景",
+            "平台、客户、商户、最终用户、银行/持牌机构、PSP、卡组织和本地合作方",
+            "用户解释视图",
+            "多币种、跨境、收单、出款、发卡或全球账户场景",
+            "交易币种、账户币种、清算币种、结算币种、记账本位币",
+            "费用承担、舍入规则、汇损益归属",
+            "## 嵌入式金融与平台责任补充",
+            "嵌入式金融不是“把 API 给客户”",
+        ],
+    ),
+)
+check(
+    "product payment methodology keeps global platform deliverable package",
+    has_all(
+        payment_methodology,
+        [
+            "全球金融平台方案还要补交付包判断",
+            "能力地图、主体责任、对象生命周期、四流资金路径、FX/费用、运营报表、风险合规、验证上线",
+            "全球金融平台、BaaS、跨境、多币种、Payouts 或 Issuing 方案应在上述骨架上追加八个交付包",
+            "13. 能力地图",
+            "14. 主体责任矩阵",
+            "15. 对象生命周期",
+            "20. 验证与上线包",
+            "## 生命周期与退出补充",
+            "没有退出设计的金融产品是不完整的",
+        ],
+    ),
+)
+check(
+    "product global payment reference keeps Airwallex-style capability map",
+    has_all(
+        global_payment,
+        [
+            "## 全球金融平台能力地图",
+            "Connected Accounts / 平台账户",
+            "Accounts / Global Accounts",
+            "Payouts / 付款",
+            "Issuing / 发卡",
+            "Embedded Finance / 嵌入式金融",
+            "## 状态、事件、报表、沙盒四件套",
+        ],
+    ),
+)
+check(
+    "product global payment reference keeps responsibility and FX matrix",
+    has_all(
+        global_payment,
+        [
+            "## 平台责任边界矩阵",
+            "客户/商户入网",
+            "账户与资金",
+            "换汇与费用",
+            "数据与报表",
+            "最终用户看到的品牌主体",
+            "## FX、费用和舍入口径",
+            "报价层次",
+            "舍入层次",
+            "归属层次",
+            "解释层次",
+        ],
+    ),
+)
+check(
+    "product global payment reference keeps deliverable package and maturity ladder",
+    has_all(
+        global_payment,
+        [
+            "## 全球金融平台交付包",
+            "能力地图",
+            "主体与责任矩阵",
+            "对象与生命周期",
+            "验证与上线包",
+            "## 生命周期主轴",
+            "入网 -> 配置 -> 交易/资金动作 -> 状态事件 -> 清结算/账务 -> 报表/对账 -> 异常/争议 -> 退出/留存",
+            "## 运营成熟度阶梯",
+            "L1 接口接入",
+            "L5 可解释金融基础设施",
+        ],
+    ),
+)
+check(
+    "product source map records Airwallex official docs boundary",
+    has_all(
+        product_source_map,
+        [
+            "Airwallex Docs Home",
+            "Airwallex Accounts Docs",
+            "Airwallex Payments Docs",
+            "Airwallex Payouts Docs",
+            "Airwallex Issuing Docs",
+            "不固化覆盖国家、币种、费率、接口字段或商业承诺",
+            "不把 Airwallex 或其他全球支付厂商的品牌叙事",
+        ],
+    ),
+)
+check(
+    "product bank transfer reference keeps payouts object model",
+    has_all(
+        "product-architecture-expert/references/payment-rails-ach-and-bank-transfers.md",
+        [
+            "## Payouts 对象模型",
+            "Transfer",
+            "Beneficiary",
+            "Payer",
+            "Batch Transfer",
+            "Approval",
+            "Confirmation / Receipt",
+            "受益人字段、银行清单、地区要求和税务材料具有强时效性",
+        ],
+    ),
+)
+check(
+    "product VCC reference keeps issuing simulation frame",
+    has_all(
+        "product-architecture-expert/references/virtual-card-and-vcc.md",
+        [
+            "远程授权或协同授权",
+            "告警阈值和控制规则要分开",
+            "## 交易生命周期与仿真验证",
+            "overcapture",
+            "验收时应设计交易仿真或沙盒用例",
+        ],
+    ),
+)
+check(
+    "product checklist keeps embedded finance responsibility and FX checks",
+    has_all(
+        payment_checklists,
+        [
+            "嵌入式金融、BaaS、Payments for Platforms 或白标能力是否有平台责任边界矩阵",
+            "最终用户看到的品牌、合同主体、资金服务主体、隐私主体、账单主体和客服入口是否一致",
+            "## FX、费用和舍入补充",
+            "汇率来源、报价有效期、锁价时点、重新报价、报价撤销和异常兜底是否明确",
+            "固定费、比例费、跨境费、网络费、processor fee、FX markup、退款费、拒付费、退汇费和人工处理费",
+            "舍入规则、最小货币单位、差额归属、批量轧差和报表展示精度",
+        ],
+    ),
+)
+check(
+    "product checklist keeps global platform deliverable and lifecycle checks",
+    has_all(
+        payment_checklists,
+        [
+            "## 全球金融平台交付包检查",
+            "是否输出能力地图",
+            "是否输出主体责任矩阵",
+            "是否输出对象生命周期",
+            "是否输出验证与上线包",
+            "## 生命周期与运营成熟度检查",
+            "入网 -> 配置 -> 交易/资金动作 -> 状态事件 -> 清结算/账务 -> 报表/对账 -> 异常/争议 -> 退出/留存",
+            "是否评估当前能力成熟度处于接口接入、对象化、运营闭环、平台化还是可解释金融基础设施阶段",
+        ],
+    ),
+)
+check(
     "product payment checklist keeps financial expert gate",
     has_all(
         payment_checklists,
@@ -1054,6 +1355,23 @@ check(
             "业务确认、支付受理、授权成功、清算入账、清账完成、结算出款、资金到账、财务确认",
             "四流、单据状态、账户/账务、清结算/对账、风险合规、数据证据和验收确认方",
             "法域、主体资质、外部规则版本、数据边界和待专业确认项",
+        ],
+    ),
+)
+check(
+    "product payment checklist keeps multi-ledger settlement gates",
+    has_all(
+        payment_checklists,
+        [
+            "客户可见账、平台内部账本、外部机构账、真实资金账和会计账",
+            "支付、退款、撤销、清分、结算、调账、长短款、拒付或退汇",
+            "加记、减记、冻结、解冻、冲正、挂账",
+            "内部可见额度、通道/清算机构账、银行/存管真实资金和财务确认",
+            "垫资、授信、准备金、限额和风控承接",
+            "往来户模式或代理结算模式",
+            "代理结算、平台代收代付、多 PSP 或跨境收付",
+            "内部账本与底层资金账户的映射规则",
+            "大账户、备付金账户、清算账户、Nostro/Vostro 或资金池",
         ],
     ),
 )
@@ -1097,6 +1415,30 @@ check(
             "集中存管账户余额",
             "映射额度",
             "可用额度",
+        ],
+    ),
+)
+check(
+    "product clearing reference keeps multi-ledger and agency settlement gates",
+    has_all(
+        clearing_settlement,
+        [
+            "## 账本观与虚实分离",
+            "付款人账本减少、收款人账本增加",
+            "一堆账本",
+            "两个动作",
+            "双层结构",
+            "虚实结合",
+            "大账户、备付金账户、清算账户、Nostro/Vostro 或资金池是真实资金户",
+            "客户余额、商户待结算、VA、子账户或钱包余额通常是内部虚拟账本",
+            "## 跨机构支付两种模式",
+            "往来户模式",
+            "代理结算模式",
+            "内部可见额度",
+            "底层资金账户",
+            "清算场次",
+            "轧差规则",
+            "失败回退",
         ],
     ),
 )
@@ -1197,6 +1539,8 @@ check(
         clearing_settlement,
         [
             "## 跨业务线清结算全局规划",
+            "不再归因于已删除、当前不可复核的历史文章链接",
+            "项目事实、资金路径、财务/账务负责人意见和可核验资料确认",
             "现状盘点",
             "线上线下两层皮",
             "系统只出报表不记账",
@@ -1419,10 +1763,14 @@ check(
     has_all(
         product_source_map,
         [
+            "## 读取与归因规则",
+            "未读取到正文、页面删除、只剩验证页或正文为空的条目",
+            "不得作为已吸收来源",
+            "不代表原文逐字表述",
             "https://mp.weixin.qq.com/s/7sZhZPeBE7XmBLjik8al8w",
             "支付系统五层拆解、支付核心主流程、收银台、路由、通道管理、退款和广义通道",
             "https://mp.weixin.qq.com/s/4P1PuButME_rr5anXeK2ng",
-            "支付清算生态分层、交易平台七段链路、跨机构清算、备付金/额度口径",
+            "支付清算生态分层、跨机构清算、备付金/额度口径",
             "https://mp.weixin.qq.com/s/86gPuhw8eUYb65gRhALH6A",
             "全球支付清算基础、Nostro/Vostro、外清内结、清算行/代理行/NRA 模式",
             "https://mp.weixin.qq.com/s/FM6h2bbN5xLXZQLJYG-cWg",
@@ -1432,39 +1780,42 @@ check(
             "https://mp.weixin.qq.com/s/atTMCmIoQaG0EIsed2TATg",
             "支付知识体系主题索引和能力地图校准",
             "https://mp.weixin.qq.com/s/NVmy4mKSB83bP18u6XEzHA",
-            "卡组织支付清结算、四方/三方模式、BIN/IIN 路由",
+            "卡组织支付清结算、四方/三方模式、BIN 路由",
             "https://mp.weixin.qq.com/s/ZhKc64tXXguEFJYxozuMtw",
             "三方支付机构全链路",
             "https://mp.weixin.qq.com/s/04oIhVhypiZv7sRWygtOoA",
             "会计恒等式、会计循环、总账/明细账",
             "https://mp.weixin.qq.com/s/WWhjG9ACi3qmqeqPFvBaaA",
-            "账务核心架构、账户体系、热点账户",
+            "账务核心架构、账户体系、热点账户、账户合并",
             "https://mp.weixin.qq.com/s/FVx1lUcxCF3jUl0Xh6UydA",
-            "支付合规、KYC/KYB/KYT/KYA",
+            "支付合规、KYC/KYB/KYT/KYA、持续监控、交易限额、反洗钱/反恐怖融资",
             "https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw",
-            "清算、结算、清结算在理论、机构命名、平台产品和内部核算语境中的差异",
+            "清算、结算、清结算在理论概念、机构命名、平台产品和企业信息层处理语境中的差异",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
-            "多业务线清结算全局规划、现状问题盘点、清算/账务/账户/结算/对账五中心能力切分、专业化/模块化/配置化原则和分期迁移路线",
+            "2026-05-26 Playwright 核验结果为页面已被发布者删除",
+            "正文不可复核",
+            "仅保留为历史索引线索",
+            "不得作为已吸收来源",
             "https://mp.weixin.qq.com/s/oXTAGAvE_OwNJfq1JXLZ0w",
             "先清账再结算、先对清账再对结算、调账/冲正/负项必须进入清账模型",
             "https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng",
             "Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性",
             "https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A",
-            "Mastercard 作为 payment network、transaction processing、participant role、responsibility management、cost/billing 和 network governance 的能力栈视角",
+            "Mastercard 作为支付网络、交易处理、参与方角色、责任管理、成本计收和网络治理的能力栈视角",
             "https://mp.weixin.qq.com/s/rgZSbR_2zfkISFhSuHmMPg",
             "Authorization Core、Authorization Lifecycle、Hold/Reference Chain、network session boundary、ISO 8583 semantic carrier、scheme adapter、SAF recovery 和授权可观测性",
             "https://mp.weixin.qq.com/s/uuEwioL-Xx3JKeGvG7AyCg",
-            "Clearing 不是文件状态更新，而是 Financial Presentment、账务确认、费用责任和后续争议追溯的入口",
+            "Clearing 不是文件状态更新，而是 Financial Presentment、账务进入、费用拆分和后续争议追溯的入口",
             "https://mp.weixin.qq.com/s/iSvq8LO0zjHlW20ZUf_S6Q",
-            "Matching Core、ARN / Reference Model、Fee & Amount Decomposition、Posting Model、异常隔离和清算到账务承接",
+            "Matching Core、ARN / Reference Model、Fee & Amount Decomposition、Posting Model、异常处理/隔离和清算到账务承接",
             "https://mp.weixin.qq.com/s/sU_Opre7z9cRVdtOB1y-Zg",
-            "Clearing Core 作为生命周期治理能力，覆盖 transaction lifecycle、accounting consistency、reference continuity、dispute traceability、replay / investigation、四层 reconciliation、清算异常按交易链影响分类，以及多卡组核心语义与 scheme adapter 边界",
+            "Clearing Core 作为生命周期治理能力，覆盖 transaction lifecycle、accounting consistency、reference continuity、dispute traceability、replay / investigation、四层 reconciliation、清算异常按交易链影响分类，以及多卡组核心语义与适配边界",
             "https://mp.weixin.qq.com/s/Y1O4BsLo4DD0HgkKYSRQnw",
             "外卡收单中 authorization、clearing、settlement 的语义差异，以及清算连接交易、账务、费用、责任、对账和争议的产品视角",
             "https://mp.weixin.qq.com/s/hilJTPiiakSQvDLYAzHtuA",
-            "settlement 不是商户打款动作，而是 network member settlement、platform allocation/netting、merchant payout、bank arrival、risk reserve、delayed settlement 和商户可用资金管理",
+            "settlement 不是商户打款动作，而是成员级结算、平台内部分配/轧差、商户结算/打款、银行到账、保证金/延迟结算和商户可用资金管理",
             "https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ",
-            "外卡收单风控贯穿 merchant onboarding、transaction、capture / fulfillment、settlement、dispute feedback 和 funds strategy，而不是单点交易拦截",
+            "外卡收单风控贯穿商户准入、交易、capture / 履约、结算、争议反馈和资金策略，而不是单点交易拦截",
             "https://mp.weixin.qq.com/s/IpEWgr-8pMzUP480TDWlFw",
             "外卡收单从接卡组/API 升级为全球支付编排能力",
             "卡组、钱包、本地支付方式、APM/RTP/A2A、PSP/网关、认证风控、结算资金、争议治理和运营闭环",
@@ -1773,6 +2124,31 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="payment product",
         prompt="设计商户清结算和对账产品方案，注意外部规则和合规",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="payment ledger perspective product",
+        prompt="设计一个平台代收代付的多套账本产品方案，说明客户可见余额、内部账本、备付金真实资金、代理结算和会计账如何对齐",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="airwallex global platform product",
+        prompt="参考 Airwallex Docs 设计全球金融平台产品能力地图，覆盖 Global Accounts、Payouts、Issuing 和 Embedded Finance",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="global accounts payouts product",
+        prompt="设计 Global Accounts + Payouts 的多币种资金运营产品方案，包含受益人、付款审批、失败回执和对账",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="embedded finance responsibility product",
+        prompt="设计一个 BaaS 白标金融产品方案，重点说明平台责任、用户解释视图、Transactional FX 和费用舍入口径",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="global financial platform deliverable package",
+        prompt="做一份 Airwallex 类全球金融平台 PRD 交付包，包含对象生命周期、运营成熟度、go-live 和退出留存",
         routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
