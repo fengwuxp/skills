@@ -21,9 +21,20 @@
 
 ## 需要继续读取的 reference
 
-- AI 协作任务读 `ai-assisted-engineering.md`。
+- AI 协作任务读 `ai-assisted-engineering.md`；CAD Mode、Execution Grant 或自动分轮推进继续读 `cad-mode.md`。
 - 测试任务读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
 - 生产发布、数据修复或外部依赖变更读 `production-readiness.md` 和 `negative-constraints.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 代码修改或测试补充 | `工程生命周期门禁`、`代码修改前`、`代码修改后（必须验证）`、`验证命令选择矩阵` | 不先读 Git 规约或提交模板 |
+| 只做验证、CR 或提交前检查 | `代码修改后（必须验证）`、`PR 提交前检查`、`Git 规约` | 不重新展开设计方法论 |
+| 外部 API、SDK、云产品或规则变化 | `外部知识时效性门禁`、`工程生命周期门禁` | 不依赖模型记忆或二手博客给确定结论 |
+| AI 协作、OpenSpec、Harness 或 CAD Mode | `工程生命周期门禁`、`代码修改前`，再读 `ai-assisted-engineering.md` 与 `cad-mode.md` | 不把 CAD 建议当作自动授权 |
+| 文档、注释或说明类变更 | `代码修改后（必须验证）` 中文档行、`语言偏好` | 不运行无意义编译但必须说明原因 |
+| Git 边界和提交建议 | `Git 规约`、`PR 提交前检查` | 用户未要求时不执行 Git 写操作 |
 
 ## 外部知识时效性门禁
 
@@ -64,7 +75,7 @@
 - Build 阶段的每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景；无法追溯的“顺手优化”、格式化、抽象或删除，默认不进入本轮变更。
 - Verify 阶段无法执行真实验证时，必须说明原因、替代证据和残余风险，不得用“看起来没问题”代替验证。
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
-- AI 协作、多 Agent 或 CAD Mode 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers、Harness 和 Execution Grant 边界。
+- AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；CAD Mode、Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
 
 ## 语言偏好
 
@@ -77,7 +88,7 @@
 - 先识别项目构建工具和变更类型，再选择验证命令。
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
-- 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，详细进入门禁、Git 策略、每轮摘要和停止条件以 `ai-assisted-engineering.md` 为准。
+- 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，详细进入门禁、Git 策略、每轮摘要和停止条件以 `cad-mode.md` 为准。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。
 - 仅文档、注释、说明类修改可跳过编译，但最终回复必须说明未运行编译的原因。
@@ -124,7 +135,7 @@ scope: 模块名称（如 service, controller, mapper）
 - 【强制】提交前运行项目对应测试命令，确保相关测试通过；无法运行全量测试时必须说明原因和替代验证。
 - 【推荐】用户未明确要求执行 Git 写操作时，只做验证、审查和确认；最终告诉用户是否已经可以提交，并给出建议提交信息。`git add`、`git commit`、`git push`、创建 PR 等操作默认由用户执行。
 - 【推荐】当产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律和验证边界已经较完整时，可以建议用户进入 CAD Mode；不得把建议视为自动推进授权。
-- 【强制】CAD Mode 的进入门禁、Git 策略、自动提交、每轮摘要、5 秒人工中断窗口和严重错误处理，统一以 `ai-assisted-engineering.md` 为唯一详细规则源；本文只保留 Git 基础规约和默认协作边界。
+- 【强制】CAD Mode 的进入门禁、Git 策略、自动提交、每轮摘要、5 秒人工中断窗口和严重错误处理，统一以 `cad-mode.md` 为唯一详细规则源；本文只保留 Git 基础规约和默认协作边界。
 - 【强制】输出提交建议前必须检查 `git status` 和 `git diff`，确认建议范围只包含本任务相关文件；如发现用户已有改动混入同一文件或无法区分来源，必须暂停并请求确认。
 - 【建议】做小而美的提交，每次控制在 30 个文件内。
 - 【强制】禁止提交 .env 文件、密钥、token 到版本控制。

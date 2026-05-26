@@ -31,6 +31,17 @@
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 支付资金图读 `payment-scenario-routing.md`、`regulatory-baseline.md`，并按具体场景读取清结算、对账、通道路由、争议或 VCC 专项 reference。
 
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 判断画什么图 | 图形类型路由、卓越图形能力要求、输出形态选择 | 稳定提示配方 |
+| 产品架构/能力地图 | 图形类型路由、视觉风格路由、语义形状和箭头、图形内容规则 | 支付资金专项 |
+| 流程/状态机/规则图 | 图形类型路由、语义形状和箭头、图形内容规则、验证清单 | fireworks-tech-graph 续作 |
+| 支付资金四流图 | 图形类型路由、Finance Ledger 风格、语义形状和箭头、图形内容规则，并读支付专项 reference | 普通产品图模板 |
+| 正式 SVG 交付 | 输出形态选择、图形内容规则、验证清单、外部参考边界 | Mermaid 草图说明 |
+| 使用 fireworks-tech-graph | 可选续作：fireworks-tech-graph、稳定提示配方、验证清单 | 手工图形细节 |
+
 ## 图形类型路由
 
 | 场景 | 首选图形 | 适合表达 | 注意事项 |

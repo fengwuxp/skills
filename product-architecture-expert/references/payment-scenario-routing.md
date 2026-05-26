@@ -30,6 +30,17 @@
 - 公开资料来源和提炼边界读 `source-map.md`。
 - 全球金融平台、嵌入式金融、Global Accounts、全球付款、发卡平台或 Airwallex 类公开产品能力分析，读 `global-payment-emerging.md`，再按收单、出款、VCC、清结算或风控场景读取专项 reference。
 
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 支付/资金问题初判 | `使用方式`、`快速路由表`、`场景识别问题` | 不先加载所有支付专项 reference |
+| 高风险资金、合规或跨境场景 | `读取后必须产出`、`需要继续读取的 reference`、`路由红线`，再读 `regulatory-baseline.md` 与 `payment-methodology.md` | 不直接给上线结论、资质结论或监管结论 |
+| 清结算、账务、对账、商户结算 | `快速路由表`、`组合场景路由` 中清结算相关行，再读 `clearing-settlement.md` 与 `payment-design-checklists.md` | 跳过 VCC、ACH、争议等无关专项 |
+| 卡组织、外卡收单、VCC、争议拒付 | `快速路由表` 中卡组织、外卡收单、VCC、退款争议行，再读对应专项 reference | 不把卡拒付、ACH return、普通退款混成一个流程 |
+| 多 PSP、多地区、全球支付编排 | `快速路由表` 中通道路由、全球支付、Airwallex 类、跨境行，再读 `payment-channel-routing-and-operations.md` 与 `global-payment-emerging.md` | 不把厂商能力清单当成通用规范 |
+| 输出支付方案或评审意见 | `输出路由`、`路由红线`、对应专项 reference 的 `读取后必须产出` | 不输出没有四流、状态、账务、对账和待确认项的散点建议 |
+
 ## 使用方式
 
 先按以下顺序识别场景，再选择参考文件：

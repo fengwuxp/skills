@@ -71,7 +71,7 @@ description: |
 2. 复杂产品问题先读 `references/product-scenario-routing.md`，按业务场景和目标产物选择 reference。
 3. 只读取当前任务必要的 reference；PRD、支付资金和外部规则场景必须把待确认项、验收口径和专业确认方写清楚。
 
-当用户要求写作、生成、完善、补全、改写或评审 PRD、产品需求文档、需求说明书、需求文档模板、PRD 模板、产品方案模板，或要求“输出一份可评审的产品文档”时，必须读取 `references/product-prd-template.md`，并结合 `references/product-design-and-prd.md` 输出可复制、可评审、可开发、可测试、可运营的 PRD；不要只给提纲或说明。
+当用户要求写作、生成、完善、补全、改写或评审 PRD、产品需求文档、需求说明书、需求文档模板、PRD 模板、产品方案模板，或要求“输出一份可评审的产品文档”时，必须读取 `references/product-prd-template.md`，并结合 `references/product-design-and-prd.md` 输出可复制、可评审、可开发、可测试、可运营的 PRD；正式评审或提交前自检继续读取 `references/product-prd-quality-gates.md`，支付资金场景继续读取 `references/product-prd-financial-appendix.md`，运营后台、通知、数据指标、埋点、报表和发布运营场景继续读取 `references/product-prd-operations-and-data.md`；不要只给提纲或说明。
 
 产品架构交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下用 `scripts/check_product_deliverable.py` 做本地结构完整性检查。适用于 PRD、产品架构方案和图形 brief；该脚本输入为 `--kind` + `--text`、`--file` 或标准输入，缺少目标范围、角色主体、对象状态、流程规则、数据审计、风险确认、验收或图形语义时返回非 0；只检查本地文本或显式传入的本地文件，不写文件、不访问网络、不上传文件、不读取密钥，也不判断方案业务质量。无法运行脚本时必须说明原因、人工检查结果和残余风险。
 
@@ -86,10 +86,10 @@ description: |
 当目标产物是 PRD、产品需求文档、需求说明书或产品方案模板时：
 
 1. 先判断用户、主体、业务目标、范围边界、核心对象、风险等级和验收标准是否足够；缺失时输出 Round 0 补齐清单和可填写模板，不臆造确定结论。
-2. 读取 `references/product-prd-template.md` 作为主骨架，读取 `references/product-design-and-prd.md` 作为写作、验收和评审标准。
-3. 按复杂度裁剪模板：轻量需求保留摘要、目标范围、场景、功能和验收；复杂或高风险需求保留对象、流程、状态、规则、数据、权限、运营、风险和发布。
+2. 读取 `references/product-prd-template.md` 作为主骨架，读取 `references/product-design-and-prd.md` 作为写作、验收和评审标准；正式评审或提交前自检加读 `references/product-prd-quality-gates.md`。
+3. 按复杂度裁剪模板：轻量需求保留摘要、目标范围、场景、功能和验收；复杂或高风险需求保留对象、流程、状态、规则、数据、权限、运营、风险和发布；命中运营/通知/数据/发布时读取 `references/product-prd-operations-and-data.md`。
 4. 输出完整可复制文档正文；未知信息用“待确认”标注，并说明对评审、开发、测试或上线的影响。
-5. 涉及支付、资金、账户、账本、清结算、对账、银行卡、ACH、VCC、跨境或金融合规时，进入支付与资金专项路由并补充金融红线。
+5. 涉及支付、资金、账户、账本、清结算、对账、银行卡、ACH、VCC、跨境或金融合规时，读取 `references/product-prd-financial-appendix.md`，进入支付与资金专项路由并补充金融红线。
 
 ## 核心工作法
 
@@ -124,7 +124,10 @@ description: |
 - `references/product-scenario-routing.md`：产品场景识别与最小参考集选择。
 - `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。
-- `references/product-prd-template.md`：PRD、产品需求文档、需求文档模板、PRD 模板、产品方案模板和可复制评审文档。
+- `references/product-prd-template.md`：PRD、产品需求文档、需求文档模板、PRD 模板、产品方案模板和可复制主骨架。
+- `references/product-prd-quality-gates.md`：PRD 提交前自检、符合性评审、验收门禁和必改/建议输出。
+- `references/product-prd-financial-appendix.md`：支付、资金、账户、账本、清结算、对账、VCC、跨境和金融合规 PRD 专项附录。
+- `references/product-prd-operations-and-data.md`：运营后台、人工处理、通知、任务、数据指标、埋点、报表、导出、发布和运营准备 PRD 附录。
 - `references/diagram-output.md`：产品架构、业务流程、状态机、能力地图、运营后台、指标口径和支付资金四流的图形化交付。
 - `references/skill-tree.md`：能力评估、学习路径、岗位画像和复杂任务拆解。
 

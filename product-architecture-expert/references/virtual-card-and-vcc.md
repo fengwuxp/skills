@@ -2,12 +2,36 @@
 
 本文用于设计 VCC（Virtual Credit Card）和广义虚拟卡产品。VCC 在业务上常被泛称为虚拟信用卡，但产品设计时必须明确它实际是 credit、debit、prepaid、charge card、commercial card 还是一次性卡号/token。它不替代发卡资质、银行合作协议、卡组织规则、PCI DSS 或本地监管要求。
 
-## 适用场景
+## 使用时机
 
 - 设计企业采购卡、员工费用卡、旅行/酒店 VCC、供应商付款、广告投放卡、项目预算卡和一次性虚拟卡。
 - 设计平台型发卡、共享额度卡、主资金池 + 子账户、按需供资、实时授权和 spend controls。
 - 设计虚拟卡生命周期、PAN/CVC 展示、卡 token、数字钱包、卡片冻结、注销、重发和轮换。
 - 设计虚拟卡交易的授权、清算、退款、争议、费用、对账、报表和客服追踪。
+
+## 不适用场景
+
+- 只做普通卡组织授权、清算或收单方案时，优先读 `card-network-and-card-rails.md`。
+- 发卡资质、银行合作协议、卡组织规则、PCI DSS 和本地监管要求必须按最新合同、规则和专业确认处理。
+
+## 读取后必须产出
+
+- Program、Account Holder、Funding Account、Cardholder、Virtual Card、Spend Control、Authorization、Ledger/Balance、生命周期、资金模式、授权控制、安全合规和运营报表。
+
+## 需要继续读取的 reference
+
+- 卡组织和授权清算读 `card-network-and-card-rails.md`；发卡平台模式读 `highnote-reference-patterns.md`；清结算和账务读 `clearing-settlement.md`；争议读 `dispute-refund-and-chargeback-operations.md`；监管和 PCI 边界读 `regulatory-baseline.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| VCC 产品方案 | 核心对象模型、生命周期设计、额度资金与账务、授权控制 | 交易仿真细节 |
+| Spend controls/授权 | 授权控制、额度资金与账务、交易生命周期与仿真验证，并读 `card-network-and-card-rails.md` | 客服报表扩写 |
+| 按需供资/共享额度 | 额度资金与账务、核心对象模型，并读 `highnote-reference-patterns.md` | PCI 展示细节 |
+| 安全/PCI/卡号展示 | 安全与合规、常见陷阱、设计落地检查 | 清算账务扩写 |
+| 对账/报表/运营 | 对账报表与运营、交易生命周期与仿真验证、设计落地检查 | 发卡资质背景 |
+| 争议/退款/清算 | 交易生命周期与仿真验证，并读 `dispute-refund-and-chargeback-operations.md`、`clearing-settlement.md` | 卡片创建模板 |
 
 ## 核心对象模型
 

@@ -25,6 +25,7 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
+| Java/Spring 测试底座、最小上下文、外部依赖替身 | `testing-practices-java-spring-common.md` | 具体 Controller / Service 模板 |
 | 普通类、工具类、值对象、数据库测试 | `testing-practices-java-unit-db.md` | Controller、资金域、非 Java |
 | Controller、Filter、Interceptor、HTTP 层测试 | `testing-practices-java-web.md` | 数据库和资金域专项 |
 | Application Service / Use Case 流程测试 | `testing-practices-java-service-flow.md` | Controller 模板细节 |
@@ -33,6 +34,7 @@
 
 ## 专题 reference 路由
 
+- `testing-practices-java-spring-common.md`：Java/Spring 测试底座、最小上下文、外部依赖替身、公共测试基础设施和 SpringBoot 测试减负。
 - `testing-practices-java-unit-db.md`：普通类、工具类、数据库、Mapper、Repository 和事务测试。
 - `testing-practices-java-web.md`：Controller、Filter、Interceptor、MockMvc 和 HTTP 层测试。
 - `testing-practices-java-service-flow.md`：Spring Application Service / Use Case 流程测试和 SpringBoot 测试减负。

@@ -1,6 +1,6 @@
 # 产品方案与 PRD
 
-本文用于生成或审查产品方案、PRD、评审材料和验收标准。它偏交付结构，不替代用户研究、市场调研或法务合规结论。需要可直接复用的完整文档骨架时，读取 `product-prd-template.md`。
+本文用于生成或审查产品方案、PRD、评审材料和验收标准。它偏交付结构，不替代用户研究、市场调研或法务合规结论。需要可直接复用的完整文档骨架时，读取 `product-prd-template.md`；正式评审或提交前自检读取 `product-prd-quality-gates.md`；支付资金 PRD 读取 `product-prd-financial-appendix.md`；运营、通知、数据和发布附录读取 `product-prd-operations-and-data.md`。
 
 ## 使用时机
 
@@ -11,6 +11,9 @@
 ## 不适用场景
 
 - 用户要求完整可复制模板时，应读取 `product-prd-template.md`，不要只用本文。
+- 用户要求 PRD 评审、提交前检查或符合性审查时，应读取 `product-prd-quality-gates.md`。
+- PRD 涉及支付资金、账户账本、清结算、对账、VCC 或跨境时，应读取 `product-prd-financial-appendix.md`。
+- PRD 涉及运营后台、人工处理、通知、埋点、报表或发布运营时，应读取 `product-prd-operations-and-data.md`。
 - 涉及支付、资金、账户、账本、清结算、对账、跨境或外部规则时，必须补充支付资金专项 reference。
 
 ## 读取后必须产出
@@ -22,8 +25,22 @@
 ## 需要继续读取的 reference
 
 - 可复制模板读 `product-prd-template.md`。
+- 质量门禁读 `product-prd-quality-gates.md`。
+- 支付资金附录读 `product-prd-financial-appendix.md`。
+- 运营数据发布附录读 `product-prd-operations-and-data.md`。
 - 通用方法论读 `product-architecture-methodology.md`。
 - 支付资金和外部规则读 `payment-scenario-routing.md`、`regulatory-baseline.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 快速生成产品方案 | 输出格式约定、PRD 生成门禁、产品方案结构、PRD 最小必备项、验收标准 | 符合性评审细则 |
+| 完整 PRD 草案 | PRD 生成补全模式、产品方案结构、用户故事、状态机、规则矩阵、运营后台、数据报表、验收标准 | 支付资金专项，除非命中资金场景 |
+| PRD 补全 | PRD 生成补全模式、PRD 最小必备项、状态机、规则矩阵、运营后台、数据报表 | 完整模板正文，除非需要重写 |
+| PRD 符合性评审 | PRD 生成门禁、符合性评审模式、评审清单，并读 `product-prd-quality-gates.md` | 生成模板占位说明 |
+| 支付资金 PRD | PRD 生成门禁、验收标准，并读 `product-prd-financial-appendix.md` 和支付专项 reference | 非资金运营细节 |
+| 运营/数据/发布 PRD | 运营后台说明、数据和报表说明、验收标准，并读 `product-prd-operations-and-data.md` | 金融资金附录 |
 
 ## 0. 输出格式约定
 

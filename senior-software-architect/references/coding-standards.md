@@ -1,6 +1,23 @@
 # Java 编码规约 2.0
 
-本文档用于约束 Java/Spring 项目的编码行为，定位为团队 Java 编码治理标准。它以阿里巴巴 Java 开发手册 / P3C 的分级、分类和工程实践为基础，结合团队 Java/Spring/Wind 项目约规、现代工具链和架构边界要求形成。模块划分、服务分层、CRUD 命名、MyBatis Flex 详细实践、数据库设计、日志体系、测试体系和 Git 流程，以 `project-governance-standards.md`、`workflow.md` 为准；编码 Review 的判断顺序和问题定级见 `coding-review-deep-dive.md`；禁止项清单以 `negative-constraints.md` 为准。
+本文用于约束 Java/Spring 项目的编码行为。模块划分、服务分层、CRUD 命名、MyBatis Flex 详细实践、数据库设计、日志体系、测试体系和 Git 流程，以 `project-governance-standards.md`、`workflow.md` 为准；编码 Review 定级见 `coding-review-deep-dive.md`；禁止项清单以 `negative-constraints.md` 为准。
+
+## 使用时机
+
+- Java/Spring/Wind 代码实现、CR、编码红线、模型分层、契约、异常日志、Lombok/MapStruct 或数据库访问约规。
+
+## 不适用场景
+
+- 只做架构方案、系分、生产变更或测试专项选择时，先读对应架构、系分、生产或测试 reference。
+- 非 Java 技术栈不得强套本规约，应先读 `language-agnostic-architecture.md`。
+
+## 读取后必须产出
+
+- 命中的强制/推荐规则、风险等级、最小整改建议和验证方式。
+
+## 需要继续读取的 reference
+
+- 深度 Review 读 `coding-review-deep-dive.md`，项目治理读 `project-governance-standards.md`，测试读 `testing.md`。
 
 ## 按任务读取索引
 
@@ -12,28 +29,6 @@
 | Java/Spring、Lombok、MapStruct、不可变对象 | 7、8、9、10 | MySQL/MyBatis 细节 |
 | 数据库、MyBatis Flex、模型分层 | 11、12、13 | 并发和 Lombok 细节 |
 | 测试代码和自动化检查 | 15、17、19 | 业务命名细节 |
-
-## 目录
-
-- `1. 编码规约总纲`
-- `2. 规约等级定义`
-- `3. 阿里 Java 规约采纳原则`
-- `4. 编程规约`
-- `5. 契约规约`
-- `6. 异常与日志规约`
-- `7. Java/Spring 专项规约`
-- `8. Lombok 与 MapStruct 规约`
-- `9. 不可变对象规约`
-- `10. 时间、金额、ID 规约`
-- `11. 数据库与 MySQL 规约`
-- `12. MyBatis / MyBatis Flex 规约`
-- `13. 分层与模型规约`
-- `14. 安全编码规约`
-- `15. 测试代码规约`
-- `16. Review 定级与整改建议`
-- `17. 自动化检查映射`
-- `18. 阿里规约采纳矩阵`
-- `19. 与其他规范的关系`
 
 ## 1. 编码规约总纲
 

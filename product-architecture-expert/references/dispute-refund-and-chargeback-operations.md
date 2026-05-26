@@ -2,12 +2,36 @@
 
 本文用于设计退款、撤销、冲正、争议、拒付、证据提交和逆向资金处理能力。它不替代卡组织、ACH、钱包、本地支付网络或通道的正式 dispute/chargeback 规则。
 
-## 适用场景
+## 使用时机
 
 - 设计银行卡、ACH/银行转账、钱包、本地支付方式、企业卡和虚拟卡的逆向交易。
 - 设计 refund、void、reversal、chargeback、dispute、representment、arbitration、return 和退汇。
 - 设计争议运营台、证据链、时限管理、商户准备金、负余额追偿和财务入账。
 - 设计客服、风控、运营、财务、法务与通道之间的协作流程。
+
+## 不适用场景
+
+- 只做正向支付、通道路由或清结算主流程时，优先读 `payment-methodology.md`、`payment-channel-routing-and-operations.md` 或 `clearing-settlement.md`。
+- 具体卡组织、ACH、钱包、本地支付网络或通道 dispute/chargeback 规则必须按最新官方规则和协议确认。
+
+## 读取后必须产出
+
+- 逆向交易类型、责任方、资金动作、证据模型、时限、账务影响、运营动作、结果回流和待确认项。
+
+## 需要继续读取的 reference
+
+- 卡争议读 `card-network-and-card-rails.md`；ACH/银行转账争议读 `payment-rails-ach-and-bank-transfers.md`；商户风险读 `payment-risk-fraud-and-merchant-operations.md`；清结算和账务读 `clearing-settlement.md`；监管边界读 `regulatory-baseline.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 逆向交易语义校准 | 概念边界、标准处理链路、资金与账务口径 | 证据日志细节 |
+| 卡争议/拒付 | 外卡争议治理链路、证据模型、交易争议举证行为日志，并读 `card-network-and-card-rails.md` | ACH 专项扩写 |
+| ACH/银行转账退回 | 概念边界、交易争议举证行为日志，并读 `payment-rails-ach-and-bank-transfers.md` | 卡组织 reason code 细节 |
+| 证据包设计 | 证据模型、交易争议举证行为日志、证据导出和隐私边界 | 标准链路背景 |
+| 账务/清结算影响 | 标准处理链路、资金与账务口径，并读 `clearing-settlement.md` | 前置风控细节 |
+| 运营评审 | 设计落地检查、外卡争议治理链路、资金与账务口径 | 深层网络规则解释 |
 
 ## 概念边界
 

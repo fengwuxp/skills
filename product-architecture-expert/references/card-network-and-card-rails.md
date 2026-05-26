@@ -2,11 +2,36 @@
 
 本文提炼卡组织和卡支付轨道中对产品架构专家最有价值的支付专项设计模式，重点覆盖四方模型、授权清算结算、争议与拒付、tokenization、PCI 边界和费用口径。它不替代 Visa / Mastercard / 银联等卡组织规则、收单协议、发卡协议或法务合规结论。
 
-## 适用场景
+## 使用时机
 
 - 设计银行卡收单、企业卡、员工卡、虚拟卡、卡钱包、卡支付路由和卡账务系统。
 - 设计 card-present / card-not-present、预授权、增量授权、capture、refund、void、chargeback 和 tokenization。
 - 设计卡网络相关的支付订单、商户入网、结算、费用和争议处理流程。
+
+## 不适用场景
+
+- 只做通用支付方法论时，优先读 `payment-methodology.md`。
+- 只做 VCC 产品生命周期和 spend controls 时，继续读 `virtual-card-and-vcc.md`。
+- 具体 Visa、Mastercard、银联、收单行、发卡行或处理商规则必须按最新官方规则和合同确认。
+
+## 读取后必须产出
+
+- 卡交易角色、授权/清算/结算分段、授权生命周期、clearing 承接、settlement 资金口径、争议拒付、tokenization/PCI 边界、费用和待确认项。
+
+## 需要继续读取的 reference
+
+- VCC 读 `virtual-card-and-vcc.md`；争议拒付读 `dispute-refund-and-chargeback-operations.md`；清结算和账务读 `clearing-settlement.md`；通道路由读 `payment-channel-routing-and-operations.md`；监管基线读 `regulatory-baseline.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 卡组织角色和模式 | 四方模型、卡组织网络与三/四方模式、卡网络能力栈与角色定位 | clearing core 细节 |
+| 授权产品设计 | 授权清算结算三段式、授权网络与前置裁决、Stand-In/SAF、授权数据、授权核心建模 | merchant settlement 扩写 |
+| Clearing/Settlement | 典型卡交易事件、标准卡交易流程、Clearing Core、Settlement 与商户可用资金 | Tokenization 细节 |
+| 收单风控和争议 | 收单风控闭环、常见卡交易分支、争议与拒付，并读 `dispute-refund-and-chargeback-operations.md` | 发卡控制细节 |
+| Tokenization/PCI | Tokenization 与 PCI 边界、授权数据与生命周期追踪 | 清算文件运营 |
+| 设计评审 | 设计落地检查、费用与结算口径、官方参考方向 | 背景模式解释 |
 
 ## 四方模型
 

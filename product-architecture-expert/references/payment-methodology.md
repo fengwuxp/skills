@@ -1,5 +1,37 @@
 # 支付产品方法论
 
+## 使用时机
+
+- 用户要求设计、评审或补全支付、账户、账本、清结算、对账、收单、发卡、跨境、全球账户、付款、VCC、争议或业财一体化产品方案。
+- 已通过 `payment-scenario-routing.md` 判断当前问题需要进入支付与资金专项，而不是普通产品架构或工程实现。
+
+## 不适用场景
+
+- 只需要写通用 PRD 主骨架时，优先读 `product-prd-template.md`。
+- 只做具体清结算、账务或对账方案时，继续读 `clearing-settlement.md`。
+- 只做卡组织、ACH、VCC、争议、通道、风控等专项时，继续读对应专项 reference。
+- 具体法律、监管、卡组织、ACH、银行或本地清算网络规则真实性必须交由专业确认，本文只提供产品架构框架。
+
+## 读取后必须产出
+
+- 金融业务主轴、四流、单据状态、账户/账务、清结算/对账、风险合规、数据证据、验收确认方和待确认项。
+
+## 需要继续读取的 reference
+
+- 场景识别读 `payment-scenario-routing.md`；监管和外部规则读 `regulatory-baseline.md`；清结算和账务读 `clearing-settlement.md`；评审收口读 `payment-design-checklists.md`。
+- 卡组织读 `card-network-and-card-rails.md`；ACH/银行转账读 `payment-rails-ach-and-bank-transfers.md`；VCC 读 `virtual-card-and-vcc.md`；争议拒付读 `dispute-refund-and-chargeback-operations.md`；通道路由读 `payment-channel-routing-and-operations.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 支付产品总方案 | 金融业务总纲、支付系统五层拆解、十二字能力地图、需求分析顺序、产品方案骨架 | 专项补充，除非命中具体支付轨道 |
+| 资金/账本/对账方案 | 金融业务总纲、四流建模、账本观、钱包账本对账三层模式，并读 `clearing-settlement.md` | 收银台展示细节 |
+| 收单/通道/全球支付 | 支付系统五层拆解、收单与事件集成补充、通道路由与运营治理补充、全球账户与付款补充 | VCC 专项，除非涉及发卡 |
+| 发卡/VCC/授权控制 | 卡产品与授权控制模式、VCC 与虚拟卡补充，并读 `virtual-card-and-vcc.md`、`card-network-and-card-rails.md` | 清结算全局规划细节 |
+| 风控/争议/逆向资金 | 风控欺诈与商户运营补充、争议退款与拒付运营补充，并读对应专项 reference | 全球平台交付包 |
+| PRD 或评审清单 | 产品方案骨架，并读 `product-prd-financial-appendix.md`、`payment-design-checklists.md` | 方法论背景扩写 |
+
 ## 先识别场景再设计
 
 开始设计前，先读取或参考 `payment-scenario-routing.md` 完成场景识别：组织语境、业务动作、支付轨道、资金复杂度和目标产物。不要把清结算、通道路由、争议证据、ACH、卡组织和 VCC 混成一个模板。

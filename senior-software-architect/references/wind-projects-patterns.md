@@ -6,6 +6,40 @@
 - wind-integration：https://github.com/fengwuxp/wind-integration
 - wind-security：https://github.com/fengwuxp/wind-security
 
+## 使用时机
+
+- 用户正在处理 Java/Spring/Wind 项目族、Wind/Nobe 风格项目或需要复用 Wind 基础能力。
+- 需要判断统一响应、Trace、端口适配、Spring Boot Starter、查询分页、安全域、企业集成和模块治理的本地风格。
+- 需要从公开 Wind 项目族中提炼可迁移的工程模式，但不直接复制实现。
+
+## 不适用场景
+
+- 非 Java/Wind 项目先读 `language-agnostic-architecture.md`。
+- 具体编码强规约优先读 `coding-standards.md`，项目级治理优先读 `project-governance-standards.md`。
+- 不把公开项目样本当成当前项目必须照抄的架构；仍以当前仓库事实和用户目标为准。
+
+## 读取后必须产出
+
+- 当前任务是否命中 Wind 项目族能力，以及应复用的端口、模式、模块边界或约规。
+- 明确哪些是可迁移模式，哪些需要读取当前项目代码后确认。
+- 对新增能力优先检查是否已有 WindXxx 接口、starter、helper、query、trace、安全或集成能力。
+
+## 需要继续读取的 reference
+
+- Java/Spring/Wind 强制约规读 `coding-standards.md`。
+- 项目治理综合规范读 `project-governance-standards.md`。
+- Review 输出读 `coding-review-deep-dive.md`；生产和安全读对应专项 reference。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| Wind 项目族能力识别 | `1. 总体架构定位`、`5. 模块治理提炼` | 不把模块地图当作当前项目真实依赖 |
+| API 和契约风格 | `2. API 设计风格` | 不绕过统一响应、traceId、错误码和空值契约 |
+| 编码风格和公共模型 | `3. 编码风格提炼` | 不替代 `coding-standards.md` |
+| 端口适配和 Starter 模式 | `4. 架构模式提炼` | 不让业务代码直接依赖厂商 SDK |
+| Java/Wind 落地 Review | `6. 对资深架构师 Skill 的 Java/Wind 落地要求`、`7. 可复用检查清单` | 不重复造已有基础能力 |
+
 ## 目录
 
 - `1. 总体架构定位`

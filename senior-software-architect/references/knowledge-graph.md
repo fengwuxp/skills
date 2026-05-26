@@ -1,6 +1,24 @@
 # 资深架构师知识图谱
 
-本文定义架构师需要维护的知识图谱。它不是百科全书，而是用于设计、评审、编码和排障时快速定位知识域、依赖关系、风险点和落地工具的索引。
+本文不是百科全书，而是用于设计、评审、编码和排障时快速定位知识域、依赖关系、风险点和落地工具的索引。
+
+## 使用时机
+
+- 需要判断问题属于哪个知识域、应读取哪个 reference。
+- 需要把新经验归入架构、代码、测试、运维、AI 协作或项目治理知识域。
+
+## 不适用场景
+
+- 已经明确具体规则文件时，直接读取对应 reference。
+- 需要完整编码规约、系分模板、测试专项或生产检查时，不在本文展开细节。
+
+## 读取后必须产出
+
+- 当前问题所属知识域、优先 reference 和需要跳过的无关细节。
+
+## 需要继续读取的 reference
+
+- 编码读 `coding-standards.md`，测试读 `testing.md`/`testing-practices.md`，系分读 `system-analysis-design.md`，生产读 `production-readiness.md`。
 
 ## 按任务读取索引
 
@@ -12,27 +30,6 @@
 | Java/Spring/Data 技术定位 | 7、8、10、14 | 产品语义和技术表达 |
 | 生产排障、安全、可观测性 | 15、17、18 | 前端和产品语义 |
 | AI 协作或规范沉淀 | 19、21、22 | 语言运行时细节 |
-
-## 使用方式
-
-- 做技术方案时：先定位业务域、质量属性、架构风格、基础设施和约束条件。
-- 做代码实现时：先定位分层规范、框架能力、数据访问、异常日志、测试策略。
-- 做评审时：按“业务规则 -> 架构边界 -> 数据一致性 -> 稳定性 -> 安全 -> 可观测性 -> 验证”顺序检查。
-- 遇到新资料时：归入相应知识域，补充“概念、适用场景、反模式、落地规范、验证方式”。
-
-## 参考资料入口
-
-- 代码整洁之道：https://github.com/glen9527/Clean-Code-zh
-- 架构整洁之道：https://github.com/leewaiho/Clean-Architecture-zh
-- 重构：改善既有代码的设计：https://martinfowler.com/books/refactoring.html
-- 凤凰架构：https://icyfenix.cn/
-- 产品语义校准与工程映射：`references/product-design.md`
-- 测试驱动设计与测试资产治理：`references/testing.md`
-- 测试专项实践：`references/testing-practices.md`
-- 调试诊断与根因分析：`references/debugging-diagnosis.md`
-- AI 编码协作与三层作业模型：`references/ai-assisted-engineering.md`
-- Wind 项目族实践：`references/wind-projects-patterns.md`
-- 项目长期演进规范：`references/project-governance-standards.md`
 
 ## 1. 根节点
 

@@ -2,11 +2,35 @@
 
 本文提炼 ACH 和银行转账轨道中对产品架构专家最有价值的支付专项设计模式，重点覆盖角色分工、授权与结算时序、退回与更正、跨境差异和运营风险。它不替代银行协议、Nacha Operating Rules、当地支付系统规则或法务合规结论。
 
-## 适用场景
+## 使用时机
 
 - 设计美国 ACH credit / debit、银行代扣、批量付款、工资代发、平台出金和退款回退。
 - 设计银行转账类支付轨道，如本地清算、RTP、FedNow、代理行汇款、SWIFT/GPI、本地代付。
 - 设计跨境银行转账、企业付款、供应商付款和高客单价低频支付场景。
+
+## 不适用场景
+
+- 只做卡组织、VCC 或钱包产品时，优先读对应专项 reference。
+- Nacha、银行、本地清算网络、跨境报文和代理行规则必须按最新官方规则、协议或合作方确认。
+
+## 读取后必须产出
+
+- 角色分工、授权凭证、提交/结算时序、return/NOC/reversal 语义、批次、trace/reference、Payouts 对象、失败处理和待确认项。
+
+## 需要继续读取的 reference
+
+- 支付总纲读 `payment-methodology.md`；清结算读 `clearing-settlement.md`；争议证据读 `dispute-refund-and-chargeback-operations.md`；风控读 `payment-risk-fraud-and-merchant-operations.md`；跨境读 `global-payment-emerging.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| ACH debit/credit 方案 | 核心角色、关键差异、授权提交与结算时序、ACH 特有设计点 | 跨境代理行细节 |
+| ACH return/NOC/reversal | Return/NOC/Reversal 语义、ACH 授权与争议举证日志、设计落地检查 | Payouts 对象模型 |
+| 银行转账/本地清算 | 核心角色、银行转账与跨境特有设计点、设计落地检查 | ACH 授权证据细节 |
+| Payouts/批量付款 | Payouts 对象模型、授权提交与结算时序、设计落地检查 | dispute 证据扩写 |
+| 跨境银行转账 | 银行转账与跨境特有设计点，并读 `global-payment-emerging.md` | Same Day ACH 细节 |
+| 争议/证据/风控 | ACH 授权与争议举证日志，并读 `dispute-refund-and-chargeback-operations.md`、`payment-risk-fraud-and-merchant-operations.md` | 普通付款建模 |
 
 ## 核心角色
 

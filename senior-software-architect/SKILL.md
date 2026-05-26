@@ -89,7 +89,7 @@ description: |
 - **通用架构**：DDD、整洁架构、六边形架构、CQRS、事件驱动、模块化单体、微服务、数据一致性、可靠性、安全、可观测性和工程治理。
 - **分析表达**：产品语义校准、系分设计、工程能力映射、用例/流程/时序图、技术方案、评审文档和故障复盘。
 - **跨语言工程**：识别语言运行时、构建、依赖、测试、质量和部署体系，按项目生态选择验证手段。
-- **AI 编码协作**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor、协作编排和验证闭环；CAD Mode 细节只读 `references/ai-assisted-engineering.md`。
+- **AI 编码协作**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor、协作编排和验证闭环；CAD Mode、Execution Grant 和自动分轮推进细节只读 `references/cad-mode.md`。
 - **Java/Spring/Wind**：Java 8+ / 21 / 25、JVM、JUC、Spring Boot、Validation、Transaction、Security、MyBatis Flex、Redis、MQ、缓存、事务、一致性与幂等。
 - **测试与交付**：TDD、测试分层、真实代码优先验证、Mock/Fake/Recording 边界、Spring 最小上下文、H2/Testcontainers、ArchUnit、P3C/PMD/SpotBugs/SonarLint、CI/CD、灰度、回滚和可观测性。
 - **调试与诊断**：用可重复反馈环、最小复现、假设验证、证据采集、最小修复和回归测试处理 Bug、异常、测试失败和生产现象。
@@ -111,7 +111,7 @@ description: |
 - `references/language-agnostic-architecture.md` – 技术栈识别、跨语言架构共性和验证交付。
 - `references/scenario-routing.md` – 按任务、技术栈、风险和目标产物选择最小参考集。
 - `references/architecture.md` – 架构原则、职责边界、核心抽象、质量属性和落地机制。
-- `references/system-analysis-design.md` – 团队系分设计约规、可复制系分模板、详细设计模板、表结构模板、研发计划和评审清单。
+- `references/system-analysis-design.md` – 团队系分设计约规、详细设计、表结构、研发计划和评审清单；完整可复制模板按需读 `references/system-analysis-template.md`。
 - `references/product-design.md` – 工程设计前的产品语义校准、能力边界和开发/测试友好性检查；完整 PRD、产品架构和业务/金融产品方案优先路由到 `产品架构专家`。
 - `references/adr-and-tradeoff.md` – 技术选型、服务拆分、重大重构和高风险决策取舍。
 - `references/diagram-output.md` – 系统架构图、模块图、时序图、状态机、ER 图、部署图、迁移图和验证闭环图的图形化交付。
@@ -128,12 +128,13 @@ Java/Wind 与代码质量：
 测试与验证：
 
 - `references/testing.md` – 测试驱动设计、测试资产治理、测试分层和 Review 清单总纲。
-- `references/testing-practices.md` – 测试专项实践索引；按任务路由到 `references/testing-practices-java-unit-db.md`、`references/testing-practices-java-web.md`、`references/testing-practices-java-service-flow.md`、`references/testing-practices-business-funds.md`、`references/testing-practices-non-java-and-selection.md`。
-- `references/workflow.md` – 工作流程、验证命令矩阵、PR 和 Git 基础规约；CAD Mode 细节以 `ai-assisted-engineering.md` 为准。
+- `references/testing-practices.md` – 测试专项实践索引；按任务路由到 `references/testing-practices-java-spring-common.md`、`references/testing-practices-java-unit-db.md`、`references/testing-practices-java-web.md`、`references/testing-practices-java-service-flow.md`、`references/testing-practices-business-funds.md`、`references/testing-practices-non-java-and-selection.md`。
+- `references/workflow.md` – 工作流程、验证命令矩阵、PR 和 Git 基础规约；CAD Mode 细节以 `cad-mode.md` 为准。
 
 AI 协作与生产专项：
 
-- `references/ai-assisted-engineering.md` – OpenSpec、Superpowers、Harness、CAD Mode、Execution Grant 和 AI 代码红线；CAD Mode 唯一详细规则源。
+- `references/ai-assisted-engineering.md` – OpenSpec、Superpowers、Harness、AI 代码红线和 AI 协作总纲。
+- `references/cad-mode.md` – CAD Mode、Execution Grant、自动分轮推进、Git 策略、人工中断窗口和停止条件；CAD Mode 唯一详细规则源。
 - `references/negative-constraints.md` – 禁止行为和权限边界摘要。
 - `references/production-readiness.md` – SLO、容量、压测、发布回滚、数据变更、外部依赖和 Runbook。
 - `references/distributed-consistency.md` – 事务边界、Outbox、Saga、TCC、幂等、消息一致性、对账和补偿。

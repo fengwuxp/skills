@@ -90,14 +90,19 @@ senior_routing = "senior-software-architect/references/scenario-routing.md"
 senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
 ai_engineering = "senior-software-architect/references/ai-assisted-engineering.md"
+cad_mode = "senior-software-architect/references/cad-mode.md"
+negative_constraints = "senior-software-architect/references/negative-constraints.md"
 testing = "senior-software-architect/references/testing.md"
 coding = "senior-software-architect/references/coding-standards.md"
+knowledge_graph = "senior-software-architect/references/knowledge-graph.md"
 review = "senior-software-architect/references/coding-review-deep-dive.md"
 debugging = "senior-software-architect/references/debugging-diagnosis.md"
 adr_tradeoff = "senior-software-architect/references/adr-and-tradeoff.md"
 language_agnostic = "senior-software-architect/references/language-agnostic-architecture.md"
 security = "senior-software-architect/references/security-architecture.md"
+system_analysis_template = "senior-software-architect/references/system-analysis-template.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
+architecture_fixture_verifier = "senior-software-architect/scripts/verify_fixtures.py"
 reference_index_audit = "scripts/audit-reference-indexes.py"
 source_archive = "scripts/archive-source-evidence.py"
 source_map_audit = "scripts/audit-source-map.py"
@@ -109,6 +114,7 @@ skillx_export_schema = "schemas/skillx-candidate.schema.json"
 codegen_generator = "java-service-code-generator/scripts/generate_scaffold.py"
 codegen_fixture_verifier = "java-service-code-generator/scripts/verify_fixtures.py"
 codegen_rules = "java-service-code-generator/references/code-generation-rules.md"
+codegen_nobe_patterns = "java-service-code-generator/references/nobe-patterns.md"
 project_governance_refs = [
     "senior-software-architect/references/project-governance-codebase-and-modules.md",
     "senior-software-architect/references/project-governance-service-api-modeling.md",
@@ -116,6 +122,7 @@ project_governance_refs = [
     "senior-software-architect/references/project-governance-delivery-and-platform.md",
 ]
 testing_practice_refs = [
+    "senior-software-architect/references/testing-practices-java-spring-common.md",
     "senior-software-architect/references/testing-practices-java-unit-db.md",
     "senior-software-architect/references/testing-practices-java-web.md",
     "senior-software-architect/references/testing-practices-java-service-flow.md",
@@ -134,6 +141,10 @@ product_routing = "product-architecture-expert/references/product-scenario-routi
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
+product_prd_template = "product-architecture-expert/references/product-prd-template.md"
+product_prd_quality_gates = "product-architecture-expert/references/product-prd-quality-gates.md"
+product_prd_financial_appendix = "product-architecture-expert/references/product-prd-financial-appendix.md"
+product_prd_operations_and_data = "product-architecture-expert/references/product-prd-operations-and-data.md"
 regulatory = "product-architecture-expert/references/regulatory-baseline.md"
 payment_methodology = "product-architecture-expert/references/payment-methodology.md"
 clearing_settlement = "product-architecture-expert/references/clearing-settlement.md"
@@ -199,12 +210,20 @@ reference_headers = [
     workflow,
     ai_engineering,
     testing,
+    coding,
+    knowledge_graph,
     debugging,
     product_routing,
     payment_routing,
     product_diagram,
     product_prd,
+    product_prd_template,
+    product_prd_quality_gates,
+    product_prd_financial_appendix,
+    product_prd_operations_and_data,
     regulatory,
+    codegen_rules,
+    codegen_nobe_patterns,
 ] + project_governance_refs + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
@@ -355,11 +374,51 @@ check(
             *testing_practice_refs,
             "senior-software-architect/references/skill-tree.md",
             *skill_tree_refs,
+            "senior-software-architect/references/architecture.md",
+            "senior-software-architect/references/clean-code.md",
+            "senior-software-architect/references/coding-review-deep-dive.md",
+            "senior-software-architect/references/language-agnostic-architecture.md",
+            "senior-software-architect/references/product-design.md",
+            "senior-software-architect/references/production-readiness.md",
+            "senior-software-architect/references/review-and-output-templates.md",
+            "senior-software-architect/references/security-architecture.md",
+            "senior-software-architect/references/wind-projects-patterns.md",
             "senior-software-architect/references/system-analysis-design.md",
+            "senior-software-architect/references/system-analysis-template.md",
+            "senior-software-architect/references/scenario-routing.md",
+            "senior-software-architect/references/workflow.md",
             "senior-software-architect/references/ai-assisted-engineering.md",
+            "senior-software-architect/references/cad-mode.md",
+            "senior-software-architect/references/testing.md",
+            "senior-software-architect/references/debugging-diagnosis.md",
+            "senior-software-architect/references/diagram-output.md",
             "senior-software-architect/references/knowledge-graph.md",
             "senior-software-architect/references/coding-standards.md",
             "product-architecture-expert/references/product-prd-template.md",
+            "product-architecture-expert/references/product-prd-quality-gates.md",
+            "product-architecture-expert/references/product-prd-financial-appendix.md",
+            "product-architecture-expert/references/product-prd-operations-and-data.md",
+            "product-architecture-expert/references/product-design-and-prd.md",
+            "product-architecture-expert/references/payment-methodology.md",
+            "product-architecture-expert/references/clearing-settlement.md",
+            "product-architecture-expert/references/payment-design-checklists.md",
+            "product-architecture-expert/references/card-network-and-card-rails.md",
+            "product-architecture-expert/references/global-payment-emerging.md",
+            "product-architecture-expert/references/glossary.md",
+            "product-architecture-expert/references/diagram-output.md",
+            "product-architecture-expert/references/dispute-refund-and-chargeback-operations.md",
+            "product-architecture-expert/references/formance-reference-patterns.md",
+            "product-architecture-expert/references/highnote-reference-patterns.md",
+            "product-architecture-expert/references/payment-channel-routing-and-operations.md",
+            "product-architecture-expert/references/payment-rails-ach-and-bank-transfers.md",
+            "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md",
+            "product-architecture-expert/references/payment-scenario-routing.md",
+            "product-architecture-expert/references/product-architecture-methodology.md",
+            "product-architecture-expert/references/product-scenario-routing.md",
+            "product-architecture-expert/references/regulatory-baseline.md",
+            "product-architecture-expert/references/skill-tree.md",
+            "product-architecture-expert/references/source-map.md",
+            "product-architecture-expert/references/virtual-card-and-vcc.md",
         ]
     )
     and has_all(
@@ -455,6 +514,36 @@ check(
             "reference_quality",
             "deterministic_execution",
             "trigger_fixtures",
+            "REFERENCE_FILE_SOFT_LIMIT",
+            "REFERENCE_FILE_HARD_LIMIT",
+            "REFERENCE_SECTION_SOFT_LIMIT",
+            "REFERENCE_SECTION_HARD_LIMIT",
+            "SENIOR_REFERENCE_TOTAL_SOFT_LIMIT",
+            "SENIOR_REFERENCE_TOTAL_HARD_LIMIT",
+            "TASK_INDEX_HEADING",
+            "TASK_INDEX_COLUMNS",
+            "CONTROLLED_REFERENCE_SEARCHABILITY_SCORE",
+            "has_progressive_headers",
+            "has_task_index",
+            "reference_searchability_score",
+            "large_reference_files",
+            "largest_reference_lines",
+            "large_reference_sections",
+            "largest_reference_section_lines",
+            "reference_files_with_task_indexes",
+            "reference_searchability_score",
+            "reference_files_over_soft_limit",
+            "reference_files_over_hard_limit",
+            "reference_sections_over_soft_limit",
+            "reference_sections_over_hard_limit",
+            "controlled_searchability_score",
+            "reference section soft budget exceeded",
+            "in_fenced_code",
+            "does not force mechanical splitting",
+            "more than one independent task entry in one reference",
+            "a single section longer than 120 lines",
+            "the same rule repeated across multiple references",
+            "more than eight level-2 topics in one reference",
             "Overall skill score",
             "OK skill evaluation self-test",
         ],
@@ -761,8 +850,14 @@ check(
     contains(workflow, "设计前必须先构造用例、测试用例、边界条件、异常路径和验收标准"),
 )
 check(
-    "workflow routes AI/CAD to AI engineering reference",
-    contains(workflow, "AI 协作、多 Agent 或 CAD Mode 必须继续读取 `ai-assisted-engineering.md`"),
+    "workflow routes AI and CAD references separately",
+    has_all(
+        workflow,
+        [
+            "AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`",
+            "CAD Mode、Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`",
+        ],
+    ),
 )
 check(
     "AI engineering maps to workflow lifecycle",
@@ -772,6 +867,56 @@ check(
             "## 工程生命周期映射",
             "必须服从 `workflow.md`",
             "不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Execution Grant、验证或高风险人工确认点",
+        ],
+    ),
+)
+check(
+    "CAD mode split keeps AI engineering as overview",
+    has_all(
+        senior_skill,
+        [
+            "`references/ai-assisted-engineering.md`",
+            "`references/cad-mode.md`",
+            "CAD Mode 唯一详细规则源",
+        ],
+    )
+    and has_all(
+        ai_engineering,
+        [
+            "CAD Mode 详细执行规则只读 `cad-mode.md`",
+            "不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Execution Grant、验证或高风险人工确认点",
+            "AI 协作总纲不得复制这些细节",
+        ],
+    )
+    and has_all(
+        cad_mode,
+        [
+            "## 使用时机",
+            "## 按任务读取索引",
+            "受控自治开发模式",
+            "Execution Grant 是 CAD Mode 的权限边界",
+            "每轮执行闭环",
+            "5 秒",
+            "平台权限边界优先于 Execution Grant",
+        ],
+    ),
+)
+check(
+    "negative constraints routes CAD authority to CAD mode",
+    has_all(
+        negative_constraints,
+        [
+            "`cad-mode.md` 定义的 Execution Grant",
+            "Git 策略和自动提交边界以 `cad-mode.md` 为准",
+            "统一以 `cad-mode.md` 为唯一详细规则源",
+        ],
+    )
+    and has_none(
+        negative_constraints,
+        [
+            "`ai-assisted-engineering.md` 定义的 Execution Grant",
+            "Git 策略和自动提交边界以 `ai-assisted-engineering.md` 为准",
+            "统一以 `ai-assisted-engineering.md` 为唯一详细规则源",
         ],
     ),
 )
@@ -818,6 +963,42 @@ check(
     ),
 )
 check(
+    "system analysis template is split from design guidance",
+    has_all(
+        senior_skill,
+        [
+            "`references/system-analysis-design.md`",
+            "`references/system-analysis-template.md`",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "读取 `system-analysis-template.md` 获取可复制模板",
+            "## 3. 章节写作要求",
+            "## 5. 评审清单",
+        ],
+    )
+    and has_all(
+        system_analysis_template,
+        [
+            "# 系统分析设计模板",
+            "## 使用时机",
+            "## 不适用场景",
+            "## 读取后必须产出",
+            "## 需要继续读取的 reference",
+            "## 按任务读取索引",
+            "## 1. 文档头、背景与目标模板",
+            "## 2. 概要设计模板",
+            "## 3. 模块与接口设计模板",
+            "## 4. 数据设计模板",
+            "## 5. 状态、流程与专项设计模板",
+            "## 6. 非功能、研发计划与参考资料模板",
+            "# <需求/系统/模块名称> 系统分析设计文档",
+        ],
+    ),
+)
+check(
     "senior route sends code changes through workflow",
     has_all(
         senior_routing,
@@ -833,6 +1014,7 @@ check(
         senior_routing,
         [
             "`workflow.md`、`ai-assisted-engineering.md`",
+            "`cad-mode.md`",
             "先过工程生命周期门禁",
         ],
     ),
@@ -1080,7 +1262,16 @@ check(
 )
 check(
     "PRD route loads template and design references",
-    has_all(product_routing, ["product-prd-template.md", "product-design-and-prd.md"]),
+    has_all(
+        product_routing,
+        [
+            "product-prd-template.md",
+            "product-design-and-prd.md",
+            "product-prd-quality-gates.md",
+            "product-prd-financial-appendix.md",
+            "product-prd-operations-and-data.md",
+        ],
+    ),
 )
 check(
     "product architecture methodology keeps multi-frame exploration gate",
@@ -1109,6 +1300,10 @@ check(
     has_all(
         product_prd,
         [
+            "product-prd-template.md",
+            "product-prd-quality-gates.md",
+            "product-prd-financial-appendix.md",
+            "product-prd-operations-and-data.md",
             "## 0.2 PRD 生成、补全与符合性评审模式",
             "生成、补全还是评审",
             "符合项 / 必改 / 建议 / 可选",
@@ -1123,17 +1318,62 @@ check(
 check(
     "PRD template keeps acceptability and priority gates",
     has_all(
-        "product-architecture-expert/references/product-prd-template.md",
+        product_prd_template,
         [
             "优先级口径",
             "P0：没有它不能上线",
             "P1：核心体验或主流程必须具备",
             "P2：增强体验、运营效率或后续扩展能力",
-            "### 22.1 可验收性门禁",
-            "### 22.2 已有 PRD 符合性评审输出",
+            "product-prd-quality-gates.md",
+            "product-prd-financial-appendix.md",
+            "product-prd-operations-and-data.md",
+            "正式评审、提交前检查、CR、触发验证或符合性评审时读取 `product-prd-quality-gates.md`",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "## 使用时机",
+            "## 按任务读取索引",
+            "## 1. PRD 质量门禁",
+            "## 2. 可验收性门禁",
+            "## 3. 已有 PRD 符合性评审输出",
             "符合项：已经满足模板、可验收性或专项门禁的内容",
             "必改：会阻断评审、研发、测试、上线或专业确认的缺口",
             "每条评审项必须说明章节或位置、问题、影响和建议改法",
+        ],
+    ),
+)
+check(
+    "PRD financial appendix keeps payment funding gates",
+    has_all(
+        product_prd_financial_appendix,
+        [
+            "## 使用时机",
+            "## 按任务读取索引",
+            "## 1. 主体、法域与资质",
+            "## 2. 四流说明",
+            "## 3. 账务矩阵",
+            "## 4. 资金与风险红线",
+            "不混同客户资金、商户资金和平台自有资金",
+            "不把授权成功、清算成功、结算完成、资金可用和商户出款混为一个状态",
+        ],
+    ),
+)
+check(
+    "PRD operations and data appendix keeps operational closure",
+    has_all(
+        product_prd_operations_and_data,
+        [
+            "## 使用时机",
+            "## 按任务读取索引",
+            "## 1. 运营后台与人工处理",
+            "## 2. 通知、消息与任务",
+            "## 3. 数据指标、埋点与报表",
+            "## 4. 发布与运营计划",
+            "什么情况下进入人工处理",
+            "指标口径",
+            "报表与导出",
         ],
     ),
 )
@@ -2110,6 +2350,28 @@ check(
     ),
 )
 check(
+    "senior architecture deliverable checker has public fixtures",
+    has_all(
+        architecture_fixture_verifier,
+        [
+            "architecture-plan-valid.md",
+            "system-design-valid.md",
+            "code-review-valid.md",
+            "production-change-valid.md",
+            "diagram-brief-valid.md",
+            "invalid-incomplete.md",
+            "Architecture fixture verification passed.",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "senior-software-architect/scripts/check_architecture_deliverable.py --self-test",
+            "senior-software-architect/scripts/verify_fixtures.py",
+        ],
+    ),
+)
+check(
     "java service generator routes structured input to deterministic script",
     has_all(
         codegen_skill,
@@ -2223,7 +2485,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI coding CAD",
         prompt="根据 OpenSpec 用多 Agent 推进这批代码实现，可以进入 CAD Mode 吗",
-        routes={"senior", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"},
+        routes={"senior", "workflow.md", "ai-assisted-engineering.md", "cad-mode.md", "negative-constraints.md"},
     ),
     RouteFixture(
         name="architecture diagram output",
@@ -2400,6 +2662,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
     if contains_any(prompt, ["OpenSpec", "Agent", "CAD"]):
         route.update({"workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"})
+    if contains_any(prompt, ["CAD", "Execution Grant", "自动分轮", "自动提交"]):
+        route.add("cad-mode.md")
     if contains_any(prompt, external_dependency_terms):
         route.update({"workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"})
     if contains_any(prompt, ["PRD", "模板"]):

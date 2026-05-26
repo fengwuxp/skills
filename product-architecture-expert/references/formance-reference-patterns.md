@@ -2,7 +2,7 @@
 
 本文提炼 Formance 官方 Wallets、Ledger、Reconciliation、Connectivity、Numscript、Flows 文档中的通用产品与系统设计模式。它只作为支付产品、账务、连接器、流程编排和对账设计参考，不替代监管规则、财务制度、机构接口规范或团队自研架构决策。
 
-## 适用场景
+## 使用时机
 
 - 设计电子钱包、商户余额、预付账户、平台内部账户、补贴账户或多币种账户。
 - 设计账务核心、产品账本、资金流水、余额查询、冻结解冻、调账和审计追踪。
@@ -10,6 +10,30 @@
 - 设计外部支付服务商、银行、开放银行、虚拟账户、现金池和交易导入的连接器层。
 - 设计可配置账务规则、分账规则、手续费规则、退款规则和跨模块资金流程编排。
 - 需要把支付产品从“交易状态机”提升为“可解释、可核对、可追溯的资金事实系统”。
+
+## 不适用场景
+
+- 只做卡产品、VCC 或收单运营方案时，优先读 `highnote-reference-patterns.md`、`virtual-card-and-vcc.md` 或 `payment-channel-routing-and-operations.md`。
+- 本文只抽象公开产品模式，不替代团队自研账务架构、监管规则、财务制度或机构接口规范。
+
+## 读取后必须产出
+
+- 钱包层、账本层、对账层、连接器层、记账规则、流程编排、事实源、幂等审计和待确认项。
+
+## 需要继续读取的 reference
+
+- 清结算和会计账务读 `clearing-settlement.md`；支付总纲读 `payment-methodology.md`；评审清单读 `payment-design-checklists.md`；监管边界读 `regulatory-baseline.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 钱包/余额产品 | 三层和三个支撑能力、Wallets 模式、Ledger 模式 | Flows 深层编排 |
+| 账务核心 | Ledger 模式、Bi-Temporality 模式、Numscript 模式 | Connectivity 接入细节 |
+| 对账/外部账户 | Reconciliation 模式、Connectivity 模式、设计落地检查 | Wallets 业务展示 |
+| 可配置记账规则 | Numscript 模式、Ledger 模式、设计落地检查 | 外部连接器扩写 |
+| 资金流程编排 | Flows 模式、Connectivity 模式、Reconciliation 模式 | 钱包 UI 细节 |
+| 方案评审 | 三层和三个支撑能力、设计落地检查、资料来源 | 模式背景解释 |
 
 ## 三层 + 三个支撑能力
 

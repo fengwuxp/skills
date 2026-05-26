@@ -4,6 +4,31 @@
 
 该模块使用 Freemarker 模板生成 DTO、Request、Query、Mapper、MapStruct、Service、ServiceImpl 等代码。本技能不直接复刻全部实现，但应吸收以下稳定规程。
 
+## 使用时机
+
+- 需要确认 Wind/Nobe 风格模块布局、中文描述、DTO/Request/Query、Entity/MyBatis-Flex 和 Service 生成惯例。
+
+## 不适用场景
+
+- 需要完整脚本参数、输入可信度或 golden fixture 维护时，读 `code-generation-rules.md`。
+
+## 读取后必须产出
+
+- 本地模块布局判断、包名推断依据、生成风格差异和需要人工确认的项目约定。
+
+## 需要继续读取的 reference
+
+- 生成规程和验证读 `code-generation-rules.md`；代码红线和 Review 交给 `资深架构师`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 判断模块布局 | 模块布局 | 审查要点 |
+| 生成 DTO/Request/Query | 中文描述、DTO / Request / Query | Entity 细节 |
+| 生成 Entity/MyBatis-Flex | Entity 与 MyBatis-Flex | Service 细节 |
+| 生成 Service/ServiceImpl | Service / ServiceImpl、资深架构师审查要点 | 输入源路由 |
+
 ## 输入源路由
 
 - DDL/schema 是最高可信输入，可直接进入生产代码生成链路。

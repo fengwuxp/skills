@@ -62,6 +62,7 @@ python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
+python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/archive-source-evidence.py
 python3 -m py_compile scripts/audit-source-map.py
@@ -80,6 +81,7 @@ product-architecture-expert/scripts/check_product_deliverable.py --self-test
 
 echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
+senior-software-architect/scripts/verify_fixtures.py
 
 echo "==> reference index audit"
 scripts/audit-reference-indexes.py

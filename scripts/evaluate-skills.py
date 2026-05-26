@@ -37,6 +37,23 @@ PROGRESSIVE_HEADER_TERMS = [
     "## 读取后必须产出",
     "## 需要继续读取的 reference",
 ]
+TASK_INDEX_HEADING = "## 按任务读取索引"
+TASK_INDEX_COLUMNS = ["| 任务 | 优先读取 | 跳过 |"]
+REFERENCE_FILE_SOFT_LIMIT = 400
+REFERENCE_FILE_HARD_LIMIT = 550
+REFERENCE_SECTION_SOFT_LIMIT = 120
+REFERENCE_SECTION_HARD_LIMIT = 180
+SENIOR_REFERENCE_TOTAL_SOFT_LIMIT = 7000
+SENIOR_REFERENCE_TOTAL_HARD_LIMIT = 8000
+CONTROLLED_REFERENCE_SEARCHABILITY_SCORE = 85
+TOP_LARGE_REFERENCE_COUNT = 5
+TOP_LARGE_SECTION_COUNT = 5
+REFERENCE_SPLIT_TRIGGERS = [
+    "more than one independent task entry in one reference",
+    "a single section longer than 120 lines",
+    "the same rule repeated across multiple references",
+    "more than eight level-2 topics in one reference",
+]
 
 
 def read(path: Path) -> str:
@@ -97,6 +114,14 @@ def score_ratio(value: int, target: int, full_score: int) -> int:
     return min(full_score, round(full_score * min(value, target) / target))
 
 
+def has_progressive_headers(text: str) -> bool:
+    return all(term in text for term in PROGRESSIVE_HEADER_TERMS)
+
+
+def has_task_index(text: str) -> bool:
+    return TASK_INDEX_HEADING in text and all(column in text for column in TASK_INDEX_COLUMNS)
+
+
 def score_metadata(description_len: int, has_agent_yaml: bool) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 100
@@ -133,7 +158,119 @@ def score_progressive(skill_lines: int, ref_links: int, missing_refs: list[str])
     return max(score, 0), warnings
 
 
-def score_references(reference_count: int, reference_lines: int, reference_headers: int) -> tuple[int, list[str]]:
+def relative_reference_stats(skill_dir: Path, refs: list[Path]) -> list[dict[str, Any]]:
+    stats = []
+    for ref in refs:
+        ref_text = read(ref)
+        sections = reference_section_stats(ref.relative_to(skill_dir).as_posix(), ref_text)
+        stats.append(
+            {
+                "path": ref.relative_to(skill_dir).as_posix(),
+                "lines": line_count(ref_text),
+                "level_2_sections": len(sections),
+                "largest_section_lines": sections[0]["lines"] if sections else 0,
+                "has_progressive_headers": has_progressive_headers(ref_text),
+                "has_task_index": has_task_index(ref_text),
+            }
+        )
+    return sorted(stats, key=lambda item: (-item["lines"], item["path"]))
+
+
+def reference_section_stats(relative_path: str, text: str) -> list[dict[str, Any]]:
+    sections: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    current_start = 1
+    current_lines = 0
+    in_fenced_code = False
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if line.startswith("```"):
+            in_fenced_code = not in_fenced_code
+        if line.startswith("## "):
+            if not in_fenced_code and current:
+                current["lines"] = current_lines
+                sections.append(current)
+            if not in_fenced_code:
+                current = {
+                    "path": relative_path,
+                    "title": line[3:].strip(),
+                    "start_line": line_number,
+                }
+                current_start = line_number
+                current_lines = 1
+        elif current:
+            current_lines = line_number - current_start + 1
+    if current:
+        current["lines"] = current_lines
+        sections.append(current)
+    return sorted(sections, key=lambda item: (-item["lines"], item["path"], item["start_line"]))
+
+
+def all_reference_sections(skill_dir: Path, refs: list[Path]) -> list[dict[str, Any]]:
+    sections: list[dict[str, Any]] = []
+    for ref in refs:
+        sections.extend(
+            reference_section_stats(
+                ref.relative_to(skill_dir).as_posix(),
+                read(ref),
+            )
+        )
+    return sorted(sections, key=lambda item: (-item["lines"], item["path"], item["start_line"]))
+
+
+def reference_searchability_score(
+    reference_count: int,
+    reference_lines: int,
+    reference_stats: list[dict[str, Any]],
+    section_stats: list[dict[str, Any]],
+) -> int:
+    if reference_count == 0:
+        return 0
+    large_refs = [
+        item
+        for item in reference_stats
+        if item["lines"] >= REFERENCE_FILE_SOFT_LIMIT
+        or item["level_2_sections"] > 8
+    ]
+    score = 0
+    score += score_ratio(
+        sum(1 for item in reference_stats if item["has_progressive_headers"]),
+        min(reference_count, 8),
+        22,
+    )
+    score += score_ratio(
+        sum(1 for item in large_refs if item["has_task_index"]),
+        len(large_refs) or 1,
+        28,
+    )
+    largest_file = reference_stats[0]["lines"] if reference_stats else 0
+    largest_section = section_stats[0]["lines"] if section_stats else 0
+    if largest_file <= REFERENCE_FILE_SOFT_LIMIT:
+        score += 18
+    elif largest_file <= REFERENCE_FILE_HARD_LIMIT:
+        score += 10
+    if largest_section <= REFERENCE_SECTION_SOFT_LIMIT:
+        score += 18
+    elif largest_section <= REFERENCE_SECTION_HARD_LIMIT:
+        score += 8
+    average_lines = reference_lines / reference_count
+    if average_lines <= 220:
+        score += 14
+    elif average_lines <= 300:
+        score += 8
+    elif average_lines <= 400:
+        score += 4
+    return min(score, 100)
+
+
+def score_references(
+    skill_name: str,
+    reference_count: int,
+    reference_lines: int,
+    reference_headers: int,
+    reference_stats: list[dict[str, Any]],
+    section_stats: list[dict[str, Any]],
+    searchability_score: int,
+) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 70
     score += score_ratio(reference_count, 10, 18)
@@ -143,9 +280,66 @@ def score_references(reference_count: int, reference_lines: int, reference_heade
     if reference_lines > 8000:
         score -= 8
         warnings.append("reference set is large; keep indexes sharp")
-    elif reference_lines > 5000:
+    elif reference_lines > 5000 and searchability_score < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE:
         score -= 4
         warnings.append("reference set is sizable; monitor searchability")
+    over_soft = [
+        item
+        for item in reference_stats
+        if item["lines"] > REFERENCE_FILE_SOFT_LIMIT
+    ]
+    over_hard = [
+        item
+        for item in reference_stats
+        if item["lines"] > REFERENCE_FILE_HARD_LIMIT
+    ]
+    if over_hard:
+        score -= 10
+        names = ", ".join(f"{item['path']}={item['lines']}" for item in over_hard)
+        warnings.append(f"reference hard budget exceeded: {names}")
+    elif over_soft:
+        names = ", ".join(f"{item['path']}={item['lines']}" for item in over_soft[:3])
+        warnings.append(
+            "reference soft budget exceeded; inspect split triggers, "
+            f"does not force mechanical splitting: {names}"
+        )
+    oversized_sections = [
+        item
+        for item in section_stats
+        if item["lines"] > REFERENCE_SECTION_SOFT_LIMIT
+    ]
+    hard_oversized_sections = [
+        item
+        for item in section_stats
+        if item["lines"] > REFERENCE_SECTION_HARD_LIMIT
+    ]
+    if hard_oversized_sections:
+        score -= 6
+        names = ", ".join(
+            f"{item['path']}#{item['title']}={item['lines']}"
+            for item in hard_oversized_sections[:3]
+        )
+        warnings.append(f"reference section hard budget exceeded: {names}")
+    elif oversized_sections:
+        names = ", ".join(
+            f"{item['path']}#{item['title']}={item['lines']}"
+            for item in oversized_sections[:3]
+        )
+        warnings.append(
+            "reference section soft budget exceeded; inspect whether one topic should split: "
+            f"{names}"
+        )
+    if (
+        skill_name == "senior-software-architect"
+        and reference_lines > SENIOR_REFERENCE_TOTAL_SOFT_LIMIT
+        and searchability_score < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE
+    ):
+        warnings.append(
+            "senior reference total exceeds soft budget; monitor large_reference_files"
+        )
+        if reference_lines > SENIOR_REFERENCE_TOTAL_HARD_LIMIT:
+            score -= 8
+            warnings.append("senior reference total exceeds hard budget")
     return max(min(score, 100), 0), warnings
 
 
@@ -192,15 +386,20 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
     text = read(skill_md)
     frontmatter, _ = extract_frontmatter(text)
     refs = files_under(skill_dir, "references", "*.md")
+    reference_stats = relative_reference_stats(skill_dir, refs)
+    section_stats = all_reference_sections(skill_dir, refs)
     scripts = files_under(skill_dir, "scripts")
     fixtures = files_under(skill_dir, "fixtures")
     ref_links = direct_reference_links(text)
     missing_refs = [ref for ref in ref_links if not (skill_dir / ref).exists()]
-    reference_headers = 0
-    for ref in refs:
-        ref_text = read(ref)
-        if all(term in ref_text for term in PROGRESSIVE_HEADER_TERMS):
-            reference_headers += 1
+    reference_headers = sum(1 for item in reference_stats if item["has_progressive_headers"])
+    reference_task_indexes = sum(1 for item in reference_stats if item["has_task_index"])
+    reference_searchability = reference_searchability_score(
+        len(refs),
+        sum(item["lines"] for item in reference_stats),
+        reference_stats,
+        section_stats,
+    )
     script_text = "\n".join(read(script) for script in scripts if script.suffix in {".py", ".sh"})
     has_self_test_signal = "--self-test" in script_text or f"{skill_dir.name}/scripts" in validate_text
 
@@ -214,9 +413,13 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         missing_refs,
     )
     reference_score, reference_warnings = score_references(
+        skill_dir.name,
         len(refs),
-        sum(line_count(read(ref)) for ref in refs),
+        sum(item["lines"] for item in reference_stats),
         reference_headers,
+        reference_stats,
+        section_stats,
+        reference_searchability,
     )
     deterministic_score, deterministic_warnings = score_deterministic(
         len(scripts),
@@ -244,8 +447,45 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         "skill_lines": line_count(text),
         "direct_reference_links": len(ref_links),
         "reference_files": len(refs),
-        "reference_lines": sum(line_count(read(ref)) for ref in refs),
+        "reference_lines": sum(item["lines"] for item in reference_stats),
         "reference_files_with_progressive_headers": reference_headers,
+        "reference_files_with_task_indexes": reference_task_indexes,
+        "reference_searchability_score": reference_searchability,
+        "largest_reference_lines": reference_stats[0]["lines"] if reference_stats else 0,
+        "large_reference_files": reference_stats[:TOP_LARGE_REFERENCE_COUNT],
+        "largest_reference_section_lines": section_stats[0]["lines"] if section_stats else 0,
+        "large_reference_sections": section_stats[:TOP_LARGE_SECTION_COUNT],
+        "reference_files_over_soft_limit": [
+            item
+            for item in reference_stats
+            if item["lines"] > REFERENCE_FILE_SOFT_LIMIT
+        ],
+        "reference_files_over_hard_limit": [
+            item
+            for item in reference_stats
+            if item["lines"] > REFERENCE_FILE_HARD_LIMIT
+        ],
+        "reference_sections_over_soft_limit": [
+            item
+            for item in section_stats
+            if item["lines"] > REFERENCE_SECTION_SOFT_LIMIT
+        ],
+        "reference_sections_over_hard_limit": [
+            item
+            for item in section_stats
+            if item["lines"] > REFERENCE_SECTION_HARD_LIMIT
+        ],
+        "reference_budget": {
+            "file_soft_limit": REFERENCE_FILE_SOFT_LIMIT,
+            "file_hard_limit": REFERENCE_FILE_HARD_LIMIT,
+            "section_soft_limit": REFERENCE_SECTION_SOFT_LIMIT,
+            "section_hard_limit": REFERENCE_SECTION_HARD_LIMIT,
+            "senior_total_soft_limit": SENIOR_REFERENCE_TOTAL_SOFT_LIMIT,
+            "senior_total_hard_limit": SENIOR_REFERENCE_TOTAL_HARD_LIMIT,
+            "controlled_searchability_score": CONTROLLED_REFERENCE_SEARCHABILITY_SCORE,
+            "split_triggers": REFERENCE_SPLIT_TRIGGERS,
+            "note": "Soft budget triggers review only and does not force mechanical splitting.",
+        },
         "script_files": len(scripts),
         "fixture_files": len(fixtures),
         "openai_yaml": (skill_dir / "agents" / "openai.yaml").exists(),
@@ -325,6 +565,28 @@ def run_self_test() -> None:
             raise SystemExit(f"{item['name']}: missing reference links")
         if metrics["skill_lines"] > 500:
             raise SystemExit(f"{item['name']}: SKILL.md too large")
+        if metrics["reference_files_over_hard_limit"]:
+            names = ", ".join(
+                f"{ref['path']}={ref['lines']}"
+                for ref in metrics["reference_files_over_hard_limit"]
+            )
+            raise SystemExit(f"{item['name']}: reference file too large: {names}")
+        if (
+            item["name"] == "senior-software-architect"
+            and metrics["reference_lines"] > SENIOR_REFERENCE_TOTAL_HARD_LIMIT
+        ):
+            raise SystemExit(
+                f"{item['name']}: reference total too large: {metrics['reference_lines']}"
+            )
+        if (
+            item["name"] == "senior-software-architect"
+            and metrics["reference_lines"] > SENIOR_REFERENCE_TOTAL_SOFT_LIMIT
+            and metrics["reference_searchability_score"] < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE
+        ):
+            raise SystemExit(
+                f"{item['name']}: reference searchability too low: "
+                f"{metrics['reference_searchability_score']}"
+            )
     print("OK skill evaluation self-test")
 
 
