@@ -20,7 +20,9 @@ SKILL_MD = ROOT / "product-architecture-expert" / "SKILL.md"
 PAYMENT_ROUTING = ROOT / "product-architecture-expert" / "references" / "payment-scenario-routing.md"
 
 RULE_TERMS = [
-    "Playwright 或等价浏览器自动化读取到标题、作者、发布时间和正文",
+    "Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文",
+    "公开 HTML 中可读取到标题、作者、发布时间和正文",
+    "Playwright 尝试状态、公开 HTML 读取状态和读取日期",
     "未读取到正文、页面删除、只剩验证页或正文为空",
     "不得作为已吸收来源",
     "不代表原文逐字表述",
@@ -68,6 +70,10 @@ def source_bullets(text: str) -> list[tuple[int, str]]:
 
 def urls(line: str) -> list[str]:
     return re.findall(r"`(https?://[^`]+)`", line)
+
+
+def has_date(text: str) -> bool:
+    return bool(re.search(r"20\d{2}-\d{2}-\d{2}", text))
 
 
 def audit_text(
@@ -123,6 +129,15 @@ def audit_text(
                 failures.append(
                     f"{source_label}:{lineno}: WeChat article must state readable reference or Playwright audit status"
                 )
+            has_html_fallback_status = "公开 HTML" in bullet and has_supported_status
+            if has_html_fallback_status:
+                for required in ["Playwright", "标题、作者、发布时间和正文"]:
+                    if required not in bullet:
+                        failures.append(
+                            f"{source_label}:{lineno}: HTML fallback source missing trace term: {required}"
+                        )
+                if not has_date(bullet):
+                    failures.append(f"{source_label}:{lineno}: HTML fallback source must record read date")
 
         is_unverifiable = any(
             term in bullet
@@ -143,7 +158,7 @@ def audit_text(
                     failures.append(
                         f"{source_label}:{lineno}: unverifiable source missing downgrade term: {required}"
                     )
-            if not re.search(r"20\d{2}-\d{2}-\d{2}", bullet):
+            if not has_date(bullet):
                 failures.append(f"{source_label}:{lineno}: unverifiable source must record audit date")
 
     for url, required_terms in KNOWN_UNVERIFIABLE_URLS.items():
@@ -184,11 +199,17 @@ ORDINARY_DEMO_URL = "https://" + "example.com/source-map-demo"
 READABLE_BULLET = (
     f"- 微信公众号文章《已读取文章》：`{READABLE_DEMO_URL}`。公开内容用于参考支付账本观。"
 )
+HTML_FALLBACK_DEMO_URL = "https://" + "mp.weixin.qq.com/s/html-fallback-demo"
+HTML_FALLBACK_BULLET = (
+    f"- 微信公众号文章《HTML 可读取文章》：`{HTML_FALLBACK_DEMO_URL}`。"
+    "2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；"
+    "随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考复杂度治理。"
+)
 VALID_FIXTURE = f"""# 公开资料来源与支付专项提炼边界
 
 ## 读取与归因规则
 
-- 微信文章等动态页面必须先通过 Playwright 或等价浏览器自动化读取到标题、作者、发布时间和正文，才能写成“公开内容用于参考”。
+- 微信文章等动态页面必须先通过 Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文；如果 Playwright 当前通道失败，但公开 HTML 中可读取到标题、作者、发布时间和正文，也可以写成“公开内容用于参考”，但条目必须同时记录 Playwright 尝试状态、公开 HTML 读取状态和读取日期。
 - 未读取到正文、页面删除、只剩验证页或正文为空的条目，只能标为“当前不可复核”或“历史索引线索”，不得作为已吸收来源。
 - 条目中的英文术语、分层名称和能力边界可能是 Skill 为统一输出做的标准化表达，不代表原文逐字表述；需要引用作者原话时必须重新读取正文并核对。
 - 从文章吸收的内容只作为产品架构问题、检查项、路由和边界，不作为监管、合同、卡组织规则、财务准则或上线结论。
@@ -196,6 +217,7 @@ VALID_FIXTURE = f"""# 公开资料来源与支付专项提炼边界
 ## 已参考的公开来源
 
 {READABLE_BULLET}
+{HTML_FALLBACK_BULLET}
 {KNOWN_GOOD_BULLET}
 - 普通公开来源：`{ORDINARY_DEMO_URL}`。公开资料用于主题发现。
 
@@ -276,6 +298,38 @@ def run_self_test() -> list[str]:
                 READABLE_BULLET.replace("公开内容用于参考支付账本观", "用于支付账本观"),
             ),
             "WeChat article must state readable reference or Playwright audit status",
+        ),
+        (
+            "html-fallback-missing-playwright-trace",
+            VALID_FIXTURE.replace(
+                HTML_FALLBACK_BULLET,
+                HTML_FALLBACK_BULLET.replace("已尝试 Playwright，", ""),
+            ),
+            "HTML fallback source missing trace term: Playwright",
+        ),
+        (
+            "html-fallback-missing-date",
+            VALID_FIXTURE.replace(
+                HTML_FALLBACK_BULLET,
+                HTML_FALLBACK_BULLET.replace("2026-05-26 ", ""),
+            ),
+            "HTML fallback source must record read date",
+        ),
+        (
+            "html-fallback-missing-fields",
+            VALID_FIXTURE.replace(
+                HTML_FALLBACK_BULLET,
+                HTML_FALLBACK_BULLET.replace("标题、作者、发布时间和正文", "正文"),
+            ),
+            "HTML fallback source missing trace term: 标题、作者、发布时间和正文",
+        ),
+        (
+            "html-fallback-rule-wording-detected",
+            VALID_FIXTURE.replace(
+                HTML_FALLBACK_BULLET,
+                HTML_FALLBACK_BULLET.replace("通过公开 HTML 读取到", "公开 HTML 中可读取到"),
+            ).replace("2026-05-26 ", "", 1),
+            "HTML fallback source must record read date",
         ),
     ]
 

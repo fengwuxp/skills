@@ -274,6 +274,17 @@ check(
     ),
 )
 check(
+    "senior skill anchors AI-era constraint first",
+    has_all(
+        senior_skill,
+        [
+            "约束优先",
+            "代码生成越便宜",
+            "前置约束控制复杂度和注意力成本",
+        ],
+    ),
+)
+check(
     "senior metadata triggers diagram output",
     all(
         term in frontmatter(senior_skill)
@@ -315,6 +326,17 @@ check(
             "用最少稳定对象、流程、规则和验收口径统摄复杂业务",
             "复杂知识下沉到 references",
             "可重复、可审计动作交给 scripts",
+        ],
+    ),
+)
+check(
+    "product skill guards low cost feature noise",
+    has_all(
+        product_skill,
+        [
+            "AI 生成和低成本原型场景",
+            "避免无效功能噪声",
+            "先控噪声再扩展",
         ],
     ),
 )
@@ -440,6 +462,9 @@ check(
             "does not access the",
             "network",
             "KNOWN_UNVERIFIABLE_URLS",
+            "公开 HTML 中可读取到标题、作者、发布时间和正文",
+            "HTML fallback source missing trace term",
+            "HTML fallback source must record read date",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
             "2026-05-26 Playwright 核验结果为页面已被发布者删除",
             "正文不可复核",
@@ -452,6 +477,10 @@ check(
             "stale-deleted-clearing-attribution",
             "duplicate-url",
             "wechat-missing-readable-or-audit-status",
+            "html-fallback-missing-playwright-trace",
+            "html-fallback-missing-date",
+            "html-fallback-missing-fields",
+            "html-fallback-rule-wording-detected",
             "OK source map audit",
             "OK source map self-test",
         ],
@@ -942,8 +971,31 @@ check(
     ),
 )
 check(
+    "AI engineering guards generation complexity",
+    has_all(
+        ai_engineering,
+        [
+            "代码生成降低的是执行成本，不降低系统复杂度",
+            "不要写什么、必须删什么、何时停止",
+            "复杂度与注意力成本",
+        ],
+    ),
+)
+check(
     "workflow requires diff traceability to goals",
     contains(workflow, "每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景"),
+)
+check(
+    "senior architecture keeps AI-era complexity control",
+    has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "代码生成和 AI 协作场景",
+            "定义问题、控制复杂度、分配团队注意力",
+            "低成本代码变成高成本理解和维护",
+            "是否因为实现成本低而引入了无效尝试",
+        ],
+    ),
 )
 check(
     "senior ADR reference keeps multi-frame exploration gate",
@@ -1288,6 +1340,43 @@ check(
             "在什么条件下会失效",
             "不要为了显得完整制造伪多样性",
             "形成可评审交付物",
+        ],
+    ),
+)
+check(
+    "product methodology keeps low cost generation constraints",
+    has_all(
+        product_architecture,
+        [
+            "低成本生成场景的约束",
+            "每个功能、页面、实验或自动生成方案必须回到目标、假设、非目标、成功指标和停止条件",
+            "是否存在更低成本、注意力消耗更小的验证方式",
+        ],
+    ),
+)
+check(
+    "product source map records AI complexity article reference",
+    has_all(
+        product_source_map,
+        [
+            "代码不再稀缺，稀缺的是你如何对抗复杂度",
+            "https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA",
+            "实现成本下降、复杂度/注意力成本上升",
+        ],
+    ),
+)
+check(
+    "product source map keeps topic index",
+    has_all(
+        product_source_map,
+        [
+            "## 来源主题索引",
+            "支付系统与支付账本",
+            "卡组织、发卡与 VCC",
+            "全球支付与基础设施",
+            "收单、争议与风险运营",
+            "AI / Skill / 通用复杂度",
+            "官方规则与监管",
         ],
     ),
 )

@@ -32,14 +32,14 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 核对外部文章是否可吸收 | `读取与归因规则`、`本地证据归档规则` | 不读取整份来源清单 |
-| 查找已参考来源和用途 | `已参考的公开来源` 中对应 URL 或主题条目 | 不把条目描述当成原文逐字引用 |
+| 查找已参考来源和用途 | 先看 `来源主题索引`，再到 `已参考的公开来源` 中按 URL 或主题条目定位 | 不把条目描述当成原文逐字引用 |
 | 新增来源或修正来源状态 | `读取与归因规则`、`本地证据归档规则`、`提炼边界` | 不把未抓取正文的文章标为公开内容用于参考 |
 | 判断支付专项提炼边界 | `提炼边界`，必要时回到 `payment-scenario-routing.md` | 不把厂商文档、文章观点或第三方索引写成行业标准 |
 | 需要最新规则或准确引用 | `读取与归因规则`、`提炼边界`，然后重新联网核验官方来源 | 不依赖历史索引直接给确定性结论 |
 
 ## 读取与归因规则
 
-- 微信文章等动态页面必须先通过 Playwright 或等价浏览器自动化读取到标题、作者、发布时间和正文，才能写成“公开内容用于参考”。
+- 微信文章等动态页面必须先通过 Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文；如果 Playwright 当前通道失败，但公开 HTML 中可读取到标题、作者、发布时间和正文，也可以写成“公开内容用于参考”，但条目必须同时记录 Playwright 尝试状态、公开 HTML 读取状态和读取日期。
 - 未读取到正文、页面删除、只剩验证页或正文为空的条目，只能标为“当前不可复核”或“历史索引线索”，不得作为已吸收来源。
 - 条目中的英文术语、分层名称和能力边界可能是 Skill 为统一输出做的标准化表达，不代表原文逐字表述；需要引用作者原话时必须重新读取正文并核对。
 - 从文章吸收的内容只作为产品架构问题、检查项、路由和边界，不作为监管、合同、卡组织规则、财务准则或上线结论。
@@ -50,6 +50,15 @@
 - 本文件只记录公开索引、读取状态、提炼边界、`archive_id`、`evidence_sha256` 和读取日期等轻量 metadata；不得写入文章全文、原图、截图包、MHTML、PDF、付费内容或大段摘录。
 - `archive_id` 只能作为本机私有证据定位符，不代表公开来源仍可访问；需要引用或复核时仍要优先重新读取公开页面或官方来源。
 - 删除、验证页、空正文或无法复核的条目，即使存在本地归档，也不得写成“公开内容用于参考”，只能说明归档证据来源、读取日期、当前复核状态和剩余风险。
+
+## 来源主题索引
+
+- 支付系统与支付账本：检索“支付系统”“账本”“清算/结算”“对账”“账务核心”。
+- 卡组织、发卡与 VCC：检索“Mastercard”“Visa”“Issuing”“VCC”“虚拟卡”“授权”“Clearing”。
+- 全球支付与基础设施：检索“Airwallex”“全球支付”“跨境”“Payouts”“Global Accounts”“embedded finance”。
+- 收单、争议与风险运营：检索“外卡收单”“收单风控”“争议”“Chargeback”“Fraud”。
+- AI / Skill / 通用复杂度：检索“Agent Skills”“代码不再稀缺”“复杂度”“低成本生成”。
+- 官方规则与监管：检索“Nacha”“Visa Core Rules”“Mastercard Rules”“监管来源”，并继续回到 `regulatory-baseline.md` 核验。
 
 ## 已参考的公开来源
 
@@ -97,6 +106,7 @@
 - Airwallex Payments Docs：`https://www.airwallex.com/docs/payments/overview`。公开文档用于参考在线收单、一次性/周期性付款、多本地支付方式、支付状态、webhook、退款/取消、欺诈、争议、settlement report、activity export、fee / FX / rounding 和 go-live checklist 的产品闭环；不照搬支付方式列表、状态枚举、错误码或 API 字段。
 - Airwallex Payouts Docs：`https://www.airwallex.com/docs/payouts/overview`。公开文档用于参考全球付款的 transfer、beneficiary、payer、batch transfer、approval、failure reason、confirmation letter、regulatory requirement、beneficiary schema、tax reporting 和 status simulation 的对象化设计；不把国家字段、银行清单或税务要求写成通用规则。
 - Airwallex Issuing Docs：`https://www.airwallex.com/docs/issuing/overview`。公开文档用于参考发卡、VCC、cardholder、card、issuing balance、card control、remote authorization、3DS、transaction lifecycle、dispute、overcapture、fraud feedback 和 transaction simulation 的产品设计模式；不替代发卡资质、卡组织规则、PCI DSS、银行协议或最新安全要求。
+- 微信公众号文章《代码不再稀缺，稀缺的是你如何对抗复杂度》：`https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA`。2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考 AI 代码生成时代实现成本下降、复杂度/注意力成本上升、系统设计、前置约束和问题定义能力的重要性；只吸收问题框架和能力定位，不复制原文或作者表达。
 - 微信公众号文章《清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484523&idx=1&sn=bab6c18e89728feaf921bccbc5cb88d3`。公开内容用于参考外卡/跨境收单清算文件延迟排查，覆盖交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject、批次 ID、三段链路归因和资金链路事故升级信号。
 - 微信公众号文章《外卡收单钱收到了，战争才刚开始》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484517&idx=1&sn=a171eb833dc25e6e83be75c407ad69ff`。公开内容用于参考外卡收单争议治理，覆盖 Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration 链路、卡争议与非卡争议分轨、争议率/CB 率红线、止血/组证/representment 决策和反馈回流；Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准。
 - 微信公众号文章《Agent Skills 实战：把 PRD 需求文档写成 Skill》：`https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ`。公开内容用于参考 PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式、必填章节检查、用户故事/验收标准可验证性和 scripts/reference 分层；不复制原文模板或另建重复 PRD Skill。
