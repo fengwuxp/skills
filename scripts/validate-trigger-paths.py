@@ -99,6 +99,7 @@ language_agnostic = "senior-software-architect/references/language-agnostic-arch
 security = "senior-software-architect/references/security-architecture.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
 reference_index_audit = "scripts/audit-reference-indexes.py"
+source_archive = "scripts/archive-source-evidence.py"
 source_map_audit = "scripts/audit-source-map.py"
 skillx_export_spec = "references/skillx-to-codex-skill-package.md"
 skillx_export_adapter = "scripts/skillx_export_adapter.py"
@@ -405,6 +406,42 @@ check(
     ),
 )
 check(
+    "source evidence archive stays private and offline",
+    has_all(
+        source_archive,
+        [
+            "Archive externally read source evidence outside this repository",
+            "intentionally offline",
+            "never fetches URLs",
+            "uploads files",
+            "reads secrets",
+            "modifies repository content",
+            "SKILL_SOURCE_ARCHIVE_HOME",
+            "~/.skill-source-archive/",
+            "raw evidence must not be stored inside this repository",
+            "archive home must be outside this repository",
+            "repo stores only source metadata; raw evidence stays outside git",
+            "evidence_sha256",
+            "--self-test",
+            "OK source evidence archive self-test",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "python3 -m py_compile scripts/archive-source-evidence.py",
+            "==> source evidence archive",
+            "scripts/archive-source-evidence.py --self-test",
+        ],
+    )
+    and has_all(
+        "scripts/audit-skills.sh",
+        [
+            "scripts/archive-source-evidence\\.py:.*shutil\\.copy2",
+        ],
+    ),
+)
+check(
     "senior diagram reference keeps delivery and safety boundaries",
     has_all(
         senior_diagram,
@@ -658,6 +695,21 @@ check(
             "常规抓取、网页搜索或 `curl` 无法取得正文",
             "必须改用 Playwright 或等价浏览器自动化加载页面",
             "不得把未读取到正文的文章写成已吸收结论",
+        ],
+    ),
+)
+check(
+    "AGENTS defines private source evidence archive boundary",
+    has_all(
+        agents_rules,
+        [
+            "## 外部文章本地证据归档约规",
+            "本仓库只保存公开索引、读取日期、读取状态、结构化提炼、核验边界、`archive_id` 和 `evidence_sha256` 等轻量 metadata",
+            "不得提交文章全文、原图、截图包、MHTML、PDF、付费内容或大段摘录",
+            "默认 `~/.skill-source-archive/`",
+            "SKILL_SOURCE_ARCHIVE_HOME",
+            "归档脚本只处理已经通过浏览器、Playwright 或人工方式取得的本地证据文件",
+            "不默认联网、不上传、不读取密钥、不扫描用户私有目录",
         ],
     ),
 )
@@ -1764,6 +1816,12 @@ check(
         product_source_map,
         [
             "## 读取与归因规则",
+            "## 本地证据归档规则",
+            "默认 `~/.skill-source-archive/`",
+            "SKILL_SOURCE_ARCHIVE_HOME",
+            "`archive_id`",
+            "`evidence_sha256`",
+            "不得写入文章全文、原图、截图包、MHTML、PDF、付费内容或大段摘录",
             "未读取到正文、页面删除、只剩验证页或正文为空的条目",
             "不得作为已吸收来源",
             "不代表原文逐字表述",

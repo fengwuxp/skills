@@ -49,7 +49,7 @@ check_script_patterns() {
 
   local output
   output="$(grep -EIn "${pattern}" "${files[@]}" || true)"
-  output="$(echo "${output}" | grep -Ev 'scripts/audit-skills\.sh:|scripts/validate\.sh:.*rm -rf "\$\{tmp_dir\}"|sync-skills\.sh:.*rsync|java-service-code-generator/scripts/verify_fixtures\.py:.*subprocess|java-service-code-generator/scripts/verify_fixtures\.py:.*shutil|java-service-code-generator/scripts/verify_fixtures\.py:.*rmtree\(base_tmp\)' || true)"
+  output="$(echo "${output}" | grep -Ev 'scripts/audit-skills\.sh:|scripts/validate\.sh:.*rm -rf "\$\{tmp_dir\}"|sync-skills\.sh:.*rsync|scripts/archive-source-evidence\.py:.*shutil\.copy2|java-service-code-generator/scripts/verify_fixtures\.py:.*subprocess|java-service-code-generator/scripts/verify_fixtures\.py:.*shutil|java-service-code-generator/scripts/verify_fixtures\.py:.*rmtree\(base_tmp\)' || true)"
 
   if [[ -n "${output}" ]]; then
     warn "review high-risk script patterns:"

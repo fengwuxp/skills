@@ -63,6 +63,7 @@ python3 -m py_compile product-architecture-expert/scripts/check_external_rules.p
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile scripts/audit-reference-indexes.py
+python3 -m py_compile scripts/archive-source-evidence.py
 python3 -m py_compile scripts/audit-source-map.py
 python3 -m py_compile scripts/skillx_export_adapter.py
 python3 -m py_compile scripts/validate-trigger-paths.py
@@ -85,6 +86,9 @@ scripts/audit-reference-indexes.py
 echo "==> source map audit"
 scripts/audit-source-map.py
 scripts/audit-source-map.py --self-test
+
+echo "==> source evidence archive"
+scripts/archive-source-evidence.py --self-test
 
 echo "==> SkillX export adapter"
 python3 scripts/skillx_export_adapter.py --self-test
