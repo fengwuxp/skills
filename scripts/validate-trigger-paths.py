@@ -166,8 +166,8 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = ["产品", "PRD", "模板", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵"]
+product_terms = ["产品", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
+product_general_route_terms = ["SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求"]
 payment_terms = [
     "清结算",
     "对账",
@@ -344,12 +344,12 @@ check(
     "product metadata triggers diagram output",
     all(
         term in frontmatter(product_skill)
-        for term in ["PRD", "需求说明", "产品架构图", "业务流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图", "外卡收单", "Mastercard", "合规待确认", "工程实现"]
+        for term in ["PRD", "需求说明", "原型/HTML/页面截图/交互稿反推 PRD", "产品架构图", "业务流程图", "状态机", "默认产出 SVG", "Mermaid/Markdown 草图", "外卡收单", "Mastercard", "合规待确认", "工程实现"]
     ),
 )
 check(
     "product openai yaml mentions visual output",
-    has_all(product_agent, ["能力流程状态图", "默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图", "待确认项"]),
+    has_all(product_agent, ["原型反推", "页面截图", "交互稿", "能力流程状态图", "默认输出 SVG", "Mermaid/Markdown 草图", "PNG/PDF/截图", "待确认项"]),
 )
 check(
     "product openai yaml mentions acquiring specialty",
@@ -649,14 +649,30 @@ check(
         "README.md",
         [
             "## 用户使用指南",
+            "### 先选哪个 Skill",
             "[资深架构师](./senior-software-architect)",
             "[产品架构专家](./product-architecture-expert)",
             "[java-service-code-generator](./java-service-code-generator)",
+            "原型/HTML/页面截图/交互稿反推 PRD",
             "默认产出 SVG",
+            "调用 `$fireworks-tech-graph` 续作",
+            "## 5 分钟上手",
             "sync-skills.sh --dry-run all",
             "./scripts/validate.sh",
             "先定业务和验收",
+            "根据页面截图反推可评审 PRD",
+            "错误截图、日志截图、测试失败截图",
             "先输出到 /tmp/order-scaffold 评审目录",
+            "### 常用组合路线",
+            "从想法到工程",
+            "从原型到 PRD",
+            "从普通图到复杂图",
+            "### 提示词公式",
+            "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
+            "### 常见误用",
+            "不要让 `java-service-code-generator` 从纯自然语言直接生成生产代码",
+            "不要把产品专家对支付、资金、卡组织或监管的输出当作最终合规结论",
+            "## 维护者与高级扩展",
         ],
     ),
 )
@@ -719,7 +735,7 @@ check(
     has_all(
         "README.md",
         [
-            "## SkillX 导出规范",
+            "### SkillX 导出规范",
             "SkillX 到 Codex Skill Package 导出规范",
             "输入契约、安全门禁、三层映射、生成流程和验证流程",
             "不自动读取历史轨迹、不采集用户数据、不引入外部训练流水线",
@@ -1343,6 +1359,20 @@ check(
     ),
 )
 check(
+    "product route supports prototype to PRD",
+    has_all(
+        product_routing,
+        [
+            "原型/HTML/页面截图/交互稿反推 PRD",
+            "原型、HTML、页面截图、页面说明或交互稿",
+            "错误截图、日志截图或测试失败截图",
+            "优先使用 `资深架构师`",
+            "先反推角色、对象、流程、规则、状态和验收",
+            "不要只描述页面控件",
+        ],
+    ),
+)
+check(
     "product architecture methodology keeps multi-frame exploration gate",
     has_all(
         product_architecture,
@@ -1413,6 +1443,11 @@ check(
             "## 0.2 PRD 生成、补全与符合性评审模式",
             "生成、补全还是评审",
             "符合项 / 必改 / 建议 / 可选",
+            "## 0.3 PRD 连环追问与原型反推",
+            "PRD 是产品思考结构，不只是文档模板",
+            "问题 ID、待确认问题、影响章节、风险等级、建议选项、未确认前处理",
+            "原型、HTML、页面截图、交互稿或页面说明",
+            "错误截图、日志截图、测试失败截图不是本节的输入材料",
             "用户故事是否包含角色、能力和价值",
             "成功指标是否可衡量",
             "验收标准是否能回到需求 ID",
@@ -2294,6 +2329,9 @@ check(
             "https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ",
             "PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式",
             "不复制原文模板或另建重复 PRD Skill",
+            "https://mp.weixin.qq.com/s/qRv1Qe3GjQ_jbQqWGQcHfQ",
+            "PRD 作为产品思考结构、模糊需求连续追问、原型/HTML/页面截图/交互稿反推 PRD",
+            "不复制原文模板、安装说明、外部 Skill 结构或效率营销表述",
         ],
     ),
 )
@@ -2609,6 +2647,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
     ),
     RouteFixture(
+        name="prototype to PRD",
+        prompt="我有一份运营后台页面截图和交互稿，帮我反推成可评审 PRD，并列出待确认问题",
+        routes={"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
         name="payment product",
         prompt="设计商户清结算和对账产品方案，注意外部规则和合规",
         routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
@@ -2685,6 +2728,11 @@ negative_route_fixtures: list[RouteFixture] = [
         name="codegen on java service review or tests",
         prompt="对这个 Java 类的 Service 做一次 CR 并补测试，重点看契约和空值",
         routes=codegen_route,
+    ),
+    RouteFixture(
+        name="product on bug screenshot",
+        prompt="这张错误截图显示 NullPointerException，帮我定位根因并补回归测试",
+        routes={"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
     ),
 ]
 

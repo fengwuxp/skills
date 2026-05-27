@@ -1,9 +1,113 @@
-
 # Skills
 
 本仓库用于维护可安装到 Codex 的 Skills。它不是轻量 prompt 集，而是一套可长期演进的 Agent 运行时资产库。
 
 仓库采用分层治理：`AGENTS.md` 保存每个会话都应知道的默认规则和安全边界；各技能的 `SKILL.md` 保存特定任务的入口、路由和红线；详细知识、模板和方法论放在对应技能的 `references/` 中；确定性生成、验证、同步和安全检查放在 `scripts/` 中；使用者长期学习数据只保存在用户目录 `~/.skill-learning/` 或 `SKILL_LEARNING_HOME`，不进入仓库。
+
+## 用户使用指南
+
+安装或同步后，Codex 会根据每个 `SKILL.md` 的 `name` 和 `description` 自动判断是否触发对应技能。使用者也可以在提示中直接点名，例如“用产品架构专家……”“用资深架构师……”“用 java-service-code-generator……”。同步后如果触发不符合预期，先重启 Codex 或开启新会话。
+
+### 先选哪个 Skill
+
+[产品架构专家](./product-architecture-expert)
+
+- 适合：PRD、产品方案、需求说明、原型/HTML/页面截图/交互稿反推 PRD、能力地图、业务流程、状态机、规则矩阵、运营后台、数据指标、验收标准和产品架构图。支付与资金是重点能力，覆盖账户/账本、清结算、对账、外卡收单、ACH、VCC、争议和跨境支付。
+- 不适合：不替代法务、合规、财务、税务、持牌机构或卡组织规则确认；不负责工程实现、代码 Review 和生产排障。
+- 常用说法：“用产品架构专家写一版 PRD”“根据页面截图反推可评审 PRD”“画一个 VCC 交易流程”“梳理清结算和对账能力地图”“评审这个需求是否可开发可验收”。
+
+[资深架构师](./senior-software-architect)
+
+- 适合：架构设计、系统分析设计、技术方案、ADR、代码 Review、Bug 修复、测试/TDD、生产变更、架构图和工程治理。擅长 Java/Spring/Wind，也能先识别非 Java 项目的本地生态。
+- 不适合：不替代产品专家定义复杂业务语义、PRD 和金融产品规则；不在缺少边界、风险和验收时直接给可上线方案。
+- 常用说法：“用资深架构师做一轮 CR”“评审这个系统设计”“分析这个 Bug 根因并补测试”“画一张服务架构图”。
+
+[java-service-code-generator](./java-service-code-generator)
+
+- 适合：根据 DDL/SQL、Java 类、字段表格或 schema 生成 Wind/Nobe 风格 Java Service 配套代码，包括 Entity、Mapper、DTO、Request、Query、Converter、Service、ServiceImpl 和测试夹具。
+- 不适合：不从纯自然语言直接生成生产代码；不替代架构师、DBA 或业务负责人确认表结构、索引、状态机和金额精度；不默认覆盖已有文件。
+- 常用说法：“根据这段 DDL 生成 Java Service 配套代码”“把这个字段表格转换成脚手架”“先生成到评审目录，不覆盖已有文件”。
+
+### 如何选择
+
+- 先定业务和验收，用 `产品架构专家`；再定工程结构、代码、测试和发布，用 `资深架构师`。
+- 有原型、页面截图、HTML、交互稿或模糊想法，需要反推需求、流程、规则和待确认问题，用 `产品架构专家`。
+- 已有代码、报错、测试失败、工程坏味或生产现象，直接用 `资深架构师`。
+- 已经有明确表结构、字段表格或 Java 类，并且目标是生成配套代码，用 `java-service-code-generator`。
+- 需要图形化交付时，架构师和产品专家都会默认产出 SVG；PNG、PDF、截图、Mermaid 或 Markdown 草图只有在使用者明确提出时才处理。
+- 如果需要更复杂、更好看的技术图、能力图、架构图或风格化图形，先让产品专家或架构师产出图形语义、对象边界和 SVG 初稿；需要继续美化、风格化或复杂图形工程时，可以明确调用 `$fireworks-tech-graph` 续作。
+- 涉及金融、支付、资金、卡组织、ACH、跨境、合规或监管时，先让产品专家标出主体、法域、资金归属、外部规则来源、待确认方和验收边界，再进入工程设计。
+
+### 常用组合路线
+
+- 从想法到工程：`产品架构专家` 先把目标、对象、流程、规则、验收和待确认项定清楚；`资深架构师` 再承接系统设计、代码、测试和发布风险。
+- 从原型到 PRD：`产品架构专家` 根据原型、HTML、页面截图或交互稿反推 PRD，先补角色、对象、状态、规则、数据和验收，不只描述页面控件。
+- 从 PRD 到代码生成：先用 `产品架构专家` 或 `资深架构师` 确认对象、状态、字段、索引和金额精度；已有 DDL、字段表格或 Java 类后，再用 `java-service-code-generator` 生成配套代码。
+- 从普通图到复杂图：先用 `产品架构专家` 或 `资深架构师` 产出语义稳定的 SVG；需要更复杂的布局、风格系统或精细视觉时，再调用 `$fireworks-tech-graph` 续作。
+- 从金融产品到上线方案：`产品架构专家` 先标出主体、法域、资金归属、外部规则和专业确认方；`资深架构师` 再处理系统边界、数据一致性、可靠性、安全和发布回滚。
+
+### 提示词公式
+
+```text
+用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>
+```
+
+示例要点：
+
+- `<Skill 名称>`：产品架构专家、资深架构师、java-service-code-generator，或明确 `$fireworks-tech-graph`。
+- `<任务类型>`：生成 PRD、反推 PRD、系统设计、代码 CR、补测试、生成脚手架、画图、触发验证。
+- `<输入材料>`：需求描述、原型/页面截图/HTML/交互稿、PRD、设计文档、DDL、Java 类、字段表格、报错日志或本地文件路径。
+- `<目标产物>`：PRD、能力地图、架构图、规则矩阵、验收标准、ADR、代码修改、测试、评审报告或脚手架目录。
+- `<边界/风险>`：不要覆盖已有文件、默认只输出 SVG、涉及支付资金需列待确认方、只做 CR 不改代码。
+- `<验证要求>`：运行 `./scripts/validate.sh`、做触发验证、执行 dry-run、检查外部规则来源或说明无法验证的残余风险。
+
+### 推荐提示词
+
+```text
+用产品架构专家梳理 VCC 发卡业务的产品架构，输出能力地图、核心对象、交易流程、资金流、风险和验收标准，默认 SVG 画图。
+```
+
+```text
+用产品架构专家根据这份运营后台页面截图和交互稿反推可评审 PRD，补齐角色、对象、流程、规则、数据指标、验收标准和待确认问题。
+```
+
+```text
+用资深架构师评审这个设计文档，重点看模块边界、数据一致性、可靠性、安全、测试和发布回滚，并给出 P0/P1/P2 问题。
+```
+
+```text
+用 java-service-code-generator 根据 docs/order.sql 生成订单模块配套代码，先输出到 /tmp/order-scaffold 评审目录，不覆盖现有文件。
+```
+
+```text
+这个产品架构图还需要更精致的视觉风格和更复杂的分组关系，继续调用 $fireworks-tech-graph 做 SVG 续作。
+```
+
+```text
+对产品专家和架构师做一轮触发验证，检查哪些提示会触发、哪些不应触发，并说明是否需要调整 description。
+```
+
+```text
+做一轮完整性、可用性和约规 CR；如果无明显问题，再执行 ./scripts/validate.sh。
+```
+
+### 最佳实践
+
+- 提供背景、目标产物、范围边界、已知约束、风险等级和验收标准，比只说“优化一下”更容易得到可评审结果。
+- 明确你要的是“方案”“PRD”“原型反推”“CR”“触发验证”“图”“代码生成”“同步到 Codex”还是“提交变更”；这些词会影响技能路由和验证动作。
+- 对高风险问题保留待确认项。产品专家给产品和金融业务结构，架构师给工程验证和生产风险，外部规则仍要由法务、合规、财务、通道、银行或持牌机构确认。
+- 让技能分层协作。复杂金融产品通常先由产品专家产出对象、流程、规则和验收，再由架构师承接系统设计、代码、测试和发布。
+- 代码生成前先确认输入结构和目标模块。提供 DDL、字段表格、Java 类、业务模块和是否允许覆盖，会显著减少歧义。
+- 修改技能后先运行 `./scripts/validate.sh`；需要安装到 Codex 时先运行 `./sync-skills.sh --dry-run all`，确认目标目录后再正式同步。
+
+### 常见误用
+
+- 不要让 `java-service-code-generator` 从纯自然语言直接生成生产代码；它需要 DDL、字段表格、Java 类或 schema 这类结构化输入。
+- 不要把产品专家对支付、资金、卡组织或监管的输出当作最终合规结论；上线前仍需法务、合规、财务、通道、银行或持牌机构确认。
+- 不要把错误截图、日志截图、测试失败截图交给产品专家定位；如果目标是根因分析、修复或补测试，应使用 `资深架构师`。
+- 不要把“画图”只说成一句话；至少说明图给谁看、要表达什么对象关系、需要哪类视图、是否只要 SVG。
+- 不要在没有明确授权时要求覆盖已有文件、读取私有目录、同步安装目录或提交变更；高影响动作先 dry-run 或 CR。
+- 不要把外部文章、仓库或论文直接搬进 Skill；只能吸收可迁移的方法、边界、检查项和验证方式，并保留来源和安全审查。
 
 ## 5 分钟上手
 
@@ -32,70 +136,7 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh --dry-run all
 CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 ```
 
-## 用户使用指南
-
-安装或同步后，Codex 会根据每个 `SKILL.md` 的 `name` 和 `description` 自动判断是否触发对应技能。使用者也可以在提示中直接点名，例如“用产品架构专家……”“用资深架构师……”“用 java-service-code-generator……”。同步后如果触发不符合预期，先重启 Codex 或开启新会话。
-
-### 技能速览
-
-[资深架构师](./senior-software-architect)
-
-- 适合：架构设计、系统分析设计、技术方案、ADR、代码 Review、Bug 修复、测试/TDD、生产变更、架构图和工程治理。擅长 Java/Spring/Wind，也能先识别非 Java 项目的本地生态。
-- 不适合：不替代产品专家定义复杂业务语义、PRD 和金融产品规则；不在缺少边界、风险和验收时直接给可上线方案。
-- 常用说法：“用资深架构师做一轮 CR”“评审这个系统设计”“分析这个 Bug 根因并补测试”“画一张服务架构图”。
-
-[产品架构专家](./product-architecture-expert)
-
-- 适合：PRD、产品方案、需求说明、能力地图、业务流程、状态机、规则矩阵、运营后台、数据指标、验收标准和产品架构图。支付与资金是重点能力，覆盖账户/账本、清结算、对账、外卡收单、ACH、VCC、争议和跨境支付。
-- 不适合：不替代法务、合规、财务、税务、持牌机构或卡组织规则确认；不负责工程实现、代码 Review 和生产排障。
-- 常用说法：“用产品架构专家写一版 PRD”“画一个 VCC 交易流程”“梳理清结算和对账能力地图”“评审这个需求是否可开发可验收”。
-
-[java-service-code-generator](./java-service-code-generator)
-
-- 适合：根据 DDL/SQL、Java 类、字段表格或 schema 生成 Wind/Nobe 风格 Java Service 配套代码，包括 Entity、Mapper、DTO、Request、Query、Converter、Service、ServiceImpl 和测试夹具。
-- 不适合：不从纯自然语言直接生成生产代码；不替代架构师、DBA 或业务负责人确认表结构、索引、状态机和金额精度；不默认覆盖已有文件。
-- 常用说法：“根据这段 DDL 生成 Java Service 配套代码”“把这个字段表格转换成脚手架”“先生成到评审目录，不覆盖已有文件”。
-
-### 如何选择
-
-- 先定业务和验收，用 `产品架构专家`；再定工程结构、代码、测试和发布，用 `资深架构师`。
-- 已有代码、报错、测试失败、工程坏味或生产现象，直接用 `资深架构师`。
-- 已经有明确表结构、字段表格或 Java 类，并且目标是生成配套代码，用 `java-service-code-generator`。
-- 需要图形化交付时，架构师和产品专家都会默认产出 SVG；PNG、PDF、截图、Mermaid 或 Markdown 草图只有在使用者明确提出时才处理。
-- 涉及金融、支付、资金、卡组织、ACH、跨境、合规或监管时，先让产品专家标出主体、法域、资金归属、外部规则来源、待确认方和验收边界，再进入工程设计。
-
-### 推荐提示词
-
-```text
-用产品架构专家梳理 VCC 发卡业务的产品架构，输出能力地图、核心对象、交易流程、资金流、风险和验收标准，默认 SVG 画图。
-```
-
-```text
-用资深架构师评审这个设计文档，重点看模块边界、数据一致性、可靠性、安全、测试和发布回滚，并给出 P0/P1/P2 问题。
-```
-
-```text
-用 java-service-code-generator 根据 docs/order.sql 生成订单模块配套代码，先输出到 /tmp/order-scaffold 评审目录，不覆盖现有文件。
-```
-
-```text
-对产品专家和架构师做一轮触发验证，检查哪些提示会触发、哪些不应触发，并说明是否需要调整 description。
-```
-
-```text
-做一轮完整性、可用性和约规 CR；如果无明显问题，再执行 ./scripts/validate.sh。
-```
-
-### 最佳实践
-
-- 提供背景、目标产物、范围边界、已知约束、风险等级和验收标准，比只说“优化一下”更容易得到可评审结果。
-- 明确你要的是“方案”“PRD”“CR”“触发验证”“图”“代码生成”“同步到 Codex”还是“提交变更”；这些词会影响技能路由和验证动作。
-- 对高风险问题保留待确认项。产品专家给产品和金融业务结构，架构师给工程验证和生产风险，外部规则仍要由法务、合规、财务、通道、银行或持牌机构确认。
-- 让技能分层协作。复杂金融产品通常先由产品专家产出对象、流程、规则和验收，再由架构师承接系统设计、代码、测试和发布。
-- 代码生成前先确认输入结构和目标模块。提供 DDL、字段表格、Java 类、业务模块和是否允许覆盖，会显著减少歧义。
-- 修改技能后先运行 `./scripts/validate.sh`；需要安装到 Codex 时先运行 `./sync-skills.sh --dry-run all`，确认目标目录后再正式同步。
-
-## 验证
+## 验证与同步安全
 
 修改技能、同步脚本或代码生成器后，建议执行统一验证：
 
@@ -115,13 +156,13 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 - `sync-skills.sh --dry-run all`。
 - `git diff --check` 空白问题。
 
-## 同步安全
-
 `sync-skills.sh` 使用 `rsync --delete` 保持安装目录和仓库技能目录一致。正式同步前会备份已有目标技能目录到 `$CODEX_HOME/skills/.backups/`，但仍建议先执行 `--dry-run`，确认 `CODEX_HOME` 和目标技能列表正确。
 
 不要把使用者长期学习数据放在本仓库或安装后的技能目录中；技能同步可能删除安装目录里的额外文件。长期学习数据应保存在用户目录 `~/.skill-learning/`，或由 `SKILL_LEARNING_HOME` 指定的位置。
 
-## SkillX 导出规范
+## 维护者与高级扩展
+
+### SkillX 导出规范
 
 如需把 SkillX 或类似系统生成的规划技能、功能技能、原子技能转换为 Codex Skill Package，先按 [SkillX 到 Codex Skill Package 导出规范](./references/skillx-to-codex-skill-package.md) 做输入契约、安全门禁、三层映射、生成流程和验证流程审查。第一版只允许离线转换人工审查后的 JSON，不自动读取历史轨迹、不采集用户数据、不引入外部训练流水线，也不自动同步到 Codex。
 
@@ -134,14 +175,14 @@ python3 scripts/skillx_export_adapter.py --input fixtures/skillx/sample-candidat
 python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skillx-product-reviewer --input fixtures/skillx/sample-candidate.json
 ```
 
-## 外部参考来源
+### 外部参考来源
 
 - [yizhiyanhua-ai/fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph)：作为图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG 导出和渲染校验思路的公开参考来源。本仓库只吸收通用方法，不默认复制外部脚本、模板、图形资产或安装流程；PNG/PDF/截图等派生格式只在使用者明确提出时处理；引入外部可执行内容前必须按 `AGENTS.md` 做供应链安全审查。
 - [Ivy-piger/Ivy-skills](https://github.com/Ivy-piger/Ivy-skills)：作为架构师陌生代码库侦察、Java 架构坏味启发式扫描、生产故障时间线、5-Why 复盘草稿和 Spring Boot 安全检查清单的公开参考来源。本仓库只吸收可复用流程和检查项，不安装或复制 Claude Code 专用 frontmatter、`CLAUDE.md` 流程、外部脚本或服务端运行逻辑；如需复用具体文本、脚本或资产，必须保留来源、确认许可证并执行供应链安全审查。
 - [cg0x-skills/cg0x-frame-analysis](https://github.com/cg0x-skills/cg0x-frame-analysis)：作为探索期反路径锁定、多框架分析、假设/盲区/失败条件自检的公开参考来源。本仓库只吸收通用方法到产品专家和架构师 reference，不引入 `alwaysApply`、`/on` `/off` 开关、单文件长 Skill 或默认不收敛的交付方式；复杂问题先展开问题地图，正式交付仍必须回到可评审、可验证、可验收的产物。
 - [zjunlp/SkillX](https://github.com/zjunlp/SkillX) 与论文 [SkillX: Automatically Constructing Skill Knowledge Bases for Agents](https://arxiv.org/abs/2604.04804)：作为从 Agent 执行轨迹提炼规划技能、功能技能、原子技能，迭代精炼、合并过滤和探索扩展技能知识库的公开参考来源。本仓库只吸收“经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证”的方法，不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码；任何长期学习仍必须遵守 `AGENTS.md` 的本地协作学习授权和隐私边界。
 
-## 本地协作学习机制
+### 本地协作学习机制
 
 本仓库只维护技能定义和协议，不保存使用者个人学习数据。本地协作学习机制用于提升使用者与技能的配合度，并在合适场景下协助使用者改进判断、表达和设计质量。该机制是可选项，默认关闭；只有用户明确同意启用后，才会在用户目录下创建 `~/.skill-learning/` 并保存长期使用习惯、团队决策偏好、业务背景和技能演进记录。如需自定义位置，可以设置 `SKILL_LEARNING_HOME`。
 
@@ -176,9 +217,3 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - 未经用户确认，不应把 `Pending Observations` 提升为 `Confirmed Agreements`。
 
 详细约定见 [AGENTS.md](./AGENTS.md)。
-
-## AI Skills
-
-- [senior-software-architect](./senior-software-architect) 资深架构师（Java/Spring 核心专长）
-- [product-architecture-expert](./product-architecture-expert) 产品架构专家（支付与资金系统为重点垂直能力）
-- [java-service-code-generator](./java-service-code-generator) Java Service 代码生成
