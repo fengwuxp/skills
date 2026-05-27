@@ -148,6 +148,7 @@ AI 协作与生产专项：
 - `references/acceptance-scenarios.md` – 技能验收场景与模拟用例。
 - `references/skill-tree.md` – 资深架构师能力地图索引；按任务路由到 `references/skill-tree-architecture-design.md`、`references/skill-tree-engineering-quality.md`、`references/skill-tree-platform-leadership-ai.md`。
 - `references/knowledge-graph.md` – 架构师知识图谱，回答“遇到问题应定位到哪个知识域和 reference”。
+- `references/source-map.md` – 架构师公开参考来源、应用记录、许可证和提炼边界。
 
 ## 技术栈识别原则
 

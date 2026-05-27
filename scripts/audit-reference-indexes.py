@@ -48,6 +48,7 @@ REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/skill-tree-engineering-quality.md",
     "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
     "senior-software-architect/references/skill-tree.md",
+    "senior-software-architect/references/source-map.md",
     "senior-software-architect/references/system-analysis-design.md",
     "senior-software-architect/references/system-analysis-template.md",
     "senior-software-architect/references/testing.md",

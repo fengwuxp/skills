@@ -101,6 +101,7 @@ adr_tradeoff = "senior-software-architect/references/adr-and-tradeoff.md"
 language_agnostic = "senior-software-architect/references/language-agnostic-architecture.md"
 security = "senior-software-architect/references/security-architecture.md"
 system_analysis_template = "senior-software-architect/references/system-analysis-template.md"
+senior_source_map = "senior-software-architect/references/source-map.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
 architecture_fixture_verifier = "senior-software-architect/scripts/verify_fixtures.py"
 reference_index_audit = "scripts/audit-reference-indexes.py"
@@ -404,6 +405,7 @@ check(
             "senior-software-architect/references/production-readiness.md",
             "senior-software-architect/references/review-and-output-templates.md",
             "senior-software-architect/references/security-architecture.md",
+            "senior-software-architect/references/source-map.md",
             "senior-software-architect/references/wind-projects-patterns.md",
             "senior-software-architect/references/system-analysis-design.md",
             "senior-software-architect/references/system-analysis-template.md",
@@ -689,6 +691,18 @@ check(
     ),
 )
 check(
+    "README records Google engineering practices reference source",
+    has_all(
+        "README.md",
+        [
+            "google/eng-practices",
+            "代码评审标准、评论分级、变更颗粒度、作者/评审者协作和持续改善代码健康",
+            "不把它扩展为完整架构设计方法论",
+            "CC-BY 3.0 归因要求",
+        ],
+    ),
+)
+check(
     "README records Ivy skills reference source",
     has_all(
         "README.md",
@@ -891,6 +905,26 @@ check(
         ],
     ),
 )
+check(
+    "senior source map records Google eng-practices application",
+    has_all(
+        senior_source_map,
+        [
+            "# 架构师公开来源与应用记录",
+            "google/eng-practices",
+            "读取日期：2026-05-27",
+            "CC-BY 3.0",
+            "已读取文件",
+            "应用记录",
+            "coding-review-deep-dive.md",
+            "workflow.md",
+            "production-readiness.md",
+            "scripts/validate-trigger-paths.py",
+            "不把 `google/eng-practices` 扩展为完整架构设计",
+        ],
+    )
+    and contains(senior_skill, "references/source-map.md"),
+)
 
 lifecycle_stages = ["Clarify", "Design", "Plan", "Build", "Verify", "Review/Ship"]
 check("workflow defines engineering lifecycle gate", contains(workflow, "## 工程生命周期门禁"))
@@ -912,12 +946,38 @@ check(
     contains(workflow, "设计前必须先构造用例、测试用例、边界条件、异常路径和验收标准"),
 )
 check(
+    "workflow preserves PR description and small change rules",
+    has_all(
+        workflow,
+        [
+            "一个提交/PR 默认只承载一个自包含变更",
+            "相关测试应随同一变更提交",
+            "大重构、搬迁和重命名通常与功能修改、Bug 修复分开提交",
+            "## PR/CL 说明质量",
+            "第一行清楚说明本次变更具体做了什么",
+            "提交前应回看并更新说明",
+        ],
+    ),
+)
+check(
     "workflow routes AI and CAD references separately",
     has_all(
         workflow,
         [
             "AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`",
             "CAD Mode、Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`",
+        ],
+    ),
+)
+check(
+    "production readiness defines emergency change boundary",
+    has_all(
+        "senior-software-architect/references/production-readiness.md",
+        [
+            "## 紧急变更边界",
+            "真实生产风险或硬截止日期",
+            "不构成紧急情况",
+            "事后完整 Review、测试、复盘和技术债登记",
         ],
     ),
 )
@@ -1176,6 +1236,20 @@ check(
             "Data Clumps",
             "公共模块垃圾桶",
             "以下阈值是提示信号，不是机械定罪",
+        ],
+    ),
+)
+check(
+    "review guidance absorbs Google review collaboration rules",
+    has_all(
+        review,
+        [
+            "Review 的目标是让代码库长期健康持续变好",
+            "评论分级建议",
+            "Review 导航顺序",
+            "重大设计问题先反馈",
+            "明确审查范围",
+            "不评价作者个人",
         ],
     ),
 )
