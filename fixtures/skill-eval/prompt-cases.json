@@ -60,6 +60,36 @@
       "expected_handling": "进入架构评审路径，识别技术先行和过度设计风险，要求先澄清核心业务用例、主干流程、变化频率、验收场景和质量属性，再决定服务拆分、分层、缓存、MQ、网关和扩展点。"
     },
     {
+      "id": "senior-should-prd-to-business-driven-system-design",
+      "skill": "senior-software-architect",
+      "query": "这份 PRD 已经有会员权益的目标、核心用例、状态机、规则矩阵和验收场景，请继续推导系统边界、模块划分、接口契约、数据模型、测试计划和发布风险。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 PRD/产品方案到系统设计路径，先用产品语义到工程资产追踪矩阵校准目标、用例、对象、规则、验收和风险，再输出系统边界、模块、接口、数据、测试、监控、发布和取舍。"
+    },
+    {
+      "id": "senior-should-system-design-business-driver-validation",
+      "skill": "senior-software-architect",
+      "query": "这份系分已经有组件图和接口表，但看不出业务目标、参与方、核心行为、验收样例和质量属性场景，请做一轮交付验证并指出怎么补到可评审。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入系统分析设计和业务驱动架构验证路径，先补产品语义到工程资产追踪，再检查系统边界、接口、数据、质量属性场景、测试、监控和发布门禁。"
+    },
+    {
+      "id": "senior-should-map-business-driven-validation-to-tdd",
+      "skill": "senior-software-architect",
+      "query": "会员权益方案已经有目标、参与方、规则矩阵、验收样例和质量属性种子，请把业务驱动验证映射成 TDD 测试计划，区分第一批失败测试、监控指标和人工确认门禁。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入业务驱动验证到 TDD 映射路径，先把验收种子分为可代码化、可观测化和可评审化，再选择测试层级、第一批失败测试候选、断言事实、监控/数据验收和人工确认门禁。"
+    },
+    {
       "id": "senior-negative-prototype-to-prd",
       "skill": "senior-software-architect",
       "query": "根据这个运营后台页面截图反推一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准。",
@@ -121,6 +151,36 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
       "expected_handling": "进入 VCC 和支付资金产品路径，标出主体、外部规则、资金归属、状态机和验收口径。"
+    },
+    {
+      "id": "product-should-push-back-tech-or-page-first-design",
+      "skill": "product-architecture-expert",
+      "query": "我想先画几个会员中心页面，再让研发按页面拆模块；帮我把这个想法整理成能交给架构师继续设计的产品方案。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入产品架构路径，先把页面和模块想法拉回业务目标、用户/主体、核心用例、对象状态、规则矩阵、变化频率、验收场景和技术架构交接包，而不是直接按页面列功能。"
+    },
+    {
+      "id": "product-should-business-driven-architecture-handoff",
+      "skill": "product-architecture-expert",
+      "query": "会员权益产品方案准备交给架构师继续做系统设计，帮我补一版业务驱动架构交接包，重点要有目标、参与方、核心行为、对象状态、规则矩阵、验收样例和质量属性种子。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入业务驱动架构交接路径，输出产品侧交接包和验证口径，覆盖目标/非目标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。"
+    },
+    {
+      "id": "product-should-provide-acceptance-seeds-for-tdd",
+      "skill": "product-architecture-expert",
+      "query": "这版会员权益产品方案后面要让架构师按 TDD 推进，请帮我把验收种子补清楚，区分可代码化、可观测化和可评审化，但不要写工程测试代码。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入产品侧验收种子到测试驱动设计交接路径，输出业务前置条件、触发行为、可观察结果、风险红线，并把验收种子分为可代码化、可观测化和可评审化，避免越界生成测试代码。"
     },
     {
       "id": "product-negative-bug-diagnosis",

@@ -15,25 +15,56 @@ from typing import Sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_MAP = ROOT / "product-architecture-expert" / "references" / "source-map.md"
-SKILL_MD = ROOT / "product-architecture-expert" / "SKILL.md"
-PAYMENT_ROUTING = ROOT / "product-architecture-expert" / "references" / "payment-scenario-routing.md"
+PRODUCT_SOURCE_MAP = ROOT / "product-architecture-expert" / "references" / "source-map.md"
+PRODUCT_SKILL_MD = ROOT / "product-architecture-expert" / "SKILL.md"
+PRODUCT_ROUTING = ROOT / "product-architecture-expert" / "references" / "payment-scenario-routing.md"
+SENIOR_SOURCE_MAP = ROOT / "senior-software-architect" / "references" / "source-map.md"
+SENIOR_SKILL_MD = ROOT / "senior-software-architect" / "SKILL.md"
+SENIOR_WORKFLOW = ROOT / "senior-software-architect" / "references" / "workflow.md"
 
-RULE_TERMS = [
+COMMON_RULE_TERMS = [
     "Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文",
     "公开 HTML 中可读取到标题、作者、发布时间和正文",
     "Playwright 尝试状态、公开 HTML 读取状态和读取日期",
     "未读取到正文、页面删除、只剩验证页或正文为空",
     "不得作为已吸收来源",
     "不代表原文逐字表述",
+]
+
+PRODUCT_RULE_TERMS = [
+    *COMMON_RULE_TERMS,
     "不作为监管、合同、卡组织规则、财务准则或上线结论",
 ]
 
-BOUNDARY_TERMS = [
+SENIOR_RULE_TERMS = [
+    *COMMON_RULE_TERMS,
+    "不作为生产、资金、安全、合规、外部 API、SDK、云产品、法规规则或上线结论",
+]
+
+COMMON_BOUNDARY_TERMS = [
     "不复制文章正文",
-    "不声称技能代表作者本人观点",
     "不得继续作为已吸收来源",
+]
+
+PRODUCT_BOUNDARY_TERMS = [
+    *COMMON_BOUNDARY_TERMS,
+    "不声称技能代表作者本人观点",
     "必须按最新公开来源、合同或专业确认结果复核",
+]
+
+SENIOR_BOUNDARY_TERMS = [
+    *COMMON_BOUNDARY_TERMS,
+    "不声称技能代表外部作者",
+    "必须按最新官方来源",
+]
+
+FRESHNESS_TERMS = [
+    "不把读取日期当成当前核验日期",
+    "不代表来源仍然最新可用",
+    "外部知识时效性门禁",
+    "来源、版本或发布日期",
+    "核验日期",
+    "确认方",
 ]
 
 KNOWN_UNVERIFIABLE_URLS = {
@@ -84,21 +115,31 @@ def audit_text(
     skill_label: str,
     routing_text: str,
     routing_label: str,
+    rule_terms: Sequence[str] = PRODUCT_RULE_TERMS,
+    boundary_terms: Sequence[str] = PRODUCT_BOUNDARY_TERMS,
+    routing_required: bool = True,
+    require_freshness_terms: bool = False,
+    require_product_unverifiable_url: bool = False,
 ) -> list[str]:
     failures: list[str] = []
 
-    for term in RULE_TERMS:
+    for term in rule_terms:
         if term not in text:
             failures.append(f"{source_label}: missing source reading rule term: {term}")
 
-    for term in BOUNDARY_TERMS:
+    for term in boundary_terms:
         if term not in text:
             failures.append(f"{source_label}: missing source boundary term: {term}")
+
+    if require_freshness_terms:
+        for term in FRESHNESS_TERMS:
+            if term not in text:
+                failures.append(f"{source_label}: missing freshness boundary term: {term}")
 
     if "references/source-map.md" not in skill_text:
         failures.append(f"{skill_label}: does not link source-map.md")
 
-    if "source-map.md" not in routing_text:
+    if routing_required and "source-map.md" not in routing_text:
         failures.append(f"{routing_label}: payment routing does not link source-map.md")
 
     seen_urls: dict[str, int] = {}
@@ -161,15 +202,16 @@ def audit_text(
             if not has_date(bullet):
                 failures.append(f"{source_label}:{lineno}: unverifiable source must record audit date")
 
-    for url, required_terms in KNOWN_UNVERIFIABLE_URLS.items():
-        if url not in text:
-            failures.append(f"{source_label}: known unverifiable URL missing from source map: {url}")
-            continue
-        line_start = line_no(text, url)
-        source_line = next((line for _, line in source_bullets(text) if url in line), "")
-        for term in required_terms:
-            if term not in source_line:
-                failures.append(f"{source_label}:{line_start}: known unverifiable source missing: {term}")
+    if require_product_unverifiable_url:
+        for url, required_terms in KNOWN_UNVERIFIABLE_URLS.items():
+            if url not in text:
+                failures.append(f"{source_label}: known unverifiable URL missing from source map: {url}")
+                continue
+            line_start = line_no(text, url)
+            source_line = next((line for _, line in source_bullets(text) if url in line), "")
+            for term in required_terms:
+                if term not in source_line:
+                    failures.append(f"{source_label}:{line_start}: known unverifiable source missing: {term}")
 
     if "公开内容用于参考多业务线清结算全局规划" in text:
         failures.append(f"{source_label}: stale attribution for deleted clearing article")
@@ -178,14 +220,35 @@ def audit_text(
 
 
 def audit_current() -> list[str]:
-    return audit_text(
-        read(SOURCE_MAP),
-        source_label=rel(SOURCE_MAP),
-        skill_text=read(SKILL_MD),
-        skill_label=rel(SKILL_MD),
-        routing_text=read(PAYMENT_ROUTING),
-        routing_label=rel(PAYMENT_ROUTING),
+    failures: list[str] = []
+    failures.extend(
+        audit_text(
+            read(PRODUCT_SOURCE_MAP),
+            source_label=rel(PRODUCT_SOURCE_MAP),
+            skill_text=read(PRODUCT_SKILL_MD),
+            skill_label=rel(PRODUCT_SKILL_MD),
+            routing_text=read(PRODUCT_ROUTING),
+            routing_label=rel(PRODUCT_ROUTING),
+            rule_terms=PRODUCT_RULE_TERMS,
+            boundary_terms=PRODUCT_BOUNDARY_TERMS,
+            require_product_unverifiable_url=True,
+        )
     )
+    failures.extend(
+        audit_text(
+            read(SENIOR_SOURCE_MAP),
+            source_label=rel(SENIOR_SOURCE_MAP),
+            skill_text=read(SENIOR_SKILL_MD),
+            skill_label=rel(SENIOR_SKILL_MD),
+            routing_text=read(SENIOR_WORKFLOW),
+            routing_label=rel(SENIOR_WORKFLOW),
+            rule_terms=SENIOR_RULE_TERMS,
+            boundary_terms=SENIOR_BOUNDARY_TERMS,
+            routing_required=False,
+            require_freshness_terms=True,
+        )
+    )
+    return failures
 
 
 KNOWN_BAD_URL = "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q"
@@ -230,6 +293,28 @@ VALID_FIXTURE = f"""# 公开资料来源与支付专项提炼边界
 """
 VALID_SKILL_FIXTURE = "需要核对公开来源边界时读取 `references/source-map.md`。"
 VALID_ROUTING_FIXTURE = "支付专项来源和归因边界见 `source-map.md`。"
+VALID_SENIOR_FIXTURE = f"""# 架构师公开来源与应用记录
+
+## 读取与归因规则
+
+- 微信文章等动态页面必须先通过 Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文；如果 Playwright 当前通道失败，但公开 HTML 中可读取到标题、作者、发布时间和正文，也可以写成“公开内容用于参考”，但条目必须同时记录 Playwright 尝试状态、公开 HTML 读取状态和读取日期。
+- 未读取到正文、页面删除、只剩验证页或正文为空的条目，只能标为“当前不可复核”或“历史索引线索”，不得作为已吸收来源。
+- 条目中的英文术语、分层名称和能力边界可能是 Skill 为统一输出做的标准化表达，不代表原文逐字表述。
+- 从文章吸收的内容只作为工程判断问题、检查项、路由和边界，不作为生产、资金、安全、合规、外部 API、SDK、云产品、法规规则或上线结论。
+- 本文用于记录历史来源，不把读取日期当成当前核验日期。
+- 本文只记录历史读取状态和应用位置，不代表来源仍然最新可用；具体任务涉及外部 API、SDK、云产品、法规、安全基线或支付清算网络时，必须回到 `workflow.md` 的外部知识时效性门禁，重新记录来源、版本或发布日期、适用范围、核验日期和确认方。
+
+## 已参考的公开来源
+
+{HTML_FALLBACK_BULLET}
+
+## 提炼边界
+
+- 不复制文章正文、付费内容、仓库示例、站点图像、品牌表达、组织内部流程或外部脚本。
+- 不声称技能代表外部作者、组织或云厂商观点。
+- 对当前不可复核、已删除或只剩索引页的文章，不得继续作为已吸收来源。
+- 外部 API、SDK、云产品、开源组件、法规标准和安全基线具有时效性。引用这类来源时，必须按最新官方来源、项目 lockfile、本地依赖树、合同或专业确认结果复核，并记录核验日期。
+"""
 
 
 def fixture_failures(name: str, source_text: str) -> list[str]:
@@ -249,6 +334,22 @@ def run_self_test() -> list[str]:
     if valid_failures:
         failures.append("self-test valid fixture should pass")
         failures.extend(valid_failures)
+
+    senior_valid_failures = audit_text(
+        VALID_SENIOR_FIXTURE,
+        source_label="fixture:senior-valid",
+        skill_text=VALID_SKILL_FIXTURE,
+        skill_label="fixture:senior-valid:SKILL.md",
+        routing_text=VALID_ROUTING_FIXTURE,
+        routing_label="fixture:senior-valid:workflow.md",
+        rule_terms=SENIOR_RULE_TERMS,
+        boundary_terms=SENIOR_BOUNDARY_TERMS,
+        routing_required=False,
+        require_freshness_terms=True,
+    )
+    if senior_valid_failures:
+        failures.append("self-test senior valid fixture should pass")
+        failures.extend(senior_valid_failures)
 
     negative_cases = [
         (
@@ -335,6 +436,38 @@ def run_self_test() -> list[str]:
 
     for name, source_text, expected in negative_cases:
         case_failures = fixture_failures(name, source_text)
+        joined = "\n".join(case_failures)
+        if not case_failures:
+            failures.append(f"self-test {name}: expected failure but audit passed")
+        elif expected not in joined:
+            failures.append(f"self-test {name}: expected failure containing {expected!r}")
+            failures.extend(case_failures)
+
+    senior_negative_cases = [
+        (
+            "senior-missing-freshness-gate",
+            VALID_SENIOR_FIXTURE.replace("外部知识时效性门禁", "外部知识检查"),
+            "missing freshness boundary term: 外部知识时效性门禁",
+        ),
+        (
+            "senior-missing-current-verification-boundary",
+            VALID_SENIOR_FIXTURE.replace("不代表来源仍然最新可用", "不代表来源永久可用"),
+            "missing freshness boundary term: 不代表来源仍然最新可用",
+        ),
+    ]
+    for name, source_text, expected in senior_negative_cases:
+        case_failures = audit_text(
+            source_text,
+            source_label=f"fixture:{name}",
+            skill_text=VALID_SKILL_FIXTURE,
+            skill_label=f"fixture:{name}:SKILL.md",
+            routing_text=VALID_ROUTING_FIXTURE,
+            routing_label=f"fixture:{name}:workflow.md",
+            rule_terms=SENIOR_RULE_TERMS,
+            boundary_terms=SENIOR_BOUNDARY_TERMS,
+            routing_required=False,
+            require_freshness_terms=True,
+        )
         joined = "\n".join(case_failures)
         if not case_failures:
             failures.append(f"self-test {name}: expected failure but audit passed")

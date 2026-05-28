@@ -1,6 +1,6 @@
 # 公开资料来源与支付专项提炼边界
 
-本文主要约束产品架构专家中支付与资金垂直分支的公开资料来源、引用边界和时效性风险。通用产品架构方法见 `product-architecture-methodology.md`，产品方案与 PRD 结构见 `product-design-and-prd.md`。
+本文主要约束产品架构专家中支付与资金垂直分支的公开资料来源、引用边界和时效性风险；少量通用产品架构、PRD、Skill 和业务驱动验证来源也在此记录。通用产品架构方法见 `product-architecture-methodology.md`，产品方案与 PRD 结构见 `product-design-and-prd.md`。
 
 ## 使用时机
 
@@ -58,6 +58,8 @@
 - 全球支付与基础设施：检索“Airwallex”“全球支付”“跨境”“Payouts”“Global Accounts”“embedded finance”。
 - 收单、争议与风险运营：检索“外卡收单”“收单风控”“争议”“Chargeback”“Fraud”。
 - AI / Skill / 通用复杂度：检索“Agent Skills”“代码不再稀缺”“复杂度”“低成本生成”。
+- 通用产品架构与业务驱动验证：检索“Impact Mapping”“BDD”“业务目标”“验收场景”“产品到架构交接”。
+- PRD 模板与发布验证：检索“Atlassian PRD”“assumptions”“success metrics”“release criteria”“bidirectional traceability”。
 - 官方规则与监管：检索“Nacha”“Visa Core Rules”“Mastercard Rules”“监管来源”，并继续回到 `regulatory-baseline.md` 核验。
 
 ## 已参考的公开来源
@@ -111,6 +113,10 @@
 - 微信公众号文章《外卡收单钱收到了，战争才刚开始》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484517&idx=1&sn=a171eb833dc25e6e83be75c407ad69ff`。公开内容用于参考外卡收单争议治理，覆盖 Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration 链路、卡争议与非卡争议分轨、争议率/CB 率红线、止血/组证/representment 决策和反馈回流；Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准。
 - 微信公众号文章《Agent Skills 实战：把 PRD 需求文档写成 Skill》：`https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ`。公开内容用于参考 PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式、必填章节检查、用户故事/验收标准可验证性和 scripts/reference 分层；不复制原文模板或另建重复 PRD Skill。
 - 微信公众号文章《产品经理的PRD写作武器：一个Skills让写PRD从3小时缩到3分钟》：`https://mp.weixin.qq.com/s/qRv1Qe3GjQ_jbQqWGQcHfQ`。2026-05-27 普通 curl 返回环境异常验证页；随后通过移动端微信 UA 公开 HTML 读取到标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（Chrome headless）加载取证，公开内容用于参考 PRD 作为产品思考结构、模糊需求连续追问、原型/HTML/页面截图/交互稿反推 PRD、需求 ID、优先级、文档状态和评审清单；不复制原文模板、安装说明、外部 Skill 结构或效率营销表述。
+- Impact Mapping 官方图书页：`https://www.impactmapping.org/book.html`。2026-05-28 已读取公开页面；页脚声明站点内容在未另行说明时使用 CC-BY 4.0，公开内容用于参考业务与交付对齐、目标导向规划、把工作拆成仍有业务价值的小块和可适应变化的路线图；本仓库只吸收目标、参与方、行为影响和交付物之间的验证链路，不复制图书内容、图示、海报、工作坊材料或站点资产。
+- Dan North 文章《Introducing BDD》：`https://dannorth.net/blog/introducing-bdd/`。2026-05-28 已读取公开页面，公开内容用于参考业务价值、行为、故事模板、场景和 Given / When / Then 验收标准如何连接需求、测试和实现；本仓库进一步落成产品侧验收种子交接矩阵，只保留业务前置条件、触发行为、可观察结果和风险红线的结构化方法；不复制原文、代码示例、ATM 场景或工具实现细节。
+- Atlassian Product Requirements：`https://www.atlassian.com/agile/product-management/requirements` 与 Product Requirements 模板页 `https://www.atlassian.com/software/confluence/templates/product-requirements`。2026-05-28 已读取公开页面；公开内容用于参考 PRD 中 assumptions、user stories、success metrics、scope、release 和 open questions 的组织方式；本仓库只吸收假设/待决策、发布后验证和验收追踪槽位，不复制模板正文或示例。
+- NASA SWE-052 Bidirectional Traceability：`https://swehb.nasa.gov/x/AwIfBg`。公开内容用于参考需求、设计、代码和测试之间的双向追踪；本仓库只吸收需求ID、验收种子ID、质量属性ID 和后续验证资产映射，不复制 NASA 流程或表述。
 - 《支付之门：支付原理、架构与产品全链路设计》公开图书页：如当当云阅读 `https://e.dangdang.com/products/1901384633.html`。公开简介说明其面向支付系统底层逻辑、会计知识和支付系统设计方法论。
 - Formance Wallets Introduction：`https://docs.formance.com/modules/wallets/introduction`。公开文档用于参考业务钱包、余额和钱包操作的分层设计。
 - Formance Ledger Introduction：`https://docs.formance.com/modules/ledger/introduction`。公开文档用于参考产品账本、账户、交易、分录和元数据设计。

@@ -170,8 +170,8 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = ["产品", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求"]
 payment_terms = [
     "清结算",
     "对账",
@@ -470,6 +470,15 @@ check(
             "公开 HTML 中可读取到标题、作者、发布时间和正文",
             "HTML fallback source missing trace term",
             "HTML fallback source must record read date",
+            "SENIOR_SOURCE_MAP",
+            "SENIOR_RULE_TERMS",
+            "FRESHNESS_TERMS",
+            "require_freshness_terms=True",
+            "senior-missing-freshness-gate",
+            "不把读取日期当成当前核验日期",
+            "不代表来源仍然最新可用",
+            "外部知识时效性门禁",
+            "不作为生产、资金、安全、合规、外部 API、SDK、云产品、法规规则或上线结论",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
             "2026-05-26 Playwright 核验结果为页面已被发布者删除",
             "正文不可复核",
@@ -496,6 +505,34 @@ check(
             "==> source map audit",
             "scripts/audit-source-map.py",
             "scripts/audit-source-map.py --self-test",
+        ],
+    ),
+)
+check(
+    "senior source map preserves freshness boundary",
+    has_all(
+        senior_source_map,
+        [
+            "不把读取日期当成当前核验日期",
+            "不代表来源仍然最新可用",
+            "外部知识时效性门禁",
+            "来源、版本或发布日期",
+            "核验日期",
+            "确认方",
+            "不作为生产、资金、安全、合规、外部 API、SDK、云产品、法规规则或上线结论",
+            "必须按最新官方来源、项目 lockfile、本地依赖树、合同或专业确认结果复核",
+        ],
+    ),
+)
+check(
+    "senior knowledge graph stays navigational",
+    has_all(
+        knowledge_graph,
+        [
+            "本文是知识域定位器，不是百科全书",
+            "本文只保留导航和归档规则",
+            "不沉淀专题长知识",
+            "新增条目必须能指向一个权威 reference",
         ],
     ),
 )
@@ -827,6 +864,28 @@ check(
     ),
 )
 check(
+    "README records business-driven architecture reference sources",
+    has_all(
+        "README.md",
+        [
+            "SEI ATAM",
+            "Microsoft Azure Domain Analysis",
+            "AWS Well-Architected REL03-BP02",
+            "Dan North: Introducing BDD",
+            "Impact Mapping",
+            "NASA SWE-052 Bidirectional Traceability",
+            "arc42",
+            "C4 Model",
+            "Atlassian PRD guide",
+            "ISO/IEC 25010 质量模型摘要",
+            "业务目标、业务域/限界上下文、质量属性场景、行为验收和产品到架构追踪",
+            "需求到设计到验证的追踪、架构视图、质量属性和 PRD 假设/发布验证",
+            "Use-Case 2.0 官方站点本轮受 Cloudflare 阻断，未作为已吸收来源",
+            "不复制外部模板、图示、示例或品牌化流程",
+        ],
+    ),
+)
+check(
     "README routes SkillX export specification",
     has_all(
         "README.md",
@@ -1006,6 +1065,87 @@ check(
         ],
     )
     and contains(senior_skill, "references/source-map.md"),
+)
+check(
+    "senior records business-driven architecture verification sources",
+    has_all(
+        senior_source_map,
+        [
+            "业务驱动架构与验证公开来源组",
+            "Architecture Tradeoff Analysis Method Collection",
+            "https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis",
+            "https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_service_architecture_business_domains.html",
+            "https://dannorth.net/blog/introducing-bdd/",
+            "https://www.impactmapping.org/book.html",
+            "具体产品侧交接矩阵以 `product-architecture-expert/references/source-map.md`",
+            "https://swehb.nasa.gov/x/AwIfBg",
+            "https://arc42.org/overview",
+            "https://c4model.com/diagrams",
+            "ISO/IEC 25010",
+            "Use-Case 2.0",
+            "Cloudflare 阻断页，未作为已吸收来源",
+            "SEI `Quality Attribute Workshop` 旧直链返回 404，未作为已吸收来源",
+            "未作为已吸收来源",
+        ],
+    ),
+)
+check(
+    "senior system design preserves business-driven validation route",
+    has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "PRD/产品方案到系分 / 业务驱动系统设计",
+            "业务驱动追踪表",
+            "质量属性场景",
+            "业务 driver",
+            "系统边界、模块、接口、数据、质量属性和测试",
+        ],
+    ),
+)
+check(
+    "senior architecture template includes business-driven trace and quality scenarios",
+    has_all(
+        "senior-software-architect/references/review-and-output-templates.md",
+        [
+            "业务驱动追踪：业务目标、参与方、核心行为、对象规则和验收示例",
+            "质量属性场景：业务 driver、触发条件、受影响资产、期望响应、度量验收和取舍",
+            "业务驱动 TDD 映射",
+        ],
+    ),
+)
+check(
+    "senior product design maps business-driven validation to TDD assets",
+    has_all(
+        "senior-software-architect/references/product-design.md",
+        [
+            "### 3.3 业务驱动验证到 TDD 映射",
+            "业务驱动验证到 TDD 映射矩阵",
+            "AC-xxx",
+            "QA-xxx",
+            "追踪ID",
+            "业务目标/验收种子/质量属性",
+            "可代码化",
+            "可观测化",
+            "可评审化",
+            "第一批失败反馈候选",
+            "人工确认门禁",
+        ],
+    ),
+)
+check(
+    "senior testing separates code observable and review verification assets",
+    has_all(
+        "senior-software-architect/references/testing.md",
+        [
+            "业务驱动验证进入 TDD 前",
+            "AC-xxx",
+            "QA-xxx",
+            "保留追踪 ID",
+            "只有可代码化项进入 red-green-refactor",
+            "可观测化和可评审化项仍然是验证资产",
+            "业务驱动验证到 TDD 映射矩阵",
+        ],
+    ),
 )
 
 lifecycle_stages = ["Clarify", "Design", "Plan", "Build", "Verify", "Review/Ship"]
@@ -1215,6 +1355,18 @@ check(
             "## 读取后必须产出",
             "## 需要继续读取的 reference",
             "## 按任务读取索引",
+            "PRD/产品方案到系分",
+            "### 1.3 产品语义输入",
+            "追踪ID",
+            "QA-001 | 质量属性种子",
+            "### 3.1A 设计视图清单",
+            "上下文视图",
+            "### 3.1B 业务驱动追踪表",
+            "### 4.10 业务驱动验证承接",
+            "业务目标/验收种子/质量属性",
+            "### 5.2A 质量属性场景",
+            "质量属性ID",
+            "可代码化/可观测化/可评审化",
             "## 1. 文档头、背景与目标模板",
             "## 2. 概要设计模板",
             "## 3. 模块与接口设计模板",
@@ -1579,7 +1731,78 @@ check(
             "全球支付与基础设施",
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
+            "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map records business-driven product verification sources",
+    has_all(
+        product_source_map,
+        [
+            "Impact Mapping 官方图书页",
+            "https://www.impactmapping.org/book.html",
+            "Dan North 文章《Introducing BDD》",
+            "https://dannorth.net/blog/introducing-bdd/",
+            "目标、参与方、行为影响和交付物之间的验证链路",
+            "Given / When / Then 验收标准",
+            "产品侧验收种子交接矩阵",
+            "Atlassian Product Requirements",
+            "https://www.atlassian.com/agile/product-management/requirements",
+            "https://swehb.nasa.gov/x/AwIfBg",
+            "需求ID",
+            "验收种子ID",
+            "质量属性ID",
+        ],
+    ),
+)
+check(
+    "product routing exposes business-driven architecture handoff",
+    has_all(
+        product_routing,
+        [
+            "业务驱动架构交接 / 产品方案交给架构师",
+            "业务驱动架构交接包",
+            "验收种子到 TDD 交接",
+            "验收种子交接矩阵",
+            "质量属性种子",
+            "用户要交给架构师继续设计或业务驱动架构交接",
+        ],
+    ),
+)
+check(
+    "product methodology provides acceptance seeds for TDD handoff",
+    has_all(
+        product_architecture,
+        [
+            "### 5.2 验收种子到测试驱动设计",
+            "验收种子交接矩阵",
+            "需求ID",
+            "质量属性ID",
+            "业务前置条件",
+            "可观察结果",
+            "风险红线",
+            "产品专家不替架构师写工程测试代码",
+            "可代码化",
+            "可观测化",
+            "可评审化",
+            "第一批失败测试候选",
+        ],
+    ),
+)
+check(
+    "prompt fixtures cover business-driven handoff and validation",
+    has_all(
+        skill_eval_prompt_fixture,
+        [
+            "senior-should-system-design-business-driver-validation",
+            "senior-should-map-business-driven-validation-to-tdd",
+            "product-should-business-driven-architecture-handoff",
+            "product-should-provide-acceptance-seeds-for-tdd",
+            "业务驱动架构交接包",
+            "质量属性场景",
+            "可代码化、可观测化和可评审化",
         ],
     ),
 )
@@ -1621,6 +1844,17 @@ check(
             "P0：没有它不能上线",
             "P1：核心体验或主流程必须具备",
             "P2：增强体验、运营效率或后续扩展能力",
+            "产品到架构交接",
+            "业务驱动架构交接",
+            "product-architecture-methodology.md",
+            "假设/问题ID",
+            "需求ID",
+            "验收种子ID",
+            "质量属性ID",
+            "验收种子交接矩阵",
+            "发布后验证",
+            "业务驱动架构交接包",
+            "可代码化/可观测化/可评审化",
             "product-prd-quality-gates.md",
             "product-prd-financial-appendix.md",
             "product-prd-operations-and-data.md",
@@ -2778,6 +3012,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "testing.md", "coding-standards.md", "workflow.md"},
     ),
     RouteFixture(
+        name="business-driven validation to tdd",
+        prompt="会员权益方案已有验收样例和质量属性种子，把业务驱动验证映射成 TDD 测试计划，区分失败测试、监控指标和人工确认门禁",
+        routes={"senior", "testing.md", "coding-standards.md", "workflow.md"},
+    ),
+    RouteFixture(
         name="bug diagnosis",
         prompt="线上出现 NullPointerException，帮我定位根因并补回归测试",
         routes={"senior", "debugging-diagnosis.md", "testing.md", "workflow.md"},
@@ -2845,6 +3084,11 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="complex non-payment product",
         prompt="设计一个 SaaS B2B 运营后台产品方案，包含角色权限、能力地图、规则矩阵和验收标准",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="product acceptance seeds for tdd handoff",
+        prompt="会员权益产品方案要交给架构师按 TDD 推进，请补验收种子，区分可代码化、可观测化和可评审化，不要写工程测试代码",
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(

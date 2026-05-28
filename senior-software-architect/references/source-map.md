@@ -33,15 +33,22 @@
 | --- | --- | --- |
 | 核对 Google 工程实践应用记录 | `已参考的公开来源`、`应用记录` | 不重新读取所有 Review 正文 |
 | 核对业务用例驱动架构文章应用记录 | `微信公众号文章：软件架构别再瞎设计了`、`应用记录` | 不把宣导性原文当作完整架构方法论 |
+| 核对业务驱动架构与验证来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把通用方法论当作项目事实 |
 | 新增外部来源 | `读取与归因规则`、`提炼边界` | 不把未读正文的来源标为已吸收 |
 | 审查来源是否可继续使用 | `读取与归因规则`、`已参考的公开来源` | 不用历史记录替代最新核验 |
+| 需要最新外部 API、SDK、云产品、法规或安全基线结论 | 本文确认来源历史，再回 `workflow.md` 的外部知识时效性门禁 | 不把读取日期当成当前核验日期 |
 
 ## 读取与归因规则
 
 - 分析、提炼或吸收外部资料时，必须以实际读取到的正文、仓库文件或官方页面为依据。
+- 微信文章等动态页面必须先通过 Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文；如果 Playwright 当前通道失败，但公开 HTML 中可读取到标题、作者、发布时间和正文，也可以写成“公开内容用于参考”，但条目必须同时记录 Playwright 尝试状态、公开 HTML 读取状态和读取日期。
+- 未读取到正文、页面删除、只剩验证页或正文为空的条目，只能标为“当前不可复核”或“历史索引线索”，不得作为已吸收来源。
 - 对无法读取正文、只剩验证页、动态页面失败、仓库不可访问或许可证不明的来源，只能标为待核验，不得作为已吸收来源。
+- 条目中的英文术语、分层名称和能力边界可能是 Skill 为统一输出做的标准化表达，不代表原文逐字表述；需要引用作者原话时必须重新读取正文并核对。
 - 进入 Skill 的内容只保留可迁移的方法、检查项、路由和边界；不复制原文、示例、图像、品牌表达或组织内部流程。
+- 从文章吸收的内容只作为工程判断问题、检查项、路由和边界，不作为生产、资金、安全、合规、外部 API、SDK、云产品、法规规则或上线结论。
 - 涉及许可证、归因或派生要求时，README 或本文必须记录来源和边界；需要复用具体文本、脚本或资产时必须另做许可证确认和供应链安全审查。
+- 本文只记录历史读取状态和应用位置，不代表来源仍然最新可用；具体任务涉及外部 API、SDK、云产品、法规、安全基线或支付清算网络时，必须回到 `workflow.md` 的外部知识时效性门禁，重新记录来源、版本或发布日期、适用范围、核验日期和确认方。
 
 ## 已参考的公开来源
 
@@ -107,8 +114,48 @@
 - 不把“业务用例驱动”绝对化为唯一架构约束；正式架构仍必须同时考虑质量属性、团队能力、合规安全、遗留系统、发布运维和可验证性。
 - 不新增独立方法论 reference；当前内容与 `architecture.md`、`diagram-output.md` 中“从业务和用例推导技术骨架”的原则一致，只做反模式命名和评审强化。
 
+### 业务驱动架构与验证公开来源组
+
+- 读取日期：2026-05-28
+- 读取状态：已通过公开网页、官方文档或 Markdown 输出读取正文/页面元数据；`Use-Case 2.0` 官方站点本轮 `curl` 返回 Cloudflare 阻断页，未作为已吸收来源；SEI `Quality Attribute Workshop` 旧直链返回 404，未作为已吸收来源。
+- 许可证：SEI、Microsoft Learn、AWS Docs、Dan North 站点未在本轮复用原文；Impact Mapping 站点页脚声明站点内容在未另行说明时使用 CC-BY 4.0。本仓库只保留来源链接、结构化提炼和归因边界，不复制外部正文、图片、示例、模板或脚本。
+
+已读取来源：
+
+- SEI Architecture Tradeoff Analysis Method Collection：`https://www.sei.cmu.edu/library/architecture-tradeoff-analysis-method-collection/`。公开页面说明 ATAM 用于围绕质量属性目标评估软件架构。
+- Microsoft Azure Architecture Center《Use domain analysis to model microservices》：`https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis`。2026-02-23 文档；已读取 Markdown 输出，公开内容用于参考业务域分析、业务能力、限界上下文、统一语言、领域模型和服务边界。
+- AWS Well-Architected Framework REL03-BP02：`https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_service_architecture_business_domains.html`。公开内容用于参考围绕业务域和功能定义服务、用限界上下文隔离业务逻辑、按领域差异定义可靠性要求，以及避免按 UI、middleware、database 等技术域组织服务。
+- Dan North《Introducing BDD》：`https://dannorth.net/blog/introducing-bdd/`。公开内容用于参考业务价值、行为、故事模板、场景和 Given / When / Then 验收标准如何连接需求、测试和实现。
+- Impact Mapping 官方图书页：`https://www.impactmapping.org/book.html`。公开内容用于参考目标、参与方、行为影响和交付物之间的验证链路；具体产品侧交接矩阵以 `product-architecture-expert/references/source-map.md` 和 `product-architecture-methodology.md` 为准，本技能只吸收架构承接所需的追踪边界。
+- NASA SWE-052 Bidirectional Traceability：`https://swehb.nasa.gov/x/AwIfBg`。公开内容用于参考需求、设计、代码和测试之间的双向追踪；本仓库只吸收追踪 ID 和验证资产映射，不复制 NASA 流程或表述。
+- arc42 Template Overview：`https://arc42.org/overview`。公开内容用于参考架构文档的上下文、构建块、运行时、部署、决策、质量和风险视图；本仓库只吸收设计视图清单，不复制模板正文。
+- C4 Model Diagrams：`https://c4model.com/diagrams`。公开内容用于参考 System Context、Container、Component、Code、Dynamic、Deployment 等架构图层次；本仓库只吸收“按需列出设计视图”的检查项，不复制图示。
+- ISO/IEC 25010 质量模型公开摘要：`https://iso25000.com/index.php/en/iso-25000-standards/iso-25010`。公开内容用于参考质量属性分类；本仓库只吸收质量属性场景表的提示，不复制标准文本。
+
+应用记录：
+
+| 应用位置 | 已吸收内容 |
+| --- | --- |
+| `README.md` | 新增业务驱动架构与验证来源组，保留来源链接和不复制边界。 |
+| `architecture.md` | 补充质量属性场景化，把业务 driver、触发条件、受影响资产、期望响应、度量验收和架构取舍作为架构评审门禁；补充业务域/限界上下文驱动边界和质量属性口号化反模式。 |
+| `product-design.md` | 补充业务驱动验证闭环和业务驱动验证到 TDD 映射矩阵，把目标、参与方、行为、对象/规则、业务域、质量属性和验收示例追踪到工程证据、失败测试、监控数据和人工确认门禁。 |
+| `system-analysis-template.md` | 补充产品语义输入追踪 ID、设计视图清单、业务驱动追踪 ID、质量属性场景表和业务驱动验证承接 ID。 |
+| `scenario-routing.md` | 强化 PRD/产品方案到系统设计路径，要求业务 driver 先转成服务/模块边界和质量属性场景。 |
+| `testing.md` | 补充业务驱动验证进入 TDD 前的可代码化、可观测化和可评审化归类，避免把业务确认、合规确认或运营验收强行写成单元测试。 |
+| `fixtures/skill-eval/prompt-cases.json` | 继续使用业务驱动系统设计、业务驱动验证到 TDD 映射、页面/模块先行纠偏和验收种子交接 fixture 验证触发。 |
+
+未吸收内容：
+
+- 不把 ATAM、DDD、BDD、Impact Mapping 或云厂商 Well-Architected 条目写成单一强制流程；项目设计仍以本地业务事实、现有系统、团队能力、生产约束和用户授权为准。
+- 不复制外部示例、图、模板、代码、工作坊材料或站点资产。
+- 不把云厂商服务建议等同于非云项目或 Wind 项目族的技术选型结论。
+
 ## 提炼边界
 
 - 代码评审类来源适合沉淀为 Review 判断顺序、评论分级、协作礼仪、变更颗粒度和提交说明质量。
+- 不复制文章正文、付费内容、仓库示例、站点图像、品牌表达、组织内部流程或外部脚本。
+- 不声称技能代表外部作者、组织或云厂商观点。
+- 对当前不可复核、已删除或只剩索引页的文章，不得继续作为已吸收来源；相关能力只能按通用工程方法、项目事实或其他可核验来源表达，并标明待核验。
 - 生产、资金、安全、合规、外部 API、SDK、云产品或法规规则，不能从通用 Review 指南推导结论，必须回到对应官方来源和项目事实。
+- 外部 API、SDK、云产品、开源组件、法规标准和安全基线具有时效性。引用这类来源时，必须按最新官方来源、项目 lockfile、本地依赖树、合同或专业确认结果复核，并记录核验日期。
 - 与现有 Skill 规则重复时，只升级一个权威位置；其他文件只做摘要和链接，避免规则漂移。

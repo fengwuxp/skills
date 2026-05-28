@@ -1,386 +1,103 @@
 # 资深架构师知识图谱
 
-本文不是百科全书，而是用于设计、评审、编码和排障时快速定位知识域、依赖关系、风险点和落地工具的索引。
+本文是知识域定位器，不是百科全书。它只回答三个问题：当前问题属于哪个知识域、应优先读取哪个 reference、哪些细节可以跳过。
 
 ## 使用时机
 
 - 需要判断问题属于哪个知识域、应读取哪个 reference。
 - 需要把新经验归入架构、代码、测试、运维、AI 协作或项目治理知识域。
+- 需要快速解释资深架构师能力图谱，而不是直接产出完整方案。
 
 ## 不适用场景
 
 - 已经明确具体规则文件时，直接读取对应 reference。
 - 需要完整编码规约、系分模板、测试专项或生产检查时，不在本文展开细节。
+- 不把本文当作最终方法论来源；本文只做导航。
 
 ## 读取后必须产出
 
-- 当前问题所属知识域、优先 reference 和需要跳过的无关细节。
+- 当前问题所属知识域。
+- 优先 reference 和需要跳过的 reference。
+- 后续验证方式或交付物入口。
 
 ## 需要继续读取的 reference
 
-- 编码读 `coding-standards.md`，测试读 `testing.md`/`testing-practices.md`，系分读 `system-analysis-design.md`，生产读 `production-readiness.md`。
+- 编码读 `coding-standards.md`，Review 读 `coding-review-deep-dive.md`。
+- 测试读 `testing.md` 和 `testing-practices.md`。
+- 系分读 `system-analysis-design.md`，完整模板读 `system-analysis-template.md`。
+- 生产、发布和回滚读 `production-readiness.md` 与 `workflow.md`。
+- 项目治理读 `project-governance-standards.md`，再按任务进入治理专题。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 定位知识域或 reference | 使用方式、参考资料入口、1、22 | 各领域细节 |
-| 产品语义到工程映射 | 2、3、5、14 | 基础设施和 K8s |
-| 架构设计、质量属性、取舍 | 4、5、11、18 | 语言细节 |
-| Java/Spring/Data 技术定位 | 7、8、10、14 | 产品语义和技术表达 |
-| 生产排障、安全、可观测性 | 15、17、18 | 前端和产品语义 |
-| AI 协作或规范沉淀 | 19、21、22 | 语言运行时细节 |
+| 定位知识域或 reference | 本文的知识域路由、归档规则 | 各领域专项细则 |
+| 产品语义到工程映射 | `product-design.md`, `system-analysis-design.md` | 基础设施和 K8s 细节 |
+| 架构设计、质量属性、取舍 | `architecture.md`, `adr-and-tradeoff.md`, `diagram-output.md` | Java 编码细则 |
+| Java/Spring/Wind 设计或 Review | `coding-standards.md`, `wind-projects-patterns.md`, `project-governance-standards.md` | 通用能力解释 |
+| 测试、TDD、验收验证 | `testing.md`, `testing-practices.md` | 平台治理细节 |
+| 生产排障、安全、可观测性 | `debugging-diagnosis.md`, `production-readiness.md`, `security-architecture.md` | 产品语义细节 |
+| AI 协作或 CAD Mode | `ai-assisted-engineering.md`, `cad-mode.md`, `workflow.md` | 语言运行时细节 |
+| 经验沉淀或 Skill 维护 | 本文的归档规则、`source-map.md` | 具体业务方案细节 |
 
 ## 1. 根节点
 
 ```text
 资深架构师知识图谱
-├── 业务知识
-├── 产品语义校准
-├── 架构理论
-├── 设计方法
-├── 语言与运行时
-├── Java 语言与 JVM
-├── Spring 生态
-├── 前端与前后端分离
-├── 数据访问与存储
-├── 分布式与微服务
-├── 基础设施
-├── 容器化与 Kubernetes
-├── 工程质量
-├── 调试诊断与根因分析
-├── 技术表达
-├── 安全体系
-├── 可观测性与运维
-├── Wind 项目族实践
-├── 项目治理规范
-└── AI 编码协作与规范沉淀
+├── 业务与产品语义
+├── 架构设计与取舍
+├── 系统分析与设计表达
+├── 编码质量与 Java/Spring/Wind
+├── 测试驱动设计与验证
+├── 调试诊断与生产韧性
+├── 安全、数据与合规边界
+├── 平台、交付与项目治理
+└── AI 编码协作与经验沉淀
 ```
 
-## 2. 业务知识
-
-### 2.1 通用业务建模
-
-- 业务目标：增长、效率、风控、合规、成本、体验。
-- 业务流程：主流程、支流程、异常流程、人工流程。
-- 业务规则：准入、校验、定价、权限、风控、审批、结算、通知。
-- 业务不变量：金额守恒、库存不负、状态不可逆、唯一约束、权限边界。
-- 业务指标：转化率、履约率、成功率、超时率、风险命中率、收入、成本。
-
-### 2.2 领域知识沉淀模板
-
-新增业务知识时按此格式补充：
-
-```text
-领域名称：
-核心目标：
-核心角色：
-核心实体：
-核心流程：
-状态机：
-业务规则：
-业务不变量：
-异常场景：
-关键指标：
-外部依赖：
-合规/安全约束：
-```
-
-## 3. 产品语义校准
-
-- 语义输入：背景、目标、非目标、用户角色、业务流程、产品能力、业务规则、数据状态、验收标准、风险取舍。
-- 工程映射：将产品语义映射到模块边界、接口契约、数据模型、状态机、权限、幂等、审计、测试和发布风险。
-- 协作边界：完整 PRD、产品架构、规则矩阵、运营后台、数据指标和金融/支付产品方案优先路由到 `产品架构专家`。
-- 图文表达：用例图表达角色和目标，流程图表达业务路径，时序图表达交互顺序，状态机表达状态流转。
-- 开发友好：材料能指导模块、接口、数据、事务、权限、幂等、扩展点和兼容设计。
-- 测试友好：材料能提取正常、异常、边界、权限、幂等、并发、兼容和回归场景。
-- 设计严谨：每个工程设计都服务当前落地或明确的未来扩展，所有待确认项都应有选项、影响和建议。
-
-## 4. 架构理论
-
-### 4.1 基础原则
-
-- SOLID、KISS、YAGNI、DRY、高内聚低耦合、关注点分离、依赖倒置、最小知识原则。
-- Clean Code：让代码表达意图，用小函数、小类、清晰命名、明确错误处理和测试支撑可维护性。
-- Clean Architecture：业务规则处于中心，框架、数据库、Web、UI、消息等都是外部细节。
-- Fenix Architecture：架构随业务、团队和基础设施演进，可靠性来自对失败的承认、隔离、恢复、观测和自动化治理。
-- TDD：以测试驱动设计，通过先描述行为、边界和不变量，反推接口、模型、依赖方向和可测试架构。
-- 测试资产治理：测试代码等同生产代码，测试套件是重构、升级、拆分、迁移和缺陷修复的长期安全网。
-- Refactoring：在行为保持和测试保护下，小步改善既有代码结构。
-
-### 4.2 架构风格
-
-| 风格 | 适用场景 | 关键风险 |
-|------|----------|----------|
-| 分层架构 | 传统 CRUD、团队熟悉、边界较稳定 | 贫血模型、跨层调用、Service 膨胀 |
-| 模块化单体 | 中小团队、业务快速迭代、需要清晰边界但暂不拆服务 | 模块边界靠自律，公共模块膨胀 |
-| 整洁架构/六边形 | 核心业务复杂、需要隔离框架和基础设施 | 初期样板代码较多，团队需要共同语言 |
-| DDD | 复杂业务、规则多、长期演进 | 过度建模、概念堆砌、落地成本高 |
-| 微服务 | 团队/业务边界清晰、独立发布、独立伸缩 | 分布式复杂度、数据一致性、运维成本 |
-| 云原生 | 需要弹性、自动化交付、基础设施吸收复杂度 | 平台复杂度、可观测性和运维能力不足 |
-| 事件驱动 | 异步解耦、状态传播、削峰、最终一致 | 追踪困难、重复消费、顺序与幂等 |
-| CQRS | 读写复杂度差异大、查询性能要求高 | 数据同步和一致性复杂 |
-
-### 4.3 质量属性
-
-- 可维护性：结构清晰、职责单一、依赖可控、测试保护。
-- 可扩展性：变化点明确，扩展契约稳定。
-- 可用性：失败隔离、降级、恢复、容灾。
-- 可靠性：承认失败、隔离故障、控制影响、快速恢复。
-- 性能：容量、延迟、吞吐、资源效率。
-- 安全性：认证、授权、数据保护、审计。
-- 可观测性：日志、指标、链路、告警。
-- 可测试性：核心逻辑可隔离验证，副作用可替换。
-
-## 5. 设计方法
-
-### 5.1 DDD 战术对象
-
-- Entity：有身份，生命周期内可变化。
-- Value Object：无身份，不可变，用值表达概念。
-- Aggregate Root：一致性边界和外部访问入口。
-- Domain Service：承载不自然属于单个实体的领域行为。
-- Domain Event：表达领域内已经发生的重要事实。
-- Repository：以领域语义持久化聚合，隐藏存储细节。
-
-### 5.2 应用设计对象
-
-- Command：表达写操作意图。
-- Query：表达读操作条件。
-- Request：协议层输入模型。
-- DTO/VO：对外输出或页面视图模型。
-- ApplicationService：用例编排、事务边界、权限校验、调用领域能力。
-- Assembler/Converter/Mapper：模型转换，禁止混入业务规则。
-
-### 5.3 TDD 设计闭环
-
-```text
-业务行为/验收语义
--> 失败测试
--> 最小实现
--> 重构设计
--> 边界固化
--> 回归保护
-```
-
-- 行为测试表达业务规则和边界条件。
-- 单元测试反推领域对象、领域服务和纯函数边界。
-- 契约测试保护模块、API、消息和外部集成协议。
-- 集成测试验证基础设施适配器、事务、SQL、配置和自动装配。
-- 回归测试把缺陷转化为长期保护。
-
-### 5.4 评审检查链
-
-```text
-需求目标
--> 业务边界
--> 领域模型
--> 模块边界
--> 依赖方向
--> 数据模型
--> 接口契约
--> 事务与一致性
--> 异常与补偿
--> 性能与容量
--> 安全与权限
--> 可观测性
--> 测试与验收
-```
-
-## 6. 语言与运行时
-
-- 通用关注点：类型系统、内存模型、并发模型、包管理、构建工具、测试工具、运行时限制和部署形态。
-- Go：package、interface、context、goroutine、channel、错误处理、`go test`、`go vet`、`gofmt`。
-- Node.js/TypeScript：事件循环、异步模型、类型检查、包管理、构建、前后端同构边界。
-- Python：虚拟环境、类型提示、包管理、测试、脚本与服务边界、运行时性能限制。
-- Rust：ownership、borrow checker、trait、crate 边界、错误处理、`cargo` 工具链。
-- 前端：组件模型、状态管理、构建工具、浏览器运行时、性能与可访问性。
-
-## 7. Java 语言与 JVM
-
-- 语言特性：泛型、枚举、注解、反射、SPI、Stream、Optional、Record、sealed class、模式匹配。
-- 并发：JMM、线程池、锁、原子类、并发集合、CompletableFuture、ThreadLocal、虚拟线程。
-- JVM：类加载、字节码、内存区域、GC、JIT、逃逸分析。
-- 诊断：jstack、jmap、jcmd、jfr、async-profiler、Arthas。
-- 反模式：滥用 Stream、错误 Optional、共享可变状态、线程池无界队列、ThreadLocal 泄漏。
-
-## 8. Spring 生态
-
-### 8.1 Spring Framework / Boot
-
-- IoC、AOP、事务、事件、配置绑定、自动装配、Bean 生命周期。
-- Web MVC、Validation、异常处理、拦截器、过滤器。
-- Cache、Scheduling、Async、Actuator。
-- 关键风险：事务自调用失效、AOP 代理边界、循环依赖、配置覆盖、启动慢、隐式 Bean 冲突。
-
-### 8.2 Spring Data / JPA
-
-- Repository、Entity、Value Type、Specification、事务、懒加载、脏检查。
-- 适合领域对象和关系映射较稳定的场景。
-- 风险：N+1、懒加载越界、实体泄露、复杂查询失控、事务边界不清。
-
-### 8.3 MyBatis / MyBatis Flex
-
-- Mapper、动态 SQL、结果映射、分页、批处理。
-- 适合 SQL 可控、复杂查询、性能敏感场景。
-- 风险：SQL 分散、字段常量不统一、动态条件不可控、索引不匹配。
-- 项目约束：优先使用 MyBatis Flex 字段常量类，禁止随意使用 LambdaQueryWrapper。
-
-### 8.4 Spring Cloud / 微服务组件
-
-- 服务注册发现、配置中心、网关、负载均衡、熔断限流、链路追踪。
-- 关键风险：网络不可靠、版本兼容、雪崩、链路丢失、分布式事务复杂度。
-
-## 9. 前端与前后端分离
-
-- 语言与运行时：Node.js、TypeScript、ECMAScript、HTML5、CSS、Web Components。
-- 框架与组件：React、Hooks、状态管理、路由、表单、错误边界、Ant Design、团队组件库。
-- 工程化：Webpack、Vite、Babel、SWC、npm/yarn/pnpm、Tree Shaking、Code Splitting。
-- 质量工具：ESLint、Prettier、Stylelint、TypeScript strict、Husky、lint-staged、单元测试、E2E 测试。
-- 架构关注：组件职责、状态边界、副作用管理、接口契约、权限模型、错误处理、可访问性、性能和可维护性。
-- 前后端契约：OpenAPI、DTO、错误码、分页、排序、筛选、日期时间格式、权限、登录态和 traceId。
-- 介入原则：先阅读项目自身 lint、tsconfig、目录规范和组件库约定；不删除或绕过 ESLint/Husky/类型检查。
-
-## 10. 数据访问与存储
-
-### 10.1 关系数据库
-
-- MySQL / PostgreSQL：表设计、索引、事务、锁、执行计划、慢 SQL、分区、读写分离。
-- 设计重点：唯一约束、状态字段、审计字段、时间字段、金额精度、幂等键。
-- 风险：无索引查询、隐式类型转换、长事务、间隙锁、分页深翻、热点行。
-
-### 10.2 缓存
-
-- Redis：String、Hash、List、Set、ZSet、Stream、Bitmap、HyperLogLog、Lua、Pipeline。
-- 模式：Cache Aside、Read Through、Write Through、Write Behind。
-- 风险：穿透、击穿、雪崩、热点 Key、大 Key、缓存一致性、分布式锁误用。
-
-### 10.3 消息与事件
-
-- Kafka、RocketMQ、RabbitMQ、Pulsar。
-- 关注：顺序、幂等、重复消费、事务消息、死信、延迟消息、消息堆积、重平衡。
-- 事件命名表达业务事实，消费者必须可重复执行。
-
-### 10.4 搜索与 NoSQL
-
-- Elasticsearch：全文检索、聚合、倒排索引、映射、刷新、分页、别名迁移。
-- MongoDB：文档模型、聚合管道、索引、事务适用边界。
-- 对象存储：文件上传、签名 URL、生命周期、权限和防盗链。
-
-## 11. 分布式与微服务
-
-- 服务边界：按业务能力和团队边界拆分，不按表拆分。
-- 通信：HTTP、gRPC、MQ、事件、批处理。
-- 一致性：本地事务、最终一致、事务消息、Outbox、Saga、TCC、对账。
-- 稳定性：超时、重试、限流、熔断、降级、隔离、舱壁、回滚。
-- 治理：服务契约、版本兼容、灰度发布、流量染色、配置治理。
-
-## 12. 基础设施
-
-### 12.1 运行与部署
-
-- Linux、容器、Docker、Kubernetes、Helm、Ingress、Service Mesh。
-- CI/CD：构建、测试、扫描、制品、部署、回滚。
-- 配置：环境隔离、配置中心、密钥管理、特性开关。
-
-### 12.2 网络与网关
-
-- DNS、HTTP、TLS、负载均衡、反向代理、Nginx、API Gateway。
-- 风险：超时不一致、连接池耗尽、重试风暴、请求体过大、证书过期。
-
-### 12.3 基础中间件
-
-- 数据库、Redis、MQ、搜索、对象存储、调度平台、任务队列、规则引擎、工作流引擎。
-- 选型原则：先确认业务复杂度、团队掌控力、运维成本和可替代方案。
-
-## 13. 容器化与 Kubernetes
-
-- 容器基础：镜像、容器、Registry、Dockerfile、多阶段构建、镜像分层、非 root 用户、stdout/stderr 日志。
-- K8s 对象：Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob、Service、Ingress、ConfigMap、Secret、PV/PVC、HPA、PDB。
-- Java 容器运行：JVM 容器内存识别、MaxRAMPercentage、GC、线程池、连接池、CPU throttling、OOMKilled。
-- 健康检查：livenessProbe、readinessProbe、startupProbe，区分存活、就绪和启动慢。
-- 发布回滚：滚动发布、蓝绿、金丝雀、不可变镜像 tag、快速回滚、数据库向前兼容变更。
-- 安全隔离：Namespace、RBAC、ServiceAccount、NetworkPolicy、Secret 管理、镜像漏洞扫描、最小权限。
-- 可观测性：日志、指标、链路、Pod 事件、重启次数、资源水位、告警和仪表盘。
-- 决策映射：高可用映射到副本数/PDB/反亲和/探针；性能映射到 requests/limits/HPA；安全映射到 RBAC/NetworkPolicy/Secret。
-
-## 14. 工程质量
-
-- 编码规范：阿里 Java 规约、项目 AGENTS.md、包结构、命名、异常、日志、注释。
-- 测试：JUnit 5、Mockito、AssertJ、Spring Boot Test、Testcontainers、WireMock、ArchUnit。
-- 静态检查：Checkstyle、PMD、SpotBugs、P3C、SonarQube、依赖漏洞扫描。
-- 重构：坏味道识别、小步行为保持、测试保护、避免混入功能变更。
-- 文档：技术方案、ADR、API 文档、数据字典、Runbook、复盘报告。
-
-## 15. 调试诊断与根因分析
-
-- 反馈环：失败测试、复现脚本、请求样例、日志查询、指标面板、trace、只读数据检查。
-- 诊断路径：现象界定、最小复现、可证伪假设、证据采集、最小修复、回归测试、复盘沉淀。
-- 常见证据：堆栈、错误码、状态迁移、事务日志、SQL 结果、消息 ID、幂等键、调用链、配置差异、版本差异。
-- Java/Spring 专项：事务传播、AOP 代理、自调用、Bean 条件装配、线程池、异步上下文、Mapper SQL、序列化和时区。
-- 生产专项：影响面、时间线、最近变更、止血、回滚、监控补强、Runbook 和永久修复。
-- 红线：不删除失败测试，不提交临时插桩，不伪造验证，不在无复现或无证据时大范围改代码。
-
-## 16. 技术表达
-
-- 表达原则：通俗易懂、言辞简练、结构严谨、语义准确、场景贴合、可执行。
-- 汉字意识：中文术语追求短、准、稳，避免“处理、管理、操作、数据、信息、逻辑”等过宽词汇滥用。
-- 命名表达：同一概念一个词，一个词只表达一个概念；业务命名用领域语言，技术命名用业界通用词。
-- 文档能力：技术方案、架构文档、规范文档、代码注释、故障复盘都要给出背景、边界、取舍、风险和验证方式。
-- 图文能力：流程复杂用流程图/时序图，模块复杂用依赖图/上下文图，规则复杂用表格，决策复杂用 ADR。
-- 读者意识：面向产品讲范围和取舍，面向研发讲边界和模型，面向测试讲验收和风险，面向运维讲发布和回滚，面向管理者讲成本和决策点。
-
-## 17. 安全体系
-
-- 身份认证：Session、JWT、OAuth2、OIDC、单点登录。
-- 权限模型：RBAC、ABAC、数据权限、租户隔离。
-- Web 安全：SQL 注入、XSS、CSRF、SSRF、反序列化、文件上传。
-- 数据安全：脱敏、加密、密钥管理、审计、备份、合规。
-- 供应链安全：依赖漏洞、镜像漏洞、密钥泄漏、构建可信度。
-
-## 18. 可观测性与运维
-
-- 日志：结构化、TraceId、SpanId、业务字段、错误堆栈、脱敏。
-- 指标：RED、USE、JVM、线程池、连接池、数据库、缓存、MQ、业务指标。
-- 链路追踪：OpenTelemetry、SkyWalking、Jaeger、Zipkin。
-- 告警：阈值、趋势、异常检测、告警收敛、值班响应。
-- 故障处理：定位、止血、恢复、复盘、永久修复；具体诊断闭环见 `references/debugging-diagnosis.md`。
-
-## 19. AI 编码协作与规范沉淀
-
-- 三层模型：OpenSpec 定标准，Superpowers 保纪律，Harness 管团队。
-- OpenSpec：把需求转为目标、范围、非目标、业务规则、接口契约、数据约束、验收场景和验证方式。
-- Superpowers：用 TDD、Review、Refactor、编码红线、测试门禁和 AI 输出审查约束实现过程。
-- Harness：管理任务拆分、Owner、写入范围、只读范围、依赖顺序、并行限制、交接说明和验证矩阵。
-- Prompt 模板：任务目标、上下文文件、修改范围、禁止行为、验证命令、输出格式。
-- Skill/AGENTS.md：沉淀项目规范、架构边界、常见坑、验证流程。
-- 自动化检查：把 Review 规则转为测试、静态扫描或脚本。
-- 风险控制：禁止 AI 大范围重构、引入未确认依赖、伪造验证结果、绕过项目现有模式。
-- 调试协作：AI 参与 Bug 修复时先按 `references/debugging-diagnosis.md` 建立反馈环和证据链，再做最小修复。
-- 协作边界：知识服务问题，不展示知识本身；不确定时最多给 3 条澄清问题、建议路径或可选方案，等待用户确认后再深入。
-
-## 20. Wind 项目族实践
-
-- 通用底座：`wind-middleware` 提供响应、异常、Trace、Web、Client、配置中心、Sentinel、RocketMQ、Sequence、Script、脱敏、日志和项目模板。
-- 企业集成：`wind-integration` 提供 OSS、KMS、消息、IM、Office、指标、工作流、MyBatis Flex 扩展、基础设施封装。
-- 安全能力：`wind-security` 提供认证、授权、JWT、验证码、MFA、RBAC 和安全自动装配。
-- 关键模式：接口端口 + 厂商适配器、Composite + `supports(...)`、Spring Boot AutoConfiguration、SPI、统一 trace/context、统一响应与异常。
-- 详细规则：见 `references/wind-projects-patterns.md`。
-
-## 21. 项目治理规范
-
-- 统一规范入口：`references/project-governance-standards.md`。
-- 覆盖范围：模块划分、依赖管理、服务划分、查询命名、API、安全、编码、数据库、日志、测试、Git 协作、代码评审、重构演进。
-- 设计目标：让项目长期保持可读、可改、可共享、可演进、可验证。
-- 分层治理：区分基础设施/中间件、框架/Starter、公共业务代码、业务项目（APP）、实验/工具脚本，不同类型采用不同可靠性、兼容性、安全性和交付标准。
-- 使用建议：做新项目脚手架、老项目治理、PR 评审、技术方案评审时优先加载该文档。
-
-## 22. 后续补充入口
-
-当用户提供新资料时，按以下位置补充：
-
-- 书籍原则、方法论：补充到 `架构理论`、`设计方法` 或 `工程质量`。
-- 框架资料：补充到 `Spring 生态`、`数据访问与存储` 或 `基础设施`。
-- 项目业务资料：补充到 `业务知识`，优先形成领域词汇表、状态机、业务不变量和流程图。
-- 事故/复盘资料：补充到 `调试诊断与根因分析`、`稳定性`、`可观测性与运维`、`工程质量`。
-- 团队规范：补充到 `工程质量` 和现有编码/工作流规范文件。
+## 2. 知识域路由
+
+| 知识域 | 典型问题 | 优先 reference | 关键输出 |
+| --- | --- | --- | --- |
+| 业务与产品语义 | 目标、非目标、参与方、对象状态、验收种子 | `product-design.md`，复杂 PRD 交给 `产品架构专家` | 产品语义到工程资产追踪 |
+| 架构设计与取舍 | 边界、抽象、依赖方向、质量属性、服务拆分 | `architecture.md`, `adr-and-tradeoff.md`, `distributed-consistency.md` | 方案、取舍、ADR、质量属性场景 |
+| 系统分析与设计表达 | 系分、详细设计、视图、模板、评审门禁 | `system-analysis-design.md`, `system-analysis-template.md`, `diagram-output.md` | 可评审系分和图形 brief |
+| 编码质量与 Java/Spring/Wind | 命名、异常、日志、契约、MapStruct、MyBatis Flex | `coding-standards.md`, `coding-review-deep-dive.md`, `wind-projects-patterns.md` | Review 结论、整改建议、验证命令 |
+| 测试驱动设计与验证 | TDD、测试层级、失败测试、验收资产 | `testing.md`, `testing-practices.md` | 测试计划、失败测试候选、验证矩阵 |
+| 调试诊断与生产韧性 | Bug、线上现象、根因、回滚、Runbook | `debugging-diagnosis.md`, `production-readiness.md`, `workflow.md` | 证据链、最小修复、回归验证 |
+| 安全、数据与合规边界 | 认证授权、租户隔离、审计、敏感数据 | `security-architecture.md`, `negative-constraints.md` | 风险清单、控制点、确认方 |
+| 平台、交付与项目治理 | 模块治理、API、Git/PR、K8s、演进 | `project-governance-standards.md`，再进入治理专题 | 治理结论、门禁、演进路径 |
+| AI 编码协作与经验沉淀 | OpenSpec、Harness、CAD Mode、Skill 维护 | `ai-assisted-engineering.md`, `cad-mode.md`, `workflow.md`, `source-map.md` | 协作边界、授权门禁、来源边界 |
+
+## 3. 典型判断路径
+
+| 问题信号 | 先判断 | 再读取 |
+| --- | --- | --- |
+| “这个方案怎么设计” | 业务目标、边界、质量属性、验收是否清楚 | `product-design.md` -> `architecture.md` -> `system-analysis-design.md` |
+| “代码这样写对不对” | 是否违反契约、边界、异常日志、测试红线 | `coding-review-deep-dive.md` -> `coding-standards.md` |
+| “补测试 / TDD 推进” | 保护的业务事实、测试层级、第一批失败反馈 | `testing.md` -> 对应 `testing-practices-*` |
+| “线上异常 / 测试失败” | 是否有可重复反馈环和证据链 | `debugging-diagnosis.md` -> `production-readiness.md` |
+| “要不要拆服务/上中台/引入 MQ” | 业务边界、团队能力、运维成本和验证方式 | `architecture.md` -> `adr-and-tradeoff.md` |
+| “外部 SDK/API/云产品版本变化” | 权威来源、版本、生效日期、本地依赖树 | `workflow.md` -> `adr-and-tradeoff.md` |
+
+## 4. 经验归档规则
+
+新增知识时先归位，避免把所有内容塞回本文：
+
+| 经验类型 | 放置位置 |
+| --- | --- |
+| 架构原则、质量属性、服务边界 | `architecture.md` |
+| 系分写法、模板、评审门禁 | `system-analysis-design.md` 或 `system-analysis-template.md` |
+| Java/Spring/Wind 编码规则 | `coding-standards.md` 或 `wind-projects-patterns.md` |
+| 测试策略和具体测试实践 | `testing.md` 或 `testing-practices.md` |
+| 生产变更、发布、回滚、Runbook | `production-readiness.md` 或 `workflow.md` |
+| 项目级治理细则 | `project-governance-standards.md` 及其专题文件 |
+| 外部来源和吸收边界 | `source-map.md` |
+
+## 5. 维护边界
+
+- 本文只保留导航和归档规则，不沉淀专题长知识。
+- 新增条目必须能指向一个权威 reference；没有权威 reference 时，先创建或补充专项文件。
+- 与专项 reference 重复的知识，保留专项原文，本文只保留一句定位。
+- 修改本文后运行 `scripts/audit-reference-indexes.py`、`python3 scripts/evaluate-skills.py --json` 和 `./scripts/validate.sh`。
