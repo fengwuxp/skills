@@ -108,6 +108,9 @@ reference_index_audit = "scripts/audit-reference-indexes.py"
 source_archive = "scripts/archive-source-evidence.py"
 source_map_audit = "scripts/audit-source-map.py"
 skill_evaluator = "scripts/evaluate-skills.py"
+skill_eval_methodology = "references/skill-evaluation-methodology.md"
+skill_eval_fixture_audit = "scripts/audit-skill-eval-fixtures.py"
+skill_eval_prompt_fixture = "fixtures/skill-eval/prompt-cases.json"
 skillx_export_spec = "references/skillx-to-codex-skill-package.md"
 skillx_export_adapter = "scripts/skillx_export_adapter.py"
 skillx_export_fixture = "fixtures/skillx/sample-candidate.json"
@@ -537,7 +540,7 @@ check(
     has_all(
         skill_evaluator,
         [
-            "Evaluate local Codex skills with deterministic structure metrics",
+            "Evaluate local Codex skills with deterministic structure and prompt metrics",
             "offline and read-only",
             "does not grade domain truth",
             "metadata_trigger",
@@ -545,6 +548,12 @@ check(
             "reference_quality",
             "deterministic_execution",
             "trigger_fixtures",
+            "realistic_prompt_fixtures",
+            "SKILL_EVAL_PROMPT_FIXTURE",
+            "REQUIRED_PROMPT_DIMENSIONS",
+            "prompt_fixture_stats",
+            "score_prompt_fixtures",
+            "Skill Eval source is not recorded as title/author/time/body read",
             "REFERENCE_FILE_SOFT_LIMIT",
             "REFERENCE_FILE_HARD_LIMIT",
             "REFERENCE_SECTION_SOFT_LIMIT",
@@ -583,8 +592,81 @@ check(
         "scripts/validate.sh",
         [
             "python3 -m py_compile scripts/evaluate-skills.py",
+            "python3 -m py_compile scripts/audit-skill-eval-fixtures.py",
+            "==> Skill Eval prompt fixtures",
+            "scripts/audit-skill-eval-fixtures.py --self-test",
             "==> skill evaluation",
             "scripts/evaluate-skills.py --self-test",
+        ],
+    ),
+)
+check(
+    "Skill Eval methodology and prompt fixtures are grounded and offline",
+    has_all(
+        skill_eval_methodology,
+        [
+            "# Skill Eval 方法论",
+            "## 使用时机",
+            "## 不适用场景",
+            "## 读取后必须产出",
+            "## 需要继续读取的 reference",
+            "## 按任务读取索引",
+            "触发准确率",
+            "输出质量",
+            "效率指标",
+            "对照实验",
+            "方差检查",
+            "Prompt 矩阵规则",
+            "每个 Skill 至少有两个应该触发的真实请求",
+            "每个 Skill 至少有两个不应该触发的难负例",
+            "每个 Skill 至少有一个正例不直接点名 Skill",
+            "https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg",
+            "2026-05-28",
+            "已通过浏览器自动化读取标题、账号、作者、发布时间和正文",
+            "不复制文章原文、示例代码、投资策略样例或社群引导内容",
+        ],
+    )
+    and has_all(
+        skill_eval_fixture_audit,
+        [
+            "Audit Skill Eval prompt fixtures",
+            "offline and read-only",
+            "does not run agents",
+            "call networks",
+            "REQUIRED_DIMENSIONS",
+            "title_author_time_body_read",
+            "needs at least 2 positive cases",
+            "needs at least 2 hard negatives",
+            "positive case without explicit skill name",
+            "toy prompt",
+            "appears to contain sensitive data",
+            "OK skill eval fixture self-test",
+        ],
+    )
+    and has_all(
+        skill_eval_prompt_fixture,
+        [
+            "\"evaluation_dimensions\"",
+            "\"trigger_accuracy\"",
+            "\"output_quality\"",
+            "\"efficiency_metrics\"",
+            "\"baseline_comparison\"",
+            "\"variance_check\"",
+            "\"read_status\": \"title_author_time_body_read\"",
+            "\"should_trigger\": true",
+            "\"should_trigger\": false",
+            "\"hard_negative\": true",
+            "\"preferred_skill\"",
+            "\"negative_reason\"",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "如何评估你写的 SKILL.md 质量？一套完整的 Eval 方法论",
+            "触发准确率、输出质量、效率指标、真实 prompt、难负例、对照实验和方差检查",
+            "2026-05-28 已通过浏览器自动化读取标题、账号、作者、发布时间和正文",
+            "不复制文章原文、策略案例、社群引导或未逐篇读取的外部链接",
         ],
     ),
 )

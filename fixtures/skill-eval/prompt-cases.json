@@ -1,0 +1,212 @@
+{
+  "version": 1,
+  "description": "Skill Eval prompt fixtures for trigger accuracy, hard negatives, output quality, efficiency, comparison, and variance review.",
+  "evaluation_dimensions": [
+    "trigger_accuracy",
+    "output_quality",
+    "efficiency_metrics",
+    "baseline_comparison",
+    "variance_check"
+  ],
+  "source": {
+    "title": "如何评估你写的 SKILL.md 质量？一套完整的 Eval 方法论",
+    "url": "https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg",
+    "account": "Zen Trading",
+    "author": "y",
+    "published_at": "2026-04-14 01:20",
+    "read_at": "2026-05-28",
+    "read_method": "Codex in-app browser automation with Playwright DOM extraction",
+    "read_status": "title_author_time_body_read"
+  },
+  "cases": [
+    {
+      "id": "senior-should-code-review-service-transaction",
+      "skill": "senior-software-architect",
+      "query": "做一轮 CR：这个 ServiceImpl 新增了扣款和冻结两个事务方法，重点看幂等、事务边界、异常处理和测试缺口。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "进入代码评审路径，给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
+    },
+    {
+      "id": "senior-should-production-incident-postmortem",
+      "skill": "senior-software-architect",
+      "query": "昨晚支付回调积压导致订单状态延迟，帮我按时间线梳理根因、补偿方案、监控告警和回滚边界。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "进入生产故障诊断和复盘路径，先确认事实证据，再给补偿、监控、回滚和测试建议。"
+    },
+    {
+      "id": "senior-should-architecture-design-with-tests",
+      "skill": "senior-software-architect",
+      "query": "这个账务投影服务要支持重放和差异比对，请评审模块边界、状态一致性、接口契约和 TDD 切入点。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入架构设计和测试设计路径，输出边界、契约、不变量、风险和可验证任务。"
+    },
+    {
+      "id": "senior-negative-prototype-to-prd",
+      "skill": "senior-software-architect",
+      "query": "根据这个运营后台页面截图反推一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "表面涉及系统交付，但目标产物是 PRD 和产品规则，应让路给产品架构专家。"
+    },
+    {
+      "id": "senior-negative-structured-codegen",
+      "skill": "senior-software-architect",
+      "query": "根据这段 CREATE TABLE 生成 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl，先输出到评审目录。",
+      "should_trigger": false,
+      "preferred_skill": "java-service-code-generator",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是结构化输入到 Java Service 脚手架的生成任务，应交给代码生成技能。"
+    },
+    {
+      "id": "senior-negative-payment-product-rules",
+      "skill": "senior-software-architect",
+      "query": "设计一个外卡收单商户结算能力，说明主体、法域、资金归属、手续费、争议拒付和待合规确认项。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是支付产品规则和合规待确认，不是工程实现或代码评审。"
+    },
+    {
+      "id": "product-should-prototype-prd",
+      "skill": "product-architecture-expert",
+      "query": "根据这个商户运营后台 HTML 反推一份 PRD，补齐用户角色、核心对象、状态流转、操作权限、数据指标和验收标准。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "进入原型反推 PRD 路径，先补语义、角色、对象、流程、规则、指标和验收。"
+    },
+    {
+      "id": "product-should-payment-clearing-map",
+      "skill": "product-architecture-expert",
+      "query": "帮我梳理平台分账分润和商户到账能力地图，区分账户、账本、清结算、对账、手续费和运营后台。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
+      "expected_handling": "进入支付与资金专项，输出能力地图、对象、流程、资金/账务边界、风险和待确认项。"
+    },
+    {
+      "id": "product-should-vcc-issuing-flow",
+      "skill": "product-architecture-expert",
+      "query": "设计一个 VCC 发卡交易流程，说明开卡、授权、冻结、清算、退款、争议和财务对账的产品边界。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 VCC 和支付资金产品路径，标出主体、外部规则、资金归属、状态机和验收口径。"
+    },
+    {
+      "id": "product-negative-bug-diagnosis",
+      "skill": "product-architecture-expert",
+      "query": "这段日志显示 NullPointerException，帮我定位根因、修复代码、补单元测试并跑定向验证。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是工程排障、代码修改和补测试，应交给资深架构师。"
+    },
+    {
+      "id": "product-negative-service-codegen",
+      "skill": "product-architecture-expert",
+      "query": "我有订单表 DDL 和字段说明，请直接生成 Wind/Nobe 风格 Java Service 配套代码，不覆盖已有文件。",
+      "should_trigger": false,
+      "preferred_skill": "java-service-code-generator",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "用户已有结构化输入且目标是代码生成，应交给 Java Service 代码生成技能。"
+    },
+    {
+      "id": "product-negative-architecture-review",
+      "skill": "product-architecture-expert",
+      "query": "评审这个 Spring Boot 模块拆分方案，重点看循环依赖、事务边界、缓存一致性、发布回滚和测试覆盖。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是工程架构和发布风险评审，不是产品语义、PRD 或支付产品方案。"
+    },
+    {
+      "id": "codegen-should-ddl-to-service",
+      "skill": "java-service-code-generator",
+      "query": "这段 CREATE TABLE 是渠道订单表，请生成 Entity、Mapper、DTO、Request、Query、Converter、Service、ServiceImpl 和测试夹具。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "进入结构化 DDL 生成路径，推断表结构并优先写入评审目录或用户指定目录。"
+    },
+    {
+      "id": "codegen-should-field-table-scaffold",
+      "skill": "java-service-code-generator",
+      "query": "把这个 Markdown 字段表格转换成 Java Service 脚手架，表名是 spend_order，业务模块是 spend，先不要覆盖已有文件。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
+      "expected_handling": "进入字段表格生成路径，检查表名、主键、模块和覆盖边界，调用确定性生成脚本。"
+    },
+    {
+      "id": "codegen-should-java-class-input",
+      "skill": "java-service-code-generator",
+      "query": "根据这个 Java Entity 类补齐 Request、Query、Converter、Service 和 ServiceImpl，包名按相邻模块推断。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
+      "expected_handling": "进入 Java 类输入路径，先确认基础包名和模块唯一性，再生成可评审代码。"
+    },
+    {
+      "id": "codegen-negative-ddl-review",
+      "skill": "java-service-code-generator",
+      "query": "帮我评审这段账户表 DDL 是否满足金额精度、唯一约束、索引、审计字段和数据生命周期要求。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "虽然有 DDL，但用户要评审表设计质量，不是生成配套代码。"
+    },
+    {
+      "id": "codegen-negative-pure-product-idea",
+      "skill": "java-service-code-generator",
+      "query": "我想做一个优惠券核销模块，帮我先设计业务流程、对象、状态机、运营后台和验收标准。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是产品架构和 PRD 前置设计，没有结构化模型可用于代码生成。"
+    },
+    {
+      "id": "codegen-negative-bugfix-tests",
+      "skill": "java-service-code-generator",
+      "query": "这个 Mapper 查询返回空列表导致资金流水断链，帮我修 Bug、补回归测试并说明根因。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是 Bug 修复和测试补齐，应由资深架构师处理。"
+    }
+  ]
+}

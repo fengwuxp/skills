@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Evaluate local Codex skills with deterministic structure metrics.
+"""Evaluate local Codex skills with deterministic structure and prompt metrics.
 
 The script is offline and read-only. It inspects Skill metadata, SKILL.md body
 size, direct reference links, bundled resources, scripts, fixtures, and
-repo-level validation hooks. It does not grade domain truth; it highlights
+repo-level validation hooks. It also inspects realistic positive and hard
+negative prompt fixtures. It does not grade domain truth; it highlights
 maintainability and trigger-readiness signals that should trend over time.
 """
 
@@ -27,10 +28,19 @@ REQUIRED_VALIDATE_HOOKS = [
     "scripts/validate-trigger-paths.py",
     "scripts/audit-reference-indexes.py",
     "scripts/audit-source-map.py",
+    "scripts/audit-skill-eval-fixtures.py --self-test",
     "scripts/archive-source-evidence.py --self-test",
     "scripts/skillx_export_adapter.py --self-test",
     "./sync-skills.sh --dry-run all",
 ]
+SKILL_EVAL_PROMPT_FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
+REQUIRED_PROMPT_DIMENSIONS = {
+    "trigger_accuracy",
+    "output_quality",
+    "efficiency_metrics",
+    "baseline_comparison",
+    "variance_check",
+}
 PROGRESSIVE_HEADER_TERMS = [
     "## 使用时机",
     "## 不适用场景",
@@ -372,6 +382,78 @@ def score_trigger(skill_name: str, trigger_text: str) -> tuple[int, list[str]]:
     return max(min(score, 100), 0), warnings
 
 
+def load_prompt_fixture() -> dict[str, Any]:
+    if not SKILL_EVAL_PROMPT_FIXTURE.exists():
+        return {}
+    return json.loads(read(SKILL_EVAL_PROMPT_FIXTURE))
+
+
+def prompt_fixture_stats(skill_name: str, prompt_fixture: dict[str, Any]) -> dict[str, Any]:
+    cases = [
+        case
+        for case in prompt_fixture.get("cases", [])
+        if case.get("skill") == skill_name
+    ]
+    positive = [case for case in cases if case.get("should_trigger") is True]
+    negative = [case for case in cases if case.get("should_trigger") is False]
+    hard_negative = [case for case in negative if case.get("hard_negative") is True]
+    positive_without_name = [
+        case
+        for case in positive
+        if skill_name not in case.get("query", "").casefold()
+    ]
+    dimensions = sorted(
+        {
+            dimension
+            for case in cases
+            for dimension in case.get("dimensions", [])
+        }
+    )
+    return {
+        "cases": len(cases),
+        "positive_cases": len(positive),
+        "negative_cases": len(negative),
+        "hard_negative_cases": len(hard_negative),
+        "positive_without_name_cases": len(positive_without_name),
+        "dimensions": dimensions,
+    }
+
+
+def score_prompt_fixtures(skill_name: str, stats: dict[str, Any], prompt_fixture: dict[str, Any]) -> tuple[int, list[str]]:
+    warnings: list[str] = []
+    if not prompt_fixture:
+        return 0, ["missing Skill Eval prompt fixture"]
+
+    score = 55
+    score += score_ratio(stats["positive_cases"], 2, 12)
+    score += score_ratio(stats["negative_cases"], 2, 12)
+    score += score_ratio(stats["hard_negative_cases"], 2, 10)
+    score += score_ratio(stats["positive_without_name_cases"], 1, 6)
+    score += score_ratio(len(stats["dimensions"]), 4, 5)
+
+    if stats["positive_cases"] < 2:
+        warnings.append(f"{skill_name}: realistic prompt fixture has too few positive cases")
+    if stats["negative_cases"] < 2:
+        warnings.append(f"{skill_name}: realistic prompt fixture has too few negative cases")
+    if stats["hard_negative_cases"] < 2:
+        warnings.append(f"{skill_name}: realistic prompt fixture has too few hard negatives")
+    if stats["positive_without_name_cases"] < 1:
+        warnings.append(f"{skill_name}: realistic prompt fixture has no positive case without explicit skill name")
+
+    fixture_dimensions = set(prompt_fixture.get("evaluation_dimensions", []))
+    missing_dimensions = REQUIRED_PROMPT_DIMENSIONS - fixture_dimensions
+    if missing_dimensions:
+        score -= 12
+        warnings.append(f"Skill Eval fixture missing dimensions: {', '.join(sorted(missing_dimensions))}")
+
+    source = prompt_fixture.get("source", {})
+    if source.get("read_status") != "title_author_time_body_read":
+        score -= 10
+        warnings.append("Skill Eval source is not recorded as title/author/time/body read")
+
+    return max(min(score, 100), 0), warnings
+
+
 @dataclass
 class SkillEvaluation:
     name: str
@@ -402,6 +484,8 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
     )
     script_text = "\n".join(read(script) for script in scripts if script.suffix in {".py", ".sh"})
     has_self_test_signal = "--self-test" in script_text or f"{skill_dir.name}/scripts" in validate_text
+    prompt_fixture = load_prompt_fixture()
+    prompt_stats = prompt_fixture_stats(skill_dir.name, prompt_fixture)
 
     metadata_score, metadata_warnings = score_metadata(
         len(frontmatter.get("description", "")),
@@ -427,6 +511,7 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         has_self_test_signal,
     )
     trigger_score, trigger_warnings = score_trigger(skill_dir.name, trigger_text)
+    prompt_score, prompt_warnings = score_prompt_fixtures(skill_dir.name, prompt_stats, prompt_fixture)
 
     dimensions = {
         "metadata_trigger": metadata_score,
@@ -434,13 +519,15 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         "reference_quality": reference_score,
         "deterministic_execution": deterministic_score,
         "trigger_fixtures": trigger_score,
+        "realistic_prompt_fixtures": prompt_score,
     }
     weighted = (
-        metadata_score * 0.20
-        + progressive_score * 0.25
-        + reference_score * 0.20
-        + deterministic_score * 0.20
-        + trigger_score * 0.15
+        metadata_score * 0.18
+        + progressive_score * 0.22
+        + reference_score * 0.18
+        + deterministic_score * 0.18
+        + trigger_score * 0.12
+        + prompt_score * 0.12
     )
     metrics = {
         "description_len": len(frontmatter.get("description", "")),
@@ -488,6 +575,8 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         },
         "script_files": len(scripts),
         "fixture_files": len(fixtures),
+        "skill_eval_prompt_fixture": prompt_stats,
+        "skill_eval_prompt_source": prompt_fixture.get("source", {}),
         "openai_yaml": (skill_dir / "agents" / "openai.yaml").exists(),
         "missing_reference_links": missing_refs,
     }
@@ -497,6 +586,7 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         + reference_warnings
         + deterministic_warnings
         + trigger_warnings
+        + prompt_warnings
     )
     return SkillEvaluation(
         name=skill_dir.name,
@@ -565,6 +655,11 @@ def run_self_test() -> None:
             raise SystemExit(f"{item['name']}: missing reference links")
         if metrics["skill_lines"] > 500:
             raise SystemExit(f"{item['name']}: SKILL.md too large")
+        if item["dimensions"]["realistic_prompt_fixtures"] < 90:
+            raise SystemExit(
+                f"{item['name']}: realistic prompt fixture score too low: "
+                f"{item['dimensions']['realistic_prompt_fixtures']}"
+            )
         if metrics["reference_files_over_hard_limit"]:
             names = ", ".join(
                 f"{ref['path']}={ref['lines']}"
