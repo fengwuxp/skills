@@ -50,6 +50,16 @@
       "expected_handling": "进入架构设计和测试设计路径，输出边界、契约、不变量、风险和可验证任务。"
     },
     {
+      "id": "senior-should-push-back-tech-first-architecture",
+      "skill": "senior-software-architect",
+      "query": "我们准备先把订单系统拆成微服务，缓存、MQ、网关、分层框架都先定下来，后面再把业务需求塞进去；帮我评审这个架构思路。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入架构评审路径，识别技术先行和过度设计风险，要求先澄清核心业务用例、主干流程、变化频率、验收场景和质量属性，再决定服务拆分、分层、缓存、MQ、网关和扩展点。"
+    },
+    {
       "id": "senior-negative-prototype-to-prd",
       "skill": "senior-software-architect",
       "query": "根据这个运营后台页面截图反推一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准。",

@@ -209,7 +209,10 @@ def run_self_test() -> None:
         raise SystemExit("self-test failed: missing toy prompt failure")
 
     invalid = deepcopy(valid)
-    invalid["cases"][3]["negative_reason"] = ""
+    first_negative = next(
+        case for case in invalid["cases"] if case.get("should_trigger") is False
+    )
+    first_negative["negative_reason"] = ""
     expected = audit_data(invalid, label="invalid-negative")
     if not any("negative_reason" in item for item in expected):
         raise SystemExit("self-test failed: missing negative reason failure")
