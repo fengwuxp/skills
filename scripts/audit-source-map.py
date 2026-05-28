@@ -49,7 +49,8 @@ COMMON_BOUNDARY_TERMS = [
 PRODUCT_BOUNDARY_TERMS = [
     *COMMON_BOUNDARY_TERMS,
     "不声称技能代表作者本人观点",
-    "必须按最新公开来源、合同或专业确认结果复核",
+    "必须按最新公开来源",
+    "合同或专业确认结果复核",
 ]
 
 SENIOR_BOUNDARY_TERMS = [
@@ -231,6 +232,7 @@ def audit_current() -> list[str]:
             routing_label=rel(PRODUCT_ROUTING),
             rule_terms=PRODUCT_RULE_TERMS,
             boundary_terms=PRODUCT_BOUNDARY_TERMS,
+            require_freshness_terms=True,
             require_product_unverifiable_url=True,
         )
     )
@@ -276,6 +278,7 @@ VALID_FIXTURE = f"""# 公开资料来源与支付专项提炼边界
 - 未读取到正文、页面删除、只剩验证页或正文为空的条目，只能标为“当前不可复核”或“历史索引线索”，不得作为已吸收来源。
 - 条目中的英文术语、分层名称和能力边界可能是 Skill 为统一输出做的标准化表达，不代表原文逐字表述；需要引用作者原话时必须重新读取正文并核对。
 - 从文章吸收的内容只作为产品架构问题、检查项、路由和边界，不作为监管、合同、卡组织规则、财务准则或上线结论。
+- 本文只记录历史读取状态和应用位置，不把读取日期当成当前核验日期，不代表来源仍然最新可用；具体任务涉及金融、合规、监管、云产品、SDK/API、外部服务、卡组织、ACH、银行、通道、税务或会计准则时，必须进入外部知识时效性门禁，按最新公开来源、官方规则、项目 lockfile、本地依赖树、合同或专业确认结果复核，并记录来源、版本或发布日期、核验日期和确认方。
 
 ## 已参考的公开来源
 
@@ -289,7 +292,7 @@ VALID_FIXTURE = f"""# 公开资料来源与支付专项提炼边界
 - 不复制文章正文、付费课程内容、书籍章节、原图、课件、原型或专有案例。
 - 不声称技能代表作者本人观点。
 - 对当前不可复核、已删除或只剩索引页的文章，不得继续作为已吸收来源；相关能力只能按通用方法、项目事实或其他可核验来源表达，并标明待核验。
-- 外部规则具有时效性。引用法律法规、卡组织规则、Nacha/ACH、PCI DSS、银行/通道协议、税务或会计准则时，必须按最新公开来源、合同或专业确认结果复核，并记录核验日期。
+- 外部规则具有时效性。引用法律法规、卡组织规则、Nacha/ACH、PCI DSS、银行/通道协议、税务、会计准则、云产品、SDK/API 或外部服务规则时，必须按最新公开来源、官方规则、项目 lockfile、本地依赖树、合同或专业确认结果复核，并记录来源、版本或发布日期、核验日期和确认方。
 """
 VALID_SKILL_FIXTURE = "需要核对公开来源边界时读取 `references/source-map.md`。"
 VALID_ROUTING_FIXTURE = "支付专项来源和归因边界见 `source-map.md`。"
@@ -330,7 +333,15 @@ def fixture_failures(name: str, source_text: str) -> list[str]:
 
 def run_self_test() -> list[str]:
     failures: list[str] = []
-    valid_failures = fixture_failures("valid", VALID_FIXTURE)
+    valid_failures = audit_text(
+        VALID_FIXTURE,
+        source_label="fixture:valid",
+        skill_text=VALID_SKILL_FIXTURE,
+        skill_label="fixture:valid:SKILL.md",
+        routing_text=VALID_ROUTING_FIXTURE,
+        routing_label="fixture:valid:payment-scenario-routing.md",
+        require_freshness_terms=True,
+    )
     if valid_failures:
         failures.append("self-test valid fixture should pass")
         failures.extend(valid_failures)
@@ -352,6 +363,16 @@ def run_self_test() -> list[str]:
         failures.extend(senior_valid_failures)
 
     negative_cases = [
+        (
+            "product-missing-freshness-gate",
+            VALID_FIXTURE.replace("外部知识时效性门禁", "外部知识检查"),
+            "missing freshness boundary term: 外部知识时效性门禁",
+        ),
+        (
+            "product-missing-current-verification-boundary",
+            VALID_FIXTURE.replace("不代表来源仍然最新可用", "不代表来源永久可用"),
+            "missing freshness boundary term: 不代表来源仍然最新可用",
+        ),
         (
             "absorbed-unverifiable",
             VALID_FIXTURE.replace(
@@ -435,7 +456,15 @@ def run_self_test() -> list[str]:
     ]
 
     for name, source_text, expected in negative_cases:
-        case_failures = fixture_failures(name, source_text)
+        case_failures = audit_text(
+            source_text,
+            source_label=f"fixture:{name}",
+            skill_text=VALID_SKILL_FIXTURE,
+            skill_label=f"fixture:{name}:SKILL.md",
+            routing_text=VALID_ROUTING_FIXTURE,
+            routing_label=f"fixture:{name}:payment-scenario-routing.md",
+            require_freshness_terms=True,
+        )
         joined = "\n".join(case_failures)
         if not case_failures:
             failures.append(f"self-test {name}: expected failure but audit passed")

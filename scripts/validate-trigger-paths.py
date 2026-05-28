@@ -474,6 +474,8 @@ check(
             "SENIOR_RULE_TERMS",
             "FRESHNESS_TERMS",
             "require_freshness_terms=True",
+            "product-missing-freshness-gate",
+            "product-missing-current-verification-boundary",
             "senior-missing-freshness-gate",
             "不把读取日期当成当前核验日期",
             "不代表来源仍然最新可用",
@@ -509,6 +511,25 @@ check(
     ),
 )
 check(
+    "skill supply-chain audit surfaces freshness-sensitive URL risk",
+    has_all(
+        "scripts/audit-skills.sh",
+        [
+            "external URL reference lines found",
+            "unique external URLs",
+            "unique freshness-sensitive external URLs found",
+            "current task conclusions must re-verify official/current sources",
+            "sort -u",
+            "外部知识时效性门禁",
+            "不代表来源仍然最新可用",
+            "不把读取日期当成当前核验日期",
+            "核验日期",
+            "确认方",
+            "freshness-sensitive URL guard missing required term",
+        ],
+    ),
+)
+check(
     "senior source map preserves freshness boundary",
     has_all(
         senior_source_map,
@@ -521,6 +542,22 @@ check(
             "确认方",
             "不作为生产、资金、安全、合规、外部 API、SDK、云产品、法规规则或上线结论",
             "必须按最新官方来源、项目 lockfile、本地依赖树、合同或专业确认结果复核",
+        ],
+    ),
+)
+check(
+    "product source map preserves freshness boundary",
+    has_all(
+        product_source_map,
+        [
+            "不把读取日期当成当前核验日期",
+            "不代表来源仍然最新可用",
+            "外部知识时效性门禁",
+            "来源、版本或发布日期",
+            "核验日期",
+            "确认方",
+            "金融、合规、监管、云产品、SDK/API、外部服务、卡组织、ACH、银行、通道、税务或会计准则",
+            "必须按最新公开来源、官方规则、项目 lockfile、本地依赖树、合同或专业确认结果复核",
         ],
     ),
 )

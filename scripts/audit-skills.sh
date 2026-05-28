@@ -58,15 +58,49 @@ check_script_patterns() {
 }
 
 check_external_urls() {
-  local count
-  count="$(grep -RIE 'https?://' . \
+  local url_lines
+  url_lines="$(grep -RIE 'https?://' . \
     --exclude-dir .git \
     --exclude-dir .serena \
-    --exclude '*.pyc' | wc -l | tr -d ' ' || true)"
-  if [[ "${count}" != "0" ]]; then
-    echo "INFO external URL references found: ${count}; ensure they are intentional and source-attributed."
+    --exclude '*.pyc' || true)"
+  local line_count
+  line_count="$(printf '%s\n' "${url_lines}" | sed '/^$/d' | wc -l | tr -d ' ')"
+  local unique_urls
+  unique_urls="$(printf '%s\n' "${url_lines}" | grep -Eoh 'https?://[^[:space:]`)"]+' | sort -u || true)"
+  local unique_count
+  unique_count="$(printf '%s\n' "${unique_urls}" | sed '/^$/d' | wc -l | tr -d ' ')"
+  if [[ "${line_count}" != "0" ]]; then
+    echo "INFO external URL reference lines found: ${line_count}; unique external URLs: ${unique_count}; ensure they are intentional and source-attributed."
     echo "INFO inspect with: grep -RInE 'https?://' . --exclude-dir .git --exclude-dir .serena"
   fi
+
+  local high_risk_urls
+  high_risk_urls="$(grep -RIEoh 'https?://[^[:space:]`)"]*(nacha|visa|mastercard|stripe|adyen|marqeta|highnote|formance|docs\.aws\.amazon|learn\.microsoft|docs\.stripe|docs\.adyen|docs\.highnote|docs\.formance|api|sdk|rules|regulat|pci|ach|bank|payment|issuing|acquiring|dispute|fraud)[^[:space:]`)"]*' . \
+    --exclude-dir .git \
+    --exclude-dir .serena \
+    --exclude '*.pyc' | sort -u || true)"
+  local high_risk_count
+  high_risk_count="$(printf '%s\n' "${high_risk_urls}" | sed '/^$/d' | wc -l | tr -d ' ')"
+  if [[ "${high_risk_count}" != "0" ]]; then
+    echo "INFO unique freshness-sensitive external URLs found: ${high_risk_count}; current task conclusions must re-verify official/current sources."
+  fi
+
+  local freshness_text
+  freshness_text="$(grep -RIE '外部知识时效性门禁|不代表来源仍然最新可用|不把读取日期当成当前核验日期|最新公开来源|最新官方来源|项目 lockfile|本地依赖树|核验日期|确认方' \
+    README.md AGENTS.md product-architecture-expert senior-software-architect scripts \
+    --exclude-dir .git \
+    --exclude-dir .serena \
+    --exclude '*.pyc' || true)"
+  for required in \
+    "外部知识时效性门禁" \
+    "不代表来源仍然最新可用" \
+    "不把读取日期当成当前核验日期" \
+    "核验日期" \
+    "确认方"; do
+    if [[ "${freshness_text}" != *"${required}"* ]]; then
+      warn "freshness-sensitive URL guard missing required term: ${required}"
+    fi
+  done
 }
 
 check_required_files
