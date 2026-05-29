@@ -28,7 +28,7 @@
 - 清结算、对账、账户科目、账务矩阵和结算系统读 `clearing-settlement.md` 与 `payment-design-checklists.md`。
 - 通道路由、商户风控、争议退款、ACH/银行转账、卡组织、VCC、跨境或新支付形态按下方快速路由表继续读取专项 reference。
 - 公开资料来源和提炼边界读 `source-map.md`。
-- 全球金融平台、嵌入式金融、Global Accounts、全球付款、发卡平台或 Airwallex 类公开产品能力分析，读 `global-payment-emerging.md`，再按收单、出款、VCC、清结算或风控场景读取专项 reference。
+- 全球金融平台、嵌入式金融、Global Accounts、全球付款、发卡平台、AI 出海全球资金管理或 Airwallex / WorldFirst 类公开产品能力分析，读 `global-payment-emerging.md`，再按收单、出款、VCC、清结算或风控场景读取专项 reference。
 
 ## 按任务读取索引
 
@@ -68,7 +68,8 @@
 | 对账、差错、长短款、批处理、资金到账 | `clearing-settlement.md`, `formance-reference-patterns.md`, `payment-design-checklists.md` | 对账方案、差错生命周期、重跑和核销机制 |
 | 多 PSP/多银行/多支付方式、通道路由、降级 | `payment-channel-routing-and-operations.md` | 通道路由方案、通道健康、熔断、成本/成功率口径 |
 | 全球支付接受能力、Global Payment Orchestration、外卡收单 + 钱包 + 本地支付方式 + APM/RTP/A2A、多国家收款编排 | `payment-channel-routing-and-operations.md`, `card-network-and-card-rails.md`, `global-payment-emerging.md`, `payment-risk-fraud-and-merchant-operations.md` | 全球支付编排方案，覆盖卡轨、钱包轨、本地轨、认证、风控、结算、争议、资金控制和运营治理 |
-| Airwallex 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms | `global-payment-emerging.md`, `payment-methodology.md`, `regulatory-baseline.md`, `source-map.md` | 全球金融产品能力地图、平台账户/客户主体、账户收款、付款、发卡、嵌入式金融边界和待确认项 |
+| Airwallex / WorldFirst 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms | `global-payment-emerging.md`, `payment-methodology.md`, `regulatory-baseline.md`, `source-map.md` | 全球金融产品能力地图、平台账户/客户主体、账户收款、付款、发卡、嵌入式金融边界和待确认项 |
+| AI 出海、全球资金管理、token / 用量计费、全球订阅、AI Agent 支付、VCC 控制、平台白标金融 | `global-payment-emerging.md`, `payment-methodology.md`, `virtual-card-and-vcc.md`, `regulatory-baseline.md` | AI 企业收、管、付、控方案，覆盖全球收款、多币种财资、批量付款、Agent 授权、VCC 控制、对账和待确认项 |
 | 商户入网、KYB、欺诈、拒付率、准备金 | `payment-risk-fraud-and-merchant-operations.md`, `regulatory-baseline.md` | 风控方案、商户生命周期、风险规则和运营闭环 |
 | 支付合规、KYC/KYB/KYT/KYA、AML/CFT、大额交易、可疑交易 | `regulatory-baseline.md`, `payment-risk-fraud-and-merchant-operations.md` | 合规生命周期、客户/商户/交易/地址尽调、持续监控、待专业确认项 |
 | 退款、撤销、拒付、争议、证据、chargeback | `dispute-refund-and-chargeback-operations.md`, `card-network-and-card-rails.md` | 逆向交易状态机、证据模型、争议运营流程 |
@@ -91,6 +92,7 @@
 - **多通道收款优化**：读 `payment-channel-routing-and-operations.md` + `payment-risk-fraud-and-merchant-operations.md` + 对应支付轨道文件。重点输出路由决策、健康熔断、成本口径、风险约束和通道对账。
 - **全球支付编排 / 外卡收单升级**：读 `payment-channel-routing-and-operations.md` + `card-network-and-card-rails.md` + `global-payment-emerging.md` + `payment-risk-fraud-and-merchant-operations.md`。重点输出全球覆盖、本地适配、支付方式组合、认证与风控、资金控制、争议治理和运营闭环。
 - **Airwallex 类全球金融平台能力分析**：读 `global-payment-emerging.md` + `payment-methodology.md` + `source-map.md`，涉及真实资金再读 `regulatory-baseline.md`。重点输出能力族群、对象边界、状态事件、报表、沙盒验证、复杂性承接和客户侧确定性，不复制厂商 API 或覆盖清单。
+- **AI 出海全球资金管理**：读 `global-payment-emerging.md` + `payment-methodology.md` + `virtual-card-and-vcc.md`，涉及真实资金再读 `regulatory-baseline.md`。重点输出 AI SaaS/API、硬件渠道、GPU/云资源和 Agent 平台的收款、资金归集、FX、付款、VCC 控制、审计和对账边界，不把厂商营销数字写成能力承诺。
 - **Global Accounts + Payouts + 多币种资金运营**：读 `global-payment-emerging.md` + `payment-rails-ach-and-bank-transfers.md` + `clearing-settlement.md`。重点输出入账账户、direct debit / bank transfer、受益人、付款批次、审批、失败退回、币种/汇率/手续费和对账路径。
 - **钱包/账本 + 清结算**：读 `formance-reference-patterns.md` + `clearing-settlement.md`。重点输出钱包层、账本层、对账层、账户科目和账务矩阵。
 - **跨境 + 多币种 + 商户结算**：读 `global-payment-emerging.md` + `regulatory-baseline.md` + `clearing-settlement.md`。重点输出法域、主体、币种、汇率、费用、清算路径和待确认项。

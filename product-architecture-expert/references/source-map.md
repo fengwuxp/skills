@@ -57,9 +57,10 @@
 
 - 支付系统与支付账本：检索“支付系统”“账本”“清算/结算”“对账”“账务核心”。
 - 卡组织、发卡与 VCC：检索“Mastercard”“Visa”“Issuing”“VCC”“虚拟卡”“授权”“Clearing”。
-- 全球支付与基础设施：检索“Airwallex”“全球支付”“跨境”“Payouts”“Global Accounts”“embedded finance”。
+- 全球支付与基础设施：检索“Airwallex”“WorldFirst”“全球支付”“跨境”“Payouts”“Global Accounts”“embedded finance”“AI 出海”“全球资金管理”。
 - 收单、争议与风险运营：检索“外卡收单”“收单风控”“争议”“Chargeback”“Fraud”。
 - AI / Skill / 通用复杂度：检索“Agent Skills”“代码不再稀缺”“复杂度”“低成本生成”。
+- AI 辅助 PRD 与问题地图：检索“AI 写 PRD”“用户反馈”“问题地图”“证据强度”。
 - 通用产品架构与业务驱动验证：检索“Impact Mapping”“BDD”“业务目标”“验收场景”“产品到架构交接”。
 - PRD 模板与发布验证：检索“Atlassian PRD”“assumptions”“success metrics”“release criteria”“bidirectional traceability”。
 - 官方规则与监管：检索“Nacha”“Visa Core Rules”“Mastercard Rules”“监管来源”，并继续回到 `regulatory-baseline.md` 核验。
@@ -110,11 +111,15 @@
 - Airwallex Payments Docs：`https://www.airwallex.com/docs/payments/overview`。公开文档用于参考在线收单、一次性/周期性付款、多本地支付方式、支付状态、webhook、退款/取消、欺诈、争议、settlement report、activity export、fee / FX / rounding 和 go-live checklist 的产品闭环；不照搬支付方式列表、状态枚举、错误码或 API 字段。
 - Airwallex Payouts Docs：`https://www.airwallex.com/docs/payouts/overview`。公开文档用于参考全球付款的 transfer、beneficiary、payer、batch transfer、approval、failure reason、confirmation letter、regulatory requirement、beneficiary schema、tax reporting 和 status simulation 的对象化设计；不把国家字段、银行清单或税务要求写成通用规则。
 - Airwallex Issuing Docs：`https://www.airwallex.com/docs/issuing/overview`。公开文档用于参考发卡、VCC、cardholder、card、issuing balance、card control、remote authorization、3DS、transaction lifecycle、dispute、overcapture、fraud feedback 和 transaction simulation 的产品设计模式；不替代发卡资质、卡组织规则、PCI DSS、银行协议或最新安全要求。
+- 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并用本机 Chrome headless 作为 Playwright 等价浏览器加载页面做核验。公开内容用于参考 AI 出海企业全球资金管理的场景拆解，覆盖全球收款、多币种账户、FX、批量付款、VCC / Agent 支付控制、token / 用量计费和嵌入式金融组合；不吸收厂商覆盖国家、币种、时效、牌照数量、费率、AI 外汇预测能力、商业判断或产品可用性承诺，具体能力需回到最新官方资料、合同和合规确认。
 - 微信公众号文章《代码不再稀缺，稀缺的是你如何对抗复杂度》：`https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA`。2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考 AI 代码生成时代实现成本下降、复杂度/注意力成本上升、系统设计、前置约束和问题定义能力的重要性；只吸收问题框架和能力定位，不复制原文或作者表达。
 - 微信公众号文章《清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484523&idx=1&sn=bab6c18e89728feaf921bccbc5cb88d3`。公开内容用于参考外卡/跨境收单清算文件延迟排查，覆盖交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject、批次 ID、三段链路归因和资金链路事故升级信号。
 - 微信公众号文章《外卡收单钱收到了，战争才刚开始》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484517&idx=1&sn=a171eb833dc25e6e83be75c407ad69ff`。公开内容用于参考外卡收单争议治理，覆盖 Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration 链路、卡争议与非卡争议分轨、争议率/CB 率红线、止血/组证/representment 决策和反馈回流；Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准。
 - 微信公众号文章《Agent Skills 实战：把 PRD 需求文档写成 Skill》：`https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ`。公开内容用于参考 PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式、必填章节检查、用户故事/验收标准可验证性和 scripts/reference 分层；不复制原文模板或另建重复 PRD Skill。
 - 微信公众号文章《产品经理的PRD写作武器：一个Skills让写PRD从3小时缩到3分钟》：`https://mp.weixin.qq.com/s/qRv1Qe3GjQ_jbQqWGQcHfQ`。2026-05-27 普通 curl 返回环境异常验证页；随后通过移动端微信 UA 公开 HTML 读取到标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（Chrome headless）加载取证，公开内容用于参考 PRD 作为产品思考结构、模糊需求连续追问、原型/HTML/页面截图/交互稿反推 PRD、需求 ID、优先级、文档状态和评审清单；不复制原文模板、安装说明、外部 Skill 结构或效率营销表述。
+- 微信公众号文章《产品经理别再只让 AI 写 PRD 了，先把用户反馈整理成一张问题地图》：`https://mp.weixin.qq.com/s/sY6cw6wE5ePyrZmRYbXApg`。2026-05-28 普通 curl 初始因沙箱 DNS 失败；随后通过移动端微信 UA 公开 HTML 读取到标题、作者、发布时间和正文，并已尝试 Browser/Playwright 等价浏览器加载取证但页面加载超时/会话重置。公开内容用于参考 AI 辅助 PRD 前的用户反馈证据整理、问题地图、原始反馈到真实问题的转换、证据强度和潜在机会字段，以及 AI 初稿的人工判断门禁；不复制原文表格、图片、作者表达或外部工具营销。
+- 微信公众号文章《别再手工看政策和竞品了，让 AI 帮你做“递归式洞察”》：`https://mp.weixin.qq.com/s?__biz=MzY5MTIxNDA0MQ==&mid=2247483929&idx=1&sn=d832c54aa5a58e0f429d82a969e7f928&scene=21#wechat_redirect`。2026-05-28 普通 curl 返回微信验证页；Browser/Playwright 核验结果为页面加载超时/会话重置，正文不可复核；仅保留为同号历史索引线索，不得作为已吸收来源。
+- 搜狗微信搜索《产品AI力学》结果页：`https://weixin.sogou.com/weixin?type=2&query=%E4%BA%A7%E5%93%81AI%E5%8A%9B%E5%AD%A6`。2026-05-28 公开结果页可读取部分同号文章标题与摘要；后续结果跳转和更多正文读取触发反爬/验证页，Browser/Playwright 核验结果为正文不可复核；仅保留为选题分布与历史索引线索，不得作为已吸收来源。
 - Impact Mapping 官方图书页：`https://www.impactmapping.org/book.html`。2026-05-28 已读取公开页面；页脚声明站点内容在未另行说明时使用 CC-BY 4.0，公开内容用于参考业务与交付对齐、目标导向规划、把工作拆成仍有业务价值的小块和可适应变化的路线图；本仓库只吸收目标、参与方、行为影响和交付物之间的验证链路，不复制图书内容、图示、海报、工作坊材料或站点资产。
 - Dan North 文章《Introducing BDD》：`https://dannorth.net/blog/introducing-bdd/`。2026-05-28 已读取公开页面，公开内容用于参考业务价值、行为、故事模板、场景和 Given / When / Then 验收标准如何连接需求、测试和实现；本仓库进一步落成产品侧验收种子交接矩阵，只保留业务前置条件、触发行为、可观察结果和风险红线的结构化方法；不复制原文、代码示例、ATM 场景或工具实现细节。
 - Atlassian Product Requirements：`https://www.atlassian.com/agile/product-management/requirements` 与 Product Requirements 模板页 `https://www.atlassian.com/software/confluence/templates/product-requirements`。2026-05-28 已读取公开页面；公开内容用于参考 PRD 中 assumptions、user stories、success metrics、scope、release 和 open questions 的组织方式；本仓库只吸收假设/待决策、发布后验证和验收追踪槽位，不复制模板正文或示例。

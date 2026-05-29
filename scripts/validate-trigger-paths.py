@@ -204,6 +204,15 @@ payment_terms = [
     "多币种",
     "费用舍入",
     "全球金融平台交付包",
+    "WorldFirst",
+    "万里汇",
+    "AI 出海",
+    "全球资金管理",
+    "Agent 支付",
+    "Token 计费",
+    "token 计费",
+    "用量计费",
+    "VCC",
 ]
 external_dependency_terms = ["SDK", "API", "云产品", "版本", "升级"]
 diagram_terms = ["画图", "图形化", "可视化", "架构图", "流程图", "时序图", "状态机", "ER 图", "类图", "部署图", "迁移图", "关系图", "资金流图"]
@@ -901,6 +910,32 @@ check(
     ),
 )
 check(
+    "README records architecture principles WeChat source",
+    has_all(
+        "README.md",
+        [
+            "架构8：架构设计三原则",
+            "https://mp.weixin.qq.com/s/wc3xeSbBqb6ktEDz2ZuK7g",
+            "合适、简单、演化三类架构评审原则",
+            "当前约束匹配、结构/逻辑复杂度评估和演进式设计门禁",
+            "不复制文章案例、代码示例、图片或作者表达",
+        ],
+    ),
+)
+check(
+    "README records architect thinking WeChat source",
+    has_all(
+        "README.md",
+        [
+            "架构师底层思维能力要求-这7种尽早练习",
+            "https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q",
+            "抽象、逻辑、结构化、批判、成长型、复盘和数据思维",
+            "底层思维能力框架、架构判断落点和常见误区",
+            "不复制原文图片、推荐书目、排版结构或作者表达",
+        ],
+    ),
+)
+check(
     "README records business-driven architecture reference sources",
     has_all(
         "README.md",
@@ -1123,6 +1158,88 @@ check(
             "Cloudflare 阻断页，未作为已吸收来源",
             "SEI `Quality Attribute Workshop` 旧直链返回 404，未作为已吸收来源",
             "未作为已吸收来源",
+        ],
+    ),
+)
+check(
+    "senior records architecture principles WeChat source",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：架构设计三原则",
+            "https://mp.weixin.qq.com/s/wc3xeSbBqb6ktEDz2ZuK7g",
+            "架构8：架构设计三原则",
+            "泛终端操作系统",
+            "开心就好TF",
+            "2026-05-18 18:06",
+            "公开 HTML 读取标题、公众号、作者、发布时间和正文",
+            "本机 Chrome headless",
+            "合适、简单、演化",
+            "当前人力、技术积累、业务规模、运行约束和验证成本",
+            "结构复杂度、逻辑复杂度、故障面和排障成本",
+            "当前最小稳定结构、复审触发条件和下一阶段路径",
+            "不复制文章中的公司案例、比喻、可用性计算代码",
+        ],
+    ),
+)
+check(
+    "senior records architect thinking WeChat source",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：架构师底层思维能力要求",
+            "https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q",
+            "架构师底层思维能力要求-这7种尽早练习",
+            "面汤放盐",
+            "面汤放盐-uzong",
+            "2026-04-10 14:42",
+            "公开 HTML 读取标题、公众号、作者、发布时间和正文",
+            "本机 Chrome headless",
+            "抽象、逻辑、结构化、批判、成长型、复盘、数据",
+            "架构设计、Review、诊断和生产风险判断",
+            "不复制文章图片、排版结构、推荐书目",
+            "本地协作学习授权边界",
+        ],
+    ),
+)
+check(
+    "senior architecture keeps fit simplicity evolution gates",
+    has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "### 5.1.1 合适优先",
+            "人力失配",
+            "积累失配",
+            "场景失配",
+            "结构复杂度来自更多组件、更多依赖、更多失败点和更长排障链路",
+            "逻辑复杂度来自单个组件承担过多职责、状态流转和规则判断",
+            "演进式设计优于一步到位",
+            "复审触发条件",
+            "当前人力、技术积累、业务规模、运行约束和验证成本",
+            "行业领先搬运",
+            "一步到位幻觉",
+        ],
+    ),
+)
+check(
+    "senior architecture keeps architect thinking model",
+    has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "### 1.1 架构师底层思维",
+            "抽象思维",
+            "逻辑思维",
+            "结构化思维",
+            "批判思维",
+            "成长型思维",
+            "复盘思维",
+            "数据思维",
+            "Object",
+            "Map",
+            "String",
+            "排除法、假设验证和反例检查",
+            "质疑、验证、适配",
+            "指标、日志、压测、用户行为、收益/成本和运行数据",
         ],
     ),
 )
@@ -1736,6 +1853,22 @@ check(
     ),
 )
 check(
+    "product methodology keeps feedback evidence problem map",
+    has_all(
+        product_architecture,
+        [
+            "反馈证据与问题地图",
+            "原始反馈",
+            "真实问题",
+            "使用场景",
+            "影响范围",
+            "证据强度",
+            "潜在机会",
+            "AI 可以先做聚类、去重、归类和初稿表格",
+        ],
+    ),
+)
+check(
     "product methodology keeps low cost generation constraints",
     has_all(
         product_architecture,
@@ -1768,6 +1901,7 @@ check(
             "全球支付与基础设施",
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
+            "AI 辅助 PRD 与问题地图",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
         ],
@@ -1778,6 +1912,9 @@ check(
     has_all(
         product_source_map,
         [
+            "产品经理别再只让 AI 写 PRD 了，先把用户反馈整理成一张问题地图",
+            "https://mp.weixin.qq.com/s/sY6cw6wE5ePyrZmRYbXApg",
+            "用户反馈证据整理、问题地图、原始反馈到真实问题的转换",
             "Impact Mapping 官方图书页",
             "https://www.impactmapping.org/book.html",
             "Dan North 文章《Introducing BDD》",
@@ -1848,6 +1985,19 @@ check(
     has_all(product_prd, ["## 0.1 PRD 生成门禁", "产品语义门禁"]),
 )
 check(
+    "PRD reference keeps feedback-to-problem gate",
+    has_all(
+        product_prd,
+        [
+            "用户反馈整理成 PRD",
+            "反馈到问题的证据链",
+            "功能请求不是问题定义",
+            "原始反馈、真实问题、使用场景、影响范围、证据强度和潜在机会",
+            "AI 初稿只能作为聚类和表格化辅助",
+        ],
+    ),
+)
+check(
     "PRD reference keeps generation completion and compliance review modes",
     has_all(
         product_prd,
@@ -1877,6 +2027,11 @@ check(
     has_all(
         product_prd_template,
         [
+            "反馈证据与问题地图",
+            "原始反馈",
+            "真实问题",
+            "证据强度",
+            "处理结论",
             "优先级口径",
             "P0：没有它不能上线",
             "P1：核心体验或主流程必须具备",
@@ -1996,11 +2151,14 @@ check(
     has_all(
         "product-architecture-expert/references/payment-scenario-routing.md",
         [
-            "Airwallex 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms",
+            "Airwallex / WorldFirst 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms",
             "全球金融产品能力地图、平台账户/客户主体、账户收款、付款、发卡、嵌入式金融边界和待确认项",
+            "AI 出海、全球资金管理、token / 用量计费、全球订阅、AI Agent 支付、VCC 控制、平台白标金融",
+            "AI 企业收、管、付、控方案，覆盖全球收款、多币种财资、批量付款、Agent 授权、VCC 控制、对账和待确认项",
             "全球付款、Payouts、受益人管理、付款审批、批量付款、付款失败和回执",
             "transfer / beneficiary / payer / batch / approval 对象模型、付款状态机、失败处理、回执和出款对账",
             "Airwallex 类全球金融平台能力分析",
+            "AI 出海全球资金管理",
             "状态事件、报表、沙盒验证、复杂性承接和客户侧确定性",
         ],
     ),
@@ -2155,6 +2313,22 @@ check(
     ),
 )
 check(
+    "product global payment reference keeps AI outbound money management frame",
+    has_all(
+        global_payment,
+        [
+            "## AI 出海全球资金管理",
+            "AI SaaS / API / 模型服务",
+            "token 计费",
+            "GPU / 云资源 / 算力平台",
+            "AI Agent 平台",
+            "收、管、付、控",
+            "每个 Agent / 任务独立 VCC 或受控支付凭证",
+            "覆盖国家、币种、到账时效、牌照数量",
+        ],
+    ),
+)
+check(
     "product global payment reference keeps responsibility and FX matrix",
     has_all(
         global_payment,
@@ -2203,6 +2377,20 @@ check(
             "Airwallex Issuing Docs",
             "不固化覆盖国家、币种、费率、接口字段或商业承诺",
             "不把 Airwallex 或其他全球支付厂商的品牌叙事",
+        ],
+    ),
+)
+check(
+    "product source map records WorldFirst AI outbound article boundary",
+    has_all(
+        product_source_map,
+        [
+            "万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了",
+            "WorldFirst",
+            "AI 出海企业全球资金管理",
+            "token / 用量计费",
+            "VCC / Agent 支付控制",
+            "不吸收厂商覆盖国家、币种、时效、牌照数量、费率",
         ],
     ),
 )
@@ -3111,6 +3299,11 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="global financial platform deliverable package",
         prompt="做一份 Airwallex 类全球金融平台 PRD 交付包，包含对象生命周期、运营成熟度、go-live 和退出留存",
+        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="AI outbound global treasury product",
+        prompt="参考万里汇和 WorldFirst 这类能力，设计 AI 出海全球资金管理产品方案，覆盖 token 计费、批量付款、Agent 支付和 VCC 控制",
         routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
