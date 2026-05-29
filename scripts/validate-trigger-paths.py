@@ -936,6 +936,20 @@ check(
     ),
 )
 check(
+    "README records communication complexity WeChat source",
+    has_all(
+        "README.md",
+        [
+            "软件复杂性的本质是通信复杂性",
+            "https://mp.weixin.qq.com/s/1MbijKDxD2B4wa1E9QTnAw",
+            "通信复杂度、节点/边/状态传播、抽象隐藏边、复杂度转移检查，以及业务驱动架构/TDD 桥接",
+            "架构评审、业务验证、测试资产和图形检查项",
+            "不复制原文、SVG 插图、产品对比或作者表达",
+            "不把通信复杂度绝对化为唯一复杂度来源",
+        ],
+    ),
+)
+check(
     "README records business-driven architecture reference sources",
     has_all(
         "README.md",
@@ -1203,6 +1217,28 @@ check(
     ),
 )
 check(
+    "senior records communication complexity WeChat source",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：软件复杂性的本质是通信复杂性",
+            "https://mp.weixin.qq.com/s/1MbijKDxD2B4wa1E9QTnAw",
+            "高盛盛",
+            "2026-03-30 19:31",
+            "2026-05-29",
+            "公开 HTML 读取标题、公众号、作者、发布时间和正文",
+            "本机 Chrome headless",
+            "通信复杂度视角",
+            "节点、边、状态传播和可观测性",
+            "技术选型通常转移复杂度而非消灭复杂度",
+            "业务驱动架构、TDD 的桥接",
+            "测试、观测和评审门禁用于证明关键边上的业务事实、状态传播和失败语义",
+            "删除节点或边",
+            "不把“通信复杂性”绝对化为软件复杂度的唯一来源",
+        ],
+    ),
+)
+check(
     "senior architecture keeps fit simplicity evolution gates",
     has_all(
         "senior-software-architect/references/architecture.md",
@@ -1218,6 +1254,101 @@ check(
             "当前人力、技术积累、业务规模、运行约束和验证成本",
             "行业领先搬运",
             "一步到位幻觉",
+        ],
+    ),
+)
+check(
+    "senior architecture keeps communication complexity lens",
+    has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "### 5.2.1 通信复杂度视角",
+            "节点是服务、模块、函数、批任务、数据存储、Agent、工具或外部系统",
+            "边是同步调用、异步事件、数据读写、配置依赖、状态传播、控制策略或观测链路",
+            "技术选型通常不会消灭复杂度，只会改变复杂度的位置和可见性",
+            "解耦是降低边密度",
+            "抽象是把子图封装成复合节点",
+            "治理是减少环路、跨层依赖和隐式状态传播",
+            "删除节点或边",
+            "业务目标、用例和验收示例是判断节点和边是否必要的依据",
+            "TDD、监控和评审门禁是让关键边上的业务事实、状态传播和失败语义变成反馈的手段",
+            "通信复杂度搬家",
+            "隐藏边抽象",
+        ],
+    ),
+)
+check(
+    "senior routes communication complexity through decisions and templates",
+    has_all(
+        senior_routing,
+        [
+            "关键节点/通信边",
+            "复杂度从哪里转移到哪里",
+            "隐藏边是否可观测、可追踪和可回滚",
+            "新增节点、通信边、隐藏状态、观测入口和退出策略",
+        ],
+    )
+    and has_all(
+        adr_tradeoff,
+        [
+            "复杂度位置：新增、删除或隐藏了哪些节点和通信边",
+            "复杂度是被删除、被暴露，还是转移到网络、配置、框架黑箱、隐式状态或运维排障",
+            "服务间通信边清楚",
+            "隐藏调用、上下文、状态传播或重试链路",
+            "隐藏通信边、隐式状态传播或框架黑箱",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/review-and-output-templates.md",
+        [
+            "通信复杂度：关键节点和通信边、同步/异步关系、状态传播、隐藏边、观测入口",
+            "复杂度从哪里转移到哪里",
+        ],
+    ),
+)
+check(
+    "senior AI collaboration exposes hidden communication edges",
+    has_all(
+        ai_engineering,
+        [
+            "隐藏通信边和后验修补倾向",
+            "通信边界：关键调用、工具、上下文、状态传播、读写关系和观测入口",
+            "是否隐藏关键通信边",
+            "AI 生成的框架封装、工具调用、上下文传递、异步任务和重试链路必须可追踪、可观测、可复现",
+        ],
+    ),
+)
+check(
+    "senior knowledge map and skill tree expose communication complexity",
+    has_all(
+        knowledge_graph,
+        [
+            "服务拆分、通信复杂度",
+            "关键节点和通信边",
+            "这个框架/SDK/Agent 编排会不会让系统更复杂",
+            "复杂度从哪里转移到哪里，关键通信边和状态传播是否可观测",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/skill-tree-architecture-design.md",
+        [
+            "通信复杂度显式化",
+            "节点、边和状态传播的图",
+            "解耦收益 vs 新增通信边和观测成本",
+        ],
+    ),
+)
+check(
+    "senior diagram output keeps communication complexity graph checks",
+    has_all(
+        "senior-software-architect/references/diagram-output.md",
+        [
+            "### 通信复杂度图形检查",
+            "架构图应暴露系统复杂度在哪些节点和边上",
+            "边是否标明同步调用、异步事件、数据读写、状态传播、控制策略、补偿、降级或监控链路",
+            "边过密、交叉过多、跨层连线过多或出现依赖环",
+            "隐藏了关键调用、上下文、状态或失败路径",
+            "上下文图、关键链路图、状态传播图或故障传播图",
         ],
     ),
 )
@@ -1264,6 +1395,35 @@ check(
             "业务驱动追踪：业务目标、参与方、核心行为、对象规则和验收示例",
             "质量属性场景：业务 driver、触发条件、受影响资产、期望响应、度量验收和取舍",
             "业务驱动 TDD 映射",
+        ],
+    ),
+)
+check(
+    "senior bridges communication complexity with business-driven TDD",
+    has_all(
+        "senior-software-architect/references/product-design.md",
+        [
+            "业务驱动架构与通信复杂度视角是同一件事的两面",
+            "产品语义决定哪些节点、通信边、状态传播和观测链路必须存在",
+            "验收示例决定这些边上哪些业务事实需要被证明",
+            "节点、通信边和状态传播",
+            "先决定该边应暴露、观测、删除还是交给评审门禁",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/testing.md",
+        [
+            "若验证对象是节点、通信边或状态传播",
+            "不要为了覆盖隐藏边而断言内部调用顺序",
+            "关键通信边和状态传播",
+            "删节点/删边的前提和债务到期条件",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "节点/通信边和状态传播分为可代码化、可观测化和可评审化",
+            "隐藏边排障",
         ],
     ),
 )

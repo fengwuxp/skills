@@ -57,7 +57,7 @@
 | 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 | `testing.md`，Java 项目再读 `coding-standards.md` | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、保护对象、风险来源、真实链路和替身边界；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
 | 代码 Review / PR Review | `review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 问题优先，按 P0-P3 给文件行号、风险、证据、建议和验证。 |
 | 系统分析设计 / 系分 | `system-analysis-design.md`、`architecture.md`、`production-readiness.md` | 背景、目标、概要、详细、非功能、研发计划、评审清单。 |
-| 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件。 |
+| 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件；同时说明关键节点/通信边、复杂度从哪里转移到哪里，以及隐藏边是否可观测、可追踪和可回滚。 |
 | 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md` | 业务不变量、事务边界、幂等、去重、补偿、对账、告警和一致性窗口。 |
 | 遗留系统改造 / 迁移 | `evolutionary-architecture.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 防腐层、契约测试、双写/回填/切流、灰度、回滚、下线标准。 |
 | 安全架构 / 权限 / 租户 / 敏感数据 / Spring Security | `security-architecture.md`、`negative-constraints.md` | 资产、主体、边界、威胁、认证授权、隔离、密钥、审计和安全测试；Spring 项目追加 SecurityFilterChain、方法级授权、CSRF、CORS、代理头、限流和错误响应检查。 |
@@ -75,12 +75,12 @@
 
 - **系分 + 生产变更**：先用 `system-analysis-design.md` 固定背景、目标、边界和详细设计，再用 `production-readiness.md` 检查 SLO、容量、灰度、监控、应急和回滚。
 - **PRD/产品方案 + 系统设计**：先用 `product-design.md` 检查目标、核心业务用例、对象状态、规则、数据和验收是否足以支撑工程落地；缺口回到产品专家补齐，已确认内容再进入 `architecture.md` 和 `system-analysis-design.md`。
-- **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
+- **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，说明新增节点、通信边、隐藏状态、观测入口和退出策略，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
 - **外部 API / SDK / 云产品版本变化**：先用 `workflow.md` 的外部知识时效性门禁核验权威来源、版本、生效/发布日期和本地实际依赖，再用 `adr-and-tradeoff.md`、`production-readiness.md` 和 `negative-constraints.md` 检查兼容、安全、成本、上线和回滚。
 - **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再追加架构坏味启发式扫描，最后回到具体强规约。
 - **Bug 修复 + TDD**：先用 `debugging-diagnosis.md` 建立稳定失败反馈环，再用 `testing.md` 选择回归测试形态；修复后必须证明原失败路径通过且旧行为未回退。
-- **业务驱动验证 + TDD**：先用 `product-design.md` 第 3.3 节把业务目标、参与方、行为、对象规则、质量属性和验收样例分为可代码化、可观测化和可评审化，再用 `testing.md` 选择第一批失败测试候选；不要把业务确认、合规确认或运营验收强行写成单元测试。
+- **业务驱动验证 + TDD**：先用 `product-design.md` 第 3.3 节把业务目标、参与方、行为、对象规则、质量属性、验收样例、节点/通信边和状态传播分为可代码化、可观测化和可评审化，再用 `testing.md` 选择第一批失败测试候选；不要把业务确认、合规确认、运营验收或隐藏边排障强行写成单元测试。
 - **生产现象 + 代码修复**：先只读采集影响面、故障时间线、日志、指标和数据事实，再按 `debugging-diagnosis.md` 收敛根因；高风险问题修复后补 5-Why 复盘草稿，需要上线或数据处理时补充 `production-readiness.md` 和 `negative-constraints.md`。
 - **DDD/分层架构 + 写测试/TDD**：先用 `testing.md` 第 2 节选择测试形态，再用第 6 节定位保护事实和测试层级；只有命中 Domain Service / Policy / Specification、Application Service / Use Case、Repository / DAO / Mapper 或第 12 节专项条件时，再读 `testing-practices.md`。
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。

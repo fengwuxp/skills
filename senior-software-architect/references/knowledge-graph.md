@@ -61,7 +61,7 @@
 | 知识域 | 典型问题 | 优先 reference | 关键输出 |
 | --- | --- | --- | --- |
 | 业务与产品语义 | 目标、非目标、参与方、对象状态、验收种子 | `product-design.md`，复杂 PRD 交给 `产品架构专家` | 产品语义到工程资产追踪 |
-| 架构设计与取舍 | 边界、抽象、依赖方向、质量属性、服务拆分 | `architecture.md`, `adr-and-tradeoff.md`, `distributed-consistency.md` | 方案、取舍、ADR、质量属性场景 |
+| 架构设计与取舍 | 边界、抽象、依赖方向、质量属性、服务拆分、通信复杂度 | `architecture.md`, `adr-and-tradeoff.md`, `distributed-consistency.md`, `diagram-output.md` | 方案、取舍、ADR、质量属性场景、关键节点和通信边 |
 | 系统分析与设计表达 | 系分、详细设计、视图、模板、评审门禁 | `system-analysis-design.md`, `system-analysis-template.md`, `diagram-output.md` | 可评审系分和图形 brief |
 | 编码质量与 Java/Spring/Wind | 命名、异常、日志、契约、MapStruct、MyBatis Flex | `coding-standards.md`, `coding-review-deep-dive.md`, `wind-projects-patterns.md` | Review 结论、整改建议、验证命令 |
 | 测试驱动设计与验证 | TDD、测试层级、失败测试、验收资产 | `testing.md`, `testing-practices.md` | 测试计划、失败测试候选、验证矩阵 |
@@ -79,6 +79,7 @@
 | “补测试 / TDD 推进” | 保护的业务事实、测试层级、第一批失败反馈 | `testing.md` -> 对应 `testing-practices-*` |
 | “线上异常 / 测试失败” | 是否有可重复反馈环和证据链 | `debugging-diagnosis.md` -> `production-readiness.md` |
 | “要不要拆服务/上中台/引入 MQ” | 业务边界、团队能力、运维成本和验证方式 | `architecture.md` -> `adr-and-tradeoff.md` |
+| “这个框架/SDK/Agent 编排会不会让系统更复杂” | 复杂度从哪里转移到哪里，关键通信边和状态传播是否可观测 | `architecture.md` -> `adr-and-tradeoff.md` -> `diagram-output.md` |
 | “外部 SDK/API/云产品版本变化” | 权威来源、版本、生效日期、本地依赖树 | `workflow.md` -> `adr-and-tradeoff.md` |
 
 ## 4. 经验归档规则
