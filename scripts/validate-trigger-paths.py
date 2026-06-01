@@ -2062,8 +2062,26 @@ check(
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
             "AI 辅助 PRD 与问题地图",
+            "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map records PRD document quality article",
+    has_all(
+        product_source_map,
+        [
+            "B端产品经理实战经验分享系列 - 如何写出高质量的需求文档",
+            "https://mp.weixin.qq.com/s/_KU0j5sy1HBMdx03bhlYGg",
+            "AI产品经理老李",
+            "2026-04-22 08:00",
+            "2026-06-01",
+            "需求文档质量治理",
+            "PRD/MRD/BRD 类型区分",
+            "版本记录、变更同步和评审闭环",
+            "不复制原文案例、指标数字、图片、排版或作者表达",
         ],
     ),
 )
@@ -2145,6 +2163,23 @@ check(
     has_all(product_prd, ["## 0.1 PRD 生成门禁", "产品语义门禁"]),
 )
 check(
+    "PRD reference keeps document quality governance",
+    has_all(
+        product_prd,
+        [
+            "PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步",
+            "## 0.0 PRD 文档质量治理",
+            "高质量 PRD 不是越长越好，也不是越短越好",
+            "先定文档目标和读者",
+            "PRD 说明要做什么和如何验收",
+            "MRD 说明市场、客户机会和为什么做",
+            "BRD 说明商业价值、投入产出和决策依据",
+            "功能名不能替代需求",
+            "需求变更必须更新版本号、变更原因、影响范围、通知对象和评审结论",
+        ],
+    ),
+)
+check(
     "PRD reference keeps feedback-to-problem gate",
     has_all(
         product_prd,
@@ -2211,6 +2246,8 @@ check(
             "product-prd-financial-appendix.md",
             "product-prd-operations-and-data.md",
             "正式评审、提交前检查、CR、触发验证或符合性评审时读取 `product-prd-quality-gates.md`",
+            "文档目标、目标读者和文档类型",
+            "不能把轻量需求写成无人评审的长文",
         ],
     )
     and has_all(
@@ -2224,6 +2261,45 @@ check(
             "符合项：已经满足模板、可验收性或专项门禁的内容",
             "必改：会阻断评审、研发、测试、上线或专业确认的缺口",
             "每条评审项必须说明章节或位置、问题、影响和建议改法",
+        ],
+    ),
+)
+check(
+    "PRD quality gates keep document governance checks",
+    has_all(
+        product_prd_quality_gates,
+        [
+            "文档过厚、过薄、未更新、未评审",
+            "## 2.1 文档治理门禁",
+            "文档目标、目标读者和文档类型清楚",
+            "主文档可扫读",
+            "复杂细节拆到附录、矩阵或图",
+            "不能只写功能名",
+            "版本记录、变更原因、影响范围、通知对象和评审结论完整",
+            "文档、原型、规则矩阵、验收标准和工程交接口径一致",
+        ],
+    ),
+)
+check(
+    "product routing covers PRD document governance",
+    has_all(
+        product_routing,
+        [
+            "PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步",
+            "PRD 文档过厚、过薄、未更新、未评审、版本不同步",
+            "文档目标/受众、裁剪建议、必改项、版本/评审/同步机制",
+        ],
+    ),
+)
+check(
+    "product skill tree includes PRD document governance",
+    has_all(
+        "product-architecture-expert/references/skill-tree.md",
+        [
+            "文档治理",
+            "PRD/MRD/BRD",
+            "主文档/附录裁剪",
+            "版本记录、评审闭环",
         ],
     ),
 )

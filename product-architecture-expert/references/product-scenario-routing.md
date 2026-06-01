@@ -36,6 +36,7 @@
 | 产品场景初判 | 使用方式、产品语义门禁、快速路由表 | 输出路由细节 |
 | PRD/产品方案 | 快速路由表、输出路由，并继续读 PRD reference | 支付资金专项，除非命中资金场景 |
 | 原型/HTML/页面截图/交互稿反推 PRD | 使用方式、产品语义门禁、快速路由表，并继续读 PRD reference | 只描述页面控件 |
+| PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
 | 业务流程/状态/规则 | 产品语义门禁、快速路由表、通用场景识别问题 | PRD 模板正文 |
 | 业务驱动架构交接 / 产品方案交给架构师 | 产品语义门禁、快速路由表、`product-architecture-methodology.md` 的 5/5.1 | 页面控件或技术模块清单 |
 | 图形化交付 | 快速路由表、输出路由，并读 `diagram-output.md` | 支付规则细节 |
@@ -82,6 +83,7 @@
 | --- | --- | --- |
 | 产品方向、业务目标、产品边界不清 | `product-architecture-methodology.md` | 目标、用户、范围、非目标、成功指标、关键风险 |
 | 写 PRD、生成 PRD、完善 PRD、评审 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；评审加读 `product-prd-quality-gates.md`，支付资金加读 `product-prd-financial-appendix.md`，运营数据发布加读 `product-prd-operations-and-data.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
+| PRD 文档过厚、过薄、未更新、未评审、版本不同步 | `product-design-and-prd.md`, `product-prd-quality-gates.md` | 文档目标/受众、裁剪建议、必改项、版本/评审/同步机制 |
 | 产品方案要交给架构师继续系统设计、业务驱动架构交接、产品语义到工程验证、验收种子到 TDD 交接 | `product-architecture-methodology.md`, `product-design-and-prd.md`, `product-prd-quality-gates.md` | 业务驱动架构交接包：目标/非目标/成功指标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项；必要时输出验收种子交接矩阵 |
 | 能力地图、模块关系、产品架构 | `product-architecture-methodology.md` | 能力地图、模块边界、前后台能力、交付拆分 |
 | 画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物 | `diagram-output.md`，按场景再读 `product-architecture-methodology.md`、`product-design-and-prd.md` 或支付资金专项 reference | 默认生成 SVG，报告用途、假设、验证和待确认项；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出 |
