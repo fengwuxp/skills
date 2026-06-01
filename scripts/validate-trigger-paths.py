@@ -991,6 +991,21 @@ check(
     ),
 )
 check(
+    "README records requirements analysis and design source",
+    has_all(
+        "README.md",
+        [
+            "需求分析和设计活动关键要点总结",
+            "https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q",
+            "功能定义、功能分配追溯、需求分析外部视角和设计内部视角分工",
+            "功能不是头脑风暴清单",
+            "功能来自上层对象分配",
+            "正逆追溯",
+            "不复制原文推荐书目、GJB 章节表述、课程/书籍引导或作者表达",
+        ],
+    ),
+)
+check(
     "README records business-driven architecture reference sources",
     has_all(
         "README.md",
@@ -1304,6 +1319,27 @@ check(
     ),
 )
 check(
+    "senior records requirements analysis and design source",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：需求分析和设计活动关键要点总结",
+            "https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q",
+            "需求分析和设计活动关键要点总结",
+            "软件需求分析和设计",
+            "常识",
+            "2026-05-26 10:29:23",
+            "公开 HTML 读取标题、公众号、作者、发布时间和正文",
+            "本机 Chrome headless",
+            "功能不是头脑风暴功能点",
+            "对象对外提供的可见、有价值交互行为",
+            "正向分解和逆向追溯",
+            "需求分析外部视角和设计内部视角",
+            "不复制文章中的 GJB 章节表述、书籍推荐、课程机构推荐、作者自述或原文表达",
+        ],
+    ),
+)
+check(
     "senior architecture keeps fit simplicity evolution gates",
     has_all(
         "senior-software-architect/references/architecture.md",
@@ -1449,6 +1485,24 @@ check(
             "质量属性场景",
             "业务 driver",
             "系统边界、模块、接口、数据、质量属性和测试",
+        ],
+    ),
+)
+check(
+    "senior system design preserves functional allocation boundary",
+    has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "功能分配关系",
+            "功能不是头脑风暴得到的功能点",
+            "对象对外提供的可见、有价值交互行为",
+            "下层系统、模块或 CSCI 的功能应来自上层对象目标和功能分解",
+            "正向分解和逆向追溯",
+            "需求分析与设计分工",
+            "需求分析站在对象外部",
+            "设计站在对象内部",
+            "功能是否能追溯到上层目标或父对象功能分配",
+            "在需求分析阶段过早展开内部结构",
         ],
     ),
 )
@@ -2094,6 +2148,23 @@ check(
     ),
 )
 check(
+    "product methodology keeps functional allocation boundary",
+    has_all(
+        product_architecture,
+        [
+            "能力不是头脑风暴出来的功能点清单",
+            "某对象或主体对外提供的可见、有价值交互行为",
+            "上层目标或父能力来源",
+            "目标用户/主执行者",
+            "可观察结果和验收口径",
+            "不要只写按钮、页面、内部系统动作或技术组件",
+            "每个能力应能追溯到产品目标、父能力或上层业务对象",
+            "无法追溯的能力先放入观察池或非目标",
+            "外显价值行为和正逆追溯",
+        ],
+    ),
+)
+check(
     "product methodology keeps low cost generation constraints",
     has_all(
         product_architecture,
@@ -2127,10 +2198,28 @@ check(
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
             "产品图形化与服务蓝图",
+            "需求分析与设计基础",
             "AI 辅助 PRD 与问题地图",
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map records requirements analysis and design source",
+    has_all(
+        product_source_map,
+        [
+            "需求分析与设计基础",
+            "需求分析和设计活动关键要点总结",
+            "https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q",
+            "软件需求分析和设计",
+            "常识",
+            "2026-05-26 10:29:23",
+            "功能定义、功能分配追溯、需求分析外部视角和设计内部视角的分工",
+            "不复制原文中的 GJB 章节表述、推荐书目、课程机构推荐或作者表达",
+            "不把军标/适航语境写成通用产品强制流程",
         ],
     ),
 )
@@ -3159,6 +3248,19 @@ check(
     ),
 )
 check(
+    "senior skill tree exposes functional allocation literacy",
+    has_all(
+        "senior-software-architect/references/skill-tree-architecture-design.md",
+        [
+            "对象对外可见、有价值的交互行为",
+            "上层对象或父能力分配而来",
+            "正向分解和逆向追溯",
+            "需求分析的外部视角和设计活动的内部视角",
+            "避免在需求阶段过早按内部结构拆功能",
+        ],
+    ),
+)
+check(
     "product skill tree exposes product diagram literacy",
     has_all(
         product_skill_tree,
@@ -3167,6 +3269,18 @@ check(
             "能力地图、用户旅程、服务蓝图、流程图、状态机、资金四流和指标链路",
             "AI 辅助画图只作为可编辑草案",
             "必须回到 PRD、规则、证据和验收",
+        ],
+    ),
+)
+check(
+    "product skill tree exposes functional allocation literacy",
+    has_all(
+        product_skill_tree,
+        [
+            "功能分配",
+            "对象对外可见、有价值的交互行为",
+            "追溯到目标、父能力或上层业务对象",
+            "分配到对象、流程、规则、数据和验收",
         ],
     ),
 )
