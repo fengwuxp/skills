@@ -171,7 +171,7 @@ codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度"]
 payment_terms = [
     "清结算",
     "对账",
@@ -1006,6 +1006,37 @@ check(
     ),
 )
 check(
+    "README records AI-shaped readiness advisor boundary",
+    has_all(
+        "README.md",
+        [
+            "现在我敢评测这个 skill 了，产品负责人来看看这个自评卡吧",
+            "https://mp.weixin.qq.com/s/ZUwtGYYTzt-c2YRXn8ryJw",
+            "deanpeters/Product-Manager-Skills",
+            "ai-shaped-readiness-advisor",
+            "AI 产品工作成熟度",
+            "AI-first 与 AI-shaped 区分",
+            "上下文结构化、工作流编排、学习周期、人工责任和差异化指标",
+            "不安装外部 Skill",
+            "不复制交互协议、评分 rubrics、示例案例、图片、自评卡排版或作者表达",
+        ],
+    ),
+)
+check(
+    "README records product manager methodology book boundary",
+    has_all(
+        "README.md",
+        [
+            "产品经理方法论",
+            "赵丹阳",
+            "https://m.dushu.com/book/13884861/",
+            "文档分型、流程图、原型图、产品架构图、用户研究、需求管理、数据分析、技术协作、项目管理、行业/商业分析和知识库沉淀",
+            "不复制书籍正文、章节内容、示例、图表或作者表达",
+            "不把基础岗位知识体系替代复杂业务产品架构专家能力",
+        ],
+    ),
+)
+check(
     "README records business-driven architecture reference sources",
     has_all(
         "README.md",
@@ -1454,6 +1485,54 @@ check(
     ),
 )
 check(
+    "senior source map and README record GSD workflow boundary",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：GSD 工作流",
+            "https://mp.weixin.qq.com/s/VA_GhniSSrcJotXWlgk_lw",
+            "让AI编程从\"越写越烂\"到\"持续稳定输出\"：GSD工作流-适合中大型项目的精准框架。",
+            "上下文账本、阶段状态、原子任务计划、子 Agent 角色、Wave 依赖",
+            "不默认在项目中创建 `PROJECT.md`、`STATE.md`、`ROADMAP.md`、`CONTEXT.md`",
+            "不把“子 Agent + Wave 并行”写成默认开发方式",
+            "不把自动原子提交视为默认授权",
+            "不把外部工具的命令、术语或自动化习惯凌驾于本仓库 `AGENTS.md`",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "GSD工作流-适合中大型项目的精准框架",
+            "中大型 AI 编码流程治理、上下文衰减、阶段状态、多 Agent 编排、Wave 依赖、原子可追溯和 Git 版本化意识",
+            "不复制 GSD 命令体系、文件模板、XML 示例、动图、截图、工具宣传语或作者表达",
+            "不把自动提交视为默认授权",
+        ],
+    ),
+)
+check(
+    "senior skill tree exposes AI context decay capability",
+    has_all(
+        "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
+        [
+            "长任务上下文衰减",
+            "上下文账本",
+            "子 Agent / Wave 并行",
+            "研究、规划、执行和验证",
+            "明确小修、一次性 demo 或快速 MVP 验证走轻量闭环",
+            "外部工作流命令、状态文件命名或自动提交习惯",
+        ],
+    )
+    and has_all(
+        knowledge_graph,
+        [
+            "AI 协作、上下文衰减或 CAD Mode",
+            "OpenSpec、Harness、上下文账本、Wave 编排、CAD Mode",
+            "AI 写到后面越来越乱 / 长任务上下文太重",
+        ],
+    )
+    and contains("senior-software-architect/references/skill-tree.md", "上下文账本、阶段状态、Wave 编排、协作交接和验证闭环"),
+)
+check(
     "senior architecture keeps architect thinking model",
     has_all(
         "senior-software-architect/references/architecture.md",
@@ -1726,6 +1805,51 @@ check(
             "代码生成降低的是执行成本，不降低系统复杂度",
             "不要写什么、必须删什么、何时停止",
             "复杂度与注意力成本",
+        ],
+    ),
+)
+check(
+    "senior AI engineering governs long-task context decay",
+    has_all(
+        ai_engineering,
+        [
+            "长任务的上下文账本、阶段状态、交接方式和恢复入口",
+            "中大型 AI 编码或上下文衰减治理",
+            "上下文衰减",
+            "可审查、可版本化、可恢复的载体",
+            "最小上下文账本",
+            "阶段状态",
+            "原子任务计划",
+            "子 Agent 与 Wave 编排",
+            "研究者",
+            "规划者",
+            "执行者",
+            "验证者",
+            "同一 Wave 只能包含互不重叠、无顺序依赖、可独立验证的任务",
+            "Git 操作仍服从项目规则和用户授权",
+            "不把外部工作流命令、XML 示例或文件命名照搬进项目",
+            "低风险小修、3 分钟内可完成的明确改动、一次性 demo 或 MVP 快速验证",
+        ],
+    ),
+)
+check(
+    "workflow and routing expose AI context ledger gates",
+    has_all(
+        workflow,
+        [
+            "上下文账本、阶段状态、子任务交接和恢复入口",
+            "不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据",
+            "多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口",
+            "AI 多 Agent 或 Wave 编排产生的变更应保持原子可追溯",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理",
+            "上下文账本、阶段状态、原子任务计划、Wave 依赖、交接和集成",
+            "先判断是需求不清还是上下文衰减",
+            "明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程",
         ],
     ),
 )
@@ -2176,6 +2300,46 @@ check(
     ),
 )
 check(
+    "product methodology keeps AI-shaped readiness as internalized review",
+    has_all(
+        product_architecture,
+        [
+            "AI-shaped 产品工作成熟度",
+            "不安装外部 advisor、不照搬外部术语",
+            "优势、流程、上下文、编排、责任和指标",
+            "AI 要带来什么业务优势，而不只是省时间或多写文档",
+            "哪些产品发现、需求评审、验证、决策或复盘流程真的被改了",
+            "事实、约束、术语、证据标准和上下文边界已经结构化",
+            "高频产品任务能重复运行、保留输入输出、记录判断依据并可追溯",
+            "AI 输出由谁验证、谁拍板、谁承担结果责任",
+            "验证周期、决策质量、返工率、错误率和学习速度",
+            "若竞品购买同类工具即可复制，不能写成战略差异化",
+            "不要把 `AI-shaped`、`Context Design`、`Agent Orchestration` 等术语直接写进团队口号",
+        ],
+    ),
+)
+check(
+    "product methodology keeps product manager basics as architecture calibration",
+    has_all(
+        product_architecture,
+        [
+            "产品经理基础方法校准",
+            "把基础方法升格为复杂业务产品可交付能力",
+            "文档分型",
+            "流程表达",
+            "原型与注释",
+            "产品架构图",
+            "用户研究",
+            "需求管理",
+            "数据分析",
+            "技术与项目协作",
+            "行业商业分析与知识库",
+            "对象模型、规则矩阵、数据验收、跨团队交接、风险治理和领域知识",
+            "不把基础岗位清单替代复杂产品架构",
+        ],
+    ),
+)
+check(
     "product source map records AI complexity article reference",
     has_all(
         product_source_map,
@@ -2198,11 +2362,52 @@ check(
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
             "产品图形化与服务蓝图",
+            "AI-shaped 产品工作成熟度",
+            "产品经理方法论与基础能力",
             "需求分析与设计基础",
             "AI 辅助 PRD 与问题地图",
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map records product manager methodology book boundary",
+    has_all(
+        product_source_map,
+        [
+            "产品经理方法论与基础能力",
+            "产品经理方法论：构建完整的产品知识体系",
+            "https://m.dushu.com/book/13884861/",
+            "赵丹阳",
+            "人民邮电出版社",
+            "9787115571144",
+            "2026-06-02",
+            "公开图书页、内容简介、作者简介和目录",
+            "文档分型、流程图、原型图、产品架构图、用户研究、需求管理、数据分析、技术协作、项目管理、行业/商业分析、产品实践、学习方法和职业进阶",
+            "不复制书籍正文、章节内容、示例、图表、训练材料或作者表达",
+            "不把基础岗位知识体系替代复杂业务产品架构专家能力",
+        ],
+    ),
+)
+check(
+    "product source map records AI-shaped readiness advisor boundary",
+    has_all(
+        product_source_map,
+        [
+            "AI-shaped 产品工作成熟度",
+            "现在我敢评测这个 skill 了，产品负责人来看看这个自评卡吧",
+            "https://mp.weixin.qq.com/s/ZUwtGYYTzt-c2YRXn8ryJw",
+            "糖糖",
+            "产品AI力学",
+            "2026-05-02 10:00:00",
+            "ai-shaped-readiness-advisor",
+            "deanpeters/Product-Manager-Skills",
+            "https://raw.githubusercontent.com/deanpeters/Product-Manager-Skills/main/skills/ai-shaped-readiness-advisor/SKILL.md",
+            "Context Design、Agent Orchestration、Outcome Acceleration、Team-AI Facilitation 和 Strategic Differentiation",
+            "不安装该 Skill",
+            "不复制交互协议、评分 rubrics、示例案例、关联 Skill 链接或外部执行流程",
         ],
     ),
 )
@@ -2298,6 +2503,34 @@ check(
             "验收种子交接矩阵",
             "质量属性种子",
             "用户要交给架构师继续设计或业务驱动架构交接",
+        ],
+    ),
+)
+check(
+    "product routing exposes product manager methodology calibration",
+    has_all(
+        product_routing,
+        [
+            "产品经理方法论 / 产品专家基础能力补齐",
+            "不把基础岗位清单替代复杂产品架构",
+            "产品经理方法论、产品专家能力补齐、产品经理知识体系、基础工作法校准",
+            "文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析、知识库沉淀",
+            "用户要补齐产品经理方法论或产品专家基础能力",
+            "哪些能力需要提升到复杂业务对象、规则、验收和交接",
+        ],
+    ),
+)
+check(
+    "product routing exposes AI-shaped readiness review",
+    has_all(
+        product_routing,
+        [
+            "AI 产品工作成熟度 / AI-shaped readiness / AI 工作流改造",
+            "不安装外部 advisor，不把外部术语当团队结论",
+            "AI 产品工作成熟度、AI-shaped readiness、产品团队 AI 工作流改造、AI 是否形成产品优势",
+            "业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标",
+            "用户要评估 AI 产品工作成熟度或 AI-shaped readiness",
+            "默认只借鉴方法，不安装或调用外部 Skill",
         ],
     ),
 )
@@ -3273,6 +3506,26 @@ check(
     ),
 )
 check(
+    "product skill tree exposes product manager foundational methods",
+    has_all(
+        product_skill_tree,
+        [
+            "产品经理方法论 / 基础能力补齐",
+            "产品经理基础方法能力",
+            "文档分型",
+            "流程表达",
+            "原型注释",
+            "用户研究",
+            "需求管理",
+            "数据分析",
+            "技术/项目协作",
+            "行业商业分析",
+            "知识库与能力复制",
+            "不把基础岗位清单当作专家能力终点",
+        ],
+    ),
+)
+check(
     "product skill tree exposes functional allocation literacy",
     has_all(
         product_skill_tree,
@@ -3281,6 +3534,19 @@ check(
             "对象对外可见、有价值的交互行为",
             "追溯到目标、父能力或上层业务对象",
             "分配到对象、流程、规则、数据和验收",
+        ],
+    ),
+)
+check(
+    "product skill tree exposes AI-shaped product workflow maturity",
+    has_all(
+        product_skill_tree,
+        [
+            "AI 产品工作成熟度评估",
+            "不把工具熟练度当成熟度",
+            "AI 产品工作流成熟度",
+            "区分 AI 工具提效和 AI-shaped 工作重构",
+            "业务优势、流程变化、上下文结构化、任务编排、人工责任、验证周期、决策质量和返工率",
         ],
     ),
 )
@@ -3772,6 +4038,16 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="product acceptance seeds for tdd handoff",
         prompt="会员权益产品方案要交给架构师按 TDD 推进，请补验收种子，区分可代码化、可观测化和可评审化，不要写工程测试代码",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="product AI-shaped readiness review",
+        prompt="评估一下产品团队的 AI-shaped readiness，看看 AI 工作流是不是只在提效，还是形成了可复盘的产品优势",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="product manager methodology calibration",
+        prompt="阅读一下产品经理方法论这本书，看一下对于产品专家的基础能力是否可以补齐",
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(

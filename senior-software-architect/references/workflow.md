@@ -32,7 +32,7 @@
 | 代码修改或测试补充 | `工程生命周期门禁`、`代码修改前`、`代码修改后（必须验证）`、`验证命令选择矩阵` | 不先读 Git 规约或提交模板 |
 | 只做验证、CR 或提交前检查 | `代码修改后（必须验证）`、`PR 提交前检查`、`Git 规约` | 不重新展开设计方法论 |
 | 外部 API、SDK、云产品或规则变化 | `外部知识时效性门禁`、`工程生命周期门禁` | 不依赖模型记忆或二手博客给确定结论 |
-| AI 协作、OpenSpec、Harness 或 CAD Mode | `工程生命周期门禁`、`代码修改前`，再读 `ai-assisted-engineering.md` 与 `cad-mode.md` | 不把 CAD 建议当作自动授权 |
+| AI 协作、OpenSpec、Harness、多 Agent 或 CAD Mode | `工程生命周期门禁`、`代码修改前`，再读 `ai-assisted-engineering.md` 与 `cad-mode.md` | 不把 CAD 建议、外部工作流命令或并行编排当作自动授权 |
 | 文档、注释或说明类变更 | `代码修改后（必须验证）` 中文档行、`语言偏好` | 不运行无意义编译但必须说明原因 |
 | Git 边界和提交建议 | `Git 规约`、`PR 提交前检查` | 用户未要求时不执行 Git 写操作 |
 | PR / CL 说明 | `PR/CL 说明质量`、`PR 提交前检查` | 不写“fix bug”“phase 1”类无上下文说明 |
@@ -77,6 +77,7 @@
 - Verify 阶段无法执行真实验证时，必须说明原因、替代证据和残余风险，不得用“看起来没问题”代替验证。
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
 - AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；CAD Mode、Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
+- 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
 
 ## 语言偏好
 
@@ -89,6 +90,7 @@
 - 先识别项目构建工具和变更类型，再选择验证命令。
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
+- 多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口；如果任务只是明确小修或一次性 demo，不启动重型并行流程。
 - 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，详细进入门禁、Git 策略、每轮摘要和停止条件以 `cad-mode.md` 为准。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。
@@ -114,7 +116,7 @@
 | 构建配置、依赖、插件、版本升级 | 干净构建 + 相关测试 + 依赖检查 | Java: `mvn clean test`；Node: `npm ci && npm test`；Python: `pip/poetry` 项目命令；Rust: `cargo test` | 新增依赖需说明必要性、维护责任、许可和安全风险。 |
 | 框架配置、starter、plugin、中间件装配 | 启动/上下文/集成测试 | Spring/Next/FastAPI/Gin 等项目约定测试命令 | 关注配置默认值、条件装配、启动失败路径和环境差异。 |
 | MQ、异步任务、批处理、定时任务 | 幂等/重试/补偿测试 + 本地集成验证 | 项目约定测试命令 | 必须覆盖重复消息、超时、失败重试和人工兜底。 |
-| AI 编码协作 / 多 Agent 修改 | OpenSpec/Harness Plan + 目标技术栈验证 + AI 产物复核 | 结合具体语言执行编译、测试、lint；Java 参考 `mvn test` / `./gradlew test` | 必须检查写入范围、分工边界、测试保护、无关修改、幻觉 API、无主依赖和交接说明。 |
+| AI 编码协作 / 多 Agent 修改 | OpenSpec/Harness Plan + 目标技术栈验证 + AI 产物复核 | 结合具体语言执行编译、测试、lint；Java 参考 `mvn test` / `./gradlew test` | 必须检查写入范围、分工边界、上下文账本、阶段状态、测试保护、无关修改、幻觉 API、无主依赖和交接说明。 |
 
 ## PR 提交前检查
 
@@ -123,6 +125,7 @@
 - 新增或修改逻辑时，相关测试应随同一变更提交；纯重构也必须有既有测试保护，缺少保护时先补 characterization test 或行为测试。
 - 大重构、搬迁和重命名通常与功能修改、Bug 修复分开提交；只有局部清理不会增加 Review 难度时，才随当前变更一起处理。
 - 每个中间提交都应保持构建和核心用例可用；存在依赖顺序的多提交变更，应在说明中交代前后关系和回滚边界。
+- AI 多 Agent 或 Wave 编排产生的变更应保持原子可追溯：每个变更单元能对应任务计划、验证证据和交接说明；默认只建议原子提交，Git 写操作仍需用户明确授权。
 - 禁止提交任何包含 `System.out.println` 或 `e.printStackTrace()` 的代码。
 - 所有可公开访问的方法需有 Javadoc 注释。
 - 不稳定的代码必须用 `@Deprecated` 标注并说明替代方案。

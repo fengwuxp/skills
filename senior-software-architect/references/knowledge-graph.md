@@ -38,7 +38,7 @@
 | Java/Spring/Wind 设计或 Review | `coding-standards.md`, `wind-projects-patterns.md`, `project-governance-standards.md` | 通用能力解释 |
 | 测试、TDD、验收验证 | `testing.md`, `testing-practices.md` | 平台治理细节 |
 | 生产排障、安全、可观测性 | `debugging-diagnosis.md`, `production-readiness.md`, `security-architecture.md` | 产品语义细节 |
-| AI 协作或 CAD Mode | `ai-assisted-engineering.md`, `cad-mode.md`, `workflow.md` | 语言运行时细节 |
+| AI 协作、上下文衰减或 CAD Mode | `ai-assisted-engineering.md`, `cad-mode.md`, `workflow.md` | 语言运行时细节 |
 | 经验沉淀或 Skill 维护 | 本文的归档规则、`source-map.md` | 具体业务方案细节 |
 
 ## 1. 根节点
@@ -68,7 +68,7 @@
 | 调试诊断与生产韧性 | Bug、线上现象、根因、回滚、Runbook | `debugging-diagnosis.md`, `production-readiness.md`, `workflow.md` | 证据链、最小修复、回归验证 |
 | 安全、数据与合规边界 | 认证授权、租户隔离、审计、敏感数据 | `security-architecture.md`, `negative-constraints.md` | 风险清单、控制点、确认方 |
 | 平台、交付与项目治理 | 模块治理、API、Git/PR、K8s、演进 | `project-governance-standards.md`，再进入治理专题 | 治理结论、门禁、演进路径 |
-| AI 编码协作与经验沉淀 | OpenSpec、Harness、CAD Mode、Skill 维护 | `ai-assisted-engineering.md`, `cad-mode.md`, `workflow.md`, `source-map.md` | 协作边界、授权门禁、来源边界 |
+| AI 编码协作与经验沉淀 | OpenSpec、Harness、上下文账本、Wave 编排、CAD Mode、Skill 维护 | `ai-assisted-engineering.md`, `cad-mode.md`, `workflow.md`, `source-map.md` | 协作边界、阶段状态、授权门禁、来源边界 |
 
 ## 3. 典型判断路径
 
@@ -81,6 +81,7 @@
 | “要不要拆服务/上中台/引入 MQ” | 业务边界、团队能力、运维成本和验证方式 | `architecture.md` -> `adr-and-tradeoff.md` |
 | “这个框架/SDK/Agent 编排会不会让系统更复杂” | 复杂度从哪里转移到哪里，关键通信边和状态传播是否可观测 | `architecture.md` -> `adr-and-tradeoff.md` -> `diagram-output.md` |
 | “外部 SDK/API/云产品版本变化” | 权威来源、版本、生效日期、本地依赖树 | `workflow.md` -> `adr-and-tradeoff.md` |
+| “AI 写到后面越来越乱 / 长任务上下文太重” | 是需求不清还是上下文衰减，是否需要阶段状态、原子任务计划和 Wave 依赖 | `workflow.md` -> `ai-assisted-engineering.md` |
 
 ## 4. 经验归档规则
 
