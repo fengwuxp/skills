@@ -38,6 +38,7 @@
 | 核对通信复杂度文章应用记录 | `微信公众号文章：软件复杂性的本质是通信复杂性`、`应用记录` | 不把通信复杂度绝对化为唯一复杂度来源 |
 | 核对 AI 辅助画图和架构图来源 | `AI 辅助画图与架构图公开来源组`、`应用记录` | 不把工具输出当作架构质量结论 |
 | 核对 AI 编码 GSD 工作流文章应用记录 | `微信公众号文章：GSD 工作流`、`应用记录` | 不照搬外部命令、文件体系或自动提交习惯 |
+| 核对 Codex 官方团队运行时协作文章应用记录 | `微信公众号文章：Codex 官方团队：如何把 Codex 用到极致`、`应用记录` | 不把平台功能当成当前工具可用性或执行授权 |
 | 核对需求分析与设计基础文章应用记录 | `微信公众号文章：需求分析和设计活动关键要点总结`、`应用记录` | 不复制 GJB 章节表述、推荐书目或作者表达 |
 | 核对业务驱动架构与验证来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把通用方法论当作项目事实 |
 | 新增外部来源 | `读取与归因规则`、`提炼边界` | 不把未读正文的来源标为已吸收 |
@@ -291,7 +292,8 @@
 
 | 应用位置 | 已吸收内容 |
 | --- | --- |
-| `ai-assisted-engineering.md` | 补充长任务上下文治理、上下文账本、阶段状态、原子任务计划、子 Agent 角色、Wave 依赖、交接说明、会话恢复入口和轻重流程选择。 |
+| `ai-assisted-engineering.md` | 补充长任务上下文治理入口，保留 OpenSpec、Superpowers、Harness、CAD Mode 与中大型编排的路由关系。 |
+| `ai-large-project-orchestration.md` | 新增类 GSD 的大项目编排工作流，定义项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖、执行协议、验证矩阵、暂停恢复、Git 边界和收口流程。 |
 | `workflow.md` | 在 AI 协作门禁、代码修改前、验证矩阵和 PR 提交前检查中补充上下文账本、阶段状态、原子可追溯和用户授权边界。 |
 | `scenario-routing.md` | 将 AI 编码协作扩展为 OpenSpec 到代码、多 Agent 编排和上下文衰减治理，要求先判断需求不清还是上下文衰减，再选择轻量或重型流程。 |
 | `skill-tree.md`、`skill-tree-platform-leadership-ai.md`、`knowledge-graph.md` | 在能力地图和知识图谱中补充上下文衰减治理、阶段状态、Wave 编排、原子任务和外部工作流边界。 |
@@ -305,6 +307,35 @@
 - 不把“子 Agent + Wave 并行”写成默认开发方式；小修、一次性 demo、快速 MVP 验证和需求不清场景应先走轻量澄清、OpenSpec 或产品/系分补齐。
 - 不把自动原子提交视为默认授权；Git 写操作仍遵循项目规则、工具权限和用户明确授权。
 - 不把外部工具的命令、术语或自动化习惯凌驾于本仓库 `AGENTS.md`、项目本地规范、OpenSpec、Harness Plan、测试和安全边界之上。
+
+### 微信公众号文章：Codex 官方团队：如何把 Codex 用到极致
+
+- 来源：`https://mp.weixin.qq.com/s/6t8hu_XU48jC3T-fc_B5FQ`
+- 标题：`Codex 官方团队：如何把 Codex 用到极致`
+- 公众号：`产品设计频道BackChannel`
+- 作者：`Daniel`
+- 发布时间：2026-05-21 18:51:32 Asia/Shanghai
+- 读取日期：2026-06-02
+- 读取状态：已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间内嵌元数据和正文；本轮正文抽取仅用于结构化提炼，不归档文章全文到仓库。
+- 许可证与官方性边界：未见明确复用许可证；该微信文章只作为公开文章来源，不作为 OpenAI 官方当前产品能力、模型、工具可用性或官方承诺依据；涉及 Codex 当前能力时必须核验 OpenAI 官方文档或当前会话工具状态。本仓库只保留来源链接、读取状态、可迁移方法和吸收边界，不复制原文、示例、提示语、目录结构、平台宣传语或作者表达。
+
+应用记录：
+
+| 应用位置 | 已吸收内容 |
+| --- | --- |
+| `ai-assisted-engineering.md` | 新增 Codex 运行时协作模式，把 durable / pinned thread、voice / transcript、steering / queuing、browser / computer / MCP / connector、thread automation / scheduled automation、goal、side panel / artifact 和 shared written context 转成工程协作入口，并强调不替代 OpenSpec、Harness Plan、测试、Review 或用户授权。 |
+| `ai-large-project-orchestration.md` | 补充 Codex 持续协作边界，要求 automation、goal、artifact 和 written context 都绑定 verifier、停止条件、状态位置、权限边界和人工确认点；新增文章来源边界。 |
+| `README.md` | 新增公开参考来源记录，说明只吸收 Codex 运行时协作方式和持续工作流治理，不把平台功能写成默认授权。 |
+| `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 Codex 运行时协作模式、来源记录和持续协作红线漂移。 |
+
+未吸收内容：
+
+- 不把 Codex app 功能清单写成当前会话一定可用的工具能力；具体任务仍以当前工具、权限和平台状态为准。
+- 不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺。
+- 不默认创建 pinned thread、automation、goal、vault、外部 connector、长期 memory 或跨会话写入。
+- 不默认访问 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、外部 API、客户数据、生产配置或私有资料。
+- 不把 voice/transcript、thread transcript、queue 或 automation 当作规格、授权、验证结果或 Git/部署许可。
+- 不复制文章示例、提示语、目录结构、作者表达、平台宣传语或未核验的未来能力。
 
 ### 微信公众号文章：需求分析和设计活动关键要点总结
 

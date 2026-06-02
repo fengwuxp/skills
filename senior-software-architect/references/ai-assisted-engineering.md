@@ -19,12 +19,14 @@
 - 当前任务属于轻量执行、OpenSpec、Harness Plan、CAD Mode 还是只读审查。
 - 写入范围、禁止事项、验证命令和停止条件。
 - 长任务的上下文账本、阶段状态、交接方式和恢复入口。
+- Codex 运行时协作方式：thread、voice/transcript、steering/queuing、tool reach、automation/goal、side panel/artifact 或显式 written context 是否适用。
 - AI 产物复核重点：边界、契约、测试、验证、依赖、安全和生产风险。
 
 ## 需要继续读取的 reference
 
 - Java/Spring 代码读 `coding-standards.md` 和 `coding-review-deep-dive.md`。
 - 测试/TDD 读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
+- 中大型项目、长任务、上下文衰减、多 Agent/Wave 编排、暂停恢复和收口流程读 `ai-large-project-orchestration.md`。
 - CAD Mode、Execution Grant、自动分轮推进和自动提交边界读 `cad-mode.md`。
 - 生产变更读 `production-readiness.md` 和 `negative-constraints.md`。
 
@@ -38,7 +40,8 @@
 | CAD Mode 候选判断与授权 | 9 受控自治开发模式、10 Execution Grant，并继续读 `cad-mode.md` | 基础三层模型解释 |
 | 审查 AI 生成代码 | 4 Superpowers、8 风险分级、Review 清单，并按需读 Review/测试 reference | CAD 执行流程细节 |
 | 生产或高风险自动推进 | 8 风险分级、9 受控自治开发模式、10 Execution Grant，并继续读 `cad-mode.md` | 低风险轻量执行内容 |
-| 中大型 AI 编码或上下文衰减治理 | 5 Harness、6 长任务上下文治理、7 子 Agent 与 Wave 编排、11 与现有规范的关系，并按需读 `workflow.md` | 不照搬外部工具命令或完整文件体系 |
+| 中大型 AI 编码或上下文衰减治理 | 5 Harness、6 长任务上下文治理，并继续读 `ai-large-project-orchestration.md` | 不照搬外部工具命令或完整文件体系 |
+| Codex thread、automation、goal、side panel 或外部工具协作 | 5 Harness、6 长任务上下文治理、Codex 运行时协作模式；中大型任务继续读 `ai-large-project-orchestration.md` | 不把平台功能当授权或规格 |
 
 ## 1. 核心定位
 
@@ -68,6 +71,28 @@ OpenSpec 定目标
 ```
 
 中大型 AI 编码的额外风险是上下文衰减：对话越长，目标、决策、禁止事项、阻塞项和验证证据越容易被历史噪音淹没。架构师要把关键上下文放进可审查、可版本化、可恢复的载体，而不是依赖主会话记忆。
+
+## Codex 运行时协作模式
+
+Codex 的 thread、voice、tool、automation、goal、side panel 和 artifact 能把工程工作从单次问答推进到连续工作流，但它们只改变协作方式，不替代 OpenSpec、Harness Plan、测试、Review 或用户授权。
+
+| 运行时能力 | 适合承载 | 必须保留的边界 |
+| --- | --- | --- |
+| Durable / pinned thread | 长期反复发生的工作流、版本发布、文档审查、外部反馈跟进。 | 关键目标、决策、阻塞和验证证据仍应写入显式材料；thread 记忆不等同于规格。 |
+| Voice / transcript | 粗糙想法、会议记录、早期需求线索和 thought dump。 | 先提炼成目标、假设、待确认和验收，不把口述原文直接当执行规格。 |
+| Steering / queuing | 用户在执行中纠偏，或把后续任务排队。 | 新指令要重新校准范围、风险和验证；不得借排队任务绕过当前停止条件。 |
+| Browser / computer / MCP / connector | 网页审查、桌面 GUI、外部服务、Slack/Gmail/Calendar 等工作入口。 | 以当前会话可用工具和权限为准；访问外部服务、联网、上传、发送消息或读取私有数据都需要明确授权。 |
+| Thread automation / scheduled automation | 定期检查、反馈循环、周期性报告或同一 thread 的 heartbeat。 | 只有用户明确要求监控、提醒或持续推进时才创建；必须说明频率、停止条件、输出和权限边界。 |
+| Goal | 长任务的可验证终点。 | 目标必须有 success criterion、停止条件和 verifier，例如测试套件、benchmark、bug reproduction、验证矩阵或端到端流程。 |
+| Side panel / artifact | 代码、页面、文档、deck、表格、PDF 或静态 HTML 的就地审查。 | 需要真实渲染、截图、预览或验证；用户标注进入同一 Review loop，不替代测试和工程复核。 |
+| Shared memory / written context | 跨会话复用的偏好、项目事实、决策、阻塞和 open loop。 | 优先写项目已有权威文档；本地协作学习必须遵守仓库 `AGENTS.md` 授权，不默认创建 vault 或写入长期记忆。 |
+
+运行时选择顺序：
+
+1. 先判断用户是在补规格、要求执行、进行中纠偏、排后续任务，还是要长期监控。
+2. 再选择最小工具面：本地文件和 shell 优先，网页审查用 in-app browser，外部服务和桌面 GUI 只在任务和权限需要时使用。
+3. 若进入长期推进，必须把 outcome、verifier、停止条件、状态位置和人工确认点写清楚。
+4. 若涉及外部账号、消息、邮件、日程、客户数据、生产配置或敏感信息，先回 `negative-constraints.md` 和外部知识/权限门禁。
 
 ## 工程生命周期映射
 
@@ -225,6 +250,8 @@ Harness 红线：
 
 长任务不靠“主会话一直记得”维持质量，而靠项目内权威材料和阶段状态持续收束。适用于多轮实现、多 Agent 协作、跨模块变更、会话可能中断或上下文开始膨胀的任务。
 
+详细流程、账本文件、阶段模板、原子任务包、Wave 依赖、暂停恢复、Git 边界和收口模板统一读 `ai-large-project-orchestration.md`；本文只保留入口摘要，避免规则在多个 reference 中漂移。
+
 最小上下文账本：
 
 | 载体 | 记录内容 | 规则 |
@@ -234,7 +261,7 @@ Harness 红线：
 | 阶段状态 | 当前阶段、已完成事项、关键决策、阻塞项、验证结果和下一步。 | 会话中断或上下文清理后，先读阶段状态再继续。 |
 | 交接记录 | 每个子任务的改动、证据、风险、待确认项和回滚提示。 | 子 Agent 不得只说“完成了”；交接必须可 Review。 |
 
-不默认创建 `PROJECT.md`、`STATE.md`、`ROADMAP.md` 或 `CONTEXT.md`。如果项目已有 OpenSpec、ADR、任务计划、测试矩阵或本地文档，就复用既有权威位置；确需新增状态文件时，必须说明文件名、用途、写入范围、版本化策略和清理方式。
+不默认创建 `PROJECT.md`、`STATE.md`、`ROADMAP.md` 或 `CONTEXT.md`。如果项目已有 OpenSpec、ADR、任务计划、测试矩阵或本地文档，就复用既有权威位置；确需新增状态文件时，按 `ai-large-project-orchestration.md` 的账本规则说明文件名、用途、写入范围、版本化策略和清理方式。
 
 阶段循环：
 
@@ -252,6 +279,8 @@ Harness 红线：
 ## 7. 子 Agent 与 Wave 编排
 
 子 Agent / 多人并行只用于可切开的任务，不用于把模糊需求强行并行化。并行前必须先确认任务之间没有同一文件、同一模块、同一契约或同一状态机的写入冲突。
+
+详细角色边界、任务包模板、Wave 0-3 建议、执行协议和验证矩阵统一读 `ai-large-project-orchestration.md`。
 
 角色边界：
 

@@ -90,6 +90,7 @@ senior_routing = "senior-software-architect/references/scenario-routing.md"
 senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
 ai_engineering = "senior-software-architect/references/ai-assisted-engineering.md"
+ai_large_project = "senior-software-architect/references/ai-large-project-orchestration.md"
 cad_mode = "senior-software-architect/references/cad-mode.md"
 negative_constraints = "senior-software-architect/references/negative-constraints.md"
 testing = "senior-software-architect/references/testing.md"
@@ -222,6 +223,7 @@ reference_headers = [
     senior_diagram,
     workflow,
     ai_engineering,
+    ai_large_project,
     testing,
     coding,
     knowledge_graph,
@@ -1492,7 +1494,9 @@ check(
             "微信公众号文章：GSD 工作流",
             "https://mp.weixin.qq.com/s/VA_GhniSSrcJotXWlgk_lw",
             "让AI编程从\"越写越烂\"到\"持续稳定输出\"：GSD工作流-适合中大型项目的精准框架。",
-            "上下文账本、阶段状态、原子任务计划、子 Agent 角色、Wave 依赖",
+            "`ai-large-project-orchestration.md`",
+            "类 GSD 的大项目编排工作流",
+            "项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖",
             "不默认在项目中创建 `PROJECT.md`、`STATE.md`、`ROADMAP.md`、`CONTEXT.md`",
             "不把“子 Agent + Wave 并行”写成默认开发方式",
             "不把自动原子提交视为默认授权",
@@ -1510,10 +1514,40 @@ check(
     ),
 )
 check(
+    "senior source map and README record Codex runtime collaboration boundary",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：Codex 官方团队：如何把 Codex 用到极致",
+            "https://mp.weixin.qq.com/s/6t8hu_XU48jC3T-fc_B5FQ",
+            "Codex 官方团队：如何把 Codex 用到极致",
+            "durable / pinned thread、voice / transcript、steering / queuing",
+            "thread automation / scheduled automation、goal、side panel / artifact",
+            "不把平台功能当成当前工具可用性或执行授权",
+            "不作为 OpenAI 官方当前产品能力、模型、工具可用性或官方承诺依据",
+            "必须核验 OpenAI 官方文档或当前会话工具状态",
+            "不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺",
+            "不默认创建 pinned thread、automation、goal、vault、外部 connector、长期 memory",
+            "不把 voice/transcript、thread transcript、queue 或 automation 当作规格、授权、验证结果或 Git/部署许可",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "Codex 官方团队：如何把 Codex 用到极致",
+            "Codex 运行时协作、durable thread、voice/transcript、steering/queuing、tool reach、automation/goal、side panel/artifact 和 shared written context",
+            "持续工作流治理、可验证 goal、显式上下文和权限边界",
+            "不把平台功能当成默认工具可用性或执行授权",
+            "涉及 Codex 当前产品能力、模型、工具可用性或官方承诺时，仍必须核验 OpenAI 官方文档或当前会话工具状态",
+        ],
+    ),
+)
+check(
     "senior skill tree exposes AI context decay capability",
     has_all(
         "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
         [
+            "中大型 AI 编码、长任务上下文衰减、多 Agent/Wave 编排读 `ai-large-project-orchestration.md`",
             "长任务上下文衰减",
             "上下文账本",
             "子 Agent / Wave 并行",
@@ -1526,6 +1560,7 @@ check(
         knowledge_graph,
         [
             "AI 协作、上下文衰减或 CAD Mode",
+            "`ai-large-project-orchestration.md`",
             "OpenSpec、Harness、上下文账本、Wave 编排、CAD Mode",
             "AI 写到后面越来越乱 / 长任务上下文太重",
         ],
@@ -1817,6 +1852,7 @@ check(
             "中大型 AI 编码或上下文衰减治理",
             "上下文衰减",
             "可审查、可版本化、可恢复的载体",
+            "详细流程、账本文件、阶段模板、原子任务包、Wave 依赖、暂停恢复、Git 边界和收口模板统一读 `ai-large-project-orchestration.md`",
             "最小上下文账本",
             "阶段状态",
             "原子任务计划",
@@ -1829,6 +1865,63 @@ check(
             "Git 操作仍服从项目规则和用户授权",
             "不把外部工作流命令、XML 示例或文件命名照搬进项目",
             "低风险小修、3 分钟内可完成的明确改动、一次性 demo 或 MVP 快速验证",
+        ],
+    ),
+)
+check(
+    "senior AI large project orchestration defines GSD-like workflow",
+    has_all(
+        ai_large_project,
+        [
+            "# AI 大项目编排工作流",
+            "不依赖外部 GSD 工具",
+            "## 使用时机",
+            "## 不适用场景",
+            "## 读取后必须产出",
+            "## 需要继续读取的 reference",
+            "## 按任务读取索引",
+            "docs/ai-orchestration/<initiative-id>/",
+            "00-open-spec.md",
+            "01-context-ledger.md",
+            "03-state.md",
+            "04-harness-plan.md",
+            "Task ID:",
+            "Wave 0：只读侦察",
+            "同一 Wave 内任务必须互不重叠、无顺序依赖、可独立验证",
+            "暂停前必须更新 `03-state.md`",
+            "恢复时先读",
+            "大项目编排鼓励原子可追溯，但不默认执行 Git 写操作",
+            "Codex 持续协作边界",
+            "Thread automation",
+            "Scheduled automation",
+            "Goal",
+            "Side panel / artifact",
+            "Shared written context",
+            "必须包含 outcome、success criterion、verifier、停止条件和失败处理",
+            "不把 automation、goal 或 queue 当成 Git、联网、外部消息、桌面 GUI、生产操作或长期记忆授权",
+            "外部 GSD 来源边界",
+            "Codex 官方团队文章来源边界",
+            "不作为 OpenAI 官方当前产品能力、模型、工具可用性或路线图承诺依据",
+            "涉及 Codex 当前能力、工具状态、产品规则或官方承诺时，必须核验 OpenAI 官方文档或当前会话工具状态",
+            "不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺",
+            "不安装、不调用、不复刻外部 GSD 工具",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "中大型项目、长任务、上下文衰减、多 Agent/Wave 编排读 `references/ai-large-project-orchestration.md`",
+            "`references/ai-large-project-orchestration.md`",
+            "不安装或照搬外部 GSD 工具",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "`ai-large-project-orchestration.md`",
+            "中大型长任务",
+            "原子任务包",
+            "验证矩阵、暂停恢复和收口流程",
         ],
     ),
 )
@@ -1847,7 +1940,7 @@ check(
         senior_routing,
         [
             "AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理",
-            "上下文账本、阶段状态、原子任务计划、Wave 依赖、交接和集成",
+            "上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口",
             "先判断是需求不清还是上下文衰减",
             "明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程",
         ],
@@ -3971,6 +4064,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "workflow.md", "ai-assisted-engineering.md", "cad-mode.md", "negative-constraints.md"},
     ),
     RouteFixture(
+        name="AI large project orchestration",
+        prompt="目前确实有中大型项目，需要类似 GSD 的 AI 编码能力，做上下文衰减治理、Wave 编排和暂停恢复",
+        routes={"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
         name="architecture diagram output",
         prompt="画一张系统架构图和状态机，说明工程落点和验证方式",
         routes={"senior", "diagram-output.md"},
@@ -4175,6 +4273,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
     if contains_any(prompt, ["OpenSpec", "Agent", "CAD"]):
         route.update({"workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"})
+    if contains_any(prompt, ["GSD", "中大型", "大项目", "长任务", "上下文衰减", "Wave", "暂停恢复"]):
+        route.update({"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "negative-constraints.md"})
     if contains_any(prompt, ["CAD", "Execution Grant", "自动分轮", "自动提交"]):
         route.add("cad-mode.md")
     if contains_any(prompt, external_dependency_terms):

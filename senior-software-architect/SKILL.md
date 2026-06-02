@@ -90,7 +90,7 @@ description: |
 - **通用架构**：DDD、整洁架构、六边形架构、CQRS、事件驱动、模块化单体、微服务、数据一致性、可靠性、安全、可观测性和工程治理。
 - **分析表达**：产品语义校准、系分设计、工程能力映射、用例/流程/时序图、技术方案、评审文档和故障复盘。
 - **跨语言工程**：识别语言运行时、构建、依赖、测试、质量和部署体系，按项目生态选择验证手段。
-- **AI 编码协作**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor、协作编排和验证闭环；CAD Mode、Execution Grant 和自动分轮推进细节只读 `references/cad-mode.md`。
+- **AI 编码协作**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor、协作编排和验证闭环；中大型项目、长任务、上下文衰减、多 Agent/Wave 编排读 `references/ai-large-project-orchestration.md`；CAD Mode、Execution Grant 和自动分轮推进细节只读 `references/cad-mode.md`。
 - **Java/Spring/Wind**：Java 8+ / 21 / 25、JVM、JUC、Spring Boot、Validation、Transaction、Security、MyBatis Flex、Redis、MQ、缓存、事务、一致性与幂等。
 - **测试与交付**：TDD、测试分层、真实代码优先验证、Mock/Fake/Recording 边界、Spring 最小上下文、H2/Testcontainers、ArchUnit、P3C/PMD/SpotBugs/SonarLint、CI/CD、灰度、回滚和可观测性。
 - **调试与诊断**：用可重复反馈环、最小复现、假设验证、证据采集、最小修复和回归测试处理 Bug、异常、测试失败和生产现象。
@@ -135,6 +135,7 @@ Java/Wind 与代码质量：
 AI 协作与生产专项：
 
 - `references/ai-assisted-engineering.md` – OpenSpec、Superpowers、Harness、AI 代码红线和 AI 协作总纲。
+- `references/ai-large-project-orchestration.md` – 类 GSD 的中大型 AI 编码编排、上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复和收口流程；不安装或照搬外部 GSD 工具。
 - `references/cad-mode.md` – CAD Mode、Execution Grant、自动分轮推进、Git 策略、人工中断窗口和停止条件；CAD Mode 唯一详细规则源。
 - `references/negative-constraints.md` – 禁止行为和权限边界摘要。
 - `references/production-readiness.md` – SLO、容量、压测、发布回滚、数据变更、外部依赖和 Runbook。

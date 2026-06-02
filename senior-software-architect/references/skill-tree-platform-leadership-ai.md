@@ -18,6 +18,7 @@
 ## 需要继续读取的 reference
 
 - AI 协作读 `ai-assisted-engineering.md`。
+- 中大型 AI 编码、长任务上下文衰减、多 Agent/Wave 编排读 `ai-large-project-orchestration.md`。
 - 项目治理读 `project-governance-standards.md`。
 - Wind 实践读 `wind-projects-patterns.md`。
 
@@ -232,7 +233,7 @@
 - 不允许外部工作流命令、状态文件命名或自动提交习惯凌驾于项目 `AGENTS.md`、OpenSpec、Harness Plan、测试和用户授权之上。
 - 不允许把密钥、客户数据、生产敏感信息放进 AI 上下文。
 
-详细方法见 `references/ai-assisted-engineering.md`。
+AI 协作总纲见 `references/ai-assisted-engineering.md`；中大型项目编排、上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复和收口流程见 `references/ai-large-project-orchestration.md`。
 
 ## 18. Wind 项目族实践能力
 

@@ -33,7 +33,7 @@
 | Bug、异常、测试失败或生产现象 | `快速路由表` 中 Bug、生产现象行，`组合场景处理` 中 Bug/TDD、生产现象组合 | 不跳过复现和证据闭环直接重构 |
 | 写测试、补测试或 TDD | `快速路由表` 中测试行，`组合场景处理` 中 DDD/分层架构 + 测试行，再读 `testing.md` | 不以内部实现细节作为测试通过条件 |
 | 图形化、系分、ADR 或生产变更 | `快速路由表` 中图形、系分、选型、上线行，再读对应专项 reference | 不用图或 ADR 掩盖缺少验证的设计 |
-| 外部依赖、AI 协作或多 Agent 推进 | `快速路由表` 中外部 API、AI 编码协作行，再读 `workflow.md` 与 `ai-assisted-engineering.md` | 不凭模型记忆处理时效性外部规则，不照搬外部工作流命令 |
+| 外部依赖、AI 协作或多 Agent 推进 | `快速路由表` 中外部 API、AI 编码协作行，再读 `workflow.md`、`ai-assisted-engineering.md`；中大型项目继续读 `ai-large-project-orchestration.md` | 不凭模型记忆处理时效性外部规则，不照搬外部工作流命令 |
 
 ## 使用顺序
 
@@ -67,7 +67,7 @@
 | 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`negative-constraints.md`；命中 CAD Mode、Execution Grant 或自动分轮推进时加读 `cad-mode.md` | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用 Harness 管分工、写入范围、上下文账本、阶段状态、原子任务计划、Wave 依赖、交接和集成；CAD Mode 必须额外确认授权、Git 策略、人工中断和停止条件。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中 CAD Mode、Execution Grant 或自动分轮推进时加读 `cad-mode.md` | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；CAD Mode 必须额外确认授权、Git 策略、人工中断和停止条件。 |
 | AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 
@@ -88,7 +88,7 @@
 - **安全改造 + 遗留系统**：先识别现有权限和数据隔离缺口，再用防腐层、灰度开关和回归测试逐步收敛，不一次性重写认证授权体系。
 - **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载 `coding-standards.md`、`coding-review-deep-dive.md` 和项目本地规范约束具体代码；若进入 CAD Mode，再读 `cad-mode.md` 确认授权与逐轮推进边界。
 - **AI 编码协作 + 高风险生产行为**：先确认 OpenSpec 中的业务不变量、验收场景和回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范。
-- **AI 编码协作 + 中大型长任务**：先判断是需求不清还是上下文衰减；需求不清回到 OpenSpec 和产品/系分补齐，上下文衰减则建立上下文账本、阶段状态、原子任务计划和会话恢复入口，再按依赖组织 Wave。明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程。
+- **AI 编码协作 + 中大型长任务**：先判断是需求不清还是上下文衰减；需求不清回到 OpenSpec 和产品/系分补齐，上下文衰减或真实大项目则读取 `ai-large-project-orchestration.md`，建立上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和收口流程。明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程。
 
 ## 输出路由
 
@@ -102,7 +102,7 @@
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。
 - 用户要“上线”：输出生产就绪检查、风险清单、回滚和监控。
 - 用户要“改代码”：先按 `workflow.md` 过 Clarify、Design、Plan、Build、Verify、Review/Ship 生命周期门禁，再识别技术栈和本地规范，小步修改并运行对应验证。
-- 用户要“用 AI 写代码 / 多 Agent 协作”：先按 `workflow.md` 过生命周期门禁，再输出或确认 OpenSpec 与 Harness Plan；中大型任务补上下文账本、阶段状态、原子任务计划、Wave 依赖和交接说明，之后执行小步实现和 Superpowers 验证闭环。
+- 用户要“用 AI 写代码 / 多 Agent 协作”：先按 `workflow.md` 过生命周期门禁，再输出或确认 OpenSpec 与 Harness Plan；中大型任务读取 `ai-large-project-orchestration.md`，补上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和交接说明，之后执行小步实现和 Superpowers 验证闭环。
 - 用户只要“建议”：克制输出不超过 3 个高价值方向，必要时说明假设。
 
 ## 路由红线
