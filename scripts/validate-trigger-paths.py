@@ -144,6 +144,7 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
+product_ai_native_context = "product-architecture-expert/references/ai-native-product-context.md"
 product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
 product_prd_template = "product-architecture-expert/references/product-prd-template.md"
@@ -172,7 +173,7 @@ codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文"]
 payment_terms = [
     "清结算",
     "对账",
@@ -1543,6 +1544,32 @@ check(
     ),
 )
 check(
+    "senior source map and README record AI Native architect boundary",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：放下代码：AI Native是通往架构师的快车道",
+            "https://mp.weixin.qq.com/s/fhEzrPbeez-_2bmJHqExCQ",
+            "放下代码：AI Native是通往架构师的快车道",
+            "2026-05-23 12:00:00",
+            "AI Native 架构师工作面",
+            "hardened 标准",
+            "Agent 工作流设计",
+            "Hardened Candidate",
+            "不能直接作为 Execution Grant",
+            "不把“放下代码”理解为放弃编码能力、代码审查、测试、验证或生产责任",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "放下代码：AI Native是通往架构师的快车道",
+            "AI Native 架构师角色升级、hardened 标准、Agent 工作流设计、系统判断和技术战略职责",
+            "不复制原文、引用案例、播客转述、作者表达或岗位评价",
+        ],
+    ),
+)
+check(
     "senior skill tree exposes AI context decay capability",
     has_all(
         "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
@@ -1967,6 +1994,51 @@ check(
             "原子任务包",
             "GSD-like 编排 + CAD Mode",
             "验证矩阵、暂停恢复和收口流程",
+        ],
+    ),
+)
+check(
+    "senior AI Native architect and hardening gates are routed",
+    has_all(
+        ai_engineering,
+        [
+            "AI Native 架构师工作面",
+            "判断什么是好的系统",
+            "定义 hardened 标准",
+            "设计 Agent 工作流",
+            "审查 AI 代码时，重点不是证明每一行都由人工重新理解",
+            "产出整体满足 hardened 标准",
+            "不把“少写代码”理解为放弃编码能力、验证或生产责任",
+        ],
+    )
+    and has_all(
+        ai_large_project,
+        [
+            "AI Native 产品到工程的最小链路",
+            "Product Builder / 业务 dogfooding",
+            "AI Native 产品上下文包",
+            "Hardened Candidate",
+            "GSD Stage / Wave / Atomic Task",
+            "CAD Execution Grant",
+            "产品上下文包回答“这个产品候选是否值得工程化、工程化必须保留哪些业务事实”",
+            "AI Native 产品到工程 hardening",
+            "业务方能跑通 MVP，就直接让 CAD 改代码",
+        ],
+    )
+    and has_all(
+        cad_mode,
+        [
+            "从 AI Native 产品上下文或 MVP harden 进入 CAD",
+            "不把产品上下文包、Hardened Candidate 或业务 MVP 当 Execution Grant",
+            "不得把业务 MVP、PRD、产品上下文包或 GSD Roadmap 直接当 Execution Grant",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构",
+            "AI Native 输入必须先判断是否为 Hardened Candidate",
+            "来自业务 MVP 或 AI Native 产品上下文时先确认 Hardened Candidate",
         ],
     ),
 )
@@ -2499,6 +2571,7 @@ check(
             "全球支付与基础设施",
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
+            "AI Native 产品上下文",
             "产品图形化与服务蓝图",
             "AI-shaped 产品工作成熟度",
             "产品经理方法论与基础能力",
@@ -2507,6 +2580,30 @@ check(
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map records AI Native product context boundary",
+    has_all(
+        product_source_map,
+        [
+            "AI Native 产品上下文",
+            "放下 PRD：写给AI Native时代的产品经理朋友们",
+            "https://mp.weixin.qq.com/s/5TEAxFYueNc6MD5ngKEgGg",
+            "大数据随笔",
+            "2026-05-25 18:00:00",
+            "PRD 从静态翻译文档转为可运行证据、对象规则、验收种子和工程交接门禁的上下文包",
+            "Product Builder、业务 owner + Agent、业务 dogfooding、MVP/原型 harden 和 GSD/CAD 产品侧交接",
+            "不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "放下 PRD：写给AI Native时代的产品经理朋友们",
+            "PRD 从静态翻译文档升级为上下文包、验收种子和工程交接门禁",
+            "不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收",
         ],
     ),
 )
@@ -2669,6 +2766,42 @@ check(
             "业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标",
             "用户要评估 AI 产品工作成熟度或 AI-shaped readiness",
             "默认只借鉴方法，不安装或调用外部 Skill",
+        ],
+    ),
+)
+check(
+    "product routing exposes AI Native product context handoff",
+    has_all(
+        product_routing,
+        [
+            "AI Native Product Builder / 业务 dogfooding / MVP harden / 放下 PRD",
+            "`ai-native-product-context.md`",
+            "不把 AI Demo 直接当需求",
+            "不把产品上下文包当 Execution Grant",
+            "AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 GSD/CAD",
+            "Hardened Candidate 门禁",
+            "交给架构师/GSD/CAD 的产品侧交接条件",
+            "用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文",
+        ],
+    ),
+)
+check(
+    "product AI Native context reference defines hardened candidate package",
+    has_reference_header(product_ai_native_context)
+    and has_all(
+        product_ai_native_context,
+        [
+            "# AI Native 产品上下文包",
+            "不是要求放弃 PRD",
+            "AI Native 产品上下文包",
+            "Hardened Candidate",
+            "业务 owner",
+            "验收种子",
+            "Product Builder",
+            "MVP / 原型 harden 门禁",
+            "与架构师、GSD 和 CAD 的交接",
+            "产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant",
+            "不把“放下 PRD”写成跳过产品语义、评审、留痕、合规和验收",
         ],
     ),
 )
@@ -4192,6 +4325,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="product AI-shaped readiness review",
         prompt="评估一下产品团队的 AI-shaped readiness，看看 AI 工作流是不是只在提效，还是形成了可复盘的产品优势",
         routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="AI Native product context to GSD CAD handoff",
+        prompt="业务方已经 dogfooding 出一个 MVP，想按 AI Native Product Builder 流程 harden 成产品上下文包，再交给架构师接入 GSD 和 CAD，判断能不能进 Execution Grant",
+        routes={"product", "product-scenario-routing.md", "senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "cad-mode.md", "negative-constraints.md"},
     ),
     RouteFixture(
         name="product manager methodology calibration",

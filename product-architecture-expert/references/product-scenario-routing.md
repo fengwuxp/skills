@@ -6,6 +6,7 @@
 
 - 用户要求写作、生成、完善或评审 PRD、产品需求文档、产品方案、业务流程、状态机、规则矩阵、运营后台或验收标准。
 - 用户提供原型、HTML、页面截图、页面说明或交互稿，要求反推、补写或评审 PRD。
+- 用户要求评估 AI Native 产品流程、Product Builder、业务 dogfooding、MVP/原型进入工程 harden、PRD 可执行上下文或交给架构师/GSD/CAD。
 - 不确定应进入通用产品架构、PRD 模板、支付资金专项还是能力评估。
 - 需要先澄清用户、主体、目标、边界、对象、规则、数据和风险。
 
@@ -24,6 +25,7 @@
 ## 需要继续读取的 reference
 
 - PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 加读 `product-prd-financial-appendix.md`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。
+- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和 GSD/CAD 产品侧交接读 `ai-native-product-context.md`。
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 产品方案需要交给架构师继续做系统设计或业务驱动架构交接时，读 `product-architecture-methodology.md` 的“与技术架构的交接”和“业务驱动验证口径”，必要时加读 `product-prd-quality-gates.md`。
 - 图形化产品交付读 `diagram-output.md`。
@@ -39,6 +41,7 @@
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
 | 产品经理方法论 / 产品专家基础能力补齐 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md` | 不把基础岗位清单替代复杂产品架构 |
 | AI 产品工作成熟度 / AI-shaped readiness / AI 工作流改造 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2A. AI-shaped 产品工作成熟度” | 不安装外部 advisor，不把外部术语当团队结论 |
+| AI Native Product Builder / 业务 dogfooding / MVP harden / 放下 PRD | 快速路由表、产品语义门禁，并继续读 `ai-native-product-context.md` | 不把 AI Demo 直接当需求，不把产品上下文包当 Execution Grant |
 | 业务流程/状态/规则 | 产品语义门禁、快速路由表、通用场景识别问题 | PRD 模板正文 |
 | 业务驱动架构交接 / 产品方案交给架构师 | 产品语义门禁、快速路由表、`product-architecture-methodology.md` 的 5/5.1 | 页面控件或技术模块清单 |
 | 图形化交付 | 快速路由表、输出路由，并读 `diagram-output.md` | 支付规则细节 |
@@ -88,6 +91,7 @@
 | PRD 文档过厚、过薄、未更新、未评审、版本不同步 | `product-design-and-prd.md`, `product-prd-quality-gates.md` | 文档目标/受众、裁剪建议、必改项、版本/评审/同步机制 |
 | 产品经理方法论、产品专家能力补齐、产品经理知识体系、基础工作法校准 | `product-architecture-methodology.md`, `skill-tree.md` | 能力校准：文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析、知识库沉淀；并提升到复杂业务对象、规则、验收和交接能力 |
 | AI 产品工作成熟度、AI-shaped readiness、产品团队 AI 工作流改造、AI 是否形成产品优势 | `product-architecture-methodology.md` | AI 产品工作成熟度评审：业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标；不安装外部 advisor，不照搬外部话术 |
+| AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 GSD/CAD | `ai-native-product-context.md`, `product-architecture-methodology.md`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和交给架构师/GSD/CAD 的产品侧交接条件；不把可运行等同于可上线 |
 | 产品方案要交给架构师继续系统设计、业务驱动架构交接、产品语义到工程验证、验收种子到 TDD 交接 | `product-architecture-methodology.md`, `product-design-and-prd.md`, `product-prd-quality-gates.md` | 业务驱动架构交接包：目标/非目标/成功指标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项；必要时输出验收种子交接矩阵 |
 | 能力地图、模块关系、产品架构 | `product-architecture-methodology.md` | 能力地图、模块边界、前后台能力、交付拆分 |
 | 画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物 | `diagram-output.md`，按场景再读 `product-architecture-methodology.md`、`product-design-and-prd.md` 或支付资金专项 reference | 默认生成 SVG，报告用途、假设、验证和待确认项；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出 |
@@ -119,6 +123,7 @@
 ## 输出路由
 
 - **用户要产品架构方案**：输出背景、目标、范围、用户、角色、能力地图、对象模型、流程、状态机、规则、权限、数据、运营、风险和验收。
+- **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给架构师/GSD/CAD 的门禁。
 - **用户要交给架构师继续设计或业务驱动架构交接**：输出产品侧交接包，覆盖目标/非目标/成功指标、参与方与 owner、核心行为、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。
 - **用户要补齐产品经理方法论或产品专家基础能力**：读取 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md`，把基础产品经理知识体系翻译为文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析和知识库沉淀，并说明哪些能力已覆盖、哪些能力需要提升到复杂业务对象、规则、验收和交接。
 - **用户要评估 AI 产品工作成熟度或 AI-shaped readiness**：读取 `product-architecture-methodology.md` 的“2A. AI-shaped 产品工作成熟度”，把外部 advisor 术语翻译成业务优势、流程变化、上下文结构化、任务可追溯、人工责任和验证指标；默认只借鉴方法，不安装或调用外部 Skill。

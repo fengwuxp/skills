@@ -60,6 +60,7 @@
 - 全球支付与基础设施：检索“Airwallex”“WorldFirst”“全球支付”“跨境”“Payouts”“Global Accounts”“embedded finance”“AI 出海”“全球资金管理”。
 - 收单、争议与风险运营：检索“外卡收单”“收单风控”“争议”“Chargeback”“Fraud”。
 - AI / Skill / 通用复杂度：检索“Agent Skills”“代码不再稀缺”“复杂度”“低成本生成”。
+- AI Native 产品上下文：检索“AI Native”“Product Builder”“业务 dogfooding”“MVP harden”“PRD 可执行上下文”“放下 PRD”“Hardened Candidate”。
 - AI-shaped 产品工作成熟度：检索“ai-shaped-readiness-advisor”“AI-shaped”“AI-first”“Context Design”“Agent Orchestration”“Outcome Acceleration”。
 - 产品经理方法论与基础能力：检索“产品经理方法论”“赵丹阳”“BRD/MRD/PRD”“流程图”“原型图”“产品架构图”“需求管理”“用户研究”“数据分析”。
 - 产品图形化与服务蓝图：检索“用户旅程”“服务蓝图”“UX mapping”“AI 画图”“draw.io”。
@@ -118,6 +119,8 @@
 - Airwallex Issuing Docs：`https://www.airwallex.com/docs/issuing/overview`。公开文档用于参考发卡、VCC、cardholder、card、issuing balance、card control、remote authorization、3DS、transaction lifecycle、dispute、overcapture、fraud feedback 和 transaction simulation 的产品设计模式；不替代发卡资质、卡组织规则、PCI DSS、银行协议或最新安全要求。
 - 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并用本机 Chrome headless 作为 Playwright 等价浏览器加载页面做核验。公开内容用于参考 AI 出海企业全球资金管理的场景拆解，覆盖全球收款、多币种账户、FX、批量付款、VCC / Agent 支付控制、token / 用量计费和嵌入式金融组合；不吸收厂商覆盖国家、币种、时效、牌照数量、费率、AI 外汇预测能力、商业判断或产品可用性承诺，具体能力需回到最新官方资料、合同和合规确认。
 - 微信公众号文章《代码不再稀缺，稀缺的是你如何对抗复杂度》：`https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA`。2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考 AI 代码生成时代实现成本下降、复杂度/注意力成本上升、系统设计、前置约束和问题定义能力的重要性；只吸收问题框架和能力定位，不复制原文或作者表达。
+- 微信公众号文章《放下 PRD：写给AI Native时代的产品经理朋友们》：`https://mp.weixin.qq.com/s/5TEAxFYueNc6MD5ngKEgGg`。作者/账号为 `大数据随笔`，发布时间为 2026-05-25 18:00:00；2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未再执行 Playwright 等价浏览器取证。公开内容用于参考 AI Native 下 PRD 从静态翻译文档转为可运行证据、对象规则、验收种子和工程交接门禁的上下文包，覆盖 Product Builder、业务 owner + Agent、业务 dogfooding、MVP/原型 harden 和 GSD/CAD 产品侧交接；不复制原文、标题表达、作者判断、引用案例、传播性措辞或岗位评价，也不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收。
+- 微信公众号文章《放下代码：AI Native是通往架构师的快车道》：`https://mp.weixin.qq.com/s/fhEzrPbeez-_2bmJHqExCQ`。作者/账号为 `大数据随笔`，发布时间为 2026-05-23 12:00:00；2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未再执行 Playwright 等价浏览器取证。公开内容用于参考 `资深架构师` AI Native 架构师工作面；产品专家只借鉴其与产品上下文交接相关的 harden 思路，不复制原文、引用案例、岗位判断或作者表达。
 - 微信公众号文章《架构师必备--让AI画架构图》：`https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg`。作者/账号为 `方兴集`，发布时间为 2026-04-30 16:28:31；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（本机 Chrome headless）加载取证但返回异常。公开内容用于参考 AI + draw.io 的自然语言生成、文档转图、图像参考、版本历史、可编辑 draw.io XML 和本地模型/凭据边界；不复制原文示例图、提示词、项目安装说明、工具宣传语或作者表达，也不把具体工具能力写成产品图质量结论。
 - 微信公众号文章《需求分析和设计活动关键要点总结》：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`。作者为 `常识`，公众号为 `软件需求分析和设计`，发布时间为 2026-05-26 10:29:23；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（本机 Chrome headless）加载取证。公开内容用于参考功能定义、功能分配追溯、需求分析外部视角和设计内部视角的分工；不复制原文中的 GJB 章节表述、推荐书目、课程机构推荐或作者表达，也不把军标/适航语境写成通用产品强制流程。
 - 微信公众号文章《清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484523&idx=1&sn=bab6c18e89728feaf921bccbc5cb88d3`。公开内容用于参考外卡/跨境收单清算文件延迟排查，覆盖交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject、批次 ID、三段链路归因和资金链路事故升级信号。

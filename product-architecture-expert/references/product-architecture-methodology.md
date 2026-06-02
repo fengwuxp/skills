@@ -6,6 +6,7 @@
 
 - 用户需要把模糊需求、业务设想、运营问题或跨团队诉求整理成产品架构、能力地图、对象模型、业务流程、规则矩阵、验收矩阵或产品方案。
 - 需要在 PRD、原型、系统设计或研发排期之前，先明确目标、角色、能力、对象、流程、规则、数据和验收。
+- 需要把 AI 生成原型、业务 dogfooding MVP 或 Product Builder 的业务主张收敛为可工程化的产品上下文。
 - 当前问题不属于支付资金专项，或支付资金专项已经通过 `payment-scenario-routing.md` 收敛后，需要补足通用产品架构表达。
 
 ## 不适用场景
@@ -24,6 +25,7 @@
 ## 需要继续读取的 reference
 
 - PRD、用户故事、验收标准和产品文档结构读 `product-design-and-prd.md`，需要模板细节再读 `product-prd-template.md`。
+- AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文和 GSD/CAD 产品侧交接读 `ai-native-product-context.md`。
 - 支付、资金、清结算、账务、VCC、跨境和金融监管相关问题读 `payment-scenario-routing.md`。
 - 图形化交付默认读 `diagram-output.md`，复杂技术图可继续调用 `fireworks-tech-graph`。
 - 产品场景路由、适用边界和跨技能分工读 `product-scenario-routing.md`。
@@ -36,6 +38,7 @@
 | 产品方案主线设计 | `2.1 定目标` 到 `2.7 定数据和验收` | 不展开支付专项、图形化细节或工程实现 |
 | 产品经理基础方法补齐 / 方法论校准 | `2B. 产品经理基础方法校准`、`2.1 定目标` 到 `2.7 定数据和验收` | 不把基础岗位清单替代复杂产品架构 |
 | AI 产品工作成熟度 / AI-shaped readiness | `2A. AI-shaped 产品工作成熟度`、`2.7 定数据和验收` | 不安装外部 advisor 或照搬传播性术语 |
+| AI Native Product Builder / MVP harden / PRD 可执行上下文 | `ai-native-product-context.md`、`2.1 定目标` 到 `2.7 定数据和验收` | 不把 AI Demo 当需求，不把产品上下文包当 Execution Grant |
 | 能力地图和对象模型 | `2.3 定能力`、`2.4 定对象`、`3.1 能力地图`、`3.2 对象模型` | 不先画 UI 或接口字段 |
 | 流程、状态和规则设计 | `2.5 定流程`、`2.6 定规则`、`3.3 业务流程`、`3.4 状态机`、`3.5 规则矩阵` | 不把规则散写成长段自然语言 |
 | 产品评审和交接 | `2.7 定数据和验收`、`3.6 验收矩阵`、`4. 常见反模式`、`5. 与技术架构的交接` | 不替代技术方案、合规结论或上线审批 |
