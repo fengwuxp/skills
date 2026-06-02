@@ -1496,7 +1496,7 @@ check(
             "让AI编程从\"越写越烂\"到\"持续稳定输出\"：GSD工作流-适合中大型项目的精准框架。",
             "`ai-large-project-orchestration.md`",
             "类 GSD 的大项目编排工作流",
-            "项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖",
+            "项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖、GSD-CAD 双层协议",
             "不默认在项目中创建 `PROJECT.md`、`STATE.md`、`ROADMAP.md`、`CONTEXT.md`",
             "不把“子 Agent + Wave 并行”写成默认开发方式",
             "不把自动原子提交视为默认授权",
@@ -1793,6 +1793,47 @@ check(
     ),
 )
 check(
+    "GSD-CAD protocol keeps planning separate from execution authorization",
+    has_all(
+        ai_large_project,
+        [
+            "## 8. GSD-CAD 双层协议",
+            "GSD-like 编排管大盘，CAD Mode 跑单元",
+            "不得对整个大项目直接开启 CAD",
+            "GSD defines what can be executed",
+            "CAD decides whether it may be executed automatically",
+            "Execution Grant decides what is actually allowed",
+            "Validation decides whether it may continue",
+            "CAD 候选任务必须同时满足",
+            "已准备 Execution Grant",
+            "CAD 输出必须回写阶段状态、验证矩阵和 handoff",
+            "只有原子任务包满足 CAD 门禁时，才建议进入 CAD",
+        ],
+    )
+    and has_all(
+        cad_mode,
+        [
+            "中大型项目、长任务、上下文衰减或 Wave 编排读 `ai-large-project-orchestration.md`",
+            "CAD 只消费其中已满足门禁的单个任务包或阶段切片",
+            "CAD 不直接消费整个 Roadmap",
+            "不把 GSD 计划解释为 Execution Grant",
+            "用户只给了 GSD-like Roadmap、Wave 或任务清单，但没有选定单个任务包、写入范围、验证命令和 Execution Grant",
+            "必须已选定单个 Task ID 或阶段切片",
+            "GSD-CAD 联动审查",
+            "回写阶段状态、验证矩阵和 handoff",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片",
+            "GSD-like 编排 + CAD Mode",
+            "不得对整个大项目直接开启 CAD",
+            "不得把 Roadmap、Wave 或任务清单当作 Execution Grant",
+        ],
+    ),
+)
+check(
     "negative constraints routes CAD authority to CAD mode",
     has_all(
         negative_constraints,
@@ -1888,6 +1929,9 @@ check(
             "Task ID:",
             "Wave 0：只读侦察",
             "同一 Wave 内任务必须互不重叠、无顺序依赖、可独立验证",
+            "GSD-CAD 双层协议",
+            "CAD 候选：是/否，原因",
+            "Execution Grant 要求",
             "暂停前必须更新 `03-state.md`",
             "恢复时先读",
             "大项目编排鼓励原子可追溯，但不默认执行 Git 写操作",
@@ -1921,6 +1965,7 @@ check(
             "`ai-large-project-orchestration.md`",
             "中大型长任务",
             "原子任务包",
+            "GSD-like 编排 + CAD Mode",
             "验证矩阵、暂停恢复和收口流程",
         ],
     ),
@@ -4067,6 +4112,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI large project orchestration",
         prompt="目前确实有中大型项目，需要类似 GSD 的 AI 编码能力，做上下文衰减治理、Wave 编排和暂停恢复",
         routes={"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
+        name="GSD with CAD execution",
+        prompt="把 GSD 大项目编排和 CAD Mode 结合起来，只对满足门禁的原子任务包自动分轮推进，并用 Execution Grant 控制授权",
+        routes={"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "cad-mode.md", "negative-constraints.md"},
     ),
     RouteFixture(
         name="architecture diagram output",

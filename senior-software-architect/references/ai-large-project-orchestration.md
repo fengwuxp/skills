@@ -40,10 +40,11 @@
 | 判断是否启用大项目编排 | 1、2 | 不先写项目状态文件 |
 | 初始化项目账本 | 3、4、5 | 不展开执行 Wave |
 | 规划阶段和原子任务 | 6、7 | 不进入 CAD Mode 细节 |
-| 多 Agent / Wave 执行 | 7、8、9 | 不跳过验证 |
-| Codex automation / goal / artifact 协作 | 9、10、11 | 不把平台能力当授权 |
-| 暂停、恢复或跨会话继续 | 11 | 不依赖聊天记忆 |
-| 收口、Review 和交付 | 12、13 | 不自动 Git 提交 |
+| GSD-CAD 组合判断 | 8，并继续读 `cad-mode.md` | 不对整个大项目直接开 CAD |
+| 多 Agent / Wave 执行 | 7、9、10 | 不跳过验证 |
+| Codex automation / goal / artifact 协作 | 10、11、12 | 不把平台能力当授权 |
+| 暂停、恢复或跨会话继续 | 12 | 不依赖聊天记忆 |
+| 收口、Review 和交付 | 13、14 | 不自动 Git 提交 |
 
 ## 1. 能力定位
 
@@ -185,6 +186,8 @@ Owner：
 完成条件：
 交接要求：
 回滚提示：
+CAD 候选：是/否，原因：
+Execution Grant 要求：
 ```
 
 原子任务包红线：
@@ -212,7 +215,51 @@ Wave 规则：
 - Wave 完成后先更新 `03-state.md` 和验证矩阵，再进入下一 Wave。
 - 如果出现冲突、验证失败归因不清、需求变更或公共契约漂移，暂停当前 Wave，重新规划。
 
-## 8. 执行协议
+## 8. GSD-CAD 双层协议
+
+GSD-like 编排管大盘，CAD Mode 跑单元。大项目编排负责定义“哪些任务可以被执行”，CAD Mode 负责判断“某一个任务是否可以自动执行”。不得对整个大项目直接开启 CAD。
+
+双层协议：
+
+```text
+GSD Round 0
+-> 固化 OpenSpec / context ledger / roadmap / verification matrix
+-> 拆 Stage / Wave / Atomic Task
+-> 选择一个原子任务包或阶段切片
+-> 检查 CAD 门禁
+-> 用户确认 Execution Grant
+-> CAD 自动分轮执行
+-> 回写 state / verification matrix / handoff
+-> 进入下一个任务包或暂停
+```
+
+职责边界：
+
+| 层次 | 负责什么 | 不能做什么 |
+| --- | --- | --- |
+| GSD-like 编排 | 固定大项目目标、阶段、Wave、任务包、上下文账本、验证矩阵和恢复入口。 | 不授予自动执行权限，不把计划当作 Git、联网、部署或生产操作授权。 |
+| CAD Mode | 在单个任务包或阶段切片内按 Pick -> Red -> Green -> Review -> Refactor -> Verify -> Record 推进。 | 不消费整个 Roadmap，不跨越写入范围，不处理未选定任务包。 |
+| Execution Grant | 明确本轮 CAD 的写入范围、验证命令、Git 策略、禁止事项、人工确认点和撤销方式。 | 不扩大为跨阶段、跨 Wave、跨任务链的永久授权。 |
+| Verification | 决定是否继续、暂停、回滚、人工确认或进入下一任务包。 | 不用“看起来完成”替代测试、lint、Review 或人工验收。 |
+
+硬规则：
+
+- GSD defines what can be executed.
+- CAD decides whether it may be executed automatically.
+- Execution Grant decides what is actually allowed.
+- Validation decides whether it may continue.
+
+CAD 候选任务必须同时满足：
+
+- 已有明确 Task ID、所属阶段、所属 Wave、写入范围、只读参考、验收场景和验证命令。
+- 不与同一 Wave 中其他任务写入同一文件、同一契约、同一状态机或同一公共测试夹具。
+- 不需要尚未确认的业务口径、兼容策略、迁移路径、资金/权限/生产规则取舍。
+- 已检查工作区状态，能区分用户已有改动和本轮 CAD 改动。
+- 已准备 Execution Grant；涉及 Git 写操作、外部访问、依赖安装、Docker/服务启动、数据库迁移或生产行为时必须显式列出。
+
+CAD 输出必须回写阶段状态、验证矩阵和 handoff：完成内容、验证结果、失败/跳过原因、残余风险、Git 处理结果、下一任务建议。只有原子任务包满足 CAD 门禁时，才建议进入 CAD；门禁不满足时，回到本文件的 Round 0、阶段拆分或任务包补齐。
+
+## 9. 执行协议
 
 执行前检查：
 
@@ -220,6 +267,7 @@ Wave 规则：
 - 当前 Wave 是否已确认。
 - 任务包是否有明确写入范围、验证命令、完成条件。
 - 是否涉及高风险操作、Git 写操作、外部联网、生产配置或数据操作。
+- 若任务包标记为 CAD 候选，是否已继续读取 `cad-mode.md` 并形成 Execution Grant。
 
 执行中：
 
@@ -233,7 +281,7 @@ Wave 规则：
 - 更新交接记录：改了什么、验证结果、残余风险、下一步。
 - 更新阶段状态：完成、阻塞、失败或需要用户确认。
 
-## 9. 验证矩阵
+## 10. 验证矩阵
 
 验证矩阵按“任务 -> 证据”组织：
 
@@ -251,7 +299,7 @@ Wave 规则：
 
 未验证不得标记完成；无法验证必须说明原因、替代证据和残余风险。
 
-## 10. Codex 持续协作边界
+## 11. Codex 持续协作边界
 
 当大项目编排使用 Codex app 的 thread、automation、goal、side panel 或 artifact 时，先把平台能力转成工程协议：
 
@@ -272,7 +320,7 @@ Wave 规则：
 - 不为了“持久化”制造无意义文件变动；没有可复用事实、决策、阻塞或验证证据时不更新状态材料。
 - 涉及 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、客户数据、生产配置或敏感信息时，必须先说明权限、数据边界和人工确认点。
 
-## 11. 暂停与恢复
+## 12. 暂停与恢复
 
 暂停前必须更新 `03-state.md` 或等价状态文件：
 
@@ -299,7 +347,7 @@ Wave 规则：
 
 恢复后不要凭记忆继续；先复述当前状态、风险和下一步，再执行。
 
-## 12. Git 与版本化边界
+## 13. Git 与版本化边界
 
 大项目编排鼓励原子可追溯，但不默认执行 Git 写操作。
 
@@ -309,7 +357,7 @@ Wave 规则：
 - 不把外部 GSD 的“每个任务自动提交”当成本仓库默认行为。
 - 状态文件是否纳入版本库由项目规则和用户确认决定；包含敏感信息时不得提交。
 
-## 13. 收口与 Review
+## 14. 收口与 Review
 
 阶段收口必须输出：
 
@@ -322,7 +370,7 @@ Wave 规则：
 
 大项目最终收口必须回到 `workflow.md` 的 Review/Ship：验证证据、残余风险、回滚/监控、Git 边界和需要用户判断的事项都要明确。
 
-## 14. 外部 GSD 来源边界
+## 15. 外部 GSD 来源边界
 
 微信公众号文章《让AI编程从"越写越烂"到"持续稳定输出"：GSD工作流-适合中大型项目的精准框架。》可作为上下文衰减、持久化状态、子 Agent 分工、Wave 依赖、原子可追溯和 Git 版本化意识的公开参考来源。
 
@@ -341,7 +389,7 @@ Wave 规则：
 - 自动提交、自动部署、自动外部联网或绕过用户授权的执行习惯。
 - 未审查外部工具代码、脚本、Hook、插件或安装流程。
 
-## 15. Codex 官方团队文章来源边界
+## 16. Codex 官方团队文章来源边界
 
 微信公众号文章《Codex 官方团队：如何把 Codex 用到极致》可作为 Codex app 运行时协作方式的公开参考来源，用于增强 thread、voice、steering/queuing、tool reach、automation、goal、side panel、artifact 和 shared written context 的工程编排意识。
 

@@ -293,7 +293,7 @@
 | 应用位置 | 已吸收内容 |
 | --- | --- |
 | `ai-assisted-engineering.md` | 补充长任务上下文治理入口，保留 OpenSpec、Superpowers、Harness、CAD Mode 与中大型编排的路由关系。 |
-| `ai-large-project-orchestration.md` | 新增类 GSD 的大项目编排工作流，定义项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖、执行协议、验证矩阵、暂停恢复、Git 边界和收口流程。 |
+| `ai-large-project-orchestration.md` | 新增类 GSD 的大项目编排工作流，定义项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖、GSD-CAD 双层协议、执行协议、验证矩阵、暂停恢复、Git 边界和收口流程。 |
 | `workflow.md` | 在 AI 协作门禁、代码修改前、验证矩阵和 PR 提交前检查中补充上下文账本、阶段状态、原子可追溯和用户授权边界。 |
 | `scenario-routing.md` | 将 AI 编码协作扩展为 OpenSpec 到代码、多 Agent 编排和上下文衰减治理，要求先判断需求不清还是上下文衰减，再选择轻量或重型流程。 |
 | `skill-tree.md`、`skill-tree-platform-leadership-ai.md`、`knowledge-graph.md` | 在能力地图和知识图谱中补充上下文衰减治理、阶段状态、Wave 编排、原子任务和外部工作流边界。 |
