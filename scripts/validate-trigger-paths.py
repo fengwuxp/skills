@@ -1330,6 +1330,91 @@ check(
     ),
 )
 check(
+    "senior source map and README record Clean Architecture dependency rule source",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：Clean Architecture 整洁架构",
+            "https://mp.weixin.qq.com/s/7zj5v-B_-fClCYyR3SnMLA",
+            "Clean Architecture 整洁架构",
+            "智氪AI",
+            "2026-06-03 09:00:00 Asia/Shanghai",
+            "公开 HTML 读取标题、账号、发布时间和正文",
+            "层数可变、依赖方向不可逆",
+            "端口倒置失败",
+            "不启动数据库、Web 容器或真实 SDK",
+            "不把 Clean Architecture 固化为必须四层",
+            "不复制原文、图示、比喻、表格或作者表达",
+            "不把文章中的示例技术栈、数据库、框架或外部工具写成项目默认选择",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "Clean Architecture 整洁架构",
+            "Clean Architecture 依赖规则、依赖反转、业务规则/用例规则分离和可测试性诊断",
+            "源代码依赖方向、端口位置、adapter 边界和不启动数据库/Web 容器/真实 SDK 的核心业务测试诊断",
+            "不复制原文、图示、比喻、表格或作者表达",
+            "不把 Clean Architecture 固化为必须四层或固定目录模板",
+        ],
+    ),
+)
+check(
+    "senior clean code deepens Clean Architecture dependency rule",
+    has_all(
+        "senior-software-architect/references/clean-code.md",
+        [
+            "### 2.1 Clean Architecture 依赖规则诊断",
+            "Clean Architecture 首先检查依赖方向，不首先检查层数",
+            "层数可变，依赖方向不可逆",
+            "内层定义端口，外层实现适配器",
+            "Clean Architecture 的 Entities 是架构层概念，不等同于 DDD Entity",
+            "SRP 在架构层对应变化原因隔离",
+            "DIP 对应依赖规则和端口反转",
+            "OCP 对应通过外层适配器或新增用例扩展",
+            "如果业务规则或用例流程必须启动数据库、Web 容器或真实 SDK 才能测试，先怀疑依赖方向",
+            "Clean Architecture 不是固定四层目录模板",
+        ],
+    ),
+)
+check(
+    "senior review testing and module governance detect Clean Architecture dependency leaks",
+    has_all(
+        review,
+        [
+            "伪 Clean 分层",
+            "端口倒置失败",
+            "Clean Architecture 反向依赖",
+            "将端口契约移到内层，外层 adapter 实现端口",
+            "不启动 DB/Web/SDK 的核心业务测试",
+        ],
+    )
+    and has_all(
+        testing,
+        [
+            "Clean Architecture 核心业务与用例",
+            "不启动数据库、Web 容器或真实 SDK",
+            "Clean Architecture 诊断：如果业务规则或用例流程必须启动 DB/Web 才能测规则",
+            "架构测试负责守住包依赖方向，领域/用例测试负责证明核心业务可以脱离外层细节独立运行",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/project-governance-codebase-and-modules.md",
+        [
+            "Clean Architecture 在 Wind 模块中的落点是依赖规则，不是机械四层模板",
+            "层数可变，依赖方向不可逆",
+            "`core/biz` 定义 port 和业务契约，`infrastructure` 提供 adapter",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "是否只画了分层图却没有约束源代码依赖方向、端口位置和外层 adapter 边界",
+            "核心业务规则和用例流程能否脱离数据库、Web 容器、消息中间件和真实 SDK 被测试",
+        ],
+    ),
+)
+check(
     "senior records AI diagram and architecture diagram sources",
     has_all(
         senior_source_map,

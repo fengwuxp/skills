@@ -80,6 +80,8 @@ face/api -> core
 biz 不直接依赖 infrastructure 的实现细节
 ```
 
+Clean Architecture 在 Wind 模块中的落点是依赖规则，不是机械四层模板。层数可变，依赖方向不可逆：`core/biz` 定义 port 和业务契约，`infrastructure` 提供 adapter；Web、数据库、消息、缓存、框架和第三方 SDK 的变化不应穿透到核心业务规则。
+
 强制规则：
 
 - 禁止循环依赖。
