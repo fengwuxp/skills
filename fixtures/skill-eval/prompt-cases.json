@@ -193,6 +193,16 @@
       "expected_handling": "进入产品架构专家内部 po-backlog-manager 路径，先做机会清单输入归一化、业务价值和工程代价评估，再用业务/用户/工程三桌校验输出 P0/P1/P2、拒绝或延后理由、User Story、AC、技术现实主义风险、owner 和待确认项。"
     },
     {
+      "id": "product-should-insight-opportunity-radar",
+      "skill": "product-architecture-expert",
+      "query": "这里有一批客户访谈、工单、竞品动态和行业资料，请做产品洞察，输出机会雷达，说明证据来源、推理链、置信度，以及哪些机会可以进入 Backlog。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入产品架构专家内部 product-insight-analyst 路径，先做资料资产化和客户/竞品/标杆情报分拣；没有材料的类别明确留白；输出机会雷达、证据与推理链、置信度、待验证项和建议去向，再说明哪些机会只能作为 Backlog 候选继续交给 po-backlog-manager 决策。"
+    },
+    {
       "id": "product-negative-bug-diagnosis",
       "skill": "product-architecture-expert",
       "query": "这段日志显示 NullPointerException，帮我定位根因、修复代码、补单元测试并跑定向验证。",

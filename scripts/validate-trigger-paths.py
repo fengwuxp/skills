@@ -145,6 +145,7 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
+product_insight = "product-architecture-expert/references/product-insight-analyst.md"
 po_backlog_manager = "product-architecture-expert/references/po-backlog-manager.md"
 product_ai_native_context = "product-architecture-expert/references/ai-native-product-context.md"
 product_diagram = "product-architecture-expert/references/diagram-output.md"
@@ -174,8 +175,8 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文"]
 payment_terms = [
     "清结算",
     "对账",
@@ -233,6 +234,7 @@ reference_headers = [
     debugging,
     product_routing,
     po_backlog_manager,
+    product_insight,
     payment_routing,
     product_diagram,
     product_prd,
@@ -441,6 +443,7 @@ check(
             "product-architecture-expert/references/product-prd-financial-appendix.md",
             "product-architecture-expert/references/product-prd-operations-and-data.md",
             "product-architecture-expert/references/product-design-and-prd.md",
+            "product-architecture-expert/references/product-insight-analyst.md",
             "product-architecture-expert/references/po-backlog-manager.md",
             "product-architecture-expert/references/payment-methodology.md",
             "product-architecture-expert/references/clearing-settlement.md",
@@ -2754,6 +2757,50 @@ check(
     ),
 )
 check(
+    "product methodology keeps product insight and opportunity radar",
+    has_all(
+        product_skill,
+        [
+            "产品洞察/机会雷达",
+            "product-insight-analyst.md",
+        ],
+    )
+    and has_all(
+        product_agent,
+        [
+            "产品洞察",
+            "机会雷达",
+        ],
+    )
+    and has_all(
+        product_architecture,
+        [
+            "产品洞察与机会雷达",
+            "product-insight-analyst.md",
+            "资料资产化",
+            "客户视角、竞品视角和标杆视角",
+            "机会雷达",
+            "不要把资料摘要当机会决策",
+        ],
+    )
+    and has_all(
+        product_insight,
+        [
+            "# 产品洞察与机会雷达",
+            "它不是独立 Skill",
+            "资料资产化",
+            "客户视角",
+            "竞品视角",
+            "标杆视角",
+            "证据与推理链",
+            "机会雷达模板",
+            "未发现相关材料",
+            "不超过 15 个",
+            "不要让机会雷达直接替代 Backlog 决策",
+        ],
+    ),
+)
+check(
     "product methodology keeps backlog decision and opportunity convergence",
     has_all(
         product_skill,
@@ -2900,6 +2947,7 @@ check(
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
             "AI Native 产品上下文",
+            "产品洞察与机会雷达",
             "Backlog 决策与机会收敛",
             "产品图形化与服务蓝图",
             "AI-shaped 产品工作成熟度",
@@ -2909,6 +2957,41 @@ check(
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map and README record product insight article boundary",
+    has_all(
+        product_source_map,
+        [
+            "产品洞察与机会雷达",
+            "product-insight-analyst.md",
+            "为什么你的 AI 只能写总结，别的产品经理已经用AI在挖需求机会了？附skill模板和调试方法",
+            "https://mp.weixin.qq.com/s/jsuVbuvKJxEXl8dZyzh23g",
+            "糖糖",
+            "产品AI力学",
+            "2026-04-23 19:30:00 Asia/Shanghai",
+            "普通 curl/mobile UA 返回微信验证页",
+            "Chrome headless",
+            "资料资产化",
+            "客户/竞品/标杆",
+            "机会雷达",
+            "证据与推理链",
+            "不复制原文、模板正文、固定路径、外部 Skill 名称体系、作者表达或标题传播话术",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "产品洞察/机会雷达",
+            "把这批客户访谈和竞品资料整理成机会雷达",
+            "为什么你的 AI 只能写总结，别的产品经理已经用AI在挖需求机会了？附skill模板和调试方法",
+            "product-insight-analyst.md",
+            "产品洞察、资料资产化、客户/竞品/标杆情报分拣、机会雷达、证据与推理链和产品负责人决策边界",
+            "普通 curl/mobile UA 返回微信验证页",
+            "Chrome headless",
+            "不复制原文、模板正文、固定路径、外部 Skill 名称体系、作者表达或标题传播话术",
         ],
     ),
 )
@@ -3131,6 +3214,31 @@ check(
             "业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标",
             "用户要评估 AI 产品工作成熟度或 AI-shaped readiness",
             "默认只借鉴方法，不安装或调用外部 Skill",
+        ],
+    ),
+)
+check(
+    "product routing and PRD references expose product insight",
+    has_all(
+        product_routing,
+        [
+            "产品洞察 / 资料分析 / 机会雷达",
+            "`product-insight-analyst.md`",
+            "客户/竞品/标杆",
+            "证据与推理链",
+            "用户要基于资料、访谈、竞品、行业/政策或知识库做产品洞察、需求洞察或机会雷达",
+            "没有材料的类别明确留白",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "资料洞察转产品机会或 PRD 候选",
+            "product-insight-analyst.md",
+            "机会雷达和证据推理链",
+            "当输入主要来自资料、访谈、竞品、行业/政策、标杆实践或知识库笔记时",
+            "洞察是否有证据与推理链",
+            "不能从资料摘要直接写功能范围",
         ],
     ),
 )
@@ -4725,6 +4833,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(
+        name="product insight opportunity radar",
+        prompt="这里有一批客户访谈、工单、竞品动态和行业资料，请帮我做产品洞察，输出机会雷达，说明证据来源、推理链、置信度和哪些机会可以进入 Backlog",
+        routes={"product", "product-scenario-routing.md", "product-insight-analyst.md"},
+    ),
+    RouteFixture(
         name="product backlog decision from opportunity list",
         prompt="这里有 15 个客户、销售和老板提的机会点，请帮我做 Backlog 决策，按 BV/EE 排 P0/P1/P2，并转成 User Story 和 AC，说明哪些要拒绝或延后",
         routes={"product", "product-scenario-routing.md", "po-backlog-manager.md"},
@@ -4881,6 +4994,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
     if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
+    if contains_any(prompt, ["产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链"]):
+        route.add("product-insight-analyst.md")
     if contains_any(prompt, ["Backlog", "机会清单", "机会点", "需求池", "需求优先级", "P0/P1/P2", "User Story"]):
         route.add("po-backlog-manager.md")
     if contains_any(prompt, diagram_terms):

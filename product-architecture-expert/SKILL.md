@@ -1,7 +1,7 @@
 ---
 name: 产品架构专家
 description: |
-  面向复杂业务系统，适用于 PRD/产品方案、需求说明、AI Native 产品上下文包、机会清单/Backlog 决策、需求优先级、User Story/AC、原型/HTML/页面截图/交互稿反推 PRD、业务建模、能力地图、产品架构图、业务流程图、状态机、规则矩阵、数据指标、运营后台、验收标准和图形化交付；默认产出 SVG，Mermaid/Markdown 草图、PNG/PDF/截图等需明确提出。支付与资金覆盖账户/账本、清结算、对账、银行卡/卡组织、外卡收单、Mastercard、ACH、VCC、风控争议、跨境支付、合规待确认和业财一体化；工程实现、代码评审和生产排障优先交给架构师。
+  面向复杂业务系统，适用于 PRD/产品方案、需求说明、AI Native 产品上下文包、产品洞察/机会雷达、机会清单/Backlog 决策、需求优先级、User Story/AC、原型/HTML/页面截图/交互稿反推 PRD、业务建模、能力地图、产品架构图、业务流程图、状态机、规则矩阵、数据指标、运营后台、验收标准和图形化交付；默认产出 SVG，Mermaid/Markdown 草图、PNG/PDF/截图等需明确提出。支付与资金覆盖账户/账本、清结算、对账、银行卡/卡组织、外卡收单、Mastercard、ACH、VCC、风控争议、跨境支付、合规待确认和业财一体化；工程实现、代码评审和生产排障优先交给架构师。
 ---
 
 # 产品架构专家
@@ -124,6 +124,7 @@ description: |
 
 - `references/product-scenario-routing.md`：产品场景识别与最小参考集选择。
 - `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
+- `references/product-insight-analyst.md`：资料资产化、客户/竞品/标杆情报分拣、证据推理链和机会雷达。
 - `references/po-backlog-manager.md`：PO Backlog 决策、机会清单收敛、BV/EE、P0/P1/P2、User Story 和 AC。
 - `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文和交给架构师/GSD/CAD 的产品侧交接包。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。
