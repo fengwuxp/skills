@@ -183,6 +183,16 @@
       "expected_handling": "进入产品侧验收种子到测试驱动设计交接路径，输出业务前置条件、触发行为、可观察结果、风险红线，并把验收种子分为可代码化、可观测化和可评审化，避免越界生成测试代码。"
     },
     {
+      "id": "product-should-backlog-decision-opportunity-list",
+      "skill": "product-architecture-expert",
+      "query": "我们从客户、销售和老板那里收集了 15 个机会点，请做 Backlog 决策，按 BV/EE 排 P0/P1/P2，转成 User Story 和 AC，并说明哪些要拒绝或延后。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入产品架构专家内部 po-backlog-manager 路径，先做机会清单输入归一化、业务价值和工程代价评估，再用业务/用户/工程三桌校验输出 P0/P1/P2、拒绝或延后理由、User Story、AC、技术现实主义风险、owner 和待确认项。"
+    },
+    {
       "id": "product-negative-bug-diagnosis",
       "skill": "product-architecture-expert",
       "query": "这段日志显示 NullPointerException，帮我定位根因、修复代码、补单元测试并跑定向验证。",

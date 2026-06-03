@@ -145,6 +145,7 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
+po_backlog_manager = "product-architecture-expert/references/po-backlog-manager.md"
 product_ai_native_context = "product-architecture-expert/references/ai-native-product-context.md"
 product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
@@ -173,8 +174,8 @@ codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", 
 codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码", "代码生成"]
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文"]
 payment_terms = [
     "清结算",
     "对账",
@@ -231,6 +232,7 @@ reference_headers = [
     knowledge_graph,
     debugging,
     product_routing,
+    po_backlog_manager,
     payment_routing,
     product_diagram,
     product_prd,
@@ -439,6 +441,7 @@ check(
             "product-architecture-expert/references/product-prd-financial-appendix.md",
             "product-architecture-expert/references/product-prd-operations-and-data.md",
             "product-architecture-expert/references/product-design-and-prd.md",
+            "product-architecture-expert/references/po-backlog-manager.md",
             "product-architecture-expert/references/payment-methodology.md",
             "product-architecture-expert/references/clearing-settlement.md",
             "product-architecture-expert/references/payment-design-checklists.md",
@@ -1356,6 +1359,100 @@ check(
             "源代码依赖方向、端口位置、adapter 边界和不启动数据库/Web 容器/真实 SDK 的核心业务测试诊断",
             "不复制原文、图示、比喻、表格或作者表达",
             "不把 Clean Architecture 固化为必须四层或固定目录模板",
+        ],
+    ),
+)
+check(
+    "senior source map and README record DDD principles architecture tradeoff article group",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：DDD、开发原则与架构取舍组",
+            "https://mp.weixin.qq.com/s/3A5SAp1Dzw8s3sECM2SNhQ",
+            "用了 DDD 还是写不好业务代码？因为你把它当成了架构模式",
+            "https://mp.weixin.qq.com/s/zJphqS80r3fg_wLXHaFmHQ",
+            "7 条开发原则你都知道，但一条都用不对",
+            "https://mp.weixin.qq.com/s/e1ft2s2Js8K0Zaw6PNfYMQ",
+            "学了那么多软件架构，现实工作我们该怎么权衡",
+            "公开 HTML 读取标题、账号、作者、发布时间和正文",
+            "DDD 战略设计/战术设计",
+            "原则冲突",
+            "收益、代价、前置条件",
+            "不复制原文、表格、代码示例、图示、参考资料列表或作者表达",
+            "不把 DDD、Clean、微服务、CQRS、Event Sourcing、12-Factor 或 Reactive 写成默认架构套餐",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "用了 DDD 还是写不好业务代码？因为你把它当成了架构模式",
+            "7 条开发原则你都知道，但一条都用不对",
+            "学了那么多软件架构，现实工作我们该怎么权衡",
+            "DDD 战略/战术分层、开发原则判断框架和架构风格取舍框架",
+            "通用语言、限界上下文、上下文映射、原则冲突判断、架构族收益/代价/前置条件和 CR 检查项",
+            "不复制原文、表格、代码示例、参考资料列表、图示、标题传播话术或作者表达",
+            "不把 DDD、Clean、微服务、CQRS、Event Sourcing、12-Factor 或 Reactive 写成默认架构套餐",
+        ],
+    ),
+)
+check(
+    "senior architecture records DDD and architecture tradeoff framework",
+    has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "### 5.10 架构风格取舍框架",
+            "架构风格不是技术名词菜单，而是约束下的收益和代价选择",
+            "它牺牲什么换取什么",
+            "DDD / 领域架构族",
+            "Clean / Hexagonal / Onion",
+            "Microservices / SOA",
+            "CQRS / Event Sourcing",
+            "PACELC / BASE / FLP",
+            "12-Factor / Reactive / 运行架构",
+            "战略设计：通用语言、限界上下文、上下文映射和防腐层",
+            "战术设计：聚合、实体、值对象、领域事件、领域服务、仓储和应用服务",
+            "Repository 面向聚合根和领域集合",
+            "ApplicationService 当业务规则容器",
+            "领域语言是否能在代码、文档、测试和业务对话中一致出现",
+            "是否说明它牺牲什么、换取什么，以及满足哪些前置条件",
+        ],
+    ),
+)
+check(
+    "senior clean code and review turn principles into judgment frameworks",
+    has_all(
+        "senior-software-architect/references/clean-code.md",
+        [
+            "### 1.1 开发原则判断框架",
+            "开发原则是提醒维度，不是自动结论",
+            "两段代码是否表达同一业务知识",
+            "KISS",
+            "认知复杂度",
+            "YAGNI",
+            "提前设计接口边界",
+            "POLA / 最小惊讶",
+            "Boy Scout Rule",
+            "Fail Fast",
+            "SoC / 关注点分离",
+            "DRY 与 KISS 冲突",
+            "原则冲突时",
+            "它是否为了 DRY 抽象掉了不同业务知识，或为了 YAGNI 拒绝了必要的接口边界",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "原则和 DDD 误用扫描",
+            "再看领域语言",
+            "DDD 战略缺失",
+            "Repository 退化 DAO",
+            "原则误用",
+            "架构风格误用",
+            "## 原则误用 CR 提示",
+            "原则名不是问题证据",
+            "这里违反 DRY。",
+            "这里用了 DDD 但不像 DDD。",
+            "这里应该上微服务/CQRS/Event Sourcing。",
         ],
     ),
 )
@@ -2657,6 +2754,62 @@ check(
     ),
 )
 check(
+    "product methodology keeps backlog decision and opportunity convergence",
+    has_all(
+        product_skill,
+        [
+            "机会清单/Backlog 决策",
+            "需求优先级",
+            "User Story/AC",
+            "po-backlog-manager.md",
+        ],
+    )
+    and has_all(
+        product_agent,
+        [
+            "Backlog决策",
+            "机会清单",
+            "User Story",
+            "AC",
+        ],
+    )
+    and has_all(
+        product_architecture,
+        [
+            "Backlog 决策与机会收敛",
+            "转读 `po-backlog-manager.md`",
+            "本文只保留总原则",
+            "不要把洞察清单直接改写成研发任务",
+        ],
+    )
+    and has_all(
+        po_backlog_manager,
+        [
+            "# PO Backlog Manager",
+            "它不是独立 Skill",
+            "产品架构专家",
+            "Backlog 决策包",
+            "输入归一化",
+            "决策门禁",
+            "BV / Business Value",
+            "EE / Engineering Effort",
+            "三桌校验",
+            "P0",
+            "P1",
+            "P2",
+            "拒绝",
+            "延后",
+            "User Story",
+            "AC / Acceptance Criteria",
+            "owner",
+            "验证方式",
+            "不能进入可执行 Backlog",
+            "不要把 Backlog 决策写成 Execution Grant",
+            "拒绝或延后理由",
+        ],
+    ),
+)
+check(
     "product methodology keeps functional allocation boundary",
     has_all(
         product_architecture,
@@ -2747,6 +2900,7 @@ check(
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
             "AI Native 产品上下文",
+            "Backlog 决策与机会收敛",
             "产品图形化与服务蓝图",
             "AI-shaped 产品工作成熟度",
             "产品经理方法论与基础能力",
@@ -2779,6 +2933,42 @@ check(
             "放下 PRD：写给AI Native时代的产品经理朋友们",
             "PRD 从静态翻译文档升级为上下文包、验收种子和工程交接门禁",
             "不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收",
+        ],
+    ),
+)
+check(
+    "product source map and README record backlog decision article boundary",
+    has_all(
+        product_source_map,
+        [
+            "Backlog 决策与机会收敛",
+            "po-backlog-manager.md",
+            "有了洞察还不够，产品负责人真正值钱的是 Backlog 决策",
+            "https://mp.weixin.qq.com/s/stj1HjCpaG5PzXhxfxlWSg",
+            "糖糖",
+            "产品AI力学",
+            "2026-04-10 07:30:00 Asia/Shanghai",
+            "公开 HTML 读取标题、作者、发布时间和正文",
+            "BV/EE",
+            "业务/用户/工程三桌校验",
+            "P0/P1/P2",
+            "User Story",
+            "AC",
+            "技术现实主义",
+            "拒绝或延后理由",
+            "不复制原文图片、外部 Skill 名称体系、作者表达、标题传播话术或前置文章内容",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "有了洞察还不够，产品负责人真正值钱的是 Backlog 决策",
+            "洞察/机会清单到 Backlog 决策",
+            "BV/EE",
+            "业务/用户/工程三桌校验",
+            "User Story、AC、技术现实主义和 P0/P1/P2 排序",
+            "机会收敛、拒绝/延后理由、研发可执行边界和决策偏好自检",
+            "不复制原文图片、外部 Skill 名称体系、作者表达或标题传播话术",
         ],
     ),
 )
@@ -2941,6 +3131,34 @@ check(
             "业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标",
             "用户要评估 AI 产品工作成熟度或 AI-shaped readiness",
             "默认只借鉴方法，不安装或调用外部 Skill",
+        ],
+    ),
+)
+check(
+    "product routing and PRD references expose backlog decision",
+    has_all(
+        product_routing,
+        [
+            "Backlog 决策 / 机会清单优先级 / User Story/AC",
+            "洞察太多、机会清单、需求池、路线图候选、Backlog 决策、优先级、P0/P1/P2、User Story、AC",
+            "`po-backlog-manager.md`",
+            "Backlog 决策包：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、拒绝理由、User Story、AC、技术现实主义风险和待确认项",
+            "用户要消化洞察、机会清单或需求池，做 Backlog 决策、优先级、User Story 或 AC",
+            "输入归一化",
+            "不要把洞察清单直接改写成研发任务",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "机会清单/需求池转 Backlog、User Story 或 AC",
+            "po-backlog-manager.md",
+            "Backlog 优先级是否有依据",
+            "P0/P1/P2 应能追溯到 BV/EE、业务/用户/工程三桌校验、拒绝或延后理由",
+            "优先级：<P0/P1/P2；依据 BV/EE 和三桌校验>",
+            "价值：<为什么现在值得做；不做会损失什么>",
+            "依赖/风险：<数据、系统、合规、运营或工程确认方>",
+            "它的 AC 能覆盖输入、输出、正常、边界、异常、不能接受情况和完成标准",
         ],
     ),
 )
@@ -4507,6 +4725,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(
+        name="product backlog decision from opportunity list",
+        prompt="这里有 15 个客户、销售和老板提的机会点，请帮我做 Backlog 决策，按 BV/EE 排 P0/P1/P2，并转成 User Story 和 AC，说明哪些要拒绝或延后",
+        routes={"product", "product-scenario-routing.md", "po-backlog-manager.md"},
+    ),
+    RouteFixture(
         name="AI Native product context to GSD CAD handoff",
         prompt="业务方已经 dogfooding 出一个 MVP，想按 AI Native Product Builder 流程 harden 成产品上下文包，再交给架构师接入 GSD 和 CAD，判断能不能进 Execution Grant",
         routes={"product", "product-scenario-routing.md", "senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "cad-mode.md", "negative-constraints.md"},
@@ -4658,6 +4881,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
     if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
+    if contains_any(prompt, ["Backlog", "机会清单", "机会点", "需求池", "需求优先级", "P0/P1/P2", "User Story"]):
+        route.add("po-backlog-manager.md")
     if contains_any(prompt, diagram_terms):
         route.add("diagram-output.md")
     if routes_codegen(prompt):

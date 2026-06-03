@@ -12,9 +12,9 @@
 
 [产品架构专家](./product-architecture-expert)
 
-- 适合：PRD、产品方案、需求说明、原型/HTML/页面截图/交互稿反推 PRD、能力地图、业务流程、状态机、规则矩阵、运营后台、数据指标、验收标准和产品架构图。支付与资金是重点能力，覆盖账户/账本、清结算、对账、外卡收单、ACH、VCC、争议和跨境支付。
+- 适合：PRD、产品方案、需求说明、机会清单/Backlog 决策、需求优先级、User Story/AC、原型/HTML/页面截图/交互稿反推 PRD、能力地图、业务流程、状态机、规则矩阵、运营后台、数据指标、验收标准和产品架构图。支付与资金是重点能力，覆盖账户/账本、清结算、对账、外卡收单、ACH、VCC、争议和跨境支付。
 - 不适合：不替代法务、合规、财务、税务、持牌机构或卡组织规则确认；不负责工程实现、代码 Review 和生产排障。
-- 常用说法：“用产品架构专家写一版 PRD”“根据页面截图反推可评审 PRD”“画一个 VCC 交易流程”“梳理清结算和对账能力地图”“评审这个需求是否可开发可验收”。
+- 常用说法：“用产品架构专家写一版 PRD”“把这批机会清单做 Backlog 决策并转 User Story/AC”“根据页面截图反推可评审 PRD”“画一个 VCC 交易流程”“梳理清结算和对账能力地图”“评审这个需求是否可开发可验收”。
 
 [资深架构师](./senior-software-architect)
 
@@ -186,6 +186,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - 微信文章 [《架构师底层思维能力要求-这7种尽早练习》](https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q)：作为 `资深架构师` 抽象、逻辑、结构化、批判、成长型、复盘和数据思维的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收底层思维能力框架、架构判断落点和常见误区，不复制原文图片、推荐书目、排版结构或作者表达。
 - 微信文章 [《软件复杂性的本质是通信复杂性》](https://mp.weixin.qq.com/s/1MbijKDxD2B4wa1E9QTnAw)：作为 `资深架构师` 通信复杂度、节点/边/状态传播、抽象隐藏边、复杂度转移检查，以及业务驱动架构/TDD 桥接的公开参考来源。2026-05-29 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收架构评审、业务验证、测试资产和图形检查项，不复制原文、SVG 插图、产品对比或作者表达，也不把通信复杂度绝对化为唯一复杂度来源。
 - 微信文章 [《Clean Architecture 整洁架构》](https://mp.weixin.qq.com/s/7zj5v-B_-fClCYyR3SnMLA)：作为 `资深架构师` Clean Architecture 依赖规则、依赖反转、业务规则/用例规则分离和可测试性诊断的公开参考来源。2026-06-03 已通过移动端微信 UA 公开 HTML 读取标题、账号、发布时间和正文；本仓库只吸收源代码依赖方向、端口位置、adapter 边界和不启动数据库/Web 容器/真实 SDK 的核心业务测试诊断，不复制原文、图示、比喻、表格或作者表达，也不把 Clean Architecture 固化为必须四层或固定目录模板。
+- 微信文章 [《用了 DDD 还是写不好业务代码？因为你把它当成了架构模式》](https://mp.weixin.qq.com/s/3A5SAp1Dzw8s3sECM2SNhQ)、[《7 条开发原则你都知道，但一条都用不对》](https://mp.weixin.qq.com/s/zJphqS80r3fg_wLXHaFmHQ) 与 [《学了那么多软件架构，现实工作我们该怎么权衡》](https://mp.weixin.qq.com/s/e1ft2s2Js8K0Zaw6PNfYMQ)：作为 `资深架构师` DDD 战略/战术分层、开发原则判断框架和架构风格取舍框架的公开参考来源。2026-06-03 已通过移动端微信 UA 公开 HTML 读取三篇文章标题、账号、作者、发布时间和正文；本仓库只吸收通用语言、限界上下文、上下文映射、原则冲突判断、架构族收益/代价/前置条件和 CR 检查项，不复制原文、表格、代码示例、参考资料列表、图示、标题传播话术或作者表达，也不把 DDD、Clean、微服务、CQRS、Event Sourcing、12-Factor 或 Reactive 写成默认架构套餐。
 - 微信文章 [《架构师必备--让AI画架构图》](https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg)：作为 `资深架构师` 与 `产品架构专家` AI 辅助可编辑画图、文档转图、draw.io XML、版本历史和本地模型/凭据边界的公开参考来源。2026-06-01 已通过公开 HTML 读取标题、账号、作者、发布时间和正文，并尝试本机 Chrome headless 等价浏览器；本仓库只吸收可迁移的图形 brief、可编辑源文件、人工校验、权限和敏感信息边界，不复制示例图、提示词、项目安装说明或工具宣传语。
 - 微信文章 [《让AI编程从"越写越烂"到"持续稳定输出"：GSD工作流-适合中大型项目的精准框架。》](https://mp.weixin.qq.com/s/VA_GhniSSrcJotXWlgk_lw)：作为 `资深架构师` 中大型 AI 编码流程治理、上下文衰减、阶段状态、多 Agent 编排、Wave 依赖、原子可追溯和 Git 版本化意识的公开参考来源。2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、作者/账号、发布时间和正文；本仓库只吸收持久化上下文、阶段循环、交接验证和轻重流程选择，不复制 GSD 命令体系、文件模板、XML 示例、动图、截图、工具宣传语或作者表达，也不把自动提交视为默认授权。
 - 微信文章 [《Codex 官方团队：如何把 Codex 用到极致》](https://mp.weixin.qq.com/s/6t8hu_XU48jC3T-fc_B5FQ)：作为 `资深架构师` Codex 运行时协作、durable thread、voice/transcript、steering/queuing、tool reach、automation/goal、side panel/artifact 和 shared written context 的公开参考来源。2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间内嵌元数据和正文；本仓库只吸收持续工作流治理、可验证 goal、显式上下文和权限边界，不复制示例、提示语、目录结构、平台宣传语或作者表达，也不把平台功能当成默认工具可用性或执行授权；涉及 Codex 当前产品能力、模型、工具可用性或官方承诺时，仍必须核验 OpenAI 官方文档或当前会话工具状态。
@@ -194,6 +195,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - 微信文章 [《需求分析和设计活动关键要点总结》](https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q)：作为 `资深架构师` 与 `产品架构专家` 功能定义、功能分配追溯、需求分析外部视角和设计内部视角分工的公开参考来源。2026-06-01 已通过移动端微信 UA 公开 HTML 和本机 Chrome headless 读取标题、账号、作者、发布时间和正文；本仓库只吸收功能不是头脑风暴清单、功能来自上层对象分配、正逆追溯和需求/设计分工检查项，不复制原文推荐书目、GJB 章节表述、课程/书籍引导或作者表达。
 - 微信文章 [《如何评估你写的 SKILL.md 质量？一套完整的 Eval 方法论》](https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg)：作为 Skill Eval 触发准确率、输出质量、效率指标、真实 prompt、难负例、对照实验和方差检查的公开参考来源。2026-05-28 已通过浏览器自动化读取标题、账号、作者、发布时间和正文；本仓库只吸收评估方法、prompt fixture 结构和离线校验边界，不复制文章原文、策略案例、社群引导或未逐篇读取的外部链接。
 - 微信文章 [《产品经理别再只让 AI 写 PRD 了，先把用户反馈整理成一张问题地图》](https://mp.weixin.qq.com/s/sY6cw6wE5ePyrZmRYbXApg)：作为 AI 辅助 PRD 前置发现、用户反馈证据链和问题地图字段的公开参考来源。2026-05-28 已通过公开 HTML 读取标题、账号、作者、发布时间和正文，并尝试浏览器自动化；本仓库只吸收反馈到问题、证据强度、人工判断门禁和 PRD 前置发现流程，不复制原文表格、图片或外部工具营销。
+- 微信文章 [《有了洞察还不够，产品负责人真正值钱的是 Backlog 决策》](https://mp.weixin.qq.com/s/stj1HjCpaG5PzXhxfxlWSg)：作为 `产品架构专家` 内部 `po-backlog-manager.md` 的公开参考来源，用于洞察/机会清单到 Backlog 决策、BV/EE、业务/用户/工程三桌校验、User Story、AC、技术现实主义和 P0/P1/P2 排序。2026-06-03 已通过移动端微信 UA 公开 HTML 读取标题、账号、作者、发布时间和正文；本仓库只吸收机会收敛、拒绝/延后理由、研发可执行边界和决策偏好自检，不复制原文图片、外部 Skill 名称体系、作者表达或标题传播话术。
 - 微信文章 [《B端产品经理实战经验分享系列 - 如何写出高质量的需求文档》](https://mp.weixin.qq.com/s/_KU0j5sy1HBMdx03bhlYGg)：作为 `产品架构专家` PRD 文档质量治理、文档目标/受众、PRD/MRD/BRD 类型区分、版本记录、评审闭环和同步机制的公开参考来源。2026-06-01 已通过公开 HTML 读取标题、账号、作者、发布时间和正文，并用本机 Chrome headless 加载取证；本仓库只吸收可迁移的质量门禁、裁剪方法和评审机制，不复制原文案例、指标数字、图片或作者表达。
 - 微信文章 [《现在我敢评测这个 skill 了，产品负责人来看看这个自评卡吧》](https://mp.weixin.qq.com/s/ZUwtGYYTzt-c2YRXn8ryJw) 与 [deanpeters/Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills) 中的 `ai-shaped-readiness-advisor`：作为 `产品架构专家` AI 产品工作成熟度、AI-first 与 AI-shaped 区分、上下文结构化、工作流编排、学习周期、人工责任和差异化指标的公开参考来源。2026-06-01 已通过移动端微信 UA 公开 HTML 读取文章标题、账号、作者、发布时间和正文，并读取公开 `SKILL.md`；本仓库只吸收可迁移检查项，不安装外部 Skill、不复制交互协议、评分 rubrics、示例案例、图片、自评卡排版或作者表达。
 - 赵丹阳图书 [《产品经理方法论：构建完整的产品知识体系》](https://m.dushu.com/book/13884861/) 及同作者同系列公开书目信息：作为 `产品架构专家` 产品经理基础方法、知识体系和能力校准的公开参考来源。2026-06-02 已读取公开图书页、内容简介、作者简介和目录；本仓库只吸收文档分型、流程图、原型图、产品架构图、用户研究、需求管理、数据分析、技术协作、项目管理、行业/商业分析和知识库沉淀等可迁移能力，不复制书籍正文、章节内容、示例、图表或作者表达，也不把基础岗位知识体系替代复杂业务产品架构专家能力。

@@ -1,6 +1,6 @@
 # 公开资料来源与支付专项提炼边界
 
-本文主要约束产品架构专家中支付与资金垂直分支的公开资料来源、引用边界和时效性风险；少量通用产品架构、PRD、Skill 和业务驱动验证来源也在此记录。通用产品架构方法见 `product-architecture-methodology.md`，产品方案与 PRD 结构见 `product-design-and-prd.md`。
+本文主要约束产品架构专家中支付与资金垂直分支的公开资料来源、引用边界和时效性风险；少量通用产品架构、PRD、Skill 和业务驱动验证来源也在此记录。通用产品架构方法见 `product-architecture-methodology.md`，PO Backlog 决策见 `po-backlog-manager.md`，产品方案与 PRD 结构见 `product-design-and-prd.md`。
 
 ## 使用时机
 
@@ -24,6 +24,7 @@
 ## 需要继续读取的 reference
 
 - 通用产品架构方法读 `product-architecture-methodology.md`。
+- PO Backlog 决策、机会清单、需求池、BV/EE、P0/P1/P2、User Story 和 AC 读 `po-backlog-manager.md`。
 - 产品方案和 PRD 结构读 `product-design-and-prd.md` 与 PRD 相关拆分 reference。
 - 支付资金场景读 `payment-scenario-routing.md`，再按任务读取对应专项 reference。
 - 合规、监管、外部规则与官方来源边界读 `regulatory-baseline.md`。
@@ -61,6 +62,7 @@
 - 收单、争议与风险运营：检索“外卡收单”“收单风控”“争议”“Chargeback”“Fraud”。
 - AI / Skill / 通用复杂度：检索“Agent Skills”“代码不再稀缺”“复杂度”“低成本生成”。
 - AI Native 产品上下文：检索“AI Native”“Product Builder”“业务 dogfooding”“MVP harden”“PRD 可执行上下文”“放下 PRD”“Hardened Candidate”。
+- Backlog 决策与机会收敛：检索“Backlog”“机会清单”“需求池”“BV/EE”“User Story”“AC”“技术现实主义”“三桌校验”。
 - AI-shaped 产品工作成熟度：检索“ai-shaped-readiness-advisor”“AI-shaped”“AI-first”“Context Design”“Agent Orchestration”“Outcome Acceleration”。
 - 产品经理方法论与基础能力：检索“产品经理方法论”“赵丹阳”“BRD/MRD/PRD”“流程图”“原型图”“产品架构图”“需求管理”“用户研究”“数据分析”。
 - 产品图形化与服务蓝图：检索“用户旅程”“服务蓝图”“UX mapping”“AI 画图”“draw.io”。
@@ -128,6 +130,7 @@
 - 微信公众号文章《Agent Skills 实战：把 PRD 需求文档写成 Skill》：`https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ`。公开内容用于参考 PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式、必填章节检查、用户故事/验收标准可验证性和 scripts/reference 分层；不复制原文模板或另建重复 PRD Skill。
 - 微信公众号文章《产品经理的PRD写作武器：一个Skills让写PRD从3小时缩到3分钟》：`https://mp.weixin.qq.com/s/qRv1Qe3GjQ_jbQqWGQcHfQ`。2026-05-27 普通 curl 返回环境异常验证页；随后通过移动端微信 UA 公开 HTML 读取到标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（Chrome headless）加载取证，公开内容用于参考 PRD 作为产品思考结构、模糊需求连续追问、原型/HTML/页面截图/交互稿反推 PRD、需求 ID、优先级、文档状态和评审清单；不复制原文模板、安装说明、外部 Skill 结构或效率营销表述。
 - 微信公众号文章《产品经理别再只让 AI 写 PRD 了，先把用户反馈整理成一张问题地图》：`https://mp.weixin.qq.com/s/sY6cw6wE5ePyrZmRYbXApg`。2026-05-28 普通 curl 初始因沙箱 DNS 失败；随后通过移动端微信 UA 公开 HTML 读取到标题、作者、发布时间和正文，并已尝试 Browser/Playwright 等价浏览器加载取证但页面加载超时/会话重置。公开内容用于参考 AI 辅助 PRD 前的用户反馈证据整理、问题地图、原始反馈到真实问题的转换、证据强度和潜在机会字段，以及 AI 初稿的人工判断门禁；不复制原文表格、图片、作者表达或外部工具营销。
+- 微信公众号文章《有了洞察还不够，产品负责人真正值钱的是 Backlog 决策》：`https://mp.weixin.qq.com/s/stj1HjCpaG5PzXhxfxlWSg`。作者为 `糖糖`，公众号为 `产品AI力学`，发布时间为 2026-04-10 07:30:00 Asia/Shanghai；2026-06-03 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未执行 Playwright 等价浏览器取证。公开内容用于参考 `po-backlog-manager.md` 中洞察/机会清单到 Backlog 的收敛：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、User Story、AC、技术现实主义、拒绝或延后理由和决策偏好自检；不复制原文图片、外部 Skill 名称体系、作者表达、标题传播话术或前置文章内容。
 - 微信公众号文章《现在我敢评测这个 skill 了，产品负责人来看看这个自评卡吧》：`https://mp.weixin.qq.com/s/ZUwtGYYTzt-c2YRXn8ryJw`。作者为 `糖糖`，公众号为 `产品AI力学`，发布时间为 2026-05-02 10:00:00；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文；本轮未再执行 Playwright 等价浏览器取证，后续如需精确引用原文或图片应重新浏览器核验。公开内容用于参考对 `ai-shaped-readiness-advisor` 的产品负责人视角评测：该 Skill 值得读但不宜原样推广，应把 AI-shaped、Context Design、Agent Orchestration、Outcome Acceleration、Team-AI Facilitation 和 Strategic Differentiation 翻译为团队可执行、可复盘、可担责的产品工作语言；不复制原文表达、图片、自评卡排版、作者类比或外部工具营销。
 - GitHub 仓库 `deanpeters/Product-Manager-Skills` 中的 `ai-shaped-readiness-advisor`：`https://github.com/deanpeters/Product-Manager-Skills`，原始文件入口 `https://raw.githubusercontent.com/deanpeters/Product-Manager-Skills/main/skills/ai-shaped-readiness-advisor/SKILL.md`。2026-06-01 已读取公开 `SKILL.md`，其定位为 15-20 分钟交互式 AI 产品组织成熟度评估，覆盖 Context Design、Agent Orchestration、Outcome Acceleration、Team-AI Facilitation 和 Strategic Differentiation。本仓库只吸收“区分 AI 提效与工作系统重构、上下文边界、可追溯流程、学习周期、人工责任和差异化指标”的可迁移检查项；当前不安装该 Skill、不复制交互协议、评分 rubrics、示例案例、关联 Skill 链接或外部执行流程。
 - 图书《产品经理方法论：构建完整的产品知识体系》及同作者同系列公开书目信息：读书网公开图书页 `https://m.dushu.com/book/13884861/`。该公开页显示作者为赵丹阳，出版社为人民邮电出版社，出版时间为 2021-11-01，ISBN 为 9787115571144；得到公开页面另显示同作者《产品经理方法论》和第2版推荐项等系列线索。2026-06-02 已读取公开图书页、内容简介、作者简介和目录，只按公开书目信息和目录结构做方法校准。本仓库只吸收公开目录呈现的产品经理基础知识体系，覆盖文档分型、流程图、原型图、产品架构图、用户研究、需求管理、数据分析、技术协作、项目管理、行业/商业分析、产品实践、学习方法和职业进阶；不复制书籍正文、章节内容、示例、图表、训练材料或作者表达，也不把基础岗位知识体系替代复杂业务产品架构专家能力。
