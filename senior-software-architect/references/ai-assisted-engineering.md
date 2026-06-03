@@ -130,6 +130,23 @@ AI 编码协作必须服从 `workflow.md` 的 `Clarify -> Design -> Plan -> Buil
 
 CAD Mode 只是在上述生命周期满足门禁后进行受控自动推进；不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Execution Grant、验证或高风险人工确认点。
 
+OpenSpec / Superpowers / Harness 的责任边界：
+
+| 层级 | 一句话 | 负责回答 | 不能替代 |
+| --- | --- | --- | --- |
+| OpenSpec | 规定要做什么。 | 目标、范围、非目标、业务规则、契约、验收和验证方式。 | 不替代执行计划、分工、授权或代码质量纪律。 |
+| Superpowers | 规定怎么高质量地做。 | TDD、Review、Refactor、最小变更、编码红线、测试门禁和 AI 产物复核。 | 不替代需求规格、协作分工、写入范围或用户授权。 |
+| Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Owner、Task ID、写入范围、只读范围、依赖顺序、Wave、验证命令、停止条件、交接和恢复入口。 | 不替代 OpenSpec、Superpowers、Execution Grant、测试结果或生产审批。 |
+
+升级路径：
+
+```text
+轻量修改：目标 + 写入范围 + 验证命令
+中高风险 AI 编码：OpenSpec + Harness Plan + Superpowers 检查
+中大型项目：OpenSpec + context ledger + GSD Stage/Wave/Atomic Task + Harness Plan + verification matrix
+受控自动推进：上述门禁 + 单个 CAD 候选任务 + Execution Grant
+```
+
 ## 2. 适用场景
 
 - 使用 AI 进行代码生成、Bug 修复、重构、测试补充、迁移改造或文档到代码转换。
@@ -238,9 +255,12 @@ Superpowers 红线：
 
 Harness 负责让人、AI、子任务和工具协作可控。它不是组织审批，而是工程执行编排。
 
+Harness 的产物不是“再写一份项目计划”，而是当前任务的可执行协作契约。任何进入 AI 编码实现的任务，至少要能说清：谁负责、哪个 Task ID、允许写哪里、只能读哪里、先做什么后做什么、用什么命令验证、什么情况停下、如何把结果交接给下一轮。
+
 最小 Harness Plan：
 
 ```text
+Task ID：本任务的稳定追踪编号，低风险单轮任务可用临时编号。
 任务：实现、修复、重构或验证什么。
 Owner：用户、助手、子任务 Agent 或团队角色。
 写入范围：允许修改哪些文件、模块或目录。
@@ -252,6 +272,22 @@ Owner：用户、助手、子任务 Agent 或团队角色。
 交接说明：产物、验证结果、残余风险、待确认点。
 ```
 
+Harness Plan 分级：
+
+| 类型 | 使用场景 | 必须补齐 |
+| --- | --- | --- |
+| lightweight | 明确小改、单 Agent、单轮验证。 | Task ID/目标、Owner、写入范围、只读范围、验证命令、停止条件和交接。 |
+| gsd-wave | 中大型项目、Wave 编排、多 Agent 或跨会话恢复。 | 原子任务包、Wave 边界、上下文账本、阶段状态、验证矩阵和 handoff。 |
+| cad-candidate | 准备进入 CAD Mode 的单个任务包或阶段切片。 | Superpowers 执行纪律、Execution Grant 关联、人工确认点、回写和恢复入口。 |
+
+需要正式检查 Harness Plan 时，使用 `scripts/check_harness_plan.py`。脚本只检查本地文本或显式传入的本地文件，不联网、不上传、不读取密钥、不判断方案质量。常用方式：
+
+```bash
+senior-software-architect/scripts/check_harness_plan.py --kind lightweight --file 04-harness-plan.md
+senior-software-architect/scripts/check_harness_plan.py --kind gsd-wave --file 04-harness-plan.md
+senior-software-architect/scripts/check_harness_plan.py --kind cad-candidate --file 04-harness-plan.md
+```
+
 协作模式：
 
 - 单 Agent：适合小范围修改、局部 Review、测试补充。
@@ -259,12 +295,26 @@ Owner：用户、助手、子任务 Agent 或团队角色。
 - 人机结对：适合高风险设计、核心业务规则、生产变更、复杂重构。
 - Gantt / Kanban / Handoff：适合周期较长或跨人协作的任务计划、进度可视化和交接记录。
 
+Harness 交接最小格式：
+
+```text
+Task ID：
+本轮完成：
+实际写入范围：
+验证命令与结果：
+未完成/跳过：
+残余风险：
+下一步/恢复入口：
+```
+
 Harness 红线：
 
 - 不允许多个 AI 或多人无边界地同时修改同一职责范围。
 - 不允许把任务拆给 AI，却不给 OpenSpec、项目规范、上下文、测试和验收标准。
-- 不允许子任务只返回“完成了”；必须返回修改内容、验证结果、风险和待确认点。
+- 不允许子任务只返回“完成了”；必须返回 Task ID、修改内容、验证结果、风险、待确认点和恢复入口。
 - 不允许协作层绕过用户确认执行 Git 写操作、部署、外部 API 调用或生产操作。
+- 不允许 Harness Plan 的写入范围宽到“整个仓库”“整个 src”而没有进一步切片。
+- 不允许同一 Wave 内任务写入同一文件、同一公共契约或同一迁移脚本，除非用户确认串行处理。
 - 高风险任务必须设置人工确认点。
 
 ## 6. 长任务上下文治理

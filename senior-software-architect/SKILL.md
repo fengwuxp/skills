@@ -107,6 +107,8 @@ description: |
 
 架构师交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下用 `scripts/check_architecture_deliverable.py` 做本地结构完整性检查。适用于架构方案、系统分析设计、代码 Review、生产变更和图形 brief；该脚本输入为 `--kind` + `--text`、`--file` 或标准输入，缺少背景目标、边界取舍、接口数据、一致性、可靠性安全、验证、发布回滚或图形语义时返回非 0；只检查本地文本或显式传入的本地文件，不写文件、不访问网络、不上传文件、不读取密钥，也不判断架构质量。无法运行脚本时必须说明原因、人工检查结果和残余风险。
 
+Harness Plan 在正式、完整、可评审、GSD Wave、CAD 候选或触发验证场景下可用 `scripts/check_harness_plan.py` 做本地结构完整性检查。适用于 AI 编码协作计划、多 Agent 分工、GSD 原子任务包和 CAD 候选任务；该脚本输入为 `--kind lightweight|gsd-wave|cad-candidate` + `--text`、`--file` 或标准输入，缺少 Task ID、Owner、写入范围、只读范围、依赖顺序、验证命令、停止条件、交接或 Execution Grant 关联时返回非 0；只检查本地文本或显式传入的本地文件，不写文件、不访问网络、不上传文件、不读取密钥，也不判断方案质量。脚本通过不等于 CAD 授权、测试通过或生产审批。
+
 通用架构与表达：
 
 - `references/language-agnostic-architecture.md` – 技术栈识别、跨语言架构共性和验证交付。

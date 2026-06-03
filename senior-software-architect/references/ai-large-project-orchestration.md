@@ -126,10 +126,40 @@ docs/ai-orchestration/<initiative-id>/
 | `01-context-ledger.md` | 固定项目事实和决策。 | 术语、约束、架构决策、禁止事项、外部依赖、待确认项。 |
 | `02-roadmap.md` | 固定阶段和里程碑。 | 阶段目标、依赖、交付物、退出条件。 |
 | `03-state.md` | 固定当前状态。 | 当前阶段、已完成、阻塞、最新验证、下一步、恢复入口。 |
-| `04-harness-plan.md` | 固定执行计划。 | Owner、写入范围、只读范围、Wave、任务包、禁止事项。 |
+| `04-harness-plan.md` | 固定执行协作契约。 | Owner、Task ID、写入范围、只读范围、依赖顺序、Wave、验证命令、停止条件、交接和恢复入口。 |
 | `05-verification-matrix.md` | 固定验证要求。 | 测试、编译、lint、Review、人工验收、回归和发布门禁。 |
 
 如果项目已有等价文档，不重复创建；只在 `03-state.md` 或现有任务文件中留下入口索引。
+
+Harness Plan 最小模板：
+
+```text
+Task ID:
+任务目标:
+Owner:
+所属阶段 / Wave:
+写入范围:
+只读范围:
+依赖顺序:
+禁止事项:
+验收场景:
+验证命令:
+停止条件:
+交接要求:
+恢复入口:
+CAD 候选: 是/否，原因:
+Execution Grant 关联: 无/待确认/已确认
+```
+
+Harness Plan 必须体现一句话原则：OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。若这些字段无法填清，只能进入 Round 0 补齐，不进入执行 Wave。
+
+可选本地检查：
+
+```bash
+senior-software-architect/scripts/check_harness_plan.py --kind gsd-wave --file docs/ai-orchestration/<initiative-id>/04-harness-plan.md
+```
+
+脚本只做结构完整性检查；通过不代表可以进入 CAD Mode，也不代表用户已授权 Git、联网、部署或生产操作。
 
 ## 4. 初始化流程
 
@@ -192,13 +222,16 @@ Task ID:
 Owner：
 写入文件：
 只读参考：
+依赖顺序：
 允许动作：
 禁止动作：
 实现约束：
 验收场景：
 验证命令：
+停止条件：
 完成条件：
 交接要求：
+恢复入口：
 回滚提示：
 CAD 候选：是/否，原因：
 Execution Grant 要求：
@@ -210,6 +243,7 @@ Execution Grant 要求：
 - 不允许写入文件为空或过宽，例如“整个 src 目录”。
 - 不允许只有实现动作，没有验证命令和完成条件。
 - 不允许任务之间写入同一文件而仍放在同一 Wave。
+- 不允许没有交接要求和恢复入口的任务包进入跨会话或多 Agent 执行。
 
 ## 7. Wave 依赖编排
 

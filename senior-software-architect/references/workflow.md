@@ -64,7 +64,7 @@
 | --- | --- | --- |
 | Clarify | 目标、范围、非目标、风险等级、关键假设和待确认点是什么。 | 澄清结论、Round 0 缺口或明确假设。 |
 | Design | 真实用例、测试用例、边界条件、异常路径、验收标准和契约影响是什么。 | 测试驱动设计记录、OpenSpec、系分设计或轻量验收矩阵。 |
-| Plan | 写入范围、只读范围、执行顺序、验证命令、停止条件是什么。 | 轻量计划、Harness Plan 或明确的变更步骤。 |
+| Plan | 谁做、按什么顺序做、能改哪里、只读哪里、怎么验证、何时停止、怎么交接。 | 轻量计划、Harness Plan 或明确的变更步骤。 |
 | Build | 如何按最小变更实现，不扩大重构、不引入无主依赖、不越过本地约规。 | 代码 diff、实现说明或变更摘要。 |
 | Verify | 编译、测试、lint、静态检查、手工验证是否完成；未完成原因是什么。 | 命令结果、截图、日志、替代证据或残余风险说明。 |
 | Review/Ship | 是否存在行为回退、兼容性、生产风险、回滚/监控、Git 边界和交付说明。 | Review 结论、交付总结、提交建议或发布/回滚说明。 |
@@ -77,7 +77,8 @@
 - Verify 阶段无法执行真实验证时，必须说明原因、替代证据和残余风险，不得用“看起来没问题”代替验证。
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
 - AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；CAD Mode、Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
-- 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
+- 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充 Harness Plan、上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
+- Harness Plan 必须体现 OpenSpec / Superpowers / Harness 的责任分离：OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。
 
 ## 语言偏好
 
@@ -91,6 +92,7 @@
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
 - 多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口；如果任务只是明确小修或一次性 demo，不启动重型并行流程。
+- Harness Plan 需要正式校验时，使用 `senior-software-architect/scripts/check_harness_plan.py --kind lightweight|gsd-wave|cad-candidate`；脚本只检查结构完整性，不替代测试、Review、Execution Grant 或用户授权。
 - 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，详细进入门禁、Git 策略、每轮摘要和停止条件以 `cad-mode.md` 为准。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。

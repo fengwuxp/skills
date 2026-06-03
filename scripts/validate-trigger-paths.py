@@ -104,6 +104,7 @@ security = "senior-software-architect/references/security-architecture.md"
 system_analysis_template = "senior-software-architect/references/system-analysis-template.md"
 senior_source_map = "senior-software-architect/references/source-map.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
+harness_plan_checker = "senior-software-architect/scripts/check_harness_plan.py"
 architecture_fixture_verifier = "senior-software-architect/scripts/verify_fixtures.py"
 reference_index_audit = "scripts/audit-reference-indexes.py"
 source_archive = "scripts/archive-source-evidence.py"
@@ -1789,6 +1790,92 @@ check(
     ),
 )
 check(
+    "AI engineering codifies OpenSpec Superpowers Harness split",
+    has_all(
+        ai_engineering,
+        [
+            "OpenSpec / Superpowers / Harness 的责任边界",
+            "OpenSpec | 规定要做什么",
+            "Superpowers | 规定怎么高质量地做",
+            "Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
+            "轻量修改：目标 + 写入范围 + 验证命令",
+            "中高风险 AI 编码：OpenSpec + Harness Plan + Superpowers 检查",
+            "中大型项目：OpenSpec + context ledger + GSD Stage/Wave/Atomic Task + Harness Plan + verification matrix",
+            "受控自动推进：上述门禁 + 单个 CAD 候选任务 + Execution Grant",
+        ],
+    )
+    and has_all(
+        workflow,
+        [
+            "谁做、按什么顺序做、能改哪里、只读哪里、怎么验证、何时停止、怎么交接",
+            "OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
+        ],
+    ),
+)
+check(
+    "senior harness plan checker is wired and scoped",
+    has_all(
+        senior_skill,
+        [
+            "`scripts/check_harness_plan.py`",
+            "`--kind lightweight|gsd-wave|cad-candidate`",
+            "缺少 Task ID、Owner、写入范围、只读范围、依赖顺序、验证命令、停止条件、交接或 Execution Grant 关联时返回非 0",
+            "脚本通过不等于 CAD 授权、测试通过或生产审批",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py",
+            "senior-software-architect/scripts/check_harness_plan.py --self-test",
+        ],
+    )
+    and has_all(
+        harness_plan_checker,
+        [
+            "CHECKS",
+            "lightweight",
+            "gsd-wave",
+            "cad-candidate",
+            "SELF_TESTS",
+            "FAIL harness plan check",
+            "OK harness plan self-test",
+            "does not access the network",
+            "does not access the network, upload content, read secrets, or judge technical quality",
+        ],
+    ),
+)
+check(
+    "Harness plan becomes executable collaboration contract",
+    has_all(
+        ai_engineering,
+        [
+            "Harness 的产物不是“再写一份项目计划”，而是当前任务的可执行协作契约",
+            "Task ID：本任务的稳定追踪编号",
+            "Harness Plan 分级",
+            "lightweight",
+            "gsd-wave",
+            "cad-candidate",
+            "需要正式检查 Harness Plan 时，使用 `scripts/check_harness_plan.py`",
+            "Harness 交接最小格式",
+            "不允许 Harness Plan 的写入范围宽到“整个仓库”“整个 src”而没有进一步切片",
+        ],
+    )
+    and has_all(
+        ai_large_project,
+        [
+            "Harness Plan 最小模板",
+            "Task ID:",
+            "依赖顺序:",
+            "停止条件:",
+            "恢复入口:",
+            "Execution Grant 关联: 无/待确认/已确认",
+            "Harness Plan 必须体现一句话原则",
+            "senior-software-architect/scripts/check_harness_plan.py --kind gsd-wave",
+        ],
+    ),
+)
+check(
     "CAD mode split keeps AI engineering as overview",
     has_all(
         senior_skill,
@@ -1848,6 +1935,9 @@ check(
             "必须已选定单个 Task ID 或阶段切片",
             "GSD-CAD 联动审查",
             "回写阶段状态、验证矩阵和 handoff",
+            "Harness Plan 已形成：Task ID、Owner、任务拆分、写入范围、只读范围、依赖顺序、验证命令、停止条件、交接方式和恢复入口清楚",
+            "通过 `scripts/check_harness_plan.py --kind cad-candidate`",
+            "Harness Plan 中的写入范围与 Execution Grant 的授权范围一致",
         ],
     )
     and has_all(
@@ -4242,6 +4332,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "workflow.md", "ai-assisted-engineering.md", "cad-mode.md", "negative-constraints.md"},
     ),
     RouteFixture(
+        name="OpenSpec Superpowers Harness AI coding governance",
+        prompt="按照 OpenSpec 规定要做什么、Superpowers 规定怎么高质量地做、Harness 规定谁做按什么顺序做能改哪里怎么验证怎么交接，增强架构师 AI 编码约规和流程能力",
+        routes={"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
         name="AI large project orchestration",
         prompt="目前确实有中大型项目，需要类似 GSD 的 AI 编码能力，做上下文衰减治理、Wave 编排和暂停恢复",
         routes={"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "negative-constraints.md"},
@@ -4428,6 +4523,11 @@ def route_fixture(prompt: str) -> set[str]:
             "NullPointerException",
             "根因",
             "OpenSpec",
+            "Superpowers",
+            "Harness",
+            "AI 编码",
+            "编码约规",
+            "流程能力",
             "Agent",
             "CAD",
             "SDK",
@@ -4459,9 +4559,9 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
     if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
-    if contains_any(prompt, ["OpenSpec", "Agent", "CAD"]):
+    if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "AI 编码", "编码约规", "流程能力", "Agent", "CAD"]):
         route.update({"workflow.md", "ai-assisted-engineering.md", "negative-constraints.md"})
-    if contains_any(prompt, ["GSD", "中大型", "大项目", "长任务", "上下文衰减", "Wave", "暂停恢复"]):
+    if contains_any(prompt, ["GSD", "中大型", "大项目", "长任务", "上下文衰减", "Wave", "暂停恢复", "Harness"]):
         route.update({"senior", "workflow.md", "ai-assisted-engineering.md", "ai-large-project-orchestration.md", "negative-constraints.md"})
     if contains_any(prompt, ["CAD", "Execution Grant", "自动分轮", "自动提交"]):
         route.add("cad-mode.md")
