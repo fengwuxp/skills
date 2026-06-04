@@ -397,9 +397,9 @@
 | 应用位置 | 已吸收内容 |
 | --- | --- |
 | `ai-assisted-engineering.md` | 新增 AI Native 架构师工作面，强调架构师应把时间投入系统判断、hardened 标准、Agent 工作流设计和技术取舍；审查 AI 代码时重点验证整体是否满足 hardened 标准，而不是把所有精力放在逐行复写。 |
-| `ai-large-project-orchestration.md` | 补充 Product Builder / 业务 dogfooding -> AI Native 产品上下文包 -> Hardened Candidate -> GSD Stage/Wave/Atomic Task -> CAD Execution Grant 的最小链路。 |
-| `cad-mode.md` | 增加从 AI Native 产品上下文或 MVP harden 进入 CAD 的门禁，明确产品上下文包、Hardened Candidate 或业务 MVP 不能直接作为 Execution Grant。 |
-| `product-design.md`、`scenario-routing.md` | 将 AI Native 产品上下文到系统设计的路由接入产品语义校准和业务驱动架构入口。 |
+| `ai-large-project-orchestration.md` | 将 AI Native 编排或产品侧交接结论转成工程侧 OpenSpec、context ledger、GSD Stage/Wave/Atomic Task、验证矩阵和 CAD 候选缺口；端到端产品到研发链路交给 `ai-native-engineering-workflow`。 |
+| `cad-mode.md` | 增加从 AI Native 产品上下文或 MVP harden 进入 CAD 的消费门禁，明确产品上下文包、Hardened Candidate、AI Native 编排结论或业务 MVP 不能直接作为 Execution Grant。 |
+| `product-design.md`、`scenario-routing.md` | 将 AI Native 产品上下文到系统设计的路由收敛为消费已确认交接结论，不在架构师侧重建产品流程。 |
 | `README.md` | 新增公开来源记录，说明只吸收架构师从逐行实现转向系统边界、质量门禁、验证矩阵和 Agent 编排的可迁移方法。 |
 | `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI Native 架构师工作面、Hardened Candidate 和 CAD 交接门禁漂移。 |
 

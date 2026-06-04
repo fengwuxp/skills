@@ -20,10 +20,14 @@ from typing import Any, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIRS = [
+    "ai-native-engineering-workflow",
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
 ]
+SCRIPTLESS_ORCHESTRATION_SKILLS = {
+    "ai-native-engineering-workflow",
+}
 REQUIRED_VALIDATE_HOOKS = [
     "scripts/validate-trigger-paths.py",
     "scripts/audit-reference-indexes.py",
@@ -353,8 +357,22 @@ def score_references(
     return max(min(score, 100), 0), warnings
 
 
-def score_deterministic(script_count: int, fixture_count: int, has_self_test_signal: bool) -> tuple[int, list[str]]:
+def score_deterministic(
+    skill_name: str,
+    script_count: int,
+    fixture_count: int,
+    has_self_test_signal: bool,
+    prompt_stats: dict[str, Any],
+) -> tuple[int, list[str]]:
     warnings: list[str] = []
+    if script_count == 0 and skill_name in SCRIPTLESS_ORCHESTRATION_SKILLS:
+        score = 80
+        if prompt_stats["positive_cases"] >= 2 and prompt_stats["hard_negative_cases"] >= 2:
+            score += 10
+        if prompt_stats["positive_without_name_cases"] >= 1:
+            score += 5
+        return max(min(score, 100), 0), warnings
+
     score = 65
     score += score_ratio(script_count, 2, 20)
     score += score_ratio(fixture_count, 2, 10)
@@ -369,6 +387,7 @@ def score_trigger(skill_name: str, trigger_text: str) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 80
     expected_terms = {
+        "ai-native-engineering-workflow": ["ai-native workflow", "GSD/CAD", "验证矩阵"],
         "java-service-code-generator": ["java service generator", "structured input", "codegen"],
         "product-architecture-expert": ["payment product", "product diagram", "airwallex"],
         "senior-software-architect": ["architecture diagram", "bug diagnosis", "write tests"],
@@ -506,9 +525,11 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         reference_searchability,
     )
     deterministic_score, deterministic_warnings = score_deterministic(
+        skill_dir.name,
         len(scripts),
         len(fixtures),
         has_self_test_signal,
+        prompt_stats,
     )
     trigger_score, trigger_warnings = score_trigger(skill_dir.name, trigger_text)
     prompt_score, prompt_warnings = score_prompt_fixtures(skill_dir.name, prompt_stats, prompt_fixture)

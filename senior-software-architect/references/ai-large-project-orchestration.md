@@ -28,7 +28,7 @@
 ## 需要继续读取的 reference
 
 - AI 协作总纲读 `ai-assisted-engineering.md`。
-- 从 AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型 harden 或 PRD 可执行上下文进入工程时，先让 `产品架构专家` 读取 `product-architecture-expert/references/ai-native-product-context.md`，再由本技能承接工程 hardening。
+- 端到端 AI Native 产品到研发流程、角色编排和 GSD/CAD 准入判断先由 `ai-native-engineering-workflow/references/gsd-cad-admission.md` 编排；本文件只消费已确认的 GSD/CAD 编排准入结论，并在已经进入工程侧大项目编排后细化任务包、上下文账本、Wave 和验证矩阵。产品侧上下文缺口回到 `product-architecture-expert/references/ai-native-product-context.md`。
 - 生命周期、验证命令和 Git 边界读 `workflow.md`。
 - CAD Mode、Execution Grant、自动分轮推进和自动提交边界读 `cad-mode.md`。
 - 代码修改读 `coding-standards.md`、`coding-review-deep-dive.md`；测试读 `testing.md`。
@@ -41,8 +41,8 @@
 | 判断是否启用大项目编排 | 1、2 | 不先写项目状态文件 |
 | 初始化项目账本 | 3、4、5 | 不展开执行 Wave |
 | 规划阶段和原子任务 | 6、7 | 不进入 CAD Mode 细节 |
-| GSD-CAD 组合判断 | 8，并继续读 `cad-mode.md` | 不对整个大项目直接开 CAD |
-| AI Native 产品上下文进入工程 | 8A，并回读产品侧上下文包或产品/PRD 交接材料 | 不把业务 MVP 直接当 CAD 授权 |
+| GSD-CAD 组合判断 | 先消费 `ai-native-engineering-workflow/references/gsd-cad-admission.md` 的准入结论，再读 8 和 `cad-mode.md` | 不对整个大项目直接开 CAD |
+| AI Native 编排结论进入工程 | 8A，并消费 `ai-native-engineering-workflow` 或产品侧交接材料 | 不把业务 MVP 直接当 CAD 授权 |
 | 多 Agent / Wave 执行 | 7、9、10 | 不跳过验证 |
 | Codex automation / goal / artifact 协作 | 10、11、12 | 不把平台能力当授权 |
 | 暂停、恢复或跨会话继续 | 12 | 不依赖聊天记忆 |
@@ -69,17 +69,16 @@ OpenSpec 定目标
 - 让多 Agent / 多轮推进在依赖关系下并行，不在同一职责范围里互相踩踏。
 - 让会话中断、上下文清理或阶段切换后可以恢复，而不是从头解释。
 
-AI Native 产品到工程的最小链路：
+AI Native 产品到工程的端到端链路由 `ai-native-engineering-workflow` 维护，GSD/CAD 编排准入由 `ai-native-engineering-workflow/references/gsd-cad-admission.md` 产出。进入本文件时，只保留工程侧最小链路：
 
 ```text
-Product Builder / 业务 dogfooding
--> AI Native 产品上下文包
--> Hardened Candidate
+AI Native 交接结论
+-> OpenSpec / context ledger / verification matrix
 -> GSD Stage / Wave / Atomic Task
--> CAD Execution Grant
+-> CAD 候选 / Execution Grant 缺口
 ```
 
-产品上下文包回答“这个产品候选是否值得工程化、工程化必须保留哪些业务事实”。GSD-like 编排回答“哪些阶段和任务可以被执行”。CAD Mode 只回答“当前选中的原子任务是否可以自动执行”。三者不得互相替代。
+产品上下文包回答“这个产品候选是否值得工程化、工程化必须保留哪些业务事实”。`ai-native-engineering-workflow` 回答“端到端流程如何流转、是否进入 GSD/CAD 编排候选、谁负责、何时停止”。GSD-like 编排回答“哪些阶段和任务可以被执行”。CAD Mode 只回答“当前选中的原子任务是否可以自动执行”。四者不得互相替代。
 
 ## 2. 启用门槛
 
@@ -265,6 +264,8 @@ Wave 规则：
 
 ## 8. GSD-CAD 双层协议
 
+端到端 GSD/CAD 准入、GSD Round 0 缺口、Wave/Atomic Task 候选和 Execution Grant 缺口先由 `ai-native-engineering-workflow/references/gsd-cad-admission.md` 输出。本节只说明资深架构师拿到准入包后，如何把工程侧大项目编排和 CAD Mode 组合起来。
+
 GSD-like 编排管大盘，CAD Mode 跑单元。大项目编排负责定义“哪些任务可以被执行”，CAD Mode 负责判断“某一个任务是否可以自动执行”。不得对整个大项目直接开启 CAD。
 
 双层协议：
@@ -307,23 +308,17 @@ CAD 候选任务必须同时满足：
 
 CAD 输出必须回写阶段状态、验证矩阵和 handoff：完成内容、验证结果、失败/跳过原因、残余风险、Git 处理结果、下一任务建议。只有原子任务包满足 CAD 门禁时，才建议进入 CAD；门禁不满足时，回到本文件的 Round 0、阶段拆分或任务包补齐。
 
-## 8A. AI Native 产品到工程 hardening
+## 8A. 消费 AI Native 编排交接结论
 
-当输入来自业务方或产品侧 AI 生成原型、MVP、Product Builder 方案、业务 dogfooding 结果或“放下 PRD”的流程改造时，先判断是否已经形成产品侧 Hardened Candidate。没有 Hardened Candidate 时，不进入 GSD/CAD，只回到产品上下文补齐。
+当输入来自业务方或产品侧 AI 生成原型、MVP、Product Builder 方案、业务 dogfooding 结果或“放下 PRD”的流程改造时，先确认是否已有 `ai-native-engineering-workflow` 或 `产品架构专家` 给出的产品侧交接结论。没有 Hardened Candidate 或产品侧交接条件时，不进入 GSD/CAD，只回到产品上下文补齐。
 
-Hardened Candidate 进入工程最低要求：
+进入 GSD Round 0 时，本文件只消费以下工程输入：
 
-| 门禁 | 产品侧输入 | 架构侧继续补齐 |
-| --- | --- | --- |
-| 业务 owner | 业务结果责任、验收方、失败成本 | 工程 owner、技术 owner、人工确认点 |
-| 目标与非目标 | 可验证目标、成功指标、停止条件 | OpenSpec、质量属性、技术非目标 |
-| MVP / 原型证据 | 使用范围、观察结果、已知限制、不可复用实现 | 风险分级、迁移/替换策略、实现边界 |
-| 对象与状态 | 核心对象、字段口径、状态、不变量、权限 | 领域模型、接口契约、数据模型、状态机验证 |
-| 流程与规则 | 主/逆/异常/人工流程、规则矩阵、规则 owner | 模块边界、事务、一致性、幂等、可靠性 |
-| 验收种子 | 正常、边界、异常、运营、数据和风险验收样例 | TDD 场景、契约测试、集成验证、监控指标 |
-| 风险确认 | 资金、合规、隐私、安全、外部规则确认方 | 生产门禁、发布回滚、审计、安全架构 |
+- 产品侧交接结论：业务 owner、目标/非目标、对象状态、流程规则、验收种子、风险确认方和停止条件。
+- AI Native 编排结论：当前成熟度、下一步 owner、GSD/CAD 编排准入结论、是否进入 OpenSpec、是否需要 Harness/GSD、GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口和 Execution Grant 缺口。
+- 已确认材料入口：PRD-Lite、产品上下文包、OpenSpec 草案、原型/eval 证据、待确认项。
 
-进入 GSD Round 0 时，把产品上下文包转成：
+架构侧把这些输入转成：
 
 - OpenSpec 的目标、范围、非目标、业务规则、接口/数据约束和验收场景。
 - Context ledger 的术语、对象、规则、MVP 证据、已知限制、禁止事项和待确认项。
@@ -331,13 +326,13 @@ Hardened Candidate 进入工程最低要求：
 - Harness Plan 的写入范围、只读范围、Owner、Wave、任务包和停止条件。
 - Verification matrix 的 TDD、契约、集成、运营、数据、风险和人工验收证据。
 
-进入 CAD 前必须再次确认：已选定单个 Task ID 或阶段切片，写入范围、验证命令、Git 策略、人工确认点和停止条件明确。产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant。
+进入 CAD 前必须再次确认：已选定单个 Task ID 或阶段切片，写入范围、验证命令、Git 策略、人工确认点和停止条件明确。产品上下文包、Hardened Candidate、AI Native 编排结论或 GSD Roadmap 都不是 Execution Grant。
 
 反模式：
 
 - 业务方能跑通 MVP，就直接让 CAD 改代码。
 - 产品侧只给页面和按钮，没有对象、状态、规则、验收和风险 owner。
-- 架构师只按原型补接口和表结构，没有先定义 hardened 标准。
+- 架构师绕过 `ai-native-engineering-workflow` 和产品侧交接结论，直接按原型补接口和表结构。
 - 把 PRD、GSD 计划或产品上下文包当成自动提交、联网、部署或生产操作授权。
 
 ## 9. 执行协议

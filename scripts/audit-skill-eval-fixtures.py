@@ -21,11 +21,26 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 
 SKILLS = {
+    "ai-native-engineering-workflow",
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
 }
 SKILL_MENTIONS = {
+    "ai-native-engineering-workflow": [
+        "AI Native 研发流程",
+        "AI Native 研发流程编排",
+        "ai-native-engineering-workflow",
+        "进入 GSD",
+        "产研协同研发流程",
+        "GSD/CAD 准入",
+        "质量门禁",
+        "理解门禁",
+        "代码库理解",
+        "设计-代码对齐",
+        "Gemini CLI",
+        "AgentRC",
+    ],
     "java-service-code-generator": ["java-service-code-generator"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
     "senior-software-architect": ["资深架构师", "senior-software-architect"],

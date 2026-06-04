@@ -126,7 +126,7 @@ description: |
 - `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
 - `references/product-insight-analyst.md`：资料资产化、客户/竞品/标杆情报分拣、证据推理链和机会雷达。
 - `references/po-backlog-manager.md`：PO Backlog 决策、机会清单收敛、BV/EE、P0/P1/P2、User Story 和 AC。
-- `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文和交给架构师/GSD/CAD 的产品侧交接包。
+- `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文、产品侧上下文包、验收种子和交给 AI Native 编排/架构师的交接条件；端到端 GSD/CAD 准入由 `ai-native-engineering-workflow` 处理。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。
 - `references/product-prd-template.md`：PRD、产品需求文档、需求文档模板、PRD 模板、产品方案模板和可复制主骨架。
 - `references/product-prd-quality-gates.md`：PRD 提交前自检、符合性评审、验收门禁和必改/建议输出。

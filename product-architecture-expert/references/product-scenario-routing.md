@@ -8,7 +8,7 @@
 - 用户提供原型、HTML、页面截图、页面说明或交互稿，要求反推、补写或评审 PRD。
 - 用户提供客户访谈、工单、竞品动态、行业/政策资料、标杆实践、Markdown 笔记或知识库资料，要求做产品洞察、需求洞察、机会挖掘或机会雷达。
 - 用户给出洞察、机会清单、需求池、老板/销售/客户诉求或路线图候选，要求做 Backlog 决策、需求优先级、User Story、AC 或研发可执行条目。
-- 用户要求评估 AI Native 产品流程、Product Builder、业务 dogfooding、MVP/原型进入工程 harden、PRD 可执行上下文或交给架构师/GSD/CAD。
+- 用户要求从 AI Native 产品流程、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 或 PRD 可执行上下文中提炼产品侧交接材料。
 - 不确定应进入通用产品架构、PRD 模板、支付资金专项还是能力评估。
 - 需要先澄清用户、主体、目标、边界、对象、规则、数据和风险。
 
@@ -27,7 +27,7 @@
 ## 需要继续读取的 reference
 
 - PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 加读 `product-prd-financial-appendix.md`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。
-- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和 GSD/CAD 产品侧交接读 `ai-native-product-context.md`。
+- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD/CAD 准入、Harness/Agent 编排由 `ai-native-engineering-workflow` 处理。
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 产品方案需要交给架构师继续做系统设计或业务驱动架构交接时，读 `product-architecture-methodology.md` 的“与技术架构的交接”和“业务驱动验证口径”，必要时加读 `product-prd-quality-gates.md`。
 - 产品洞察、资料资产化、客户/竞品/标杆情报分拣、证据推理链或机会雷达场景，读 `product-insight-analyst.md`；机会需要排序或转研发候选时，再读 `po-backlog-manager.md`。
@@ -99,7 +99,7 @@
 | AI 产品工作成熟度、AI-shaped readiness、产品团队 AI 工作流改造、AI 是否形成产品优势 | `product-architecture-methodology.md` | AI 产品工作成熟度评审：业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标；不安装外部 advisor，不照搬外部话术 |
 | 产品洞察、需求洞察、资料资产化、客户/竞品/标杆情报、机会雷达、证据推理链 | `product-insight-analyst.md`, `product-architecture-methodology.md` | 产品洞察报告：资料资产表、三类情报分拣、机会雷达、证据与推理链、置信度、待验证和建议去向；机会需要排序时再读 `po-backlog-manager.md` |
 | 洞察太多、机会清单、需求池、路线图候选、Backlog 决策、优先级、P0/P1/P2、User Story、AC | `po-backlog-manager.md`, `product-design-and-prd.md` | Backlog 决策包：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、拒绝理由、User Story、AC、技术现实主义风险和待确认项 |
-| AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 GSD/CAD | `ai-native-product-context.md`, `product-architecture-methodology.md`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和交给架构师/GSD/CAD 的产品侧交接条件；不把可运行等同于可上线 |
+| AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师 | `ai-native-product-context.md`, `product-architecture-methodology.md`；端到端流程和 GSD/CAD 准入交给 `ai-native-engineering-workflow`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和产品侧交接条件；不把可运行等同于可上线 |
 | 产品方案要交给架构师继续系统设计、业务驱动架构交接、产品语义到工程验证、验收种子到 TDD 交接 | `product-architecture-methodology.md`, `product-design-and-prd.md`, `product-prd-quality-gates.md` | 业务驱动架构交接包：目标/非目标/成功指标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项；必要时输出验收种子交接矩阵 |
 | 能力地图、模块关系、产品架构 | `product-architecture-methodology.md` | 能力地图、模块边界、前后台能力、交付拆分 |
 | 画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物 | `diagram-output.md`，按场景再读 `product-architecture-methodology.md`、`product-design-and-prd.md` 或支付资金专项 reference | 默认生成 SVG，报告用途、假设、验证和待确认项；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出 |
@@ -131,7 +131,7 @@
 ## 输出路由
 
 - **用户要产品架构方案**：输出背景、目标、范围、用户、角色、能力地图、对象模型、流程、状态机、规则、权限、数据、运营、风险和验收。
-- **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给架构师/GSD/CAD 的门禁。
+- **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给 AI Native 编排/架构师的产品侧条件；若用户要求端到端流程、Harness/GSD/CAD 准入或 AI 工具协作，转 `ai-native-engineering-workflow`。
 - **用户要交给架构师继续设计或业务驱动架构交接**：输出产品侧交接包，覆盖目标/非目标/成功指标、参与方与 owner、核心行为、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。
 - **用户要补齐产品经理方法论或产品专家基础能力**：读取 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md`，把基础产品经理知识体系翻译为文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析和知识库沉淀，并说明哪些能力已覆盖、哪些能力需要提升到复杂业务对象、规则、验收和交接。
 - **用户要评估 AI 产品工作成熟度或 AI-shaped readiness**：读取 `product-architecture-methodology.md` 的“2A. AI-shaped 产品工作成熟度”，把外部 advisor 术语翻译成业务优势、流程变化、上下文结构化、任务可追溯、人工责任和验证指标；默认只借鉴方法，不安装或调用外部 Skill。

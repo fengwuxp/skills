@@ -10,6 +10,12 @@
 
 ### 先选哪个 Skill
 
+[AI Native 研发流程编排](./ai-native-engineering-workflow)
+
+- 适合：AI 时代产品到研发编码流程、Agentic Engineering、产品专家到架构师交接、AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD 编排准入、AI 原生工具协作、Gemini CLI/AgentRC 等代码理解工具安装与调用准入、设计-代码对齐、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、代码 CR、发布复盘和组织职责边界。
+- 边界：可以作为 PRD、Backlog、架构设计、代码 CR、测试、生产变更或 Java Service 代码生成的流程入口，但只负责成熟度、owner、交接物、停止条件和工具边界；具体产物继续分派给产品专家、架构师或代码生成器。
+- 常用说法：“设计一套 AI 时代产品到研发编码流程”“把产品专家、架构师和 Codex/Claude/Copilot 这类 AI 工具协同起来”“评审我们的 AI 编码流程是否有 OpenSpec、Harness、验证矩阵和 CR 闭环”“判断大项目是否进入 GSD Round 0、Wave、Atomic Task 和 CAD 候选”“评估是否安装 Gemini CLI / AgentRC 阅读代码”“用 AI 快速阅读代码库并整理结论包”“对齐设计和代码实现”“AI 生成代码后怎么让团队看懂结构和影响范围”“从 AI 原型到工程化怎么交接”。
+
 [产品架构专家](./product-architecture-expert)
 
 - 适合：PRD、产品方案、需求说明、产品洞察/机会雷达、机会清单/Backlog 决策、需求优先级、User Story/AC、原型/HTML/页面截图/交互稿反推 PRD、能力地图、业务流程、状态机、规则矩阵、运营后台、数据指标、验收标准和产品架构图。支付与资金是重点能力，覆盖账户/账本、清结算、对账、外卡收单、ACH、VCC、争议和跨境支付。
@@ -30,6 +36,7 @@
 
 ### 如何选择
 
+- 要设计 AI 时代产品到研发编码的整体工作流，用 `AI Native 研发流程编排`；其中产品语义由 `产品架构专家` 承接，工程实现由 `资深架构师` 承接。
 - 先定业务和验收，用 `产品架构专家`；再定工程结构、代码、测试和发布，用 `资深架构师`。
 - 有原型、页面截图、HTML、交互稿或模糊想法，需要反推需求、流程、规则和待确认问题，用 `产品架构专家`。
 - 已有代码、报错、测试失败、工程坏味或生产现象，直接用 `资深架构师`。
@@ -40,11 +47,50 @@
 
 ### 常用组合路线
 
+- 从 AI 原型到工程化：`AI Native 研发流程编排` 先定义阶段、门禁、owner、AI 工具角色、GSD/CAD 编排准入、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁和验证矩阵；`产品架构专家` 补产品上下文包、Backlog 和 PRD-Lite；`资深架构师` 补 OpenSpec、Harness、GSD/CAD 工程任务包、测试策略、TDD、补测试、源码级 CR 和发布风险。
 - 从想法到工程：`产品架构专家` 先把目标、对象、流程、规则、验收和待确认项定清楚；`资深架构师` 再承接系统设计、代码、测试和发布风险。
 - 从原型到 PRD：`产品架构专家` 根据原型、HTML、页面截图或交互稿反推 PRD，先补角色、对象、状态、规则、数据和验收，不只描述页面控件。
 - 从 PRD 到代码生成：先用 `产品架构专家` 或 `资深架构师` 确认对象、状态、字段、索引和金额精度；已有 DDL、字段表格或 Java 类后，再用 `java-service-code-generator` 生成配套代码。
 - 从普通图到复杂图：先用 `产品架构专家` 或 `资深架构师` 产出语义稳定的 SVG；需要更复杂的布局、风格系统或精细视觉时，再调用 `$fireworks-tech-graph` 续作。
 - 从金融产品到上线方案：`产品架构专家` 先标出主体、法域、资金归属、外部规则和专业确认方；`资深架构师` 再处理系统边界、数据一致性、可靠性、安全和发布回滚。
+
+### AI Native 研发流程编排怎么用
+
+`AI Native 研发流程编排` 是编排入口，不是万能执行入口。它适合回答“现在应该由谁做、做到哪一步、交接什么、怎么验证、什么时候停”，再把产品语义交给 `产品架构专家`，把工程实现和生产风险交给 `资深架构师`。
+
+瘦身后的职责边界：`产品架构专家` 只补产品上下文包、验收种子和产品侧交接条件，不直接判定 GSD/CAD 准入或 Execution Grant；`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位，只编排 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、测试矩阵、验证顺序、CR 前置条件、失败回退、入口路径、源码锚点、结构影响说明和残余风险交接；`资深架构师` 只消费已确认的 AI Native 交接结论，继续做 OpenSpec、Harness、工程编排、CAD 门禁、测试策略、TDD、补测试、源码级 CR 和风险，不在架构师侧重建产品流程。
+
+先判断输入成熟度，再选最小模式：
+
+- **Round 0 补齐**：只有想法、文章观点、口头需求、原型截图或工具宣传时，先补问题、证据、owner、风险、验收和待确认项。
+- **交接包模式**：已有 AI 原型/eval、dogfooding 反馈、MVP 或业务目标时，整理产品上下文包、PRD-Lite 缺口和交给架构师的最小材料。
+- **GSD 产研协同模式**：说“进入 GSD 产研协同研发流程”时，先让产品专家做需求分析、产品设计、方案确认和验收种子，再让架构师做系分设计、编码、TDD、测试、CR 和验证发布；本技能只编排 owner、交接物、门禁和停止条件。
+- **工程编排模式**：已有产品上下文、OpenSpec 或明确变更目标时，设计 GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口、Execution Grant 缺口和验证矩阵草案。
+- **质量门禁模式**：需要测试策略、TDD、补测试或 CR 验证时，先设计测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接，再路由到 `资深架构师` 的 `testing.md` 能力。
+- **理解门禁模式**：陌生代码库、AI 代码变更、diff、重构计划或 PR 说明已经出现，但团队看不清结构关系和影响范围时，先设计代码库理解结论包，覆盖业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、owner 复述和残余风险交接，再路由到 `资深架构师` 做源码级 CR。
+- **工具准入模式**：点名 Gemini CLI、AgentRC 或同类代码理解 / 上下文工程工具，或要求代码库级阅读/分析、对齐设计和代码、检查 AI-readiness / instructions / eval / 上下文漂移时，先判断是否值得安装或调用、是否只读、是否联网/认证/写文件、输出如何回链源码和验证，再决定是否交给资深架构师或用户授权执行。
+- **CR/发布模式**：已有代码变更、测试结果或发布计划时，评审验证缺口、代码 CR 重点、发布门禁、监控、回滚和复盘。
+
+使用时建议直接说明：
+
+```text
+当前输入成熟度：想法 / 原型 / 产品上下文包 / OpenSpec / 代码变更 / 发布计划
+目标产物：流程评审 / 交接包 / GSD/CAD 编排准入结论 / Harness 摘要 / GSD Wave 建议 / CAD 候选缺口 / 工具安装与调用准入 / 质量门禁 / 代码库理解结论包 / 理解门禁 / 验证矩阵草案 / 发布复盘
+边界：只做流程编排，不写 PRD / 不改代码 / 不提交 / 不部署
+验证要求：列出缺口、停止条件、需要产品专家或架构师继续处理的事项
+```
+
+经流程入口分派时这样用：
+
+- 可以让它先判断普通 PRD、产品方案或 Backlog 是否成熟，再把正文产物分派给 `产品架构专家`。
+- 可以让它先判断架构设计、代码 CR、Bug 修复、测试或生产变更是否需要 OpenSpec、Harness、验证矩阵和发布闭环，再把工程执行分派给 `资深架构师`。
+- 可以让它先判断中大型项目是否进入 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些是 CAD 候选缺口和 Execution Grant 缺口，再把工程任务包、CAD Mode 门禁和执行策略分派给 `资深架构师`。
+- 可以让它先判断测试策略、TDD、补测试或 CR 验证需要放在哪个质量门禁、按什么顺序验证、失败后如何回退，再把测试设计与实现分派给 `资深架构师`。
+- 可以让它先判断陌生代码库、AI 生成代码、diff、重构计划或 PR 说明是否能让团队看懂业务意图、入口路径、影响模块、源码锚点、调用关系和边界变化，再把源码级 CR 分派给 `资深架构师`。
+- 可以让它先判断是否值得安装或调用 Gemini CLI、AgentRC 这类工具来阅读代码、生成上下文、对齐设计和代码、检查上下文漂移；需要安装、联网、认证、写文件或改配置时必须先列授权缺口。
+- 只要求阅读某个文件、函数、类、报错、测试失败或具体 PR diff 时，优先直接用 `资深架构师`；除非目标是代码库级理解、设计-代码对齐、上下文工程或工具准入，否则不要默认触发 Gemini CLI / AgentRC。
+- 可以让它先判断 DDL、字段表格或 Java 类是否具备结构化输入、写入范围和覆盖风险，再把配套代码生成分派给 `java-service-code-generator`。
+- 不要把外部文章、工具宣传或历史平台能力当作当前会话可用工具、执行授权或生产审批。
 
 ### 提示词公式
 
@@ -62,6 +108,38 @@
 - `<验证要求>`：运行 `./scripts/validate.sh`、做触发验证、执行 dry-run、检查外部规则来源或说明无法验证的残余风险。
 
 ### 推荐提示词
+
+```text
+用 AI Native 研发流程编排：按当前材料选最小流程，输出 owner、交接物、验证门禁、停止条件和下一步分派。
+```
+
+```text
+进入 GSD 产研协同研发流程：产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。
+```
+
+```text
+做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。
+```
+
+```text
+做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点。
+```
+
+```text
+做理解门禁：把这次 diff / 重构计划整理成入口路径、影响模块、调用关系、源码锚点、验证证据和 CR 交接条件。
+```
+
+```text
+阅读分析代码库：先做代码库理解结论包；评估是否需要 Gemini CLI / AgentRC，但不要默认安装或联网。
+```
+
+```text
+评估 Gemini CLI / AgentRC：列来源、安装/认证/联网/写入边界、只读范围、隐私风险、人工替代路径和 CR 条件。
+```
+
+```text
+做设计-代码对齐：对齐 OpenSpec / 系分设计与当前代码，输出设计条款、代码入口、实现状态、偏差和测试证据。
+```
 
 ```text
 用产品架构专家梳理 VCC 发卡业务的产品架构，输出能力地图、核心对象、交易流程、资金流、风险和验收标准，默认 SVG 画图。
@@ -108,6 +186,7 @@
 - 不要把“画图”只说成一句话；至少说明图给谁看、要表达什么对象关系、需要哪类视图、是否只要 SVG。
 - 不要在没有明确授权时要求覆盖已有文件、读取私有目录、同步安装目录或提交变更；高影响动作先 dry-run 或 CR。
 - 不要把外部文章、仓库或论文直接搬进 Skill；只能吸收可迁移的方法、边界、检查项和验证方式，并保留来源和安全审查。
+- 不要把 AI 原生工具的产品宣传或历史文章能力描述当作当前会话可用工具、执行授权、合规结论或生产审批；需要执行时仍要回到当前工具状态、项目权限和用户授权。
 
 ## 5 分钟上手
 
@@ -177,6 +256,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 
 ### 外部参考来源
 
+- [智东西《Claude产品团队工作模式被公开了！》](https://zhidx.com/p/546178.html)、[Anthropic《Product development in the agentic era》](https://claude.com/blog/product-development-in-the-agentic-era)、[OpenAI Codex](https://openai.com/index/introducing-codex/)、[OpenAI《How OpenAI uses Codex》](https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf)、[GitHub Copilot coding agent](https://docs.github.com/en/copilot/concepts/about-copilot-coding-agent)、[GitHub Copilot code review](https://docs.github.com/en/copilot/concepts/agents/code-review)、[Google Gemini CLI](https://github.com/google-gemini/gemini-cli)、[Microsoft AgentRC](https://github.com/microsoft/agentrc)、[Microsoft Clarity Agent](https://github.com/microsoft/clarity-agent)、[Google People + AI Guidebook](https://pair.withgoogle.com/guidebook-v2/)、[NIST AI RMF Generative AI Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)、[OWASP Top 10 for LLM Applications 2025](https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf)、[ISO/IEC 42001](https://www.iso.org/standard/81230.html) 与微信文章 [《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》](https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ)：作为 `ai-native-engineering-workflow` 的公开参考来源，用于 AI 时代产品到研发编码流程、Agentic Engineering、AI 原型/eval、产品上下文、OpenSpec/Harness/GSD/CAD、AI 原生工具权限边界、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、CR、发布复盘和 AI 风险治理。2026-06-04 微信原链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ` 只读取到微信“环境异常”验证页，未作为已吸收来源；2026-06-04 已通过移动端微信 UA 公开 HTML 读取《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》标题、作者、页面时间线索和正文；2026-06-04 已读取 Gemini CLI、AgentRC 和 Clarity Agent 的 GitHub README。本仓库只吸收可迁移流程和边界，不复制文章正文、图示、案例、厂商宣传或作者表达，也不把历史工具能力、AI 快速阅读工具、外部可视化 CLI、上下文生成器或文章推荐工具当成当前会话授权、默认依赖或官方最新承诺。
 - [yizhiyanhua-ai/fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph)：作为图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG 导出和渲染校验思路的公开参考来源。本仓库只吸收通用方法，不默认复制外部脚本、模板、图形资产或安装流程；PNG/PDF/截图等派生格式只在使用者明确提出时处理；引入外部可执行内容前必须按 `AGENTS.md` 做供应链安全审查。
 - [google/eng-practices](https://github.com/google/eng-practices)：作为 `资深架构师` 代码评审标准、评论分级、变更颗粒度、作者/评审者协作和持续改善代码健康的公开参考来源。本仓库只吸收可迁移的 Review 与 Change Author 原则，不把它扩展为完整架构设计方法论；复用具体文本、示例或派生产物时必须保留来源、确认 CC-BY 3.0 归因要求并避免复制大段原文。
 - [Ivy-piger/Ivy-skills](https://github.com/Ivy-piger/Ivy-skills)：作为架构师陌生代码库侦察、Java 架构坏味启发式扫描、生产故障时间线、5-Why 复盘草稿和 Spring Boot 安全检查清单的公开参考来源。本仓库只吸收可复用流程和检查项，不安装或复制 Claude Code 专用 frontmatter、`CLAUDE.md` 流程、外部脚本或服务端运行逻辑；如需复用具体文本、脚本或资产，必须保留来源、确认许可证并执行供应链安全审查。

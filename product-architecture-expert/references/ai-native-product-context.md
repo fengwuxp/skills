@@ -1,18 +1,19 @@
 # AI Native 产品上下文包
 
-本文定义 AI Native 场景下从业务意图、原型、MVP 或粗糙想法进入产品架构和工程交接的上下文包。它不是要求放弃 PRD，而是把 PRD 从静态翻译文档升级为可运行证据、对象规则、验收种子和责任边界的组合。
+本文定义 AI Native 场景下从业务意图、原型、MVP 或粗糙想法进入产品架构和工程交接的产品侧上下文包。它不是要求放弃 PRD，也不替代 AI Native 研发编排；它只把 PRD 从静态翻译文档升级为可运行证据、对象规则、验收种子和责任边界的组合。
 
 ## 使用时机
 
-- 用户要求评估或改造 AI Native 产品流程、Product Builder 工作方式、业务 dogfooding、MVP 到工程 harden 或“放下 PRD”。
+- 用户要求从 AI 原型、业务 dogfooding、MVP、Product Builder 工作方式或“放下 PRD”输入中提炼产品侧上下文、验收种子和工程交接条件。
 - 用户已有原型、低代码页面、AI 生成 Demo、MVP、页面截图、HTML 或业务操作流程，希望进入可评审产品方案、PRD、系统设计或 CAD。
 - 业务方、产品、运营或老板已能用 AI 快速做出候选方案，但需要判断哪些内容值得进入工程化。
-- 产品方案要交给 `资深架构师` 继续做系统设计、GSD-like 编排或 CAD Mode。
+- 产品方案要交给 `ai-native-engineering-workflow` 编排或 `资深架构师` 承接，需要先说明产品侧哪些事实已确认、哪些仍是假设。
 
 ## 不适用场景
 
 - 用户明确只要求传统 PRD 模板、PRD 补全或 PRD 质量评审；此时优先读 `product-design-and-prd.md`、`product-prd-template.md` 和 `product-prd-quality-gates.md`。
 - 用户只要求工程实现、代码 Review、测试或排障；此时优先交给 `资深架构师`。
+- 用户要求设计端到端 AI Native 产品到研发流程、Harness/GSD/CAD 准入、角色编排或 AI 原生工具治理；此时优先使用 `ai-native-engineering-workflow`，本文件只提供产品侧输入。
 - 目标、用户、主体、风险承担方、验收方完全不清楚时，不直接进入 MVP harden；先回 `product-scenario-routing.md` 做产品语义门禁。
 - 支付、资金、账户、账本、清结算、对账、VCC、跨境、隐私、安全或监管合规场景，仍必须读取支付资金和监管专项 reference。
 
@@ -20,7 +21,7 @@
 
 - 当前输入处于哪一层：意图、问题地图、可运行 MVP、产品架构候选、PRD 草案、工程交接包或待废弃噪声。
 - AI Native 产品上下文包：目标/非目标、业务 owner、证据、对象状态、流程规则、数据审计、验收种子、风险确认和工程交接条件。
-- 是否可以进入架构 hardening、GSD-like 编排或 CAD；若不可以，列出缺口和 Round 0 补齐动作。
+- 是否具备交给 AI Native 编排或架构师继续判断的产品侧条件；若不具备，列出缺口和 Round 0 补齐动作。不得直接判定 GSD/CAD 准入或 Execution Grant。
 
 ## 需要继续读取的 reference
 
@@ -29,6 +30,7 @@
 - 产品架构主线读 `product-architecture-methodology.md`。
 - 运营、数据和发布读 `product-prd-operations-and-data.md`。
 - 支付资金、外部规则和监管确认读 `payment-scenario-routing.md`、`regulatory-baseline.md`。
+- 端到端产品到研发流程、GSD/CAD 准入、Harness/Agent 编排和角色边界读 `ai-native-engineering-workflow/references/product-to-engineering-lifecycle.md` 与 `ai-native-engineering-workflow/references/agentic-engineering-governance.md`。
 
 ## 按任务读取索引
 
@@ -38,23 +40,24 @@
 | MVP / 原型进入工程 harden | 3、4、5、6，并读 `product-architecture-methodology.md` 的技术交接 | 不把可运行等同于可上线 |
 | Product Builder 工作方式评估 | 1、2、7 | 不用岗位判断替代业务 owner 和结果责任 |
 | 从 AI Native 上下文包生成 PRD | 3、5，并继续读 PRD reference | 不让 PRD 只描述页面控件 |
-| 交给架构师进入 GSD / CAD | 6，并让架构师读 `product-design.md` 和 `ai-large-project-orchestration.md` | 不把产品上下文包当 Execution Grant |
+| 交给 AI Native 编排或架构师 | 6，由 `ai-native-engineering-workflow` 判断 GSD/CAD 准入，再让架构师读 `product-design.md` 和 `ai-large-project-orchestration.md` | 不把产品上下文包当 Execution Grant |
 | 评审 AI 生成方案噪声 | 2、4、7 | 不把所有 Demo 都沉淀为需求 |
 
 ## 1. 定位：PRD 从翻译文档变成可执行上下文
 
 AI 降低了做出候选软件、原型和页面的成本，但没有降低产品判断、风险承担、验收和工程化成本。产品架构专家的职责不是维护“先写长 PRD 再动工”的旧流程，也不是让业务方直接把 AI Demo 扔给研发，而是把低成本产物转成可评审、可验证、可追责的上下文。
 
-AI Native 产品工作链路：
+AI Native 产品侧工作链路：
 
 ```text
 业务意图 / 问题地图
 -> 可运行 MVP / 原型 / 页面
 -> 产品架构候选
 -> AI Native 产品上下文包
--> 架构 hardening
--> GSD-like 编排或 CAD Execution Grant
+-> 产品侧工程交接包
 ```
+
+OpenSpec、Harness/GSD、CAD 候选和 Execution Grant 由 `ai-native-engineering-workflow` 编排，并由 `资深架构师` 在工程侧继续判断。本文件只回答产品侧材料是否足够可靠、可追溯、可验收。
 
 这条链路中的 PRD 仍然存在，但它不再只是“业务到研发的翻译稿”。它应承载：
 
@@ -62,7 +65,7 @@ AI Native 产品工作链路：
 - 原型、MVP、用户反馈或数据证据。
 - 对象、状态、流程、规则和数据口径。
 - 验收种子、非目标、风险和待确认项。
-- 交给架构师继续设计、TDD 和 CAD 的边界。
+- 交给 AI Native 编排和架构师继续设计、TDD 和 CAD 判断的产品侧边界。
 
 ## 2. Product Builder 与传统 PM 能力校准
 
@@ -107,7 +110,7 @@ AI 生成原型或业务方 dogfooding MVP 进入工程前，先分级：
 | 噪声 | 只是快速想法或视觉/交互尝试，没有目标、证据和 owner。 | 放入观察池或丢弃，不进入 PRD。 |
 | 发现证据 | 暴露了用户问题、流程阻塞或规则缺口，但方案未确认。 | 先补问题地图、待确认项和验证动作。 |
 | 产品候选 | 目标、主体、对象、流程和验收已有草案。 | 写 AI Native 产品上下文包或 PRD 草案。 |
-| Hardened Candidate | 已有业务 owner、验证证据、对象规则、验收种子和风险确认路径。 | 可以交给架构师做系统设计、GSD-like 编排或 CAD 任务包。 |
+| Hardened Candidate | 已有业务 owner、验证证据、对象规则、验收种子和风险确认路径。 | 可以形成产品侧交接包，由 AI Native 编排和架构师继续判断系统设计、GSD/CAD。 |
 
 Hardened Candidate 最低门禁：
 
@@ -140,11 +143,11 @@ PRD 章节必须能回指上下文包：
 | 验收种子 | 验收标准、测试场景、上线后观察 |
 | 风险与待确认 | 风险、依赖、专业确认方、进入研发门禁 |
 
-## 6. 与架构师、GSD 和 CAD 的交接
+## 6. 与 AI Native 编排和架构师的交接
 
-产品侧上下文包只回答“这个产品候选是否值得工程化、工程化时必须保持哪些业务事实”。它不是系统设计，不是 Harness Plan，也不是 Execution Grant。
+产品侧上下文包只回答“这个产品候选是否值得工程化、工程化时必须保持哪些业务事实”。它不是端到端流程设计，不是系统设计，不是 Harness Plan，也不是 Execution Grant。
 
-交给 `资深架构师` 前至少输出：
+交给 `ai-native-engineering-workflow` 编排或 `资深架构师` 承接前至少输出：
 
 | 交接项 | 产品侧必须给出 | 架构侧继续处理 |
 | --- | --- | --- |
@@ -153,9 +156,9 @@ PRD 章节必须能回指上下文包：
 | 流程与规则 | 主/逆/异常/人工流程、规则矩阵 | 模块边界、事务、一致性、幂等、可靠性 |
 | 验收种子 | 正常、边界、异常、运营、数据验收 | TDD 场景、契约测试、集成验证、监控指标 |
 | 风险与确认 | 资金、合规、隐私、安全、外部规则确认方 | 生产门禁、发布回滚、审计、安全架构 |
-| MVP 证据 | 原型/MVP 观察、已知限制、不可复用实现 | GSD 任务包输入、CAD 候选判断 |
+| MVP 证据 | 原型/MVP 观察、已知限制、不可复用实现 | AI Native 编排输入、GSD 任务包输入、CAD 候选判断 |
 
-进入 CAD 前还必须由架构师补齐系统设计、OpenSpec、Harness Plan、验证矩阵和 Execution Grant。产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant；产品侧不得把“业务方能跑通 MVP”解释为“可以自动编码上线”。
+GSD/CAD 准入结论由 `ai-native-engineering-workflow` 编排，并由架构师在系统设计、OpenSpec、Harness Plan、验证矩阵和 Execution Grant 中确认。产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant；产品侧不得把“业务方能跑通 MVP”解释为“可以自动编码上线”。
 
 ## 7. 反模式
 

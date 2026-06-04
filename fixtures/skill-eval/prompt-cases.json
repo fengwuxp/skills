@@ -20,6 +20,180 @@
   },
   "cases": [
     {
+      "id": "ai-native-should-end-to-end-product-engineering-workflow",
+      "skill": "ai-native-engineering-workflow",
+      "query": "我们已经有 AI 原型/eval 和业务 dogfooding 反馈，想设计从 PRD-Lite 到 OpenSpec、Harness、GSD/CAD、验证矩阵、代码 CR 和发布复盘的流程，说明产品专家、架构师和 AI Agent 的职责边界。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 AI 时代产品到研发编码流程编排路径，先判断输入成熟度，再输出阶段、owner、交接物、AI 工具角色、门禁、验证矩阵和停止条件，并路由产品专家与架构师分工。"
+    },
+    {
+      "id": "ai-native-should-gsd-cad-handoff",
+      "skill": "ai-native-engineering-workflow",
+      "query": "目前是中大型项目，产品上下文包已有目标、对象、规则和验收种子，请评估如何把 GSD Wave 和 CAD 原子任务结合，输出 Harness 摘要、Execution Grant 缺口和停止条件。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入工程编排模式，区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
+    },
+    {
+      "id": "ai-native-should-gsd-product-engineering-collaboration",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入 GSD 产研协同研发流程：产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
+      "expected_handling": "进入 GSD 产研协同模式，先编排产品专家完成需求分析、产品设计、方案确认和验收种子，再编排资深架构师完成系分设计、编码、TDD、CR、验证发布，并输出 owner、交接物、门禁和停止条件。"
+    },
+    {
+      "id": "ai-native-should-gsd-cad-admission-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 GSD/CAD 编排准入模式，输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁和下一步 owner，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
+    },
+    {
+      "id": "ai-native-should-review-ai-coding-process",
+      "skill": "ai-native-engineering-workflow",
+      "query": "评审我们现在的 AI 编码流程，看看是不是有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、CR、发布监控和复盘闭环，给出可落地改造顺序。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
+      "expected_handling": "进入流程治理评审路径，按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
+    },
+    {
+      "id": "ai-native-should-quality-test-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入质量门禁模式，只编排测试矩阵、验证顺序、CR 前置条件、失败回退、残余风险交接和架构师 testing.md 调用点，不新增独立测试专家 Skill。"
+    },
+    {
+      "id": "ai-native-should-change-understanding-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做理解门禁：把这次 diff / 重构计划整理成入口路径、影响模块、调用关系、源码锚点、验证证据和 CR 交接条件。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入理解门禁模式，只编排业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、验证证据、owner 复述、残余风险和资深架构师源码级 CR 交接条件，不默认引入外部可视化工具。"
+    },
+    {
+      "id": "ai-native-should-codebase-understanding-brief",
+      "skill": "ai-native-engineering-workflow",
+      "query": "最近 Google Gemini CLI 和 Microsoft AgentRC 这类工具能快速阅读代码库、生成上下文和总结结论，帮我把它们抽象进 AI Native 研发流程，设计代码库理解结论包和进入架构师 CR 的门禁，但不要默认安装工具。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入代码库理解门禁模式，把 AI 快速阅读和上下文工程工具抽象为可选辅助，只编排入口路径、关键模块、源码锚点、事实/推断、置信度、验证证据、上下文漂移检查和架构师 CR 交接条件，不默认安装或依赖外部工具。"
+    },
+    {
+      "id": "ai-native-should-tool-install-admission",
+      "skill": "ai-native-engineering-workflow",
+      "query": "评估 Gemini CLI / AgentRC：列来源、安装/认证/联网/写入边界、只读范围、隐私风险、人工替代路径和 CR 条件。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入工具准入模式，先核对官方来源、安装方式、认证/联网/写入边界、只读范围、隐私风险、人工替代路径和工具输出交接格式；不得直接安装、登录、联网、写配置或把工具结论当源码事实。"
+    },
+    {
+      "id": "ai-native-should-design-code-alignment",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做设计-代码对齐：对齐 OpenSpec / 系分设计与当前代码，输出设计条款、代码入口、实现状态、偏差和测试证据。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
+      "expected_handling": "进入设计-代码对齐入口，输出设计条款到源码入口、实现状态、偏差、测试证据、事实/推断和下一步 owner；AI 代码阅读工具只作为可选辅助，源码判断和 CR 继续交给资深架构师。"
+    },
+    {
+      "id": "ai-native-should-route-prd-work",
+      "skill": "ai-native-engineering-workflow",
+      "query": "用 AI Native 研发流程编排先判断这批客户访谈和运营后台截图能否进入 PRD，输出成熟度、owner、交接物和停止条件，再分派给产品架构专家写正文。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
+      "expected_handling": "进入流程入口分派路径，只判断产品输入成熟度、产品侧交接物、owner 和停止条件，再把 PRD 正文分派给产品架构专家。"
+    },
+    {
+      "id": "ai-native-should-route-cr-work",
+      "skill": "ai-native-engineering-workflow",
+      "query": "用 AI Native 研发流程编排先判断这次 Spring Boot Service 代码 CR 是否需要 OpenSpec、Harness、验证矩阵和发布闭环，再交给资深架构师执行 CR。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
+      "expected_handling": "进入工程流程分派路径，只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
+    },
+    {
+      "id": "ai-native-should-route-codegen-work",
+      "skill": "ai-native-engineering-workflow",
+      "query": "用 AI Native 研发流程编排先评估这段 CREATE TABLE 是否具备生成 Java Service 配套代码的结构化输入、写入范围和覆盖风险，再分派给 java-service-code-generator。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "进入代码生成前置编排路径，只判断结构化输入、写入范围、覆盖风险和人工确认点，再把实际生成分派给 java-service-code-generator。"
+    },
+    {
+      "id": "ai-native-negative-prd-from-prototype",
+      "skill": "ai-native-engineering-workflow",
+      "query": "根据这批客户访谈、运营后台截图和交互稿写一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标产物是 PRD 和产品语义，不是产品到研发编码流程编排，应交给产品架构专家。"
+    },
+    {
+      "id": "ai-native-negative-code-review",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做一轮代码 CR：这个 Spring Boot Service 改了事务边界、缓存一致性和异常处理，帮我按严重级别列问题并补测试建议。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是具体代码评审和测试建议，应交给资深架构师，而不是流程编排 Skill。"
+    },
+    {
+      "id": "ai-native-negative-read-single-code-file",
+      "skill": "ai-native-engineering-workflow",
+      "query": "阅读并分析这个 Service 类的实现逻辑，指出潜在 Bug 并补测试。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是具体源码阅读、Bug 分析和补测试，应交给资深架构师；除非用户要求代码库级理解或工具准入，否则不触发 AI Native 和 Gemini/AgentRC。"
+    },
+    {
+      "id": "ai-native-negative-structured-codegen",
+      "skill": "ai-native-engineering-workflow",
+      "query": "根据这段 CREATE TABLE 生成 Wind/Nobe 风格 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl，先输出到评审目录。",
+      "should_trigger": false,
+      "preferred_skill": "java-service-code-generator",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是结构化输入到 Java Service 脚手架生成任务，应交给 java-service-code-generator。"
+    },
+    {
       "id": "senior-should-code-review-service-transaction",
       "skill": "senior-software-architect",
       "query": "做一轮 CR：这个 ServiceImpl 新增了扣款和冻结两个事务方法，重点看幂等、事务边界、异常处理和测试缺口。",
