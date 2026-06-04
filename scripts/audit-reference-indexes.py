@@ -22,6 +22,7 @@ WARN_LINE_THRESHOLD = 500
 REQUIRED_INDEX_THRESHOLD = 350
 REQUIRED_HEADING = "## 按任务读取索引"
 REQUIRED_COLUMNS = ["任务", "优先读取", "跳过"]
+ALTERNATIVE_REQUIRED_COLUMNS = ["任务", "主文档保留", "按需展开"]
 
 REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/ai-assisted-engineering.md",
@@ -99,7 +100,10 @@ def line_count(path: Path) -> int:
 
 def has_task_index(path: Path) -> bool:
     text = path.read_text(encoding="utf-8")
-    return REQUIRED_HEADING in text and all(column in text for column in REQUIRED_COLUMNS)
+    return REQUIRED_HEADING in text and (
+        all(column in text for column in REQUIRED_COLUMNS)
+        or all(column in text for column in ALTERNATIVE_REQUIRED_COLUMNS)
+    )
 
 
 def main() -> int:

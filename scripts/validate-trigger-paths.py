@@ -72,6 +72,14 @@ def has_reference_header(path: str) -> bool:
     )
 
 
+def has_task_reading_index(path: str) -> bool:
+    body = read(path)
+    return "## 按任务读取索引" in body and (
+        "| 任务 | 优先读取 | 跳过 |" in body
+        or "| 任务 | 主文档保留 | 按需展开 |" in body
+    )
+
+
 def expected_subset(name: str, actual: set[str], expected: set[str]) -> None:
     missing = expected - actual
     detail = f" missing={sorted(missing)}" if missing else ""
@@ -403,13 +411,7 @@ check(
 check(
     "large references expose task-level reading indexes",
     all(
-        has_all(
-            path,
-            [
-                "## 按任务读取索引",
-                "| 任务 | 优先读取 | 跳过 |",
-            ],
-        )
+        has_task_reading_index(path)
         for path in [
             "senior-software-architect/references/project-governance-standards.md",
             *project_governance_refs,
@@ -472,6 +474,7 @@ check(
         [
             "REQUIRED_INDEX_THRESHOLD",
             "REQUIRED_HEADING",
+            "ALTERNATIVE_REQUIRED_COLUMNS",
             "REQUIRED_INDEX_FILES",
             "OK reference index audit",
         ],
@@ -3406,6 +3409,11 @@ check(
         product_prd_template,
         [
             "反馈证据与问题地图",
+            "信息传递流程",
+            "事实 -> 判断 -> 决策 -> 承诺 -> 验证",
+            "描述可靠性必须可见",
+            "表达结构选择",
+            "表格只用于比较、矩阵或追踪",
             "原始反馈",
             "真实问题",
             "证据强度",
@@ -3418,13 +3426,30 @@ check(
             "业务驱动架构交接",
             "product-architecture-methodology.md",
             "假设/问题ID",
+            "默认 PRD 主模板",
+            "一页摘要",
+            "背景、问题与证据",
+            "目标、范围与非目标",
+            "用户、主体与角色/场景",
+            "场景、能力与功能",
+            "需求链卡片",
+            "对象、流程与规则",
+            "数据、权限、风险与待确认",
+            "验收与产品到架构交接",
+            "附录按需展开",
+            "精简输出规则",
+            "来源/问题ID",
             "需求ID",
             "验收种子ID",
             "质量属性ID",
             "验收种子交接矩阵",
+            "每个 P0/P1 需求必须能回到问题、目标、场景、规则和验收",
+            "每个进入开发候选的需求必须能关联场景、能力或功能、关键规则和验收种子",
+            "默认不展开文档控制、完整状态机、字段字典、规则矩阵、权限矩阵、非功能、发布运营和金融资金全表",
+            "主文档优先用短句、卡片和编号流程帮助扫读",
             "发布后验证",
             "业务驱动架构交接包",
-            "可代码化/可观测化/可评审化",
+            "可代码化、可观测化、可评审化",
             "product-prd-quality-gates.md",
             "product-prd-financial-appendix.md",
             "product-prd-operations-and-data.md",
@@ -3439,8 +3464,9 @@ check(
             "## 使用时机",
             "## 按任务读取索引",
             "## 1. PRD 质量门禁",
-            "## 2. 可验收性门禁",
-            "## 3. 已有 PRD 符合性评审输出",
+            "## 2. 文档治理门禁",
+            "## 3. 可验收性门禁",
+            "## 4. 已有 PRD 符合性评审输出",
             "符合项：已经满足模板、可验收性或专项门禁的内容",
             "必改：会阻断评审、研发、测试、上线或专业确认的缺口",
             "每条评审项必须说明章节或位置、问题、影响和建议改法",
@@ -3453,13 +3479,19 @@ check(
         product_prd_quality_gates,
         [
             "文档过厚、过薄、未更新、未评审",
-            "## 2.1 文档治理门禁",
+            "## 2. 文档治理门禁",
             "文档目标、目标读者和文档类型清楚",
             "主文档可扫读",
             "复杂细节拆到附录、矩阵或图",
+            "信息传递顺序清楚",
+            "表格只用于比较、矩阵或追踪",
+            "描述可靠性清楚",
             "不能只写功能名",
+            "P0/P1 需求能通过主模板需求链回到问题/证据、目标、场景、能力/功能、规则和验收种子",
             "版本记录、变更原因、影响范围、通知对象和评审结论完整",
             "文档、原型、规则矩阵、验收标准和工程交接口径一致",
+            "验收种子能回到需求 ID、场景编号、规则编号或质量属性 ID",
+            "验收描述必须包含可观察结果",
         ],
     ),
 )
