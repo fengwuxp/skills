@@ -1,7 +1,7 @@
 ---
 name: ai-native-engineering-workflow
 description: |
-  AI Native 产品到研发编码流程编排与准入门禁 Skill。适用于 AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD、产品专家到架构师交接、质量/测试门禁、代码库理解、设计-代码对齐、Gemini CLI/AgentRC 工具准入、验证矩阵、代码 CR、发布复盘和组织职责边界。普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师；只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排。
+  AI Native 产品到研发编码流程编排与准入门禁 Skill。适用于 AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD、产品专家到架构师交接、PRD/系分合议预审、质量/测试门禁、代码库理解、设计-代码对齐、Gemini CLI/AgentRC 工具准入、验证矩阵、代码 CR、发布复盘和组织职责边界。普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师；只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排。
 ---
 
 # AI Native Engineering Workflow
@@ -43,6 +43,7 @@ description: |
 - 用户已有 AI 原型、业务 dogfooding、MVP、页面、PRD 草案或需求池，希望进入工程化流程。
 - 用户要评审“现在流程是否适合 AI 编码”“哪些环节需要人审”“哪些任务可自动推进”。
 - 用户要设计质量 / 测试门禁、验证顺序、CR 前置条件、失败回退或测试结果如何进入发布复盘。
+- 用户要对 PRD、PRD-Lite、OpenSpec 输入、系统分析设计、系分、详细设计、Harness Plan 或 GSD 任务包做合议预审、多视角评审、MAGI 三角色评审、A2A 虚拟评审或 IPD 式互审。
 - 用户担心陌生代码库读不快、AI 代码变更看不懂、影响范围说不清、重构计划难 Review，或希望用代码库理解结论包、结构图、依赖图、调用导览辅助 CR。
 - 用户说“阅读 / 分析代码”时，只有目标是代码库级理解、设计-代码对齐、AI 生成变更影响、上下文工程或 Gemini CLI / AgentRC 准入，才进入本技能；只读某段代码、具体 CR、Bug、测试或实现问题优先交给 `资深架构师`。
 - 用户要求安装、评估或调用 Gemini CLI、AgentRC、AI 快速阅读代码工具、上下文工程工具，或要求把代码阅读结论、agent instructions、eval、MCP 配置、AI-readiness 和上下文漂移纳入流程。
@@ -79,6 +80,7 @@ description: |
 - **工程编排模式**：已有产品上下文、OpenSpec 或明确变更目标时，输出 GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口和验证矩阵草案。
 - **CR/发布模式**：已有代码变更、测试结果或发布计划时，输出验证缺口、CR 重点、发布门禁、监控和复盘动作。
 - **质量门禁模式**：需要测试策略、TDD、补测试或 CR 验证时，先输出质量门禁位置、测试矩阵、验证顺序、失败回退和交接证据，再路由到 `资深架构师`。
+- **PRD / 系分预审模式**：需要正式评审前的多视角合议、MAGI 三角色、IPD 式互审或 AI 生成文档预审时，先输出评审对象、三角色分工、`review_task`、`evaluation_task`、`reporting_task`、`ACCEPT/REJECT/PENDING` 决策日志和下一步路由，再分别交给产品专家或架构师。
 - **理解门禁模式**：已有陌生代码库、AI 代码变更、diff、重构计划或 PR 说明但结构与影响看不清时，先输出代码库理解结论包，覆盖业务意图、入口路径、影响模块、调用关系、边界变化、源码锚点、验证证据和残余风险，再路由到 `资深架构师` 做源码级 CR。
 - **工具准入模式**：用户点名 Gemini CLI、AgentRC 或类似代码理解工具，或要求代码库级阅读 / 分析、设计-代码对齐、AI-readiness 时，先输出安装与调用准入、只读范围、禁止事项、工具输出交接格式和人工替代路径。
 
@@ -87,6 +89,7 @@ description: |
 ## 参考路由
 
 - `references/product-to-engineering-lifecycle.md`：产品发现、AI 原型/eval、PRD-Lite、产品上下文包到工程交接的端到端流程。
+- `references/prd-system-design-review.md`：PRD / 系分合议预审、MAGI 三角色、IPD 式互审、决策日志、`ACCEPT/REJECT/PENDING` 和进入 PRD 修订、OpenSpec、系分、Harness/GSD/CAD 的准出判断。
 - `references/agentic-engineering-governance.md`：OpenSpec、Superpowers、Harness、GSD、CAD、AI 原生工具、权限边界和多 Agent 协作治理。
 - `references/gsd-cad-admission.md`：中大型项目是否进入 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口和下一步 owner 的编排准入。
 - `references/code-understanding-tools.md`：Gemini CLI、AgentRC 等 AI 代码理解 / 上下文工程工具的触发入口、安装准入、只读/写入边界、设计-代码对齐和工具输出交接。
@@ -100,6 +103,7 @@ description: |
 - AI Native 产品研发流程图或阶段表。
 - 产品专家、架构师、工程师、测试、设计、运营和 AI Agent 的 RACI / owner 划分。
 - 从 AI 原型/eval 到 PRD-Lite、OpenSpec、GSD/CAD 编排准入结论、Harness 摘要、验证矩阵草案和 CAD 候选缺口的交接清单。
+- PRD / 系分合议预审报告：三角色分工、锚点化问题、接受项、拒绝项、待定项、分歧、风险清单、owner、验证方式和下一步路由。
 - 质量 / 测试门禁清单：测试矩阵、验证顺序、CR 前置条件、失败回退、残余风险和架构师测试能力调用点。
 - 代码库理解 / 影响可视化门禁清单：业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、owner 复述和残余风险。
 - AI 代码理解工具准入包：Gemini CLI / AgentRC 是否值得安装或调用、只读范围、联网/认证/写入边界、输出格式、人工替代路径和交接 owner。

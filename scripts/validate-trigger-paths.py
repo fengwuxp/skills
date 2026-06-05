@@ -155,6 +155,7 @@ product_routing = "product-architecture-expert/references/product-scenario-routi
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_insight = "product-architecture-expert/references/product-insight-analyst.md"
 po_backlog_manager = "product-architecture-expert/references/po-backlog-manager.md"
+product_deliberation = "product-architecture-expert/references/product-deliberation-workflow.md"
 product_ai_native_context = "product-architecture-expert/references/ai-native-product-context.md"
 product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
@@ -180,6 +181,7 @@ codegen_skill = "java-service-code-generator/SKILL.md"
 ai_native_workflow_skill = "ai-native-engineering-workflow/SKILL.md"
 ai_native_workflow_agent = "ai-native-engineering-workflow/agents/openai.yaml"
 ai_native_product_to_engineering = "ai-native-engineering-workflow/references/product-to-engineering-lifecycle.md"
+ai_native_prd_system_design_review = "ai-native-engineering-workflow/references/prd-system-design-review.md"
 ai_native_agentic_governance = "ai-native-engineering-workflow/references/agentic-engineering-governance.md"
 ai_native_gsd_cad_admission = "ai-native-engineering-workflow/references/gsd-cad-admission.md"
 ai_native_code_understanding_tools = "ai-native-engineering-workflow/references/code-understanding-tools.md"
@@ -208,6 +210,11 @@ ai_native_terms = [
     "Atomic Task",
     "Execution Grant",
     "AI 原型/eval",
+    "PRD/系分合议预审",
+    "合议预审",
+    "MAGI 三角色",
+    "A2A 虚拟评审",
+    "IPD 式互审",
     "AI 编码流程",
     "验证矩阵",
     "代码 CR",
@@ -228,8 +235,8 @@ ai_native_terms = [
     "变更可理解性",
     "影响可视化",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案"]
 payment_terms = [
     "清结算",
     "对账",
@@ -299,6 +306,7 @@ reference_headers = [
     codegen_rules,
     codegen_nobe_patterns,
     ai_native_product_to_engineering,
+    ai_native_prd_system_design_review,
     ai_native_agentic_governance,
     ai_native_gsd_cad_admission,
     ai_native_code_understanding_tools,
@@ -549,12 +557,104 @@ check(
     ),
 )
 check(
+    "ai-native workflow keeps PRD and system design deliberation review gate",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "PRD/系分合议预审",
+            "MAGI 三角色评审",
+            "A2A 虚拟评审",
+            "IPD 式互审",
+            "PRD / 系分预审模式",
+            "review_task",
+            "evaluation_task",
+            "reporting_task",
+            "ACCEPT/REJECT/PENDING",
+            "references/prd-system-design-review.md",
+            "PRD / 系分合议预审报告",
+        ],
+    )
+    and has_all(
+        ai_native_workflow_agent,
+        [
+            "PRD/系分合议预审",
+        ],
+    )
+    and has_reference_header(ai_native_prd_system_design_review)
+    and has_task_reading_index(ai_native_prd_system_design_review)
+    and has_all(
+        ai_native_prd_system_design_review,
+        [
+            "PRD 与系分合议预审",
+            "MAGI 三角色",
+            "A2A 虚拟评审",
+            "IPD 式互审",
+            "流程控制位",
+            "主笔 / 决策 owner",
+            "挑战者位",
+            "review_task",
+            "evaluation_task",
+            "reporting_task",
+            "ACCEPT",
+            "REJECT",
+            "PENDING",
+            "每条意见必须有锚点",
+            "PRD 预审门禁",
+            "系分预审门禁",
+            "双向追踪",
+            "准出与停止",
+            "不能替代产品 owner、架构 owner、正式评审、测试通过或 Execution Grant",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "prd-system-design-review.md",
+            "合议预审",
+            "ACCEPT",
+            "REJECT",
+            "PENDING",
+        ],
+    )
+    and has_all(
+        ai_native_agentic_governance,
+        [
+            "prd-system-design-review.md",
+            "预审 Agent",
+            "ACCEPT/REJECT/PENDING",
+            "PRD / 系分是否已在需要时做合议预审",
+        ],
+    )
+    and has_all(
+        ai_native_verification_release,
+        [
+            "prd-system-design-review.md",
+            "PRD / 系分合议预审进入验证矩阵",
+            "ACCEPT",
+            "REJECT",
+            "PENDING",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统",
+            "prd-system-design-review.md",
+            "A2A 虚拟评审",
+            "IPD 多角色反向拷问",
+            "ACCEPT/REJECT/PENDING",
+            "不把虚拟评审写成正式 IPD、合规确认、架构批准或 Execution Grant",
+        ],
+    ),
+)
+check(
     "ai-native workflow has realistic prompt fixtures and evaluation coverage",
     has_all(
         skill_eval_prompt_fixture,
         [
             "ai-native-should-end-to-end-product-engineering-workflow",
             "ai-native-should-gsd-cad-handoff",
+            "ai-native-should-prd-system-design-deliberation-review",
             "ai-native-should-gsd-cad-admission-gate",
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-quality-test-gate",
@@ -589,6 +689,7 @@ check(
             "[AI Native 研发流程编排](./ai-native-engineering-workflow)",
             "AI 时代产品到研发编码流程、Agentic Engineering",
             "AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD 编排准入",
+            "PRD/系分合议预审",
             "Gemini CLI/AgentRC 等代码理解工具安装与调用准入",
             "设计-代码对齐",
             "质量/测试门禁",
@@ -618,6 +719,10 @@ check(
             "交接包模式",
             "GSD 产研协同模式",
             "工程编排模式",
+            "PRD / 系分预审模式",
+            "对 PRD 和系分做 MAGI 三角色合议预审",
+            "review_task、evaluation_task、reporting_task",
+            "ACCEPT/REJECT/PENDING 决策日志",
             "质量门禁模式",
             "理解门禁模式",
             "工具准入模式",
@@ -627,6 +732,8 @@ check(
             "经流程入口分派时这样用",
             "可以让它先判断普通 PRD、产品方案或 Backlog 是否成熟",
             "再把正文产物分派给 `产品架构专家`",
+            "可以让它先对 PRD、PRD-Lite、OpenSpec 输入、系分或 Harness 候选做合议预审",
+            "不能替代产品 owner、架构 owner、正式评审、测试通过或 Execution Grant",
             "可以让它先判断架构设计、代码 CR、Bug 修复、测试或生产变更是否需要 OpenSpec、Harness、验证矩阵和发布闭环",
             "再把工程执行分派给 `资深架构师`",
             "可以让它先判断中大型项目是否进入 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些是 CAD 候选缺口和 Execution Grant 缺口",
@@ -658,10 +765,48 @@ check(
             "ai-native-engineering-workflow",
             "微信原链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ` 只读取到微信“环境异常”验证页，未作为已吸收来源",
             "https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ",
+            "PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统",
+            "虚拟评审或文章推荐工具当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
             "Google Gemini CLI",
             "Microsoft AgentRC",
             "Microsoft Clarity Agent",
-            "AI 快速阅读工具、外部可视化 CLI、上下文生成器或文章推荐工具当成当前会话授权、默认依赖或官方最新承诺",
+            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审或文章推荐工具当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
+        ],
+    ),
+)
+check(
+    "README explains product expert and AI Native workflow usage",
+    has_all(
+        "README.md",
+        [
+            "### 产品架构专家怎么用",
+            "`产品架构专家` 是产品语义和产品交付物的主入口",
+            "不负责工程实现、代码 CR、生产排障或 GSD/CAD 执行授权",
+            "想法 / 口头需求 / 原型候选",
+            "PRD / 产品方案",
+            "AI 生成方案 / 多方争议",
+            "客户访谈 / 工单 / 竞品 / 行业资料",
+            "支付与资金产品",
+            "产品图形化交付",
+            "用产品架构专家：",
+            "输入材料：想法 / 访谈 / 竞品 / 原型 / 截图 / PRD 草稿 / 支付规则",
+            "目标产物：PRD / 产品方案 / 机会雷达 / Backlog / 验收标准 / 产品架构图",
+            "业务边界：目标、非目标、主体、用户、法域、资金或数据边界",
+            "评审重点：可读性 / 准确性 / 可开发 / 可测试 / 可运营 / 合规待确认",
+            "验证要求：列待确认项、owner、验收种子；正式交付前运行产品交付物检查",
+            "产品专家交给 AI Native 或架构师前，最好形成一个轻量交接包",
+            "业务目标、非目标、角色 / 主体、核心对象与状态、主流程与异常、关键规则、验收种子、风险与待确认项、专业确认方",
+            "不要急着进入系分、GSD/CAD 或代码生成",
+            "优先用它的场景是跨角色、跨阶段、跨工具的流程问题",
+            "只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`",
+            "只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`",
+            "最短触发方式",
+            "`进入 GSD 产研协同研发流程`",
+            "`做 PRD / 系分合议预审`",
+            "`做 GSD/CAD 准入`",
+            "`做质量门禁`",
+            "`做理解门禁`",
+            "`评估 Gemini CLI / AgentRC`",
         ],
     ),
 )
@@ -3270,6 +3415,68 @@ check(
     ),
 )
 check(
+    "product methodology keeps deliberation workflow and multi-role review",
+    has_all(
+        product_skill,
+        [
+            "product-deliberation-workflow.md",
+            "复杂 PRD、AI 生成方案、原型候选、多方争议",
+            "合议式产品评审",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "产品大师、MAGI",
+            "`product-deliberation-workflow.md`",
+            "合议评审结论：触发原因、阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向",
+            "用户要多视角、多个 AI、PM/Reviewer、产品大师、MAGI 或合议式评审",
+            "不要新增独立产品大师 Skill",
+        ],
+    )
+    and has_reference_header(product_deliberation)
+    and has_task_reading_index(product_deliberation)
+    and has_all(
+        product_deliberation,
+        [
+            "# 产品合议评审工作流",
+            "它不是独立 Skill",
+            "多个 AI、PM / Reviewer、产品大师、MAGI",
+            "流程控制位",
+            "产品主笔位",
+            "挑战者位",
+            "Round 0：前置依赖确认",
+            "阶段一：方案共识",
+            "阶段二：交互、图形或原型验证",
+            "阶段三：PRD / Backlog / 上下文包定稿",
+            "共识",
+            "分歧",
+            "必改",
+            "待确认",
+            "owner",
+            "验证方式",
+            "scripts/check_product_deliverable.py --kind product-review",
+            "把外部仓库的工具调用、平台机制、看门狗脚本或领域专项规则当作本仓库默认能力",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "product-deliberation-workflow.md",
+            "多视角或合议评审是否有触发原因、阶段门、共识、分歧、必改、建议、待确认、owner 和验证方式",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "合议式产品评审",
+            "product-deliberation-workflow.md",
+            "scripts/check_product_deliverable.py --kind product-review",
+            "触发原因、阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向",
+        ],
+    ),
+)
+check(
     "product methodology keeps functional allocation boundary",
     has_all(
         product_architecture,
@@ -3586,6 +3793,52 @@ check(
             "需求ID",
             "验收种子ID",
             "质量属性ID",
+        ],
+    ),
+)
+check(
+    "product source map and README record deliberation workflow sources",
+    has_all(
+        product_source_map,
+        [
+            "产品合议评审与多 Agent PRD",
+            "我让3个AI吵了一整天架，它们把PRD写完了",
+            "https://mp.weixin.qq.com/s/13wn5wS8AwyMNBrMQpTyEg",
+            "Kira2red",
+            "产品异兽 Prod.Monster",
+            "2026-05-17 10:05:10 Asia/Shanghai",
+            "公开 HTML 读取标题、作者、发布时间和正文",
+            "product-deliberation-workflow.md",
+            "Controller / PM / Reviewer 工作位",
+            "强制阶段门",
+            "用户确认点",
+            "复杂度评估",
+            "类型分流",
+            "分批产出",
+            "不复制原文、图片、外部平台工具调用、watchdog 脚本、车载专项规则、作者表达或标题传播话术",
+            "Kira2red/magi-product",
+            "https://github.com/Kira2red/magi-product",
+            "Kira2red/Kira-product-monster-skills",
+            "https://github.com/Kira2red/Kira-product-monster-skills",
+            "不复制 OpenClaw/Hermes 专属命令",
+            "不复制外部 Skill 结构",
+            "不复制游戏 Skill",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "产品大师 / MAGI 合议评审",
+            "用产品大师/MAGI 方式多视角评审这个 AI 生成 PRD",
+            "我让3个AI吵了一整天架，它们把PRD写完了",
+            "Kira2red/magi-product",
+            "Kira2red/Kira-product-monster-skills",
+            "product-deliberation-workflow.md",
+            "Controller / PM / Reviewer 工作位",
+            "强制阶段门",
+            "分批产出",
+            "证据审查和准出检查",
+            "不复制原文、图片、外部平台工具调用、watchdog 脚本、车载专项规则、外部 Skill 结构",
         ],
     ),
 )
@@ -4947,7 +5200,7 @@ check(
         product_skill,
         [
             "scripts/check_product_deliverable.py",
-            "PRD、产品架构方案和图形 brief",
+            "PRD、产品架构方案、图形 brief 和产品合议评审报告",
             "正式、完整、可评审、提交前、CR 或触发验证场景",
             "不写文件、不访问网络、不上传文件、不读取密钥",
             "不判断方案业务质量",
@@ -4961,6 +5214,7 @@ check(
             "--kind prd",
             "--kind product-architecture",
             "--kind diagram-brief",
+            "--kind product-review",
             "必须运行",
             "只做本地文本完整性检查",
             "不联网、不写文件",
@@ -4990,9 +5244,10 @@ check(
         [
             "--self-test",
             "SELF_TESTS",
-            '"prd"',
-            '"product-architecture"',
-            '"diagram-brief"',
+            '"prd":',
+            '"product-architecture":',
+            '"diagram-brief":',
+            '"product-review":',
             "goal_and_scope",
             "risk_and_confirmation",
             "状态机图",
@@ -5000,6 +5255,10 @@ check(
             "流程图",
             "泳道图",
             "output_format",
+            "review_context",
+            "disagreement",
+            "pending_confirmation",
+            "verification",
         ],
     ),
 )
@@ -5234,6 +5493,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native PRD system design deliberation review",
+        prompt="对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native GSD CAD admission gate",
         prompt="做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口",
         routes={"ai-native", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
@@ -5369,6 +5633,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md", "product-insight-analyst.md"},
     ),
     RouteFixture(
+        name="product deliberation AI generated PRD",
+        prompt="这份 AI 生成的会员权益 PRD 有点发散，请用产品大师/MAGI 的方式做多视角合议评审，输出共识、分歧、必改、待确认、owner 和验证方式，先不要重写全文",
+        routes={"product", "product-scenario-routing.md", "product-deliberation-workflow.md"},
+    ),
+    RouteFixture(
         name="product backlog decision from opportunity list",
         prompt="这里有 15 个客户、销售和老板提的机会点，请帮我做 Backlog 决策，按 BV/EE 排 P0/P1/P2，并转成 User Story 和 AC，说明哪些要拒绝或延后",
         routes={"product", "product-scenario-routing.md", "po-backlog-manager.md"},
@@ -5456,10 +5725,12 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文包", "dogfooding", "业务", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
+        if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单"]):
+            route.add("prd-system-design-review.md")
         if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "入口路径", "源码锚点", "调用关系", "边界变化"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
@@ -5556,6 +5827,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"product-scenario-routing.md"})
     if contains_any(prompt, ["产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链"]):
         route.add("product-insight-analyst.md")
+    if contains_any(prompt, ["产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "Reviewer", "AI 生成的", "AI 生成方案"]):
+        route.add("product-deliberation-workflow.md")
     if contains_any(prompt, ["Backlog", "机会清单", "机会点", "需求池", "需求优先级", "P0/P1/P2", "User Story"]):
         route.add("po-backlog-manager.md")
     if contains_any(prompt, diagram_terms):

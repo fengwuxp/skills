@@ -6,6 +6,7 @@
 
 - 用户要求输出、完善、改写或评审产品方案、PRD、需求说明书、评审材料或验收标准。
 - 已通过 `product-scenario-routing.md` 判断目标产物是可评审产品文档。
+- 复杂 PRD、AI 生成方案、原型候选或多方争议需要 PM / Reviewer、多视角、产品大师或 MAGI 式合议评审时，先读 `product-deliberation-workflow.md`，再回到本文生成或修订正文。
 - 已通过资料、访谈、竞品、行业/政策或标杆实践形成产品洞察，需要先确认机会雷达、证据链和建议去向，再决定是否进入 PRD。
 - 已通过问题地图或洞察整理形成机会清单，需要转成 Backlog、User Story、AC、优先级和可开发范围。
 - 需要把对象、流程、状态、规则、运营、数据和风险写成可开发、可测试、可运营的结构。
@@ -28,6 +29,7 @@
 
 - 可复制模板读 `product-prd-template.md`。
 - 质量门禁读 `product-prd-quality-gates.md`。
+- 产品合议评审、多个 AI / PM / Reviewer / 产品大师 / MAGI 多视角审查读 `product-deliberation-workflow.md`。
 - 支付资金附录读 `product-prd-financial-appendix.md`。
 - 运营数据发布附录读 `product-prd-operations-and-data.md`。
 - 通用方法论读 `product-architecture-methodology.md`；产品洞察、资料资产化和机会雷达读 `product-insight-analyst.md`；机会清单、需求池、Backlog 决策、优先级、User Story 或 AC 场景读 `po-backlog-manager.md`。
@@ -42,6 +44,7 @@
 | 机会清单/需求池转 Backlog、User Story 或 AC | PRD 生成门禁、用户故事写法、验收标准，并读 `po-backlog-manager.md` | 不把每个机会点都写成 P0 |
 | 快速生成产品方案 | 输出格式约定、PRD 生成门禁、产品方案结构、PRD 最小必备项、验收标准 | 符合性评审细则 |
 | 模糊需求澄清 | PRD 生成门禁、PRD 连环追问与原型反推、产品语义门禁 | 完整模板正文 |
+| AI 生成方案 / 产品大师 / MAGI / 多视角合议评审 | PRD 生成门禁、符合性评审模式，并读 `product-deliberation-workflow.md` | 不把外部多 Agent 工具和平台专属流程写入 PRD |
 | 原型/HTML/页面截图/交互稿反推 PRD | PRD 连环追问与原型反推、产品方案结构、页面/交互说明、验收标准 | 支付资金专项，除非命中资金场景 |
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | PRD 文档质量治理、PRD 生成门禁、符合性评审模式，并读 `product-prd-quality-gates.md` | 不把完整模板机械展开 |
 | 完整 PRD 草案 | PRD 生成补全模式、产品方案结构、用户故事、状态机、规则矩阵、运营后台、数据报表、验收标准 | 支付资金专项，除非命中资金场景 |
@@ -108,6 +111,7 @@ PRD 任务先判断使用者真正要的是生成、补全还是评审：
 
 符合性评审至少检查：
 
+- 多视角或合议评审是否有触发原因、阶段门、共识、分歧、必改、建议、待确认、owner 和验证方式，避免只给观点或角色表演。
 - 必备章节是否缺失：背景与问题、目标与成功指标、用户与角色、范围与非目标、功能需求、业务规则、依赖约束和验收标准。
 - 成功指标是否可衡量：避免只写“提升体验”“优化效率”，应补成指标口径、基线、目标值、观察窗口和负责人。
 - 用户故事是否包含角色、能力和价值：不能只有“用户需要某功能”，必须说明谁、在什么场景、完成什么能力、获得什么业务价值。

@@ -25,6 +25,7 @@
 
 ## 需要继续读取的 reference
 
+- PRD / 系分合议预审、多视角评审、MAGI 三角色或 IPD 式互审读 `prd-system-design-review.md`。
 - AI 编码、OpenSpec、Harness、GSD 和 CAD 治理读 `agentic-engineering-governance.md`。
 - 验证、CR、发布和复盘读 `verification-review-release.md`。
 - 产品洞察、Backlog、PRD 和支付资金专项回到 `product-architecture-expert`。
@@ -37,6 +38,7 @@
 | 设计端到端流程 | `1. 生命周期总览`、`2. 阶段门禁`、`4. 角色协同` | 不展开 GSD/CAD 细节 |
 | 判断 AI 原型能否进入研发 | `2. 阶段门禁`、`3. 产品上下文包` | 不直接写完整 Harness Plan |
 | 优化 PRD-Lite | `3. 产品上下文包`、`5. PRD-Lite` | 不生成大而全 PRD 模板 |
+| PRD / 系分预审 | 先读 `prd-system-design-review.md`，再按结论回到本文 `6. 工程交接清单` | 不把预审当正式评审或执行授权 |
 | 产品专家到架构师交接 | `3. 产品上下文包`、`6. 工程交接清单` | 不把交接包当 Execution Grant |
 | 组织流程评审 | `4. 角色协同`、`7. 反模式` | 不只评审文档格式 |
 
@@ -157,6 +159,8 @@ PRD-Lite 不等于低质量 PRD，而是只保留进入研发必须的信息：
 
 如果只剩页面控件说明、交互路径和“让 AI 生成”的提示词，不应进入研发。
 
+PRD-Lite 进入 OpenSpec 或系分前，可用 `prd-system-design-review.md` 做合议预审：挑战者位先从产品价值、交付运营、技术可行性、QA 验收和 UX / 服务体验挑刺；主笔 / 决策 owner 再把每条反馈落成 `ACCEPT`、`REJECT` 或 `PENDING`。通过预审只代表低级问题和分歧已提前暴露，不代表正式产品评审或业务 owner 已批准。
+
 ## 6. 工程交接清单
 
 交给架构师前，先形成一段 AI Native 交接结论：
@@ -186,6 +190,7 @@ CAD 候选缺口：Task ID / 写入范围 / 验证命令 / Execution Grant / 停
 - 是否可以进入 OpenSpec；如果不能，还差哪 3-7 个关键信息。
 - 是否可以进入 Harness/GSD；如果不能，是范围、顺序、权限还是验证缺口。
 - 是否存在 CAD 候选缺口；如果存在，只能描述候选边界，不直接授权执行。
+- 是否需要 PRD / 系分合议预审；如果需要，先输出决策日志和准出路径，再进入 OpenSpec、Harness/GSD 或回退 Round 0。
 
 ## 7. 反模式
 

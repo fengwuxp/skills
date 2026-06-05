@@ -50,6 +50,16 @@
       "expected_handling": "进入 GSD 产研协同模式，先编排产品专家完成需求分析、产品设计、方案确认和验收种子，再编排资深架构师完成系分设计、编码、TDD、CR、验证发布，并输出 owner、交接物、门禁和停止条件。"
     },
     {
+      "id": "ai-native-should-prd-system-design-deliberation-review",
+      "skill": "ai-native-engineering-workflow",
+      "query": "对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 AI Native 的 PRD / 系分合议预审模式，读取 prd-system-design-review，先输出评审对象、三角色分工、锚点化问题、ACCEPT/REJECT/PENDING 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由；预审不能替代产品专家 PRD 正文、架构师系分正文、正式评审或 Execution Grant。"
+    },
+    {
       "id": "ai-native-should-gsd-cad-admission-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。",
@@ -375,6 +385,16 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
       "expected_handling": "进入产品架构专家内部 product-insight-analyst 路径，先做资料资产化和客户/竞品/标杆情报分拣；没有材料的类别明确留白；输出机会雷达、证据与推理链、置信度、待验证项和建议去向，再说明哪些机会只能作为 Backlog 候选继续交给 po-backlog-manager 决策。"
+    },
+    {
+      "id": "product-should-deliberate-ai-generated-prd",
+      "skill": "product-architecture-expert",
+      "query": "这份 AI 生成的会员权益 PRD 有点发散，请用产品大师/MAGI 的方式做多视角合议评审，输出共识、分歧、必改、待确认、owner 和验证方式，先不要重写全文。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入产品架构专家内部 product-deliberation-workflow 路径，先判断合议触发原因和当前阶段，再输出阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向；不新增独立产品大师 Skill，不把外部多 Agent 工具或长 prompt 直接搬入正文。"
     },
     {
       "id": "product-negative-bug-diagnosis",

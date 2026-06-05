@@ -25,6 +25,7 @@
 ## 需要继续读取的 reference
 
 - 产品交接和 PRD-Lite 读 `product-to-engineering-lifecycle.md`。
+- PRD / 系分合议预审、多视角评审、MAGI 三角色或 IPD 式互审读 `prd-system-design-review.md`。
 - GSD/CAD 编排准入、GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口和 Execution Grant 缺口读 `gsd-cad-admission.md`。
 - 验证、CR、发布和复盘读 `verification-review-release.md`。
 - 详细工程规则回到 `senior-software-architect/references/ai-assisted-engineering.md`、`ai-large-project-orchestration.md` 和 `cad-mode.md`。
@@ -35,6 +36,7 @@
 | --- | --- | --- |
 | 判断需要哪种 AI 编码流程 | `1. 分级模型`、`2. OpenSpec / Superpowers / Harness` | 不展开工具清单 |
 | 多 Agent / GSD 编排 | 先读 `gsd-cad-admission.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不直接开 CAD |
+| PRD / 系分合议预审 | 先读 `prd-system-design-review.md`，再读 `2. OpenSpec / Superpowers / Harness`、`3. Harness 最小契约` | 不把预审结论写成 Execution Grant |
 | CAD 候选判断 | 先读 `gsd-cad-admission.md`，再读 `4. CAD 只处理原子任务`、`6. 权限边界` | 不把整个项目授权给 CAD |
 | AI 原生工具接入 | `6. 权限边界`、`7. 工具角色` | 不把工具能力当组织授权 |
 | AI 代码库理解与影响结论包 | `3. Harness 最小契约`、`5. Wave 和交接`、`7. 工具角色` | 不把 AI 总结、可视化或上下文生成当测试或 CR 结论 |
@@ -149,6 +151,7 @@ AI 原生工具常见权限必须显式授权：
 | 架构 Agent | OpenSpec、Harness、任务拆分、边界和验证矩阵。 | 无产品上下文时直接编码。 |
 | 编码 Agent | 原子任务实现、测试补齐、局部重构。 | 修改公共契约或生产行为而无人审。 |
 | Review Agent | 初筛越界、测试缺口、坏味、结构影响和风险。 | 替代人工 CR 和责任签字。 |
+| 预审 Agent | 对 PRD、OpenSpec 输入、系分或 Harness 候选做多视角预审，输出锚点化反馈和 `ACCEPT/REJECT/PENDING` 决策日志。 | 替代产品 owner、架构 owner、正式评审会或 Execution Grant。 |
 | 代码库理解辅助 | 只读快速阅读代码、生成入口路径、模块图、调用导览、上下文文件、源码锚点和影响说明。 | 替代源码阅读、测试、人工判断或默认安装外部工具。 |
 | Eval Agent | 构造样例、失败案例、回归矩阵。 | 把 eval 通过当作上线批准。 |
 | 自动化/线程 | 周期检查、状态恢复、反馈循环。 | 未授权持续写入或发送外部消息。 |
@@ -156,6 +159,7 @@ AI 原生工具常见权限必须显式授权：
 ## 8. 治理清单
 
 - 是否从产品上下文包进入工程，而不是从一句 prompt 进入编码。
+- PRD / 系分是否已在需要时做合议预审，并形成锚点化问题、接受项、拒绝项、待定项、分歧、风险清单、owner 和验证方式。
 - 是否有 OpenSpec 固定范围、非目标、规则和验收。
 - 是否有 Harness 固定 owner、写入范围、顺序、验证和交接。
 - 是否有代码库理解与变更可理解性门禁，能让人复述业务意图、入口路径、影响模块、调用关系、边界变化、源码锚点和残余风险。

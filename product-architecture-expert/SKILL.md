@@ -72,9 +72,9 @@ description: |
 2. 复杂产品问题先读 `references/product-scenario-routing.md`，按业务场景和目标产物选择 reference。
 3. 只读取当前任务必要的 reference；PRD、支付资金和外部规则场景必须把待确认项、验收口径和专业确认方写清楚。
 
-当用户要求写作、生成、完善、补全、改写或评审 PRD、产品需求文档、需求说明书、需求文档模板、PRD 模板、产品方案模板，或要求“输出一份可评审的产品文档”时，必须读取 `references/product-prd-template.md`，并结合 `references/product-design-and-prd.md` 输出可复制、可评审、可开发、可测试、可运营的 PRD；正式评审或提交前自检继续读取 `references/product-prd-quality-gates.md`，支付资金场景继续读取 `references/product-prd-financial-appendix.md`，运营后台、通知、数据指标、埋点、报表和发布运营场景继续读取 `references/product-prd-operations-and-data.md`；不要只给提纲或说明。
+当用户要求写作、生成、完善、补全、改写或评审 PRD、产品需求文档、需求说明书、需求文档模板、PRD 模板、产品方案模板，或要求“输出一份可评审的产品文档”时，必须读取 `references/product-prd-template.md`，并结合 `references/product-design-and-prd.md` 输出可复制、可评审、可开发、可测试、可运营的 PRD；复杂 PRD、AI 生成方案、原型候选、多方争议或用户要求多个 AI/PM/Reviewer/产品大师/MAGI 合议评审时，加读 `references/product-deliberation-workflow.md`；正式评审或提交前自检继续读取 `references/product-prd-quality-gates.md`，支付资金场景继续读取 `references/product-prd-financial-appendix.md`，运营后台、通知、数据指标、埋点、报表和发布运营场景继续读取 `references/product-prd-operations-and-data.md`；不要只给提纲或说明。
 
-产品架构交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下用 `scripts/check_product_deliverable.py` 做本地结构完整性检查。适用于 PRD、产品架构方案和图形 brief；该脚本输入为 `--kind` + `--text`、`--file` 或标准输入，缺少目标范围、角色主体、对象状态、流程规则、数据审计、风险确认、验收或图形语义时返回非 0；只检查本地文本或显式传入的本地文件，不写文件、不访问网络、不上传文件、不读取密钥，也不判断方案业务质量。无法运行脚本时必须说明原因、人工检查结果和残余风险。
+产品架构交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下用 `scripts/check_product_deliverable.py` 做本地结构完整性检查。适用于 PRD、产品架构方案、图形 brief 和产品合议评审报告；该脚本输入为 `--kind` + `--text`、`--file` 或标准输入，缺少目标范围、角色主体、对象状态、流程规则、数据审计、风险确认、验收、图形语义，或合议评审中的共识、分歧、必改、待确认、owner、验证方式时返回非 0；只检查本地文本或显式传入的本地文件，不写文件、不访问网络、不上传文件、不读取密钥，也不判断方案业务质量。无法运行脚本时必须说明原因、人工检查结果和残余风险。
 
 当用户明确要求画图、流程图、能力地图、状态机、关系图、资金流图、产品架构图、运营后台结构图或可视化产物时，读取 `references/diagram-output.md`，正式图形化交付默认只生成 SVG；仅当用户明确要求 Mermaid/Markdown 草图、PNG、PDF、截图或其他格式时才额外处理并报告验证结论。
 
@@ -126,6 +126,7 @@ description: |
 - `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
 - `references/product-insight-analyst.md`：资料资产化、客户/竞品/标杆情报分拣、证据推理链和机会雷达。
 - `references/po-backlog-manager.md`：PO Backlog 决策、机会清单收敛、BV/EE、P0/P1/P2、User Story 和 AC。
+- `references/product-deliberation-workflow.md`：复杂 PRD、AI 生成方案、原型候选、多方争议、PM/Reviewer/产品大师/MAGI 合议式产品评审、阶段门、共识/分歧/待确认和准出检查。
 - `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文、产品侧上下文包、验收种子和交给 AI Native 编排/架构师的交接条件；端到端 GSD/CAD 准入由 `ai-native-engineering-workflow` 处理。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。
 - `references/product-prd-template.md`：PRD、产品需求文档、需求文档模板、PRD 模板、产品方案模板和可复制主骨架。

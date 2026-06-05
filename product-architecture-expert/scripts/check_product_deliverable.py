@@ -49,6 +49,14 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("assumptions", ["假设", "待确认", "风险", "边界"], 1),
         RequiredGroup("output_format", ["SVG", "输出格式", "正式图形化交付"], 1),
     ],
+    "product-review": [
+        RequiredGroup("review_context", ["触发原因", "当前阶段", "评审对象", "PRD 类型", "方案类型"], 2),
+        RequiredGroup("consensus", ["共识", "已确认", "可进入下一步"], 1),
+        RequiredGroup("disagreement", ["分歧", "争议", "备选方案", "取舍"], 1),
+        RequiredGroup("blocking_changes", ["必改", "阻断", "严重", "影响"], 2),
+        RequiredGroup("pending_confirmation", ["待确认", "确认方", "owner", "负责人"], 2),
+        RequiredGroup("verification", ["验证方式", "验收", "检查", "下一步", "去向"], 2),
+    ],
 }
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
@@ -77,6 +85,15 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "节点：角色、对象、系统；分组：前台和后台；箭头：审批关系；关系：数据流。"
         "假设：权限模型待确认；输出格式：SVG。",
         "图形目标：说明能力；图形类型：能力地图。",
+    ),
+    "product-review": (
+        "触发原因：AI 生成 PRD 存在多方争议；当前阶段：方案共识；评审对象：会员权益 PRD；方案类型：功能型。"
+        "共识：目标、范围和核心对象已确认，可进入下一步。"
+        "分歧：是否加入自动续费；备选方案为本期不做或灰度；影响为合规和运营成本。"
+        "必改：验收标准缺少异常路径，影响测试和上线评审。"
+        "待确认：退款规则由法务 owner 确认，确认方为产品负责人。"
+        "验证方式：补充验收样例并运行检查；下一步进入 PRD 修订。",
+        "共识：目标已确认。待确认：退款规则。",
     ),
 }
 

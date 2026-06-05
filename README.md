@@ -12,15 +12,16 @@
 
 [AI Native 研发流程编排](./ai-native-engineering-workflow)
 
-- 适合：AI 时代产品到研发编码流程、Agentic Engineering、产品专家到架构师交接、AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD 编排准入、AI 原生工具协作、Gemini CLI/AgentRC 等代码理解工具安装与调用准入、设计-代码对齐、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、代码 CR、发布复盘和组织职责边界。
+- 适合：AI 时代产品到研发编码流程、Agentic Engineering、产品专家到架构师交接、AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD 编排准入、PRD/系分合议预审、AI 原生工具协作、Gemini CLI/AgentRC 等代码理解工具安装与调用准入、设计-代码对齐、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、代码 CR、发布复盘和组织职责边界。
 - 边界：可以作为 PRD、Backlog、架构设计、代码 CR、测试、生产变更或 Java Service 代码生成的流程入口，但只负责成熟度、owner、交接物、停止条件和工具边界；具体产物继续分派给产品专家、架构师或代码生成器。
-- 常用说法：“设计一套 AI 时代产品到研发编码流程”“把产品专家、架构师和 Codex/Claude/Copilot 这类 AI 工具协同起来”“评审我们的 AI 编码流程是否有 OpenSpec、Harness、验证矩阵和 CR 闭环”“判断大项目是否进入 GSD Round 0、Wave、Atomic Task 和 CAD 候选”“评估是否安装 Gemini CLI / AgentRC 阅读代码”“用 AI 快速阅读代码库并整理结论包”“对齐设计和代码实现”“AI 生成代码后怎么让团队看懂结构和影响范围”“从 AI 原型到工程化怎么交接”。
+- 常用说法：“设计一套 AI 时代产品到研发编码流程”“把产品专家、架构师和 Codex/Claude/Copilot 这类 AI 工具协同起来”“对 PRD 和系分做 MAGI 三角色合议预审”“评审我们的 AI 编码流程是否有 OpenSpec、Harness、验证矩阵和 CR 闭环”“判断大项目是否进入 GSD Round 0、Wave、Atomic Task 和 CAD 候选”“评估是否安装 Gemini CLI / AgentRC 阅读代码”“用 AI 快速阅读代码库并整理结论包”“对齐设计和代码实现”“AI 生成代码后怎么让团队看懂结构和影响范围”“从 AI 原型到工程化怎么交接”。
 
 [产品架构专家](./product-architecture-expert)
 
 - 适合：PRD、产品方案、需求说明、产品洞察/机会雷达、机会清单/Backlog 决策、需求优先级、User Story/AC、原型/HTML/页面截图/交互稿反推 PRD、能力地图、业务流程、状态机、规则矩阵、运营后台、数据指标、验收标准和产品架构图。支付与资金是重点能力，覆盖账户/账本、清结算、对账、外卡收单、ACH、VCC、争议和跨境支付。
+- 进阶模式：复杂 PRD、AI 生成方案、原型候选、多方争议或用户要求多个 AI / PM / Reviewer / 产品大师 / MAGI 合议评审时，先做阶段门、共识、分歧、必改、待确认、owner 和验证方式，再决定是否进入正式 PRD、Backlog、AI Native 编排或架构师交接。
 - 不适合：不替代法务、合规、财务、税务、持牌机构或卡组织规则确认；不负责工程实现、代码 Review 和生产排障。
-- 常用说法：“用产品架构专家写一版 PRD”“把这批客户访谈和竞品资料整理成机会雷达”“把这批机会清单做 Backlog 决策并转 User Story/AC”“根据页面截图反推可评审 PRD”“画一个 VCC 交易流程”“梳理清结算和对账能力地图”“评审这个需求是否可开发可验收”。
+- 常用说法：“用产品架构专家写一版 PRD”“把这批客户访谈和竞品资料整理成机会雷达”“把这批机会清单做 Backlog 决策并转 User Story/AC”“根据页面截图反推可评审 PRD”“用产品大师/MAGI 方式多视角评审这个 AI 生成 PRD”“画一个 VCC 交易流程”“梳理清结算和对账能力地图”“评审这个需求是否可开发可验收”。
 
 [资深架构师](./senior-software-architect)
 
@@ -54,11 +55,48 @@
 - 从普通图到复杂图：先用 `产品架构专家` 或 `资深架构师` 产出语义稳定的 SVG；需要更复杂的布局、风格系统或精细视觉时，再调用 `$fireworks-tech-graph` 续作。
 - 从金融产品到上线方案：`产品架构专家` 先标出主体、法域、资金归属、外部规则和专业确认方；`资深架构师` 再处理系统边界、数据一致性、可靠性、安全和发布回滚。
 
+### 产品架构专家怎么用
+
+`产品架构专家` 是产品语义和产品交付物的主入口。它适合回答“这个需求到底要解决什么、对象和规则是什么、谁验收、怎么让研发接得住”，不负责工程实现、代码 CR、生产排障或 GSD/CAD 执行授权。
+
+优先直接用它的场景：
+
+- **想法 / 口头需求 / 原型候选**：先补目标、用户、主体、范围、非目标、核心对象、主流程、风险和验收种子。
+- **PRD / 产品方案**：生成、精简、重构或评审可读、可开发、可测试、可运营的正文。
+- **AI 生成方案 / 多方争议**：用产品大师 / MAGI / PM / Reviewer 合议评审，先收束共识、分歧、必改、待确认、owner 和验证方式。
+- **客户访谈 / 工单 / 竞品 / 行业资料**：整理机会雷达、证据链、Backlog 候选、User Story 和 AC。
+- **支付与资金产品**：先确认主体、法域、资金归属、账户/账务边界、外部规则来源、专业确认方和验收边界。
+- **产品图形化交付**：输出用例图、能力地图、业务流程图、状态机、规则矩阵、运营后台结构或资金流图；默认 SVG。
+
+使用时尽量给清楚五类信息：
+
+```text
+用产品架构专家：
+输入材料：想法 / 访谈 / 竞品 / 原型 / 截图 / PRD 草稿 / 支付规则
+目标产物：PRD / 产品方案 / 机会雷达 / Backlog / 验收标准 / 产品架构图
+业务边界：目标、非目标、主体、用户、法域、资金或数据边界
+评审重点：可读性 / 准确性 / 可开发 / 可测试 / 可运营 / 合规待确认
+验证要求：列待确认项、owner、验收种子；正式交付前运行产品交付物检查
+```
+
+产品专家交给 AI Native 或架构师前，最好形成一个轻量交接包：业务目标、非目标、角色 / 主体、核心对象与状态、主流程与异常、关键规则、验收种子、风险与待确认项、专业确认方。缺这些时，不要急着进入系分、GSD/CAD 或代码生成。
+
 ### AI Native 研发流程编排怎么用
 
 `AI Native 研发流程编排` 是编排入口，不是万能执行入口。它适合回答“现在应该由谁做、做到哪一步、交接什么、怎么验证、什么时候停”，再把产品语义交给 `产品架构专家`，把工程实现和生产风险交给 `资深架构师`。
 
+优先用它的场景是跨角色、跨阶段、跨工具的流程问题：从 AI 原型到 PRD-Lite / OpenSpec / Harness / GSD / CAD，产品专家和架构师如何接力，质量 / 测试 / CR / 发布门禁如何闭环，Gemini CLI / AgentRC 等工具是否允许安装或调用。只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`；只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`。
+
 瘦身后的职责边界：`产品架构专家` 只补产品上下文包、验收种子和产品侧交接条件，不直接判定 GSD/CAD 准入或 Execution Grant；`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位，只编排 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、测试矩阵、验证顺序、CR 前置条件、失败回退、入口路径、源码锚点、结构影响说明和残余风险交接；`资深架构师` 只消费已确认的 AI Native 交接结论，继续做 OpenSpec、Harness、工程编排、CAD 门禁、测试策略、TDD、补测试、源码级 CR 和风险，不在架构师侧重建产品流程。
+
+最短触发方式：
+
+- `进入 GSD 产研协同研发流程`：产品专家先做需求分析、产品设计、确认和验收种子，架构师再做系分、编码、TDD、CR 和验证。
+- `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，再输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
+- `做 GSD/CAD 准入`：判断是否需要 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。
+- `做质量门禁`：编排测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接。
+- `做理解门禁`：让代码库、AI 生成 diff 或重构计划具备入口路径、源码锚点、影响模块和验证证据。
+- `评估 Gemini CLI / AgentRC`：只做工具准入、权限边界、只读范围、隐私风险和人工替代路径，不默认安装或联网。
 
 先判断输入成熟度，再选最小模式：
 
@@ -66,6 +104,7 @@
 - **交接包模式**：已有 AI 原型/eval、dogfooding 反馈、MVP 或业务目标时，整理产品上下文包、PRD-Lite 缺口和交给架构师的最小材料。
 - **GSD 产研协同模式**：说“进入 GSD 产研协同研发流程”时，先让产品专家做需求分析、产品设计、方案确认和验收种子，再让架构师做系分设计、编码、TDD、测试、CR 和验证发布；本技能只编排 owner、交接物、门禁和停止条件。
 - **工程编排模式**：已有产品上下文、OpenSpec 或明确变更目标时，设计 GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口、Execution Grant 缺口和验证矩阵草案。
+- **PRD / 系分预审模式**：PRD、PRD-Lite、OpenSpec 输入、系分、详细设计或 Harness 候选需要正式评审前预审时，按 MAGI 三角色做多视角合议，输出锚点化问题、`ACCEPT/REJECT/PENDING` 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由。
 - **质量门禁模式**：需要测试策略、TDD、补测试或 CR 验证时，先设计测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接，再路由到 `资深架构师` 的 `testing.md` 能力。
 - **理解门禁模式**：陌生代码库、AI 代码变更、diff、重构计划或 PR 说明已经出现，但团队看不清结构关系和影响范围时，先设计代码库理解结论包，覆盖业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、owner 复述和残余风险交接，再路由到 `资深架构师` 做源码级 CR。
 - **工具准入模式**：点名 Gemini CLI、AgentRC 或同类代码理解 / 上下文工程工具，或要求代码库级阅读/分析、对齐设计和代码、检查 AI-readiness / instructions / eval / 上下文漂移时，先判断是否值得安装或调用、是否只读、是否联网/认证/写文件、输出如何回链源码和验证，再决定是否交给资深架构师或用户授权执行。
@@ -83,6 +122,7 @@
 经流程入口分派时这样用：
 
 - 可以让它先判断普通 PRD、产品方案或 Backlog 是否成熟，再把正文产物分派给 `产品架构专家`。
+- 可以让它先对 PRD、PRD-Lite、OpenSpec 输入、系分或 Harness 候选做合议预审；预审只能提前暴露问题和沉淀决策日志，不能替代产品 owner、架构 owner、正式评审、测试通过或 Execution Grant。
 - 可以让它先判断架构设计、代码 CR、Bug 修复、测试或生产变更是否需要 OpenSpec、Harness、验证矩阵和发布闭环，再把工程执行分派给 `资深架构师`。
 - 可以让它先判断中大型项目是否进入 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些是 CAD 候选缺口和 Execution Grant 缺口，再把工程任务包、CAD Mode 门禁和执行策略分派给 `资深架构师`。
 - 可以让它先判断测试策略、TDD、补测试或 CR 验证需要放在哪个质量门禁、按什么顺序验证、失败后如何回退，再把测试设计与实现分派给 `资深架构师`。
@@ -115,6 +155,10 @@
 
 ```text
 进入 GSD 产研协同研发流程：产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。
+```
+
+```text
+对 PRD 和系分做 MAGI 三角色合议预审：输出 review_task、evaluation_task、reporting_task、ACCEPT/REJECT/PENDING 决策日志和下一步路由。
 ```
 
 ```text
@@ -256,7 +300,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 
 ### 外部参考来源
 
-- [智东西《Claude产品团队工作模式被公开了！》](https://zhidx.com/p/546178.html)、[Anthropic《Product development in the agentic era》](https://claude.com/blog/product-development-in-the-agentic-era)、[OpenAI Codex](https://openai.com/index/introducing-codex/)、[OpenAI《How OpenAI uses Codex》](https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf)、[GitHub Copilot coding agent](https://docs.github.com/en/copilot/concepts/about-copilot-coding-agent)、[GitHub Copilot code review](https://docs.github.com/en/copilot/concepts/agents/code-review)、[Google Gemini CLI](https://github.com/google-gemini/gemini-cli)、[Microsoft AgentRC](https://github.com/microsoft/agentrc)、[Microsoft Clarity Agent](https://github.com/microsoft/clarity-agent)、[Google People + AI Guidebook](https://pair.withgoogle.com/guidebook-v2/)、[NIST AI RMF Generative AI Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)、[OWASP Top 10 for LLM Applications 2025](https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf)、[ISO/IEC 42001](https://www.iso.org/standard/81230.html) 与微信文章 [《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》](https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ)：作为 `ai-native-engineering-workflow` 的公开参考来源，用于 AI 时代产品到研发编码流程、Agentic Engineering、AI 原型/eval、产品上下文、OpenSpec/Harness/GSD/CAD、AI 原生工具权限边界、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、CR、发布复盘和 AI 风险治理。2026-06-04 微信原链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ` 只读取到微信“环境异常”验证页，未作为已吸收来源；2026-06-04 已通过移动端微信 UA 公开 HTML 读取《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》标题、作者、页面时间线索和正文；2026-06-04 已读取 Gemini CLI、AgentRC 和 Clarity Agent 的 GitHub README。本仓库只吸收可迁移流程和边界，不复制文章正文、图示、案例、厂商宣传或作者表达，也不把历史工具能力、AI 快速阅读工具、外部可视化 CLI、上下文生成器或文章推荐工具当成当前会话授权、默认依赖或官方最新承诺。
+- [智东西《Claude产品团队工作模式被公开了！》](https://zhidx.com/p/546178.html)、[Anthropic《Product development in the agentic era》](https://claude.com/blog/product-development-in-the-agentic-era)、[OpenAI Codex](https://openai.com/index/introducing-codex/)、[OpenAI《How OpenAI uses Codex》](https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf)、[GitHub Copilot coding agent](https://docs.github.com/en/copilot/concepts/about-copilot-coding-agent)、[GitHub Copilot code review](https://docs.github.com/en/copilot/concepts/agents/code-review)、[Google Gemini CLI](https://github.com/google-gemini/gemini-cli)、[Microsoft AgentRC](https://github.com/microsoft/agentrc)、[Microsoft Clarity Agent](https://github.com/microsoft/clarity-agent)、[Google People + AI Guidebook](https://pair.withgoogle.com/guidebook-v2/)、[NIST AI RMF Generative AI Profile](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence)、[OWASP Top 10 for LLM Applications 2025](https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf)、[ISO/IEC 42001](https://www.iso.org/standard/81230.html)、微信文章 [《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》](https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ) 与 [《PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统》](https://mp.weixin.qq.com/s/Q7jtu6Cihr0Fs0Fy1-USUg)：作为 `ai-native-engineering-workflow` 的公开参考来源，用于 AI 时代产品到研发编码流程、Agentic Engineering、AI 原型/eval、产品上下文、PRD/系分合议预审、OpenSpec/Harness/GSD/CAD、AI 原生工具权限边界、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、CR、发布复盘和 AI 风险治理。2026-06-04 微信原链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ` 只读取到微信“环境异常”验证页，未作为已吸收来源；2026-06-04 已通过移动端微信 UA 公开 HTML 读取《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》标题、作者、页面时间线索和正文；2026-06-05 普通 UA 读取《PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统》返回微信验证页，随后通过移动端微信 UA 公开 HTML 读取标题、作者、账号、发布时间和正文；2026-06-04 已读取 Gemini CLI、AgentRC 和 Clarity Agent 的 GitHub README。本仓库只吸收可迁移流程和边界，不复制文章正文、图示、案例、厂商宣传、CrewAI/Codex/Claude 互调方式、Computer Use 做法、长 prompt 或作者表达，也不把历史工具能力、AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审或文章推荐工具当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant。
 - [yizhiyanhua-ai/fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph)：作为图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG 导出和渲染校验思路的公开参考来源。本仓库只吸收通用方法，不默认复制外部脚本、模板、图形资产或安装流程；PNG/PDF/截图等派生格式只在使用者明确提出时处理；引入外部可执行内容前必须按 `AGENTS.md` 做供应链安全审查。
 - [google/eng-practices](https://github.com/google/eng-practices)：作为 `资深架构师` 代码评审标准、评论分级、变更颗粒度、作者/评审者协作和持续改善代码健康的公开参考来源。本仓库只吸收可迁移的 Review 与 Change Author 原则，不把它扩展为完整架构设计方法论；复用具体文本、示例或派生产物时必须保留来源、确认 CC-BY 3.0 归因要求并避免复制大段原文。
 - [Ivy-piger/Ivy-skills](https://github.com/Ivy-piger/Ivy-skills)：作为架构师陌生代码库侦察、Java 架构坏味启发式扫描、生产故障时间线、5-Why 复盘草稿和 Spring Boot 安全检查清单的公开参考来源。本仓库只吸收可复用流程和检查项，不安装或复制 Claude Code 专用 frontmatter、`CLAUDE.md` 流程、外部脚本或服务端运行逻辑；如需复用具体文本、脚本或资产，必须保留来源、确认许可证并执行供应链安全审查。
@@ -275,6 +319,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - 微信文章 [《需求分析和设计活动关键要点总结》](https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q)：作为 `资深架构师` 与 `产品架构专家` 功能定义、功能分配追溯、需求分析外部视角和设计内部视角分工的公开参考来源。2026-06-01 已通过移动端微信 UA 公开 HTML 和本机 Chrome headless 读取标题、账号、作者、发布时间和正文；本仓库只吸收功能不是头脑风暴清单、功能来自上层对象分配、正逆追溯和需求/设计分工检查项，不复制原文推荐书目、GJB 章节表述、课程/书籍引导或作者表达。
 - 微信文章 [《如何评估你写的 SKILL.md 质量？一套完整的 Eval 方法论》](https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg)：作为 Skill Eval 触发准确率、输出质量、效率指标、真实 prompt、难负例、对照实验和方差检查的公开参考来源。2026-05-28 已通过浏览器自动化读取标题、账号、作者、发布时间和正文；本仓库只吸收评估方法、prompt fixture 结构和离线校验边界，不复制文章原文、策略案例、社群引导或未逐篇读取的外部链接。
 - 微信文章 [《产品经理别再只让 AI 写 PRD 了，先把用户反馈整理成一张问题地图》](https://mp.weixin.qq.com/s/sY6cw6wE5ePyrZmRYbXApg)：作为 AI 辅助 PRD 前置发现、用户反馈证据链和问题地图字段的公开参考来源。2026-05-28 已通过公开 HTML 读取标题、账号、作者、发布时间和正文，并尝试浏览器自动化；本仓库只吸收反馈到问题、证据强度、人工判断门禁和 PRD 前置发现流程，不复制原文表格、图片或外部工具营销。
+- 微信文章 [《我让3个AI吵了一整天架，它们把PRD写完了》](https://mp.weixin.qq.com/s/13wn5wS8AwyMNBrMQpTyEg)、GitHub 仓库 [Kira2red/magi-product](https://github.com/Kira2red/magi-product) 与 [Kira2red/Kira-product-monster-skills](https://github.com/Kira2red/Kira-product-monster-skills)：作为 `产品架构专家` 内部 `product-deliberation-workflow.md` 的公开参考来源，用于复杂 PRD、AI 生成方案、原型候选和多方争议需求的产品合议评审。2026-06-05 已通过移动端微信 UA 公开 HTML 读取文章标题、作者、账号、发布时间字段和正文，并读取两个 GitHub 仓库的 README、文件树和核心 Skill / prompt 文件；本仓库只吸收 Controller / PM / Reviewer 工作位、强制阶段门、用户确认点、指定 Skill / 模板约束、SOP、复杂度评估、类型分流、分批产出、证据审查和准出检查，不复制原文、图片、外部平台工具调用、watchdog 脚本、车载专项规则、外部 Skill 结构、示例正文、游戏 Skill、纯中文绝对化约束或作者表达。
 - 微信文章 [《为什么你的 AI 只能写总结，别的产品经理已经用AI在挖需求机会了？附skill模板和调试方法》](https://mp.weixin.qq.com/s/jsuVbuvKJxEXl8dZyzh23g)：作为 `产品架构专家` 内部 `product-insight-analyst.md` 的公开参考来源，用于产品洞察、资料资产化、客户/竞品/标杆情报分拣、机会雷达、证据与推理链和产品负责人决策边界。2026-06-03 普通 curl/mobile UA 返回微信验证页；随后通过本机 Chrome headless 等价浏览器读取标题、账号、作者、发布时间和正文；本仓库只吸收资料资产化、客户/竞品/标杆三篮分拣、证据与推理链、机会雷达、宁缺毋滥和产品负责人决策边界，不复制原文、模板正文、固定路径、外部 Skill 名称体系、作者表达或标题传播话术。
 - 微信文章 [《有了洞察还不够，产品负责人真正值钱的是 Backlog 决策》](https://mp.weixin.qq.com/s/stj1HjCpaG5PzXhxfxlWSg)：作为 `产品架构专家` 内部 `po-backlog-manager.md` 的公开参考来源，用于洞察/机会清单到 Backlog 决策、BV/EE、业务/用户/工程三桌校验、User Story、AC、技术现实主义和 P0/P1/P2 排序。2026-06-03 已通过移动端微信 UA 公开 HTML 读取标题、账号、作者、发布时间和正文；本仓库只吸收机会收敛、拒绝/延后理由、研发可执行边界和决策偏好自检，不复制原文图片、外部 Skill 名称体系、作者表达或标题传播话术。
 - 微信文章 [《B端产品经理实战经验分享系列 - 如何写出高质量的需求文档》](https://mp.weixin.qq.com/s/_KU0j5sy1HBMdx03bhlYGg)：作为 `产品架构专家` PRD 文档质量治理、文档目标/受众、PRD/MRD/BRD 类型区分、版本记录、评审闭环和同步机制的公开参考来源。2026-06-01 已通过公开 HTML 读取标题、账号、作者、发布时间和正文，并用本机 Chrome headless 加载取证；本仓库只吸收可迁移的质量门禁、裁剪方法和评审机制，不复制原文案例、指标数字、图片或作者表达。

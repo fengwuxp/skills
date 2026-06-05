@@ -46,6 +46,7 @@
 
 - 微信文章链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ`：2026-06-04 普通 `curl` 返回微信“环境异常”验证页，未读取到正文；本仓库不把该链接作为已吸收来源，只作为用户提供的待核验线索。
 - 微信文章 [《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》](https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ)：作为 AI Native 研发流程中变更可理解性、结构上下文、影响可视化和 AI 代码 Review 交接门禁的公开参考来源。2026-06-04 已通过移动端微信 UA 公开 HTML 读取标题、作者、页面时间线索和正文；本仓库只吸收“AI 生成代码后需要共享结构视图、影响导览和源码锚点辅助 Review”的可迁移流程，不复制原文、工具宣传、命令示例、截图或作者表达，也不把任何外部可视化 CLI、IDE 插件或厂商预览能力写成默认依赖。
+- 微信文章 [《PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统》](https://mp.weixin.qq.com/s/Q7jtu6Cihr0Fs0Fy1-USUg)：作为 AI Native 研发流程中 `prd-system-design-review.md` 的公开参考来源。作者与账号字段均为 `产品AI力学`，发布时间字段为 2026-06-04 19:00:00 Asia/Shanghai；2026-06-05 普通 UA 返回微信“环境异常”验证页，随后通过移动端微信 UA 公开 HTML 读取标题、作者、账号、发布时间和正文。本仓库只吸收 A2A 虚拟评审、IPD 多角色反向拷问、Market/Delivery/Tech/QA/UX 挑战视角、PO 对反馈做 `ACCEPT/REJECT/PENDING` 决策、`review_task` / `evaluation_task` / `reporting_task` 三段任务、决策日志、接受项、分歧项和风险清单的可迁移方法；不复制原文、图片、案例细节、CrewAI/Codex/Claude 互调方式、Computer Use 做法、长 prompt、外部 Skill 原文、成本数字、作者表达或标题传播话术，也不把虚拟评审写成正式 IPD、合规确认、架构批准或 Execution Grant。
 - Google Gemini CLI：`https://github.com/google-gemini/gemini-cli`。2026-06-04 本轮读取 GitHub README 和 get-started 文档；其公开描述为开源终端 AI Agent，支持查询和编辑大型代码库、文件操作、shell 命令、web fetch/search、MCP、项目上下文文件和脚本化输出；官方快速安装包含 `npx @google/gemini-cli`、`npm install -g @google/gemini-cli`、Homebrew 等方式，并要求认证。本仓库只吸收“代码库快速理解要输出入口路径、源码锚点、验证证据和不确定性”的流程方法，不默认安装、登录、联网、上传仓库或使用其写入能力。
 - Microsoft AgentRC：`https://github.com/microsoft/agentrc`。2026-06-04 本轮读取 GitHub README；其公开描述为 AI coding agents 的 context engineering 工具，会读取代码库，评估 AI-readiness，生成仓库指令、eval 和开发配置，并在 CI 中监控上下文漂移；README 标注 Experimental，示例命令包含 `npx github:microsoft/agentrc`、`readiness`、`instructions`、`eval`，且生成物可能包括 `.github/copilot-instructions.md`、`.vscode/mcp.json`、`.vscode/settings.json` 和 `agentrc.eval.json`。本仓库只吸收“仓库上下文要可生成、可评估、可维护，且防止 stale context”的治理方法，不把 AgentRC 生成物当成本仓库默认文件，也不默认写入 `.github/`、`.vscode/` 或 CI。
 - Microsoft Clarity Agent：`https://github.com/microsoft/clarity-agent`。2026-06-04 读取 GitHub README；其公开描述为结构化思考伙伴，可在仓库中形成 `.clarity-protocol/`，记录问题、方案、失败分析、决策和 stale tracking。本仓库只吸收“代码库理解结论包需要问题、方案、失败模式、决策和过期风险”的交接结构，不把它写成代码快速阅读工具或默认依赖。
@@ -61,6 +62,7 @@
 ## 提炼边界
 
 - 可以吸收 AI Native 产品研发流程、Agentic Engineering、OpenSpec/Harness/GSD/CAD、验证矩阵、CR、发布和复盘方法。
+- 可以吸收 PRD / 系分合议预审、MAGI 三角色、IPD 式互审、锚点化反馈、`ACCEPT/REJECT/PENDING` 决策日志、接受项、分歧项、风险清单和准出 / 停止条件。
 - 可以吸收 AI 代码变更可理解性、代码库理解结论包、结构上下文、入口路径、源码锚点、影响模块、调用关系、边界变化和可视化辅助 Review 的流程门禁。
 - 可以吸收 Gemini CLI、AgentRC 等官方工具的触发场景、安装准入、只读/写入边界、上下文漂移检查、设计-代码对齐和工具输出交接要求。
 - 不复制文章正文、博客原文、PDF 大段内容、图示、截图、工具提示词、厂商案例或作者表达。
