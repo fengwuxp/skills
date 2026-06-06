@@ -27,7 +27,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 AI 时代产品到研发编码流程编排路径，先判断输入成熟度，再输出阶段、owner、交接物、AI 工具角色、门禁、验证矩阵和停止条件，并路由产品专家与架构师分工。"
+      "expected_handling": "进入 AI 时代产品到研发编码流程编排路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；先判断输入成熟度，再输出阶段、AI 工具角色、验证矩阵，并路由产品专家与架构师分工。"
     },
     {
       "id": "ai-native-should-gsd-cad-handoff",
@@ -37,17 +37,17 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入工程编排模式，区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
+      "expected_handling": "进入工程编排模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
     },
     {
       "id": "ai-native-should-gsd-product-engineering-collaboration",
       "skill": "ai-native-engineering-workflow",
-      "query": "进入 GSD 产研协同研发流程：产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。",
+      "query": "进入 GSD 产研协同研发流程：目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或看上去可用的样子货；产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
-      "expected_handling": "进入 GSD 产研协同模式，先编排产品专家完成需求分析、产品设计、方案确认和验收种子，再编排资深架构师完成系分设计、编码、TDD、CR、验证发布，并输出 owner、交接物、门禁和停止条件。"
+      "expected_handling": "进入 GSD 产研协同模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
     },
     {
       "id": "ai-native-should-prd-system-design-deliberation-review",
@@ -67,17 +67,17 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 GSD/CAD 编排准入模式，输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁和下一步 owner，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
+      "expected_handling": "进入 GSD/CAD 编排准入模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
     },
     {
       "id": "ai-native-should-gsd-goal-composition",
       "skill": "ai-native-engineering-workflow",
-      "query": "做 GSD + Goal 组合：这个中大型项目需要持续推进，请把业务目标、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件、Goal 状态和交接节奏串起来；不要把 Goal 当 Execution Grant。",
+      "query": "做 GSD + Goal 组合：这个中大型项目需要持续推进，请把业务目标、生产可用能力、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件、Goal 状态和交接节奏串起来；不要把 Goal 当 Execution Grant。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 Goal 组合模式，读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、停止条件、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
+      "expected_handling": "进入 Goal 组合模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
     },
     {
       "id": "ai-native-should-review-ai-coding-process",
@@ -87,7 +87,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
-      "expected_handling": "进入流程治理评审路径，按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
+      "expected_handling": "进入流程治理评审路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
     },
     {
       "id": "ai-native-should-code-delivery-closed-loop",
@@ -97,7 +97,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 AI 代码交付闭环模式，读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流、指标和停止条件；具体测试、代码和源码级 CR 继续分派给资深架构师。"
+      "expected_handling": "进入 AI 代码交付闭环模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
     },
     {
       "id": "ai-native-should-spec-template-practices",
@@ -160,6 +160,16 @@
       "expected_handling": "进入设计-代码对齐入口，输出设计条款到源码入口、实现状态、偏差、测试证据、事实/推断和下一步 owner；AI 代码阅读工具只作为可选辅助，源码判断和 CR 继续交给资深架构师。"
     },
     {
+      "id": "ai-native-should-fact-boundary-check",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做事实边界检查：这份 AI 生成的 GSD/CAD 流程里有不少推测和额外实现建议，请区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入事实边界检查路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
+    },
+    {
       "id": "ai-native-should-route-prd-work",
       "skill": "ai-native-engineering-workflow",
       "query": "用 AI Native 研发流程编排先判断这批客户访谈和运营后台截图能否进入 PRD，输出成熟度、owner、交接物和停止条件，再分派给产品架构专家写正文。",
@@ -167,7 +177,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
-      "expected_handling": "进入流程入口分派路径，只判断产品输入成熟度、产品侧交接物、owner 和停止条件，再把 PRD 正文分派给产品架构专家。"
+      "expected_handling": "进入流程入口分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；只判断产品输入成熟度和产品侧交接物，再把 PRD 正文分派给产品架构专家。"
     },
     {
       "id": "ai-native-should-route-cr-work",
@@ -177,7 +187,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
-      "expected_handling": "进入工程流程分派路径，只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
+      "expected_handling": "进入工程流程分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
     },
     {
       "id": "ai-native-should-route-codegen-work",
@@ -242,6 +252,16 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality"],
       "expected_handling": "进入代码评审路径，给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
+    },
+    {
+      "id": "senior-should-review-in-memory-business-service",
+      "skill": "senior-software-architect",
+      "query": "做一轮代码 CR：这个 Spring Boot 业务模块为了先跑通流程，新增了 InMemoryOrderService 和 Map 存储实现，后面 Controller 直接调用它；请判断是否能作为生产实现交付。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
+      "expected_handling": "进入资深架构师代码 CR 路径，读取 coding-review-deep-dive、coding-standards 和 negative-constraints，识别内存版业务 Service 冒充生产实现；除缓存、测试替身、fixture、沙盒模拟或明确 demo 外，生产源码路径不得用 InMemory/Fake/Mock Service、Map/List 存储或进程内状态承载真实业务能力，并要求真实持久化/端口适配、测试和发布回滚验证。"
     },
     {
       "id": "senior-should-production-incident-postmortem",

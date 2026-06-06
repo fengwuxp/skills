@@ -6,6 +6,7 @@ It is not a natural-language router or a complete prompt evaluation suite.
 Keep checks focused on durable invariants that should survive wording changes.
 """
 
+import json
 from typing import NamedTuple
 from pathlib import Path
 
@@ -29,6 +30,11 @@ class RouteFixture(NamedTuple):
     name: str
     prompt: str
     routes: set[str]
+
+
+class ExpectedHandlingFixture(NamedTuple):
+    case_id: str
+    required_terms: tuple[str, ...]
 
 
 def contains_any(text: str, needles: list[str]) -> bool:
@@ -90,6 +96,15 @@ def expected_absent(name: str, actual: set[str], unexpected: set[str]) -> None:
     present = unexpected & actual
     detail = f" present={sorted(present)}" if present else ""
     check(f"scenario fixture avoids {name}{detail}", not present)
+
+
+def expected_handling_has(case_id: str, required_terms: tuple[str, ...]) -> None:
+    cases = json.loads(read(skill_eval_prompt_fixture))["cases"]
+    case = next((item for item in cases if item.get("id") == case_id), None)
+    handling = "" if case is None else case.get("expected_handling", "")
+    missing = [term for term in required_terms if term not in handling]
+    detail = f" missing={missing}" if missing else ""
+    check(f"prompt fixture expected handling outlines {case_id}{detail}", case is not None and not missing)
 
 
 senior_skill = "senior-software-architect/SKILL.md"
@@ -243,6 +258,12 @@ ai_native_terms = [
     "验证矩阵",
     "代码 CR",
     "发布复盘",
+    "事实边界检查",
+    "事实边界",
+    "无根据猜测",
+    "模型脑补",
+    "范围外不做",
+    "超出用户目标",
     "质量门禁",
     "测试门禁",
     "理解门禁",
@@ -363,6 +384,7 @@ check(
             "可用性",
             "易用性",
             "完整性",
+            "生产可用能力、真实业务入口、验收证据和发布/回滚边界",
             "产品语义、业务对象、机会雷达、Backlog、PRD、产品上下文包由 `产品架构专家` 主导",
             "系统设计、OpenSpec、完整 Harness Plan、GSD/CAD 工程执行策略、代码实现、测试、CR 和生产风险由 `资深架构师` 主导",
             "只输出 GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口和验证矩阵草案",
@@ -389,9 +411,19 @@ check(
             "GSD + Goal",
             "Goal 不等于 Execution Grant",
             "不自动创建运行时 Goal",
+            "GSD 模式的目标是交付生产可用能力",
+            "不得让 AI 随机推进模拟模块、mock 流程、无业务入口的 demo、内存版业务 Service 或看上去可用的样子货",
+            "缓存能力和测试替身/fixture 必须显式隔离",
+            "反幻觉与证据边界由本技能编排",
+            "已知事实、合理推断、待确认事项和范围外不做",
+            "没有来源、源码锚点、用户目标、验收种子或验证证据支撑",
+            "事实先于推断",
+            "严禁把无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的实现扩张写成结论",
+            "证据边界：事实 / 推断 / 待确认 / 范围外不做",
             "Goal 组合模式",
             "Goal 组合包",
             "进入 GSD 产研协同研发流程",
+            "目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或样子货",
             "产品架构专家` 做需求分析、产品设计、方案确认和验收种子",
             "资深架构师` 做系统分析设计、编码、TDD、测试、CR 和验证发布",
             "瘦身后的协作边界",
@@ -418,6 +450,9 @@ check(
             "Java Service 配套代码生成可以从本技能进入",
             "AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD",
             "产品上下文包、OpenSpec、Harness 摘要、GSD Roadmap、CAD 候选和 Execution Grant 互相替代",
+            "不把 GSD 写成随机推进清单",
+            "不用模拟模块、mock 流程、无业务入口 demo、内存版业务 Service 或表面可运行页面替代生产可用能力",
+            "不做无根据的猜测、推导、补全、脑补式需求扩张或超出用户目标的实现",
             "references/product-to-engineering-lifecycle.md",
             "references/agentic-engineering-governance.md",
             "references/gsd-cad-admission.md",
@@ -442,7 +477,7 @@ check(
             "普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师",
             "只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排",
             "验证矩阵",
-            "代码 CR",
+            "CR 流程门禁",
             "AI 代码交付闭环",
             "Spec/SDD 模板最佳实践",
             "质量/测试门禁",
@@ -461,9 +496,27 @@ check(
             "质量/测试门禁",
             "代码库理解",
             "Gemini CLI/AgentRC工具准入",
-            "验证CR闭环",
+            "CR流程门禁和发布闭环",
             "按当前材料选择最小流程",
             "owner、交接物、验证门禁、停止条件和下一步分派",
+        ],
+    ),
+)
+check(
+    "ai-native workflow defines stable default output skeleton",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "默认输出骨架",
+            "结论：",
+            "当前模式：",
+            "Owner / 下一步分派：",
+            "交接物：",
+            "证据边界：事实 / 推断 / 待确认 / 范围外不做",
+            "验证门禁：",
+            "停止条件：",
+            "残余风险 / 需要确认：",
+            "只有用户要求完整方案、评审报告或模板时",
         ],
     ),
 )
@@ -505,6 +558,11 @@ check(
             "gsd-cad-admission.md",
             "可执行性判断",
             "最小 Harness 摘要",
+            "事实边界判断",
+            "事实 / 推断 / 待确认 / 范围外不做:",
+            "不能把无根据猜测、外部文章观点、工具总结或模型脑补写成任务、实现或授权",
+            "是否有事实边界门禁",
+            "是否有根据",
             "变更可理解性要求",
             "代码库理解结论包",
             "独立验证证据",
@@ -534,13 +592,32 @@ check(
             "GSD-like 决定“哪些阶段和任务可以被执行”",
             "CAD Mode 决定“当前选中的原子任务是否可以自动执行”",
             "Execution Grant 决定“本轮实际允许做什么”",
+            "GSD 的目标是交付生产可用能力",
+            "它服务哪个真实业务目标",
+            "落在哪个生产边界或真实入口",
+            "除了缓存能力、测试替身、fixture、沙盒模拟或明确标注的 demo",
+            "业务代码不应提供内存版 Service 实现来冒充生产能力",
+            "`InMemoryXxxService`",
+            "`FakeXxxService`",
+            "`MockXxxService`",
+            "Map/List 存储型业务实现",
             "GSD Round 0 缺口",
             "Atomic Task 候选",
+            "生产可用能力锚点",
+            "事实/推断/待确认边界",
+            "事实边界红线",
+            "无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张",
+            "事实依据、推断依据、待确认项和范围外不做",
+            "未区分时不能进入 CAD",
+            "事实边界:",
             "交给 `senior-software-architect/references/ai-large-project-orchestration.md`",
             "交给 `senior-software-architect/references/cad-mode.md`",
             "不写成执行授权",
             "不是 Execution Grant",
             "不建议进入 CAD",
+            "让 AI 随机推进模拟模块、mock 流程、无业务入口 demo、空服务骨架或看上去可用的样子货",
+            "只检查页面能打开、接口能返回假数据或测试桩能跑通",
+            "把内存版业务 Service、Map/List 存储实现、Fake/Mock 服务或进程内状态当成生产实现",
             "在 AI Native 中复制 CAD 每轮 Pick / Red / Green / Review / Refactor / Verify / Record 细则",
         ],
     )
@@ -774,6 +851,11 @@ check(
             "Goal 不会自动创建运行时 Goal",
             "不会替代 Execution Grant",
             "GSD 管 Wave 和任务顺序，Goal 管目标、成功标准、状态、预算、停止条件、验证证据和交接节奏",
+            "在 GSD 场景中，Goal 的完成线必须是生产可用能力",
+            "真实业务入口、生产边界、验收种子、验证证据、发布/回滚条件和责任 owner",
+            "生产可用能力:",
+            "demo 可跑",
+            "mock 已通",
         ],
     )
     and has_all(
@@ -845,6 +927,7 @@ check(
             "Goal 组合 / GSD + Goal",
             "Goal 组合模式",
             "Goal 组合",
+            "生产可用能力",
             "Goal 不等于 Execution Grant",
             "不要把 Goal 当 Execution Grant",
         ],
@@ -1050,6 +1133,7 @@ check(
             "ai-native-should-codebase-understanding-brief",
             "ai-native-should-tool-install-admission",
             "ai-native-should-design-code-alignment",
+            "ai-native-should-fact-boundary-check",
             "ai-native-should-route-prd-work",
             "ai-native-should-route-cr-work",
             "ai-native-should-route-codegen-work",
@@ -1121,6 +1205,8 @@ check(
             "落地 Spec 模板最佳实践",
             "Spec 模板落地包",
             "做 AI 代码交付闭环",
+            "做事实边界检查",
+            "禁止无根据猜测、模型脑补或超出用户目标的实现扩张",
             "编码提速为何没有交付体感",
             "Spec 强度",
             "独立验证证据",
@@ -1128,6 +1214,7 @@ check(
             "知识回流",
             "当前输入成熟度：想法 / 原型 / 产品上下文包 / OpenSpec / 代码变更 / 发布计划",
             "目标产物：流程评审 / 交接包 / GSD/CAD 编排准入结论 / Harness 摘要 / GSD Wave 建议 / CAD 候选缺口 / Spec 模板落地包 / AI 代码交付闭环报告 / 工具安装与调用准入 / 质量门禁 / 代码库理解结论包 / 理解门禁 / 验证矩阵草案 / 发布复盘",
+            "证据边界：事实 / 推断 / 待确认 / 范围外不做；禁止无根据猜测或超出用户目标的实现",
             "经流程入口分派时这样用",
             "可以让它先判断普通 PRD、产品方案或 Backlog 是否成熟",
             "再把正文产物分派给 `产品架构专家`",
@@ -1151,8 +1238,10 @@ check(
             "可以让它先判断 DDL、字段表格或 Java 类是否具备结构化输入、写入范围和覆盖风险",
             "再把配套代码生成分派给 `java-service-code-generator`",
             "按当前材料选最小流程",
+            "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、验证门禁、停止条件、残余风险 / 需要确认",
+            "证据边界必须区分事实、推断、待确认和范围外不做",
             "进入 GSD 产研协同研发流程",
-            "产品专家先做需求分析、产品设计和确认",
+            "产品专家先做需求分析、产品设计、确认和验收种子",
             "架构师再做系分设计、编码、TDD、CR 和验证",
             "做 GSD/CAD 准入",
             "做质量门禁",
@@ -1206,6 +1295,7 @@ check(
             "优先用它的场景是跨角色、跨阶段、跨工具的流程问题",
             "只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`",
             "只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`",
+            "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、验证门禁、停止条件、残余风险 / 需要确认",
             "最短触发方式",
             "`进入 GSD 产研协同研发流程`",
             "`做 PRD / 系分合议预审`",
@@ -1215,6 +1305,7 @@ check(
             "`做质量门禁`",
             "`做理解门禁`",
             "`评估 Gemini CLI / AgentRC`",
+            "`做事实边界检查`",
         ],
     ),
 )
@@ -3655,6 +3746,50 @@ check(
         ],
     ),
 )
+check(
+    "Java production code bans in-memory business service implementations",
+    has_all(
+        senior_skill,
+        [
+            "业务代码不得用内存版 Service 冒充生产实现",
+            "`InMemoryXxxService`",
+            "Map/List 存储型业务实现",
+            "只在进程内保留状态的应用服务",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "业务代码不得用内存版 Service 冒充生产实现",
+            "除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外",
+            "`InMemoryXxxService`",
+            "`FakeXxxService`",
+            "`MockXxxService`",
+            "Map/List 存储型业务实现",
+            "生产源码路径",
+            "不能代表生产能力",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "生产实现与内存服务",
+            "业务代码不得用内存版 Service 冒充生产实现",
+            "Map/List 存储型业务实现",
+            "缺少持久化、一致性、并发、审计、恢复、发布回滚和真实验证能力",
+            "缓存、测试替身、fixture、沙盒模拟或明确 demo 必须隔离在对应边界内",
+        ],
+    )
+    and has_all(
+        negative_constraints,
+        [
+            "除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外",
+            "`InMemoryXxxService`",
+            "Map/List 存储型业务实现",
+            "进程内状态应用服务承载真实业务能力",
+        ],
+    ),
+)
 
 product_gates = ["术语", "主体", "目标", "对象", "流程", "规则", "数据", "风险", "验收"]
 check("product route defines semantic gate", contains(product_routing, "## 产品语义门禁"))
@@ -4539,7 +4674,7 @@ check(
             "product-architecture-methodology.md",
             "假设/问题ID",
             "默认 PRD 主模板",
-            "一页摘要",
+            "需求概览",
             "背景、问题与证据",
             "目标、范围与非目标",
             "用户、主体与角色/场景",
@@ -4584,6 +4719,54 @@ check(
             "符合项：已经满足模板、可验收性或专项门禁的内容",
             "必改：会阻断评审、研发、测试、上线或专业确认的缺口",
             "每条评审项必须说明章节或位置、问题、影响和建议改法",
+        ],
+    ),
+)
+check(
+    "PRD template supports on-demand core concepts and business abstraction",
+    has_all(
+        product_prd_template,
+        [
+            "核心概念、业务抽象、对象、流程、图形视图与规则",
+            "按需启用条件",
+            "业务术语、运营口径、系统命名或既有文档存在冲突",
+            "核心概念卡 C-001",
+            "概念名称",
+            "不等于",
+            "业务抽象卡 A-001",
+            "抽象目的",
+            "不抽象范围",
+            "轻量 PRD 可合并为 3-5 行术语说明",
+            "核心概念表、业务抽象卡",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "按需补核心概念和业务抽象",
+            "术语存在歧义",
+            "抽象目的、边界、反例、不变量和验收追踪",
+            "核心概念、业务抽象、核心对象、状态、字段口径和不变量能支撑流程",
+            "核心概念与业务抽象",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "核心概念、业务抽象、核心对象、状态机、业务规则和字段口径可以解释所有关键流程",
+            "必须有核心概念与业务抽象章节",
+            "定义、适用范围、反例、责任方和与对象/规则/验收的追踪关系",
+            "验收标准能回到概念定义、抽象边界、不变量、对象状态或规则编号",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "核心概念、业务抽象、核心对象、字段口径、生命周期、状态和不变量是否能解释流程",
+            "先补概念定义、抽象边界、对象模型和状态",
+            "核心概念与业务抽象",
+            "哪些能力、规则或关系需要抽象",
+            "覆盖问题背景、用户故事、功能范围、核心概念、业务抽象、业务规则",
         ],
     ),
 )
@@ -5862,6 +6045,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md", "coding-standards.md"},
     ),
     RouteFixture(
+        name="in memory business service review",
+        prompt="做一轮代码 CR：这个 Spring Boot 业务模块新增了 InMemoryOrderService 和 Map 存储实现，Controller 直接调用它，判断是否能作为生产实现交付",
+        routes={"senior", "coding-review-deep-dive.md", "negative-constraints.md", "coding-standards.md"},
+    ),
+    RouteFixture(
         name="incident timeline and 5 why",
         prompt="昨晚线上故障帮我整理时间线并做 5-Why 复盘",
         routes={"senior", "debugging-diagnosis.md", "production-readiness.md", "negative-constraints.md"},
@@ -5928,7 +6116,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native GSD product engineering collaboration",
-        prompt="进入 GSD 产研协同研发流程：产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证",
+        prompt="进入 GSD 产研协同研发流程：目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或样子货；产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -5943,7 +6131,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native GSD goal composition",
-        prompt="做 GSD + Goal 组合：这个中大型项目需要持续推进，把业务目标、成功标准、GSD Wave、CAD 候选、验证证据、预算时间盒、停止条件、Goal 状态和交接节奏串起来，不要把 Goal 当 Execution Grant",
+        prompt="做 GSD + Goal 组合：这个中大型项目需要持续推进，把业务目标、生产可用能力、成功标准、GSD Wave、CAD 候选、验证证据、预算时间盒、停止条件、Goal 状态和交接节奏串起来，不要把 Goal 当 Execution Grant",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "goal-composition.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -5990,6 +6178,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native design code alignment",
         prompt="做设计-代码对齐：对齐 OpenSpec / 系分设计与当前代码，输出设计条款、代码入口、实现状态、偏差和测试证据",
         routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "agentic-engineering-governance.md"},
+    ),
+    RouteFixture(
+        name="AI Native fact boundary check",
+        prompt="做事实边界检查：这份 AI 生成的 GSD/CAD 流程里有推测和额外实现建议，请区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张",
+        routes={"ai-native", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native routes PRD work",
@@ -6179,13 +6372,13 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
@@ -6195,9 +6388,9 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
             route.add("gsd-cad-admission.md")
-        if contains_any(prompt, ["验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
+        if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
         if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Clarity Agent"]):
             route.add("source-map.md")
@@ -6257,7 +6450,7 @@ def route_fixture(prompt: str) -> set[str]:
         route.add("senior")
     if contains_any(prompt, ["陌生代码库", "架构现状", "接手侦察", "Node.js", "技术栈", "入口路径", "部署链路"]):
         route.update({"language-agnostic-architecture.md", "workflow.md"})
-    if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶"]):
+    if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶", "InMemory", "内存版业务 Service", "Map 存储实现"]):
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
@@ -6305,6 +6498,52 @@ for fixture in scenario_fixtures:
 
 for fixture in negative_route_fixtures:
     expected_absent(fixture.name, route_fixture(fixture.prompt), fixture.routes)
+
+ai_native_outline_terms = (
+    "默认输出骨架",
+    "结论",
+    "当前模式",
+    "owner/下一步分派",
+    "交接物",
+    "证据边界",
+    "验证门禁",
+    "停止条件",
+    "残余风险",
+)
+
+for case_id in [
+    "ai-native-should-end-to-end-product-engineering-workflow",
+    "ai-native-should-gsd-cad-handoff",
+    "ai-native-should-gsd-product-engineering-collaboration",
+    "ai-native-should-gsd-cad-admission-gate",
+    "ai-native-should-gsd-goal-composition",
+    "ai-native-should-review-ai-coding-process",
+    "ai-native-should-code-delivery-closed-loop",
+    "ai-native-should-fact-boundary-check",
+    "ai-native-should-route-prd-work",
+    "ai-native-should-route-cr-work",
+]:
+    expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-fact-boundary-check",
+    (
+        "事实",
+        "推断",
+        "待确认",
+        "范围外不做",
+        "禁止无根据猜测",
+        "模型脑补",
+        "外部文章观点",
+        "工具总结",
+        "超出用户目标的实现扩张",
+        "GSD Wave",
+        "Atomic Task",
+        "CAD 候选",
+        "实现建议",
+        "授权缺口",
+    ),
+)
 
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
