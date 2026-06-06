@@ -185,6 +185,9 @@ ai_native_prd_system_design_review = "ai-native-engineering-workflow/references/
 ai_native_agentic_governance = "ai-native-engineering-workflow/references/agentic-engineering-governance.md"
 ai_native_gsd_cad_admission = "ai-native-engineering-workflow/references/gsd-cad-admission.md"
 ai_native_code_understanding_tools = "ai-native-engineering-workflow/references/code-understanding-tools.md"
+ai_native_spec_template_practices = "ai-native-engineering-workflow/references/spec-template-practices.md"
+ai_native_code_delivery_closed_loop = "ai-native-engineering-workflow/references/code-delivery-closed-loop.md"
+ai_native_goal_composition = "ai-native-engineering-workflow/references/goal-composition.md"
 ai_native_verification_release = "ai-native-engineering-workflow/references/verification-review-release.md"
 ai_native_source_map = "ai-native-engineering-workflow/references/source-map.md"
 codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
@@ -203,6 +206,13 @@ ai_native_terms = [
     "Superpowers",
     "Harness",
     "GSD",
+    "GSD + Goal",
+    "Goal",
+    "Goal 组合",
+    "Goal 卡",
+    "目标驱动",
+    "持续推进",
+    "目标状态",
     "进入 GSD",
     "CAD",
     "GSD/CAD 编排准入",
@@ -216,6 +226,20 @@ ai_native_terms = [
     "A2A 虚拟评审",
     "IPD 式互审",
     "AI 编码流程",
+    "AI 代码交付闭环",
+    "SDD",
+    "Spec 驱动开发",
+    "Spec/SDD 模板",
+    "Spec 模板",
+    "模板最佳实践",
+    "AC 验收",
+    "Given-When-Then",
+    "spec-lint",
+    "AC 覆盖",
+    "漂移检查",
+    "Form Follows Reviewer",
+    "编码提速",
+    "交付闭环",
     "验证矩阵",
     "代码 CR",
     "发布复盘",
@@ -310,6 +334,9 @@ reference_headers = [
     ai_native_agentic_governance,
     ai_native_gsd_cad_admission,
     ai_native_code_understanding_tools,
+    ai_native_spec_template_practices,
+    ai_native_code_delivery_closed_loop,
+    ai_native_goal_composition,
     ai_native_verification_release,
     ai_native_source_map,
 ] + project_governance_refs + testing_practice_refs + skill_tree_refs
@@ -346,6 +373,24 @@ check(
             "代码库理解结论包",
             "业务意图、入口路径、影响模块、关键调用关系、边界变化、验证证据和残余风险",
             "理解先于合并",
+            "AI 代码交付闭环由本技能编排",
+            "编码提速是否真正转化为端到端交付",
+            "最小 Spec 强度",
+            "Harness 独立验证",
+            "CR 减负",
+            "知识回流",
+            "一次通过率 / 返工率 / 缺陷密度",
+            "Spec 模板最佳实践由本技能编排",
+            "AC 映射",
+            "闸门证据",
+            "Spec 模板模式",
+            "Spec 模板落地包",
+            "Goal 组合由本技能编排",
+            "GSD + Goal",
+            "Goal 不等于 Execution Grant",
+            "不自动创建运行时 Goal",
+            "Goal 组合模式",
+            "Goal 组合包",
             "进入 GSD 产研协同研发流程",
             "产品架构专家` 做需求分析、产品设计、方案确认和验收种子",
             "资深架构师` 做系统分析设计、编码、TDD、测试、CR 和验证发布",
@@ -363,6 +408,11 @@ check(
             "AI 快速阅读代码、代码库理解结论包、影响可视化、重构导览或结构化 Review 可以从本技能进入",
             "Gemini CLI / AgentRC 安装、调用或工具辅助代码阅读可以从本技能进入",
             "安装准入、权限边界、只读/写入范围、隐私/联网/认证要求和工具输出交接",
+            "AI 编码交付闭环、SDD 交付体感、Spec 强度、Harness 独立验证、CR 减负、知识回流和指标闭环可以从本技能进入",
+            "Spec / SDD / OpenSpec 模板最佳实践可以从本技能进入",
+            "模板强度、可审结构、AC 与测试映射、闸门证据、知识回流和交接条件",
+            "Goal 组合可以从本技能进入",
+            "Goal 卡、成功标准、状态、预算 / 时间盒、验证证据、停止条件、交接节奏",
             "只要求阅读/分析某个文件、函数、类、报错、测试失败或 PR diff 时",
             "不把 Gemini CLI / AgentRC 作为默认入口",
             "Java Service 配套代码生成可以从本技能进入",
@@ -372,6 +422,9 @@ check(
             "references/agentic-engineering-governance.md",
             "references/gsd-cad-admission.md",
             "references/code-understanding-tools.md",
+            "references/spec-template-practices.md",
+            "references/code-delivery-closed-loop.md",
+            "references/goal-composition.md",
             "references/verification-review-release.md",
             "references/source-map.md",
         ],
@@ -385,10 +438,13 @@ check(
             "AI Native 产品到研发编码流程编排与准入门禁",
             "产品专家到架构师交接",
             "PRD-Lite/OpenSpec/Harness/GSD/CAD",
+            "Goal 组合/GSD+Goal",
             "普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师",
             "只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排",
             "验证矩阵",
             "代码 CR",
+            "AI 代码交付闭环",
+            "Spec/SDD 模板最佳实践",
             "质量/测试门禁",
             "代码库理解",
             "Gemini CLI/AgentRC 工具准入",
@@ -399,6 +455,9 @@ check(
         [
             "AI Native产品到研发编码流程编排",
             "GSD/CAD准入",
+            "Goal组合",
+            "Spec模板实践",
+            "AI代码交付闭环",
             "质量/测试门禁",
             "代码库理解",
             "Gemini CLI/AgentRC工具准入",
@@ -421,11 +480,17 @@ check(
             "Hardened Candidate",
             "工程交接清单",
             "AI Native 交接结论",
+            "AI 代码交付闭环",
+            "code-delivery-closed-loop.md",
             "CAD 候选缺口",
             "瘦身边界",
             "最小产品上下文",
             "Round 0 补齐清单",
             "是否可以进入 OpenSpec",
+            "可评审 Spec 模板",
+            "人类能否 Review，Agent 能否执行，机器能否验证",
+            "spec-template-practices.md",
+            "Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖和漂移检查",
         ],
     )
     and has_all(
@@ -442,11 +507,18 @@ check(
             "最小 Harness 摘要",
             "变更可理解性要求",
             "代码库理解结论包",
+            "独立验证证据",
+            "知识回流位置",
+            "交付指标",
             "业务意图、入口路径、影响模块、关键调用关系、边界变化和源码锚点",
             "能不能做",
             "是否看懂",
             "能改哪里",
             "何时停止",
+            "spec-template-practices.md",
+            "AC 编号与测试映射",
+            "spec-lint / AC 覆盖 / 漂移检查",
+            "可评审 Spec 模板",
         ],
     )
     and has_all(
@@ -530,6 +602,16 @@ check(
             "残余风险清单",
             "先给结论",
             "交付完整性要求",
+            "code-delivery-closed-loop.md",
+            "spec-template-practices.md",
+            "Spec 强度",
+            "Spec / AC 编号",
+            "AC 覆盖",
+            "漂移检查",
+            "独立验证证据",
+            "知识回流",
+            "一次通过率",
+            "CR 高频问题",
         ],
     )
     and has_all(
@@ -543,6 +625,20 @@ check(
             "Google Gemini CLI",
             "Microsoft AgentRC",
             "Microsoft Clarity Agent",
+            "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
+            "我们落地了 SDD，为什么团队效率没有体感提升？",
+            "code-delivery-closed-loop.md",
+            "spec-template-practices.md",
+            "减层",
+            "上下文注入",
+            "机器验证",
+            "自适应强度",
+            "Form Follows Reviewer",
+            "Spec 五段式骨架",
+            "spec-lint",
+            "AC 覆盖",
+            "漂移检查",
+            "一次通过率 / 返工率 / 缺陷密度",
             "代码库理解结论包",
             "上下文漂移",
             "Anthropic 官方博客",
@@ -553,6 +649,295 @@ check(
             "OWASP Top 10 for LLM Applications 2025",
             "ISO/IEC 42001",
             "不把任一工具的能力写成当前会话必然可用",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps spec template practices gate",
+    has_reference_header(ai_native_spec_template_practices)
+    and has_task_reading_index(ai_native_spec_template_practices)
+    and has_all(
+        ai_native_workflow_skill,
+        [
+            "Spec/SDD 模板最佳实践",
+            "Spec 模板最佳实践由本技能编排",
+            "Spec 模板模式",
+            "Spec 模板落地包",
+            "references/spec-template-practices.md",
+        ],
+    )
+    and has_all(
+        ai_native_spec_template_practices,
+        [
+            "# Spec 模板最佳实践",
+            "本文定义 AI Native 研发流程中 Spec / SDD / OpenSpec / Harness 输入的模板落地方式",
+            "不把外部 Harness 写成默认依赖",
+            "Spec 强度建议",
+            "五段式结构",
+            "Form Follows Reviewer",
+            "More Context, Less Control",
+            "轻量任务卡",
+            "可评审 Spec",
+            "Harness/GSD Spec",
+            "CAD 候选 Spec",
+            "AC 与测试映射",
+            "Given-When-Then",
+            "spec-lint",
+            "AC 覆盖",
+            "漂移检查",
+            "风险自查",
+            "轻重切换",
+        ],
+    )
+    and has_all(
+        ai_native_code_delivery_closed_loop,
+        [
+            "spec-template-practices.md",
+            "Spec 模板落地建议",
+            "Form Follows Reviewer",
+            "spec-lint",
+            "ac-coverage",
+            "drift-check",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "spec-template-practices.md",
+            "可评审 Spec 模板",
+            "Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖和漂移检查",
+        ],
+    )
+    and has_all(
+        ai_native_agentic_governance,
+        [
+            "spec-template-practices.md",
+            "AC 编号与测试映射",
+            "spec-lint / AC 覆盖 / 漂移检查",
+            "可评审 Spec 模板",
+        ],
+    )
+    and has_all(
+        ai_native_verification_release,
+        [
+            "spec-template-practices.md",
+            "Spec / AC 编号",
+            "AC 覆盖",
+            "漂移检查",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "spec-template-practices.md",
+            "Form Follows Reviewer",
+            "Spec 五段式骨架",
+            "AC 编号",
+            "Given-When-Then",
+            "spec-lint",
+            "AC 覆盖",
+            "漂移检查",
+            "不复制原文、图片、案例细节、ASD / SSD Harness 命令体系",
+        ],
+    )
+    and has_all(ai_native_workflow_agent, ["Spec模板实践"])
+    and has_all(
+        "README.md",
+        [
+            "Spec/SDD 模板最佳实践",
+            "落地 Spec 模板最佳实践",
+            "Spec 模板模式",
+            "Spec 模板落地包",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps goal composition gate",
+    has_reference_header(ai_native_goal_composition)
+    and has_task_reading_index(ai_native_goal_composition)
+    and has_all(
+        ai_native_goal_composition,
+        [
+            "# Goal 组合编排",
+            "Goal 是显式目标管理和持续推进契约",
+            "GSD + Goal",
+            "CAD + Goal",
+            "Spec + Goal",
+            "CR/发布 + Goal",
+            "Goal 卡",
+            "Goal ID",
+            "成功标准",
+            "预算 / 时间盒",
+            "停止条件",
+            "Goal Ledger",
+            "Draft / Ready / Active / Blocked / Verified / Closed / Superseded",
+            "Goal 不会自动创建运行时 Goal",
+            "不会替代 Execution Grant",
+            "GSD 管 Wave 和任务顺序，Goal 管目标、成功标准、状态、预算、停止条件、验证证据和交接节奏",
+        ],
+    )
+    and has_all(
+        ai_native_workflow_skill,
+        [
+            "Goal 组合由本技能编排",
+            "Goal 组合模式",
+            "Goal 组合包",
+            "references/goal-composition.md",
+            "Goal 不等于 Execution Grant",
+            "不自动创建运行时 Goal",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "goal-composition.md",
+            "是否需要 Goal 组合",
+            "Goal 卡、GSD Wave / Goal 映射",
+        ],
+    )
+    and has_all(
+        ai_native_agentic_governance,
+        [
+            "goal-composition.md",
+            "Goal ID",
+            "Goal 状态",
+            "Goal Ledger 更新",
+            "不把 Goal 写成 Execution Grant",
+        ],
+    )
+    and has_all(
+        ai_native_spec_template_practices,
+        [
+            "goal-composition.md",
+            "关联 Goal",
+            "Goal 成功标准",
+            "Goal / AC 映射",
+        ],
+    )
+    and has_all(
+        ai_native_code_delivery_closed_loop,
+        [
+            "goal-composition.md",
+            "Goal 交付闭环",
+            "Goal 追踪",
+            "目标闭环",
+        ],
+    )
+    and has_all(
+        ai_native_verification_release,
+        [
+            "goal-composition.md",
+            "Goal 完成度判断",
+            "Goal ID / 成功标准",
+            "是否可以把 Goal 标记为 Verified 或 Closed",
+        ],
+    )
+    and has_all(
+        ai_native_workflow_agent,
+        [
+            "Goal组合",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "GSD + Goal",
+            "Goal 组合 / GSD + Goal",
+            "Goal 组合模式",
+            "Goal 组合",
+            "Goal 不等于 Execution Grant",
+            "不要把 Goal 当 Execution Grant",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps code delivery closed-loop gate",
+    has_reference_header(ai_native_code_delivery_closed_loop)
+    and has_task_reading_index(ai_native_code_delivery_closed_loop)
+    and has_all(
+        ai_native_workflow_skill,
+        [
+            "AI 代码交付闭环",
+            "代码交付闭环模式",
+            "编码提速没有带来交付体感",
+            "最小 Spec 强度",
+            "Harness 三层闭环",
+            "独立验证证据",
+            "CR 减负",
+            "知识回流",
+            "一次通过率 / 返工率 / 缺陷密度",
+            "references/code-delivery-closed-loop.md",
+        ],
+    )
+    and has_all(
+        ai_native_code_delivery_closed_loop,
+        [
+            "AI 代码交付闭环",
+            "编码阶段提速明显，但端到端交付、CR、测试、对齐或返工没有明显改善",
+            "最小 Spec 强度",
+            "Harness 三层闭环",
+            "Orchestrator",
+            "Knowledge",
+            "Delivery",
+            "机器验证与独立证据",
+            "生成者不能自己给自己签字",
+            "CR 减负与可理解交接",
+            "知识回流",
+            "CONTEXT.md",
+            "AGENTS.md",
+            "CLAUDE.md",
+            "一次通过率",
+            "返工率",
+            "缺陷密度",
+            "三问法",
+            "外部 Harness",
+            "不把外部文章中的 ASD / SSD Harness、命令体系、目录结构或脚本写成本技能默认依赖",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "code-delivery-closed-loop.md",
+            "AI 代码交付闭环",
+            "编码提速但 CR、测试、对齐、返工或上线质量没有改善",
+        ],
+    )
+    and has_all(
+        ai_native_agentic_governance,
+        [
+            "code-delivery-closed-loop.md",
+            "Delivery Gate Agent",
+            "独立验证证据",
+            "知识回流位置",
+            "交付指标",
+        ],
+    )
+    and has_all(
+        ai_native_verification_release,
+        [
+            "code-delivery-closed-loop.md",
+            "最终代码交付能力",
+            "Spec 强度",
+            "Harness 摘要",
+            "CR 高频问题",
+            "一次通过率、CR 轮次、缺陷密度、知识回流命中、上下文漂移、机器门禁覆盖",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
+            "我们落地了 SDD，为什么团队效率没有体感提升？",
+            "code-delivery-closed-loop.md",
+            "Orchestrator / Knowledge / Delivery 三层 Harness",
+            "不把外部 Harness 写成当前会话默认依赖或执行授权",
+            "不把文章中的比例和团队经验写成通用事实或项目当前指标",
+        ],
+    )
+    and has_all(
+        ai_native_workflow_agent,
+        [
+            "AI代码交付闭环",
         ],
     ),
 )
@@ -656,7 +1041,10 @@ check(
             "ai-native-should-gsd-cad-handoff",
             "ai-native-should-prd-system-design-deliberation-review",
             "ai-native-should-gsd-cad-admission-gate",
+            "ai-native-should-gsd-goal-composition",
             "ai-native-should-review-ai-coding-process",
+            "ai-native-should-code-delivery-closed-loop",
+            "ai-native-should-spec-template-practices",
             "ai-native-should-quality-test-gate",
             "ai-native-should-change-understanding-gate",
             "ai-native-should-codebase-understanding-brief",
@@ -690,6 +1078,7 @@ check(
             "AI 时代产品到研发编码流程、Agentic Engineering",
             "AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD 编排准入",
             "PRD/系分合议预审",
+            "AI 代码交付闭环",
             "Gemini CLI/AgentRC 等代码理解工具安装与调用准入",
             "设计-代码对齐",
             "质量/测试门禁",
@@ -704,7 +1093,7 @@ check(
             "先判断输入成熟度，再选最小模式",
             "瘦身后的职责边界",
             "`产品架构专家` 只补产品上下文包、验收种子和产品侧交接条件",
-            "`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位",
+            "`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、AI 代码交付闭环、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位",
             "变更可理解性/影响可视化协作位",
             "GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口",
             "测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接",
@@ -727,8 +1116,18 @@ check(
             "理解门禁模式",
             "工具准入模式",
             "CR/发布模式",
+            "代码交付闭环模式",
+            "Spec 模板模式",
+            "落地 Spec 模板最佳实践",
+            "Spec 模板落地包",
+            "做 AI 代码交付闭环",
+            "编码提速为何没有交付体感",
+            "Spec 强度",
+            "独立验证证据",
+            "CR 减负",
+            "知识回流",
             "当前输入成熟度：想法 / 原型 / 产品上下文包 / OpenSpec / 代码变更 / 发布计划",
-            "目标产物：流程评审 / 交接包 / GSD/CAD 编排准入结论 / Harness 摘要 / GSD Wave 建议 / CAD 候选缺口 / 工具安装与调用准入 / 质量门禁 / 代码库理解结论包 / 理解门禁 / 验证矩阵草案 / 发布复盘",
+            "目标产物：流程评审 / 交接包 / GSD/CAD 编排准入结论 / Harness 摘要 / GSD Wave 建议 / CAD 候选缺口 / Spec 模板落地包 / AI 代码交付闭环报告 / 工具安装与调用准入 / 质量门禁 / 代码库理解结论包 / 理解门禁 / 验证矩阵草案 / 发布复盘",
             "经流程入口分派时这样用",
             "可以让它先判断普通 PRD、产品方案或 Backlog 是否成熟",
             "再把正文产物分派给 `产品架构专家`",
@@ -738,6 +1137,9 @@ check(
             "再把工程执行分派给 `资深架构师`",
             "可以让它先判断中大型项目是否进入 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些是 CAD 候选缺口和 Execution Grant 缺口",
             "再把工程任务包、CAD Mode 门禁和执行策略分派给 `资深架构师`",
+            "可以让它先判断 Spec / SDD / OpenSpec 模板应该使用轻量任务卡、可评审 Spec、Harness/GSD Spec、CAD 候选 Spec 还是人工主导",
+            "可以让它先判断 AI Coding / SDD / Spec / Harness 为什么没有带来端到端交付体感",
+            "是否需要减层、补上下文、补机器验证、调整 Spec 强度、前移 CR 高频问题和建立知识回流",
             "可以让它先判断测试策略、TDD、补测试或 CR 验证需要放在哪个质量门禁",
             "再把测试设计与实现分派给 `资深架构师`",
             "可以让它先判断陌生代码库、AI 生成代码、diff、重构计划或 PR 说明是否能让团队看懂业务意图、入口路径、影响模块、源码锚点、调用关系和边界变化",
@@ -766,11 +1168,15 @@ check(
             "微信原链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ` 只读取到微信“环境异常”验证页，未作为已吸收来源",
             "https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ",
             "PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统",
-            "虚拟评审或文章推荐工具当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
+            "虚拟评审、文章推荐工具或外部 Harness 当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
             "Google Gemini CLI",
             "Microsoft AgentRC",
             "Microsoft Clarity Agent",
-            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审或文章推荐工具当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
+            "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
+            "我们落地了 SDD，为什么团队效率没有体感提升？",
+            "AI 代码交付闭环",
+            "外部 Harness",
+            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审、文章推荐工具或外部 Harness 当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
         ],
     ),
 )
@@ -804,6 +1210,8 @@ check(
             "`进入 GSD 产研协同研发流程`",
             "`做 PRD / 系分合议预审`",
             "`做 GSD/CAD 准入`",
+            "`落地 Spec 模板最佳实践`",
+            "`做 AI 代码交付闭环`",
             "`做质量门禁`",
             "`做理解门禁`",
             "`评估 Gemini CLI / AgentRC`",
@@ -1402,7 +1810,36 @@ check(
         "README.md",
         [
             "## 用户使用指南",
+            "### 30 秒选路",
+            "跨角色、跨阶段、跨工具或 AI 编码交付闭环",
+            "普通 PRD / 产品方案 / Backlog / 原型反推",
+            "代码、Bug、测试、源码级 CR 或生产变更",
+            "已有 DDL、字段表格、Java 类或 schema",
+            "复杂图形续作、视觉风格或更复杂的 SVG/PNG 图形工程",
+            "### 默认流程短句",
+            "AI Native 只编排流程和门禁",
+            "单个文件、函数、报错或 PR diff 直接用资深架构师",
+            "### 任务到入口速查",
+            "只有想法 / 原型 / 页面截图 / 客户反馈",
+            "已有 AI 原型或 MVP，要工程化",
+            "中大型项目要持续推进",
+            "Goal 不替代 Execution Grant",
+            "编码很快但交付不稳",
+            "PRD 或系分担心返工",
+            "需要阅读大型代码库、对齐设计和实现，或评估 Gemini CLI / AgentRC",
+            "要做质量、测试、CR、发布",
+            "要生成 Java Service 配套代码",
+            "要画图",
+            "### AI Native 默认闭环",
+            "产品发现",
+            "编排准入",
+            "Goal / GSD",
+            "Spec / Harness",
+            "工程执行",
+            "质量理解门禁",
+            "交付复盘",
             "### 先选哪个 Skill",
+            "日常使用优先按上面的选路和默认流程短句下指令",
             "[资深架构师](./senior-software-architect)",
             "[产品架构专家](./product-architecture-expert)",
             "[java-service-code-generator](./java-service-code-generator)",
@@ -1420,11 +1857,13 @@ check(
             "从想法到工程",
             "从原型到 PRD",
             "从普通图到复杂图",
+            "能用默认流程短句表达时，先让 `AI Native 研发流程编排` 判断最小流程",
             "### 提示词公式",
             "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
             "### 常见误用",
             "不要让 `java-service-code-generator` 从纯自然语言直接生成生产代码",
             "不要把产品专家对支付、资金、卡组织或监管的输出当作最终合规结论",
+            "不要把 `AI Native 研发流程编排` 当作 PRD 正文、源码级 CR 或代码生成的替代品",
             "## 维护者与高级扩展",
         ],
     ),
@@ -5503,9 +5942,24 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native GSD goal composition",
+        prompt="做 GSD + Goal 组合：这个中大型项目需要持续推进，把业务目标、成功标准、GSD Wave、CAD 候选、验证证据、预算时间盒、停止条件、Goal 状态和交接节奏串起来，不要把 Goal 当 Execution Grant",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "goal-composition.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI coding workflow CR",
         prompt="评审我们的 AI 编码流程是否有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、代码 CR、发布监控和复盘闭环",
         routes={"ai-native", "agentic-engineering-governance.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native code delivery closed loop",
+        prompt="我们落地了 SDD / Spec / Harness，AI 编码更快，但 CR、测试、对齐、返工和上线质量没有明显改善。做 AI 代码交付闭环评审，输出瓶颈、Spec 强度、Harness 独立验证、CR 减负、知识回流和一次通过率返工率缺陷密度指标",
+        routes={"ai-native", "agentic-engineering-governance.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native spec template practices",
+        prompt="落地 Spec 模板最佳实践：把产品上下文和系分交给 AI 编码，输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "spec-template-practices.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native quality test gate",
@@ -5725,19 +6179,25 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文包", "dogfooding", "业务", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "入口路径", "源码锚点", "调用关系", "边界变化"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
+        if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
+            route.add("goal-composition.md")
+        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查"]):
+            route.add("spec-template-practices.md")
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "Spec 强度", "编码提速", "交付体感", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
+            route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
             route.add("gsd-cad-admission.md")
-        if contains_any(prompt, ["验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据"]):
+        if contains_any(prompt, ["验证矩阵", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
         if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Clarity Agent"]):
             route.add("source-map.md")

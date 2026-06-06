@@ -45,6 +45,8 @@
 ## 已参考的公开来源
 
 - 微信文章链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ`：2026-06-04 普通 `curl` 返回微信“环境异常”验证页，未读取到正文；本仓库不把该链接作为已吸收来源，只作为用户提供的待核验线索。
+- 微信文章 [《万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环》](https://mp.weixin.qq.com/s/d1j7JCOkAFd5L-W1LK-Qug)：作为 AI Native 研发流程中 `code-delivery-closed-loop.md` 和 `spec-template-practices.md` 的公开参考来源。账号字段为 `dolphin07`，页面时间字段为 2026-06-04 21:22:27 Asia/Shanghai；2026-06-06 普通 `web.open` 未取得正文，随后通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文；2026-06-06 本轮再次通过移动端微信 UA 公开 HTML 读取正文并解析为本地纯文本用于复核。本仓库只吸收减层、上下文注入、机器验证、自适应强度、Form Follows Reviewer、Spec 五段式骨架、AC 编号、Given-When-Then、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、Orchestrator / Knowledge / Delivery 三层 Harness、独立验证、CR 减负、知识回流和轻重流程切换等可迁移方法；不复制原文、图片、案例细节、ASD / SSD Harness 命令体系、目录结构、脚本、长模板、作者表达或标题传播话术，也不把外部 Harness 写成当前会话默认依赖或执行授权。
+- 微信文章 [《我们落地了 SDD，为什么团队效率没有体感提升？》](https://mp.weixin.qq.com/s/LEoZtLOyk-7qGY6Q-b7r2A)：作为 AI Native 研发流程中 AI Coding 端到端交付瓶颈、全栈 Spec、Harness Engineering、CR 高频问题机器化、知识回流和交付指标的公开参考来源。账号字段为 `dolphin07`，页面时间字段为 2026-05-21 19:46:29 Asia/Shanghai；2026-06-06 普通 `web.open` 未取得正文，随后通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文。本仓库只吸收编码提速不等于交付提速、上下文覆盖、Spec Review、CONTEXT.md / AGENTS.md / CLAUDE.md 等项目上下文资产、CR 高频问题转机器门禁、一次通过率 / 返工率 / 缺陷密度等指标和反馈飞轮；不复制原文、图示、数据口径、案例、模板、工具宣传、作者表达或标题传播话术，也不把文章中的比例和团队经验写成通用事实或项目当前指标。
 - 微信文章 [《终于有人开始解决 AI Coding 最大的问题了：看不懂代码》](https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ)：作为 AI Native 研发流程中变更可理解性、结构上下文、影响可视化和 AI 代码 Review 交接门禁的公开参考来源。2026-06-04 已通过移动端微信 UA 公开 HTML 读取标题、作者、页面时间线索和正文；本仓库只吸收“AI 生成代码后需要共享结构视图、影响导览和源码锚点辅助 Review”的可迁移流程，不复制原文、工具宣传、命令示例、截图或作者表达，也不把任何外部可视化 CLI、IDE 插件或厂商预览能力写成默认依赖。
 - 微信文章 [《PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统》](https://mp.weixin.qq.com/s/Q7jtu6Cihr0Fs0Fy1-USUg)：作为 AI Native 研发流程中 `prd-system-design-review.md` 的公开参考来源。作者与账号字段均为 `产品AI力学`，发布时间字段为 2026-06-04 19:00:00 Asia/Shanghai；2026-06-05 普通 UA 返回微信“环境异常”验证页，随后通过移动端微信 UA 公开 HTML 读取标题、作者、账号、发布时间和正文。本仓库只吸收 A2A 虚拟评审、IPD 多角色反向拷问、Market/Delivery/Tech/QA/UX 挑战视角、PO 对反馈做 `ACCEPT/REJECT/PENDING` 决策、`review_task` / `evaluation_task` / `reporting_task` 三段任务、决策日志、接受项、分歧项和风险清单的可迁移方法；不复制原文、图片、案例细节、CrewAI/Codex/Claude 互调方式、Computer Use 做法、长 prompt、外部 Skill 原文、成本数字、作者表达或标题传播话术，也不把虚拟评审写成正式 IPD、合规确认、架构批准或 Execution Grant。
 - Google Gemini CLI：`https://github.com/google-gemini/gemini-cli`。2026-06-04 本轮读取 GitHub README 和 get-started 文档；其公开描述为开源终端 AI Agent，支持查询和编辑大型代码库、文件操作、shell 命令、web fetch/search、MCP、项目上下文文件和脚本化输出；官方快速安装包含 `npx @google/gemini-cli`、`npm install -g @google/gemini-cli`、Homebrew 等方式，并要求认证。本仓库只吸收“代码库快速理解要输出入口路径、源码锚点、验证证据和不确定性”的流程方法，不默认安装、登录、联网、上传仓库或使用其写入能力。
@@ -62,6 +64,7 @@
 ## 提炼边界
 
 - 可以吸收 AI Native 产品研发流程、Agentic Engineering、OpenSpec/Harness/GSD/CAD、验证矩阵、CR、发布和复盘方法。
+- 可以吸收 AI Coding / SDD / Spec / Harness 最终代码交付闭环、Spec 模板最佳实践、减层、上下文注入、机器验证、自适应强度、Form Follows Reviewer、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、CR 减负、知识回流和交付指标方法。
 - 可以吸收 PRD / 系分合议预审、MAGI 三角色、IPD 式互审、锚点化反馈、`ACCEPT/REJECT/PENDING` 决策日志、接受项、分歧项、风险清单和准出 / 停止条件。
 - 可以吸收 AI 代码变更可理解性、代码库理解结论包、结构上下文、入口路径、源码锚点、影响模块、调用关系、边界变化和可视化辅助 Review 的流程门禁。
 - 可以吸收 Gemini CLI、AgentRC 等官方工具的触发场景、安装准入、只读/写入边界、上下文漂移检查、设计-代码对齐和工具输出交接要求。

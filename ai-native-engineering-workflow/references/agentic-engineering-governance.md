@@ -1,10 +1,11 @@
 # Agentic Engineering 治理
 
-本文定义 AI 原生工具进入研发编码流程时的治理方式：OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。
+本文定义 AI 原生工具进入研发编码流程时的治理方式：OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。跨轮或中大型任务再叠加 Goal：定义为什么持续推进、做到什么算完成、状态如何更新、预算 / 时间盒如何约束、何时停止和如何交接。
 
 ## 使用时机
 
 - 用户要求设计 AI 编码流程、Agentic Engineering、OpenSpec、Harness、GSD、CAD 或多 Agent 协作。
+- 用户要求 GSD + Goal、CAD + Goal、目标驱动推进、持续推进、目标状态、预算 / 时间盒、停止条件或跨轮交接。
 - 产品上下文包已经形成，需要进入系统设计、任务拆分、Agent 执行或 CAD 候选判断。
 - 团队使用 Codex、Claude Code、GitHub Copilot coding agent、Cursor、MCP、自动化线程或其他 AI 原生工具协作。
 
@@ -19,6 +20,7 @@
 - 当前任务属于轻量执行、OpenSpec、Harness/GSD、CAD 候选还是只读评审。
 - AI 原生工具职责、权限边界、写入范围、验证方式和停止条件。
 - 需要架构师继续生成的 OpenSpec、完整 Harness Plan、验证矩阵或 Execution Grant 缺口。
+- 若任务跨轮推进，一份 Goal 组合判断：Goal ID、成功标准、状态、预算 / 时间盒、验证证据、停止条件和 GSD Wave / CAD 候选关联。
 - 一份可执行性判断：当前材料能否让 Agent 开始写、只能只读侦察，还是必须先补规格。
 - 一份最小 Harness 摘要：Task ID、owner、写入范围、只读范围、依赖顺序、验证命令、停止条件、变更可理解性要求和交接要求。
 
@@ -27,7 +29,10 @@
 - 产品交接和 PRD-Lite 读 `product-to-engineering-lifecycle.md`。
 - PRD / 系分合议预审、多视角评审、MAGI 三角色或 IPD 式互审读 `prd-system-design-review.md`。
 - GSD/CAD 编排准入、GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口和 Execution Grant 缺口读 `gsd-cad-admission.md`。
+- Goal 组合、GSD + Goal、CAD + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-composition.md`。
 - 验证、CR、发布和复盘读 `verification-review-release.md`。
+- Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、测试映射、spec-lint、AC 覆盖和漂移检查读 `spec-template-practices.md`。
+- AI Coding / SDD / Spec / Harness 最终代码交付闭环、CR 减负、知识回流和指标读 `code-delivery-closed-loop.md`。
 - 详细工程规则回到 `senior-software-architect/references/ai-assisted-engineering.md`、`ai-large-project-orchestration.md` 和 `cad-mode.md`。
 
 ## 按任务读取索引
@@ -35,11 +40,14 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断需要哪种 AI 编码流程 | `1. 分级模型`、`2. OpenSpec / Superpowers / Harness` | 不展开工具清单 |
+| 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `3. Harness 最小契约` | 不复制外部 ASD/SSD Harness |
+| 做 GSD + Goal / Goal 组合 | 先读 `goal-composition.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不把 Goal 写成 Execution Grant |
 | 多 Agent / GSD 编排 | 先读 `gsd-cad-admission.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不直接开 CAD |
 | PRD / 系分合议预审 | 先读 `prd-system-design-review.md`，再读 `2. OpenSpec / Superpowers / Harness`、`3. Harness 最小契约` | 不把预审结论写成 Execution Grant |
 | CAD 候选判断 | 先读 `gsd-cad-admission.md`，再读 `4. CAD 只处理原子任务`、`6. 权限边界` | 不把整个项目授权给 CAD |
 | AI 原生工具接入 | `6. 权限边界`、`7. 工具角色` | 不把工具能力当组织授权 |
 | AI 代码库理解与影响结论包 | `3. Harness 最小契约`、`5. Wave 和交接`、`7. 工具角色` | 不把 AI 总结、可视化或上下文生成当测试或 CR 结论 |
+| AI 代码交付闭环 | 先读 `3. Harness 最小契约`，再读 `code-delivery-closed-loop.md` | 不只优化编码速度或加厚 Spec |
 | 流程治理评审 | `8. 治理清单`、`9. 反模式` | 不只看效率指标 |
 
 ## 1. 分级模型
@@ -64,12 +72,17 @@
 | Superpowers | 怎么高质量地做。 | TDD、Review、Refactor、最小变更、编码红线、测试门禁。 |
 | Harness | 谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Task ID、owner、写入范围、只读范围、依赖、验证命令、停止条件、交接。 |
 
+Goal 是跨层目标契约，不替代三层责任：它把目标、成功标准、状态、预算 / 时间盒、验证证据和交接节奏挂到 GSD Wave、CAD 候选、Spec、CR 和发布复盘上。
+
 ## 3. Harness 最小契约
 
 任何进入 AI 编码实现的任务，至少写清：
 
 ```text
 Task ID:
+Goal ID:
+Goal 状态:
+Goal 成功标准:
 目标:
 Owner:
 来源上下文:
@@ -78,10 +91,16 @@ Owner:
 依赖顺序:
 禁止事项:
 验收场景:
+AC 编号与测试映射:
+spec-lint / AC 覆盖 / 漂移检查:
 验证命令:
 停止条件:
+Goal Ledger 更新:
 变更可理解性:
 代码库理解结论包:
+独立验证证据:
+知识回流位置:
+交付指标:
 交接要求:
 恢复入口:
 CAD 候选:
@@ -94,9 +113,12 @@ Execution Grant:
 
 - 小任务只输出 Harness 摘要，不展开完整 GSD 模板。
 - 中大型任务先给 Wave 顺序和每个 Wave 的 owner/写入范围，再展开单个任务。
+- 使用 Goal 组合时，Harness 摘要必须写清 Goal ID、Goal 状态、成功标准、预算 / 时间盒、停止条件和 Ledger 更新；Goal 不能扩大写入范围。
 - CAD 候选只写“候选”和“缺口”，不把候选描述成执行授权。
 - 输出中必须把“能读什么”“能改什么”“不能碰什么”分开写，避免权限边界混在目标描述里。
 - 对陌生代码库侦察、多文件 AI 变更或重构计划，Harness 摘要必须要求交接时说明业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、验证证据和残余不确定性。
+- 对 AI 代码交付闭环，Harness 摘要必须说明 Spec 强度、独立验证证据、CR 高频问题是否机器化、知识回流位置和交付指标；如果只能证明“代码已生成”，不能进入合并或发布判断。
+- 对 Spec 模板落地，Harness 摘要必须说明模板强度、AC 编号规则、Given-When-Then 映射、测试证据、spec-lint、AC 覆盖、漂移检查和风险自查；如果只能证明“文档已生成”，不能进入实现判断。
 
 ## 4. CAD 只处理原子任务
 
@@ -125,6 +147,7 @@ Wave 3：集成验证、CR、文档、发布准备。
 - 已完成内容和未完成内容。
 - 变更文件和关键决策。
 - 业务意图、入口路径、影响模块、关键调用关系、边界变化和源码锚点。
+- 关联 Goal、Goal 状态、成功标准完成情况和 Ledger 更新。
 - 验证命令、结果和失败证据。
 - 残余风险、阻塞项和下一步。
 - 回滚或恢复入口。
@@ -153,6 +176,7 @@ AI 原生工具常见权限必须显式授权：
 | Review Agent | 初筛越界、测试缺口、坏味、结构影响和风险。 | 替代人工 CR 和责任签字。 |
 | 预审 Agent | 对 PRD、OpenSpec 输入、系分或 Harness 候选做多视角预审，输出锚点化反馈和 `ACCEPT/REJECT/PENDING` 决策日志。 | 替代产品 owner、架构 owner、正式评审会或 Execution Grant。 |
 | 代码库理解辅助 | 只读快速阅读代码、生成入口路径、模块图、调用导览、上下文文件、源码锚点和影响说明。 | 替代源码阅读、测试、人工判断或默认安装外部工具。 |
+| Delivery Gate Agent | 汇总独立验证、CR 减负、发布观测、知识回流和指标证据。 | 替代架构师源码级 CR、测试实现、上线审批或生产责任。 |
 | Eval Agent | 构造样例、失败案例、回归矩阵。 | 把 eval 通过当作上线批准。 |
 | 自动化/线程 | 周期检查、状态恢复、反馈循环。 | 未授权持续写入或发送外部消息。 |
 
@@ -161,13 +185,17 @@ AI 原生工具常见权限必须显式授权：
 - 是否从产品上下文包进入工程，而不是从一句 prompt 进入编码。
 - PRD / 系分是否已在需要时做合议预审，并形成锚点化问题、接受项、拒绝项、待定项、分歧、风险清单、owner 和验证方式。
 - 是否有 OpenSpec 固定范围、非目标、规则和验收。
+- 中大型或跨轮任务是否有 Goal 卡固定目标、成功标准、预算 / 时间盒、状态、停止条件和验证证据。
+- 是否有可评审 Spec 模板，覆盖五段式骨架、AC 与测试映射、风险自查和闸门证据。
 - 是否有 Harness 固定 owner、写入范围、顺序、验证和交接。
 - 是否有代码库理解与变更可理解性门禁，能让人复述业务意图、入口路径、影响模块、调用关系、边界变化、源码锚点和残余风险。
 - 是否区分轻量任务、GSD Wave 和 CAD 候选。
 - 是否有测试、lint、CR、监控或人工验收闭环。
+- 是否有 AI 代码交付闭环，覆盖最小 Spec 强度、Harness 独立验证、CR 减负、知识回流和一次通过率 / 返工率 / 缺陷密度等指标。
 - 是否记录工具权限、外部来源和专业确认边界。
 - 是否避免多个 Agent 同时写同一职责范围。
 - 是否把失败、阻塞和恢复入口写入显式材料。
+- 是否避免把 Goal、Goal 状态或 GSD + Goal 当作 Execution Grant、测试通过、CR 结论或上线批准。
 
 完整性自检：
 
@@ -177,6 +205,7 @@ AI 原生工具常见权限必须显式授权：
 - **怎么验证**：测试、lint、静态检查、人工验收和不可执行原因是否明确。
 - **是否看懂**：入口路径、影响模块、调用关系、边界变化、源码锚点、验证证据和剩余不确定性是否能被 Review 者复述。
 - **何时停止**：权限不足、规格不清、验证失败、风险升级和用户中断是否明确。
+- **目标是否闭环**：Goal 成功标准、验证证据、Ledger 更新和交接 owner 是否明确。
 
 ## 9. 反模式
 
@@ -187,4 +216,6 @@ AI 原生工具常见权限必须显式授权：
 - 用大段 AI 总结替代结构理解，Review 者无法定位入口路径、关键源码、调用关系和边界变化。
 - 把 AI 快速阅读、上下文生成或可视化工具输出当成默认事实，不回链源码、OpenSpec、Harness 和验证证据。
 - 自动提交、自动合并、自动部署默认开启。
+- Goal 只有口号和状态，没有成功标准、验证证据、预算 / 时间盒、停止条件和 Ledger。
 - 指标只看代码量、PR 数、执行轮数，不看返工率、缺陷率、验证质量和上线结果。
+- 只做 SDD / Spec / Harness 的前半程，不把 CR 高频问题、测试失败、发布问题和复盘发现回流到知识、模板、测试、fixture、脚本或门禁。

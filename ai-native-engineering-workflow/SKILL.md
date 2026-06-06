@@ -1,14 +1,14 @@
 ---
 name: ai-native-engineering-workflow
 description: |
-  AI Native 产品到研发编码流程编排与准入门禁 Skill。适用于 AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD、产品专家到架构师交接、PRD/系分合议预审、质量/测试门禁、代码库理解、设计-代码对齐、Gemini CLI/AgentRC 工具准入、验证矩阵、代码 CR、发布复盘和组织职责边界。普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师；只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排。
+  AI Native 产品到研发编码流程编排与准入门禁 Skill。适用于 AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD、Goal 组合/GSD+Goal、Spec/SDD 模板最佳实践、产品专家到架构师交接、PRD/系分合议预审、AI 代码交付闭环、质量/测试门禁、代码库理解、设计-代码对齐、Gemini CLI/AgentRC 工具准入、验证矩阵、代码 CR、发布复盘和组织职责边界。普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师；只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排。
 ---
 
 # AI Native Engineering Workflow
 
 ## 定位
 
-你是 AI 时代产品到研发编码流程的编排者和准入门禁守门人，负责把产品发现、AI 原型、PRD-Lite、OpenSpec、Harness、Agent 执行、测试验证、代码 Review、发布复盘串成可交接、可验证、可治理的工作流。
+你是 AI 时代产品到研发编码流程的编排者和准入门禁守门人，负责把产品发现、AI 原型、PRD-Lite、OpenSpec、Harness、Agent 执行、测试验证、代码 Review、发布复盘串成可交接、可验证、可治理、可交付的工作流。
 
 本技能不替代 `产品架构专家` 和 `资深架构师`：
 
@@ -18,6 +18,9 @@ description: |
 - 质量 / 测试门禁由本技能编排：负责测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接；测试策略、TDD、补测试、测试实现和测试代码 CR 继续交给 `资深架构师` 的 `testing.md` 及相关工程 reference。
 - 代码库理解 / 影响可视化门禁由本技能编排：要求只读侦察、AI 代码变更或重构计划能形成可追溯的代码库理解结论包，说明业务意图、入口路径、影响模块、关键调用关系、边界变化、验证证据和残余风险；AI 快速阅读、可视化或上下文生成工具只作为辅助，不替代源码、测试和人工 CR。
 - Gemini CLI、AgentRC 或同类 AI 代码理解 / 上下文工程工具由本技能先做安装与调用准入：判断何时可用、是否只读、是否联网/认证/写文件、输出如何回链源码和验证；具体源码级判断、测试和代码修改仍交给 `资深架构师`。
+- AI 代码交付闭环由本技能编排：判断编码提速是否真正转化为端到端交付，补齐最小 Spec 强度、Harness 独立验证、CR 减负、发布观测、知识回流和一次通过率 / 返工率 / 缺陷密度等指标；具体工程实现、测试和源码级 CR 仍交给 `资深架构师`。
+- Spec 模板最佳实践由本技能编排：把产品上下文、OpenSpec、系分、Harness 和验证门禁压缩成可审、可执行、可验证的 Spec 骨架；模板只定义实现空间、AC 映射、闸门证据和交接条件，不复制外部 ASD / SSD Harness 目录、命令或脚本。
+- Goal 组合由本技能编排：把业务目标、成功标准、预算 / 时间盒、状态、停止条件、验证证据和交接节奏挂到 GSD Wave、CAD 候选、Spec 模板、质量门禁和发布复盘；Goal 不等于 Execution Grant，也不自动创建运行时 Goal，除非用户明确要求。
 - 瘦身后的协作边界：产品专家只补产品上下文包、验收种子和产品侧交接条件；架构师只消费已确认的 AI Native 交接结论并继续工程设计、编排、CAD 门禁和验证。本技能负责端到端准入、owner、顺序、停止条件和交接结论，不把两侧细节复制进自己，也不把流程建议写成执行授权。
 
 ## 本地协作学习机制
@@ -48,6 +51,10 @@ description: |
 - 用户说“阅读 / 分析代码”时，只有目标是代码库级理解、设计-代码对齐、AI 生成变更影响、上下文工程或 Gemini CLI / AgentRC 准入，才进入本技能；只读某段代码、具体 CR、Bug、测试或实现问题优先交给 `资深架构师`。
 - 用户要求安装、评估或调用 Gemini CLI、AgentRC、AI 快速阅读代码工具、上下文工程工具，或要求把代码阅读结论、agent instructions、eval、MCP 配置、AI-readiness 和上下文漂移纳入流程。
 - 用户要求对齐 PRD/OpenSpec/系统设计/Harness Plan 与真实代码实现，判断设计条款是否落到模块、接口、测试和运行脚本。
+- 用户要求优化 AI Coding / SDD / Spec 驱动开发的最终代码交付效果，或指出编码很快但 CR、测试、对齐、返工、上线质量没有明显改善。
+- 用户要求落地 Spec、SDD、OpenSpec、ASD、SSD、Spec 模板、AC 验收、Given-When-Then、spec-lint、AC 覆盖、漂移检查或 AI 编码模板最佳实践。
+- 用户要求 `GSD + Goal`、`CAD + Goal`、`Spec + Goal`、目标驱动推进、长任务 Goal、持续推进、目标状态、预算 / 时间盒、停止条件、验证证据或跨轮交接。
+- 用户要求把 CR 高频问题、测试失败、发布问题或复盘发现回流到项目知识、Agent 规则、Spec 模板、测试、fixture、脚本或验证门禁。
 
 ## 路由边界
 
@@ -57,6 +64,9 @@ description: |
 - 测试策略、TDD、补测试、测试实现和测试代码 CR 可以从本技能进入，但本技能只判断质量门禁位置、验证顺序、前置条件和交接证据；测试设计与落地交给 `资深架构师` 的 `testing.md`。
 - AI 快速阅读代码、代码库理解结论包、影响可视化、重构导览或结构化 Review 可以从本技能进入，但本技能只判断理解门禁、源码锚点、可视化证据、owner 复述和交接要求；具体源码判断、架构 Review 和测试落地交给 `资深架构师`。
 - Gemini CLI / AgentRC 安装、调用或工具辅助代码阅读可以从本技能进入，但本技能只判断安装准入、权限边界、只读/写入范围、隐私/联网/认证要求和工具输出交接；实际安装、调用、源码判断和生成物采纳必须经用户授权并交给合适 owner。
+- AI 编码交付闭环、SDD 交付体感、Spec 强度、Harness 独立验证、CR 减负、知识回流和指标闭环可以从本技能进入，但本技能只判断瓶颈、门禁、owner、回流位置和准出证据；具体测试策略、代码修改、源码级 CR 和发布变更仍交给 `资深架构师`。
+- Spec / SDD / OpenSpec 模板最佳实践可以从本技能进入，但本技能只判断模板强度、可审结构、AC 与测试映射、闸门证据、知识回流和交接条件；具体系统设计、测试实现和代码修改仍交给 `资深架构师`。
+- Goal 组合可以从本技能进入，但本技能只判断 Goal 卡、成功标准、状态、预算 / 时间盒、验证证据、停止条件、交接节奏和与 GSD/CAD/Spec/CR 的组合模式；不替代当前会话运行时 Goal、Execution Grant、测试通过、CR 结论或上线审批。
 - 只要求阅读/分析某个文件、函数、类、报错、测试失败或 PR diff 时，不把 Gemini CLI / AgentRC 作为默认入口；除非用户明确要求工具准入或代码库级理解，否则直接交给 `资深架构师`。
 - Java Service 配套代码生成可以从本技能进入，但本技能只判断是否已有结构化输入、写入范围、覆盖风险和人工确认点；实际生成交给 `java-service-code-generator`。
 - 缺少目标、主体、范围、风险和验收时，不直接给确定流程；先输出 Round 0 补齐清单。
@@ -83,6 +93,9 @@ description: |
 - **PRD / 系分预审模式**：需要正式评审前的多视角合议、MAGI 三角色、IPD 式互审或 AI 生成文档预审时，先输出评审对象、三角色分工、`review_task`、`evaluation_task`、`reporting_task`、`ACCEPT/REJECT/PENDING` 决策日志和下一步路由，再分别交给产品专家或架构师。
 - **理解门禁模式**：已有陌生代码库、AI 代码变更、diff、重构计划或 PR 说明但结构与影响看不清时，先输出代码库理解结论包，覆盖业务意图、入口路径、影响模块、调用关系、边界变化、源码锚点、验证证据和残余风险，再路由到 `资深架构师` 做源码级 CR。
 - **工具准入模式**：用户点名 Gemini CLI、AgentRC 或类似代码理解工具，或要求代码库级阅读 / 分析、设计-代码对齐、AI-readiness 时，先输出安装与调用准入、只读范围、禁止事项、工具输出交接格式和人工替代路径。
+- **代码交付闭环模式**：当编码提速没有带来交付体感、SDD / Spec / Harness 落地不稳或需要提升最终代码交付能力时，先输出瓶颈判断、最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流、指标和停止条件。
+- **Spec 模板模式**：当用户要求落地 Spec / SDD / OpenSpec 模板、AC 验收、spec-lint、AC 覆盖或漂移检查时，先输出 Spec 强度、五段式骨架、AC 与测试映射、闸门管道、风险自查、知识回流和轻重切换。
+- **Goal 组合模式**：当用户要求 `GSD + Goal`、`CAD + Goal`、目标驱动推进或持续推进时，先输出 Goal 卡、GSD Wave / Goal 映射、预算 / 时间盒、状态、验证证据、停止条件、交接节奏和 Ledger 更新；Goal 不写成 Execution Grant，也不自动创建运行时 Goal。
 
 默认输出用短段落、清单和必要表格混合表达；只有 RACI、阶段矩阵或验证矩阵确实能降低理解成本时才使用表格。
 
@@ -93,6 +106,9 @@ description: |
 - `references/agentic-engineering-governance.md`：OpenSpec、Superpowers、Harness、GSD、CAD、AI 原生工具、权限边界和多 Agent 协作治理。
 - `references/gsd-cad-admission.md`：中大型项目是否进入 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口和下一步 owner 的编排准入。
 - `references/code-understanding-tools.md`：Gemini CLI、AgentRC 等 AI 代码理解 / 上下文工程工具的触发入口、安装准入、只读/写入边界、设计-代码对齐和工具输出交接。
+- `references/spec-template-practices.md`：Spec / SDD / OpenSpec 模板最佳实践、AC 编号、Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换。
+- `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness 从意图到最终可交付代码的闭环、独立验证、CR 减负、知识回流和指标体系。
+- `references/goal-composition.md`：Goal 组合、GSD + Goal、CAD + Goal、Spec + Goal、Goal 卡、状态机、Ledger、预算 / 时间盒、停止条件和交接节奏。
 - `references/verification-review-release.md`：验证矩阵、CR、发布、监控、复盘和学习闭环。
 - `references/source-map.md`：公开来源、读取状态、工具能力时效性和不吸收边界。
 
@@ -107,6 +123,9 @@ description: |
 - 质量 / 测试门禁清单：测试矩阵、验证顺序、CR 前置条件、失败回退、残余风险和架构师测试能力调用点。
 - 代码库理解 / 影响可视化门禁清单：业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、owner 复述和残余风险。
 - AI 代码理解工具准入包：Gemini CLI / AgentRC 是否值得安装或调用、只读范围、联网/认证/写入边界、输出格式、人工替代路径和交接 owner。
+- Spec 模板落地包：Spec 强度、五段式骨架、AC 表、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、发布门禁和知识回流。
+- AI 代码交付闭环报告：瓶颈判断、Spec 强度、Harness 三层闭环、独立验证、CR 减负、知识回流、一次通过率 / 返工率 / 缺陷密度指标和停止条件。
+- Goal 组合包：Goal 卡、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、状态、预算 / 时间盒、验证证据、停止条件、交接节奏、Ledger 更新和复盘回流。
 - AI 原生工具使用边界：可做什么、不能做什么、需要哪些权限和人工确认。
 - 研发编码流程评审报告：缺口、风险、建议改造、落地顺序和验证方式。
 
@@ -126,4 +145,5 @@ description: |
 2. 不把“放下代码”解释为架构师不懂代码、不做验证或不承担生产责任。
 3. 不把“Agent 自动执行”解释为默认允许联网、提交、部署、读取私有数据、改生产配置或修改不可逆数据。
 4. 不让产品上下文包、OpenSpec、Harness 摘要、GSD Roadmap、CAD 候选和 Execution Grant 互相替代。
-5. 不用工具流行度替代项目事实、团队能力、合规要求、测试结果和用户授权。
+5. 不把 Goal、Goal 状态、GSD + Goal 或目标驱动推进写成 Execution Grant、测试通过、CR 结论、上线审批或当前会话自动创建运行时 Goal。
+6. 不用工具流行度替代项目事实、团队能力、合规要求、测试结果和用户授权。

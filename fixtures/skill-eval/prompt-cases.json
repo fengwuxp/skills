@@ -70,6 +70,16 @@
       "expected_handling": "进入 GSD/CAD 编排准入模式，输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁和下一步 owner，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
     },
     {
+      "id": "ai-native-should-gsd-goal-composition",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做 GSD + Goal 组合：这个中大型项目需要持续推进，请把业务目标、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件、Goal 状态和交接节奏串起来；不要把 Goal 当 Execution Grant。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 Goal 组合模式，读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、停止条件、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
+    },
+    {
       "id": "ai-native-should-review-ai-coding-process",
       "skill": "ai-native-engineering-workflow",
       "query": "评审我们现在的 AI 编码流程，看看是不是有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、CR、发布监控和复盘闭环，给出可落地改造顺序。",
@@ -78,6 +88,26 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
       "expected_handling": "进入流程治理评审路径，按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
+    },
+    {
+      "id": "ai-native-should-code-delivery-closed-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "我们落地了 SDD / Spec / Harness，AI 编码确实更快，但 CR、测试、对齐、返工和上线质量没有明显改善。请做 AI 代码交付闭环评审，输出瓶颈、Spec 强度、Harness 独立验证、CR 减负、知识回流、一次通过率/返工率/缺陷密度指标和下一步 owner。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 AI 代码交付闭环模式，读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流、指标和停止条件；具体测试、代码和源码级 CR 继续分派给资深架构师。"
+    },
+    {
+      "id": "ai-native-should-spec-template-practices",
+      "skill": "ai-native-engineering-workflow",
+      "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
     },
     {
       "id": "ai-native-should-quality-test-gate",
