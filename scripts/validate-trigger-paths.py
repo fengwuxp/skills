@@ -204,6 +204,7 @@ ai_native_spec_template_practices = "ai-native-engineering-workflow/references/s
 ai_native_code_delivery_closed_loop = "ai-native-engineering-workflow/references/code-delivery-closed-loop.md"
 ai_native_goal_composition = "ai-native-engineering-workflow/references/goal-composition.md"
 ai_native_verification_release = "ai-native-engineering-workflow/references/verification-review-release.md"
+ai_native_superpowers_library = "ai-native-engineering-workflow/references/superpowers-skill-library.md"
 ai_native_source_map = "ai-native-engineering-workflow/references/source-map.md"
 codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
 codegen_safety_route = codegen_route | {"requires-confirmation"}
@@ -274,6 +275,15 @@ ai_native_terms = [
     "AI 快速阅读代码",
     "Gemini CLI",
     "AgentRC",
+    "Superpowers skills",
+    "superpowers skills",
+    "brainstorming",
+    "writing-plans",
+    "executing-plans",
+    "subagent-driven-development",
+    "test-driven-development",
+    "requesting-code-review",
+    "verification-before-completion",
     "设计-代码对齐",
     "AI-readiness",
     "上下文漂移",
@@ -359,6 +369,7 @@ reference_headers = [
     ai_native_code_delivery_closed_loop,
     ai_native_goal_composition,
     ai_native_verification_release,
+    ai_native_superpowers_library,
     ai_native_source_map,
 ] + project_governance_refs + testing_practice_refs + skill_tree_refs
 
@@ -407,6 +418,9 @@ check(
             "闸门证据",
             "Spec 模板模式",
             "Spec 模板落地包",
+            "Superpowers skills 作为外部方法库按需调度",
+            "外部 skill 原文只作为 Level 3 参考",
+            "不自动安装插件，不运行外部脚本，不采用外部默认 Git 操作",
             "Goal 组合由本技能编排",
             "GSD + Goal",
             "Goal 不等于 Execution Grant",
@@ -443,6 +457,8 @@ check(
             "AI 编码交付闭环、SDD 交付体感、Spec 强度、Harness 独立验证、CR 减负、知识回流和指标闭环可以从本技能进入",
             "Spec / SDD / OpenSpec 模板最佳实践可以从本技能进入",
             "模板强度、可审结构、AC 与测试映射、闸门证据、知识回流和交接条件",
+            "Superpowers skills 可以从本技能进入",
+            "不自动安装插件，不运行外部脚本，不采用外部默认 Git 操作",
             "Goal 组合可以从本技能进入",
             "Goal 卡、成功标准、状态、预算 / 时间盒、验证证据、停止条件、交接节奏",
             "只要求阅读/分析某个文件、函数、类、报错、测试失败或 PR diff 时",
@@ -461,6 +477,7 @@ check(
             "references/code-delivery-closed-loop.md",
             "references/goal-composition.md",
             "references/verification-review-release.md",
+            "references/superpowers-skill-library.md",
             "references/source-map.md",
         ],
     ),
@@ -550,6 +567,15 @@ check(
         ai_native_agentic_governance,
         [
             "OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
+            "Superpowers skills 下载资源、外部 skill 调度矩阵、MIT 许可和安全边界读 `superpowers-skill-library.md`",
+            "调度 Superpowers skills",
+            "`obra/superpowers` 已作为外部 skill library 下载并隔离到 `external-superpowers/`",
+            "brainstorming 用于前置澄清",
+            "writing-plans 用于计划拆解",
+            "test-driven-development 用于红绿重构纪律",
+            "requesting-code-review / receiving-code-review 用于 CR 反馈闭环",
+            "verification-before-completion 用于完成前证据门禁",
+            "外部 skill 的默认目录、插件安装、hooks、worktree、自动提交、Git 推送",
             "轻量执行",
             "Harness / GSD",
             "CAD 候选",
@@ -585,6 +611,7 @@ check(
             "GSD/CAD 编排准入",
             "是否需要 GSD Round 0",
             "Wave/Atomic Task 候选",
+            "Superpowers 方法门禁",
             "CAD 候选缺口",
             "Execution Grant 缺口",
             "下一步 owner",
@@ -592,6 +619,9 @@ check(
             "GSD-like 决定“哪些阶段和任务可以被执行”",
             "CAD Mode 决定“当前选中的原子任务是否可以自动执行”",
             "Execution Grant 决定“本轮实际允许做什么”",
+            "Superpowers 在 GSD 中只作为方法纪律层",
+            "GSD 可以默认支持 Superpowers 方法门禁",
+            "不能默认安装 Superpowers 插件、运行外部脚本、创建 worktree、启动 subagent 或采用外部 Git 默认动作",
             "GSD 的目标是交付生产可用能力",
             "它服务哪个真实业务目标",
             "落在哪个生产边界或真实入口",
@@ -602,9 +632,20 @@ check(
             "`MockXxxService`",
             "Map/List 存储型业务实现",
             "GSD Round 0 缺口",
+            "是否需要 Superpowers 方法门禁",
+            "需求澄清是否需要 `brainstorming`",
+            "任务拆解是否需要 `writing-plans`",
+            "实现是否需要 `test-driven-development`",
+            "CR 是否需要 `requesting-code-review` / `receiving-code-review`",
+            "完成前是否需要 `verification-before-completion`",
             "Atomic Task 候选",
             "生产可用能力锚点",
             "事实/推断/待确认边界",
+            "Superpowers 方法纪律候选",
+            "TDD 切入点",
+            "最小 Review 输入包",
+            "完成前验证命令",
+            "是否已有 Superpowers/TDD/Review/Verification 方法门禁",
             "事实边界红线",
             "无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张",
             "事实依据、推断依据、待确认项和范围外不做",
@@ -618,6 +659,7 @@ check(
             "让 AI 随机推进模拟模块、mock 流程、无业务入口 demo、空服务骨架或看上去可用的样子货",
             "只检查页面能打开、接口能返回假数据或测试桩能跑通",
             "把内存版业务 Service、Map/List 存储实现、Fake/Mock 服务或进程内状态当成生产实现",
+            "把 Superpowers skills 当成 GSD 的默认插件安装、默认外部脚本、默认 worktree、默认 subagent 或默认 Git 操作",
             "在 AI Native 中复制 CAD 每轮 Pick / Red / Green / Review / Refactor / Verify / Record 细则",
         ],
     )
@@ -726,6 +768,49 @@ check(
             "OWASP Top 10 for LLM Applications 2025",
             "ISO/IEC 42001",
             "不把任一工具的能力写成当前会话必然可用",
+            "`obra/superpowers`",
+            "2026-06-07",
+            "6fd4507659784c351abbd2bc264c7162cfd386dc",
+            "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
+            "references/external-superpowers/",
+            "superpowers-skill-library.md",
+            "不复制或运行外部脚本、hooks、插件 manifest、package 脚本",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps Superpowers skill library boundary",
+    has_reference_header(ai_native_superpowers_library)
+    and has_task_reading_index(ai_native_superpowers_library)
+    and has_all(
+        ai_native_superpowers_library,
+        [
+            "# Superpowers Skill Library 外部参考",
+            "不是本仓库的顶层可安装 Skill",
+            "不是当前会话的自动执行授权",
+            "brainstorming",
+            "writing-plans",
+            "executing-plans",
+            "subagent-driven-development",
+            "test-driven-development",
+            "requesting-code-review",
+            "receiving-code-review",
+            "systematic-debugging",
+            "verification-before-completion",
+            "using-git-worktrees",
+            "finishing-a-development-branch",
+            "writing-skills",
+            "2026-06-07",
+            "6fd4507659784c351abbd2bc264c7162cfd386dc",
+            "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
+            "MIT License",
+            "仅复制 `skills/` 下 Markdown 资源和 LICENSE",
+            "未复制外部脚本、hooks、插件 manifest、package 脚本",
+            "外部 skill 原文里出现的 Git 提交、Git 推送、worktree、subagent、插件安装",
+            "当前仓库 Git 操作仍遵守 `AGENTS.md`",
+            "当前仓库 OpenSpec / Superpowers / Harness 生成的文档或计划默认使用中文",
+            "Superpowers 调度结论",
+            "不采用的外部默认流程",
         ],
     ),
 )
@@ -1202,6 +1287,11 @@ check(
             "CR/发布模式",
             "代码交付闭环模式",
             "Spec 模板模式",
+            "Superpowers 调度模式",
+            "接入 Superpowers skills",
+            "superpowers-skill-library.md",
+            "外部 skill 适用范围",
+            "不采用的外部默认流程",
             "落地 Spec 模板最佳实践",
             "Spec 模板落地包",
             "做 AI 代码交付闭环",
@@ -1956,6 +2046,25 @@ check(
             "不要把产品专家对支付、资金、卡组织或监管的输出当作最终合规结论",
             "不要把 `AI Native 研发流程编排` 当作 PRD 正文、源码级 CR 或代码生成的替代品",
             "## 维护者与高级扩展",
+        ],
+    ),
+)
+check(
+    "README records Superpowers skills library source",
+    has_all(
+        "README.md",
+        [
+            "obra/superpowers",
+            "外部 skills library",
+            "brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development",
+            "2026-06-07",
+            "6fd4507659784c351abbd2bc264c7162cfd386dc",
+            "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
+            "MIT",
+            "ai-native-engineering-workflow/references/external-superpowers/",
+            "superpowers-skill-library.md",
+            "不复制或运行外部脚本、hooks、插件 manifest、package 脚本",
+            "不把外部默认文档路径、自动提交、Git 推送、worktree、subagent 连续执行要求写成本仓库默认行为",
         ],
     ),
 )
@@ -6135,6 +6244,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "goal-composition.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native routes Superpowers skills library",
+        prompt="下载 superpowers skills，并加入到 AI Native 的调度流程，要求说明哪些外部 skill 可参考、是否安装插件、是否运行脚本、Git/worktree/subagent 边界和验证门禁",
+        routes={"ai-native", "agentic-engineering-governance.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI coding workflow CR",
         prompt="评审我们的 AI 编码流程是否有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、代码 CR、发布监控和复盘闭环",
         routes={"ai-native", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -6372,7 +6486,7 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
@@ -6388,6 +6502,9 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
+        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "外部 skill", "外部技能", "下载", "接入", "加入"]):
+            route.add("superpowers-skill-library.md")
+            route.add("source-map.md")
         if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):

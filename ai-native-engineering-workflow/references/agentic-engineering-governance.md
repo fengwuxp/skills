@@ -34,6 +34,7 @@
 - 验证、CR、发布和复盘读 `verification-review-release.md`。
 - Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、测试映射、spec-lint、AC 覆盖和漂移检查读 `spec-template-practices.md`。
 - AI Coding / SDD / Spec / Harness 最终代码交付闭环、CR 减负、知识回流和指标读 `code-delivery-closed-loop.md`。
+- Superpowers skills 下载资源、外部 skill 调度矩阵、MIT 许可和安全边界读 `superpowers-skill-library.md`。
 - 详细工程规则回到 `senior-software-architect/references/ai-assisted-engineering.md`、`ai-large-project-orchestration.md` 和 `cad-mode.md`。
 
 ## 按任务读取索引
@@ -41,6 +42,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断需要哪种 AI 编码流程 | `1. 分级模型`、`2. OpenSpec / Superpowers / Harness` | 不展开工具清单 |
+| 调度 Superpowers skills | `2. OpenSpec / Superpowers / Harness`，再读 `superpowers-skill-library.md` | 不直接安装插件或执行外部脚本 |
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `3. Harness 最小契约` | 不复制外部 ASD/SSD Harness |
 | 做 GSD + Goal / Goal 组合 | 先读 `goal-composition.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不把 Goal 写成 Execution Grant |
 | 多 Agent / GSD 编排 | 先读 `gsd-cad-admission.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不直接开 CAD |
@@ -74,6 +76,8 @@
 | Harness | 谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Task ID、owner、写入范围、只读范围、依赖、验证命令、停止条件、交接。 |
 
 Goal 是跨层目标契约，不替代三层责任：它把目标、成功标准、状态、预算 / 时间盒、验证证据和交接节奏挂到 GSD Wave、CAD 候选、Spec、CR 和发布复盘上。
+
+`obra/superpowers` 已作为外部 skill library 下载并隔离到 `external-superpowers/`，调度入口读 `superpowers-skill-library.md`。调度时只吸收它的工程纪律：brainstorming 用于前置澄清，writing-plans 用于计划拆解，test-driven-development 用于红绿重构纪律，subagent-driven-development / executing-plans 用于受控任务执行参考，requesting-code-review / receiving-code-review 用于 CR 反馈闭环，verification-before-completion 用于完成前证据门禁。外部 skill 的默认目录、插件安装、hooks、worktree、自动提交、Git 推送和 subagent 连续执行要求不能覆盖本仓库权限边界。
 
 ## 3. Harness 最小契约
 
