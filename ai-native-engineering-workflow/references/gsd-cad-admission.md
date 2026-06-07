@@ -9,6 +9,7 @@
 - 用户要求“结合 GSD 与 CAD”“自动推进哪些任务”“按什么顺序交给架构师或 Agent”“Execution Grant 还缺什么”。
 - 用户担心大项目被拆散、上下文漂移、多个 Agent 互相覆盖、CAD 被误用于整个 Roadmap。
 - 用户要求 GSD 模式支持 Superpowers skills、TDD、Review、verification-before-completion 或外部工程纪律接入。
+- AI 产品、企业协作 AI、Agent 入口或组织级 AI 助手要从战略叙事、AI 原型、发布会目标或 dogfooding 进入工程化，需要先判断是否真的值得进入真实工作流。
 
 ## 不适用场景
 
@@ -23,6 +24,7 @@
 - GSD Round 0 缺口：目标、非目标、对象/规则、OpenSpec、owner、写入范围、验证命令、风险确认方和停止条件。
 - Wave / Atomic Task 候选：只给候选形态、依赖顺序、owner、写入/只读边界、生产可用能力锚点、事实/推断/待确认边界和验证证据，不写成执行授权。
 - Superpowers 方法门禁：当前 GSD 是否需要参考 brainstorming、writing-plans、test-driven-development、requesting/receiving-code-review、verification-before-completion 等外部 skill，以及对应的 TDD、CR 和完成前验证要求。
+- AI 产品工程化准入卡：业务 context、真实工作流、用户收益/负担、权限与责任、旧系统接入、灰度止损、成本稳定性和事实边界是否足够。
 - CAD 候选缺口：Task ID、写入范围、验证命令、工作区状态、Execution Grant、人工确认点和风险阻断项。
 - 下一步 owner：产品专家、资深架构师、代码生成器、人类 owner 或当前流程继续补齐。
 
@@ -42,6 +44,7 @@
 | 判断是否进入 GSD Round 0 | 1、2、3 | 不生成完整工程任务包 |
 | 拆 Wave / Atomic Task 候选 | 3、4 | 不写 CAD 每轮执行计划 |
 | 判断 CAD 候选缺口 | 5、6 | 不把候选当 Execution Grant |
+| AI 产品或 Agent 工作流是否值得工程化 | 3A，并回读 `product-to-engineering-lifecycle.md` | 不把战略风口、发布会、DAU 或 demo 当准入证据 |
 | 给 GSD 补 Superpowers/TDD/Review 门禁 | 3、4、5，并回读 `superpowers-skill-library.md` | 不安装插件、不运行外部脚本 |
 | 产品上下文进入工程 | 7，并回读 `product-to-engineering-lifecycle.md` | 不把 MVP 当工程授权 |
 | 流程评审或 CR 前置 | 8、9，并回读 `verification-review-release.md` | 不替代源码级 CR |
@@ -99,6 +102,41 @@ Superpowers 在 GSD 中只作为方法纪律层：它回答“怎么高质量地
 - 是否需要上下文账本、阶段状态、恢复入口和多 Agent / Wave 编排。
 
 缺任一关键项时，只输出补齐清单，不建议 CAD。
+
+### 3A. AI 产品工程化准入卡
+
+当输入来自 AI 产品复盘、企业协作 AI、Agent 入口、AI 原型、发布会节点、dogfooding 或“AI 已经能做一些事”的材料时，先判断它是否值得进入 GSD Round 0。AI Native 只做工程化准入，不替代产品专家确认发心、定位和用户张力；若产品侧仍未回答清楚，应先退回 `产品架构专家`。
+
+准入卡至少检查八项：
+
+| 检查项 | 准入问题 | 阻断信号 |
+| --- | --- | --- |
+| 业务 context | 是否有足够组织关系、对象、权限、历史数据、任务状态和术语口径支撑 AI 判断。 | 只有聊天总结、页面草图或孤立 prompt。 |
+| 真实工作流 | AI 是否进入用户已经发生的任务链，并能推动任务完成。 | 只新增入口、卡片、提醒、看板或汇总层。 |
+| 用户收益 / 负担 | 受益用户和被影响用户是否分开验证，收益是否大于新增操作和被监督风险。 | 只证明管理者、发信人或组织侧收益。 |
+| 权限与责任 | AI 能看什么、做什么、谁确认、谁申诉、谁审计、谁承担错误后果。 | 默认站在组织或强势角色一侧，缺可解释/可关闭/可申诉边界。 |
+| 旧系统接入 | 是否识别端侧差异、权限系统、客户定制、消息/审批/日程等既有系统技术债。 | demo 可运行但生产路径、端侧一致性或兼容改造不清。 |
+| 灰度与止损 | 是否有内测、灰度、反馈纠偏、暂停条件、回滚和退场路径。 | 发布会倒排、舆论先行、全量上线前缺真实用户验证。 |
+| 成本与稳定性 | token/算力、延迟、失败率、兜底、人工接管和运营成本是否可观测。 | 只看 DAU、曝光、生成量或功能上线数量。 |
+| 事实边界 | 哪些来自用户材料、源码、数据、eval 或真实反馈，哪些只是外部文章观点或组织期待。 | 把外部文章、竞品叙事、模型能力宣传或管理愿望写成任务事实。 |
+
+输出格式：
+
+```text
+AI 产品工程化准入卡
+
+当前结论: 不进入 GSD / 只做 Round 0 / 可进入产品到工程交接 / 可进入 GSD Round 0 候选
+主发心与首批用户:
+真实工作流:
+context / 权限 / 责任:
+旧系统与生产路径:
+灰度止损:
+成本稳定性:
+事实 / 推断 / 待确认 / 范围外不做:
+下一步 owner:
+```
+
+不满足准入卡时，只能输出 Round 0 补齐清单或回到产品专家，不得生成 Wave、Atomic Task 或 CAD 候选。
 
 ## 4. Wave / Atomic Task 候选
 

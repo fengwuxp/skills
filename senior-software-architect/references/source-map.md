@@ -42,6 +42,8 @@
 | 核对 AI 编码 GSD 工作流文章应用记录 | `微信公众号文章：GSD 工作流`、`应用记录` | 不照搬外部命令、文件体系或自动提交习惯 |
 | 核对 Codex 官方团队运行时协作文章应用记录 | `微信公众号文章：Codex 官方团队：如何把 Codex 用到极致`、`应用记录` | 不把平台功能当成当前工具可用性或执行授权 |
 | 核对 AI Native 架构师文章应用记录 | `微信公众号文章：放下代码：AI Native是通往架构师的快车道`、`应用记录` | 不把“少写代码”当成放弃编码能力、验证或生产责任 |
+| 核对 AI 产品进入旧系统复盘来源 | `微信公众号文章：置身钉内`、`应用记录` | 不把公开转述/OCR 材料当官方事实或架构结论 |
+| 核对 AI 全栈工作流文章应用记录 | `微信公众号文章：从一份模糊需求，到一套可开发系统`、`应用记录` | 不把原型或页面愿望当工程边界 |
 | 核对需求分析与设计基础文章应用记录 | `微信公众号文章：需求分析和设计活动关键要点总结`、`应用记录` | 不复制 GJB 章节表述、推荐书目或作者表达 |
 | 核对业务驱动架构与验证来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把通用方法论当作项目事实 |
 | 新增外部来源 | `读取与归因规则`、`提炼边界` | 不把未读正文的来源标为已吸收 |
@@ -70,29 +72,9 @@
 - 读取状态：GitHub 仓库公开可读；目录树显示公开内容集中在 `review/` 下的 Code Review Guidelines、Reviewer Guide、Change Author Guide 和 emergencies 文档。
 - 许可证：仓库 README 声明文档使用 CC-BY 3.0；本仓库只保留提炼后的规则和来源链接，不复制大段原文。
 
-已读取文件：
+已读取文件：`README.md`、`review/reviewer/standard.md`、`review/reviewer/looking-for.md`、`review/reviewer/navigate.md`、`review/reviewer/speed.md`、`review/reviewer/comments.md`、`review/reviewer/pushback.md`、`review/developer/cl-descriptions.md`、`review/developer/small-cls.md`、`review/developer/handling-comments.md`、`review/emergencies.md`。
 
-- `README.md`
-- `review/reviewer/standard.md`
-- `review/reviewer/looking-for.md`
-- `review/reviewer/navigate.md`
-- `review/reviewer/speed.md`
-- `review/reviewer/comments.md`
-- `review/reviewer/pushback.md`
-- `review/developer/cl-descriptions.md`
-- `review/developer/small-cls.md`
-- `review/developer/handling-comments.md`
-- `review/emergencies.md`
-
-应用记录：
-
-| 应用位置 | 已吸收内容 |
-| --- | --- |
-| `README.md` | 新增公开参考来源记录，说明只吸收 Review 与 Change Author 原则，并保留 CC-BY 3.0 归因边界。 |
-| `coding-review-deep-dive.md` | 补充代码健康优先于完美主义、评论分级、争议处理、评论代码不评论人、Review 导航顺序和审查范围说明。 |
-| `workflow.md` | 补充自包含小变更、测试随变更、重构与功能拆分、提交/PR 说明质量和长期版本记录要求。 |
-| `production-readiness.md` | 补充紧急变更边界，区分真实紧急情况与软期限，并要求事后完整 Review、测试和复盘。 |
-| `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止来源记录和核心 Review/PR/紧急变更规则漂移。 |
+应用记录：`README.md` 记录 CC-BY 3.0 来源边界；`coding-review-deep-dive.md` 吸收代码健康、评论分级、争议处理、Review 导航和范围说明；`workflow.md` 吸收自包含小变更、测试随变更、提交/PR 说明质量；`production-readiness.md` 吸收紧急变更边界；`scripts/validate-trigger-paths.py` 增加防漂移断言。
 
 未吸收内容：
 
@@ -333,17 +315,7 @@
 - 读取状态：已通过移动端微信 UA 公开 HTML 读取标题、作者/账号、发布时间、meta 描述和正文；本轮正文抽取仅用于结构化提炼，不归档文章全文到仓库。
 - 许可证：未见明确复用许可证；本仓库只保留来源链接、读取状态、可迁移方法和吸收边界，不复制原文、图片、动图、命令说明、XML 示例或作者表达。
 
-应用记录：
-
-| 应用位置 | 已吸收内容 |
-| --- | --- |
-| `ai-assisted-engineering.md` | 补充长任务上下文治理入口，保留 OpenSpec、Superpowers、Harness、CAD Mode 与中大型编排的路由关系。 |
-| `ai-large-project-orchestration.md` | 新增类 GSD 的大项目编排工作流，定义项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖、GSD-CAD 双层协议、执行协议、验证矩阵、暂停恢复、Git 边界和收口流程。 |
-| `workflow.md` | 在 AI 协作门禁、代码修改前、验证矩阵和 PR 提交前检查中补充上下文账本、阶段状态、原子可追溯和用户授权边界。 |
-| `scenario-routing.md` | 将 AI 编码协作扩展为 OpenSpec 到代码、多 Agent 编排和上下文衰减治理，要求先判断需求不清还是上下文衰减，再选择轻量或重型流程。 |
-| `skill-tree.md`、`skill-tree-platform-leadership-ai.md`、`knowledge-graph.md` | 在能力地图和知识图谱中补充上下文衰减治理、阶段状态、Wave 编排、原子任务和外部工作流边界。 |
-| `README.md` | 新增公开参考来源记录，说明只吸收持久化上下文、阶段循环、多 Agent 编排、Wave 依赖、原子可追溯和 Git 版本化思想。 |
-| `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI 编码流程治理、来源记录和路由入口漂移。 |
+应用记录：`ai-assisted-engineering.md` 保留 OpenSpec / Superpowers / Harness / CAD Mode 路由；`ai-large-project-orchestration.md` 落成类 GSD 的大项目编排工作流，覆盖项目上下文账本、初始化流程、阶段拆分、原子任务包、Wave 依赖、GSD-CAD 双层协议、验证矩阵、暂停恢复和收口；`workflow.md`、`scenario-routing.md`、`skill-tree.md`、`skill-tree-platform-leadership-ai.md`、`knowledge-graph.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 同步治理入口与防漂移断言。
 
 未吸收内容：
 
@@ -364,23 +336,13 @@
 - 读取状态：已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间内嵌元数据和正文；本轮正文抽取仅用于结构化提炼，不归档文章全文到仓库。
 - 许可证与官方性边界：未见明确复用许可证；该微信文章只作为公开文章来源，不作为 OpenAI 官方当前产品能力、模型、工具可用性或官方承诺依据；涉及 Codex 当前能力时必须核验 OpenAI 官方文档或当前会话工具状态。本仓库只保留来源链接、读取状态、可迁移方法和吸收边界，不复制原文、示例、提示语、目录结构、平台宣传语或作者表达。
 
-应用记录：
-
-| 应用位置 | 已吸收内容 |
-| --- | --- |
-| `ai-assisted-engineering.md` | 新增 Codex 运行时协作模式，把 durable / pinned thread、voice / transcript、steering / queuing、browser / computer / MCP / connector、thread automation / scheduled automation、goal、side panel / artifact 和 shared written context 转成工程协作入口，并强调不替代 OpenSpec、Harness Plan、测试、Review 或用户授权。 |
-| `ai-large-project-orchestration.md` | 补充 Codex 持续协作边界，要求 automation、goal、artifact 和 written context 都绑定 verifier、停止条件、状态位置、权限边界和人工确认点；新增文章来源边界。 |
-| `README.md` | 新增公开参考来源记录，说明只吸收 Codex 运行时协作方式和持续工作流治理，不把平台功能写成默认授权。 |
-| `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 Codex 运行时协作模式、来源记录和持续协作红线漂移。 |
+应用记录：`ai-assisted-engineering.md` 新增 Codex 运行时协作模式，把 durable / pinned thread、voice / transcript、steering / queuing、thread automation / scheduled automation、goal、side panel / artifact 和 shared written context 转成工程协作入口；`ai-large-project-orchestration.md` 要求 automation、goal、artifact 和 written context 绑定 verifier、停止条件、状态位置、权限边界和人工确认点；`README.md` 和 `scripts/validate-trigger-paths.py` 记录来源边界与防漂移断言。
 
 未吸收内容：
 
-- 不把 Codex app 功能清单写成当前会话一定可用的工具能力；具体任务仍以当前工具、权限和平台状态为准。
-- 不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺。
-- 不默认创建 pinned thread、automation、goal、vault、外部 connector、长期 memory 或跨会话写入。
-- 不默认访问 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、外部 API、客户数据、生产配置或私有资料。
-- 不把 voice/transcript、thread transcript、queue 或 automation 当作规格、授权、验证结果或 Git/部署许可。
-- 不复制文章示例、提示语、目录结构、作者表达、平台宣传语或未核验的未来能力。
+- 不把 Codex app 功能清单写成当前会话一定可用的工具能力，也不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺；涉及 Codex 当前能力时必须核验 OpenAI 官方文档或当前会话工具状态。
+- 不默认创建 pinned thread、automation、goal、vault、外部 connector、长期 memory，不默认访问 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、外部 API、客户数据、生产配置或私有资料。
+- 不把 voice/transcript、thread transcript、queue 或 automation 当作规格、授权、验证结果或 Git/部署许可；不复制文章示例、提示语、目录结构、作者表达、平台宣传语或未核验的未来能力。
 
 ### 微信公众号文章：放下代码：AI Native是通往架构师的快车道
 
@@ -392,47 +354,28 @@
 - 读取状态：已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文；本轮未再执行 Playwright 等价浏览器取证，正文抽取仅用于结构化提炼，不归档文章全文到仓库。
 - 许可证：未见明确复用许可证；本仓库只保留来源链接、读取状态、可迁移方法和吸收边界，不复制原文、引用案例、播客来源转述或作者表达。
 
-应用记录：
-
-| 应用位置 | 已吸收内容 |
-| --- | --- |
-| `ai-assisted-engineering.md` | 新增 AI Native 架构师工作面，强调架构师应把时间投入系统判断、hardened 标准、Agent 工作流设计和技术取舍；审查 AI 代码时重点验证整体是否满足 hardened 标准，而不是把所有精力放在逐行复写。 |
-| `ai-large-project-orchestration.md` | 将 AI Native 编排或产品侧交接结论转成工程侧 OpenSpec、context ledger、GSD Stage/Wave/Atomic Task、验证矩阵和 CAD 候选缺口；端到端产品到研发链路交给 `ai-native-engineering-workflow`。 |
-| `cad-mode.md` | 增加从 AI Native 产品上下文或 MVP harden 进入 CAD 的消费门禁，明确产品上下文包、Hardened Candidate、AI Native 编排结论或业务 MVP 不能直接作为 Execution Grant。 |
-| `product-design.md`、`scenario-routing.md` | 将 AI Native 产品上下文到系统设计的路由收敛为消费已确认交接结论，不在架构师侧重建产品流程。 |
-| `README.md` | 新增公开来源记录，说明只吸收架构师从逐行实现转向系统边界、质量门禁、验证矩阵和 Agent 编排的可迁移方法。 |
-| `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI Native 架构师工作面、Hardened Candidate 和 CAD 交接门禁漂移。 |
+应用记录：`ai-assisted-engineering.md` 新增 AI Native 架构师工作面，覆盖 hardened 标准和 Agent 工作流设计；`ai-large-project-orchestration.md` 将 AI Native 编排或产品侧交接结论转成 OpenSpec、context ledger、GSD Stage/Wave/Atomic Task、验证矩阵和 CAD 候选缺口；`cad-mode.md`、`product-design.md`、`scenario-routing.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 维护 Hardened Candidate 不能直接作为 Execution Grant 的边界。
 
 未吸收内容：
 
-- 不把“放下代码”理解为放弃编码能力、代码审查、测试、验证或生产责任。
-- 不复制文章中的引用案例、岗位判断、作者表达、情绪化标题或传播性措辞。
-- 不把 AI 生成 PR 数量、自动化轮数或外部团队案例写成工程质量结论。
-- 不把 Agent review / Agent test 替代高风险变更中的人工确认、架构审查、测试证据和生产门禁。
-- 不把岗位转型观点写成组织制度、绩效口径、裁员建议或团队角色结论。
+- 不把“放下代码”理解为放弃编码能力、代码审查、测试、验证或生产责任，不复制文章中的引用案例、岗位判断、作者表达、情绪化标题或传播性措辞。
+- 不把 AI 生成 PR 数量、自动化轮数或外部团队案例写成工程质量结论，不把 Agent review / Agent test 替代高风险变更中的人工确认、架构审查、测试证据和生产门禁，不把岗位转型观点写成组织制度、绩效口径、裁员建议或团队角色结论。
+
+### 微信公众号文章：置身钉内
+- 来源/读取：`https://mp.weixin.qq.com/s/_D20O0vpPXjSzjAKJmBYuA`；标题：`阿里内网万言离职书《置身钉内》原文，已刷屏`；公众号：`爬梯意外簿`；作者：`Corgi/滕雅辛`；发布时间：2026-06-05 16:21；读取日期：2026-06-07。普通 `curl` 返回微信“环境异常”验证页；随后使用 Codex in-app Browser 的 Playwright 接口读取标题、公众号、作者、发布时间和正文。页面正文声明内容由 AI 识图整理，因此本仓库只把它作为公开转述/OCR 复盘材料；未见明确复用许可证，不复制原文、项目细节、组织评价、作者表达或标题传播话术。
+- 应用记录：`ai-assisted-engineering.md` 新增“AI 进入旧系统的架构门禁”，覆盖 context 架构、权限与权力边界、旧系统技术债、多端一致性、任务闭环、成本稳定性、可观测审计和演进切片；AI Native 流程和产品专家分别维护“AI 产品工程化准入卡”与“AI 产品发心、定位和用户张力门禁”；`scripts/validate-trigger-paths.py` 增加漂移断言。
+- 未吸收内容：不把公开转述/OCR 内容写成钉钉、ONE 或阿里官方事实，不复述项目内部细节、组织评价、人员经历或成败判断；不把单个企业协作产品复盘绝对化为所有 AI 产品或所有 SaaS 的通用结论；不把文章中的外部行业时间线、模型能力、厂商能力或工具名称写成当前最新事实。
+
+### 微信公众号文章：从一份模糊需求，到一套可开发系统
+- 来源/读取：`https://mp.weixin.qq.com/s/HzbdrmNkT-OTRKdQh0c0Ug`；标题：`从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战`；作者/账号：`KEEN的创享`；发布时间：2026-06-04 21:39；读取日期：2026-06-07。普通 `curl` / `web.open` 未取得正文或返回微信“环境异常”验证页；随后通过移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文；未见明确复用许可证。
+- 应用记录：`ai-assisted-engineering.md` 新增“可开发系统工程化门禁”，要求从模糊需求、内容/多端原型或高保真 HTML 进入工程前，先确认目标/非目标、前后台和多端边界、业务流、对象状态、规则权限、数据安全、接口候选、测试验收和发布路径；AI Native 流程和产品专家维护产品到工程秩序链路。
+- 未吸收内容：不复制原文、案例项目、页面设计、提示词、技术选型、图片或作者表达；不把高保真原型、AI 生成页面或示例系统当成当前项目工程边界、OpenSpec、Harness Plan 或 Execution Grant。
 
 ### 微信公众号文章：需求分析和设计活动关键要点总结
 
-- 来源：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`
-- 标题：`需求分析和设计活动关键要点总结`
-- 公众号：`软件需求分析和设计`
-- 作者：`常识`
-- 发布时间：2026-05-26 10:29:23
-- 读取日期：2026-06-01
-- 读取状态：已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间和正文；随后使用本机 Chrome headless 作为 Playwright 等价浏览器读取到标题、作者、发布时间和正文。
-- 许可证：未见明确复用许可证；本仓库只保留来源链接、读取状态、可迁移方法和吸收边界，不复制原文、图片、推荐书目或作者表达。
-
-应用记录：
-
-| 应用位置 | 已吸收内容 |
-| --- | --- |
-| `system-analysis-design.md` | 补充功能不是头脑风暴功能点，而是对象对外提供的可见、有价值交互行为；下层系统、模块或 CSCI 的功能应来自上层对象目标和功能分解，并保留正向分解和逆向追溯；同时区分需求分析外部视角和设计内部视角。 |
-| `skill-tree-architecture-design.md` | 在产品语义与工程映射中补充功能分配追溯和需求/设计视角分工能力。 |
-| `README.md` | 新增公开来源记录，说明只吸收功能定义、功能分配追溯和需求/设计分工检查项。 |
-| `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止功能定义、功能追溯和需求/设计分工能力漂移。 |
-
-未吸收内容：
-
+- 来源/读取：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`；标题：`需求分析和设计活动关键要点总结`；公众号：`软件需求分析和设计`；作者：`常识`；发布时间：2026-05-26 10:29:23；读取日期：2026-06-01。已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间和正文；随后使用本机 Chrome headless 作为 Playwright 等价浏览器读取到标题、作者、发布时间和正文；未见明确复用许可证。
+- 应用记录：`system-analysis-design.md` 补充功能不是头脑风暴功能点，而是对象对外提供的可见、有价值交互行为、正向分解和逆向追溯，以及需求分析外部视角和设计内部视角；`skill-tree-architecture-design.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 同步功能分配追溯、需求/设计分工与防漂移断言。
+- 未吸收内容：
 - 不复制文章中的 GJB 章节表述、书籍推荐、课程机构推荐、作者自述或原文表达。
 - 不把军标/适航语境直接写成通用软件项目强制流程；本技能只吸收可迁移的功能定义、功能分配追溯和需求/设计视角分工。
 - 不把“功能分配”绝对化为排斥用户反馈、业务探索或产品发现；产品侧仍需先确认目标、主体、场景、价值和验收。

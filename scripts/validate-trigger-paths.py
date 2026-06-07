@@ -546,6 +546,12 @@ check(
             "问题地图",
             "AI 原型 / eval / dogfooding",
             "产品上下文包",
+            "可开发系统秩序链",
+            "模糊需求",
+            "结构化需求文档",
+            "业务流 / 状态 / 规则",
+            "原型或页面说明",
+            "开发执行任务",
             "PRD-Lite / OpenSpec 输入",
             "Hardened Candidate",
             "工程交接清单",
@@ -561,6 +567,8 @@ check(
             "人类能否 Review，Agent 能否执行，机器能否验证",
             "spec-template-practices.md",
             "Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖和漂移检查",
+            "不能跳到代码生成、GSD Wave 或 CAD 候选",
+            "前后台 / 多端 / 运营能力分工",
         ],
     )
     and has_all(
@@ -622,6 +630,16 @@ check(
             "Superpowers 在 GSD 中只作为方法纪律层",
             "GSD 可以默认支持 Superpowers 方法门禁",
             "不能默认安装 Superpowers 插件、运行外部脚本、创建 worktree、启动 subagent 或采用外部 Git 默认动作",
+            "AI 产品工程化准入卡",
+            "业务 context",
+            "真实工作流",
+            "用户收益 / 负担",
+            "权限与责任",
+            "旧系统接入",
+            "灰度与止损",
+            "成本与稳定性",
+            "不把战略风口、发布会、DAU 或 demo 当准入证据",
+            "不满足准入卡时，只能输出 Round 0 补齐清单或回到产品专家",
             "GSD 的目标是交付生产可用能力",
             "它服务哪个真实业务目标",
             "落在哪个生产边界或真实入口",
@@ -768,6 +786,15 @@ check(
             "OWASP Top 10 for LLM Applications 2025",
             "ISO/IEC 42001",
             "不把任一工具的能力写成当前会话必然可用",
+            "阿里内网万言离职书〈置身钉内〉原文，已刷屏",
+            "公开转述/OCR 复盘参考来源",
+            "AI 产品从战略叙事、AI 原型或发布会目标进入工程化前应检查业务 context、真实工作流、用户收益/负担、权限责任、旧系统接入、灰度止损、成本稳定性和事实边界",
+            "不把文章内容写成钉钉/ONE 官方事实、行业结论、当前工具能力或 Execution Grant",
+            "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
+            "KEEN的创享",
+            "2026-06-04 21:39",
+            "移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文",
+            "模糊需求 -> 结构化需求文档 -> 业务流 -> 原型/页面说明 -> 开发执行任务 -> 验收发布路径",
             "`obra/superpowers`",
             "2026-06-07",
             "6fd4507659784c351abbd2bc264c7162cfd386dc",
@@ -2090,6 +2117,37 @@ check(
     ),
 )
 check(
+    "README records AI product postmortem source boundary",
+    has_all(
+        "README.md",
+        [
+            "阿里内网万言离职书〈置身钉内〉原文，已刷屏",
+            "公开转述/OCR 复盘参考来源",
+            "AI 产品发心与定位",
+            "AI 产品工程化准入卡",
+            "AI 进入旧系统的 context 架构、权限与权力边界、技术债、多端一致性、成本稳定性和灰度止损门禁",
+            "Codex in-app Browser 的 Playwright 接口",
+            "页面正文声明内容由 AI 识图整理",
+            "不把它写成钉钉/ONE 官方事实、行业结论、当前工具能力或 Execution Grant",
+        ],
+    ),
+)
+check(
+    "README records AI full-stack workflow article boundary",
+    has_all(
+        "README.md",
+        [
+            "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
+            "AI Native 研发流程编排",
+            "产品架构专家",
+            "资深架构师",
+            "模糊需求到结构化需求文档、业务流、原型/页面说明、开发任务和验收发布路径",
+            "移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文",
+            "不把示例项目写成通用模板、当前工程事实或执行授权",
+        ],
+    ),
+)
+check(
     "README records fireworks tech graph reference source",
     has_all(
         "README.md",
@@ -2971,6 +3029,60 @@ check(
     ),
 )
 check(
+    "senior source map and README record AI old-system postmortem boundary",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：置身钉内",
+            "https://mp.weixin.qq.com/s/_D20O0vpPXjSzjAKJmBYuA",
+            "阿里内网万言离职书《置身钉内》原文，已刷屏",
+            "爬梯意外簿",
+            "Corgi/滕雅辛",
+            "Codex in-app Browser 的 Playwright 接口",
+            "公开转述/OCR 复盘材料",
+            "AI 进入旧系统的架构门禁",
+            "context 架构、权限与权力边界、旧系统技术债、多端一致性、任务闭环、成本稳定性、可观测审计和演进切片",
+            "AI 产品工程化准入卡",
+            "AI 产品发心、定位和用户张力门禁",
+            "不把公开转述/OCR 内容写成钉钉、ONE 或阿里官方事实",
+            "不把单个企业协作产品复盘绝对化为所有 AI 产品或所有 SaaS 的通用结论",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "阿里内网万言离职书〈置身钉内〉原文，已刷屏",
+            "公开转述/OCR 复盘参考来源",
+            "AI 进入旧系统的 context 架构、权限与权力边界、技术债、多端一致性、成本稳定性和灰度止损门禁",
+            "不把它写成钉钉/ONE 官方事实、行业结论、当前工具能力或 Execution Grant",
+        ],
+    ),
+)
+check(
+    "senior source map and README record AI full-stack workflow boundary",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：从一份模糊需求，到一套可开发系统",
+            "https://mp.weixin.qq.com/s/HzbdrmNkT-OTRKdQh0c0Ug",
+            "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
+            "KEEN的创享",
+            "Codex in-app Browser 的 Playwright 接口",
+            "可开发系统工程化门禁",
+            "目标/非目标、前后台和多端边界、业务流、对象状态、规则权限、数据安全、接口候选、测试验收和发布路径",
+            "不把高保真原型、AI 生成页面或示例系统当成当前项目工程边界、OpenSpec、Harness Plan 或 Execution Grant",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
+            "模糊需求到结构化需求文档、业务流、原型/页面说明、开发任务和验收发布路径",
+            "不把示例项目写成通用模板、当前工程事实或执行授权",
+        ],
+    ),
+)
+check(
     "senior skill tree exposes AI context decay capability",
     has_all(
         "senior-software-architect/references/skill-tree-platform-leadership-ai.md",
@@ -3493,12 +3605,30 @@ check(
         ai_engineering,
         [
             "AI Native 架构师工作面",
+            "AI 进入旧系统的架构门禁",
+            "可开发系统工程化门禁",
+            "Context 架构",
+            "权限与权力边界",
+            "旧系统技术债",
+            "多端一致性",
+            "任务闭环",
+            "成本与稳定性",
+            "可观测与审计",
+            "演进切片",
+            "AI 旧系统接入 OpenSpec 补充",
             "判断什么是好的系统",
             "定义 hardened 标准",
             "设计 Agent 工作流",
             "审查 AI 代码时，重点不是证明每一行都由人工重新理解",
             "产出整体满足 hardened 标准",
             "不把“少写代码”理解为放弃编码能力、验证或生产责任",
+            "前后台和多端边界",
+            "业务流",
+            "对象状态",
+            "规则权限",
+            "接口候选",
+            "测试验收",
+            "不从页面愿望直接拆代码任务",
         ],
     )
     and has_all(
@@ -3989,7 +4119,7 @@ check(
     has_all(
         product_architecture,
         [
-            "## 2. 设计顺序",
+            "## 2. 探索期收敛",
             "### 2.0 探索期多框架分析",
             "避免过早把问题锁进单一路径",
             "保留 3-5 个真正不同的框架",
@@ -4119,6 +4249,26 @@ check(
     ),
 )
 check(
+    "product methodology keeps fuzzy requirement system-order gate",
+    has_all(
+        product_architecture,
+        [
+            "模糊需求到内容/多端系统",
+            "可开发系统秩序链",
+            "结构化需求",
+            "业务流",
+            "对象与规则",
+            "原型/页面说明",
+            "开发交接",
+            "不是一个页面，而是一套系统",
+            "投稿/审核/发布/运营后台/多端展示/动态配置/素材管理/权限/统计/日志",
+            "不能只输出页面清单或高保真原型",
+            "高保真 HTML 原型之后没有回到对象、接口、数据、测试和验收任务",
+            "工程无法接",
+        ],
+    ),
+)
+check(
     "product methodology keeps deliberation workflow and multi-role review",
     has_all(
         product_skill,
@@ -4228,6 +4378,25 @@ check(
     ),
 )
 check(
+    "product methodology keeps AI product intention and user tension gate",
+    has_all(
+        product_architecture,
+        [
+            "AI 产品发心、定位和用户张力门禁",
+            "公开文章、离职复盘或内部转述只能作为反模式和问题框架来源",
+            "主发心是什么",
+            "首批服务谁",
+            "先做什么",
+            "用户收益是否大于新增负担",
+            "权力与责任如何平衡",
+            "如何灰度和止损",
+            "AI 产品发心与定位卡",
+            "战略叙事、行业风口、发布会表达、竞品对标或组织意志",
+            "保留必要的协作弹性",
+        ],
+    ),
+)
+check(
     "product methodology keeps product manager basics as architecture calibration",
     has_all(
         product_architecture,
@@ -4271,6 +4440,8 @@ check(
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
             "AI Native 产品上下文",
+            "AI 产品发心与定位复盘",
+            "模糊需求到可开发系统",
             "产品洞察与机会雷达",
             "Backlog 决策与机会收敛",
             "产品图形化与服务蓝图",
@@ -4281,6 +4452,47 @@ check(
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map records AI product intention article boundary",
+    has_all(
+        product_source_map,
+        [
+            "AI 产品发心与定位复盘",
+            "阿里内网万言离职书〈置身钉内〉原文，已刷屏",
+            "https://mp.weixin.qq.com/s/_D20O0vpPXjSzjAKJmBYuA",
+            "Corgi/滕雅辛",
+            "爬梯意外簿",
+            "Codex in-app Browser 的 Playwright 接口",
+            "公开转述/OCR 复盘材料",
+            "AI 产品发心、定位、用户张力、真实工作流、灰度止损和反模式门禁",
+            "不把文章内容写成钉钉/ONE 官方事实",
+        ],
+    ),
+)
+check(
+    "product source map records fuzzy requirement to developable system boundary",
+    has_all(
+        product_source_map,
+        [
+            "模糊需求到可开发系统",
+            "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
+            "https://mp.weixin.qq.com/s/HzbdrmNkT-OTRKdQh0c0Ug",
+            "KEEN的创享",
+            "2026-06-04 21:39",
+            "移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文",
+            "结构化需求、业务流、对象规则、原型说明和开发交接秩序",
+            "不把文章示例项目写成通用产品模板",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
+            "产品架构专家",
+            "不复制原文、项目案例、页面设计、图片、提示词或作者表达",
         ],
     ),
 )

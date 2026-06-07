@@ -63,6 +63,8 @@
 - 收单、争议与风险运营：检索“外卡收单”“收单风控”“争议”“Chargeback”“Fraud”。
 - AI / Skill / 通用复杂度：检索“Agent Skills”“代码不再稀缺”“复杂度”“低成本生成”。
 - AI Native 产品上下文：检索“AI Native”“Product Builder”“业务 dogfooding”“MVP harden”“PRD 可执行上下文”“放下 PRD”“Hardened Candidate”。
+- AI 产品发心与定位复盘：检索“置身钉内”“AI 产品发心”“AI 产品定位”“真实工作流”“用户张力”“灰度止损”。
+- 模糊需求到可开发系统：检索“从一份模糊需求”“AI 全栈工作流”“内容系统”“多端平台”“结构化需求文档”“业务流”“高保真 HTML 原型”“开发任务”。
 - 产品洞察与机会雷达：检索“产品洞察”“需求洞察”“机会雷达”“资料资产化”“客户视角”“竞品视角”“标杆视角”“证据推理链”。
 - Backlog 决策与机会收敛：检索“Backlog”“机会清单”“需求池”“BV/EE”“User Story”“AC”“技术现实主义”“三桌校验”。
 - AI-shaped 产品工作成熟度：检索“ai-shaped-readiness-advisor”“AI-shaped”“AI-first”“Context Design”“Agent Orchestration”“Outcome Acceleration”。
@@ -125,6 +127,8 @@
 - 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并用本机 Chrome headless 作为 Playwright 等价浏览器加载页面做核验。公开内容用于参考 AI 出海企业全球资金管理的场景拆解，覆盖全球收款、多币种账户、FX、批量付款、VCC / Agent 支付控制、token / 用量计费和嵌入式金融组合；不吸收厂商覆盖国家、币种、时效、牌照数量、费率、AI 外汇预测能力、商业判断或产品可用性承诺，具体能力需回到最新官方资料、合同和合规确认。
 - 微信公众号文章《代码不再稀缺，稀缺的是你如何对抗复杂度》：`https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA`。2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考 AI 代码生成时代实现成本下降、复杂度/注意力成本上升、系统设计、前置约束和问题定义能力的重要性；只吸收问题框架和能力定位，不复制原文或作者表达。
 - 微信公众号文章《放下 PRD：写给AI Native时代的产品经理朋友们》：`https://mp.weixin.qq.com/s/5TEAxFYueNc6MD5ngKEgGg`。作者/账号为 `大数据随笔`，发布时间为 2026-05-25 18:00:00；2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未再执行 Playwright 等价浏览器取证。公开内容用于参考 AI Native 下 PRD 从静态翻译文档转为可运行证据、对象规则、验收种子和工程交接门禁的上下文包，覆盖 Product Builder、业务 owner + Agent、业务 dogfooding、MVP/原型 harden 和产品侧交接；端到端 GSD/CAD 准入与 AI 工具编排交给 `ai-native-engineering-workflow`，不复制原文、标题表达、作者判断、引用案例、传播性措辞或岗位评价，也不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收。
+- 微信公众号文章《阿里内网万言离职书〈置身钉内〉原文，已刷屏》：`https://mp.weixin.qq.com/s/_D20O0vpPXjSzjAKJmBYuA`。作者为 `Corgi/滕雅辛`，公众号为 `爬梯意外簿`，发布时间为 2026-06-05 16:21；2026-06-07 普通 `curl` 返回微信“环境异常”验证页，随后通过 Codex in-app Browser 的 Playwright 接口读取标题、账号、作者、发布时间和正文，页面正文声明内容由 AI 识图整理，故只作为公开转述/OCR 复盘材料。公开内容用于参考 `product-architecture-methodology.md` 中 AI 产品发心、定位、用户张力、真实工作流、灰度止损和反模式门禁；不复制原文、项目细节、组织评价、作者表达或标题传播话术，也不把文章内容写成钉钉/ONE 官方事实、行业结论或产品成败定论。
+- 微信公众号文章《从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战》：`https://mp.weixin.qq.com/s/HzbdrmNkT-OTRKdQh0c0Ug`。作者/账号为 `KEEN的创享`，发布时间为 2026-06-04 21:39；2026-06-07 普通抓取返回微信验证页或无正文，随后通过移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文。公开内容用于参考 `product-architecture-methodology.md` 中模糊需求到内容/多端系统的结构化需求、业务流、对象规则、原型说明和开发交接秩序；不复制原文、项目案例、页面设计、提示词、图片或作者表达，也不把文章示例项目写成通用产品模板。
 - 微信公众号文章《放下代码：AI Native是通往架构师的快车道》：`https://mp.weixin.qq.com/s/fhEzrPbeez-_2bmJHqExCQ`。作者/账号为 `大数据随笔`，发布时间为 2026-05-23 12:00:00；2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未再执行 Playwright 等价浏览器取证。公开内容用于参考 `资深架构师` AI Native 架构师工作面；产品专家只借鉴其与产品上下文交接相关的 harden 思路，不复制原文、引用案例、岗位判断或作者表达。
 - 微信公众号文章《架构师必备--让AI画架构图》：`https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg`。作者/账号为 `方兴集`，发布时间为 2026-04-30 16:28:31；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（本机 Chrome headless）加载取证但返回异常。公开内容用于参考 AI + draw.io 的自然语言生成、文档转图、图像参考、版本历史、可编辑 draw.io XML 和本地模型/凭据边界；不复制原文示例图、提示词、项目安装说明、工具宣传语或作者表达，也不把具体工具能力写成产品图质量结论。
 - 微信公众号文章《需求分析和设计活动关键要点总结》：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`。作者为 `常识`，公众号为 `软件需求分析和设计`，发布时间为 2026-05-26 10:29:23；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（本机 Chrome headless）加载取证。公开内容用于参考功能定义、功能分配追溯、需求分析外部视角和设计内部视角的分工；不复制原文中的 GJB 章节表述、推荐书目、课程机构推荐或作者表达，也不把军标/适航语境写成通用产品强制流程。
