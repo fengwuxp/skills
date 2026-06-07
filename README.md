@@ -8,6 +8,18 @@
 
 安装或同步后，Codex 会根据每个 `SKILL.md` 的 `name` 和 `description` 自动判断是否触发对应技能。使用者也可以在提示中直接点名，例如“用产品架构专家……”“用资深架构师……”“用 java-service-code-generator……”。同步后如果触发不符合预期，先重启 Codex 或开启新会话。
 
+### 一页速用版
+
+| 你要完成的事 | 首选入口 | 最小输入 | 典型输出 |
+| --- | --- | --- | --- |
+| 把想法、反馈、原型或页面变成可评审需求 | `产品架构专家` | 目标、用户/主体、场景、边界、材料 | PRD、产品方案、核心概念、业务抽象、流程、规则、验收和待确认项 |
+| 把 AI 原型、PRD、OpenSpec 或大项目推进到研发闭环 | `AI Native 研发流程编排` | 当前材料、目标产物、owner、风险、期望验证 | Round 0、交接包、GSD/CAD 准入、Goal、Spec/Harness、质量/理解门禁和下一步分派 |
+| 做系统设计、代码 CR、Bug 修复、测试或生产风险控制 | `资深架构师` | 代码/文档路径、报错、现象、目标、验证命令 | 设计方案、ADR、修复、测试、CR 结论、发布/回滚风险 |
+| 根据结构化输入生成 Java Service 配套代码 | `java-service-code-generator` | DDL/schema、Java 类、字段表格、表名、模块、输出目录 | Entity、Mapper、DTO、Request、Query、Converter、Service、ServiceImpl 和测试夹具 |
+| 做更复杂的图形视觉续作 | `$fireworks-tech-graph` | 语义清楚的产品图/架构图、风格目标、输出格式 | 更精致的 SVG/PNG 技术图或风格化图稿 |
+
+先判断“我要交付什么”，再选择 Skill。跨角色、跨阶段、跨工具、AI 编码流程治理、GSD/CAD、Goal、工具准入和交付闭环，优先让 `AI Native 研发流程编排` 做路由；单一产品产物直接给 `产品架构专家`，单一工程事实直接给 `资深架构师`，结构化代码生成直接给 `java-service-code-generator`。
+
 ### 30 秒选路
 
 - 跨角色、跨阶段、跨工具或 AI 编码交付闭环：用 `AI Native 研发流程编排`，让它先判断 owner、交接物、门禁、停止条件和下一步分派。
@@ -16,10 +28,31 @@
 - 已有 DDL、字段表格、Java 类或 schema，要生成 Wind/Nobe Java Service 配套代码：用 `java-service-code-generator`。
 - 复杂图形续作、视觉风格或更复杂的 SVG/PNG 图形工程：先让产品专家或架构师定语义，再调用 `$fireworks-tech-graph` 续作。
 
+### 按交付物选路
+
+- `PRD / 产品方案 / User Story / AC / 机会雷达 / Backlog`：先用 `产品架构专家`；如果要进入工程化，再交给 `AI Native 研发流程编排` 判断交接成熟度。
+- `OpenSpec / Harness / GSD / CAD / Goal / AI 代码交付闭环 / 工具准入`：先用 `AI Native 研发流程编排`；它只编排 owner、门禁、停止条件和分派，不替代 PRD 正文或源码实现。
+- `系分 / 技术方案 / ADR / 代码 CR / Bug / TDD / 发布回滚`：直接用 `资深架构师`；如果任务跨产品、工程、Agent 和验证闭环，再先让 AI Native 编排。
+- `Entity / Mapper / DTO / Request / Query / Service 脚手架`：只有结构化输入齐全时用 `java-service-code-generator`；业务语义、表设计和金额/状态规则仍需产品专家、架构师或 DBA 确认。
+- `能力图 / 流程图 / 状态机 / 架构图 / 资金流图`：产品语义图用产品专家，工程结构图用架构师；需要复杂视觉、风格化或图形工程续作时再调用 `$fireworks-tech-graph`。
+
+### 最小提示词公式
+
+```text
+用 <Skill 名称>：<任务类型>；输入材料：<路径/截图/文档/DDL/代码/日志>；目标产物：<要交付什么>；边界：<不做什么/风险/是否允许写入或覆盖>；验证要求：<要跑什么检查或如何说明残余风险>。
+```
+
+没有把握选哪个 Skill 时，可以这样说：
+
+```text
+先帮我选路：根据当前材料判断应该用 AI Native、产品架构专家、资深架构师还是 java-service-code-generator；说明理由、缺口、下一步 owner 和停止条件。
+```
+
 ### 默认流程短句
 
 - `进入 GSD 产研协同研发流程`：以交付生产可用能力为目标，产品专家做需求分析、产品设计和确认，架构师做系分设计、编码、TDD、CR 和验证，AI Native 只编排流程和门禁。
 - `GSD + Goal`：把大项目目标、生产可用能力、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件和交接节奏串成 Goal 组合。
+- `做 GSD/CAD 准入`：判断是否进入 Round 0、Wave/Atomic Task、Superpowers 方法门禁、CAD 候选缺口和 Execution Grant 缺口。
 - `做 AI 代码交付闭环`：评审 SDD / Spec / Harness 为什么没有交付体感，补 Spec 强度、独立验证、CR 减负、知识回流和交付指标。
 - `落地 Spec 模板最佳实践`：输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换。
 - `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
@@ -27,6 +60,15 @@
 - `阅读分析代码库`：只有代码库级理解、设计-代码对齐、上下文工程或工具准入才走 AI Native；单个文件、函数、报错或 PR diff 直接用资深架构师。
 - `做事实边界检查`：要求 AI Native 区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张。
 - `接入 Superpowers skills`：让 AI Native 读取 `superpowers-skill-library.md`，把 Superpowers 的 brainstorming、writing-plans、TDD、code review 和 verification-before-completion 作为外部方法库调度，不默认安装插件或执行外部脚本。
+
+### 反误触发规则
+
+- 只看某个文件、函数、报错、测试失败或 PR diff：不要默认走 AI Native，直接用 `资深架构师`。
+- 只有自然语言需求、没有字段结构或表名：不要直接用 `java-service-code-generator` 生成生产代码，先补结构化输入。
+- 只要 PRD 正文、产品方案或 Backlog 决策：不要让 AI Native 代写正文，直接用 `产品架构专家`。
+- 只要代码实现、测试或源码级 CR：不要让产品专家接工程问题，直接用 `资深架构师`。
+- 只说“画图”但没有对象、关系、受众和视图类型：先补图形 brief，再由产品专家或架构师出 SVG。
+- 涉及安装、联网、写文件、覆盖已有文件、Git、同步到 Codex、生产数据或不可逆操作：先明确授权、写入范围、dry-run 和停止条件。
 
 ### 任务到入口速查
 
@@ -45,11 +87,19 @@
 
 1. 产品发现：`产品架构专家` 先收束问题、证据、对象、规则、验收种子和待确认项。
 2. 编排准入：`AI Native 研发流程编排` 判断输入成熟度、owner、交接物、门禁、停止条件和下一步分派。
-3. Goal / GSD：中大型项目用 `GSD + Goal` 管目标、Wave、预算 / 时间盒、状态、验证证据和交接节奏。
+3. Goal / GSD：中大型项目用 `GSD + Goal` 管目标、Wave、预算 / 时间盒、状态、验证证据和交接节奏；GSD/CAD 准入同时检查 Superpowers 方法门禁。
 4. Spec / Harness：需要 AI 编码时，补 OpenSpec、Spec 模板、Harness 摘要、写入范围、验证命令和 Execution Grant 缺口。
 5. 工程执行：`资深架构师` 承接系统设计、编码、TDD、补测试、CAD 门禁、源码级 CR 和发布风险。
 6. 质量理解门禁：AI Native 编排质量门禁、理解门禁、工具准入和验证矩阵，确保 Review 者看得懂影响范围并能复核证据。
 7. 交付复盘：用 `做 AI 代码交付闭环` 检查一次通过率、返工率、CR 轮次、缺陷密度、知识回流和残余风险。
+
+### 每个 Skill 的最小输入
+
+- `AI Native 研发流程编排`：当前材料成熟度、目标产物、涉及 owner、写入/只读边界、验证要求、是否需要 GSD/CAD/Goal/工具准入。
+- `产品架构专家`：业务目标、用户/主体、范围/非目标、输入材料、希望输出的产品产物、验收和待确认项。
+- `资深架构师`：代码或文档路径、现象/目标、运行环境、约束、期望验证命令、是否允许改代码或只做 CR。
+- `java-service-code-generator`：DDL/schema/Java 类/字段表格、表名、业务模块、输出目录、是否允许覆盖已有文件。
+- `$fireworks-tech-graph`：图形语义、节点关系、受众、风格要求、输出格式和是否需要基于已有 SVG 续作。
 
 ### 先选哪个 Skill
 
