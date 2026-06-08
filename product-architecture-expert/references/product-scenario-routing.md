@@ -11,6 +11,7 @@
 - 用户要求产品头脑风暴、问题探索、假设挑战、HMW、第一性原理拆解、OODA、逆向头脑风暴或在写 PRD 前先把想法想透。
 - 用户要求从 AI Native 产品流程、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 或 PRD 可执行上下文中提炼产品侧交接材料。
 - 用户要求多个 AI、PM / Reviewer、产品大师、MAGI、多视角、合议式评审 PRD / 产品方案 / AI 生成方案 / 原型候选，或希望按阶段确认前置依赖、方案概要、交互和 PRD。
+- 用户要求需求评审、PRD 评审会前扫描、需求评审 Skill、AI 先扫 PRD、完整性 / 一致性 / 可测试性 / 二义性检查。
 - 不确定应进入通用产品架构、PRD 模板、支付资金专项还是能力评估。
 - 需要先澄清用户、主体、目标、边界、对象、规则、数据和风险。
 
@@ -48,6 +49,7 @@
 | 原型/HTML/页面截图/交互稿反推 PRD | 使用方式、产品语义门禁、快速路由表，并继续读 PRD reference | 只描述页面控件 |
 | 复杂 PRD / AI 生成方案 / 多视角合议评审 | 快速路由表、产品语义门禁，并继续读 `product-deliberation-workflow.md`、`product-prd-quality-gates.md` | 不新增独立产品大师 Skill，不照搬外部多 Agent 工具 |
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
+| PRD / 需求评审会前 AI 预扫描 | 快速路由表、产品语义门禁，并继续读 `product-prd-quality-gates.md` 的“AI 预扫描四维度” | 不把 AI 扫描结果当已确认缺陷，不替代正式评审 |
 | 产品洞察 / 资料分析 / 机会雷达 | 快速路由表、产品语义门禁，并继续读 `product-insight-analyst.md` | 不把资料摘要当机会决策 |
 | 产品头脑风暴 / 问题探索 / 假设挑战 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律” | 不把发散想法直接当 PRD、Backlog 或研发任务 |
 | Backlog 决策 / 机会清单优先级 / User Story/AC | 快速路由表、产品语义门禁，并继续读 `po-backlog-manager.md` 和 `product-design-and-prd.md` | 不把洞察清单直接当研发任务 |
@@ -101,6 +103,7 @@
 | 产品方向、业务目标、产品边界不清 | `product-architecture-methodology.md` | 目标、用户、范围、非目标、成功指标、关键风险 |
 | 写 PRD、生成 PRD、完善 PRD、评审 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；评审加读 `product-prd-quality-gates.md`，支付资金加读 `product-prd-financial-appendix.md`，运营数据发布加读 `product-prd-operations-and-data.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
 | PRD 文档过厚、过薄、未更新、未评审、版本状态不清或过程稿混入正文 | `product-design-and-prd.md`, `product-prd-quality-gates.md` | 文档目标/受众、裁剪建议、必改项、版本状态/过程记录链接和最终正文准出机制 |
+| 需求评审、PRD 评审会前扫描、需求评审 Skill、完整性/一致性/可测试性/二义性检查 | `product-prd-quality-gates.md`, `product-design-and-prd.md` | AI 预扫描疑似问题清单：锚点、维度、影响、建议追问、建议改法、决策状态、owner、验证方式；只做评审前广度扫描，不替代正式评审 |
 | 多 AI、PM/Reviewer、产品大师、MAGI、合议式评审复杂 PRD、AI 生成方案、HTML Demo 或产品方案 | `product-deliberation-workflow.md`, `product-prd-quality-gates.md`，需要正文时再读 `product-prd-template.md` 和 `product-design-and-prd.md` | 合议评审结论：触发原因、阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向 |
 | 产品经理方法论、产品专家能力补齐、产品经理知识体系、基础工作法校准 | `product-architecture-methodology.md`, `skill-tree.md` | 能力校准：文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析、知识库沉淀；并提升到复杂业务对象、规则、验收和交接能力 |
 | AI 产品工作成熟度、AI-shaped readiness、产品团队 AI 工作流改造、AI 是否形成产品优势 | `product-architecture-methodology.md` | AI 产品工作成熟度评审：业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标；不安装外部 advisor，不照搬外部话术 |
@@ -149,6 +152,7 @@
 - **用户要消化洞察、机会清单或需求池，做 Backlog 决策、优先级、User Story 或 AC**：读取 `po-backlog-manager.md`，先做输入归一化、BV/EE 和业务/用户/工程三桌校验，再输出 P0/P1/P2、拒绝/延后理由、User Story、AC、技术现实主义风险、owner 和待确认项；不要把洞察清单直接改写成研发任务。
 - **用户要图形化产物**：读取 `diagram-output.md`，先判断图形目标和图形类型；正式图形化交付默认只生成 SVG；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式只在用户明确提出时生成，并报告验证结论。
 - **用户要写作、生成、完善或评审 PRD / 产品需求文档 / 需求说明书 / 模板**：优先读取 `product-prd-template.md`，输出可复制 PRD，覆盖问题背景、用户故事、功能范围、核心概念、业务抽象、业务规则、页面/交互说明、异常处理、埋点报表、权限、非功能和验收标准；评审或提交前自检读取 `product-prd-quality-gates.md`；支付资金 PRD 读取 `product-prd-financial-appendix.md`；运营、通知、数据、发布读取 `product-prd-operations-and-data.md`；信息不足时保留“待确认”，不要只给提纲。用户给原型、HTML、页面截图、交互稿或页面说明时，先反推角色、对象、流程、规则、状态和验收，再生成 PRD；不要只描述页面控件。
+- **用户要需求评审、PRD 评审会前扫描或需求评审 Skill 化**：读取 `product-prd-quality-gates.md` 的“AI 预扫描四维度”，按完整性、一致性、可测试性、二义性输出疑似问题、章节锚点、影响、建议追问、建议改法、owner 和验证方式；只做评审前广度扫描和提问准备，不把 AI 结论当成已确认缺陷，也不替代正式评审。
 - **用户要多视角、多个 AI、PM/Reviewer、产品大师、MAGI 或合议式评审**：读取 `product-deliberation-workflow.md`，先判断是否需要合议，再输出阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向；需要正式 PRD 时再回到 `product-prd-template.md` 和 `product-design-and-prd.md`，不要新增独立产品大师 Skill。
 - **用户要从模糊想法直接出方案**：先过产品语义门禁，输出关键假设、待确认项和最小可评审结构；不要把假设写成已确认事实。
 - **用户要流程**：输出角色、触发条件、主流程、逆向流程、异常流程、人工处理、通知、SLA 和审计。

@@ -75,6 +75,7 @@
 - AI 辅助 PRD 与问题地图：检索“AI 写 PRD”“用户反馈”“问题地图”“证据强度”。
 - 产品合议评审与多 Agent PRD：检索“产品大师”“MAGI”“多 Agent”“PM Reviewer Controller”“合议评审”“AI 生成 PRD”。
 - PRD 文档质量治理：检索“高质量需求文档”“PRD/MRD/BRD”“版本管理”“评审机制”。
+- 需求评审 AI 预扫描：检索“完整不等于可测”“需求评审”“完整性”“一致性”“可测试性”“二义性”“AI 预扫描”。
 - 通用产品架构与业务驱动验证：检索“Impact Mapping”“BDD”“业务目标”“验收场景”“产品到架构交接”。
 - PRD 模板与发布验证：检索“Atlassian PRD”“assumptions”“success metrics”“release criteria”“bidirectional traceability”。
 - 官方规则与监管：检索“Nacha”“Visa Core Rules”“Mastercard Rules”“监管来源”，并继续回到 `regulatory-baseline.md` 核验。
@@ -148,6 +149,7 @@
 - GitHub 仓库 `deanpeters/Product-Manager-Skills` 中的 `ai-shaped-readiness-advisor`：`https://github.com/deanpeters/Product-Manager-Skills`，原始文件入口 `https://raw.githubusercontent.com/deanpeters/Product-Manager-Skills/main/skills/ai-shaped-readiness-advisor/SKILL.md`。2026-06-01 已读取公开 `SKILL.md`，其定位为 15-20 分钟交互式 AI 产品组织成熟度评估，覆盖 Context Design、Agent Orchestration、Outcome Acceleration、Team-AI Facilitation 和 Strategic Differentiation。本仓库只吸收“区分 AI 提效与工作系统重构、上下文边界、可追溯流程、学习周期、人工责任和差异化指标”的可迁移检查项；当前不安装该 Skill、不复制交互协议、评分 rubrics、示例案例、关联 Skill 链接或外部执行流程。
 - 图书《产品经理方法论：构建完整的产品知识体系》及同作者同系列公开书目信息：读书网公开图书页 `https://m.dushu.com/book/13884861/`。该公开页显示作者为赵丹阳，出版社为人民邮电出版社，出版时间为 2021-11-01，ISBN 为 9787115571144；得到公开页面另显示同作者《产品经理方法论》和第2版推荐项等系列线索。2026-06-02 已读取公开图书页、内容简介、作者简介和目录，只按公开书目信息和目录结构做方法校准。本仓库只吸收公开目录呈现的产品经理基础知识体系，覆盖文档分型、流程图、原型图、产品架构图、用户研究、需求管理、数据分析、技术协作、项目管理、行业/商业分析、产品实践、学习方法和职业进阶；不复制书籍正文、章节内容、示例、图表、训练材料或作者表达，也不把基础岗位知识体系替代复杂业务产品架构专家能力。
 - 微信公众号文章《B端产品经理实战经验分享系列 - 如何写出高质量的需求文档》：`https://mp.weixin.qq.com/s/_KU0j5sy1HBMdx03bhlYGg`。作者/账号为 `AI产品经理老李`，发布时间为 2026-04-22 08:00；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（Chrome headless）加载取证。公开内容用于参考 B 端需求文档质量治理，覆盖文档目标与受众、PRD/MRD/BRD 类型区分、复杂度裁剪、功能范围、验收标准、版本记录、变更同步和评审闭环；不复制原文案例、指标数字、图片、排版或作者表达，也不把文章中的轻量结构替代本仓库已有产品架构/PRD 模板。
+- 微信公众号文章《完整不等于可测：需求评审的四个AI新维度》：`https://mp.weixin.qq.com/s/7EiFz1Oka1tYQmfbBferQg`。作者/账号为 `Maywen测开AI手记`，页面时间字段为 2026-06-08 12:52:41 Asia/Shanghai；2026-06-08 `web.open` 未取得正文，随后通过移动端微信 UA 读取标题、作者、发布时间和正文。公开内容用于参考需求评审前 AI 预扫描的四维检查框架：完整性、一致性、可测试性和二义性，以及“AI 只列疑似问题和追问点，人工过滤、排序和 owner 决策”的边界；不复制原文、效果数字、示例句子、标题传播话术或作者表达，也不把预扫描替代正式需求评审、QA 测试设计或产品 owner 决策。
 - 微信公众号文章《别再手工看政策和竞品了，让 AI 帮你做“递归式洞察”》：`https://mp.weixin.qq.com/s?__biz=MzY5MTIxNDA0MQ==&mid=2247483929&idx=1&sn=d832c54aa5a58e0f429d82a969e7f928&scene=21#wechat_redirect`。2026-05-28 普通 curl 返回微信验证页；Browser/Playwright 核验结果为页面加载超时/会话重置，正文不可复核；仅保留为同号历史索引线索，不得作为已吸收来源。
 - 搜狗微信搜索《产品AI力学》结果页：`https://weixin.sogou.com/weixin?type=2&query=%E4%BA%A7%E5%93%81AI%E5%8A%9B%E5%AD%A6`。2026-05-28 公开结果页可读取部分同号文章标题与摘要；后续结果跳转和更多正文读取触发反爬/验证页，Browser/Playwright 核验结果为正文不可复核；仅保留为选题分布与历史索引线索，不得作为已吸收来源。
 - Impact Mapping 官方图书页：`https://www.impactmapping.org/book.html`。2026-05-28 已读取公开页面；页脚声明站点内容在未另行说明时使用 CC-BY 4.0，公开内容用于参考业务与交付对齐、目标导向规划、把工作拆成仍有业务价值的小块和可适应变化的路线图；本仓库只吸收目标、参与方、行为影响和交付物之间的验证链路，不复制图书内容、图示、海报、工作坊材料或站点资产。

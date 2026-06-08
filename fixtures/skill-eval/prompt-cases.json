@@ -60,6 +60,16 @@
       "expected_handling": "进入 AI Native 的 PRD / 系分合议预审模式，读取 prd-system-design-review，先输出评审对象、三角色分工、锚点化问题、ACCEPT/REJECT/PENDING 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由；预审不能替代产品专家 PRD 正文、架构师系分正文、正式评审或 Execution Grant。"
     },
     {
+      "id": "ai-native-should-prd-ai-prescan-review",
+      "skill": "ai-native-engineering-workflow",
+      "query": "做 PRD 评审会前 AI 预扫描：先让产品专家按完整性、一致性、可测试性、二义性找疑似问题和追问点，再接入 MAGI 预审的 review_task、evaluation_task、reporting_task，输出 ACCEPT/REJECT/PENDING 和 owner。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 PRD AI 预扫描 + 合议预审模式，先路由产品架构专家读取 product-prd-quality-gates 的 AI 预扫描四维度，按完整性、一致性、可测试性、二义性输出带锚点的疑似问题和建议追问；再由 ai-native 的 prd-system-design-review 接入 review_task、evaluation_task、reporting_task，把每条疑似问题标为 ACCEPT/REJECT/PENDING，写清 owner、验证方式和下一步路由；AI 预扫描不能替代正式需求评审、QA 测试设计或产品 owner 决策。"
+    },
+    {
       "id": "ai-native-should-final-deliverable-document-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、Goal Ledger 或任务计划，只保留当前有效结论和验收。",

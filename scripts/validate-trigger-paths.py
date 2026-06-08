@@ -237,6 +237,9 @@ ai_native_terms = [
     "Execution Grant",
     "AI 原型/eval",
     "PRD/系分合议预审",
+    "PRD 评审会前",
+    "AI 预扫描",
+    "完整性/一致性/可测试性/二义性",
     "整理最终 PRD",
     "最终文档准出",
     "正式交付文档",
@@ -305,8 +308,8 @@ ai_native_terms = [
     "授权学习",
     "经验归位",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 payment_terms = [
     "清结算",
     "对账",
@@ -1590,6 +1593,9 @@ check(
             "不负责工程实现、代码 CR、生产排障或 GSD/CAD 执行授权",
             "想法 / 口头需求 / 原型候选",
             "PRD / 产品方案",
+            "需求评审前置扫描",
+            "完整性、一致性、可测试性、二义性",
+            "疑似问题",
             "AI 生成方案 / 多方争议",
             "客户访谈 / 工单 / 竞品 / 行业资料",
             "支付与资金产品",
@@ -1609,6 +1615,7 @@ check(
             "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件、残余风险 / 需要确认",
             "最短触发方式",
             "`进入 GSD 产研协同研发流程`",
+            "`做 PRD 评审会前预扫描`",
             "`做 PRD / 系分合议预审`",
             "`做 GSD/CAD 准入`",
             "`开启 GSD/CAD 默认授权策略`",
@@ -4986,6 +4993,53 @@ check(
     ),
 )
 check(
+    "product source map records PRD AI prescan article",
+    has_all(
+        product_source_map,
+        [
+            "完整不等于可测：需求评审的四个AI新维度",
+            "https://mp.weixin.qq.com/s/7EiFz1Oka1tYQmfbBferQg",
+            "Maywen测开AI手记",
+            "2026-06-08 12:52:41 Asia/Shanghai",
+            "移动端微信 UA 读取标题、作者、发布时间和正文",
+            "公开内容用于参考需求评审前 AI 预扫描",
+            "完整性、一致性、可测试性和二义性",
+            "AI 只列疑似问题和追问点",
+            "人工过滤、排序和 owner 决策",
+            "不把预扫描替代正式需求评审",
+        ],
+    ),
+)
+check(
+    "AI Native source map records PRD AI prescan article",
+    has_all(
+        ai_native_source_map,
+        [
+            "完整不等于可测：需求评审的四个AI新维度",
+            "https://mp.weixin.qq.com/s/7EiFz1Oka1tYQmfbBferQg",
+            "PRD 评审会前 AI 预扫描",
+            "完整性、一致性、可测试性、二义性四维预扫描",
+            "疑似问题清单",
+            "人工过滤/排序和 owner 决策边界",
+            "不把 AI 预扫描写成正式评审、测试设计或产品决策的替代品",
+        ],
+    ),
+)
+check(
+    "README records PRD AI prescan source boundary",
+    has_all(
+        "README.md",
+        [
+            "完整不等于可测：需求评审的四个AI新维度",
+            "https://mp.weixin.qq.com/s/7EiFz1Oka1tYQmfbBferQg",
+            "完整性、一致性、可测试性、二义性四维度预扫描",
+            "疑似问题",
+            "人工过滤/排序/owner 决策边界",
+            "不把 AI 预扫描写成正式需求评审、QA 设计或产品 owner 决策的替代品",
+        ],
+    ),
+)
+check(
     "product source map records business-driven product verification sources",
     has_all(
         product_source_map,
@@ -5243,6 +5297,60 @@ check(
             "功能名不能替代需求",
             "需求变更必须更新版本号、影响范围、通知对象、当前评审结论和过程记录链接",
             "最终 PRD 不保留讨论过程、迭代草稿、AI prompt/回答轨迹、多角色争论或被拒方案展开",
+        ],
+    ),
+)
+check(
+    "PRD references expose AI prescan four dimensions",
+    has_all(
+        product_prd_quality_gates,
+        [
+            "AI 预扫描四维度",
+            "完整性",
+            "一致性",
+            "可测试性",
+            "二义性",
+            "疑似问题",
+            "建议追问",
+            "ACCEPT / REJECT / PENDING",
+            "预扫描只负责找疑似问题和追问点",
+            "不能替代正式需求评审、QA 测试设计或产品 owner 决策",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "PRD / 需求评审会前预扫描",
+            "完整性、一致性、可测试性、二义性四维度只产出疑似问题和追问点",
+            "不能替代正式评审或 owner 决策",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "需求评审、PRD 评审会前扫描、需求评审 Skill",
+            "AI 预扫描疑似问题清单",
+            "完整性/一致性/可测试性/二义性检查",
+            "不把 AI 扫描结果当已确认缺陷",
+        ],
+    ),
+)
+check(
+    "AI Native PRD review consumes AI prescan without replacing owners",
+    has_all(
+        ai_native_prd_system_design_review,
+        [
+            "PRD AI 预扫描接入",
+            "完整性",
+            "一致性",
+            "可测试性",
+            "二义性",
+            "预扫描输出只作为 `review_task` 的候选锚点和追问点",
+            "ACCEPT",
+            "REJECT",
+            "PENDING",
+            "AI 预扫描不能替代正式 PRD 评审、QA 测试设计、业务 owner 决策或架构 owner 判断",
+            "未确认的疑似问题继续留在评审报告、Decision Log 或任务计划",
         ],
     ),
 )
@@ -6772,6 +6880,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native PRD AI prescan review",
+        prompt="做 PRD 评审会前 AI 预扫描：先让产品专家按完整性、一致性、可测试性、二义性找疑似问题和追问点，再接入 MAGI 预审的 review_task、evaluation_task、reporting_task，输出 ACCEPT/REJECT/PENDING 和 owner",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "product", "product-scenario-routing.md", "product-prd-quality-gates.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
         name="AI Native final PRD system design document gate",
         prompt="整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、Goal Ledger 或任务计划，只保留当前有效结论和验收",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "spec-template-practices.md", "verification-review-release.md"},
@@ -7049,11 +7162,11 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
-        if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案"]):
+        if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案"]):
             route.add("prd-system-design-review.md")
         if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
@@ -7154,6 +7267,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"workflow.md", "adr-and-tradeoff.md", "production-readiness.md", "negative-constraints.md"})
     if contains_any(prompt, ["PRD", "模板"]):
         route.update({"product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"})
+    if contains_any(prompt, ["需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点"]):
+        route.update({"product-scenario-routing.md", "product-prd-quality-gates.md", "product-design-and-prd.md"})
     if contains_any(prompt, payment_terms):
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
     if contains_any(prompt, product_general_route_terms):
@@ -7204,6 +7319,24 @@ for case_id in [
     "ai-native-should-route-cr-work",
 ]:
     expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-prd-ai-prescan-review",
+    (
+        "PRD AI 预扫描 + 合议预审模式",
+        "product-prd-quality-gates",
+        "完整性",
+        "一致性",
+        "可测试性",
+        "二义性",
+        "疑似问题",
+        "review_task",
+        "evaluation_task",
+        "reporting_task",
+        "ACCEPT/REJECT/PENDING",
+        "不能替代正式需求评审、QA 测试设计或产品 owner 决策",
+    ),
+)
 
 expected_handling_has(
     "ai-native-should-final-deliverable-document-gate",
