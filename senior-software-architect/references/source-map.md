@@ -276,13 +276,14 @@
 
 ### AI 辅助画图与架构图公开来源组
 
-- 读取日期：2026-06-01
-- 读取状态：微信公众号文章已通过移动端微信 UA 公开 HTML 读取标题、作者/账号、发布时间和正文；本机 Chrome headless 等价浏览器尝试返回异常，未作为正文来源。C4 Model 与 arc42 沿用“业务驱动架构与验证公开来源组”的既有读取记录，本轮只补充图形化应用；draw.io 官方页面已通过公开 HTML 读取正文。
+- 读取日期：2026-06-01；追加读取日期：2026-06-07
+- 读取状态：微信公众号文章《架构师必备--让AI画架构图》已通过移动端微信 UA 公开 HTML 读取标题、作者/账号、发布时间和正文；本机 Chrome headless 等价浏览器尝试返回异常，未作为正文来源。微信公众号文章《如何让 AI 画出高质量架构图，一个Skill搞定》2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文。C4 Model 与 arc42 沿用“业务驱动架构与验证公开来源组”的既有读取记录，本轮只补充图形化应用；draw.io 官方页面已通过公开 HTML 读取正文。
 - 许可证：C4 Model 页面声明站点和示例图使用 CC-BY 4.0；arc42、draw.io 与微信文章本轮不复用原文、模板、图示或站点资产。本仓库只保留来源说明、结构化提炼和归因边界。
 
 已读取来源：
 
 - 微信公众号文章《架构师必备--让AI画架构图》：`https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg`。作者/账号为 `方兴集`，发布时间为 2026-04-30 16:28:31；公开内容用于参考 AI + draw.io 的自然语言生成、文档转图、图像参考、版本历史、可编辑 draw.io XML 和本地模型/凭据边界。
+- 微信公众号文章《如何让 AI 画出高质量架构图，一个Skill搞定》：`https://mp.weixin.qq.com/s/tE0kfJ2ZHeGGz6xCgEp3Zg`。2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，页面作者字段为 `Davon Dong`，既有账号线索保留 `日积月码`，页面时间字段为 2026-05-12；公开内容用于参考陌生代码库先形成架构描述、再生成可编辑架构图、并通过组件和连接关系迭代校验的图形化理解工作法。
 - C4 Model Diagrams：沿用上文既有来源记录，公开内容用于参考 System Context、Container、Component、Code、Dynamic、Deployment 等图形视图，以及按不同 zoom level 面向不同读者讲不同故事。
 - arc42 Template Overview：沿用上文既有来源记录，公开内容用于参考架构文档中的 Introduction & Goals、Constraints、Context & Scope、Solution Strategy、Building Block View、Runtime View、Deployment View、Quality Requirements、Risks & Technical Debt 等视图。
 - draw.io 官方 GitHub 集成文档：`https://www.drawio.com/docs/integrations/github/`。公开内容用于参考可编辑图文件和源码/文档同库维护、GitHub 权限边界和文件大小提示。
@@ -292,13 +293,15 @@
 | 应用位置 | 已吸收内容 |
 | --- | --- |
 | `diagram-output.md` | 新增 AI 辅助可编辑图治理，要求先给出图形 brief，按业务上下文、容器/应用、组件、运行时交互、部署、数据/消息和观测分层拆解；保留 SVG、draw.io XML、Mermaid 或生成脚本等可编辑源；检查敏感信息、版权边界、远程资源、错误连线、异常路径、颜色语义和文本溢出。 |
+| `diagram-output.md` | 新增陌生代码库图形化理解包，要求只读提取组件、入口、启动顺序、认证权限、外部系统、数据/消息/状态流、源码锚点和未确认连接，再判断能否进入实现或 CR。 |
+| `ai-native-engineering-workflow/references/agentic-engineering-governance.md` | 补充 AI Native Harness 对图形化理解 brief 的调度要求，避免陌生代码库或多模块变更只靠文字总结进入实现。 |
 | `skill-tree-platform-leadership-ai.md` | 在技术表达与图文能力中补充 AI 辅助画图只是可编辑草案，架构师仍需校验视图层级、节点责任、箭头语义、敏感信息、版权边界和工程验证闭环。 |
 | `README.md` | 新增公开参考来源记录，说明只吸收 AI + draw.io、C4、arc42、draw.io 官方文档中的通用方法和治理边界。 |
 | `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI 辅助可编辑图治理、来源记录和图形能力入口漂移。 |
 
 未吸收内容：
 
-- 不复制微信文章示例图、提示词、项目安装说明、工具宣传语、截图、作者表达或具体工具链配置。
+- 不复制微信文章示例图、提示词、项目安装说明、工具宣传语、截图、作者表达或具体工具链配置；不安装《如何让 AI 画出高质量架构图，一个Skill搞定》中提到的外部 Skill。
 - 不把 next-ai-draw-io、draw.io、Mermaid、SVG 或 `$fireworks-tech-graph` 的生成结果写成架构质量结论；架构质量仍需回到业务目标、模块边界、接口契约、数据、测试、监控、发布和回滚。
 - 不默认把内部文档、代码、客户资料、生产配置或密钥上传到云端 AI 画图工具；涉及 API Key、OAuth 或仓库访问时必须说明数据边界、凭据边界、联网行为和写入范围。
 - 不复制 C4、arc42 或 draw.io 的图示、模板、品牌资产、站点样式或完整流程；只吸收视图选择、文档结构和版本化治理的轻量检查项。

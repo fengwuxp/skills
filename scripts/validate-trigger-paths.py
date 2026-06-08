@@ -237,6 +237,11 @@ ai_native_terms = [
     "Execution Grant",
     "AI 原型/eval",
     "PRD/系分合议预审",
+    "整理最终 PRD",
+    "最终文档准出",
+    "正式交付文档",
+    "过程资产",
+    "过程记录链接",
     "合议预审",
     "MAGI 三角色",
     "A2A 虚拟评审",
@@ -259,6 +264,12 @@ ai_native_terms = [
     "验证矩阵",
     "代码 CR",
     "发布复盘",
+    "默认授权",
+    "自动推进",
+    "替我审批",
+    "授权策略",
+    "Wave Grant",
+    "CAD Grant",
     "事实边界检查",
     "事实边界",
     "无根据猜测",
@@ -289,9 +300,13 @@ ai_native_terms = [
     "上下文漂移",
     "变更可理解性",
     "影响可视化",
+    "图形化理解",
+    "架构描述转图",
+    "授权学习",
+    "经验归位",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 payment_terms = [
     "清结算",
     "对账",
@@ -377,6 +392,18 @@ for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
 
 check(
+    "repo agents constrain final deliverable documents",
+    has_all(
+        agents_rules,
+        [
+            "正式 PRD、系分、OpenSpec/SDD 等交付文档以最终标准版本为主",
+            "不保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案展开",
+            "过程内容进入任务计划、评审报告、Decision Log、Goal Ledger、ADR 或中间任务文档",
+        ],
+    ),
+)
+
+check(
     "ai-native workflow skill anchors product architect and senior architect collaboration",
     has_all(
         ai_native_workflow_skill,
@@ -423,6 +450,11 @@ check(
             "不自动安装插件，不运行外部脚本，不采用外部默认 Git 操作",
             "Goal 组合由本技能编排",
             "GSD + Goal",
+            "GSD/CAD 授权策略由本技能编排",
+            "按 Wave、Goal 或 CAD Grant 的分级授权",
+            "低风险、边界清楚、验证可运行的任务可在 Grant 有效期内默认推进",
+            "Codex 当前会话已启用“替我审批”时可作为低风险工具审批通道",
+            "Git、联网、依赖安装、生产、密钥、部署、不可逆操作和高风险业务仍必须显式授权",
             "Goal 不等于 Execution Grant",
             "不自动创建运行时 Goal",
             "GSD 模式的目标是交付生产可用能力",
@@ -432,8 +464,13 @@ check(
             "已知事实、合理推断、待确认事项和范围外不做",
             "没有来源、源码锚点、用户目标、验收种子或验证证据支撑",
             "事实先于推断",
+            "授权按风险分级",
+            "GSD/CAD 可以默认推进已授权范围内的低风险原子任务",
             "严禁把无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的实现扩张写成结论",
+            "正式交付文档与过程资产分离",
+            "交付文档不混过程",
             "证据边界：事实 / 推断 / 待确认 / 范围外不做",
+            "授权策略模式",
             "Goal 组合模式",
             "Goal 组合包",
             "进入 GSD 产研协同研发流程",
@@ -449,7 +486,7 @@ check(
             "普通 PRD、产品方案或 Backlog 决策可以从本技能进入",
             "架构设计、代码 Review、Bug 修复、测试或生产变更可以从本技能进入",
             "GSD/CAD 大项目编排可以从本技能进入",
-            "是否需要 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口和下一步 owner",
+            "是否需要 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、授权策略、Execution Grant 缺口和下一步 owner",
             "测试策略、TDD、补测试、测试实现和测试代码 CR 可以从本技能进入",
             "AI 快速阅读代码、代码库理解结论包、影响可视化、重构导览或结构化 Review 可以从本技能进入",
             "Gemini CLI / AgentRC 安装、调用或工具辅助代码阅读可以从本技能进入",
@@ -469,6 +506,7 @@ check(
             "不把 GSD 写成随机推进清单",
             "不用模拟模块、mock 流程、无业务入口 demo、内存版业务 Service 或表面可运行页面替代生产可用能力",
             "不做无根据的猜测、推导、补全、脑补式需求扩张或超出用户目标的实现",
+            "不把 Codex “替我审批”写成 Skill 可自行开启的权限",
             "references/product-to-engineering-lifecycle.md",
             "references/agentic-engineering-governance.md",
             "references/gsd-cad-admission.md",
@@ -490,6 +528,8 @@ check(
             "AI Native 产品到研发编码流程编排与准入门禁",
             "产品专家到架构师交接",
             "PRD-Lite/OpenSpec/Harness/GSD/CAD",
+            "GSD/CAD 授权策略",
+            "Codex 替我审批模式边界",
             "Goal 组合/GSD+Goal",
             "普通代码阅读、Bug、测试或源码级 CR 优先交给资深架构师",
             "只有代码库级理解、影响可视化、上下文工程或工具调用准入才由本技能先编排",
@@ -506,7 +546,7 @@ check(
         ai_native_workflow_agent,
         [
             "AI Native产品到研发编码流程编排",
-            "GSD/CAD准入",
+            "GSD/CAD准入与授权策略",
             "Goal组合",
             "Spec模板实践",
             "AI代码交付闭环",
@@ -515,7 +555,7 @@ check(
             "Gemini CLI/AgentRC工具准入",
             "CR流程门禁和发布闭环",
             "按当前材料选择最小流程",
-            "owner、交接物、验证门禁、停止条件和下一步分派",
+            "owner、交接物、授权策略、验证门禁、停止条件和下一步分派",
         ],
     ),
 )
@@ -530,6 +570,7 @@ check(
             "Owner / 下一步分派：",
             "交接物：",
             "证据边界：事实 / 推断 / 待确认 / 范围外不做",
+            "授权策略：只读 / 默认低风险授权 / Wave Grant / CAD Grant / 显式确认",
             "验证门禁：",
             "停止条件：",
             "残余风险 / 需要确认：",
@@ -587,6 +628,13 @@ check(
             "轻量执行",
             "Harness / GSD",
             "CAD 候选",
+            "默认授权 / 自动推进",
+            "GSD/CAD 自动推进、默认授权、减少每个任务审批",
+            "授权策略判断",
+            "授权策略: 只读 / 默认低风险授权 / Wave Grant / CAD Grant / 显式确认",
+            "Codex 替我审批: 未启用 / 已启用但仅低风险 / 不适用",
+            "GSD/CAD 授权必须按风险分级",
+            "Codex “替我审批”只能记录为当前会话已启用的低风险审批通道",
             "权限边界",
             "Wave 0",
             "gsd-cad-admission.md",
@@ -596,6 +644,8 @@ check(
             "事实 / 推断 / 待确认 / 范围外不做:",
             "不能把无根据猜测、外部文章观点、工具总结或模型脑补写成任务、实现或授权",
             "是否有事实边界门禁",
+            "是否有授权策略",
+            "能否自动推进",
             "是否有根据",
             "变更可理解性要求",
             "代码库理解结论包",
@@ -611,6 +661,7 @@ check(
             "AC 编号与测试映射",
             "spec-lint / AC 覆盖 / 漂移检查",
             "可评审 Spec 模板",
+            "把“自动推进”“默认授权”或 Codex “替我审批”写成无条件放行",
         ],
     )
     and has_all(
@@ -621,12 +672,18 @@ check(
             "Wave/Atomic Task 候选",
             "Superpowers 方法门禁",
             "CAD 候选缺口",
+            "GSD/CAD 授权策略卡",
+            "默认授权哪些任务",
+            "Codex 的“替我审批”模式",
             "Execution Grant 缺口",
             "下一步 owner",
             "AI Native 决定“是否进入 GSD/CAD 编排候选，以及下一步 owner”",
             "GSD-like 决定“哪些阶段和任务可以被执行”",
             "CAD Mode 决定“当前选中的原子任务是否可以自动执行”",
             "Execution Grant 决定“本轮实际允许做什么”",
+            "授权策略不是让每个任务都重新问一次，也不是让所有动作无条件通过",
+            "把授权前移到 Wave、Goal 或 CAD Grant 层",
+            "Skill 自行开启",
             "Superpowers 在 GSD 中只作为方法纪律层",
             "GSD 可以默认支持 Superpowers 方法门禁",
             "不能默认安装 Superpowers 插件、运行外部脚本、创建 worktree、启动 subagent 或采用外部 Git 默认动作",
@@ -650,6 +707,7 @@ check(
             "`MockXxxService`",
             "Map/List 存储型业务实现",
             "GSD Round 0 缺口",
+            "当前授权策略是否清楚",
             "是否需要 Superpowers 方法门禁",
             "需求澄清是否需要 `brainstorming`",
             "任务拆解是否需要 `writing-plans`",
@@ -659,11 +717,24 @@ check(
             "Atomic Task 候选",
             "生产可用能力锚点",
             "事实/推断/待确认边界",
+            "建议授权模式",
             "Superpowers 方法纪律候选",
             "TDD 切入点",
             "最小 Review 输入包",
             "完成前验证命令",
             "是否已有 Superpowers/TDD/Review/Verification 方法门禁",
+            "CAD 候选但缺授权策略",
+            "CAD Grant 候选",
+            "只读侦察",
+            "默认低风险授权",
+            "Wave Grant",
+            "显式确认",
+            "Codex 替我审批通道",
+            "Grant 最小字段",
+            "默认审批通道",
+            "未开启时不得假定开启",
+            "Git 默认需要显式确认",
+            "只说“继续”“按建议推进”“自动跑起来”",
             "事实边界红线",
             "无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张",
             "事实依据、推断依据、待确认项和范围外不做",
@@ -678,6 +749,8 @@ check(
             "只检查页面能打开、接口能返回假数据或测试桩能跑通",
             "把内存版业务 Service、Map/List 存储实现、Fake/Mock 服务或进程内状态当成生产实现",
             "把 Superpowers skills 当成 GSD 的默认插件安装、默认外部脚本、默认 worktree、默认 subagent 或默认 Git 操作",
+            "把默认低风险授权写成无条件自动通过",
+            "让 Codex 替我审批绕过工具权限、sandbox、项目规则和用户授权",
             "在 AI Native 中复制 CAD 每轮 Pick / Red / Green / Review / Refactor / Verify / Record 细则",
         ],
     )
@@ -962,6 +1035,13 @@ check(
             "Draft / Ready / Active / Blocked / Verified / Closed / Superseded",
             "Goal 不会自动创建运行时 Goal",
             "不会替代 Execution Grant",
+            "不会扩大写入范围、提交权限或 Codex 替我审批范围",
+            "GSD/CAD 默认授权收敛到 Goal / Wave / CAD Grant",
+            "Goal 可以挂接 Wave Grant 或 CAD Grant",
+            "每个 Wave 的授权策略",
+            "Wave Grant 只能覆盖该 Wave 内互不冲突、低风险、可验证、可回滚的任务",
+            "Codex 替我审批只可作为当前 CAD Grant 范围内低风险工具审批通道",
+            "用 Goal、Wave 状态或 Codex 替我审批扩大默认授权范围",
             "GSD 管 Wave 和任务顺序，Goal 管目标、成功标准、状态、预算、停止条件、验证证据和交接节奏",
             "在 GSD 场景中，Goal 的完成线必须是生产可用能力",
             "真实业务入口、生产边界、验收种子、验证证据、发布/回滚条件和责任 owner",
@@ -1137,6 +1217,79 @@ check(
     ),
 )
 check(
+    "ai-native workflow keeps authorized learning and experience placement",
+    has_all(
+        ai_native_code_delivery_closed_loop,
+        [
+            "学习归位判断",
+            "授权学习与经验归位",
+            "稳定上下文、项目规则和用户偏好没有进入合适载体",
+            "项目公共知识",
+            "Skill 方法增强",
+            "用户长期偏好",
+            "~/.skill-learning/",
+            "只有用户明确同意后才能读取或写入",
+            "已回流、建议回流、需要用户授权、不得回流",
+            "未经授权，不得创建 `~/.skill-learning/`",
+            "不得把用户长期偏好、个人工作方式或对话历史写进本仓库",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "一个让Codex变得越来越聪明的小方法",
+            "像素与咖啡时光",
+            "授权学习",
+            "经验归位",
+            "不把用户长期偏好写入仓库、安装目录或未授权学习目录",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "一个让Codex变得越来越聪明的小方法",
+            "授权学习、经验归位和知识回流",
+            "不把用户长期偏好写入仓库、安装目录或未授权学习目录",
+        ],
+    ),
+)
+check(
+    "ai-native governance keeps codebase visual understanding gate",
+    has_all(
+        ai_native_agentic_governance,
+        [
+            "图形化理解包",
+            "组件/入口",
+            "启动顺序",
+            "认证权限",
+            "外部系统",
+            "数据/消息/状态流",
+            "源码锚点",
+            "未确认连接",
+            "图只能降低认知负荷",
+            "图形化理解 brief",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "如何让 AI 画出高质量架构图，一个Skill搞定",
+            "日积月码",
+            "图形化理解 brief",
+            "不安装文中提到的外部 Skill",
+            "不把外部工具生成结果当作架构质量结论",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "如何让 AI 画出高质量架构图，一个Skill搞定",
+            "陌生代码库图形化理解",
+            "不安装文中提到的外部 Skill",
+        ],
+    ),
+)
+check(
     "ai-native workflow keeps PRD and system design deliberation review gate",
     has_all(
         ai_native_workflow_skill,
@@ -1178,6 +1331,11 @@ check(
             "ACCEPT",
             "REJECT",
             "PENDING",
+            "预审报告和决策日志是过程资产",
+            "进入正式文档时，只吸收 `ACCEPT` 后的最终结论",
+            "正式 PRD 是否只保留最终标准版本",
+            "正式系分是否只保留当前有效设计",
+            "双向追踪只记录当前有效条款、偏差、决策和下一步",
             "每条意见必须有锚点",
             "PRD 预审门禁",
             "系分预审门禁",
@@ -1194,6 +1352,7 @@ check(
             "ACCEPT",
             "REJECT",
             "PENDING",
+            "产品上下文包和 PRD-Lite 只保留工程化必须消费的最终业务事实",
         ],
     )
     and has_all(
@@ -1235,7 +1394,9 @@ check(
             "ai-native-should-end-to-end-product-engineering-workflow",
             "ai-native-should-gsd-cad-handoff",
             "ai-native-should-prd-system-design-deliberation-review",
+            "ai-native-should-final-deliverable-document-gate",
             "ai-native-should-gsd-cad-admission-gate",
+            "ai-native-should-gsd-cad-default-authorization",
             "ai-native-should-gsd-goal-composition",
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-code-delivery-closed-loop",
@@ -1281,6 +1442,10 @@ check(
             "### 最小提示词公式",
             "先帮我选路：根据当前材料判断应该用 AI Native、产品架构专家、资深架构师还是 java-service-code-generator",
             "### 反误触发规则",
+            "整理最终 PRD / 系分",
+            "最终文档准出模式",
+            "最终交付标准版本",
+            "过程内容外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划",
             "只看某个文件、函数、报错、测试失败或 PR diff：不要默认走 AI Native，直接用 `资深架构师`",
             "只有自然语言需求、没有字段结构或表名：不要直接用 `java-service-code-generator` 生成生产代码",
             "涉及安装、联网、写文件、覆盖已有文件、Git、同步到 Codex、生产数据或不可逆操作",
@@ -1307,9 +1472,9 @@ check(
             "先判断输入成熟度，再选最小模式",
             "瘦身后的职责边界",
             "`产品架构专家` 只补产品上下文包、验收种子和产品侧交接条件",
-            "`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、AI 代码交付闭环、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位",
+            "`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、GSD/CAD 授权策略、AI 代码交付闭环、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位",
             "变更可理解性/影响可视化协作位",
-            "GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口",
+            "GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、授权策略缺口",
             "测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接",
             "入口路径",
             "源码锚点",
@@ -1333,8 +1498,11 @@ check(
             "代码交付闭环模式",
             "Spec 模板模式",
             "Superpowers 调度模式",
+            "授权策略模式",
             "接入 Superpowers skills",
             "做 GSD/CAD 准入",
+            "开启 GSD/CAD 默认授权策略",
+            "Codex “替我审批”只作为已启用的低风险审批通道",
             "Superpowers 方法门禁",
             "GSD/CAD 准入同时检查 Superpowers 方法门禁",
             "superpowers-skill-library.md",
@@ -1351,8 +1519,9 @@ check(
             "CR 减负",
             "知识回流",
             "当前输入成熟度：想法 / 原型 / 产品上下文包 / OpenSpec / 代码变更 / 发布计划",
-            "目标产物：流程评审 / 交接包 / GSD/CAD 编排准入结论 / Harness 摘要 / GSD Wave 建议 / CAD 候选缺口 / Spec 模板落地包 / AI 代码交付闭环报告 / 工具安装与调用准入 / 质量门禁 / 代码库理解结论包 / 理解门禁 / 验证矩阵草案 / 发布复盘",
+            "目标产物：流程评审 / 交接包 / GSD/CAD 编排准入结论 / Harness 摘要 / GSD Wave 建议 / CAD 候选缺口 / 授权策略卡 / Spec 模板落地包 / AI 代码交付闭环报告 / 工具安装与调用准入 / 质量门禁 / 代码库理解结论包 / 理解门禁 / 验证矩阵草案 / 发布复盘",
             "证据边界：事实 / 推断 / 待确认 / 范围外不做；禁止无根据猜测或超出用户目标的实现",
+            "授权策略：只读 / 默认低风险授权 / Wave Grant / CAD Grant / 显式确认；Codex 替我审批仅限当前 Grant 范围内低风险动作",
             "经流程入口分派时这样用",
             "可以让它先判断普通 PRD、产品方案或 Backlog 是否成熟",
             "再把正文产物分派给 `产品架构专家`",
@@ -1360,8 +1529,10 @@ check(
             "不能替代产品 owner、架构 owner、正式评审、测试通过或 Execution Grant",
             "可以让它先判断架构设计、代码 CR、Bug 修复、测试或生产变更是否需要 OpenSpec、Harness、验证矩阵和发布闭环",
             "再把工程执行分派给 `资深架构师`",
-            "可以让它先判断中大型项目是否进入 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些是 CAD 候选缺口和 Execution Grant 缺口",
+            "可以让它先判断中大型项目是否进入 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些是 CAD 候选缺口和授权策略缺口",
             "再把工程任务包、CAD Mode 门禁和执行策略分派给 `资深架构师`",
+            "可以让它先做 `开启 GSD/CAD 默认授权策略`",
+            "减少每个任务重复审批",
             "可以让它先判断 Spec / SDD / OpenSpec 模板应该使用轻量任务卡、可评审 Spec、Harness/GSD Spec、CAD 候选 Spec 还是人工主导",
             "可以让它先判断 AI Coding / SDD / Spec / Harness 为什么没有带来端到端交付体感",
             "是否需要减层、补上下文、补机器验证、调整 Spec 强度、前移 CR 高频问题和建立知识回流",
@@ -1376,8 +1547,9 @@ check(
             "可以让它先判断 DDL、字段表格或 Java 类是否具备结构化输入、写入范围和覆盖风险",
             "再把配套代码生成分派给 `java-service-code-generator`",
             "按当前材料选最小流程",
-            "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、验证门禁、停止条件、残余风险 / 需要确认",
+            "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件、残余风险 / 需要确认",
             "证据边界必须区分事实、推断、待确认和范围外不做",
+            "授权策略必须区分默认、自动和需显式确认",
             "进入 GSD 产研协同研发流程",
             "产品专家先做需求分析、产品设计、确认和验收种子",
             "架构师再做系分设计、编码、TDD、CR 和验证",
@@ -1386,6 +1558,7 @@ check(
             "做理解门禁",
             "阅读分析代码库",
             "评估 Gemini CLI / AgentRC",
+            "开启 GSD/CAD 默认授权策略",
             "做设计-代码对齐",
             "评估是否需要 Gemini CLI / AgentRC，但不要默认安装或联网",
             "列来源、安装/认证/联网/写入边界、只读范围、隐私风险、人工替代路径和 CR 条件",
@@ -1433,11 +1606,12 @@ check(
             "优先用它的场景是跨角色、跨阶段、跨工具的流程问题",
             "只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`",
             "只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`",
-            "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、验证门禁、停止条件、残余风险 / 需要确认",
+            "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件、残余风险 / 需要确认",
             "最短触发方式",
             "`进入 GSD 产研协同研发流程`",
             "`做 PRD / 系分合议预审`",
             "`做 GSD/CAD 准入`",
+            "`开启 GSD/CAD 默认授权策略`",
             "`落地 Spec 模板最佳实践`",
             "`做 AI 代码交付闭环`",
             "`做质量门禁`",
@@ -3600,6 +3774,39 @@ check(
     ),
 )
 check(
+    "senior diagram output keeps codebase visual understanding package",
+    has_all(
+        senior_diagram,
+        [
+            "陌生代码库图形化理解",
+            "文字总结容易堆成无法评审的长段落",
+            "只读提取架构描述",
+            "启动入口",
+            "认证与权限入口",
+            "外部系统",
+            "数据/消息/状态流",
+            "关键源码锚点",
+            "未确认连接",
+            "进入实现/CR 的结论",
+            "如果只有自然语言描述而没有源码锚点",
+            "不能作为架构结论、重构计划或 CR 准出依据",
+            "如何让 AI 画出高质量架构图，一个Skill搞定",
+            "不安装文中提到的外部 Skill",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "如何让 AI 画出高质量架构图，一个Skill搞定",
+            "日积月码",
+            "页面时间字段为 2026-05-12",
+            "陌生代码库先形成架构描述",
+            "图形化理解包",
+            "不安装《如何让 AI 画出高质量架构图，一个Skill搞定》中提到的外部 Skill",
+        ],
+    ),
+)
+check(
     "senior AI Native architect and hardening gates are routed",
     has_all(
         ai_engineering,
@@ -3757,6 +3964,9 @@ check(
             "### 5.2A 质量属性场景",
             "质量属性ID",
             "可代码化/可观测化/可评审化",
+            "## 文档状态与版本信息",
+            "过程记录链接",
+            "本系分正文只保留当前有效设计、取舍、风险、待确认和验证计划",
             "## 1. 文档头、背景与目标模板",
             "## 2. 概要设计模板",
             "## 3. 模块与接口设计模板",
@@ -3764,6 +3974,30 @@ check(
             "## 5. 状态、流程与专项设计模板",
             "## 6. 非功能、研发计划与参考资料模板",
             "# <需求/系统/模块名称> 系统分析设计文档",
+        ],
+    ),
+)
+check(
+    "system analysis design keeps final document process separation",
+    has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "文档状态与版本信息",
+            "正式系分以最终标准版本为主",
+            "完整修订流水、评审争论、AI 推理轨迹、迭代草稿和被拒方案进入评审报告、ADR、Decision Log、任务计划或中间任务文档",
+            "不得把旧版本方案、历史讨论和多轮草稿与当前设计结论混写",
+        ],
+    ),
+)
+check(
+    "AI Native spec templates keep final specs separate from process assets",
+    has_all(
+        ai_native_spec_template_practices,
+        [
+            "Spec / SDD / OpenSpec 是当前实现约束，不是评审过程记录",
+            "讨论过程、迭代草稿、AI 推理轨迹、被拒方案和 Goal Ledger 流水只作为过程资产链接，不复制进正文",
+            "是否把讨论过程、迭代草稿、AI 推理轨迹、被拒方案或完整 Goal Ledger 流水写进 Spec 正文",
+            "不要把过程记录回流成最终交付正文",
         ],
     ),
 )
@@ -4348,6 +4582,27 @@ check(
     ),
 )
 check(
+    "product methodology keeps brainstorming as exploration discipline",
+    has_all(
+        product_architecture,
+        [
+            "产品头脑风暴纪律",
+            "思考伙伴",
+            "不是交付物生成器",
+            "问题探索",
+            "方案发散",
+            "假设挑战",
+            "HMW",
+            "第一性原理",
+            "反转/逆向头脑风暴",
+            "OODA",
+            "删除或少做选项",
+            "下一步验证动作",
+            "不把发散想法直接写成 PRD 或研发任务",
+        ],
+    ),
+)
+check(
     "product methodology keeps low cost generation constraints",
     has_all(
         product_architecture,
@@ -4355,6 +4610,20 @@ check(
             "低成本生成场景的约束",
             "每个功能、页面、实验或自动生成方案必须回到目标、假设、非目标、成功指标和停止条件",
             "是否存在更低成本、注意力消耗更小的验证方式",
+        ],
+    ),
+)
+check(
+    "product routing exposes brainstorming exploration discipline",
+    has_all(
+        product_routing,
+        [
+            "产品头脑风暴、问题探索、方案发散、假设挑战、HMW、第一性原理、OODA、逆向头脑风暴",
+            "产品头脑风暴纪律",
+            "头脑风暴结论",
+            "删除/少做选项",
+            "下一步验证动作",
+            "不直接变研发任务",
         ],
     ),
 )
@@ -4439,6 +4708,7 @@ check(
             "全球支付与基础设施",
             "收单、争议与风险运营",
             "AI / Skill / 通用复杂度",
+            "产品头脑风暴与假设挑战",
             "AI Native 产品上下文",
             "AI 产品发心与定位复盘",
             "模糊需求到可开发系统",
@@ -4452,6 +4722,33 @@ check(
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product source map and README record product brainstorming boundary",
+    has_all(
+        product_source_map,
+        [
+            "产品头脑风暴与假设挑战",
+            "`product-brainstorming` Skill 原文中文版",
+            "https://mp.weixin.qq.com/s/cz-9HnmlC_VNcVpdd_e0Vw",
+            "AIML实验室",
+            "2026-04-21",
+            "knowledge-work-plugins/product-management/skills/product-brainstorming/SKILL.md",
+            "GitHub raw 原始 `SKILL.md` 未及时返回",
+            "问题探索、方案发散、假设挑战、HMW、第一性原理、类比、反转、OODA 和逆向头脑风暴",
+            "不把头脑风暴输出直接写成 PRD、Backlog 或研发任务",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "`product-brainstorming` Skill 原文中文版",
+            "产品头脑风暴、问题探索、方案发散和假设挑战纪律",
+            "HMW、第一性原理、类比、反转、OODA 和逆向头脑风暴",
+            "本轮 GitHub raw 原始文件未成功拉取",
+            "不把头脑风暴结果直接写成 PRD、Backlog 或研发任务",
         ],
     ),
 )
@@ -4944,7 +5241,8 @@ check(
             "MRD 说明市场、客户机会和为什么做",
             "BRD 说明商业价值、投入产出和决策依据",
             "功能名不能替代需求",
-            "需求变更必须更新版本号、变更原因、影响范围、通知对象和评审结论",
+            "需求变更必须更新版本号、影响范围、通知对象、当前评审结论和过程记录链接",
+            "最终 PRD 不保留讨论过程、迭代草稿、AI prompt/回答轨迹、多角色争论或被拒方案展开",
         ],
     ),
 )
@@ -5034,6 +5332,9 @@ check(
             "验收种子交接矩阵",
             "每个 P0/P1 需求必须能回到问题、目标、场景、规则和验收",
             "每个进入开发候选的需求必须能关联场景、能力或功能、关键规则和验收种子",
+            "正式 PRD 以最终标准版本为主",
+            "文档控制只保留当前版本号、状态、owner、发布日期、评审结论摘要和过程记录链接",
+            "最终 PRD 不保留“第一版/第二版怎么改”",
             "默认不展开文档控制、完整状态机、字段字典、规则矩阵、权限矩阵、非功能、发布运营和金融资金全表",
             "主文档优先用短句、卡片和编号流程帮助扫读",
             "默认不强制每份 PRD 生成图片",
@@ -5127,9 +5428,11 @@ check(
             "信息传递顺序清楚",
             "表格只用于比较、矩阵或追踪",
             "描述可靠性清楚",
+            "正式 PRD 是最终交付标准版本",
             "不能只写功能名",
             "P0/P1 需求能通过主模板需求链回到问题/证据、目标、场景、能力/功能、规则和验收种子",
-            "版本记录、变更原因、影响范围、通知对象和评审结论完整",
+            "版本治理保留当前版本号、状态、owner、评审结论摘要、影响范围、通知对象和过程记录链接",
+            "合议式产品评审报告是过程资产",
             "文档、原型、规则矩阵、验收标准和工程交接口径一致",
             "验收种子能回到需求 ID、场景编号、规则编号或质量属性 ID",
             "图形化验收路径清楚",
@@ -5143,8 +5446,8 @@ check(
         product_routing,
         [
             "PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步",
-            "PRD 文档过厚、过薄、未更新、未评审、版本不同步",
-            "文档目标/受众、裁剪建议、必改项、版本/评审/同步机制",
+            "PRD 文档过厚、过薄、未更新、未评审、版本状态不清或过程稿混入正文",
+            "文档目标/受众、裁剪建议、必改项、版本状态/过程记录链接和最终正文准出机制",
         ],
     ),
 )
@@ -5156,7 +5459,9 @@ check(
             "文档治理",
             "PRD/MRD/BRD",
             "主文档/附录裁剪",
-            "版本记录、评审闭环",
+            "最终正文",
+            "版本状态",
+            "过程记录链接",
         ],
     ),
 )
@@ -6467,8 +6772,18 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native final PRD system design document gate",
+        prompt="整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、Goal Ledger 或任务计划，只保留当前有效结论和验收",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "spec-template-practices.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native GSD CAD admission gate",
         prompt="做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口",
+        routes={"ai-native", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native GSD CAD default authorization",
+        prompt="优化 AI Native GSD 流程：不希望每个任务都单独审批，GSD/CAD 模式下默认授权或自动推进；Codex 替我审批模式用于低风险任务自动通过",
         routes={"ai-native", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -6510,6 +6825,16 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native codebase understanding brief",
         prompt="最近 Google Gemini CLI 和 Microsoft AgentRC 这类工具能快速阅读代码库、生成上下文和总结结论，帮我抽象进 AI Native 研发流程，设计代码库理解结论包和进入架构师 CR 的门禁，但不要默认安装工具",
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md", "code-understanding-tools.md"},
+    ),
+    RouteFixture(
+        name="AI Native authorized learning and knowledge flow",
+        prompt="参考让 Codex 越用越聪明的方法，完善 AI 流程里的经验回流、授权学习、知识归位和不要把用户长期偏好写进仓库的边界",
+        routes={"ai-native", "agentic-engineering-governance.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native visual understanding for unfamiliar codebase",
+        prompt="这个陌生多 Agent 代码库看不懂，先做图形化理解和架构描述转图的门禁，说明组件入口、启动顺序、认证权限、外部系统、数据消息流、源码锚点和进入 CR 的条件",
+        routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md"},
     ),
     RouteFixture(
         name="AI Native read analyze codebase",
@@ -6622,6 +6947,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(
+        name="product brainstorming exploration",
+        prompt="先不要写 PRD，帮我做一次产品头脑风暴和问题探索，用 HMW、第一性原理、OODA、逆向头脑风暴挑战关键假设，输出下一步验证动作",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
         name="product insight opportunity radar",
         prompt="这里有一批客户访谈、工单、竞品动态和行业资料，请帮我做产品洞察，输出机会雷达，说明证据来源、推理链、置信度和哪些机会可以进入 Backlog",
         routes={"product", "product-scenario-routing.md", "product-insight-analyst.md"},
@@ -6719,28 +7049,28 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
-        if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单"]):
+        if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查"]):
+        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
-        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "Spec 强度", "编码提速", "交付体感", "独立验证", "CR 减负", "知识回流", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "Spec 强度", "编码提速", "交付体感", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
             route.add("gsd-cad-admission.md")
-        if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
+        if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
         if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Clarity Agent"]):
             route.add("source-map.md")
@@ -6874,6 +7204,16 @@ for case_id in [
     "ai-native-should-route-cr-work",
 ]:
     expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-final-deliverable-document-gate",
+    (
+        "最终文档准出模式",
+        "正式 PRD/系分/Spec 正文与过程资产",
+        "正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接",
+        "讨论过程、迭代草稿、AI 推理轨迹、被拒方案",
+    ),
+)
 
 expected_handling_has(
     "ai-native-should-fact-boundary-check",

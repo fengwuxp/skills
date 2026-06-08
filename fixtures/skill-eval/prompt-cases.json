@@ -27,7 +27,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 AI 时代产品到研发编码流程编排路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；先判断输入成熟度，再输出阶段、AI 工具角色、验证矩阵，并路由产品专家与架构师分工。"
+      "expected_handling": "进入 AI 时代产品到研发编码流程编排路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断输入成熟度，再输出阶段、AI 工具角色、验证矩阵，并路由产品专家与架构师分工。"
     },
     {
       "id": "ai-native-should-gsd-cad-handoff",
@@ -37,7 +37,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入工程编排模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
+      "expected_handling": "进入工程编排模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
     },
     {
       "id": "ai-native-should-gsd-product-engineering-collaboration",
@@ -47,7 +47,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
-      "expected_handling": "进入 GSD 产研协同模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
+      "expected_handling": "进入 GSD 产研协同模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
     },
     {
       "id": "ai-native-should-prd-system-design-deliberation-review",
@@ -60,6 +60,16 @@
       "expected_handling": "进入 AI Native 的 PRD / 系分合议预审模式，读取 prd-system-design-review，先输出评审对象、三角色分工、锚点化问题、ACCEPT/REJECT/PENDING 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由；预审不能替代产品专家 PRD 正文、架构师系分正文、正式评审或 Execution Grant。"
     },
     {
+      "id": "ai-native-should-final-deliverable-document-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、Goal Ledger 或任务计划，只保留当前有效结论和验收。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入最终文档准出模式，区分正式 PRD/系分/Spec 正文与过程资产；正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接；讨论过程、迭代草稿、AI 推理轨迹、被拒方案、MAGI 争论和完整 Goal Ledger 流水外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划，并按需要路由产品专家或资深架构师修正文档。"
+    },
+    {
       "id": "ai-native-should-gsd-cad-admission-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。",
@@ -67,7 +77,17 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 GSD/CAD 编排准入模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
+      "expected_handling": "进入 GSD/CAD 编排准入模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
+    },
+    {
+      "id": "ai-native-should-gsd-cad-default-authorization",
+      "skill": "ai-native-engineering-workflow",
+      "query": "优化 AI Native GSD 流程：我不希望每个任务都单独审批，GSD/CAD 模式下希望默认授权或自动推进；如果 Codex 有替我审批模式，也希望在低风险任务里自动通过。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 GSD/CAD 授权策略模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；把授权分成只读、默认低风险授权、Wave Grant、CAD Grant 和显式确认，说明 Codex 替我审批只适用于当前 Grant 范围内低风险、本地、可回滚动作；Git、联网、依赖安装、读取密钥、生产数据、部署、数据库迁移、真实支付/资金、不可逆操作和高风险权限/租户/审计/合规变更必须显式确认。"
     },
     {
       "id": "ai-native-should-gsd-goal-composition",
@@ -77,7 +97,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 Goal 组合模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
+      "expected_handling": "进入 Goal 组合模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
     },
     {
       "id": "ai-native-should-review-ai-coding-process",
@@ -87,7 +107,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
-      "expected_handling": "进入流程治理评审路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
+      "expected_handling": "进入流程治理评审路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
     },
     {
       "id": "ai-native-should-code-delivery-closed-loop",
@@ -97,7 +117,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 AI 代码交付闭环模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
+      "expected_handling": "进入 AI 代码交付闭环模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
     },
     {
       "id": "ai-native-should-spec-template-practices",
@@ -177,7 +197,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入事实边界检查路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
+      "expected_handling": "进入事实边界检查路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
     },
     {
       "id": "ai-native-should-route-prd-work",
@@ -187,7 +207,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
-      "expected_handling": "进入流程入口分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；只判断产品输入成熟度和产品侧交接物，再把 PRD 正文分派给产品架构专家。"
+      "expected_handling": "进入流程入口分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；只判断产品输入成熟度和产品侧交接物，再把 PRD 正文分派给产品架构专家。"
     },
     {
       "id": "ai-native-should-route-cr-work",
@@ -197,7 +217,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
-      "expected_handling": "进入工程流程分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、验证门禁、停止条件和残余风险；只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
+      "expected_handling": "进入工程流程分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
     },
     {
       "id": "ai-native-should-route-codegen-work",

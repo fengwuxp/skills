@@ -1,5 +1,5 @@
 interface:
   display_name: "资深架构师"
-  short_description: "架构/系分/技术方案、Bug/TDD/CR、生产风险与Java/Spring专长"
+  short_description: "架构/系分/技术方案、陌生代码库图形化理解、Bug/TDD/CR、生产风险与Java/Spring专长"
   brand_color: "#0F766E"
   default_prompt: "Use $资深架构师 帮我做架构设计、系分、技术方案或代码评审：先构造用例、边界和验证标准，必要时默认输出 SVG 架构图、时序图或状态机；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需明确提出，并审查接口契约、测试、发布回滚和生产风险。"

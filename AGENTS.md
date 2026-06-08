@@ -9,6 +9,7 @@
 - 不创建无必要的 README、安装指南、变更日志等辅助文件；仓库级说明统一放在根目录 `README.md`。
 - 更新技能时同步检查 `agents/openai.yaml` 是否仍匹配技能定位。
 - 修改后至少执行 YAML、引用和同步 dry-run 等轻量校验。
+- 正式 PRD、系分、OpenSpec/SDD 等交付文档以最终标准版本为主，不保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案展开；过程内容进入任务计划、评审报告、Decision Log、Goal Ledger、ADR 或中间任务文档。
 
 ## Skill 三级加载机制
 

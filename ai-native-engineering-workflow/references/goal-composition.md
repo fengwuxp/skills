@@ -9,6 +9,7 @@
 - 多 Agent、多 owner 或多轮任务容易出现目标漂移、状态过期、验证证据断裂或交接丢失。
 - 需要把产品专家的业务目标和验收种子，转换成架构师可消费的 Goal 卡、GSD Wave / Goal 映射和验证矩阵。
 - 需要防止 GSD 目标漂移成“多做几个 AI 任务”或“搭一些看上去可用的 demo”，必须重新锚定到生产可用能力。
+- 需要把 GSD/CAD 默认授权收敛到 Goal / Wave / CAD Grant，减少每个任务重复审批但保留高风险硬门禁。
 
 ## 不适用场景
 
@@ -23,7 +24,7 @@
 - 一份组合判断：当前适合 `GSD + Goal`、`CAD + Goal`、`Spec + Goal`、`CR/发布 + Goal` 还是 `产品到工程 + Goal`。
 - 一份 Goal 状态结论：`Draft / Ready / Active / Blocked / Verified / Closed / Superseded` 之一，并说明证据。
 - 一份 Goal Ledger 更新：最近证据、变化假设、开放风险、下一 owner、下一动作和复盘回流位置。
-- 明确说明 Goal 不会自动创建运行时 Goal，不会替代 Execution Grant，也不会扩大写入范围或提交权限。
+- 明确说明 Goal 不会自动创建运行时 Goal，不会替代 Execution Grant，也不会扩大写入范围、提交权限或 Codex 替我审批范围。
 
 ## 需要继续读取的 reference
 
@@ -40,6 +41,7 @@
 | --- | --- | --- |
 | 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `gsd-cad-admission.md` | 不展开 CAD 执行细则 |
 | 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `agentic-engineering-governance.md` | 不把 Goal 当 Execution Grant |
+| 将默认授权挂到 Goal | `1. Goal 边界`、`3. GSD + Goal`、`4. CAD + Goal`，再读 `gsd-cad-admission.md` | 不把 Goal 状态当授权 |
 | 做 `Spec + Goal` | `1. Goal 边界`、`5. Spec + Goal`，再读 `spec-template-practices.md` | 不重复写完整 Spec 模板 |
 | 做 CR / 发布 Goal 验证 | `6. CR/发布 + Goal`，再读 `verification-review-release.md` | 不把测试通过当 Goal 自动关闭 |
 | 长任务状态交接 | `2. Goal 卡`、`7. 状态和 Ledger` | 不用长报告替代状态更新 |
@@ -63,6 +65,7 @@ Goal 回答：为什么持续做、做到什么叫完成、预算 / 时间盒如
 原则：
 
 - Goal 可以约束 GSD Wave 和 CAD 候选，但不能授予写入、提交、联网、部署或生产操作权限。
+- Goal 可以挂接 Wave Grant 或 CAD Grant 来减少重复审批，但 Grant 必须单独写清写入范围、验证命令、默认审批通道和显式确认边界。
 - Goal 状态必须有证据，不能只靠“感觉已完成”。
 - Goal 的成功标准应能映射到验收种子、AC、测试、CR 检查点、发布监控或人工确认方。
 - Goal 过大时先拆父子 Goal；子 Goal 必须继承父 Goal 的目标意图、非目标、风险边界和停止条件。
@@ -117,6 +120,7 @@ Wave 3 Goal: 集成验证 / CR / 发布准备
 每个 Wave 的成功标准:
 每个 Wave 的停止条件:
 每个 Wave 的验证证据:
+每个 Wave 的授权策略: 只读 / 默认低风险授权 / Wave Grant / 显式确认
 下一 Wave 准入:
 ```
 
@@ -127,6 +131,7 @@ Wave 3 Goal: 集成验证 / CR / 发布准备
 - 每个 Wave 只允许有一个主目标；混合目标拆成子 Goal。
 - Wave 完成不是“文件改完”，而是成功标准、验证证据和交接要求已满足。
 - Wave 之间必须记录变更假设、残余风险和下一 owner，防止跨轮漂移。
+- Wave Grant 只能覆盖该 Wave 内互不冲突、低风险、可验证、可回滚的任务；公共契约、Git、联网、依赖安装、生产、密钥、部署、不可逆操作和高风险业务必须显式确认。
 
 ## 4. CAD + Goal
 
@@ -141,6 +146,8 @@ Goal 状态是否 Ready / Active:
 写入范围:
 验证命令:
 Execution Grant:
+授权策略:
+Codex 替我审批:
 停止条件:
 失败恢复:
 ```
@@ -149,6 +156,7 @@ Execution Grant:
 
 - Goal Ready 不代表 CAD 可执行。
 - 父 Goal Active 不代表所有子任务都有 Execution Grant。
+- Codex 替我审批只可作为当前 CAD Grant 范围内低风险工具审批通道，不代表 Git、联网、生产或高风险动作自动放行。
 - CAD 执行失败时，更新 Goal Ledger 的阻塞证据和下一 owner，不把失败隐藏成“继续推进”。
 
 ## 5. Spec + Goal
@@ -243,6 +251,7 @@ Goal ID:
 - `GSD + Goal` 只写父目标，不给 Wave Goal 和验证证据。
 - Goal 状态长期停在 Active，没有 Ledger 更新。
 - 用 Goal 扩大写入范围、跳过 Execution Grant、跳过测试或跳过 CR。
+- 用 Goal、Wave 状态或 Codex 替我审批扩大默认授权范围，跳过 Git/联网/生产/密钥/部署/不可逆操作的显式确认。
 - 把 “测试通过” 直接等同于 Goal Closed。
 - 目标过大，无法在一次 Wave、一次 CR 或一次发布中判断完成。
 - Goal 与 Spec、Harness、验证矩阵、发布复盘各写一套，导致目标漂移。
