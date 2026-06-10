@@ -50,6 +50,26 @@
       "expected_handling": "进入 GSD 产研协同模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
     },
     {
+      "id": "ai-native-should-demand-analysis-collaboration-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Native 研发流程进入需求分析协同门禁：这批用户原始诉求里混了功能解法，请先输出需求分析结论卡，明确根源需求、产品定义、产品边界、稳定点/变化点、边界坐标和上下游分工，再判断能否进入 PRD / 系分预审或 GSD Round 0。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入需求分析协同门禁，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出需求分析结论卡，覆盖原始诉求、根源需求、产品定义、产品边界、稳定点/变化点、边界坐标、上下游分工和待确认项；产品专家负责补根源需求、产品定义、边界和验收种子，资深架构师负责把已确认边界映射到模块、接口、数据、测试和发布风险；边界不清时回退 Round 0，不进入 OpenSpec、GSD Wave 或 CAD 候选。"
+    },
+    {
+      "id": "ai-native-should-development-standards-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Native 研发流程补需求 / 设计 / 编码标准门禁：系统需求或产品需求未确认时，不进入 SDD、测试、代码或 CAD；请输出需求基线稳定性、需求条目质量、HLR/LLR 设计追踪、编码规则原因/示例/验证方式和防御式编程检查。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入开发标准门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断需求基线稳定性，系统需求、产品需求或外部规则未确认时，不进入 SDD、测试、代码或 CAD；再输出需求条目质量、需求标准、设计标准、编码标准、HLR/LLR 设计追踪、强制/推荐规则分级、规则原因/示例/验证方式、防御式编程、需求驱动测试和回退 owner。"
+    },
+    {
       "id": "ai-native-should-prd-system-design-deliberation-review",
       "skill": "ai-native-engineering-workflow",
       "query": "对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文。",
@@ -132,12 +152,12 @@
     {
       "id": "ai-native-should-spec-template-practices",
       "skill": "ai-native-engineering-workflow",
-      "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",
+      "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请先区分 PRD / SDD / 实现 Spec 三层是否齐备，再输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
+      "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，先区分 PRD / SDD / 实现 Spec 三层边界，说明已具备、缺失和不可让 AI 猜的层；输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；把实现 Spec 作为实现和 CR 检查清单，偏差先判断是否需要更新 Spec，再要求 AI 修改代码；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
     },
     {
       "id": "ai-native-should-quality-test-gate",

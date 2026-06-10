@@ -349,39 +349,26 @@
 
 ### 微信公众号文章：放下代码：AI Native是通往架构师的快车道
 
-- 来源：`https://mp.weixin.qq.com/s/fhEzrPbeez-_2bmJHqExCQ`
-- 标题：`放下代码：AI Native是通往架构师的快车道`
-- 公众号/作者：`大数据随笔`
-- 发布时间：2026-05-23 12:00:00 Asia/Shanghai
-- 读取日期：2026-06-02
-- 读取状态：已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文；本轮未再执行 Playwright 等价浏览器取证，正文抽取仅用于结构化提炼，不归档文章全文到仓库。
-- 许可证：未见明确复用许可证；本仓库只保留来源链接、读取状态、可迁移方法和吸收边界，不复制原文、引用案例、播客来源转述或作者表达。
-
-应用记录：`ai-assisted-engineering.md` 新增 AI Native 架构师工作面，覆盖 hardened 标准和 Agent 工作流设计；`ai-large-project-orchestration.md` 将 AI Native 编排或产品侧交接结论转成 OpenSpec、context ledger、GSD Stage/Wave/Atomic Task、验证矩阵和 CAD 候选缺口；`cad-mode.md`、`product-design.md`、`scenario-routing.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 维护 Hardened Candidate 不能直接作为 Execution Grant 的边界。
-
-未吸收内容：
-
-- 不把“放下代码”理解为放弃编码能力、代码审查、测试、验证或生产责任，不复制文章中的引用案例、岗位判断、作者表达、情绪化标题或传播性措辞。
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/fhEzrPbeez-_2bmJHqExCQ`；标题：`放下代码：AI Native是通往架构师的快车道`；公众号/作者：`大数据随笔`；发布时间：2026-05-23 12:00:00 Asia/Shanghai；读取日期：2026-06-02。已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文；本轮未再执行 Playwright 等价浏览器取证，不归档文章全文。应用到 `ai-assisted-engineering.md` 的 AI Native 架构师工作面，覆盖 hardened 标准和 Agent 工作流设计；`ai-large-project-orchestration.md` 转成 OpenSpec、context ledger、GSD Stage/Wave/Atomic Task、验证矩阵和 CAD 候选缺口；`cad-mode.md`、`product-design.md`、`scenario-routing.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 维护 Hardened Candidate 不能直接作为 Execution Grant 的边界。不把“放下代码”理解为放弃编码能力、代码审查、测试、验证或生产责任，不复制文章中的引用案例、岗位判断、作者表达、情绪化标题或传播性措辞。
 - 不把 AI 生成 PR 数量、自动化轮数或外部团队案例写成工程质量结论，不把 Agent review / Agent test 替代高风险变更中的人工确认、架构审查、测试证据和生产门禁，不把岗位转型观点写成组织制度、绩效口径、裁员建议或团队角色结论。
 
 ### 微信公众号文章：置身钉内
-- 来源/读取：`https://mp.weixin.qq.com/s/_D20O0vpPXjSzjAKJmBYuA`；标题：`阿里内网万言离职书《置身钉内》原文，已刷屏`；公众号：`爬梯意外簿`；作者：`Corgi/滕雅辛`；发布时间：2026-06-05 16:21；读取日期：2026-06-07。普通 `curl` 返回微信“环境异常”验证页；随后使用 Codex in-app Browser 的 Playwright 接口读取标题、公众号、作者、发布时间和正文。页面正文声明内容由 AI 识图整理，因此本仓库只把它作为公开转述/OCR 复盘材料；未见明确复用许可证，不复制原文、项目细节、组织评价、作者表达或标题传播话术。
-- 应用记录：`ai-assisted-engineering.md` 新增“AI 进入旧系统的架构门禁”，覆盖 context 架构、权限与权力边界、旧系统技术债、多端一致性、任务闭环、成本稳定性、可观测审计和演进切片；AI Native 流程和产品专家分别维护“AI 产品工程化准入卡”与“AI 产品发心、定位和用户张力门禁”；`scripts/validate-trigger-paths.py` 增加漂移断言。
-- 未吸收内容：不把公开转述/OCR 内容写成钉钉、ONE 或阿里官方事实，不复述项目内部细节、组织评价、人员经历或成败判断；不把单个企业协作产品复盘绝对化为所有 AI 产品或所有 SaaS 的通用结论；不把文章中的外部行业时间线、模型能力、厂商能力或工具名称写成当前最新事实。
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/_D20O0vpPXjSzjAKJmBYuA`；标题：`阿里内网万言离职书《置身钉内》原文，已刷屏`；公众号：`爬梯意外簿`；作者：`Corgi/滕雅辛`；发布时间：2026-06-05 16:21；读取日期：2026-06-07。普通 `curl` 返回微信验证页，随后使用 Codex in-app Browser 的 Playwright 接口读取标题、公众号、作者、发布时间和正文；页面声明内容由 AI 识图整理，仅作为公开转述/OCR 复盘材料。应用到 `ai-assisted-engineering.md` 的“AI 进入旧系统的架构门禁”，覆盖 context 架构、权限与权力边界、旧系统技术债、多端一致性、任务闭环、成本稳定性、可观测审计和演进切片；AI Native 流程和产品专家分别维护“AI 产品工程化准入卡”与“AI 产品发心、定位和用户张力门禁”。不复制原文、项目细节、组织评价、作者表达或标题传播话术；不把公开转述/OCR 内容写成钉钉、ONE 或阿里官方事实，不把单个企业协作产品复盘绝对化为所有 AI 产品或所有 SaaS 的通用结论。
 
 ### 微信公众号文章：从一份模糊需求，到一套可开发系统
-- 来源/读取：`https://mp.weixin.qq.com/s/HzbdrmNkT-OTRKdQh0c0Ug`；标题：`从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战`；作者/账号：`KEEN的创享`；发布时间：2026-06-04 21:39；读取日期：2026-06-07。普通 `curl` / `web.open` 未取得正文或返回微信“环境异常”验证页；随后通过移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文；未见明确复用许可证。
-- 应用记录：`ai-assisted-engineering.md` 新增“可开发系统工程化门禁”，要求从模糊需求、内容/多端原型或高保真 HTML 进入工程前，先确认目标/非目标、前后台和多端边界、业务流、对象状态、规则权限、数据安全、接口候选、测试验收和发布路径；AI Native 流程和产品专家维护产品到工程秩序链路。
-- 未吸收内容：不复制原文、案例项目、页面设计、提示词、技术选型、图片或作者表达；不把高保真原型、AI 生成页面或示例系统当成当前项目工程边界、OpenSpec、Harness Plan 或 Execution Grant。
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/HzbdrmNkT-OTRKdQh0c0Ug`；标题：`从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战`；作者/账号：`KEEN的创享`；发布时间：2026-06-04 21:39；读取日期：2026-06-07。普通 `curl` / `web.open` 未取得正文或返回微信验证页，随后通过移动端微信 UA 公开 HTML 和 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文。应用到 `ai-assisted-engineering.md` 的“可开发系统工程化门禁”，要求从模糊需求、内容/多端原型或高保真 HTML 进入工程前，确认目标/非目标、前后台和多端边界、业务流、对象状态、规则权限、数据安全、接口候选、测试验收和发布路径；AI Native 流程和产品专家维护产品到工程秩序链路。不复制原文、案例项目、页面设计、提示词、技术选型、图片或作者表达；不把高保真原型、AI 生成页面或示例系统当成当前项目工程边界、OpenSpec、Harness Plan 或 Execution Grant。
+
+### 微信公众号文章：架构30：架构思维：需求分析
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/B8Rap_MmAKmVN3f7eAnvCw`；标题：`架构30：架构思维：需求分析`；作者字段：`开心就好TF`；页面时间字段：2026-06-07 09:34:00 Asia/Shanghai；读取日期：2026-06-09。`web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文（发布时间取页面时间字段）；用于 `product-design.md` 的需求澄清门禁、`system-analysis-design.md` 的系分前需求分析门禁，以及 AI Native / 产品专家的需求分析结论卡；不复制原文、案例、作者表达、标题传播话术或时间投入比例，不把单篇文章观点写成组织制度、项目事实、执行授权或架构师必须越过产品 owner 的理由。
+
+### 微信公众号文章：标准与需求基线
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw`；标题：`[013] 标准不是摆设——需求标准、设计标准、编码标准怎么写`。`https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q`；标题：`[014] 85%返工都是需求的锅——为啥说需求是软件的根本`。作者/账号字段为 `AIIIIlIIII`；页面时间字段分别为 2026-05-23 07:24:00 与 2026-05-26 06:21:00 Asia/Shanghai；读取日期：2026-06-09。首篇 `web.open` 未取得正文，随后两篇均通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。应用到 `system-analysis-design.md` 的需求基线和高层/详细设计分工、`coding-standards.md` 的规则原因/示例/验证方式与防御式编程、`testing.md` 的需求驱动测试门禁，并由 AI Native / 产品专家维护需求 / 设计 / 编码标准门禁。不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文；不把单篇文章写成通用合规结论、项目制度或 Execution Grant。
 
 ### 微信公众号文章：需求分析和设计活动关键要点总结
 
 - 来源/读取：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`；标题：`需求分析和设计活动关键要点总结`；公众号：`软件需求分析和设计`；作者：`常识`；发布时间：2026-05-26 10:29:23；读取日期：2026-06-01。已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间和正文；随后使用本机 Chrome headless 作为 Playwright 等价浏览器读取到标题、作者、发布时间和正文；未见明确复用许可证。
 - 应用记录：`system-analysis-design.md` 补充功能不是头脑风暴功能点，而是对象对外提供的可见、有价值交互行为、正向分解和逆向追溯，以及需求分析外部视角和设计内部视角；`skill-tree-architecture-design.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 同步功能分配追溯、需求/设计分工与防漂移断言。
-- 未吸收内容：
-- 不复制文章中的 GJB 章节表述、书籍推荐、课程机构推荐、作者自述或原文表达。
-- 不把军标/适航语境直接写成通用软件项目强制流程；本技能只吸收可迁移的功能定义、功能分配追溯和需求/设计视角分工。
-- 不把“功能分配”绝对化为排斥用户反馈、业务探索或产品发现；产品侧仍需先确认目标、主体、场景、价值和验收。
+- 未吸收内容：不复制文章中的 GJB 章节表述、书籍推荐、课程机构推荐、作者自述或原文表达；不把军标/适航语境直接写成通用软件项目强制流程；不把“功能分配”绝对化为排斥用户反馈、业务探索或产品发现。
 
 ## 提炼边界
 

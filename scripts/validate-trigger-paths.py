@@ -236,6 +236,24 @@ ai_native_terms = [
     "Atomic Task",
     "Execution Grant",
     "AI 原型/eval",
+    "需求分析协同门禁",
+    "需求分析结论卡",
+    "需求基线稳定性",
+    "需求 / 设计 / 编码标准门禁",
+    "开发标准门禁",
+    "需求标准",
+    "设计标准",
+    "编码标准",
+    "可验证性",
+    "可追踪性",
+    "衍生需求",
+    "根源需求",
+    "产品定义",
+    "产品边界",
+    "稳定点/变化点",
+    "稳定点 / 变化点",
+    "边界坐标",
+    "上下游分工",
     "PRD/系分合议预审",
     "PRD 评审会前",
     "AI 预扫描",
@@ -308,8 +326,8 @@ ai_native_terms = [
     "授权学习",
     "经验归位",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 payment_terms = [
     "清结算",
     "对账",
@@ -480,11 +498,25 @@ check(
             "目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或样子货",
             "产品架构专家` 做需求分析、产品设计、方案确认和验收种子",
             "资深架构师` 做系统分析设计、编码、TDD、测试、CR 和验证发布",
+            "需求分析协同门禁",
+            "需求 / 设计 / 编码标准门禁",
+            "需求基线稳定性",
+            "需求分析结论卡",
+            "根源需求",
+            "产品定义",
+            "产品边界",
+            "稳定点 / 变化点",
+            "边界坐标",
             "瘦身后的协作边界",
             "产品专家只补产品上下文包、验收种子和产品侧交接条件",
             "架构师只消费已确认的 AI Native 交接结论",
             "本技能负责端到端准入、owner、顺序、停止条件和交接结论",
             "不把流程建议写成执行授权",
+            "标准服务交付",
+            "开发标准门禁模式",
+            "开发标准门禁包",
+            "需求基线稳定性、需求条目质量、设计追踪、编码规则可执行性、防御式编程、测试映射和停止条件",
+            "需求未确认时不进入 SDD、代码、测试或 CAD",
             "## 路由边界",
             "普通 PRD、产品方案或 Backlog 决策可以从本技能进入",
             "架构设计、代码 Review、Bug 修复、测试或生产变更可以从本技能进入",
@@ -531,6 +563,7 @@ check(
             "AI Native 产品到研发编码流程编排与准入门禁",
             "产品专家到架构师交接",
             "PRD-Lite/OpenSpec/Harness/GSD/CAD",
+            "需求分析协同门禁",
             "GSD/CAD 授权策略",
             "Codex 替我审批模式边界",
             "Goal 组合/GSD+Goal",
@@ -591,6 +624,12 @@ check(
             "AI 原型 / eval / dogfooding",
             "产品上下文包",
             "可开发系统秩序链",
+            "Round 0A：需求基线稳定性",
+            "需求条目说明外部可见行为，而不是内部实现方案",
+            "P0/P1 需求具备原子性、完整性、一致性、必要性、无二义性、可行性、可验证性和可追踪性",
+            "图、流程、原型或表格有正文解释、需求 ID 或验收种子回链",
+            "衍生需求、异常恢复、安全监控、状态异常处理和鲁棒性要求",
+            "系统/产品需求未确认、需求条目不可验证、图文不可追踪或衍生需求无 owner",
             "模糊需求",
             "结构化需求文档",
             "业务流 / 状态 / 规则",
@@ -606,6 +645,12 @@ check(
             "瘦身边界",
             "最小产品上下文",
             "Round 0 补齐清单",
+            "需求分析结论卡",
+            "根源需求",
+            "产品定义",
+            "产品边界",
+            "稳定点 / 变化点",
+            "边界坐标",
             "是否可以进入 OpenSpec",
             "可评审 Spec 模板",
             "人类能否 Review，Agent 能否执行，机器能否验证",
@@ -938,6 +983,16 @@ check(
             "本文定义 AI Native 研发流程中 Spec / SDD / OpenSpec / Harness 输入的模板落地方式",
             "不把外部 Harness 写成默认依赖",
             "Spec 强度建议",
+            "Spec 分层判断",
+            "PRD / SDD / 实现 Spec 三层边界",
+            "需求 / 设计 / 编码标准门禁",
+            "需求标准",
+            "设计标准",
+            "编码标准",
+            "防御式编程",
+            "需求基线稳定性门禁",
+            "系统/产品需求未确认、需求条目不可验证、图文不可追踪或衍生需求无 owner",
+            "关键标准没有强制/推荐分级、原因/示例、验证方式或适用范围",
             "五段式结构",
             "Form Follows Reviewer",
             "More Context, Less Control",
@@ -951,6 +1006,7 @@ check(
             "AC 覆盖",
             "漂移检查",
             "风险自查",
+            "Spec 也是实现和 CR 的检查清单",
             "轻重切换",
         ],
     )
@@ -997,6 +1053,9 @@ check(
             "spec-template-practices.md",
             "Form Follows Reviewer",
             "Spec 五段式骨架",
+            "Spec 驱动开发：让 AI 知道该写什么，不该写什么",
+            "PRD / SDD / 实现 Spec 三层边界",
+            "Spec 作为实现和 CR 检查清单",
             "AC 编号",
             "Given-When-Then",
             "spec-lint",
@@ -1013,6 +1072,8 @@ check(
             "落地 Spec 模板最佳实践",
             "Spec 模板模式",
             "Spec 模板落地包",
+            "先区分 PRD / SDD / 实现 Spec 三层是否齐备",
+            "Spec 驱动开发：让 AI 知道该写什么，不该写什么",
         ],
     ),
 )
@@ -1336,6 +1397,13 @@ check(
             "PENDING",
             "预审报告和决策日志是过程资产",
             "进入正式文档时，只吸收 `ACCEPT` 后的最终结论",
+            "根源需求",
+            "产品定义",
+            "产品边界",
+            "稳定点 / 变化点",
+            "边界坐标",
+            "扩展点、抽象层和可配置能力是否能回指真实变化轴",
+            "过度设计风险",
             "正式 PRD 是否只保留最终标准版本",
             "正式系分是否只保留当前有效设计",
             "双向追踪只记录当前有效条款、偏差、决策和下一步",
@@ -1404,6 +1472,7 @@ check(
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-code-delivery-closed-loop",
             "ai-native-should-spec-template-practices",
+            "ai-native-should-development-standards-gate",
             "ai-native-should-quality-test-gate",
             "ai-native-should-change-understanding-gate",
             "ai-native-should-codebase-understanding-brief",
@@ -1536,7 +1605,7 @@ check(
             "再把工程任务包、CAD Mode 门禁和执行策略分派给 `资深架构师`",
             "可以让它先做 `开启 GSD/CAD 默认授权策略`",
             "减少每个任务重复审批",
-            "可以让它先判断 Spec / SDD / OpenSpec 模板应该使用轻量任务卡、可评审 Spec、Harness/GSD Spec、CAD 候选 Spec 还是人工主导",
+            "可以让它先判断 PRD / SDD / 实现 Spec 三层是否齐备、Spec / SDD / OpenSpec 模板应该使用轻量任务卡、可评审 Spec、Harness/GSD Spec、CAD 候选 Spec 还是人工主导",
             "可以让它先判断 AI Coding / SDD / Spec / Harness 为什么没有带来端到端交付体感",
             "是否需要减层、补上下文、补机器验证、调整 Spec 强度、前移 CR 高频问题和建立知识回流",
             "可以让它先判断测试策略、TDD、补测试或 CR 验证需要放在哪个质量门禁",
@@ -1571,7 +1640,7 @@ check(
             "微信原链接 `https://mp.weixin.qq.com/s/hRZ8zbkW4-PRyBYXn8bxbQ` 只读取到微信“环境异常”验证页，未作为已吸收来源",
             "https://mp.weixin.qq.com/s/JWtKELqDYvdPZtDzeJNybQ",
             "PRD 评审总返工？跟我把IPD的6个强角色、3个硬任务塞进你的Agent系统",
-            "虚拟评审、文章推荐工具或外部 Harness 当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
+            "虚拟评审、文章推荐工具、外部 Harness 或单篇文章当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
             "Google Gemini CLI",
             "Microsoft AgentRC",
             "Microsoft Clarity Agent",
@@ -1579,7 +1648,7 @@ check(
             "我们落地了 SDD，为什么团队效率没有体感提升？",
             "AI 代码交付闭环",
             "外部 Harness",
-            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审、文章推荐工具或外部 Harness 当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
+            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审、文章推荐工具、外部 Harness 或单篇文章当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
         ],
     ),
 )
@@ -3316,10 +3385,70 @@ check(
         "senior-software-architect/references/system-analysis-design.md",
         [
             "PRD/产品方案到系分 / 业务驱动系统设计",
+            "系分前需求分析门禁",
+            "原始诉求和根源需求",
+            "产品定义",
+            "产品边界",
+            "稳定点 / 变化点",
+            "边界坐标",
+            "系统边界、模块拆分、接口契约、数据模型和测试矩阵必须能回指产品定义、产品边界、稳定点 / 变化点或业务不变量",
+            "扩展点、抽象层、规则引擎、平台化、缓存、MQ 或微服务拆分",
+            "真实变化轴、owner 和验收方式",
+            "过度设计风险",
             "业务驱动追踪表",
             "质量属性场景",
             "业务 driver",
             "系统边界、模块、接口、数据、质量属性和测试",
+        ],
+    ),
+)
+check(
+    "senior standards gate protects requirements design coding and testing",
+    has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "若系统需求、产品需求或外部规则未确认，不进入详细设计、编码或测试设计",
+            "需求条目应表达外部可见行为",
+            "衍生需求、异常恢复、安全监控、状态异常处理和鲁棒性要求必须标明来源、owner、验收方式和是否回写上游",
+            "高层 / 详细设计分工",
+            "高层设计说明系统对外做什么、边界和分配关系是什么",
+            "详细设计说明内部如何实现",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "规则写法要求",
+            "每条强制 / 推荐规则必须说明原因、适用范围、反例或示例、验证方式",
+            "防御式编程规则覆盖输入校验、边界检查、类型转换、金额/精度、除零、异常传播、故障隔离和统一错误处理",
+            "避免无上限递归、无界循环、共享全局状态、不可控随机/时间和有副作用表达式",
+        ],
+    )
+    and has_all(
+        testing,
+        [
+            "需求驱动测试门禁",
+            "系统/产品需求未确认、需求条目不可验证、图文不可追踪或衍生需求无 owner",
+            "不直接设计测试或用测试替代需求确认",
+            "鲁棒性、异常恢复、安全监控、越界输入、状态异常和失败处理测试必须回链需求、AC、质量属性或已确认风险",
+            "测试发现需求缺失、矛盾或不可测时，先回写 PRD / OpenSpec / 系分或待确认项",
+        ],
+    ),
+)
+check(
+    "senior product semantics preserves demand analysis collaboration gate",
+    has_all(
+        "senior-software-architect/references/product-design.md",
+        [
+            "架构师不能只被动接收二手 PRD",
+            "应参与需求澄清",
+            "用户原始诉求和根源需求是否分清",
+            "功能名、页面控件或 AI 原型不能直接推导模块、表、缓存、MQ 或微服务",
+            "产品定义要说明对象、能力、可见价值行为和成功口径",
+            "产品边界、稳定点 / 变化点",
+            "本产品负责、合作方负责、外部系统负责、人工/运营承接和本期不做",
+            "稳定点 / 变化点必须带边界坐标",
+            "没有真实变化轴、owner 和验收方式的扩展点按过度设计风险处理",
         ],
     ),
 )
@@ -4390,6 +4519,40 @@ check(
     ),
 )
 check(
+    "product methodology keeps demand analysis product definition gate",
+    has_all(
+        product_architecture,
+        [
+            "根源需求到产品定义",
+            "保留原始诉求",
+            "追到根源需求",
+            "定义产品对象和能力",
+            "划定产品边界",
+            "识别稳定点和变化点",
+            "声明边界坐标",
+            "需求分析结论卡",
+            "产品定义是需求分析的收口",
+            "产品边界会直接影响系统边界、模块拆分、接口契约和上下游责任",
+            "不为未确认、无证据、无 owner 的未来想象提前平台化",
+            "真实变化轴",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "根源需求",
+            "产品定义",
+            "产品边界",
+            "稳定点 / 变化点",
+            "上下游分工",
+            "原始诉求已转换为根源需求",
+            "产品定义说明对象、能力、可见价值行为和成功口径",
+            "产品边界说明本产品负责、合作方 / 外部系统负责、本期不做和人工/运营承接部分",
+            "没有证据的未来变化不作为平台化、扩展点或系统拆分依据",
+        ],
+    ),
+)
+check(
     "product methodology keeps product insight and opportunity radar",
     has_all(
         product_skill,
@@ -4953,6 +5116,114 @@ check(
     ),
 )
 check(
+    "source maps and README record architecture demand analysis source",
+    has_all(
+        product_source_map,
+        [
+            "需求分析与产品定义",
+            "架构30：架构思维：需求分析",
+            "https://mp.weixin.qq.com/s/B8Rap_MmAKmVN3f7eAnvCw",
+            "开心就好TF",
+            "2026-06-07 09:34:00 Asia/Shanghai",
+            "2026-06-09",
+            "公开 HTML 读取标题、作者、发布时间和正文",
+            "根源需求、产品定义、产品边界、上下游分工、稳定点 / 变化点和边界坐标门禁",
+            "不复制原文、案例、作者表达、标题传播话术或时间投入比例",
+            "不把文章观点写成组织制度、项目事实或执行授权",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：架构30：架构思维：需求分析",
+            "https://mp.weixin.qq.com/s/B8Rap_MmAKmVN3f7eAnvCw",
+            "开心就好TF",
+            "2026-06-07 09:34:00 Asia/Shanghai",
+            "2026-06-09",
+            "公开 HTML 读取标题、作者、发布时间和正文",
+            "用于 `product-design.md` 的需求澄清门禁",
+            "`system-analysis-design.md` 的系分前需求分析门禁",
+            "AI Native / 产品专家的需求分析结论卡",
+            "不把单篇文章观点写成组织制度、项目事实、执行授权",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "架构30：架构思维：需求分析",
+            "需求分析协同门禁",
+            "PRD / 系分预审和 GSD Round 0",
+            "公开 HTML 读取标题、作者、发布时间和正文",
+            "根源需求、产品定义、产品边界 / 上下游分工、稳定点 / 变化点必须带边界坐标",
+            "不把文章观点写成组织制度、当前项目事实或执行授权",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "架构30：架构思维：需求分析",
+            "需求分析协同门禁、根源需求、产品定义、产品边界、上下游分工、稳定点 / 变化点、边界坐标",
+            "公开 HTML 读取标题、作者、发布时间和正文",
+            "不把单篇文章观点写成组织制度、项目事实、执行授权或架构师必须越过产品 owner 的理由",
+        ],
+    ),
+)
+check(
+    "source maps and README record requirements standards sources",
+    has_all(
+        product_source_map,
+        [
+            "需求标准与可验证 PRD",
+            "标准不是摆设",
+            "需求是软件的根本",
+            "https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw",
+            "https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q",
+            "AIIIIlIIII",
+            "2026-05-23 07:24:00",
+            "2026-05-26 06:21:00",
+            "需求条目标准、图文追踪、系统/外部需求未确认不下钻、衍生需求、可验证性和可追踪性门禁",
+            "不把文章观点写成产品团队制度、合规结论或执行授权",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：标准与需求基线",
+            "[013] 标准不是摆设",
+            "[014] 85%返工都是需求的锅",
+            "https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw",
+            "https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q",
+            "AIIIIlIIII",
+            "通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文",
+            "需求基线和高层/详细设计分工",
+            "规则原因/示例/验证方式与防御式编程",
+            "需求驱动测试门禁",
+            "不把单篇文章写成通用合规结论、项目制度或 Execution Grant",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "[013] 标准不是摆设",
+            "[014] 85%返工都是需求的锅",
+            "需求基线稳定性、需求 / 设计 / 编码标准门禁、Spec 模板和测试门禁",
+            "需求条目质量、图文追踪、衍生需求、系统需求未确认不下钻",
+            "HLR/LLR 分工、需求驱动测试、编码规则原因/示例/验证方式和防御式编程门禁",
+            "不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "[013] 标准不是摆设",
+            "[014] 85%返工都是需求的锅",
+            "需求基线稳定性、需求标准、设计标准、编码标准、HLR/LLR 分工、图文追踪、衍生需求、需求驱动测试、防御式编程和标准可执行性门禁",
+            "不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文",
+            "不把单篇文章写成通用合规结论、项目制度或 Execution Grant",
+        ],
+    ),
+)
+check(
     "product source map records diagram and service blueprint sources",
     has_all(
         product_source_map,
@@ -5332,6 +5603,30 @@ check(
             "AI 预扫描疑似问题清单",
             "完整性/一致性/可测试性/二义性检查",
             "不把 AI 扫描结果当已确认缺陷",
+        ],
+    ),
+)
+check(
+    "product PRD references keep requirement standards gate",
+    has_all(
+        product_prd_quality_gates,
+        [
+            "P0/P1 需求条目符合需求标准",
+            "一个条目只表达一个可见业务事实或验收事实",
+            "完整性、一致性、必要性、无二义性、可行性、可验证性和可追踪性",
+            "图表不替代需求条目",
+            "流程图、用例图、状态机图和表格必须有正文解释、需求 ID、规则编号或验收种子回链",
+            "衍生需求、异常恢复、安全监控、状态异常处理和鲁棒性要求",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "需求条目标准",
+            "一个条目只表达一个外部可见业务事实、规则事实或验收事实",
+            "P0/P1 条目必须可验证、可追踪、无二义性且不绑定内部实现",
+            "系统需求、外部规则或业务 owner 未确认时",
+            "不得只用图表达未确认的业务结论",
         ],
     ),
 )
@@ -6875,6 +7170,16 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native demand analysis collaboration gate",
+        prompt="AI Native 研发流程进入需求分析协同门禁：用户原始诉求里混了功能解法，先输出需求分析结论卡，明确根源需求、产品定义、产品边界、稳定点/变化点、边界坐标和上下游分工，再判断能否进入 PRD / 系分预审或 GSD Round 0",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "gsd-cad-admission.md", "product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="AI Native development standards gate",
+        prompt="AI Native 研发流程补需求 / 设计 / 编码标准门禁：系统需求或产品需求未确认时，不进入 SDD、测试、代码或 CAD；输出需求基线稳定性、需求条目质量、HLR/LLR 设计追踪、编码规则原因示例验证方式和防御式编程检查",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "spec-template-practices.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native PRD system design deliberation review",
         prompt="对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -6921,7 +7226,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native spec template practices",
-        prompt="落地 Spec 模板最佳实践：把产品上下文和系分交给 AI 编码，输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换",
+        prompt="落地 Spec 模板最佳实践：把产品上下文和系分交给 AI 编码，先区分 PRD / SDD / 实现 Spec 三层是否齐备，输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "spec-template-practices.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -7162,17 +7467,39 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
+    if contains_any(
+        prompt,
+        [
+            "需求 / 设计 / 编码标准门禁",
+            "开发标准门禁",
+            "需求基线稳定性",
+            "需求标准",
+            "设计标准",
+            "编码标准",
+            "HLR/LLR",
+            "防御式编程",
+        ],
+    ):
+        route.update(
+            {
+                "ai-native",
+                "product-to-engineering-lifecycle.md",
+                "prd-system-design-review.md",
+                "spec-template-practices.md",
+                "verification-review-release.md",
+            }
+        )
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品设计", "方案确认", "验收种子", "交接物"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
-        if contains_any(prompt, ["PRD/系分合议预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案"]):
+        if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标"]):
             route.add("prd-system-design-review.md")
         if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
+        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
         if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "Spec 强度", "编码提速", "交付体感", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
             route.add("code-delivery-closed-loop.md")
@@ -7181,7 +7508,7 @@ def route_fixture(prompt: str) -> set[str]:
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡"]):
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
@@ -7310,6 +7637,8 @@ for case_id in [
     "ai-native-should-end-to-end-product-engineering-workflow",
     "ai-native-should-gsd-cad-handoff",
     "ai-native-should-gsd-product-engineering-collaboration",
+    "ai-native-should-demand-analysis-collaboration-gate",
+    "ai-native-should-development-standards-gate",
     "ai-native-should-gsd-cad-admission-gate",
     "ai-native-should-gsd-goal-composition",
     "ai-native-should-review-ai-coding-process",
@@ -7319,6 +7648,23 @@ for case_id in [
     "ai-native-should-route-cr-work",
 ]:
     expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-development-standards-gate",
+    (
+        "开发标准门禁模式",
+        "需求基线稳定性",
+        "不进入 SDD、测试、代码或 CAD",
+        "需求条目质量",
+        "需求标准",
+        "设计标准",
+        "编码标准",
+        "HLR/LLR 设计追踪",
+        "规则原因/示例/验证方式",
+        "防御式编程",
+        "需求驱动测试",
+    ),
+)
 
 expected_handling_has(
     "ai-native-should-prd-ai-prescan-review",
@@ -7345,6 +7691,16 @@ expected_handling_has(
         "正式 PRD/系分/Spec 正文与过程资产",
         "正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接",
         "讨论过程、迭代草稿、AI 推理轨迹、被拒方案",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-spec-template-practices",
+    (
+        "PRD / SDD / 实现 Spec 三层边界",
+        "不可让 AI 猜",
+        "实现 Spec 作为实现和 CR 检查清单",
+        "更新 Spec",
     ),
 )
 
