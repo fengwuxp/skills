@@ -1,6 +1,6 @@
 interface:
   display_name: "AI Native 研发流程编排"
-  short_description: "AI Native产品到研发编码流程编排、GSD/CAD准入与授权策略、生产可用能力门禁、Goal组合、Spec模板实践、PRD/系分合议预审、AI代码交付闭环、授权学习/知识回流、质量/测试门禁、代码库理解、设计-代码对齐、Gemini CLI/AgentRC工具准入、CR流程门禁和发布闭环"
+  short_description: "AI Native产品到研发编码流程编排、GSD/CAD准入与授权策略、生产可用能力门禁、Goal组合、Spec模板实践、SDD生产代码门禁、PRD/系分合议预审、AI代码交付闭环、授权学习/知识回流、质量/测试门禁、代码库理解、设计-代码对齐、Gemini CLI/AgentRC工具准入、CR流程门禁和发布闭环"
   brand_color: "#7C3AED"
   default_prompt: "Use $ai-native-engineering-workflow 按当前材料选择最小流程，输出 owner、交接物、授权策略、验证门禁、停止条件和下一步分派。"
 policy:

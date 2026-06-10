@@ -270,6 +270,8 @@ ai_native_terms = [
     "AI 编码流程",
     "AI 代码交付闭环",
     "SDD",
+    "规范驱动开发",
+    "生产级代码",
     "Spec 驱动开发",
     "Spec/SDD 模板",
     "Spec 模板",
@@ -464,8 +466,13 @@ check(
             "Spec 模板最佳实践由本技能编排",
             "AC 映射",
             "闸门证据",
+            "SDD 生产代码门禁由本技能编排",
+            "结构化契约",
+            "五支柱验证",
             "Spec 模板模式",
+            "SDD 生产代码模式",
             "Spec 模板落地包",
+            "SDD 生产代码门禁包",
             "Superpowers skills 作为外部方法库按需调度",
             "外部 skill 原文只作为 Level 3 参考",
             "不自动安装插件，不运行外部脚本，不采用外部默认 Git 操作",
@@ -576,6 +583,7 @@ check(
             "质量/测试门禁",
             "代码库理解",
             "Gemini CLI/AgentRC 工具准入",
+            "SDD 生产代码门禁",
         ]
     )
     and has_all(
@@ -985,6 +993,11 @@ check(
             "Spec 强度建议",
             "Spec 分层判断",
             "PRD / SDD / 实现 Spec 三层边界",
+            "规范事实源与可生成性门禁",
+            "规范事实源与可生成性检查",
+            "结构化契约",
+            "正例 / 反例",
+            "五支柱验证",
             "需求 / 设计 / 编码标准门禁",
             "需求标准",
             "设计标准",
@@ -1006,6 +1019,7 @@ check(
             "AC 覆盖",
             "漂移检查",
             "风险自查",
+            "AI 生成失败时，先把失败场景回写到 Spec / AC / 测试或项目规则",
             "Spec 也是实现和 CR 的检查清单",
             "轻重切换",
         ],
@@ -1015,6 +1029,9 @@ check(
         [
             "spec-template-practices.md",
             "Spec 模板落地建议",
+            "Spec 回写与重试闭环",
+            "识别 AI 错误模式",
+            "重试次数必须有上限",
             "Form Follows Reviewer",
             "spec-lint",
             "ac-coverage",
@@ -1045,6 +1062,8 @@ check(
             "Spec / AC 编号",
             "AC 覆盖",
             "漂移检查",
+            "五支柱验证",
+            "AI 生成代码和人工代码使用同一合并标准",
         ],
     )
     and has_all(
@@ -1054,7 +1073,11 @@ check(
             "Form Follows Reviewer",
             "Spec 五段式骨架",
             "Spec 驱动开发：让 AI 知道该写什么，不该写什么",
+            "规范驱动开发（SDD）：用 AI 写生产级代码的完整指南",
             "PRD / SDD / 实现 Spec 三层边界",
+            "Spec 作为事实来源",
+            "五支柱验证",
+            "失败回写 Spec 再重试",
             "Spec 作为实现和 CR 检查清单",
             "AC 编号",
             "Given-When-Then",
@@ -1073,7 +1096,10 @@ check(
             "Spec 模板模式",
             "Spec 模板落地包",
             "先区分 PRD / SDD / 实现 Spec 三层是否齐备",
+            "进入 SDD 生产代码模式",
+            "五支柱验证",
             "Spec 驱动开发：让 AI 知道该写什么，不该写什么",
+            "规范驱动开发（SDD）：用 AI 写生产级代码的完整指南",
         ],
     ),
 )
@@ -1220,6 +1246,9 @@ check(
             "Delivery",
             "机器验证与独立证据",
             "生成者不能自己给自己签字",
+            "Spec 回写与重试闭环",
+            "处理 AI 生成失败或反复返工",
+            "AI 生成失败不是只换提示词",
             "CR 减负与可理解交接",
             "知识回流",
             "CONTEXT.md",
@@ -1228,6 +1257,9 @@ check(
             "一次通过率",
             "返工率",
             "缺陷密度",
+            "规范命中率",
+            "生成成功率",
+            "缺陷模式回写率",
             "三问法",
             "外部 Harness",
             "不把外部文章中的 ASD / SSD Harness、命令体系、目录结构或脚本写成本技能默认依赖",
@@ -1267,7 +1299,9 @@ check(
         [
             "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
             "我们落地了 SDD，为什么团队效率没有体感提升？",
+            "规范驱动开发（SDD）：用 AI 写生产级代码的完整指南",
             "code-delivery-closed-loop.md",
+            "失败回写 Spec 再重试",
             "Orchestrator / Knowledge / Delivery 三层 Harness",
             "不把外部 Harness 写成当前会话默认依赖或执行授权",
             "不把文章中的比例和团队经验写成通用事实或项目当前指标",
@@ -1471,6 +1505,7 @@ check(
             "ai-native-should-gsd-goal-composition",
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-code-delivery-closed-loop",
+            "ai-native-should-production-sdd-source-of-truth",
             "ai-native-should-spec-template-practices",
             "ai-native-should-development-standards-gate",
             "ai-native-should-quality-test-gate",
@@ -1646,7 +1681,9 @@ check(
             "Microsoft Clarity Agent",
             "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
             "我们落地了 SDD，为什么团队效率没有体感提升？",
+            "规范驱动开发（SDD）：用 AI 写生产级代码的完整指南",
             "AI 代码交付闭环",
+            "SDD 生产代码门禁",
             "外部 Harness",
             "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审、文章推荐工具、外部 Harness 或单篇文章当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
         ],
@@ -7230,6 +7267,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "spec-template-practices.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native production SDD source of truth",
+        prompt="规范驱动开发 SDD：让 AI 写生产级代码，先检查 Spec 是否能作为事实来源，补结构化契约、正反例、边界错误处理、测试计划和五支柱验证，失败时回写 Spec 再重试",
+        routes={"ai-native", "agentic-engineering-governance.md", "spec-template-practices.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native quality test gate",
         prompt="做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点",
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md"},
@@ -7489,19 +7531,19 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "Spec 强度", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
+        if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "事实来源", "结构化契约", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
-        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "Spec 强度", "编码提速", "交付体感", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
@@ -7510,7 +7552,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("source-map.md")
         if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡"]):
             route.add("gsd-cad-admission.md")
-        if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
+        if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
         if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Clarity Agent"]):
             route.add("source-map.md")
@@ -7701,6 +7743,24 @@ expected_handling_has(
         "不可让 AI 猜",
         "实现 Spec 作为实现和 CR 检查清单",
         "更新 Spec",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-production-sdd-source-of-truth",
+    (
+        "SDD 生产代码模式",
+        "spec-template-practices",
+        "code-delivery-closed-loop",
+        "verification-review-release",
+        "清晰、完整、上下文化、具体、可测试",
+        "事实来源",
+        "结构化契约",
+        "正反例",
+        "五支柱验证",
+        "回写失败场景到 Spec/AC/测试",
+        "重试上限",
+        "人工 owner",
     ),
 )
 

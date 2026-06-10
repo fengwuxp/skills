@@ -160,6 +160,16 @@
       "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，先区分 PRD / SDD / 实现 Spec 三层边界，说明已具备、缺失和不可让 AI 猜的层；输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；把实现 Spec 作为实现和 CR 检查清单，偏差先判断是否需要更新 Spec，再要求 AI 修改代码；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
     },
     {
+      "id": "ai-native-should-production-sdd-source-of-truth",
+      "skill": "ai-native-engineering-workflow",
+      "query": "规范驱动开发 SDD：我们要让 AI 写生产级代码，请先检查 Spec 是否能作为事实来源，是否有结构化契约、正反例、边界/错误处理、测试计划和安全/测试/代码质量/性能/发布就绪五支柱验证；失败时要回写 Spec 再重试。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入 SDD 生产代码模式，读取 spec-template-practices、code-delivery-closed-loop 和 verification-review-release；先检查 Spec 是否清晰、完整、上下文化、具体、可测试，并能作为事实来源；补结构化契约、输入输出示例、正反例、边界/错误处理、测试计划和五支柱验证；AI 生成失败时按复现失败、检查 Spec 清晰度、分类 AI 错误模式、回写失败场景到 Spec/AC/测试、重新生成或实现、独立验证推进，设置重试上限并升级人工 owner。"
+    },
+    {
       "id": "ai-native-should-quality-test-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点。",
