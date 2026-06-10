@@ -16,7 +16,7 @@
 | 把 AI 原型、PRD、OpenSpec 或大项目推进到研发闭环 | `AI Native 研发流程编排` | 当前材料、目标产物、owner、风险、期望验证 | Round 0、交接包、GSD/CAD 准入、Goal、Spec/Harness、质量/理解门禁和下一步分派 |
 | 做系统设计、代码 CR、Bug 修复、测试或生产风险控制 | `资深架构师` | 代码/文档路径、报错、现象、目标、验证命令 | 设计方案、ADR、修复、测试、CR 结论、发布/回滚风险 |
 | 根据结构化输入生成 Java Service 配套代码 | `java-service-code-generator` | DDL/schema、Java 类、字段表格、表名、模块、输出目录 | Entity、Mapper、DTO、Request、Query、Converter、Service、ServiceImpl 和测试夹具 |
-| 做更复杂的图形视觉续作 | `$fireworks-tech-graph` | 语义清楚的产品图/架构图、风格目标、输出格式 | 更精致的 SVG/PNG 技术图或风格化图稿 |
+| 做更复杂的图形视觉续作 | `$fireworks-tech-graph` | 语义清楚的产品图/架构图、风格目标、输出格式 | 更精致的 SVG 技术图或风格化图稿；PNG 仅在明确要求时导出 |
 
 先判断“我要交付什么”，再选择 Skill。跨角色、跨阶段、跨工具、AI 编码流程治理、GSD/CAD、Goal、工具准入和交付闭环，优先让 `AI Native 研发流程编排` 做路由；单一产品产物直接给 `产品架构专家`，单一工程事实直接给 `资深架构师`，结构化代码生成直接给 `java-service-code-generator`。
 
@@ -26,7 +26,7 @@
 - 普通 PRD / 产品方案 / Backlog / 原型反推：用 `产品架构专家`，先把产品语义、对象、流程、规则、验收和待确认项讲清楚。
 - 代码、Bug、测试、源码级 CR 或生产变更：用 `资深架构师`，直接进入工程事实、测试证据、风险和发布回滚。
 - 已有 DDL、字段表格、Java 类或 schema，要生成 Wind/Nobe Java Service 配套代码：用 `java-service-code-generator`。
-- 复杂图形续作、视觉风格或更复杂的 SVG/PNG 图形工程：先让产品专家或架构师定语义，再调用 `$fireworks-tech-graph` 续作。
+- 复杂图形续作、视觉风格或更复杂的 SVG 图形工程：先让产品专家或架构师定语义，再调用 `$fireworks-tech-graph` 续作；PNG 仅在明确要求时导出。
 
 ### 按交付物选路
 
