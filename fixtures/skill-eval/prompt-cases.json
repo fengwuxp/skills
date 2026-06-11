@@ -70,6 +70,16 @@
       "expected_handling": "进入开发标准门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断需求基线稳定性，系统需求、产品需求或外部规则未确认时，不进入 SDD、测试、代码或 CAD；再输出需求条目质量、需求标准、设计标准、编码标准、HLR/LLR 设计追踪、强制/推荐规则分级、规则原因/示例/验证方式、防御式编程、需求驱动测试和回退 owner。"
     },
     {
+      "id": "ai-native-should-product-system-dna-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入 GSD 前先做产品 / 系统 DNA 门禁：这个需求现在只有功能清单和页面草图，请检查核心对象、业务不变量、状态流转、责任边界、演化规则和验证方式，避免功能先行、规则后补。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入产品 / 系统 DNA 门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先区分产品 DNA 和系统 DNA，检查核心对象、业务不变量、生命周期/状态、责任边界、演化规则、验证方式和待确认 owner；缺少 DNA 时回退产品架构专家补产品上下文、回退资深架构师补系分系统 DNA，不进入 OpenSpec、GSD Wave、CAD 候选或 AI 编码。"
+    },
+    {
       "id": "ai-native-should-prd-system-design-deliberation-review",
       "skill": "ai-native-engineering-workflow",
       "query": "对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文。",
