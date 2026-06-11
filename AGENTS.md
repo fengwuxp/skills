@@ -31,6 +31,33 @@ Skill 必须按渐进式加载设计，不得把所有知识一次性塞进 Agen
 - 同一规则只保留一个权威来源；其他层只做摘要和链接，避免 Level 2 与 Level 3 内容漂移。
 - 审查 Skill 时必须检查三级加载是否成立：Metadata 能否触发、Skill Body 是否可执行、Bundled Resources 是否按需可发现。
 
+## Skill 类型与接入门禁
+
+Skill 不是提示词大杂烩，而是围绕任务组织的可复用材料包。新增、重构或吸收外部经验时，先判断它的主类型；如果一个 Skill 同时跨多类，应拆分为具体 Skill，或只保留编排层并路由到已有 Skill。
+
+常见 Skill 类型：
+
+1. `library / API reference`：沉淀库、CLI、SDK、内部 API 的正确用法、版本约束和 gotchas。
+2. `product verification`：验证产物是否真的可用，例如端到端流程、页面状态、事件落库和验收证据。
+3. `data fetching and analysis`：封装取数、字段约定、监控指标和常见分析路径。
+4. `business process and team automation`：沉淀重复团队流程、例行报告、协作交接和固定格式输出。
+5. `code scaffolding and templates`：生成固定骨架但需要自然语言约束的代码、配置、迁移或文档模板。
+6. `code quality and review`：承载团队质量标准、CR 视角、对抗性检查、测试纪律和 CI 门禁。
+7. `CI/CD and deployment`：编排构建、发布、放量、错误率对比、回滚和发布交接。
+8. `runbooks`：从告警、症状、request id 或日志线索进入排障路径，输出结构化诊断结论。
+9. `infrastructure operations`：处理资源清理、依赖治理、成本排查等高风险操作，必须有 guardrail、确认和回退边界。
+
+接入门禁：
+
+- 只保留一个主类型；跨类型协作用路由和组合，不把所有能力塞进一个大而全 Skill。
+- `description` 面向模型触发，不是摘要；应写清用户会怎么说、会上传什么文件、什么场景该触发，以及不该触发的边界。
+- `SKILL.md` 做目录和路标；细节、模板、示例、长清单、gotchas 和 setup 说明放入 `references/`、`assets/` 或 `scripts/`。
+- 优先记录模型默认不知道、团队反复踩坑或会导致错误结论的 gotchas；不要重复模型本来就会做的通用步骤。
+- 验证类能力优先级最高；凡涉及产品可用性、代码交付、发布或高风险操作，必须设计可复核的验证矩阵、程序化断言、日志证据或人工确认点。
+- setup 要提前想清楚：缺少用户、项目、频道、账号、环境、目录、权限或配置时，先询问或停止，不得猜测默认值。
+- 记忆、日志、hooks 和使用度量只能在用户授权、仓库规则和供应链安全边界内使用；不得把外部 Skill 的持久化目录、hooks 或 marketplace 机制直接写成本仓库默认能力。
+- 高风险操作类 Skill 必须先通知、再确认、再执行；不得让 Skill 自行获得 Git、联网、生产、删除、部署、密钥或不可逆操作授权。
+
 ## Agent 运行时分层
 
 本仓库中的 Skill 不是一次性提示词，而是 Agent 运行时资产的一部分。维护技能时必须先判断经验、规则或工具应该进入哪一层，避免把所有内容都塞进 `SKILL.md`。

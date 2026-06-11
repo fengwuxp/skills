@@ -21,7 +21,7 @@
 
 ## 需要继续读取的 reference
 
-- AI 协作任务读 `ai-assisted-engineering.md`；CAD Mode、Execution Grant 或自动分轮推进继续读 `cad-mode.md`。
+- AI 协作任务读 `ai-assisted-engineering.md`；CAD Mode、Plan Grant / Execution Grant 或自动分轮推进继续读 `cad-mode.md`。
 - 测试任务读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
 - 生产发布、数据修复或外部依赖变更读 `production-readiness.md` 和 `negative-constraints.md`。
 
@@ -76,13 +76,13 @@
 - Build 阶段的每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景；无法追溯的“顺手优化”、格式化、抽象或删除，默认不进入本轮变更。
 - Verify 阶段无法执行真实验证时，必须说明原因、替代证据和残余风险，不得用“看起来没问题”代替验证。
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
-- AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；CAD Mode、Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
+- AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；CAD Mode、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
 - 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充 Harness Plan、上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
 - Harness Plan 必须体现 OpenSpec / Superpowers / Harness 的责任分离：OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。
 
 ## 语言偏好
 
-- 【推荐】默认使用中文输出任务规划、OpenSpec、Harness Plan、Execution Grant、评审意见、验证结论、文档和交付总结。
+- 【推荐】默认使用中文输出任务规划、OpenSpec、Harness Plan、Plan Grant / Execution Grant、评审意见、验证结论、文档和交付总结。
 - 【推荐】提交说明优先使用中文描述业务意图、变更内容和验证结果；`type(scope):`、脚手架要求、`Assisted-by`、工具名、模块名、类名、方法名、协议字段和错误码保持项目既有格式。
 - 【强制】不得为了中文化修改代码标识符、接口字段、数据库字段、配置键、消息字段、外部协议或已有项目约定。
 
@@ -92,7 +92,7 @@
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
 - 多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口；如果任务只是明确小修或一次性 demo，不启动重型并行流程。
-- Harness Plan 需要正式校验时，使用 `senior-software-architect/scripts/check_harness_plan.py --kind lightweight|gsd-wave|cad-candidate`；脚本只检查结构完整性，不替代测试、Review、Execution Grant 或用户授权。
+- Harness Plan 需要正式校验时，使用 `senior-software-architect/scripts/check_harness_plan.py --kind lightweight|gsd-wave|cad-candidate`；脚本只检查结构完整性，不替代测试、Review、Plan Grant / Execution Grant 或用户授权。
 - 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，详细进入门禁、Git 策略、每轮摘要和停止条件以 `cad-mode.md` 为准。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。

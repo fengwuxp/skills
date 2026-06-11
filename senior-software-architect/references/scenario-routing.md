@@ -67,7 +67,7 @@
 | 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中 CAD Mode、Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程先由 `ai-native-engineering-workflow` 编排 | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论；GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片，并必须额外确认授权、Git 策略、人工中断和停止条件。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中 CAD Mode、Plan Grant / Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程先由 `ai-native-engineering-workflow` 编排 | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论；GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片，并必须额外确认授权、Git 策略、人工中断和停止条件。 |
 | AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 
@@ -89,7 +89,7 @@
 - **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载 `coding-standards.md`、`coding-review-deep-dive.md` 和项目本地规范约束具体代码；若进入 CAD Mode，再读 `cad-mode.md` 确认授权与逐轮推进边界。
 - **AI 编码协作 + 高风险生产行为**：先确认 OpenSpec 中的业务不变量、验收场景和回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范。
 - **AI 编码协作 + 中大型长任务**：先判断是需求不清还是上下文衰减；需求不清回到 OpenSpec 和产品/系分补齐，上下文衰减或真实大项目则读取 `ai-large-project-orchestration.md`，建立上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和收口流程。明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程。
-- **GSD-like 编排 + CAD Mode**：先用 `ai-large-project-orchestration.md` 拆出 Stage、Wave 和原子任务包，再只对已选定且门禁完整的单个 Task ID 或阶段切片读取 `cad-mode.md`。不得对整个大项目直接开启 CAD，不得把 Roadmap、Wave 或任务清单当作 Execution Grant。
+- **GSD-like 编排 + CAD Mode**：先用 `ai-large-project-orchestration.md` 拆出 Stage、Wave 和原子任务包，再只对已选定且门禁完整的单个 Task ID 或阶段切片读取 `cad-mode.md`。不得对整个大项目直接开启 CAD，不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant。
 
 ## 输出路由
 

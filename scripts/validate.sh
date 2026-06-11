@@ -65,6 +65,7 @@ python3 -m py_compile senior-software-architect/scripts/check_architecture_deliv
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
 python3 -m py_compile scripts/audit-reference-indexes.py
+python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py
 python3 -m py_compile scripts/archive-source-evidence.py
 python3 -m py_compile scripts/audit-source-map.py
@@ -98,6 +99,10 @@ scripts/archive-source-evidence.py --self-test
 
 echo "==> Skill Eval prompt fixtures"
 scripts/audit-skill-eval-fixtures.py --self-test
+
+echo "==> skill quality advisory"
+scripts/audit-skill-quality.py
+scripts/audit-skill-quality.py --self-test
 
 echo "==> skill evaluation"
 scripts/evaluate-skills.py --self-test

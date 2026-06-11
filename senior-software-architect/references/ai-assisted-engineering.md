@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 用户要求 AI 参与代码生成、Bug 修复、重构、测试补充、迁移改造或文档到代码转换。
-- 任务需要 OpenSpec、Superpowers、Harness、CAD Mode、Execution Grant 或多 Agent 协作。
+- 任务需要 OpenSpec、Superpowers、Harness、CAD Mode、Plan Grant / Execution Grant 或多 Agent 协作。
 - 需要审查 AI 生成代码是否越界、幻觉、缺测试、放宽断言或伪造验证。
 
 ## 不适用场景
@@ -27,7 +27,7 @@
 - Java/Spring 代码读 `coding-standards.md` 和 `coding-review-deep-dive.md`。
 - 测试/TDD 读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
 - 中大型项目、长任务、上下文衰减、多 Agent/Wave 编排、暂停恢复和收口流程读 `ai-large-project-orchestration.md`。
-- CAD Mode、Execution Grant、自动分轮推进和自动提交边界读 `cad-mode.md`。
+- CAD Mode、Plan Grant / Execution Grant、自动分轮推进和自动提交边界读 `cad-mode.md`。
 - 生产变更读 `production-readiness.md` 和 `negative-constraints.md`。
 
 ## 按任务读取索引
@@ -35,11 +35,11 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断是否需要 AI 协作流程 | 使用时机、读取后必须产出、1 核心定位、2 适用场景、8 风险分级 | CAD Mode 细节 |
-| 写 OpenSpec 或规格门禁 | 3 OpenSpec、8 风险分级、10 Execution Grant、11 与现有规范的关系 | Harness 和 CAD 细节 |
+| 写 OpenSpec 或规格门禁 | 3 OpenSpec、8 风险分级、10 Plan Grant / Execution Grant、11 与现有规范的关系 | Harness 和 CAD 细节 |
 | Harness Plan / 多 Agent 协作 | 4 Superpowers、5 Harness、6 长任务上下文治理、7 子 Agent 与 Wave 编排、8 风险分级 | OpenSpec 示例细节 |
-| CAD Mode 候选判断与授权 | 9 受控自治开发模式、10 Execution Grant，并继续读 `cad-mode.md` | 基础三层模型解释 |
+| CAD Mode 候选判断与授权 | 9 受控自治开发模式、10 Plan Grant / Execution Grant，并继续读 `cad-mode.md` | 基础三层模型解释 |
 | 审查 AI 生成代码 | 4 Superpowers、8 风险分级、Review 清单，并按需读 Review/测试 reference | CAD 执行流程细节 |
-| 生产或高风险自动推进 | 8 风险分级、9 受控自治开发模式、10 Execution Grant，并继续读 `cad-mode.md` | 低风险轻量执行内容 |
+| 生产或高风险自动推进 | 8 风险分级、9 受控自治开发模式、10 Plan Grant / Execution Grant，并继续读 `cad-mode.md` | 低风险轻量执行内容 |
 | 中大型 AI 编码或上下文衰减治理 | 5 Harness、6 长任务上下文治理，并继续读 `ai-large-project-orchestration.md` | 不照搬外部工具命令或完整文件体系 |
 | Codex thread、automation、goal、side panel 或外部工具协作 | 5 Harness、6 长任务上下文治理、Codex 运行时协作模式；中大型任务继续读 `ai-large-project-orchestration.md` | 不把平台功能当授权或规格 |
 | AI Native 架构师角色升级 / 放下代码 / Agent 工作流设计 | 1 核心定位、1A AI Native 架构师工作面、4 Superpowers、5 Harness | 不把“少写代码”理解为放弃编码能力、验证或生产责任 |
@@ -70,7 +70,7 @@ OpenSpec 定标准，Superpowers 保纪律，Harness 管团队。
 OpenSpec 定目标
 -> Harness 排计划
 -> Superpowers 用 TDD 推进
--> Execution Grant 控制可自动执行的权限边界
+-> Plan Grant / Execution Grant 控制可自动执行的权限边界
 ```
 
 中大型 AI 编码的额外风险是上下文衰减：对话越长，目标、决策、禁止事项、阻塞项和验证证据越容易被历史噪音淹没。架构师要把关键上下文放进可审查、可版本化、可恢复的载体，而不是依赖主会话记忆。
@@ -144,7 +144,7 @@ OpenSpec / Superpowers / Harness 的责任边界：
 | --- | --- | --- | --- |
 | OpenSpec | 规定要做什么。 | 目标、范围、非目标、业务规则、契约、验收和验证方式。 | 不替代执行计划、分工、授权或代码质量纪律。 |
 | Superpowers | 规定怎么高质量地做。 | TDD、Review、Refactor、最小变更、编码红线、测试门禁和 AI 产物复核。 | 不替代需求规格、协作分工、写入范围或用户授权。 |
-| Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Owner、Task ID、写入范围、只读范围、依赖顺序、Wave、验证命令、停止条件、交接和恢复入口。 | 不替代 OpenSpec、Superpowers、Execution Grant、测试结果或生产审批。 |
+| Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Owner、Task ID、写入范围、只读范围、依赖顺序、Wave、验证命令、停止条件、交接和恢复入口。 | 不替代 OpenSpec、Superpowers、Plan Grant / Execution Grant、测试结果或生产审批。 |
 
 升级路径：
 
@@ -152,7 +152,7 @@ OpenSpec / Superpowers / Harness 的责任边界：
 轻量修改：目标 + 写入范围 + 验证命令
 中高风险 AI 编码：OpenSpec + Harness Plan + Superpowers 检查
 中大型项目：OpenSpec + context ledger + GSD Stage/Wave/Atomic Task + Harness Plan + verification matrix
-受控自动推进：上述门禁 + 单个 CAD 候选任务 + Execution Grant
+受控自动推进：上述门禁 + 单个 CAD 候选任务 + Plan Grant / Execution Grant
 ```
 
 ## 2. 适用场景
@@ -239,7 +239,7 @@ AI 编码审查重点：
 | 是否过度设计 | 不为未知未来添加通用平台、规则引擎、插件体系、多租户、中台或复杂扩展点 |
 | 是否隐藏关键通信边 | AI 生成的框架封装、工具调用、上下文传递、异步任务和重试链路必须可追踪、可观测、可复现 |
 | 复杂度与注意力成本 | 是否新增不必要代码、抽象、依赖或生成量，是否提高理解、验证、调试和 Review 成本 |
-| 是否缺少验证 | 未说明编译、测试、静态检查或无法执行原因，不得交付 |
+| 是否缺少验证 | 未说明编译、测试、静态检查或无法执行原因，不得交付；AI Native 调用架构师做代码质量与 Review 时交回源码锚点、行为影响、质量风险、验证闭环和交接结果，产品语义缺失退回 `产品架构专家` 或 AI Native Round 0 |
 
 ## AI 经验沉淀门禁
 
@@ -405,19 +405,19 @@ Wave 编排规则：
 
 ## 9. 受控自治开发模式（CAD Mode）
 
-CAD Mode 详细执行规则只读 `cad-mode.md`，本文只保留入口边界。CAD Mode 是受控自动推进模式，不是普通“继续执行”；不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Execution Grant、验证或高风险人工确认点。
+CAD Mode 详细执行规则只读 `cad-mode.md`，本文只保留入口边界。CAD Mode 是受控自动推进模式，不是普通“继续执行”；不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Plan Grant / Execution Grant、验证或高风险人工确认点。
 
-进入 CAD Mode 前必须确认产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、Execution Grant、工作区状态和人工确认点都成立。任一门禁缺失时，只能提示“条件不满足”，列出缺口，并先补齐 Round 0。
+进入 CAD Mode 前必须确认产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、Plan Grant / Execution Grant、工作区状态和人工确认点都成立。任一门禁缺失时，只能提示“条件不满足”，列出缺口，并先补齐 Round 0；若 AI Native 已输出 `Plan Grant: Active`，范围内低风险本地任务不再逐任务索要 Execution Grant。
 
-CAD Mode 的 Git 策略、每轮执行闭环、5 秒人工中断窗口、自动提交条件、停止条件、结束收口和 Execution Grant 授权包，统一以 `cad-mode.md` 为唯一详细规则源；平台权限边界始终优先于任务授权。
+CAD Mode 的 Git 策略、每轮执行闭环、5 秒人工中断窗口、自动提交条件、停止条件、结束收口和 Plan Grant / Execution Grant 授权包，统一以 `cad-mode.md` 为唯一详细规则源；平台权限边界始终优先于任务授权。
 
-## 10. Execution Grant：执行授权包
+## 10. Plan Grant / Execution Grant：执行授权包
 
-Execution Grant 是 CAD Mode 的权限边界，只能约束当前任务链，任务完成、用户暂停或授权被撤销后失效；不得被理解为永久授权或跨任务授权。
+Plan Grant / Execution Grant 是 CAD Mode 的权限边界，只能约束当前任务链，任务完成、用户暂停或授权被撤销后失效；不得被理解为永久授权或跨任务授权。
 
 最小授权结构、默认低风险操作、必须显式列出的操作、禁止静默执行事项和 Git 策略都在 `cad-mode.md` 中维护。AI 协作总纲不得复制这些细节，避免授权规则在多个 reference 中漂移。
 
-平台权限边界优先于 Execution Grant。若 Codex/工具层要求额外授权，应按工具规则请求；不得通过脚本绕过授权、沙箱或安全限制。
+平台权限边界优先于 Plan Grant / Execution Grant。若 Codex/工具层要求额外授权，应按工具规则请求；不得通过脚本绕过授权、沙箱或安全限制。
 
 ## 11. 与现有规范的关系
 

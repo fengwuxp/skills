@@ -1,0 +1,270 @@
+# Agent Loop Engineering
+
+本文定义 AI Native 流程中的 Agent Loop 设计与治理方式。Loop 不是更长的 Prompt，也不是无条件自动执行；它是围绕目标、状态、决策、动作、反馈、验证、预算和停止条件组织起来的可审执行循环。
+
+## 使用时机
+
+- 用户提到 Agent Loop、Loop Engineering、`/goal`、`/loop`、auto mode、后台 Agent、持续编排、多 Agent 监督、定时执行或“让 Agent 自己写 Prompt”。
+- 用户希望把 GSD + Goal、Plan Grant、Wave、CAD 或质量门禁变成可持续推进的执行循环。
+- AI 编码已经能生成代码，但缺少反馈、验证、预算、停止条件、恢复入口或交接证据。
+- 需要判断某个自动化线程、定时任务、监控、Review Agent 或多 Agent 编排是否可以进入 AI Native 工作流。
+- 需要把重复执行经验沉淀为 Skill、reference、fixture 或脚本，而不是每轮重新写 Prompt。
+
+## 不适用场景
+
+- 只优化一段 Prompt、只写普通 PRD、只做单次代码修改或单个源码级 CR；按对应 Skill 处理。
+- 目标、范围、验收、写入边界或验证命令不清楚时，不设计 Loop；先回到 Round 0、Goal 卡、OpenSpec 或 Harness。
+- Git、联网、依赖安装、生产、密钥、部署、不可逆操作、高风险资金 / 权限 / 合规任务不能因为放进 Loop 就默认授权。
+- 外部文章、工具宣传、`/goal`、`/loop` 或 auto mode 只作为方法线索；当前工具是否可用必须按当前会话和官方来源重新核验。
+
+## 读取后必须产出
+
+- 一份 Loop 准入结论：不进入 Loop / 只做只读 Loop / 可形成 Plan Grant Loop / 可交给架构师检查 CAD Loop / 必须人工主导。
+- 一份最小 Loop 契约：Goal、触发条件、状态载体、决策输入、可调用 Skill / 工具、允许动作、禁止动作、反馈源、验证者、预算、最大轮次、无进展检测、停止条件、恢复入口和交接物。
+- 一份授权策略：只读、默认低风险授权、Plan Grant、Wave Grant、CAD Grant、Codex 替我审批通道或显式确认。
+- 一份反馈与验证设计：测试、lint、CR、源码锚点、用户反馈、eval、发布监控或人工验收如何进入下一轮。
+- 一份状态与失败回写设计：状态载体选什么，验证失败、需求不清、边界冲突、授权不足、连续无进展时回写到哪里。
+- 一份知识回流判断：哪些重复动作应沉淀为 Skill / reference / fixture / script，哪些只是一次性探索。
+
+## 需要继续读取的 reference
+
+- OpenSpec、Superpowers、Harness、权限边界和多 Agent 治理读 `agentic-engineering-governance.md`。
+- GSD/CAD 准入、Wave、Atomic Task、Plan Grant 和授权边界读 `gsd-cad-admission.md`。
+- Goal、状态、预算 / 时间盒、Ledger 和 GSD + Goal 读 `goal-composition.md`。
+- 代码交付反馈、Spec 回写、独立验证、CR 减负和指标读 `code-delivery-closed-loop.md`。
+- 验证矩阵、质量门禁、CR、发布和复盘读 `verification-review-release.md`。
+- 具体 CAD 每轮执行细节回到 `senior-software-architect/references/cad-mode.md`。
+
+## 按任务读取索引
+
+| 任务 | 优先读取 | 跳过 |
+| --- | --- | --- |
+| 判断是否需要 Agent Loop | `1. Loop 边界`、`2. 最小契约` | 不直接写执行计划 |
+| 设计 `/goal` / `/loop` / auto mode 准入 | `2. 最小契约`、`5. 授权与工具边界` | 不把工具能力当授权 |
+| 做 GSD + Goal + Loop | `3. GSD + Goal + Loop`，再读 `goal-composition.md` 和 `gsd-cad-admission.md` | 不把 Loop 当 Execution Grant |
+| 提升代码交付闭环 | `4. 反馈与验证`，再读 `code-delivery-closed-loop.md` | 不只优化生成速度 |
+| 控制成本与停止 | `6. 预算和停止条件` | 不允许无限循环 |
+| 绑定 Plan Grant 与 Loop 预算 | `5. 授权与工具边界`、`6. 预算和停止条件` | 不让授权无限期有效 |
+| 设计失败回写路径 | `4. 反馈与验证`、`6A. 失败回写` | 不靠换 Prompt 硬跑 |
+| 做知识回流 | `7. Skill 是复用单位` | 不复制文章或工具宣传 |
+
+## 1. Loop 边界
+
+Agent Loop 回答：在一个目标下，Agent 如何反复读取状态、决定下一步、执行动作、吸收反馈、验证结果，并在满足条件时停止或交接。
+
+最小模型：
+
+```text
+State -> Decide -> Act -> Observe -> Verify -> Stop / Continue
+```
+
+边界：
+
+- Goal 定义为什么做、做到什么算完成。
+- GSD 定义分几波做、谁接下一波。
+- Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。
+- Loop 定义每一轮如何读取状态、选择动作、吸收反馈、判断继续还是停止。
+- Plan Grant / Execution Grant 定义实际允许做什么。
+
+Loop 不能替代 Goal、OpenSpec、Harness、测试、CR、发布审批或用户授权。没有状态载体、反馈源和停止条件的“自动执行”，不是可用 Loop。
+
+## 2. 最小契约
+
+Loop 契约建议写成短卡：
+
+```text
+Loop ID:
+关联 Goal:
+Loop 类型: 只读侦察 / Plan Grant / Wave / CAD / 质量门禁 / 发布监控
+触发条件:
+状态载体:
+决策输入:
+调用 Skill / 工具:
+允许动作:
+禁止动作:
+反馈源:
+验证者:
+预算 / 时间盒 / 上下文预算:
+最大轮次:
+无进展检测:
+停止条件:
+恢复入口:
+交接物:
+知识回流位置:
+授权策略:
+```
+
+准入判断：
+
+- 缺 Goal、成功标准或验收种子时，不能进入执行 Loop。
+- 缺状态载体时，Loop 只能停留在单轮任务，不适合跨轮推进。
+- 缺反馈源时，Loop 只会放大猜测和错误。
+- 缺验证者时，Loop 不能形成交付证据。
+- 缺最大轮次、无进展检测或预算上限时，Loop 不能自动运行。
+
+状态载体优先级：
+
+- `Goal Ledger`：跨轮记录目标、当前状态、验证证据、预算消耗、阻塞和下一 owner。
+- `GSD 状态账本 / Wave plan`：记录 Wave、Task、依赖、提交切片和阶段进度。
+- `Harness Plan`：记录 owner、写入范围、验证命令、顺序、停止条件和恢复入口。
+- `OpenSpec tasks / AC / SDD`：记录业务事实、验收标准、实现约束和漂移项。
+- `verification matrix / CR report`：记录测试、lint、源码锚点、Review 发现和准出证据。
+- `git commit message / task summary`：仅作为已验证切片的历史证据，不能单独承担状态载体。
+
+没有明确状态载体时，Loop 只能做单轮分析或执行；不能跨轮承诺持续推进。
+
+## 3. GSD + Goal + Loop
+
+`GSD + Goal + Loop` 的关系：
+
+```text
+Goal 固定目标和完成线
+-> GSD 固定 Wave 和任务顺序
+-> Harness 固定 owner、写入范围、验证和交接
+-> Loop 固定每轮状态、动作、反馈、验证和停止
+-> Plan Grant / CAD Grant 固定低风险默认推进边界
+```
+
+使用要求：
+
+- 每个 Loop 必须服务一个 Goal 或子 Goal，不能为了“让 Agent 跑起来”而创建。
+- 每个 Wave 可以有 Loop，但 Wave Loop 不能跨 Wave 自动扩大写入范围。
+- 每个 CAD 原子任务本质上是受控 Loop；具体执行细节交给架构师 `cad-mode.md`。
+- Plan Grant 只能让范围内低风险本地任务按计划推进；不能扩展到 Git push、联网、生产、密钥、部署或高风险业务。
+- Plan Grant 必须绑定 Loop 预算、最大轮次、无进展检测和失败回写位置；授权不能比 Loop 状态更长寿。
+- Loop 交接必须更新 Goal Ledger、验证矩阵、任务状态或等价材料。
+
+## 4. 反馈与验证
+
+Loop 的可信度取决于反馈和验证，不取决于执行轮数。
+
+反馈源可以是：
+
+- 测试、编译、lint、静态检查、类型检查、契约测试。
+- CR 发现、源码锚点、影响模块、入口路径和调用关系。
+- 产品验收种子、用户反馈、eval 样例、发布监控和告警。
+- Spec / AC / OpenSpec 漂移检查和上下文过期检查。
+
+验证规则：
+
+- 生成者不能自己给自己签字；准出证据必须可复核。
+- Agent 可以解释验证结果，但不能把自述“已完成”当证据。
+- 连续失败时，不只是换 Prompt；应回写 Spec、AC、测试、Harness 或项目规则。
+- Review Agent 只能初筛，不能替代架构师、产品 owner、安全或发布责任人。
+
+### 4A. 失败回写路径
+
+Loop 失败后先回写事实源，再决定是否继续：
+
+- 测试、编译、lint 或契约验证失败：回写测试策略、验证矩阵、Harness Plan 或工程任务包。
+- 需求、验收或产品边界不清：回写产品上下文包、PRD-Lite、AC 或产品 owner 待确认项。
+- 系分、接口、数据、状态机或模块边界冲突：回写 OpenSpec、SDD、ADR 或架构师系分。
+- 授权不足、写入范围不清或工具要求额外审批：回写 Plan Grant / Execution Grant。
+- 连续两轮无新增证据、缺口不收敛或同类错误重复：回写 Goal Ledger，并暂停交给人类 owner。
+- 工具输出无法回链源码、测试或用户材料：标为待确认，不得写成结论或执行依据。
+
+## 5. 授权与工具边界
+
+`/goal`、`/loop`、auto mode、定时任务、后台 Agent、多 Agent 调度和 Codex 替我审批都只能作为运行方式或低风险审批通道，不能自行创造授权。
+
+默认边界：
+
+- 只读 Loop 可以读取工作区内相关文件、查引用、生成理解包和建议。
+- Plan Grant Loop 可以在任务计划内做低风险本地读写、测试、lint、文档/Skill 更新和状态回写。
+- CAD Loop 只覆盖一个已选定原子任务的 Red / Green / Review / Verify 本地动作。
+- Git stage / commit 必须由 Grant 明确写清；push、PR、merge、部署、联网、依赖安装和生产操作必须显式确认。
+- 工具要求额外审批时，工具权限优先于流程设计；不得绕过 sandbox、审批或项目规则。
+
+Plan Grant 与 Loop 预算绑定的最低字段：
+
+```text
+适用 Goal / Wave / Task:
+状态载体:
+反馈源:
+验证者:
+预算 / 时间盒:
+最大轮次:
+无进展检测:
+失败回写位置:
+预算耗尽处理:
+授权失效条件:
+```
+
+如果 Grant 没有这些字段，只能作为默认低风险授权候选，不能升级为持续自动推进。
+
+## 6. 预算和停止条件
+
+Loop 必须有硬停止条件：
+
+- 最大轮次达到上限。
+- 连续两轮没有新增验证证据、状态变化或缺口收敛。
+- token、费用、时间盒、上下文预算或验证成本达到上限。
+- 目标、范围、OpenSpec、Harness、写入边界或授权出现冲突。
+- 测试、lint、编译、CR 或人工验收失败，且继续修改会掩盖真实问题。
+- 触发 Git、联网、生产、密钥、部署、不可逆操作或高风险业务边界。
+- 出现用户中断、owner 变化、上下文漂移、工具输出无法回链源码或证据。
+
+停止不是失败。停止后应输出状态、证据、阻塞原因、下一 owner、恢复入口和需要用户确认的最小问题。
+
+## 7. Skill 是复用单位
+
+Loop 里可复用的单位应是 Skill、reference、fixture、script 或项目规则，而不是每轮重新写 Prompt。
+
+沉淀顺序：
+
+- 重复的判断流程进入 Skill / reference。
+- 可机械验证的问题进入脚本、fixture、lint、测试或 CI。
+- 项目事实和历史坑点进入项目 `AGENTS.md`、`CONTEXT.md`、ADR、OpenSpec 或等价位置。
+- 用户长期偏好只有在授权后进入 `~/.skill-learning/`，不进入仓库或安装目录。
+
+不新增顶层 Skill 的默认判断：
+
+- 如果只是 AI Native 流程中的一个执行循环，留在本 reference。
+- 如果是架构师具体代码执行、TDD、CR 或 CAD，每轮细节回到 `资深架构师`。
+- 如果是产品反馈、PRD 或验收种子，回到 `产品架构专家`。
+- 只有跨项目反复出现、边界独立、产物稳定、验证方式明确时，才评估独立 Skill。
+
+## 8. 输出模板
+
+Loop 准入卡：
+
+```text
+结论:
+关联 Goal:
+Loop 类型:
+状态载体:
+可调用 Skill / 工具:
+允许动作:
+禁止动作:
+反馈与验证:
+预算 / 最大轮次:
+无进展检测:
+停止条件:
+授权策略:
+交接物:
+下一 owner:
+```
+
+Loop 复盘卡：
+
+```text
+Loop ID:
+执行轮次:
+完成证据:
+失败 / 阻塞:
+消耗预算:
+是否触发停止:
+回写位置:
+下一步:
+```
+
+## 9. 反模式
+
+- 把 Loop 当成更高级的 Prompt，缺少状态、反馈、验证和停止条件。
+- 为了减少审批，把 Git、联网、生产、密钥、部署或不可逆操作塞进默认 Loop。
+- 用执行轮数、生成代码量、PR 数量代替交付证据。
+- Loop 发现失败后继续堆提示词，不回写 Spec、AC、测试或 Harness。
+- 多个 Loop 同时写同一模块、同一契约、同一状态机或同一测试夹具。
+- 把外部工具的 `/goal`、`/loop`、auto mode 或后台 Agent 能力写成当前会话默认能力。
+- 不把 Loop 写成无条件自动授权。
+- Loop 只会继续，不会停；或停下后没有状态、证据、owner 和恢复入口。
