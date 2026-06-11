@@ -16,6 +16,7 @@
 | 把 AI 原型、PRD、OpenSpec 或大项目推进到研发闭环 | `AI Native 研发流程编排` | 当前材料、目标产物、owner、风险、期望验证 | Round 0、交接包、GSD/CAD 准入、Goal、Spec/Harness、质量/理解门禁和下一步分派 |
 | 做系统设计、代码 CR、Bug 修复、测试或生产风险控制 | `资深架构师` | 代码/文档路径、报错、现象、目标、验证命令 | 设计方案、ADR、修复、测试、CR 结论、发布/回滚风险 |
 | 根据结构化输入生成 Java Service 配套代码 | `java-service-code-generator` | DDL/schema、Java 类、字段表格、表名、模块、输出目录 | Entity、Mapper、DTO、Request、Query、Converter、Service、ServiceImpl 和测试夹具 |
+| 生成复杂可编辑架构图或代码库结构图 | `资深架构师` 先判断是否使用 Architecture Diagram Generator | 架构描述、代码库锚点、视图层级、节点/箭头语义、权限边界 | 可编辑 SVG / draw.io XML / Mermaid 草案和人工校验清单 |
 | 做更复杂的图形视觉续作 | `$fireworks-tech-graph` | 语义清楚的产品图/架构图、风格目标、输出格式 | 更精致的 SVG 技术图或风格化图稿；PNG 仅在明确要求时导出 |
 
 先判断“我要交付什么”，再选择 Skill。跨角色、跨阶段、跨工具、AI 编码流程治理、GSD/CAD、Goal、工具准入和交付闭环，优先让 `AI Native 研发流程编排` 做路由；单一产品产物直接给 `产品架构专家`，单一工程事实直接给 `资深架构师`，结构化代码生成直接给 `java-service-code-generator`。
@@ -26,6 +27,7 @@
 - 普通 PRD / 产品方案 / Backlog / 原型反推：用 `产品架构专家`，先把产品语义、对象、流程、规则、验收和待确认项讲清楚。
 - 代码、Bug、测试、源码级 CR 或生产变更：用 `资深架构师`，直接进入工程事实、测试证据、风险和发布回滚。
 - 已有 DDL、字段表格、Java 类或 schema，要生成 Wind/Nobe Java Service 配套代码：用 `java-service-code-generator`。
+- 复杂可编辑架构图、代码库结构转图或架构描述转图：先用 `资深架构师` 判断是否需要 Architecture Diagram Generator；来源未审查时只输出准入缺口，不安装、不联网、不执行脚本。
 - 复杂图形续作、视觉风格或更复杂的 SVG 图形工程：先让产品专家或架构师定语义，再调用 `$fireworks-tech-graph` 续作；PNG 仅在明确要求时导出。
 
 ### 按交付物选路
@@ -35,7 +37,7 @@
 - `Agent Loop / /goal / /loop / auto mode`：先用 `AI Native 研发流程编排` 判断是否具备状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和授权策略；Loop 不替代 Execution Grant、测试、CR 或上线审批。
 - `系分 / 技术方案 / ADR / 代码 CR / Bug / TDD / 发布回滚`：直接用 `资深架构师`；如果任务跨产品、工程、Agent 和验证闭环，再先让 AI Native 编排。
 - `Entity / Mapper / DTO / Request / Query / Service 脚手架`：只有结构化输入齐全时用 `java-service-code-generator`；业务语义、表设计和金额/状态规则仍需产品专家、架构师或 DBA 确认。
-- `能力图 / 流程图 / 状态机 / 架构图 / 资金流图`：产品语义图用产品专家，工程结构图用架构师；需要复杂视觉、风格化或图形工程续作时再调用 `$fireworks-tech-graph`。
+- `能力图 / 流程图 / 状态机 / 架构图 / 资金流图`：产品语义图用产品专家，工程结构图用架构师；复杂可编辑架构图、代码库结构转图或架构描述转图先由架构师判断是否使用 Architecture Diagram Generator；复杂视觉和风格化续作再调用 `$fireworks-tech-graph`。
 
 ### 最小提示词公式
 
@@ -64,6 +66,7 @@
 - `整理最终 PRD / 系分`：只保留当前有效结论、范围、规则、风险、待确认和验收；讨论过程、迭代草稿、AI 推理轨迹、被拒方案放入评审报告、Decision Log、Goal Ledger 或任务文档。
 - `做质量门禁`：先排测试矩阵、验证顺序、CR 前置条件、失败回退，再路由到架构师测试能力。
 - `阅读分析代码库`：只有代码库级理解、设计-代码对齐、上下文工程或工具准入才走 AI Native；单个文件、函数、报错或 PR diff 直接用资深架构师。
+- `判断是否使用 Architecture Diagram Generator`：复杂可编辑架构图、代码库结构转图、架构描述转图或多层架构图由架构师先做准入；普通产品流程图、状态机、资金四流和小型 SVG 继续用原有画图能力；视觉风格续作用 `$fireworks-tech-graph`。
 - `做 Skill 类型路由`：细化 AI 流程、产品专家或架构师能力时，先判断产品验证、代码质量、Runbook、CI/CD、模板脚手架、团队自动化、数据分析和基础设施操作分别由谁负责、交接什么、怎么验证；默认优先补 reference / fixture / 脚本，不急着新增顶层 Skill。
 - `做事实边界检查`：要求 AI Native 区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张。
 - `接入 Superpowers skills`：让 AI Native 读取 `superpowers-skill-library.md`，把 Superpowers 的 brainstorming、writing-plans、TDD、code review 和 verification-before-completion 作为外部方法库调度，不默认安装插件或执行外部脚本。
@@ -90,7 +93,7 @@
 - 要根据外部 Skill 经验拆分或细化能力：用 `做 Skill 类型路由`，让 AI Native 先判断主类型、默认 owner、协作 owner、交接物、验证证据、停止条件和回流位置；产品验证交给产品专家，代码质量 / Runbook / CI/CD / 基础设施操作交给架构师。
 - 要做质量、测试、CR、发布：AI Native 编排质量门禁、验证顺序和发布闭环；测试设计、代码实现、源码级 CR 和生产风险仍由 `资深架构师` 承接。
 - 要生成 Java Service 配套代码：只有 DDL、字段表格、Java 类或 schema 这类结构化输入齐全时，才用 `java-service-code-generator`。
-- 要画图：产品语义图用 `产品架构专家`，工程架构图用 `资深架构师`，复杂视觉续作用 `$fireworks-tech-graph`；默认 SVG。
+- 要画图：产品语义图用 `产品架构专家`，工程架构图用 `资深架构师`，复杂可编辑架构图或代码库结构转图由架构师判断是否使用 Architecture Diagram Generator，复杂视觉续作用 `$fireworks-tech-graph`；默认 SVG。
 
 ### AI Native 默认闭环
 
@@ -109,6 +112,7 @@
 - `产品架构专家`：业务目标、用户/主体、范围/非目标、输入材料、希望输出的产品产物、验收和待确认项。
 - `资深架构师`：代码或文档路径、现象/目标、运行环境、约束、期望验证命令、是否允许改代码或只做 CR。
 - `java-service-code-generator`：DDL/schema/Java 类/字段表格、表名、业务模块、输出目录、是否允许覆盖已有文件。
+- Architecture Diagram Generator：明确来源/安装包、是否已审查、架构描述或代码库锚点、视图层级、节点/分组、箭头语义、输出格式、是否允许联网/读写/安装。
 - `$fireworks-tech-graph`：图形语义、节点关系、受众、风格要求、输出格式和是否需要基于已有 SVG 续作。
 
 ### 先选哪个 Skill
@@ -148,6 +152,7 @@
 - 已有代码、报错、测试失败、工程坏味或生产现象，直接用 `资深架构师`。
 - 已经有明确表结构、字段表格或 Java 类，并且目标是生成配套代码，用 `java-service-code-generator`。
 - 需要图形化交付时，架构师和产品专家都会默认产出 SVG；PNG、PDF、截图、Mermaid 或 Markdown 草图只有在使用者明确提出时才处理。
+- 需要复杂可编辑架构图、代码库结构转图、架构描述转图或多层架构图时，先让 `资深架构师` 判断是否使用 Architecture Diagram Generator；它只做可编辑架构图草案生成，不替代架构判断、CR、测试、发布验证，也不在来源未审查时安装或执行。
 - 如果需要更复杂、更好看的技术图、能力图、架构图或风格化图形，先让产品专家或架构师产出图形语义、对象边界和 SVG 初稿；需要继续美化、风格化或复杂图形工程时，可以明确调用 `$fireworks-tech-graph` 续作。
 - 涉及金融、支付、资金、卡组织、ACH、跨境、合规或监管时，先让产品专家标出主体、法域、资金归属、外部规则来源、待确认方和验收边界，再进入工程设计。
 
@@ -158,6 +163,7 @@
 - 从原型到 PRD：`产品架构专家` 根据原型、HTML、页面截图或交互稿反推 PRD，先补角色、对象、状态、规则、数据和验收，不只描述页面控件。
 - 从 PRD 到代码生成：先用 `产品架构专家` 或 `资深架构师` 确认对象、状态、字段、索引和金额精度；已有 DDL、字段表格或 Java 类后，再用 `java-service-code-generator` 生成配套代码。
 - 从普通图到复杂图：先用 `产品架构专家` 或 `资深架构师` 产出语义稳定的 SVG；需要更复杂的布局、风格系统或精细视觉时，再调用 `$fireworks-tech-graph` 续作。
+- 从架构描述到可编辑架构图：先用 `资深架构师` 固定视图层级、源码/配置/测试锚点、节点/箭头语义和风险边界；来源已审查且工具可用时，再让 Architecture Diagram Generator 生成可编辑草案，最后回到架构师做校验。
 - 从金融产品到上线方案：`产品架构专家` 先标出主体、法域、资金归属、外部规则和专业确认方；`资深架构师` 再处理系统边界、数据一致性、可靠性、安全和发布回滚。
 
 ### 产品架构专家怎么用
