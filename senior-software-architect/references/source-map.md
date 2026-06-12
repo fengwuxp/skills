@@ -46,6 +46,7 @@
 | 核对 AI 全栈工作流文章应用记录 | `微信公众号文章：从一份模糊需求，到一套可开发系统`、`应用记录` | 不把原型或页面愿望当工程边界 |
 | 核对需求分析与设计基础文章应用记录 | `微信公众号文章：需求分析和设计活动关键要点总结`、`应用记录` | 不复制 GJB 章节表述、推荐书目或作者表达 |
 | 核对业务驱动架构与验证来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把通用方法论当作项目事实 |
+| 核对业务架构 / 技术架构同质性来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把技术平台当产品本身 |
 | 新增外部来源 | `读取与归因规则`、`提炼边界` | 不把未读正文的来源标为已吸收 |
 | 审查来源是否可继续使用 | `读取与归因规则`、`已参考的公开来源` | 不用历史记录替代最新核验 |
 | 需要最新外部 API、SDK、云产品、法规或安全基线结论 | 本文确认来源历史，再回 `workflow.md` 的外部知识时效性门禁 | 不把读取日期当成当前核验日期 |
@@ -139,15 +140,11 @@
 - 不把“业务逻辑在 Use Case 层”理解为所有业务规则都必须塞进应用服务；稳定领域规则仍应回到领域模型、值对象或领域服务。
 
 ## 已参考的公开来源：架构验证方法组
-
 ### 业务驱动架构与验证公开来源组
-
 - 读取日期：2026-05-28
 - 读取状态：已通过公开网页、官方文档或 Markdown 输出读取正文/页面元数据；`Use-Case 2.0` 官方站点本轮 `curl` 返回 Cloudflare 阻断页，未作为已吸收来源；SEI `Quality Attribute Workshop` 旧直链返回 404，未作为已吸收来源。
 - 许可证：SEI、Microsoft Learn、AWS Docs、Dan North 站点未在本轮复用原文；Impact Mapping 站点页脚声明站点内容在未另行说明时使用 CC-BY 4.0。本仓库只保留来源链接、结构化提炼和归因边界，不复制外部正文、图片、示例、模板或脚本。
-
 已读取来源：
-
 - SEI Architecture Tradeoff Analysis Method Collection：`https://www.sei.cmu.edu/library/architecture-tradeoff-analysis-method-collection/`。公开页面说明 ATAM 用于围绕质量属性目标评估软件架构。
 - Microsoft Azure Architecture Center《Use domain analysis to model microservices》：`https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis`。2026-02-23 文档；已读取 Markdown 输出，公开内容用于参考业务域分析、业务能力、限界上下文、统一语言、领域模型和服务边界。
 - AWS Well-Architected Framework REL03-BP02：`https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_service_architecture_business_domains.html`。公开内容用于参考围绕业务域和功能定义服务、用限界上下文隔离业务逻辑、按领域差异定义可靠性要求，以及避免按 UI、middleware、database 等技术域组织服务。
@@ -157,9 +154,8 @@
 - arc42 Template Overview：`https://arc42.org/overview`。公开内容用于参考架构文档的上下文、构建块、运行时、部署、决策、质量和风险视图；本仓库只吸收设计视图清单，不复制模板正文。
 - C4 Model Diagrams：`https://c4model.com/diagrams`。公开内容用于参考 System Context、Container、Component、Code、Dynamic、Deployment 等架构图层次；本仓库只吸收“按需列出设计视图”的检查项，不复制图示。
 - ISO/IEC 25010 质量模型公开摘要：`https://iso25000.com/index.php/en/iso-25000-standards/iso-25010`。公开内容用于参考质量属性分类；本仓库只吸收质量属性场景表的提示，不复制标准文本。
-
+- 微信公众号文章《所有的技术架构，本质上都是业务架构》：`https://mp.weixin.qq.com/s/4mOd-ZbtE-J6O-aDPOSUQg` 与《兑现那个问题“产品需要做什么”》：`https://mp.weixin.qq.com/s/dHXUnZI6rVGYqpyqPnjo4w`。作者字段均为 `大象无棱`，页面时间字段分别为 2026-04-25 09:32 与 2026-06-10 09:11 Asia/Shanghai；2026-06-11 首篇通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文，第二篇普通 `curl` 返回微信验证页，随后通过 Codex in-app Browser 的 Playwright 接口读取标题、作者、发布时间和正文；公开内容用于参考 `architecture.md` 的技术架构服务业务架构、业务同质性、技术平台不是产品和复制成本门禁，`product-architecture-methodology.md` 的价值 / 成本函数，以及 AI Native 生命周期的 GSD/CAD 准入；不复制原文、故事经历、比喻、图片、作者表达或标题传播话术，不把文章观点写成组织制度、客户事实、合规结论、架构批准或 Execution Grant。
 应用记录：
-
 | 应用位置 | 已吸收内容 |
 | --- | --- |
 | `README.md` | 新增业务驱动架构与验证来源组，保留来源链接和不复制边界。 |
@@ -169,9 +165,7 @@
 | `scenario-routing.md` | 强化 PRD/产品方案到系统设计路径，要求业务 driver 先转成服务/模块边界和质量属性场景。 |
 | `testing.md` | 补充业务驱动验证进入 TDD 前的可代码化、可观测化和可评审化归类，避免把业务确认、合规确认或运营验收强行写成单元测试。 |
 | `fixtures/skill-eval/prompt-cases.json` | 继续使用业务驱动系统设计、业务驱动验证到 TDD 映射、页面/模块先行纠偏和验收种子交接 fixture 验证触发。 |
-
 未吸收内容：
-
 - 不把 ATAM、DDD、BDD、Impact Mapping 或云厂商 Well-Architected 条目写成单一强制流程；项目设计仍以本地业务事实、现有系统、团队能力、生产约束和用户授权为准。
 - 不复制外部示例、图、模板、代码、工作坊材料或站点资产。
 - 不把云厂商服务建议等同于非云项目或 Wind 项目族的技术选型结论。
