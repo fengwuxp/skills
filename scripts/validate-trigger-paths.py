@@ -254,6 +254,21 @@ ai_native_terms = [
     "AI 原型/eval",
     "需求分析协同门禁",
     "需求分析结论卡",
+    "问题核心诊断",
+    "问题核心诊断模式",
+    "问题核心诊断门禁",
+    "抓住问题的核心",
+    "需求无止境",
+    "概念定名",
+    "需求止损",
+    "价值 / 意义边界",
+    "价值意义摇摆",
+    "定向",
+    "定性",
+    "定位",
+    "定量",
+    "整体 / 系统 / 科学",
+    "病 / 证 / 症",
     "需求基线稳定性",
     "需求 / 设计 / 编码标准门禁",
     "产品 / 系统 DNA 门禁",
@@ -368,8 +383,8 @@ ai_native_terms = [
     "数据分析",
     "基础设施操作",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 payment_terms = [
     "清结算",
     "对账",
@@ -468,6 +483,25 @@ check(
         ],
     ),
 )
+check(
+    "repo agents define top-level conduct principles",
+    has_all(
+        agents_rules,
+        [
+            "## 顶层处事原则",
+            "先读事实，后生判断",
+            "先抓核心，后开药方",
+            "先定名，后扩需求",
+            "先定向、定性、定位，再定量",
+            "先整体，后局部",
+            "以体统用，以用证体",
+            "以真实交付为准",
+            "事实、推断、待确认分层表达",
+            "最终文档只放最终结论",
+            "授权按风险分级，执行按证据闭环",
+        ],
+    ),
+)
 
 check(
     "ai-native workflow skill anchors product architect and senior architect collaboration",
@@ -478,6 +512,7 @@ check(
             "执简驭繁",
             "体用合一，避免体用混一",
             "阴阳互根",
+            "本技能继承仓库 `AGENTS.md` 的顶层处事原则",
             "快速落地入口",
             "Round 0 补齐",
             "交接包模式",
@@ -572,6 +607,9 @@ check(
             "本技能负责端到端准入、owner、顺序、停止条件和交接结论",
             "不把流程建议写成执行授权",
             "标准服务交付",
+            "顶层原则先行",
+            "当用户要求“提炼原则”“处事方式”“方法论沉淀”或外部文章吸收时",
+            "用户要求提炼顶层原则、处事方式、方法论纲要、跨 Skill 共同约束",
             "开发标准门禁模式",
             "开发标准门禁包",
             "需求基线稳定性、需求条目质量、设计追踪、编码规则可执行性、防御式编程、测试映射和停止条件",
@@ -583,7 +621,7 @@ check(
             "是否需要 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、授权策略、Execution Grant 缺口和下一步 owner",
             "测试策略、TDD、补测试、测试实现和测试代码 CR 可以从本技能进入",
             "AI 快速阅读代码、代码库理解结论包、影响可视化、重构导览或结构化 Review 可以从本技能进入",
-            "Gemini CLI / AgentRC 安装、调用或工具辅助代码阅读可以从本技能进入",
+            "Gemini CLI / AgentRC / Understand Anything 安装、调用或工具辅助代码阅读可以从本技能进入",
             "安装准入、权限边界、只读/写入范围、隐私/联网/认证要求和工具输出交接",
             "AI 编码交付闭环、SDD 交付体感、Spec 强度、Harness 独立验证、CR 减负、知识回流和指标闭环可以从本技能进入",
             "Spec / SDD / OpenSpec 模板最佳实践可以从本技能进入",
@@ -595,7 +633,7 @@ check(
             "Goal 组合可以从本技能进入",
             "Goal 卡、成功标准、状态、预算 / 时间盒、验证证据、停止条件、交接节奏",
             "只要求阅读/分析某个文件、函数、类、报错、测试失败或 PR diff 时",
-            "不把 Gemini CLI / AgentRC 作为默认入口",
+            "不把 Gemini CLI / AgentRC / Understand Anything 作为默认入口",
             "Java Service 配套代码生成可以从本技能进入",
             "从 AI 原型/eval 到 PRD-Lite、OpenSpec、GSD/CAD 编排准入结论",
             "产品上下文包、OpenSpec、Harness 摘要、GSD Roadmap、CAD 候选和 Execution Grant 互相替代",
@@ -899,17 +937,22 @@ check(
             "AI 代码理解工具入口",
             "Gemini CLI",
             "AgentRC",
+            "Understand Anything",
             "安装 / 调用准入",
             "设计-代码对齐",
+            "知识图谱",
             "AI-readiness",
             "上下文漂移",
+            ".understand-anything/",
             "只读范围",
             "联网需求",
             "认证 / token",
             "工具输出交接格式",
             "不把任何工具写成默认依赖",
             "不默认安装、联网、登录、写文件、写配置或改代码",
+            "不默认运行远端安装脚本、插件安装命令、`/understand`、`/understand --auto-update`、dashboard、本地服务、post-commit hook 或 Git LFS 配置",
             "不默认写入 `.github/copilot-instructions.md`、`.vscode/mcp.json`",
+            "不默认写入、提交或同步 `.understand-anything/`、`knowledge-graph.json`、图谱中间产物、dashboard 产物或 hook",
             "不把工具输出当作 Execution Grant、CAD 授权、测试通过、发布批准或合规结论",
         ],
     )
@@ -973,6 +1016,9 @@ check(
             "任何外部可视化 CLI、IDE 插件或厂商预览能力写成默认依赖",
             "Google Gemini CLI",
             "Microsoft AgentRC",
+            "Egonex-AI Understand Anything",
+            "代码库知识图谱",
+            "不默认安装、联网、写 `~/.understand-anything`、写/提交 `.understand-anything/`、启动 dashboard、本地服务或 auto-update",
             "Microsoft Clarity Agent",
             "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
             "我们落地了 SDD，为什么团队效率没有体感提升？",
@@ -1014,6 +1060,103 @@ check(
             "references/external-superpowers/",
             "superpowers-skill-library.md",
             "不复制或运行外部脚本、hooks、插件 manifest、package 脚本",
+        ],
+    ),
+)
+check(
+    "core problem diagnosis sources and routing stay wired",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "问题核心诊断由本技能编排",
+            "先定核心再定流程",
+            "问题核心诊断模式",
+            "用户要求抓住问题核心、判断需求是否无止境、区分价值与意义、做定向/定性/定位/定量",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "Round 0D：问题核心诊断门禁",
+            "问题核心诊断卡",
+            "不用流程勤奋掩盖战略懒惰",
+            "进入 PRD / OpenSpec / GSD / CAD / Loop / 工具准入结论",
+        ],
+    )
+    and has_all(
+        product_skill,
+        [
+            "本技能继承仓库 `AGENTS.md` 的顶层处事原则",
+            "概念定名先于扩需求",
+            "需求扩张时先区分用户价值、组织收益、文化/品牌意义和单纯欲望",
+            "产品原则不替代证据",
+        ],
+    )
+    and has_all(
+        product_architecture,
+        [
+            "1.3 概念定名与需求止损",
+            "需求无止境 / 概念定名 / 价值意义摇摆",
+            "价值 / 意义边界",
+            "概念定名与需求止损卡",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "本技能继承仓库 `AGENTS.md` 的顶层处事原则",
+            "先抓病机再开药方",
+            "顶层原则落到工程证据",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "1.2 问题核心诊断",
+            "可用三层诊断",
+            "病",
+            "证",
+            "症",
+            "5.11 四定变化治理",
+            "先定方向，再定性质，再定位置，最后定量",
+            "GSD/CAD 任务拆解必须能说明每个 Atomic Task 的定向、定性、定位和验证方式",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "欲读经典，先开心门",
+            "产品的创新｜需求是无止境的吗？",
+            "一阖一辟谓之变，往来不穷谓之通｜变通",
+            "如何抓住问题的核心？",
+            "反脑补阅读纪律、问题核心诊断、概念定名、需求止损、变化治理和证据边界",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "问题核心、概念定名与需求止损",
+            "产品的创新｜需求是无止境的吗？",
+            "概念定名、需求止损、价值 / 意义边界",
+            "不把传统文化或医学观点写成产品事实、用户研究结论、Backlog 决策、合规结论或 Execution Grant",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "问题核心诊断与变化治理组",
+            "四篇文章均已通过移动端微信 UA `curl` 公开 HTML 读取标题、账号、作者线索、页面时间字段和正文 / meta 正文",
+            "变化治理中的定向、定性、定位、定量顺序",
+            "病 / 证 / 症",
+            "不把传统文化、医学类比或个人修习语境写成架构标准、项目事实、合规结论、生产审批或 Execution Grant",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "问题核心诊断、反脑补证据边界、概念定名、需求止损",
+            "定向 / 定性 / 定位 / 定量变化治理",
+            "不把传统文化或医学观点写成产品事实、架构结论、合规结论、生产审批或 Execution Grant",
         ],
     ),
 )
@@ -1716,33 +1859,52 @@ check(
         "README.md",
         [
             "[AI Native 研发流程编排](./ai-native-engineering-workflow)",
-            "### 一页速用版",
-            "先判断“我要交付什么”，再选择 Skill",
-            "目标、用户/主体、场景、边界、材料",
-            "Round 0、交接包、GSD/CAD 准入、Goal、Spec/Harness、质量/理解门禁和下一步分派",
-            "### 按交付物选路",
-            "`OpenSpec / Harness / GSD / CAD / Goal / AI 代码交付闭环 / 工具准入`",
-            "`系分 / 技术方案 / ADR / 代码 CR / Bug / TDD / 发布回滚`",
-            "### 最小提示词公式",
-            "先帮我选路：根据当前材料判断应该用 AI Native、产品架构专家、资深架构师还是 java-service-code-generator",
-            "### 反误触发规则",
+            "## 用户使用指南",
+            "### 1. 先会用：一句话讲清目标",
+            "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
+            "先帮我选路",
+            "### 2. 再会选：按交付物找入口",
+            "产研协同 / GSD / CAD / Goal / Spec / Harness",
+            "它负责 owner、顺序、交接物、门禁、授权策略和停止条件",
+            "### 3. 再会编排：体用原则",
+            "体用合一",
+            "避免体用混一",
+            "阴阳互根",
+            "执简驭繁",
+            "### 4. 顶层处事原则",
+            "先看事实，先定核心，先明边界；以体统用，以证据闭环，以真实交付为准",
+            "先读事实，后生判断",
+            "先抓核心，后开药方",
+            "事实、推断、待确认、范围外不做分层表达",
+            "### 5. 常用短句",
+            "AI Native 只编排流程和门禁",
+            "Goal 不替代 Execution Grant",
+            "提炼顶层原则 / 处事方式",
+            "评估 Understand Anything / 代码库知识图谱工具",
+            "默认不安装、不写 `.understand-anything/`、不启用 auto-update / hook、不提交图谱",
             "整理最终 PRD / 系分",
-            "最终文档准出模式",
-            "最终交付标准版本",
-            "过程内容外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划",
-            "只看某个文件、函数、报错、测试失败或 PR diff：不要默认走 AI Native，直接用 `资深架构师`",
-            "只有自然语言需求、没有字段结构或表名：不要直接用 `java-service-code-generator` 生成生产代码",
-            "涉及安装、联网、写文件、覆盖已有文件、Git、同步到 Codex、生产数据或不可逆操作",
-            "### 每个 Skill 的最小输入",
-            "`AI Native 研发流程编排`：当前材料成熟度、目标产物、涉及 owner、写入/只读边界、验证要求、是否需要 GSD/CAD/Goal/工具准入",
+            "### 6. 默认闭环",
+            "产品发现",
+            "编排准入",
+            "Goal / GSD / Spec / Harness",
+            "质量理解门禁",
+            "交付复盘",
+            "### 7. 不要这样用",
+            "只写一份普通 PRD、产品方案或 Backlog 决策",
+            "只做系统设计、代码 CR、Bug、测试或生产变更",
+            "GSD 模式的目标是交付生产可用能力",
+            "### 8. 最小输入清单",
+            "`AI Native 研发流程编排`：当前材料成熟度、目标产物、涉及 owner、写入/只读边界、授权策略、验证要求、是否需要 GSD/CAD/Goal/工具准入",
             "`产品架构专家`：业务目标、用户/主体、范围/非目标、输入材料、希望输出的产品产物、验收和待确认项",
             "`资深架构师`：代码或文档路径、现象/目标、运行环境、约束、期望验证命令、是否允许改代码或只做 CR",
             "`java-service-code-generator`：DDL/schema/Java 类/字段表格、表名、业务模块、输出目录、是否允许覆盖已有文件",
+            "## 完整能力索引",
             "AI 时代产品到研发编码流程、Agentic Engineering",
             "AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD 编排准入",
             "PRD/系分合议预审",
             "AI 代码交付闭环",
-            "Gemini CLI/AgentRC 等代码理解工具安装与调用准入",
+            "Gemini CLI/AgentRC/Understand Anything 等代码理解工具安装与调用准入",
+            "代码库知识图谱准入",
             "设计-代码对齐",
             "质量/测试门禁",
             "代码库理解结论包",
@@ -1784,15 +1946,14 @@ check(
             "Superpowers 调度模式",
             "Skill 类型路由",
             "做 Skill 类型路由",
-            "产品验证、代码质量、Runbook、CI/CD、模板脚手架、团队自动化、数据分析和基础设施操作分别由谁负责",
-            "默认优先补 reference / fixture / 脚本",
+            "判断产品验证、代码质量、Runbook、CI/CD、模板脚手架、数据分析和基础设施操作的 owner",
+            "是否需要补 reference / fixture / 脚本",
             "授权策略模式",
             "接入 Superpowers skills",
             "做 GSD/CAD 准入",
             "开启 GSD/CAD 默认授权策略",
             "Codex “替我审批”只作为已启用的低风险审批通道",
-            "Superpowers 方法门禁",
-            "GSD/CAD 准入同时检查 Superpowers 方法门禁",
+            "Superpowers 调度模式",
             "superpowers-skill-library.md",
             "外部 skill 适用范围",
             "不采用的外部默认流程",
@@ -1828,13 +1989,12 @@ check(
             "再把测试设计与实现分派给 `资深架构师`",
             "可以让它先判断陌生代码库、AI 生成代码、diff、重构计划或 PR 说明是否能让团队看懂业务意图、入口路径、影响模块、源码锚点、调用关系和边界变化",
             "再把源码级 CR 分派给 `资深架构师`",
-            "可以让它先判断是否值得安装或调用 Gemini CLI、AgentRC 这类工具来阅读代码、生成上下文、对齐设计和代码、检查上下文漂移",
-            "需要安装、联网、认证、写文件或改配置时必须先列授权缺口",
+            "可以让它先判断是否值得安装或调用 Gemini CLI、AgentRC、Understand Anything 这类工具来阅读代码、生成上下文、对齐设计和代码、检查上下文漂移或生成代码库知识图谱",
+            "需要安装、联网、认证、写文件、写 `.understand-anything/`、启用 hook、启动 dashboard 或改配置时必须先列授权缺口",
             "只要求阅读某个文件、函数、类、报错、测试失败或具体 PR diff 时，优先直接用 `资深架构师`",
-            "除非目标是代码库级理解、设计-代码对齐、上下文工程或工具准入，否则不要默认触发 Gemini CLI / AgentRC",
+            "除非目标是代码库级理解、设计-代码对齐、上下文工程、知识图谱或工具准入，否则不要默认触发 Gemini CLI / AgentRC / Understand Anything",
             "可以让它先判断 DDL、字段表格或 Java 类是否具备结构化输入、写入范围和覆盖风险",
             "再把配套代码生成分派给 `java-service-code-generator`",
-            "按当前材料选最小流程",
             "默认输出骨架固定为：结论、当前模式、Owner / 下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件、残余风险 / 需要确认",
             "证据边界必须区分事实、推断、待确认和范围外不做",
             "授权策略必须区分默认、自动和需显式确认",
@@ -1846,11 +2006,11 @@ check(
             "做理解门禁",
             "做 Skill 类型路由",
             "阅读分析代码库",
-            "评估 Gemini CLI / AgentRC",
+            "评估 Gemini CLI / AgentRC / Understand Anything",
             "开启 GSD/CAD 默认授权策略",
             "做设计-代码对齐",
-            "评估是否需要 Gemini CLI / AgentRC，但不要默认安装或联网",
-            "列来源、安装/认证/联网/写入边界、只读范围、隐私风险、人工替代路径和 CR 条件",
+            "评估是否需要 Gemini CLI / AgentRC / Understand Anything，但不要默认安装或联网",
+            "Understand Anything 还要列 `.understand-anything/`、dashboard、auto-update、hook 和图谱提交边界",
             "输出设计条款、代码入口、实现状态、偏差和测试证据",
             "细化 AI 流程、产品专家和架构师能力，判断产品验证、代码质量、Runbook、CI/CD、模板脚手架、数据分析和基础设施操作的 owner、交接物、验证证据和是否需要补 reference / fixture / 脚本",
             "不要把 AI 原生工具的产品宣传或历史文章能力描述当作当前会话可用工具",
@@ -1861,6 +2021,7 @@ check(
             "虚拟评审、文章推荐工具、外部 Harness 或单篇文章当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
             "Google Gemini CLI",
             "Microsoft AgentRC",
+            "Egonex-AI Understand Anything",
             "Microsoft Clarity Agent",
             "万字长文 | Spec 驱动开发实战：半年踩坑，我们如何让 AI 编码的交付真正闭环",
             "我们落地了 SDD，为什么团队效率没有体感提升？",
@@ -1868,7 +2029,8 @@ check(
             "AI 代码交付闭环",
             "SDD 生产代码门禁",
             "外部 Harness",
-            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、虚拟评审、文章推荐工具、外部 Harness 或单篇文章当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
+            "知识图谱工具",
+            "AI 快速阅读工具、外部可视化 CLI、上下文生成器、知识图谱工具、虚拟评审、文章推荐工具、外部 Harness 或单篇文章当成当前会话授权、默认依赖、正式评审、官方最新承诺或 Execution Grant",
         ],
     ),
 )
@@ -1912,7 +2074,7 @@ check(
             "`做 AI 代码交付闭环`",
             "`做质量门禁`",
             "`做理解门禁`",
-            "`评估 Gemini CLI / AgentRC`",
+            "`评估 Gemini CLI / AgentRC / Understand Anything`",
             "`做事实边界检查`",
         ],
     ),
@@ -2554,39 +2716,63 @@ check(
         "README.md",
         [
             "## 用户使用指南",
-            "### 30 秒选路",
-            "跨角色、跨阶段、跨工具或 AI 编码交付闭环",
-            "普通 PRD / 产品方案 / Backlog / 原型反推",
-            "代码、Bug、测试、源码级 CR 或生产变更",
-            "已有 DDL、字段表格、Java 类或 schema",
+            "### 1. 先会用：一句话讲清目标",
+            "使用时不用先背 Skill 名称",
+            "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
+            "先帮我选路",
+            "### 2. 再会选：按交付物找入口",
+            "产品语义 / PRD / Backlog / 验收",
+            "产研协同 / GSD / CAD / Goal / Spec / Harness",
+            "系分 / 架构 / 代码 / Bug / 测试 / CR / 发布",
+            "Java Service 脚手架",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
-            "判断是否使用 Architecture Diagram Generator",
-            "复杂图形续作、视觉风格或更复杂的 SVG 图形工程",
             "PNG 仅在明确要求时导出",
-            "### 默认流程短句",
+            "### 3. 再会编排：体用原则",
+            "体：业务目标、用户/主体、生产边界、风险责任、验收标准和证据边界",
+            "用：Skill、工具、模板、图、代码、测试、提交和发布动作",
+            "先定体，再调度用",
+            "体用合一",
+            "避免体用混一",
+            "阴阳互根",
+            "执简驭繁",
+            "### 4. 顶层处事原则",
+            "先看事实，先定核心，先明边界；以体统用，以证据闭环，以真实交付为准",
+            "先定名、定向、定性、定位，再定量",
+            "以真实交付为准",
+            "### 5. 常用短句",
+            "进入 GSD 产研协同研发流程",
+            "GSD + Goal 按任务计划推进",
+            "Goal 不替代 Execution Grant",
+            "做 PRD / 系分合议预审",
+            "提炼顶层原则 / 处事方式",
+            "做事实边界检查",
+            "阅读分析代码库",
+            "判断是否使用 Architecture Diagram Generator",
             "AI Native 只编排流程和门禁",
             "单个文件、函数、报错或 PR diff 直接用资深架构师",
-            "### 任务到入口速查",
-            "只有想法 / 原型 / 页面截图 / 客户反馈",
-            "已有 AI 原型或 MVP，要工程化",
-            "中大型项目要持续推进",
-            "Goal 不替代 Execution Grant",
-            "编码很快但交付不稳",
-            "PRD 或系分担心返工",
-            "需要阅读大型代码库、对齐设计和实现，或评估 Gemini CLI / AgentRC",
-            "要做质量、测试、CR、发布",
-            "要生成 Java Service 配套代码",
-            "要画图",
-            "复杂可编辑架构图或代码库结构转图由架构师判断是否使用 Architecture Diagram Generator",
-            "### AI Native 默认闭环",
+            "正式交付文档只保留当前有效结论",
+            "### 6. 默认闭环",
             "产品发现",
             "编排准入",
-            "Goal / GSD",
-            "Spec / Harness",
+            "Goal / GSD / Spec / Harness",
             "工程执行",
             "质量理解门禁",
             "交付复盘",
-            "### 先选哪个 Skill",
+            "### 7. 不要这样用",
+            "只写一份普通 PRD、产品方案或 Backlog 决策",
+            "只做系统设计、代码 CR、Bug、测试或生产变更",
+            "从纯自然语言直接生成生产代码",
+            "GSD、CAD、Goal、Loop、Codex 替我审批都不是无条件授权",
+            "GSD 模式的目标是交付生产可用能力",
+            "内存版业务 Service",
+            "### 8. 最小输入清单",
+            "`AI Native 研发流程编排`：当前材料成熟度",
+            "`产品架构专家`：业务目标",
+            "`资深架构师`：代码或文档路径",
+            "`java-service-code-generator`：DDL/schema/Java 类/字段表格",
+            "Architecture Diagram Generator：来源/安装包、是否已审查",
+            "$fireworks-tech-graph",
+            "## 完整能力索引",
             "日常使用优先按上面的选路和默认流程短句下指令",
             "[资深架构师](./senior-software-architect)",
             "[产品架构专家](./product-architecture-expert)",
@@ -7738,6 +7924,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "gsd-cad-admission.md", "product", "product-scenario-routing.md"},
     ),
     RouteFixture(
+        name="AI Native core problem diagnosis gate",
+        prompt="进入 AI Native 问题核心诊断模式：这次需求无止境、价值意义摇摆，还混着工具方案和架构动作；先抓住问题的核心，输出概念定名、需求止损、定向定性定位定量、整体 / 系统 / 科学诊断，再决定是否进入 GSD 或系分",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
         name="AI Native development standards gate",
         prompt="AI Native 研发流程补需求 / 设计 / 编码标准门禁：系统需求或产品需求未确认时，不进入 SDD、测试、代码或 CAD；输出需求基线稳定性、需求条目质量、HLR/LLR 设计追踪、编码规则原因示例验证方式和防御式编程检查",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "spec-template-practices.md", "verification-review-release.md"},
@@ -7854,12 +8045,17 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native read analyze codebase",
-        prompt="阅读分析代码库：先做代码库理解结论包；评估是否需要 Gemini CLI / AgentRC，但不要默认安装或联网",
+        prompt="阅读分析代码库：先做代码库理解结论包；评估是否需要 Gemini CLI / AgentRC / Understand Anything，但不要默认安装或联网",
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md", "code-understanding-tools.md"},
     ),
     RouteFixture(
         name="AI Native tool install admission",
-        prompt="评估 Gemini CLI / AgentRC：列来源、安装认证联网写入边界、只读范围、隐私风险、人工替代路径和 CR 条件",
+        prompt="评估 Gemini CLI / AgentRC / Understand Anything：列来源、安装认证联网写入边界、只读范围、隐私风险、人工替代路径和 CR 条件；Understand Anything 还要列 .understand-anything、dashboard、auto-update、hook 和图谱提交边界",
+        routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md"},
+    ),
+    RouteFixture(
+        name="AI Native Understand Anything knowledge graph admission",
+        prompt="用 AI Native 研发流程编排评估是否需要安装 Understand Anything：大型代码库需要生成代码库知识图谱、dashboard、diff impact 和 onboarding guide；先列安装联网写 ~/.understand-anything 和项目 .understand-anything、auto-update、post-commit hook、图谱提交、敏感文件排除和 CR owner，不要默认安装",
         routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
@@ -8087,13 +8283,13 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "需求分析协同门禁", "需求分析结论卡", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
         route.add("ai-native")
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "需求分析协同门禁", "需求分析结论卡", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "问题核心诊断", "抓住问题的核心", "病机", "病 / 证 / 症", "定向", "定性", "定位", "定量", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
@@ -8111,7 +8307,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("spec-template-practices.md")
         if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查"]):
             route.add("code-delivery-closed-loop.md")
-        if contains_any(prompt, ["Gemini CLI", "AgentRC", "AI 代码阅读工具", "代码理解工具", "上下文工程", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
+        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
@@ -8124,7 +8320,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Understand Anything", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
