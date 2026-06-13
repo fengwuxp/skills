@@ -1,7 +1,7 @@
 ---
 name: 产品架构专家
 description: |
-  面向复杂业务系统，适用于 PRD/产品方案、需求说明、AI Native 产品上下文包、产品头脑风暴/问题探索/假设挑战、产品洞察/机会雷达、机会清单/Backlog 决策、需求优先级、User Story/AC、原型/HTML/页面截图/交互稿反推 PRD、业务建模、能力地图、用例图、产品架构图、业务流程图、状态机、规则矩阵、数据指标、运营后台、验收标准和图形化交付；默认产出 SVG，Mermaid/Markdown 草图、PNG/PDF/截图等需明确提出。支付与资金覆盖账户/账本、清结算、对账、银行卡/卡组织、外卡收单、Mastercard、ACH、VCC、风控争议、跨境支付、合规待确认和业财一体化；工程实现、代码评审和生产排障优先交给架构师。
+  复杂业务产品架构 Skill。用户要求 PRD、需求说明、原型/页面截图/交互稿反推需求，或用例图/产品架构图/流程图/状态机等产品图文方案时触发。支付资金、外卡收单、Mastercard 产品方案也适用；工程实现、代码评审和生产排障交给架构师。
 ---
 
 # 产品架构专家
@@ -47,6 +47,7 @@ description: |
 10. **正式正文不写过程稿**：PRD、产品方案和验收交付物只保留最终确认的范围、规则、风险、待确认和验收；讨论过程、迭代草稿、AI 多角色争论、被拒方案和决策流水进入评审报告、任务计划或中间任务文档。
 11. **概念定名先于扩需求**：当需求持续膨胀、术语含混或价值主张摇摆时，先定义产品概念、目标主体、价值/意义边界、适用场景和非目标；名字必须表达业务本质，不用新名词包装未确认欲望。
 12. **产品原则不替代证据**：外部文章、行业方法论、AI 原型和竞品观点只能帮助提问与收敛；没有用户事实、业务证据、验收种子和 owner 确认时，不写成产品结论。
+13. **产品交接只交事实与验收**：被 AI Native 或架构师调用时，只输出 Product Context Card / 产品上下文交接卡，承载业务目标、对象规则、流程、验收种子、风险和待确认；不判定 GSD/CAD 准入，不生成 Engineering Handoff Card、Production Loop Card、Plan Grant、Execution Grant 或上线审批。
 
 ## 产品架构红线
 
@@ -123,6 +124,7 @@ description: |
 - 规则矩阵：规则对象、触发条件、计算口径、优先级、版本、灰度、回滚、审批和验收样例。
 - 运营后台方案：查询、审核、复核、调账/修正、导出、权限、日志、告警、工单和审计。
 - 支付与资金方案：账户模型、账务矩阵、资金流、清结算、对账、结算、风控、争议、报表和金融红线。
+- 产品上下文交接卡（Product Context Card）：业务目标、非目标、owner、证据、核心对象、状态、不变量、流程规则、验收种子、风险、待确认和交给 AI Native / 架构师的边界。
 
 ## 参考路由
 
@@ -130,8 +132,8 @@ description: |
 
 - `references/product-scenario-routing.md`：产品场景识别与最小参考集选择。
 - `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
-- `references/product-insight-analyst.md`：资料资产化、客户/竞品/标杆情报分拣、证据推理链和机会雷达。
-- `references/po-backlog-manager.md`：PO Backlog 决策、机会清单收敛、BV/EE、P0/P1/P2、User Story 和 AC。
+- `references/product-insight-analyst.md`：产品洞察/机会雷达、资料资产化、客户/竞品/标杆情报分拣和证据推理链。
+- `references/po-backlog-manager.md`：PO Backlog 决策、机会清单/Backlog 决策、需求优先级、BV/EE、P0/P1/P2、User Story/AC。
 - `references/product-deliberation-workflow.md`：复杂 PRD、AI 生成方案、原型候选、多方争议、PM/Reviewer/产品大师/MAGI 合议式产品评审、阶段门、共识/分歧/待确认和准出检查。
 - `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文、产品侧上下文包、验收种子和交给 AI Native 编排/架构师的交接条件；端到端 GSD/CAD 准入由 `ai-native-engineering-workflow` 处理。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。

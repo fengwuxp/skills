@@ -8,7 +8,7 @@
 
 安装或同步后，Codex 会根据每个 `SKILL.md` 的 `name` 和 `description` 自动判断是否触发对应技能。使用者也可以直接点名，例如“用产品架构专家……”“用资深架构师……”“用 java-service-code-generator……”。同步后如果触发不符合预期，先重启 Codex 或开启新会话。
 
-使用时不用先背 Skill 名称，先把交付目标、现有材料、边界和验证说清楚。拿不准入口时，直接说“先帮我选路”。
+使用时不用先背 Skill 名称，先把交付目标、现有材料、范围边界、授权方式和验证要求说清楚。拿不准入口时，直接说“先帮我选路”，让 Codex 先判断最小流程、owner、交接物和停止条件。
 
 ### 1. 先会用：一句话讲清目标
 
@@ -17,6 +17,14 @@
 ```text
 我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>；已有 <材料或路径>；边界是 <不做什么 / 风险 / 是否允许写入>；验证要求是 <检查命令 / 证据 / 残余风险说明>。
 ```
+
+这句话里最重要的是五件事：
+
+- 目标：是产品定义、工程设计、代码实现、验证发布，还是完整生产可用能力。
+- 材料：需求、PRD、页面、截图、DDL、代码路径、日志、测试输出或外部文章。
+- 边界：哪些不做，是否允许写文件，是否允许联网、安装、提交或同步。
+- 风险：是否涉及资金、合规、生产、密钥、部署、删除或不可逆操作。
+- 验证：希望运行什么检查，或者至少要求给出证据、残余风险和待确认项。
 
 常用起手：
 
@@ -57,6 +65,8 @@
 
 - `进入 GSD 产研协同研发流程`：产品专家先做需求分析、产品设计、确认和验收种子，架构师再做系分设计、编码、TDD、CR 和验证，AI Native 只编排流程和门禁。
 - `GSD + Goal 按任务计划推进`：形成 Plan Grant，范围内低风险本地任务按计划推进；Goal 不替代 Execution Grant，Git、联网、生产、密钥、部署和不可逆操作仍需显式授权。
+- `生产可用 Loop 门禁`：检查 Agent Loop 是否有自动化心跳、隔离执行、可复现状态、独立验证、观测审计、人工接管和发布/回滚；能自动跑不等于能上线。
+- `三卡交接`：产品专家给 Product Context Card，AI Native 给 Engineering Handoff Card，生产可用 Loop 再给 Production Loop Card；三卡都不是 Execution Grant、测试通过或上线审批。
 - `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
 - `提炼顶层原则 / 处事方式`：先判断哪些规则应进入 `AGENTS.md`，哪些只属于 AI Native、产品专家、架构师或某个 reference；不要把一次性启发写成跨技能硬规则。
 - `做事实边界检查`：区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张。
@@ -68,11 +78,12 @@
 ### 6. 默认闭环
 
 1. 产品发现：`产品架构专家` 收束问题、证据、对象、规则、验收种子和待确认项。
-2. 编排准入：`AI Native 研发流程编排` 判断输入成熟度、owner、交接物、授权策略、门禁、停止条件和下一步分派。
-3. Goal / GSD / Spec / Harness：中大型项目先固定目标、Wave、预算 / 时间盒、状态、写入范围、验证命令和交接节奏。
-4. 工程执行：`资深架构师` 承接系统设计、编码、TDD、补测试、CAD 门禁、源码级 CR 和发布风险。
-5. 质量理解门禁：AI Native 编排测试矩阵、验证顺序、理解门禁、工具准入和影响范围证据。
-6. 交付复盘：检查一次通过率、返工率、CR 轮次、缺陷密度、知识回流和残余风险。
+2. 三卡交接：产品专家输出 Product Context Card，AI Native 输出 Engineering Handoff Card；需要持续推进时补 Production Loop Card。
+3. 编排准入：`AI Native 研发流程编排` 判断输入成熟度、owner、交接物、授权策略、门禁、停止条件和下一步分派。
+4. Goal / GSD / Spec / Harness：中大型项目先固定目标、Wave、预算 / 时间盒、状态、写入范围、验证命令和交接节奏。
+5. 工程执行：`资深架构师` 承接系统设计、编码、TDD、补测试、CAD 门禁、源码级 CR 和发布风险。
+6. 质量理解门禁：AI Native 编排测试矩阵、验证顺序、理解门禁、工具准入和影响范围证据。
+7. 交付复盘：检查一次通过率、返工率、CR 轮次、缺陷密度、知识回流和残余风险。
 
 ### 7. 不要这样用
 
@@ -93,6 +104,20 @@
 - Architecture Diagram Generator：来源/安装包、是否已审查、架构描述或代码库锚点、视图层级、节点/分组、箭头语义、输出格式、是否允许联网/读写/安装。
 - Understand Anything：官方来源、安装方式、扫描范围、排除目录、是否允许联网 / clone / dashboard、是否允许写 `~/.understand-anything` 和项目 `.understand-anything/`、是否允许 auto-update / hook / 提交图谱、敏感文件处理、图谱用途和人工 CR owner。
 - `$fireworks-tech-graph`：图形语义、节点关系、受众、风格要求、输出格式和是否需要基于已有 SVG 续作。
+
+### 9. 不同场景最佳实践
+
+- **不知道该用哪个 Skill**：先说 `先帮我选路`，并给出目标、材料、边界和验证要求。最佳输出不是正文，而是“推荐入口、为什么、缺什么、下一步 owner、什么时候停”。
+- **只写普通 PRD、产品方案或 Backlog 决策**：直接用 `产品架构专家`。最佳实践是先收束主体、对象、流程、规则、验收种子和待确认项；正式 PRD 只放最终结论，讨论过程放评审报告、Decision Log 或任务计划。
+- **从想法推进到可开发方案**：先由 `产品架构专家` 产出 Product Context Card，再由 `AI Native 研发流程编排` 判断是否进入 GSD/CAD、Spec、Harness 或 Goal，最后交给 `资深架构师` 做系分、TDD、CR 和验证。
+- **大项目要进入 GSD + Goal**：用 `AI Native 研发流程编排` 固定真实交付目标、成功标准、Wave、Atomic Task、CAD 候选、Plan Grant、验证证据和停止条件。最佳实践是按阶段形成可验证切片，Git 提交仍需授权；避免让 AI 推进模拟模块、无业务入口 demo 或内存版业务 Service。
+- **需要持续自动推进或 Loop**：先做 `生产可用 Loop 门禁`。最佳实践是检查状态载体、隔离执行、Maker / Checker、预算 / 时间盒、独立验证、人工接管、发布 / 回滚和残余风险；能自动跑不等于能上线。
+- **阅读分析代码库或对齐设计和代码**：代码库级理解、设计-代码对齐、工具准入或知识图谱用 `AI Native 研发流程编排`；单个文件、函数、报错或 PR diff 直接用 `资深架构师`。最佳实践是要求源码锚点、入口路径、影响模块、测试证据和残余风险。
+- **系统设计、Bug、测试、CR 或生产变更**：直接用 `资深架构师`。最佳实践是提供代码路径、现象、日志、测试命令、运行环境和不允许触碰的边界；评审时先列 P0/P1/P2 风险，再给验证建议。
+- **根据结构化输入生成 Java Service 代码**：用 `java-service-code-generator`，但只在 DDL/schema/Java 类/字段表格清楚时使用。最佳实践是先生成到评审目录，明确是否允许覆盖，再由架构师做源码级 CR 和测试补强。
+- **画产品图、流程图、架构图或代码库图**：先确定受众、对象、关系、视图类型和输出格式。产品语义图走产品专家，工程架构图走架构师；复杂可编辑架构图先由架构师判断 Architecture Diagram Generator 准入；正式图形默认 SVG，PNG 仅在明确要求时导出。
+- **吸收外部文章、仓库或工具经验**：先实际读取正文、仓库文件或官方材料，再提炼可迁移原则、路由、检查项和边界。最佳实践是先出建议和影响范围，再决定是否改 Skill、reference、fixture 或脚本。
+- **提交、同步或安装到 Codex**：先做 CR、触发验证和 `./scripts/validate.sh`；同步前先执行 dry-run 并确认目标目录。Git、联网、安装、删除、覆盖、生产、密钥、部署和不可逆操作都需要明确授权。
 
 ## 完整能力索引
 
@@ -172,6 +197,8 @@
 
 产品专家交给 AI Native 或架构师前，最好形成一个轻量交接包：业务目标、非目标、角色 / 主体、核心对象与状态、主流程与异常、关键规则、验收种子、风险与待确认项、专业确认方。缺这些时，不要急着进入系分、GSD/CAD 或代码生成。
 
+如果进入 AI Native 流程，这个轻量交接包应整理成 Product Context Card：它只交产品事实和验收种子，不判定 GSD/CAD 准入，不生成 Engineering Handoff Card、Production Loop Card 或 Execution Grant。
+
 ### AI Native 研发流程编排怎么用
 
 `AI Native 研发流程编排` 是编排入口，不是万能执行入口。它适合回答“现在应该由谁做、做到哪一步、交接什么、怎么验证、什么时候停”，再把产品语义交给 `产品架构专家`，把工程实现和生产风险交给 `资深架构师`。
@@ -182,11 +209,14 @@
 
 瘦身后的职责边界：`产品架构专家` 只补产品上下文包、验收种子和产品侧交接条件，不直接判定 GSD/CAD 准入或 Execution Grant；`AI Native 研发流程编排` 负责端到端准入、GSD/CAD 编排准入、GSD/CAD 授权策略、AI 代码交付闭环、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位，只编排 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、授权策略缺口、Spec 强度、独立验证证据、CR 减负、知识回流、测试矩阵、验证顺序、CR 前置条件、失败回退、入口路径、源码锚点、结构影响说明和残余风险交接；`资深架构师` 只消费已确认的 AI Native 交接结论，继续做 OpenSpec、Harness、工程编排、CAD 门禁、测试策略、TDD、补测试、源码级 CR 和风险，不在架构师侧重建产品流程。
 
+新流程默认用三张卡降低协作噪声：Product Context Card 由产品专家给出业务事实、对象规则和验收种子；Engineering Handoff Card 由 AI Native 给出 Goal、Spec/AC、Wave/Task、写入范围、验证命令、授权策略和停止条件；Production Loop Card 只在 Loop、auto mode、后台 Agent 或持续推进时补充状态载体、自动化心跳、隔离执行、Maker / Checker、独立验证、预算、人工接管和发布/回滚。三卡都不能替代 Execution Grant、测试通过、CR 结论或上线审批。
+
 最短触发方式：
 
 - `进入 GSD 产研协同研发流程`：以交付生产可用能力为目标，产品专家先做需求分析、产品设计、确认和验收种子，架构师再做系分、编码、TDD、CR 和验证。
 - `GSD + Goal`：把业务目标、生产可用能力、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件、Goal 状态和交接节奏串起来。
 - `GSD + Goal 按任务计划推进`：把 Goal 任务计划升级为 Plan Grant，低风险本地任务按计划推进，不再每个任务都停下来等 Execution Grant；默认给提交切片，授权后可按已验证任务做本地 commit。
+- `生产可用 Loop 门禁`：把 Agent Loop 从自动执行候选升级为可生产化门禁，检查状态落盘、隔离执行、Maker / Checker 解耦、观测审计、人工接管、发布/回滚和理解债。
 - `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，再输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
 - `做 PRD 评审会前预扫描`：产品专家先按完整性、一致性、可测试性、二义性输出疑似问题，AI Native 再把结果接入合议预审和决策日志。
 - `做 GSD/CAD 准入`：判断是否需要 Round 0、Wave/Atomic Task、CAD 候选缺口、授权策略和显式确认缺口。
@@ -279,6 +309,14 @@
 GSD + Goal：把目标、生产可用能力、成功标准、预算 / 时间盒、GSD Wave、CAD 候选、验证证据、提交切片、停止条件和交接节奏串起来；不要把 Goal 当 Execution Grant。
 
 GSD + Goal 按任务计划推进：形成 Plan Grant，按已确认任务计划推进低风险本地任务；默认输出提交切片，只有授权 `commit_after_verified_task` 后才做本地 commit；不要把它扩大到联网、生产、密钥、部署、不可逆操作或高风险业务。
+```
+
+```text
+生产可用 Loop 门禁：检查 Agent Loop 是否具备真实目标、状态落盘、隔离执行、Skill 上下文、连接器权限、Maker / Checker 解耦、独立验证、观测审计、人工接管、发布/回滚和停止条件。
+```
+
+```text
+三卡交接：产品专家输出 Product Context Card；AI Native 输出 Engineering Handoff Card；需要持续推进时补 Production Loop Card；缺任一卡就停在对应 owner 补齐，不进入实现、CAD 或自动 Loop。
 ```
 
 ```text
@@ -464,6 +502,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - [cg0x-skills/cg0x-frame-analysis](https://github.com/cg0x-skills/cg0x-frame-analysis)：作为探索期反路径锁定、多框架分析、假设/盲区/失败条件自检的公开参考来源。本仓库只吸收通用方法到产品专家和架构师 reference，不引入 `alwaysApply`、`/on` `/off` 开关、单文件长 Skill 或默认不收敛的交付方式；复杂问题先展开问题地图，正式交付仍必须回到可评审、可验证、可验收的产物。
 - [zjunlp/SkillX](https://github.com/zjunlp/SkillX) 与论文 [SkillX: Automatically Constructing Skill Knowledge Bases for Agents](https://arxiv.org/abs/2604.04804)：作为从 Agent 执行轨迹提炼规划技能、功能技能、原子技能，迭代精炼、合并过滤和探索扩展技能知识库的公开参考来源。本仓库只吸收“经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证”的方法，不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码；任何长期学习仍必须遵守 `AGENTS.md` 的本地协作学习授权和隐私边界。
 - 微信文章 [《【译】别再手动写 Prompt 了，去写 Loop——但 Loop 到底是什么？》](https://mp.weixin.qq.com/s/cxRvqwWW4Yo4UmufAsXEEA)：作为 `ai-native-engineering-workflow` 的 Agent Loop Engineering 参考来源，用于 Loop 准入、GSD + Goal + Loop、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、反馈自检和 Skill 作为复用单位；2026-06-11 已通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文，页面时间字段为 2026-06-09 21:13:56 Asia/Shanghai。本仓库只吸收可迁移方法，不复制原文、推文、图片、成本数字、工具宣传、作者表达、命令示例或标题传播话术，也不把 `/goal`、`/loop`、auto mode、后台 Agent 或任一工具能力写成当前会话默认能力、最新事实、执行授权或上线审批。
+- 微信文章 [《Loop Engineering（Agent 闭环工程）》](https://mp.weixin.qq.com/s/mbjdMlSTqQG1EptOGoo6og)：作为 `ai-native-engineering-workflow` 的生产可用 Loop 门禁参考来源，用于自动化心跳、隔离 worktree、Skill 上下文、连接器权限、Maker / Checker 解耦、状态持久化、质量卡口、成本预算、观测审计、人工接管、发布/回滚和理解债控制；2026-06-12 已通过移动端微信 UA 公开 HTML 读取标题、作者、账号、页面时间字段和正文。本仓库只吸收可迁移门禁，不复制原文、工具宣传、示例 Prompt 或命令，也不把 `/goal`、`/loop`、Automations、Worktrees、Connectors、Sub-agents 或任何当前工具能力写成默认可用、默认授权、测试通过、CR 结论、合并判断或上线审批。
 - 微信文章 [《一个让Codex变得越来越聪明的小方法》](https://mp.weixin.qq.com/s/G-tZjkhAd_yMAABBgNGVdw)：作为 `ai-native-engineering-workflow` 授权学习、经验归位和知识回流的公开参考来源。2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，页面作者字段为 `Dr.Joyi`，既有账号线索保留 `像素与咖啡时光`，页面时间字段为 2026-06-04；本仓库只吸收“反复踩坑来自稳定上下文缺失，执行经验、偏好理念和项目知识要进入合适载体”的可迁移方法，不复制原文、个人经历、提示词或作者口吻，也不把用户长期偏好写入仓库、安装目录或未授权学习目录。
 - 微信文章 [《架构8：架构设计三原则》](https://mp.weixin.qq.com/s/wc3xeSbBqb6ktEDz2ZuK7g)：作为 `资深架构师` 合适、简单、演化三类架构评审原则的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收当前约束匹配、结构/逻辑复杂度评估和演进式设计门禁，不复制文章案例、代码示例、图片或作者表达。
 - 微信文章 [《架构师底层思维能力要求-这7种尽早练习》](https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q)：作为 `资深架构师` 抽象、逻辑、结构化、批判、成长型、复盘和数据思维的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收底层思维能力框架、架构判断落点和常见误区，不复制原文图片、推荐书目、排版结构或作者表达。

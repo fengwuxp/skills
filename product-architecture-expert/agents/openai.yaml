@@ -1,7 +1,7 @@
 interface:
   display_name: "产品架构专家"
-  short_description: "AI Native上下文、产品头脑风暴/问题探索/假设挑战、产品洞察、Backlog决策、PRD/产品架构、原型反推、支付资金与外卡收单专项"
+  short_description: "PRD/产品架构、AI Native 产品上下文、原型反推、产品洞察/机会雷达、Backlog决策、User Story/AC、支付资金专项"
   brand_color: "#2563EB"
-  default_prompt: "Use $产品架构专家 帮我基于这个需求、资料/洞察、机会清单、Backlog、AI Native 产品上下文、原型、页面截图或交互稿生成可评审的 PRD/产品架构方案，包含角色、主体、范围、机会雷达、优先级、User Story、AC、能力地图、用例图、业务流程、能力流程状态图、状态机、规则矩阵、数据指标、运营后台、风险、待确认项和验收标准；需要图形化交付时默认输出 SVG，Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需明确提出。"
+  default_prompt: "Use $产品架构专家 基于当前需求、资料、机会清单、原型、页面截图或 AI Native 产品上下文，输出可评审的产品方案/PRD：说明目标、主体、范围、对象规则、流程、验收种子、风险和待确认项；需要图形化交付时默认输出 SVG。"
 policy:
   allow_implicit_invocation: true

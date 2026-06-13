@@ -1,6 +1,6 @@
 interface:
   display_name: "AI Native 研发流程编排"
-  short_description: "编排产品、架构、AI Agent、目标驱动执行和验证发布，形成可交接、可验证、可授权的产研协同研发流程"
+  short_description: "编排产品专家、架构师、AI Agent、GSD/CAD/Goal/Loop、验证发布和授权策略"
   brand_color: "#7C3AED"
   default_prompt: "Use $ai-native-engineering-workflow 按当前材料选择最小流程，输出 owner、交接物、授权策略、验证门禁、停止条件和下一步分派。"
 policy:

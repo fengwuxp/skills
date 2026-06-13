@@ -142,12 +142,12 @@
     {
       "id": "ai-native-should-agent-loop-engineering",
       "skill": "ai-native-engineering-workflow",
-      "query": "参考 Loop Engineering：用 /goal 或 /loop 持续推进 GSD + Goal，并梳理 Loop / GSD / CAD 协同状态机、Execution Handoff Card、Plan Grant + Loop 预算绑定和失败回写；必须有状态载体、反馈源、自我验证、最大轮次、无进展检测、预算上限、停止条件和交接物，不能把 auto mode 当无条件授权。",
+      "query": "参考 Loop Engineering：用 /goal 或 /loop 持续推进 GSD + Goal，并梳理 Loop / GSD / CAD 协同状态机、Engineering Handoff Card、Plan Grant + Loop 预算绑定和失败回写；必须有状态载体、反馈源、自我验证、最大轮次、无进展检测、预算上限、停止条件和交接物，不能把 auto mode 当无条件授权。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 Agent Loop Engineering 模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、goal-composition、gsd-cad-admission 和 code-delivery-closed-loop，输出 Loop 准入结论、协同状态机、Execution Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 /goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
+      "expected_handling": "进入 Agent Loop Engineering 模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、goal-composition、gsd-cad-admission 和 code-delivery-closed-loop，输出 Loop 准入结论、协同状态机、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 /goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
     },
     {
       "id": "ai-native-should-review-ai-coding-process",

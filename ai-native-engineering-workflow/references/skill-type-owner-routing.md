@@ -28,6 +28,7 @@
 - Superpowers 调度读 `superpowers-skill-library.md`。
 - 产品侧上下文包读 `product-architecture-expert/references/ai-native-product-context.md`。
 - 架构师 AI 协作和生产门禁读 `senior-software-architect/references/ai-assisted-engineering.md`、`production-readiness.md`。
+- 三卡交接读 `product-to-engineering-lifecycle.md` 的 `3A. 三卡交接协议`，产品侧回 `Product Context Card`，工程侧回 `Engineering Handoff Card`，持续推进回 `Production Loop Card`。
 
 ## 按任务读取索引
 
@@ -37,6 +38,7 @@
 | 产品验证和验收种子 | `1. 路由矩阵`、`3. 产品侧细化`，再读产品上下文包 | 不把验收实现交给产品专家 |
 | 代码质量、Runbook、发布 | `1. 路由矩阵`、`4. 架构侧细化`，再读架构师 reference | 不让 AI Native 做源码级判断 |
 | 流程可用性 CR | `5. 回流与验证` | 不只更新说明文字 |
+| 产品/AI Native/架构师三卡交接 | `1. 路由矩阵`、`3. 产品侧细化`、`4. 架构侧细化` | 不让任一卡替代 Execution Grant、测试通过或上线审批 |
 
 ## 1. 路由矩阵
 
@@ -77,6 +79,8 @@
 
 产品专家不负责把验收种子实现成测试，也不负责判断 GSD/CAD 准入；它只把产品事实交给 AI Native 编排和架构师承接。
 
+产品侧交接物统一收敛为 Product Context Card / 产品上下文交接卡：业务目标、非目标、owner、事实证据、核心对象、状态、不变量、流程规则、验收种子、风险、待确认和专业确认方。产品专家不生成 Engineering Handoff Card、Production Loop Card、Plan Grant、Execution Grant 或 CAD Grant。
+
 ## 4. 架构侧细化
 
 架构师被 AI Native 调用时，应优先补四类能力：
@@ -87,6 +91,8 @@
 - **基础设施操作**：dry-run、备份、分批、审计、最小权限、显式确认和不可逆操作停止条件。
 
 架构师不负责补产品语义，也不把 AI Native 的流程判断写成 Execution Grant；写入、Git、联网、生产和不可逆操作仍按仓库授权边界执行。
+
+架构侧消费 Engineering Handoff Card 和必要时的 Production Loop Card：先检查 Goal、Spec/AC、Wave/Task、写入范围、验证命令、停止条件、失败回写、授权策略、状态载体、隔离执行、Maker / Checker、独立验证、预算、人工接管和发布/回滚。可消费后才进入 OpenSpec、Harness、GSD 任务包、CAD 候选、TDD、源码级 CR 或发布风险设计。
 
 ## 5. 回流与验证
 

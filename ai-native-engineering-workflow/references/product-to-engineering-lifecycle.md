@@ -48,6 +48,7 @@
 | 问题核心诊断 / 反战术勤奋 | `2.0D 问题核心诊断门禁`、`3. 产品上下文包`、`6. 工程交接清单` | 不把流程、工具、模板或执行动作当成问题已解决 |
 | 产品目标进入 GSD + Goal | `3. 产品上下文包`、`6. 工程交接清单`，再读 `goal-composition.md` | 不把产品目标当执行授权 |
 | PRD / 系分预审 | 先读 `prd-system-design-review.md`，再按结论回到本文 `6. 工程交接清单` | 不把预审当正式评审或执行授权 |
+| 三卡交接 | `3A. 三卡交接协议`、`6. 工程交接清单`，按缺口回读产品专家或架构师 reference | 不把三卡任一卡当 Execution Grant |
 | 从产品上下文进入 Spec 模板 | `5. PRD-Lite`、`6. 工程交接清单`，模板细节读 `spec-template-practices.md` | 不把产品上下文包当完整工程 Spec |
 | 产品专家到架构师交接 | `3. 产品上下文包`、`6. 工程交接清单` | 不把交接包当 Execution Grant |
 | AI 编码交付闭环 | 先读 `6. 工程交接清单`，再读 `code-delivery-closed-loop.md` | 不只优化代码生成速度 |
@@ -270,6 +271,67 @@ Goal 输入：
 - 不用大而全模板压过当前任务；缺失信息集中放到“待确认”，不要分散在每个段落里。
 - 产品上下文包和 PRD-Lite 只保留工程化必须消费的最终业务事实、对象、规则、验收和待确认项；AI 原型讨论、dogfooding 过程、合议争论、迭代草稿和被拒方案放入任务计划、评审报告、Decision Log 或 Goal Ledger，通过链接追溯。
 
+### 3A. 三卡交接协议
+
+端到端流程用三张轻量交接卡连接产品、AI Native 和架构师，避免一个大文档同时承担事实、执行和生产 Loop 三类责任。
+
+**Product Context Card / 产品上下文交接卡** 由产品专家主导，回答“哪些产品事实必须被工程保持”：
+
+```text
+Product Context Card:
+业务目标 / 非目标:
+业务 owner / 验收 owner:
+事实证据:
+核心用户 / 被影响主体:
+核心对象 / 状态 / 不变量:
+主流程 / 逆向 / 异常 / 人工兜底:
+关键规则 / 权限 / 数据口径:
+验收种子:
+风险 / 待确认 / 专业确认方:
+交给 AI Native / 架构师的边界:
+```
+
+**Engineering Handoff Card / 工程执行交接卡** 由 AI Native 编排，交给架构师消费，回答“谁做、改哪里、怎么验证、何时停”：
+
+```text
+Engineering Handoff Card:
+当前状态:
+关联 Goal / Spec / AC:
+Wave / Task ID:
+写入范围 / 只读范围 / 禁止事项:
+依赖顺序:
+验证命令 / 人工验收:
+授权策略 / Git 策略:
+质量 / 测试门禁:
+事实 / 推断 / 待确认 / 范围外不做:
+失败回写位置:
+下一 owner / 停止条件:
+```
+
+**Production Loop Card / 生产 Loop 交接卡** 只在需要持续推进、后台 Agent、`/goal`、`/loop`、auto mode 或生产可用 Loop 时使用，回答“循环如何可控、可审计、可接管”：
+
+```text
+Production Loop Card:
+Loop 目标 / 状态载体:
+自动化心跳 / 触发条件:
+隔离执行方式:
+Maker / Checker 分工:
+反馈源 / 独立验证者:
+预算 / 最大轮次 / 无进展检测:
+观测审计:
+人工接管:
+发布 / 回滚:
+理解债和残余风险:
+```
+
+规则：
+
+- Product Context Card 不是 OpenSpec、Harness Plan、GSD Roadmap、CAD 候选、Execution Grant 或上线批准。
+- Engineering Handoff Card 不是产品事实来源；产品事实缺失时回产品专家，不由架构师猜测补齐。
+- Production Loop Card 不是自动授权；缺状态载体、独立验证、预算、停止条件、人工接管或发布/回滚时，只能停在 Loop Candidate。
+- 三卡都不是 Execution Grant、测试通过、CR 结论或上线审批。
+- 三卡必须区分事实、推断、待确认和范围外不做；证据不足的内容不能升格为任务、实现或授权。
+
 ## 4. 角色协同
 
 | 角色 | AI 时代新增职责 | 不应承担 |
@@ -330,6 +392,7 @@ CAD 候选缺口：Task ID / 写入范围 / 验证命令 / Execution Grant / 停
 - 是否可以进入 OpenSpec；如果不能，还差哪 3-7 个关键信息。
 - 是否需要 `GSD + Goal`；如果需要，继续读取 `goal-composition.md`，补 Goal 卡、GSD Wave / Goal 映射、状态、预算 / 时间盒、验证证据、停止条件和 Ledger 更新。
 - 是否需要进入可评审 Spec 模板；如果需要，继续读取 `spec-template-practices.md`，补 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖和漂移检查。
+- 是否触发需求 / 设计 / 编码标准门禁；如果触发，回到 `spec-template-practices.md` 补需求标准、设计标准、编码标准和可验证规则。
 - 是否可以进入 Harness/GSD；如果不能，是范围、顺序、权限还是验证缺口。
 - 是否存在 CAD 候选缺口；如果存在，只能描述候选边界，不直接授权执行。
 - 是否需要 PRD / 系分合议预审；如果需要，先输出决策日志和准出路径，再进入 OpenSpec、Harness/GSD 或回退 Round 0。
