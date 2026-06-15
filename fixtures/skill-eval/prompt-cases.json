@@ -26,8 +26,14 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 AI 时代产品到研发编码流程编排路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断输入成熟度，再输出阶段、AI 工具角色、验证矩阵，并路由产品专家与架构师分工。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI Native 交付 Loop，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断输入成熟度，再输出 Goal、State、Plan、AI 工具角色、验证矩阵，并路由产品专家与架构师分工；GSD/CAD/Goal 作为内部层，不要求用户手动选择多个模式。"
     },
     {
       "id": "ai-native-should-gsd-cad-handoff",
@@ -36,8 +42,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入工程编排模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研交付 Loop，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；把 GSD Wave 作为计划层、CAD 原子任务作为执行子循环，区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
     },
     {
       "id": "ai-native-should-gsd-product-engineering-collaboration",
@@ -46,8 +57,28 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
-      "expected_handling": "进入 GSD 产研协同模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入 AI Native 交付 Loop；旧说法 GSD 产研协同模式映射为产研交付 Loop。按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
+    },
+    {
+      "id": "ai-native-should-compress-gsd-cad-goal-into-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "现在 AI 流程里 GSD、Loop、CAD、Goal 太多了，请统一压缩成 Loop 机制，同时保留大项目分波、原子任务执行和授权门禁。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI Native Engineering Loop 重构路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；明确对外只推荐只读理解、产研交付、验证发布、知识回流四类 Loop，GSD 是 Plan/Wave 层，CAD 是 Atomic 子循环，Goal 是目标层，Harness 是执行契约层，Grant 是授权层；保留旧说法触发，但不再要求用户手动选择多个模式。"
     },
     {
       "id": "ai-native-should-demand-analysis-collaboration-gate",
@@ -56,8 +87,13 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入需求分析协同门禁，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出需求分析结论卡，覆盖原始诉求、根源需求、产品定义、产品边界、稳定点/变化点、边界坐标、上下游分工和待确认项；产品专家负责补根源需求、产品定义、边界和验收种子，资深架构师负责把已确认边界映射到模块、接口、数据、测试和发布风险；边界不清时回退 Round 0，不进入 OpenSpec、GSD Wave 或 CAD 候选。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入需求分析协同门禁，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；输出需求分析结论卡，覆盖原始诉求、根源需求、产品定义、产品边界、稳定点/变化点、边界坐标、上下游分工和待确认项；产品专家负责补根源需求、产品定义、边界和验收种子，资深架构师负责把已确认边界映射到模块、接口、数据、测试和发布风险；边界不清时回退 Round 0，不进入 OpenSpec、GSD Wave 或 CAD 候选。"
     },
     {
       "id": "ai-native-should-development-standards-gate",
@@ -66,8 +102,13 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入开发标准门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断需求基线稳定性，系统需求、产品需求或外部规则未确认时，不进入 SDD、测试、代码或 CAD；再输出需求条目质量、需求标准、设计标准、编码标准、HLR/LLR 设计追踪、强制/推荐规则分级、规则原因/示例/验证方式、防御式编程、需求驱动测试和回退 owner。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入开发标准门禁模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；先判断需求基线稳定性，系统需求、产品需求或外部规则未确认时，不进入 SDD、测试、代码或 CAD；再输出需求条目质量、需求标准、设计标准、编码标准、HLR/LLR 设计追踪、强制/推荐规则分级、规则原因/示例/验证方式、防御式编程、需求驱动测试和回退 owner。"
     },
     {
       "id": "ai-native-should-product-system-dna-gate",
@@ -76,8 +117,13 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入产品 / 系统 DNA 门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；先区分产品 DNA 和系统 DNA，检查核心对象、业务不变量、生命周期/状态、责任边界、演化规则、验证方式和待确认 owner；缺少 DNA 时回退产品架构专家补产品上下文、回退资深架构师补系分系统 DNA，不进入 OpenSpec、GSD Wave、CAD 候选或 AI 编码。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产品 / 系统 DNA 门禁，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；先区分产品 DNA 和系统 DNA，检查核心对象、业务不变量、生命周期/状态、责任边界、演化规则、验证方式和待确认 owner；缺少 DNA 时回退产品架构专家补产品上下文、回退资深架构师补系分系统 DNA，不进入 OpenSpec、GSD Wave、CAD 候选或 AI 编码。"
     },
     {
       "id": "ai-native-should-prd-system-design-deliberation-review",
@@ -86,7 +132,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 AI Native 的 PRD / 系分合议预审模式，读取 prd-system-design-review，先输出评审对象、三角色分工、锚点化问题、ACCEPT/REJECT/PENDING 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由；预审不能替代产品专家 PRD 正文、架构师系分正文、正式评审或 Execution Grant。"
     },
     {
@@ -96,7 +147,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 PRD AI 预扫描 + 合议预审模式，先路由产品架构专家读取 product-prd-quality-gates 的 AI 预扫描四维度，按完整性、一致性、可测试性、二义性输出带锚点的疑似问题和建议追问；再由 ai-native 的 prd-system-design-review 接入 review_task、evaluation_task、reporting_task，把每条疑似问题标为 ACCEPT/REJECT/PENDING，写清 owner、验证方式和下一步路由；AI 预扫描不能替代正式需求评审、QA 测试设计或产品 owner 决策。"
     },
     {
@@ -106,7 +162,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入最终文档准出模式，区分正式 PRD/系分/Spec 正文与过程资产；正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接；讨论过程、迭代草稿、AI 推理轨迹、被拒方案、MAGI 争论和完整 Goal Ledger 流水外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划，并按需要路由产品专家或资深架构师修正文档。"
     },
     {
@@ -116,8 +177,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 GSD/CAD 编排准入模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研交付 Loop 的 GSD/CAD 内部层准入，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
     },
     {
       "id": "ai-native-should-gsd-cad-default-authorization",
@@ -126,8 +192,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 GSD/CAD 授权策略模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；把授权分成只读、默认低风险授权、Wave Grant、CAD Grant 和显式确认，说明 Codex 替我审批只适用于当前 Grant 范围内低风险、本地、可回滚动作；Git、联网、依赖安装、读取密钥、生产数据、部署、数据库迁移、真实支付/资金、不可逆操作和高风险权限/租户/审计/合规变更必须显式确认。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研交付 Loop 的授权策略层，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；把授权分成只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant 和显式确认，说明 Codex 替我审批只适用于当前 Grant 范围内低风险、本地、可回滚动作；Git、联网、依赖安装、读取密钥、生产数据、部署、数据库迁移、真实支付/资金、不可逆操作和高风险权限/租户/审计/合规变更必须显式确认。"
     },
     {
       "id": "ai-native-should-gsd-goal-composition",
@@ -136,8 +207,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 Goal 组合模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研交付 Loop 的 Goal 目标层，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
     },
     {
       "id": "ai-native-should-agent-loop-engineering",
@@ -146,8 +222,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 Agent Loop Engineering 模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、goal-composition、gsd-cad-admission 和 code-delivery-closed-loop，输出 Loop 准入结论、协同状态机、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 /goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Agent Loop Engineering，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、goal-composition、gsd-cad-admission 和 code-delivery-closed-loop，输出 Loop 准入结论、内部层映射、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 GSD/CAD/Goal 是 Loop 内部层，/goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
     },
     {
       "id": "ai-native-should-review-ai-coding-process",
@@ -156,8 +237,13 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
-      "expected_handling": "进入流程治理评审路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入流程治理评审路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
     },
     {
       "id": "ai-native-should-code-delivery-closed-loop",
@@ -166,8 +252,14 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入 AI 代码交付闭环模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI 代码交付闭环模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
     },
     {
       "id": "ai-native-should-spec-template-practices",
@@ -176,7 +268,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，先区分 PRD / SDD / 实现 Spec 三层边界，说明已具备、缺失和不可让 AI 猜的层；输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；把实现 Spec 作为实现和 CR 检查清单，偏差先判断是否需要更新 Spec，再要求 AI 修改代码；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
     },
     {
@@ -186,7 +283,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 SDD 生产代码模式，读取 spec-template-practices、code-delivery-closed-loop 和 verification-review-release；先检查 Spec 是否清晰、完整、上下文化、具体、可测试，并能作为事实来源；补结构化契约、输入输出示例、正反例、边界/错误处理、测试计划和五支柱验证；AI 生成失败时按复现失败、检查 Spec 清晰度、分类 AI 错误模式、回写失败场景到 Spec/AC/测试、重新生成或实现、独立验证推进，设置重试上限并升级人工 owner。"
     },
     {
@@ -196,8 +298,13 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入知识表达 / 意图可执行门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出 Knowledge-to-Execution Card，覆盖原始输入、业务目标、业务对象、状态/生命周期、规则/策略、约束/非目标、验收样例、反馈源、需要保留的领域知识、待确认缺口和下一 owner；缺少对象、规则、验收样例或反馈源时，不进入 GSD/CAD/Loop、代码修改或执行授权。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入知识表达 / 意图可执行门禁，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；输出 Knowledge-to-Execution Card，覆盖原始输入、业务目标、业务对象、状态/生命周期、规则/策略、约束/非目标、验收样例、反馈源、需要保留的领域知识、待确认缺口和下一 owner；缺少对象、规则、验收样例或反馈源时，不进入执行 Loop、代码修改或执行授权。"
     },
     {
       "id": "ai-native-should-nonstandard-problem-mode",
@@ -206,8 +313,13 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入非标问题模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出非标问题处理包，覆盖问题主体、影响面、已知事实、关键不确定性、现有替代方案/绕行方式、研究/证据路径、候选方案、最小可逆实验、决策标准、owner/下一步和停止条件；产品侧缺口路由产品架构专家，工程侧缺口路由资深架构师，不能把无标准答案问题拆成机械执行清单。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入非标问题模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；输出非标问题处理包，覆盖问题主体、影响面、已知事实、关键不确定性、现有替代方案/绕行方式、研究/证据路径、候选方案、最小可逆实验、决策标准、owner/下一步和停止条件；产品侧缺口路由产品架构专家，工程侧缺口路由资深架构师，不能把无标准答案问题拆成机械执行清单。"
     },
     {
       "id": "ai-native-should-practical-coding-loop",
@@ -216,8 +328,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入实际项目编码 Loop 模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入实际项目编码 Loop，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
     },
     {
       "id": "ai-native-should-feedback-loop-verification-cluster",
@@ -226,8 +343,14 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入反馈闭环成熟度 / 验证簇准入模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、verification-review-release 和架构师 testing.md，先判断当前是 L2/L3/L4/L5 候选，强调测试通过、覆盖率、bug 下降只是证据不是事实；输出 Verification Cluster Gate，覆盖高风险业务不变量、验证簇 ID、场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度、来源、独立 Checker、预算/分层执行、状态回写和停止条件；L5 只能标为目标架构，不能写成当前已具备能力。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入反馈闭环成熟度 / 验证簇准入模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、verification-review-release 和架构师 testing.md，先判断当前是 L2/L3/L4/L5 候选，强调测试通过、覆盖率、bug 下降只是证据不是事实；输出 Verification Cluster Gate，覆盖高风险业务不变量、验证簇 ID、场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度、来源、独立 Checker、预算/分层执行、状态回写和停止条件；L5 只能标为目标架构，不能写成当前已具备能力。"
     },
     {
       "id": "ai-native-should-quality-test-gate",
@@ -236,7 +359,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入质量门禁模式，只编排测试矩阵、验证顺序、CR 前置条件、失败回退、残余风险交接和架构师 testing.md 调用点，不新增独立测试专家 Skill。"
     },
     {
@@ -246,7 +374,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入理解门禁模式，只编排业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、验证证据、owner 复述、残余风险和资深架构师源码级 CR 交接条件，不默认引入外部可视化工具。"
     },
     {
@@ -256,7 +389,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入代码库理解门禁模式，把 AI 快速阅读和上下文工程工具抽象为可选辅助，只编排入口路径、关键模块、源码锚点、事实/推断、置信度、验证证据、上下文漂移检查和架构师 CR 交接条件，不默认安装或依赖外部工具。"
     },
     {
@@ -266,7 +404,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入工具准入模式，先核对官方来源、安装方式、认证/联网/写入边界、只读范围、隐私风险、人工替代路径和工具输出交接格式；不得直接安装、登录、联网、写配置或把工具结论当源码事实。"
     },
     {
@@ -276,7 +419,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 Superpowers 调度模式，先审查来源、许可证、下载范围和供应链边界，再把 brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting/receiving-code-review、systematic-debugging、verification-before-completion 等外部 skill 映射到 AI Native 阶段；不得默认安装插件、运行脚本、使用 hooks、创建 worktree、执行 Git 推送或启动 subagent，必须列出只读/写入/Git/联网/subagent 边界、验证门禁和不采用的外部默认流程。"
     },
     {
@@ -286,7 +434,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison"
+      ],
       "expected_handling": "进入设计-代码对齐入口，输出设计条款到源码入口、实现状态、偏差、测试证据、事实/推断和下一步 owner；AI 代码阅读工具只作为可选辅助，源码判断和 CR 继续交给资深架构师。"
     },
     {
@@ -296,8 +449,13 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "进入事实边界检查路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入只读理解 Loop 的事实边界检查路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
     },
     {
       "id": "ai-native-should-route-prd-work",
@@ -306,8 +464,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
-      "expected_handling": "进入流程入口分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；只判断产品输入成熟度和产品侧交接物，再把 PRD 正文分派给产品架构专家。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "进入流程入口分派路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；只判断产品输入成熟度和产品侧交接物，再把 PRD 正文分派给产品架构专家。"
     },
     {
       "id": "ai-native-should-route-cr-work",
@@ -316,8 +478,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
-      "expected_handling": "进入工程流程分派路径，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入工程流程分派路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
     },
     {
       "id": "ai-native-should-route-codegen-work",
@@ -326,7 +492,10 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
       "expected_handling": "进入代码生成前置编排路径，只判断结构化输入、写入范围、覆盖风险和人工确认点，再把实际生成分派给 java-service-code-generator。"
     },
     {
@@ -337,7 +506,9 @@
       "preferred_skill": "product-architecture-expert",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "目标产物是 PRD 和产品语义，不是产品到研发编码流程编排，应交给产品架构专家。"
     },
     {
@@ -348,7 +519,9 @@
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "目标是具体代码评审和测试建议，应交给资深架构师，而不是流程编排 Skill。"
     },
     {
@@ -359,7 +532,9 @@
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "目标是具体源码阅读、Bug 分析和补测试，应交给资深架构师；除非用户要求代码库级理解或工具准入，否则不触发 AI Native 和 Gemini/AgentRC。"
     },
     {
@@ -370,7 +545,9 @@
       "preferred_skill": "java-service-code-generator",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "这是结构化输入到 Java Service 脚手架生成任务，应交给 java-service-code-generator。"
     },
     {
@@ -380,7 +557,10 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
       "expected_handling": "进入代码评审路径，给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
     },
     {
@@ -390,7 +570,11 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
       "expected_handling": "进入资深架构师代码 CR 路径，读取 coding-review-deep-dive、coding-standards 和 negative-constraints，识别内存版业务 Service 冒充生产实现；除缓存、测试替身、fixture、沙盒模拟或明确 demo 外，生产源码路径不得用 InMemory/Fake/Mock Service、Map/List 存储或进程内状态承载真实业务能力，并要求真实持久化/端口适配、测试和发布回滚验证。"
     },
     {
@@ -400,7 +584,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
       "expected_handling": "进入生产故障诊断和复盘路径，先确认事实证据，再给补偿、监控、回滚和测试建议。"
     },
     {
@@ -410,7 +599,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入架构设计和测试设计路径，输出边界、契约、不变量、风险和可验证任务。"
     },
     {
@@ -420,7 +614,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入非标工程问题路径，读取 architecture.md 的非标工程问题和问题核心诊断，先输出非标工程问题卡，覆盖问题背景、可见症状、结构证据、核心机制、影响面、关键不确定性、候选方案、最小可逆实验、验证命令/观测指标、决策标准、写入边界、回滚/降级、owner/下一步和停止条件；需要编码时再进入 workflow、testing 和项目本地规范，优先构造失败测试或可复现反馈环，不直接大范围重构。"
     },
     {
@@ -430,7 +629,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入架构师测试资产治理路径，读取 testing.md 的不变量验证簇方法；先确认高风险业务不变量和业务 owner，再输出验证簇，覆盖验证簇 ID、关联需求/AC、场景测试、属性/变形测试、历史回归、必要生产重放样本、有限变异/对抗检查、置信度、来源、是否人工确认、CI 分层、预算和失败处理；强调测试通过、覆盖率提高和 AI 生成测试数量不是事实本身，生产重放只能作为证据，不能反向定义需求。"
     },
     {
@@ -440,7 +644,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入架构评审路径，识别技术先行和过度设计风险，要求先澄清核心业务用例、主干流程、变化频率、验收场景和质量属性，再决定服务拆分、分层、缓存、MQ、网关和扩展点。"
     },
     {
@@ -450,7 +659,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 PRD/产品方案到系统设计路径，先用产品语义到工程资产追踪矩阵校准目标、用例、对象、规则、验收和风险，再输出系统边界、模块、接口、数据、测试、监控、发布和取舍。"
     },
     {
@@ -460,7 +674,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入系统分析设计和业务驱动架构验证路径，先补产品语义到工程资产追踪，再检查系统边界、接口、数据、质量属性场景、测试、监控和发布门禁。"
     },
     {
@@ -470,7 +689,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入业务驱动验证到 TDD 映射路径，先把验收种子分为可代码化、可观测化和可评审化，再选择测试层级、第一批失败测试候选、断言事实、监控/数据验收和人工确认门禁。"
     },
     {
@@ -481,7 +705,9 @@
       "preferred_skill": "product-architecture-expert",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "表面涉及系统交付，但目标产物是 PRD 和产品规则，应让路给产品架构专家。"
     },
     {
@@ -492,7 +718,9 @@
       "preferred_skill": "java-service-code-generator",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "这是结构化输入到 Java Service 脚手架的生成任务，应交给代码生成技能。"
     },
     {
@@ -503,7 +731,9 @@
       "preferred_skill": "product-architecture-expert",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "目标是支付产品规则和合规待确认，不是工程实现或代码评审。"
     },
     {
@@ -513,7 +743,10 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
       "expected_handling": "进入原型反推 PRD 路径，先补语义、角色、对象、流程、规则、指标和验收。"
     },
     {
@@ -523,7 +756,11 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
       "expected_handling": "进入支付与资金专项，输出能力地图、对象、流程、资金/账务边界、风险和待确认项。"
     },
     {
@@ -533,7 +770,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入 VCC 和支付资金产品路径，标出主体、外部规则、资金归属、状态机和验收口径。"
     },
     {
@@ -543,7 +785,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入产品架构路径，先把页面和模块想法拉回业务目标、用户/主体、核心用例、对象状态、规则矩阵、变化频率、验收场景和技术架构交接包，而不是直接按页面列功能。"
     },
     {
@@ -553,7 +800,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入业务驱动架构交接路径，输出产品侧交接包和验证口径，覆盖目标/非目标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。"
     },
     {
@@ -563,7 +815,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入产品侧验收种子到测试驱动设计交接路径，输出业务前置条件、触发行为、可观察结果、风险红线，并把验收种子分为可代码化、可观测化和可评审化，避免越界生成测试代码。"
     },
     {
@@ -573,7 +830,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入产品架构专家内部 po-backlog-manager 路径，先做机会清单输入归一化、业务价值和工程代价评估，再用业务/用户/工程三桌校验输出 P0/P1/P2、拒绝或延后理由、User Story、AC、技术现实主义风险、owner 和待确认项。"
     },
     {
@@ -583,7 +845,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入非标产品问题与解决方案责任路径，读取 product-architecture-methodology 的非标问题小节，输出非标产品问题卡，覆盖原始诉求、真实问题、影响面、失败成本、当前替代方式、目标用户/被影响主体、业务约束、解决方案假设、验收种子、需要 UED 重点验证的交互/状态、待确认项、下一步验证动作和进入 PRD/Backlog/AI Native/非目标结论；产品专家提供解决方案假设和验收，不把老板/销售/客户/运营诉求原样转发给研发。"
     },
     {
@@ -593,7 +860,12 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入产品架构专家内部 product-insight-analyst 路径，先做资料资产化和客户/竞品/标杆情报分拣；没有材料的类别明确留白；输出机会雷达、证据与推理链、置信度、待验证项和建议去向，再说明哪些机会只能作为 Backlog 候选继续交给 po-backlog-manager 决策。"
     },
     {
@@ -603,7 +875,12 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
       "expected_handling": "进入产品架构专家内部 product-deliberation-workflow 路径，先判断合议触发原因和当前阶段，再输出阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向；不新增独立产品大师 Skill，不把外部多 Agent 工具或长 prompt 直接搬入正文。"
     },
     {
@@ -614,7 +891,9 @@
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "这是工程排障、代码修改和补测试，应交给资深架构师。"
     },
     {
@@ -625,7 +904,9 @@
       "preferred_skill": "java-service-code-generator",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "用户已有结构化输入且目标是代码生成，应交给 Java Service 代码生成技能。"
     },
     {
@@ -636,7 +917,9 @@
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "这是工程架构和发布风险评审，不是产品语义、PRD 或支付产品方案。"
     },
     {
@@ -646,7 +929,10 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
       "expected_handling": "进入结构化 DDL 生成路径，推断表结构并优先写入评审目录或用户指定目录。"
     },
     {
@@ -656,7 +942,11 @@
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
       "expected_handling": "进入字段表格生成路径，检查表名、主键、模块和覆盖边界，调用确定性生成脚本。"
     },
     {
@@ -666,7 +956,11 @@
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
-      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison"],
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
       "expected_handling": "进入 Java 类输入路径，先确认基础包名和模块唯一性，再生成可评审代码。"
     },
     {
@@ -677,7 +971,9 @@
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "虽然有 DDL，但用户要评审表设计质量，不是生成配套代码。"
     },
     {
@@ -688,7 +984,9 @@
       "preferred_skill": "product-architecture-expert",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "这是产品架构和 PRD 前置设计，没有结构化模型可用于代码生成。"
     },
     {
@@ -699,7 +997,9 @@
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
       "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
+      "dimensions": [
+        "trigger_accuracy"
+      ],
       "negative_reason": "这是 Bug 修复和测试补齐，应由资深架构师处理。"
     }
   ]

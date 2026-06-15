@@ -1,10 +1,13 @@
-# Goal 组合编排
+# Loop 目标层与 Goal 组合
 
-本文定义 AI Native 流程中的 Goal 组合方式。Goal 是显式目标管理和持续推进契约，用来说明为什么持续推进、做到什么才算完成、预算 / 时间盒如何约束、何时停止、如何验证和交接；它不等于当前会话自动创建运行时 Goal，也不替代测试通过或发布批准。用户明确要求 `GSD + Goal 按任务计划推进` 时，Goal 可以挂接 Plan Grant，让范围内低风险本地任务按计划推进。
+本文定义 AI Native Engineering Loop 的 Goal 目标层。Goal 是显式目标管理和持续推进契约，用来说明为什么持续推进、做到什么才算完成、预算 / 时间盒如何约束、何时停止、如何验证和交接；它不等于当前会话自动创建运行时 Goal，也不替代测试通过或发布批准。用户明确要求 `GSD + Goal 按任务计划推进` 时，Goal 可以挂接 Plan Grant，让范围内低风险本地任务按计划推进。
+
+对外统一说法是 Loop；Goal 是 Loop 的目标层，GSD 是 Loop 的分波计划层，CAD 是 Loop 的原子执行子循环。输出时不要要求用户在 `GSD + Goal`、`CAD + Goal`、`Spec + Goal` 和 `Loop` 间手动选择，而是说明当前 Loop 使用了哪些内部层。
 
 ## 使用时机
 
 - 用户要求 `GSD + Goal`、`CAD + Goal`、`Spec + Goal`、`GSD + Goal + Loop`、目标驱动推进、持续推进、长任务 Goal、目标状态、预算 / 时间盒、停止条件或跨轮交接。
+- 用户要求把 GSD、CAD、Goal 多个模式统一成 Loop，但需要保留目标完成线、预算、验证证据和交接节奏。
 - 中大型项目需要把业务目标、GSD Wave、CAD 候选、Spec 模板、质量门禁、发布复盘挂到同一目标链路。
 - 多 Agent、多 owner 或多轮任务容易出现目标漂移、状态过期、验证证据断裂或交接丢失。
 - 需要把产品专家的业务目标和验收种子，转换成架构师可消费的 Goal 卡、GSD Wave / Goal 映射和验证矩阵。
@@ -23,8 +26,8 @@
 ## 读取后必须产出
 
 - 一张 Goal 卡：Goal ID、目标、owner、参与方、成功标准、非目标、范围、预算 / 时间盒、状态、停止条件、验证证据和交接要求。
-- 一份组合判断：当前适合 `GSD + Goal`、`CAD + Goal`、`Spec + Goal`、`CR/发布 + Goal` 还是 `产品到工程 + Goal`。
-- 若涉及持续编排，一份 `GSD + Goal + Loop` 判断：Loop ID、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物。
+- 一份组合判断：当前 Loop 需要哪些内部层，例如 Goal + GSD-Wave、Goal + CAD-Atomic、Goal + Spec、Goal + CR/发布或产品到工程 Goal。
+- 若涉及持续编排，一份 Loop 目标层判断：Loop ID、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物。
 - 一份 Goal 状态结论：`Draft / Ready / Active / Blocked / Verified / Closed / Superseded` 之一，并说明证据。
 - 一份 Goal Ledger 更新：最近证据、变化假设、开放风险、提交切片、下一 owner、下一动作和复盘回流位置。
 - 明确说明 Goal 不会自动创建运行时 Goal，不会自动扩大写入范围、提交权限或 Codex 替我审批范围；GSD 规划必须给出提交切片，实际 `git add` / `git commit` 只有在用户明确授权 Git 策略且 Plan Grant 字段齐备时执行。
@@ -43,9 +46,9 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `gsd-cad-admission.md` | 不展开 CAD 执行细则 |
+| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `gsd-cad-admission.md` | 输出为产研交付 Loop，不展开 CAD 执行细则 |
 | 做 `GSD + Goal + Loop` | `1. Goal 边界`、`3B. GSD + Goal + Loop`，再读 `agent-loop-engineering.md` | 不把 Loop 当授权或完成证据 |
-| 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `agentic-engineering-governance.md` | 不把 Goal 当 Execution Grant |
+| 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `agentic-engineering-governance.md` | 输出为 CAD 原子子循环，不把 Goal 当 Execution Grant |
 | 将默认授权挂到 Goal | `1. Goal 边界`、`3. GSD + Goal`、`4. CAD + Goal`，再读 `gsd-cad-admission.md` | 不把 Goal 状态当授权 |
 | 按任务计划自动推进或阶段提交 | `1. Goal 边界`、`3A. Plan Grant`，再读 `gsd-cad-admission.md` | 不逐任务索要 Execution Grant |
 | 做 `Spec + Goal` | `1. Goal 边界`、`5. Spec + Goal`，再读 `spec-template-practices.md` | 不重复写完整 Spec 模板 |
@@ -130,7 +133,7 @@ Wave 3 Goal: 集成验证 / CR / 发布准备
 每个 Wave 的成功标准:
 每个 Wave 的停止条件:
 每个 Wave 的验证证据:
-每个 Wave 的授权策略: 只读 / 默认低风险授权 / Plan Grant / Wave Grant / 显式确认
+每个 Wave 的授权策略: 只读 / 计划内低风险执行 / Plan Grant / Wave Grant / 显式确认
 每个 Wave 的提交切片: summary_only / commit_after_verified_task / explicit_confirm
 下一 Wave 准入:
 ```

@@ -1,7 +1,7 @@
 interface:
-  display_name: "AI Native 研发流程编排"
-  short_description: "编排产品专家、架构师、AI Agent、GSD/CAD/Goal/Loop、验证发布和授权策略"
+  display_name: "AI Native Engineering Loop"
+  short_description: "以统一 Loop 编排产品专家、架构师、AI Agent、GSD/CAD/Goal 内部层、验证发布和授权策略"
   brand_color: "#7C3AED"
-  default_prompt: "Use $ai-native-engineering-workflow 按当前材料选择最小流程，输出 owner、交接物、授权策略、验证门禁、停止条件和下一步分派。"
+  default_prompt: "Use $ai-native-engineering-workflow 按当前材料选择 Loop Profile，输出 owner、交接物、Loop Contract、授权策略、验证门禁、停止条件和下一步分派。"
 policy:
   allow_implicit_invocation: true

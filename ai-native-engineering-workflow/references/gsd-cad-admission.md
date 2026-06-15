@@ -1,10 +1,11 @@
-# GSD/CAD 编排准入
+# 产研交付 Loop 内部 GSD/CAD 准入
 
-本文定义 AI Native 流程中对中大型 AI 编码任务的 GSD/CAD 准入判断。它只回答是否需要 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些缺口阻断 CAD、下一步交给谁；不替代资深架构师的工程任务包、`cad-mode.md` 或 Execution Grant。
+本文定义 AI Native Engineering Loop 中对中大型 AI 编码任务的 GSD/CAD 内部层准入判断。GSD 不再作为对外独立模式，而是产研交付 Loop 的分波计划层；CAD 不再作为对外独立模式，而是单个原子任务的受控执行子循环。本文只回答是否需要 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些缺口阻断 CAD、下一步交给谁；不替代资深架构师的工程任务包、`cad-mode.md` 或 Execution Grant。
 
 ## 使用时机
 
 - 用户明确有中大型项目、长任务、上下文衰减、多 Agent / Wave 编排、GSD-like 工作流或 CAD 自动推进诉求。
+- 用户要求把 GSD、CAD、Goal 多个工作模式统一压缩进 Loop，但仍需要保留大项目分波和原子执行能力。
 - 产品上下文包、PRD-Lite、OpenSpec 草案、AI 原型/eval 或 dogfooding 反馈已经出现，需要判断能否进入工程侧 GSD Round 0。
 - 用户要求“结合 GSD 与 CAD”“自动推进哪些任务”“默认授权哪些任务”“按什么顺序交给架构师或 Agent”“任务阶段是否提交代码”“Execution Grant 还缺什么”。
 - 用户希望减少每个任务审批，希望在 GSD/CAD 模式下默认授权、自动推进，或提到 Codex 的“替我审批”模式。
@@ -22,14 +23,14 @@
 
 ## 读取后必须产出
 
-- GSD/CAD 编排准入结论：轻量执行、进入 GSD Round 0、只做只读侦察、可形成 CAD 候选，或必须停止补上下文。
+- 产研交付 Loop 准入结论：轻量执行、进入 GSD Round 0、只做只读侦察、可形成 CAD 候选，或必须停止补上下文。
 - GSD / Loop / CAD 协同状态机：当前处于 Round 0、GSD Candidate、Wave Plan、Plan Grant Active、Loop Candidate、CAD Candidate、CAD Loop Active、Verified、Paused、Escalated 还是 Closed。
 - GSD Round 0 缺口：目标、非目标、对象/规则、OpenSpec、owner、写入范围、验证命令、风险确认方和停止条件。
 - Wave / Atomic Task 候选：只给候选形态、依赖顺序、owner、写入/只读边界、生产可用能力锚点、事实/推断/待确认边界和验证证据，不写成执行授权。
 - Superpowers 方法门禁：当前 GSD 是否需要参考 brainstorming、writing-plans、test-driven-development、requesting/receiving-code-review、verification-before-completion 等外部 skill，以及对应的 TDD、CR 和完成前验证要求。
 - AI 产品工程化准入卡：业务 context、真实工作流、用户收益/负担、权限与责任、旧系统接入、灰度止损、成本稳定性和事实边界是否足够。
 - CAD 候选缺口：Task ID、写入范围、验证命令、工作区状态、Execution Grant、人工确认点和风险阻断项。
-- GSD/CAD 授权策略卡：当前适合只读、默认低风险授权、GSD + Goal 计划授权（Plan Grant）、Wave Grant、CAD Grant、Codex 替我审批通道，Git 策略是仅建议提交还是验证后阶段提交，还是必须显式确认。
+- GSD/CAD 授权策略卡：当前适合只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant、Codex 替我审批通道，Git 策略是仅建议提交还是验证后阶段提交，还是必须显式确认。
 - Agent Loop 准入卡：Loop 是否有 Goal、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、授权策略和交接物；缺失时只输出补齐项，不进入自动循环。
 - Engineering Handoff Card：跨 AI Native、GSD、Loop 和 CAD 交接时固定包含 Goal ID、Wave/Task ID、状态载体、写入范围、验证命令、反馈源、停止条件、Git 策略和下一 owner。
 - 三卡交接结论：Product Context Card 是否足以支撑工程，Engineering Handoff Card 是否足以交给架构师，Production Loop Card 是否足以进入生产可用 Loop；缺失时说明回退 owner。
@@ -68,11 +69,11 @@ GSD 的目标是交付生产可用能力，不是让 AI 随机推进一组看上
 
 事实边界红线：GSD/CAD 候选不得基于无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张。凡是没有用户目标、来源材料、源码锚点、验收种子或验证证据支撑的内容，只能写入 `推断 / 待确认 / 范围外不做`，不能写成任务、实现、准入结论或授权缺口。
 
-GSD/CAD 在 AI Native 流程中分五层：
+GSD/CAD 在 AI Native Engineering Loop 中分五层：
 
 | 层级 | 回答的问题 | owner |
 | --- | --- | --- |
-| AI Native 编排准入 | 是否需要 GSD Round 0、能否形成 Wave/Atomic Task 候选、谁接下一步。 | 本技能 |
+| AI Native Engineering Loop | 是否进入只读理解、产研交付、验证发布或知识回流 Loop，谁接下一步。 | 本技能 |
 | GSD-like 大项目编排 | 什么可以被执行，如何用 Stage/Wave/Atomic Task 和上下文账本保持可恢复。 | `资深架构师` |
 | Agent Loop | 每轮如何读取状态、执行动作、吸收反馈、验证、停止和交接。 | 本技能编排，执行侧按 owner 分派 |
 | CAD Mode | 已选定的单个原子任务是否可以受控自动推进。 | `资深架构师` |
@@ -80,7 +81,7 @@ GSD/CAD 在 AI Native 流程中分五层：
 
 边界句：
 
-- AI Native 决定“是否进入 GSD/CAD 编排候选，以及下一步 owner”。
+- AI Native Engineering Loop 决定“是否进入产研交付 Loop、是否启用 GSD/CAD 内部层，以及下一步 owner”。
 - GSD-like 决定“哪些阶段和任务可以被执行”。
 - CAD Mode 决定“当前选中的原子任务是否可以自动执行”。
 - Agent Loop 决定“每轮如何读取状态、执行动作、吸收反馈、验证和停止”。
@@ -157,7 +158,7 @@ GSD 规划还必须给出提交切片：每个 Wave / Task 完成验证后应如
 - 是否需要 Superpowers 方法门禁：需求澄清是否需要 `brainstorming`，任务拆解是否需要 `writing-plans`，实现是否需要 `test-driven-development`，CR 是否需要 `requesting-code-review` / `receiving-code-review`，完成前是否需要 `verification-before-completion`。
 - 是否需要上下文账本、阶段状态、恢复入口和多 Agent / Wave 编排。
 - 是否需要 Agent Loop；如果需要，状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件是否清楚。
-- 当前授权策略是否清楚：只读、默认低风险授权、GSD + Goal 计划授权、Wave Grant、CAD Grant、Codex 替我审批，还是需要显式确认。
+- 当前授权策略是否清楚：只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant、Codex 替我审批，还是需要显式确认。
 
 缺任一关键项时，只输出补齐清单，不建议 CAD。
 
@@ -221,7 +222,7 @@ Atomic Task 候选至少描述：
 - Superpowers 方法纪律候选：TDD 切入点、最小 Review 输入包、完成前验证命令和不采用的外部默认流程。
 - 是否可能成为 CAD 候选，以及阻断原因。
 - 是否可能成为 Loop 候选，以及状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件缺口。
-- 建议授权模式：只读、默认低风险授权、Wave Grant、CAD Grant 或显式确认。
+- 建议授权模式：只读、计划内低风险执行、Wave Grant、CAD Grant 或显式确认。
 
 同一 Wave 的候选任务不得共享同一写入文件、公共契约、状态机或测试夹具；如果共享，必须拆顺序或交给架构师重切。
 
@@ -260,8 +261,8 @@ AI Native 可以设计授权策略、形成 Plan Grant 草案和指出 Execution
 | 档位 | 含义 | 可默认通过 | 必须停止 |
 | --- | --- | --- | --- |
 | 只读侦察 | 仅读取工作区和公开项目文件，形成理解包。 | 读仓库、查引用、运行只读检查。 | 读取无关私有目录、联网、写文件。 |
-| 默认低风险授权 | 用户已要求推进，且任务在当前工作区、低风险、可回滚、有验证命令。 | 编辑已声明范围内文件、运行本地测试/校验、记录结果。 | 改范围外文件、覆盖用户改动、验证失败后继续扩张。 |
-| GSD + Goal 计划授权 | 用户明确要求按任务计划推进，且 Goal、任务计划、写入范围、验证命令、停止条件和显式确认边界已列明。 | 任务计划内低风险本地读写、测试、lint、文档/Skill/业务代码小步修改、Ledger/状态更新。 | Git 提交、联网、依赖安装、生产/密钥/部署/不可逆操作、高风险业务、计划外写入、验证失败。 |
+| 计划内低风险执行 | 用户已要求推进，且任务在当前工作区、低风险、可回滚、有验证命令。 | 编辑已声明范围内文件、运行本地测试/校验、记录结果。 | 改范围外文件、覆盖用户改动、验证失败后继续扩张。 |
+| Plan Grant | 用户明确要求按任务计划推进，且 Goal、任务计划、写入范围、验证命令、停止条件和显式确认边界已列明。 | 任务计划内低风险本地读写、测试、lint、文档/Skill/业务代码小步修改、Ledger/状态更新。 | Git 提交、联网、依赖安装、生产/密钥/部署/不可逆操作、高风险业务、计划外写入、验证失败。 |
 | Wave Grant | 用户批准一组 Wave / Goal 的写入范围、验证矩阵和停止条件。 | Wave 内互不冲突的低风险 Atomic Task。 | 公共契约变更、跨 Wave 写入、高风险业务、Git/联网。 |
 | CAD Grant | 用户批准一个原子任务的写入范围、验证命令、停止条件和失败恢复。 | CAD Red/Green/Review/Verify 内的本地低风险动作。 | Grant 外写入、测试持续失败、任务目标漂移、需要外部权限。 |
 | 显式确认 | 高风险或超出默认策略的动作。 | 无。 | 必须等待用户、项目 owner 或专业确认。 |
@@ -280,7 +281,7 @@ Plan Grant / Grant 最小字段：
 - 禁止事项：生产数据、密钥、真实支付/资金通道、不可逆操作。
 - 停止条件：何时暂停、何时交还用户、何时回滚或转人工。
 
-如果用户只说“继续”“按建议推进”“自动跑起来”，只能视为流程意向，最多进入默认低风险授权候选。若用户明确说 `GSD + Goal 按任务计划推进`、`不希望每个任务手动授权`、`直接按照任务计划推进` 或等价表达，并且任务计划已经列明写入范围、验证命令、停止条件和显式确认边界，则可升级为 Plan Grant；之后范围内低风险任务不再因缺少逐任务 Execution Grant 停止。
+如果用户只说“继续”“按建议推进”“自动跑起来”，只能视为流程意向，最多进入计划内低风险执行候选。若用户明确说 `GSD + Goal 按任务计划推进`、`不希望每个任务手动授权`、`直接按照任务计划推进` 或等价表达，并且任务计划已经列明写入范围、验证命令、停止条件和显式确认边界，则可升级为 Plan Grant；之后范围内低风险任务不再因缺少逐任务 Execution Grant 停止。
 
 ### 6A. Codex 替我审批通道
 
@@ -296,7 +297,7 @@ Codex 替我审批:
 
 Skill 只能识别和利用已经存在的审批模式，不负责打开或伪造该模式。若当前工具仍弹出审批，按工具实际状态处理；不要在文档里承诺一定自动通过。
 
-### 6B. GSD + Goal 计划授权
+### 6B. Plan Grant 计划授权
 
 Plan Grant 是为了避免 GSD + Goal 每个任务都卡在 `Execution Grant：xxx`。它不是无条件授权，而是把授权锚定到已确认任务计划：
 
@@ -405,7 +406,7 @@ GSD/CAD 准入必须同时给出质量门禁位置：
 - 把整个 Roadmap、GSD 计划或 Wave 清单当成 CAD 授权。
 - 只因为项目大，就强制创建完整 GSD 文件体系。
 - 只因为用户说“继续”“自动推进”或“替我审批”，就默认允许 Git、联网、部署、生产操作、依赖安装、读取密钥或不可逆操作。
-- 把默认低风险授权写成无条件自动通过，或让 Codex 替我审批绕过工具权限、sandbox、项目规则和用户授权。
+- 把计划内低风险执行写成无条件自动通过，或让 Codex 替我审批绕过工具权限、sandbox、项目规则和用户授权。
 - 把 AI 原型、MVP、PRD、产品上下文包或 AI Native 准入结论当成 Execution Grant；AI Native 准入结论不是 Execution Grant。
 - 把 Superpowers skills 当成 GSD 的默认插件安装、默认外部脚本、默认 worktree、默认 subagent 或默认 Git 操作。
 - 把无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张写成 GSD Wave、Atomic Task、CAD 候选或实现建议。

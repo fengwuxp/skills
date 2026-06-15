@@ -7,7 +7,7 @@
 - 用户要求设计 AI 编码流程、Agentic Engineering、OpenSpec、Harness、GSD、CAD 或多 Agent 协作。
 - 用户要求 GSD + Goal、CAD + Goal、目标驱动推进、持续推进、目标状态、预算 / 时间盒、停止条件或跨轮交接。
 - 用户要求设计 Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、持续编排、多 Agent 监督、自我验证或 Loop 停止条件。
-- 用户希望 GSD/CAD 自动推进、默认授权、减少每个任务审批，或希望用 Codex “替我审批”模式承接低风险工具审批。
+- 用户希望 GSD/CAD 自动推进、计划内授权、减少每个任务审批，或希望用 Codex “替我审批”模式承接低风险工具审批。
 - 产品上下文包已经形成，需要进入系统设计、任务拆分、Agent 执行或 CAD 候选判断。
 - 团队使用 Codex、Claude Code、GitHub Copilot coding agent、Cursor、MCP、自动化线程或其他 AI 原生工具协作。
 
@@ -23,7 +23,7 @@
 - AI 原生工具职责、权限边界、写入范围、验证方式和停止条件。
 - 需要架构师继续生成的 OpenSpec、完整 Harness Plan、验证矩阵或 Execution Grant 缺口。
 - 若任务跨轮推进，一份 Goal 组合判断：Goal ID、成功标准、状态、预算 / 时间盒、验证证据、停止条件和 GSD Wave / CAD 候选关联。
-- 一份授权策略判断：当前适合只读、默认低风险授权、Wave Grant、CAD Grant、Codex 替我审批通道，还是必须显式确认。
+- 一份授权策略判断：当前适合只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant、Codex 替我审批通道，还是必须显式确认。
 - 一份可执行性判断：当前材料能否让 Agent 开始写、只能只读侦察，还是必须先补规格。
 - 一份事实边界判断：已知事实、合理推断、待确认事项和范围外不做；无根据猜测或超出用户目标的实现扩张必须被标记为停止条件。
 - 若存在持续编排或后台 Agent，一份 Loop 准入判断：状态载体、反馈源、验证者、预算、最大轮次、无进展检测、停止条件和交接物是否齐备。
@@ -51,7 +51,7 @@
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `3. Harness 最小契约` | 不复制外部 ASD/SSD Harness |
 | 做 GSD + Goal / Goal 组合 | 先读 `goal-composition.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不把 Goal 写成 Execution Grant |
 | 设计 Agent Loop / `/goal` / `/loop` | 先读 `agent-loop-engineering.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把 Loop 当自动授权 |
-| 设计默认授权 / 自动推进 | 先读 `gsd-cad-admission.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把所有审批自动通过 |
+| 设计计划内授权 / 自动推进 | 先读 `gsd-cad-admission.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把所有审批自动通过 |
 | 多 Agent / GSD 编排 | 先读 `gsd-cad-admission.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不直接开 CAD |
 | PRD / 系分合议预审 | 先读 `prd-system-design-review.md`，再读 `2. OpenSpec / Superpowers / Harness`、`3. Harness 最小契约` | 不把预审结论写成 Execution Grant |
 | CAD 候选判断 | 先读 `gsd-cad-admission.md`，再读 `4. CAD 只处理原子任务`、`6. 权限边界` | 不把整个项目授权给 CAD |
@@ -111,7 +111,7 @@ spec-lint / AC 覆盖 / 漂移检查:
 停止条件:
 Goal Ledger 更新:
 事实 / 推断 / 待确认 / 范围外不做:
-授权策略: 只读 / 默认低风险授权 / Wave Grant / CAD Grant / 显式确认
+授权策略: 只读 / 计划内低风险执行 / Plan Grant / Wave Grant / CAD Grant / 显式确认
 Loop: 不适用 / 只读 Loop / Plan Grant Loop / Wave Loop / CAD Loop
 Loop 反馈源:
 Loop 验证者:
@@ -193,10 +193,11 @@ AI 原生工具常见权限必须显式授权：
 | Push/PR/部署 | 需明确授权。 | 目标分支、环境、回滚和审批。 |
 | 生产数据/配置 | 默认禁止。 | dry-run、备份、审批、审计和回滚。 |
 
-默认授权边界：
+授权边界：
 
 - `只读侦察` 可默认读取工作区内相关文件、查引用、运行只读检查。
-- `默认低风险授权` 可在用户已要求推进且范围明确时编辑声明范围内文件、运行本地测试/校验、记录结果。
+- `计划内低风险执行` 可在用户已要求推进且范围明确时编辑声明范围内文件、运行本地测试/校验、记录结果。
+- `Plan Grant` 可覆盖已确认任务计划内低风险、本地、可验证、可回滚动作，但不能触发 Git、联网、生产、密钥、部署、不可逆操作或高风险业务。
 - `Wave Grant` 可覆盖同一 Wave 内互不冲突的低风险 Atomic Task，但不能跨 Wave、改公共契约或触发 Git/联网。
 - `CAD Grant` 只覆盖一个原子任务的 Red/Green/Review/Verify 本地动作。
 - `显式确认` 覆盖 Git stage/commit/push/PR/merge、联网、依赖安装、读取密钥、生产数据、部署、数据库迁移、真实支付/资金、不可逆操作、高风险权限/租户/审计/合规变更。
@@ -224,7 +225,7 @@ AI 原生工具常见权限必须显式授权：
 - 中大型或跨轮任务是否有 Goal 卡固定目标、成功标准、预算 / 时间盒、状态、停止条件和验证证据。
 - 是否有可评审 Spec 模板，覆盖五段式骨架、AC 与测试映射、风险自查和闸门证据。
 - 是否有 Harness 固定 owner、写入范围、顺序、验证和交接。
-- 是否有授权策略，能区分只读、默认低风险授权、Wave Grant、CAD Grant、Codex 替我审批和显式确认边界。
+- 是否有授权策略，能区分只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant、Codex 替我审批和显式确认边界。
 - 是否有 Loop 准入，能区分状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物。
 - 是否有事实边界门禁，能区分事实、推断、待确认和范围外不做，避免 AI 幻觉进入任务包或实现建议。
 - 是否有代码库理解与变更可理解性门禁，能让人复述业务意图、入口路径、影响模块、调用关系、边界变化、源码锚点和残余风险。
