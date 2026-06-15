@@ -231,6 +231,21 @@
       "expected_handling": "进入 Agent Loop Engineering，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、goal-composition、gsd-cad-admission 和 code-delivery-closed-loop，输出 Loop 准入结论、内部层映射、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 GSD/CAD/Goal 是 Loop 内部层，/goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
     },
     {
+      "id": "ai-native-should-design-engineering-loop-not-prompting",
+      "skill": "ai-native-engineering-workflow",
+      "query": "不要继续堆 Prompt 让 AI 一轮轮改了，帮我设计一个工程 Loop：人设计循环，Loop 调用 Agent、检查结果、决定下一步、保存记忆并在边界处停止；要有 Automations、Worktrees、Skills、Connectors、Sub-agents、Memory、状态载体、反馈源、验证者、价值指标和人类理解检查。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Agent Loop Engineering / 设计工程 Loop，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，强调不是继续堆 Prompt，而是设计可运行、可验证、可停止、可接管的工程循环；输出 Automations、Worktrees / 隔离工作区、Skills、Plugins / Connectors、Sub-agents / Maker-Checker、Memory / 状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、失败回写、人类理解检查和知识回流位置；价值指标不看 PR 数、执行轮数或 Agent 数量，而看合并率、返工率、缺陷率、回滚率、Review 成本、用户价值和团队理解程度；明确不能让人类只剩点同意，关键结果必须有人类 owner 能解释目标、状态、关键变更、证据、残余风险和停止理由。"
+    },
+    {
       "id": "ai-native-should-review-ai-coding-process",
       "skill": "ai-native-engineering-workflow",
       "query": "评审我们现在的 AI 编码流程，看看是不是有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、CR、发布监控和复盘闭环，给出可落地改造顺序。",

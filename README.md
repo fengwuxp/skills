@@ -213,6 +213,8 @@
 
 `AI Native Engineering Loop` 是编排入口，不是万能执行入口。它适合回答“现在应该进入哪个 Loop、由谁做、做到哪一步、交接什么、怎么验证、什么时候停”，再把产品语义交给 `产品架构专家`，把工程实现和生产风险交给 `资深架构师`。
 
+它的工作重心是 Loop Engineering：不是让人不断补 Prompt，而是设计一个能读取状态、调用 Agent、检查结果、决定下一步、保存记忆并在边界处停止的工程循环。Prompt、Agent、Skill、测试、CR、自动化和工具连接器都是 Loop 的零件；工程师仍然负责目标、边界、理解、验证和关键决策。
+
 它承接 AI Native 产品研发流程，但不直接替代 PRD 正文、系分正文、代码实现、测试通过、CR 结论或上线审批；核心职责是把 Goal、State、Plan、Action、Observe、Decide、Verify、Stop/Handoff、owner、交接物、授权策略和验证门禁排成可执行链路。
 
 优先用它的场景是跨角色、跨阶段、跨工具的流程问题：从 AI 原型到 PRD-Lite / OpenSpec / Harness，产品专家和架构师如何接力，大项目如何用 GSD Wave 做计划、用 CAD Atomic 做原子执行、用 Goal 保持目标和状态一致，编码提速如何转成最终代码交付能力，质量 / 测试 / CR / 发布门禁如何闭环，Gemini CLI / AgentRC / Understand Anything 等工具是否允许安装或调用。只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`；只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`。
@@ -230,6 +232,7 @@
 - `GSD + Goal`：作为交付 Loop 的 Goal + GSD 内部层，把业务目标、生产可用能力、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件、Goal 状态和交接节奏串起来。
 - `GSD + Goal 按任务计划推进`：把 Goal 任务计划升级为 Plan Grant，低风险本地任务按计划推进，不再每个任务都停下来等 Execution Grant；默认给提交切片，授权后可按已验证任务做本地 commit。
 - `生产可用 Loop 门禁`：把 Agent Loop 从自动执行候选升级为可生产化门禁，检查状态落盘、隔离执行、Maker / Checker 解耦、观测审计、人工接管、发布/回滚和理解债。
+- `设计工程 Loop`：把“人提示 AI”升级为“人设计循环”，输出 Automations、Worktrees、Skills、Connectors、Sub-agents、Memory、状态载体、反馈源、验证者、停止条件和人类理解检查。
 - `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，再输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
 - `做 PRD 评审会前预扫描`：产品专家先按完整性、一致性、可测试性、二义性输出疑似问题，AI Native 再把结果接入合议预审和决策日志。
 - `做 GSD/CAD 准入`：判断是否需要 Round 0、Wave/Atomic Task、CAD 候选缺口、授权策略和显式确认缺口。
@@ -261,6 +264,8 @@
 - **CR/发布模式**：已有代码变更、测试结果或发布计划时，评审验证缺口、代码 CR 重点、发布门禁、监控、回滚和复盘。
 
 默认输出骨架固定为：结论、Loop Profile、Owner / 下一步分派、交接物、Loop Contract、证据边界、内部层、授权策略、验证门禁、停止条件、残余风险 / 需要确认。证据边界必须区分事实、推断、待确认和范围外不做；授权策略必须区分只读、计划内低风险执行、Wave Grant、CAD Grant 和显式确认；只有用户要求完整方案、评审报告或模板时，再展开阶段表、RACI、验证矩阵或 Goal Ledger。
+
+衡量 Loop 不看 PR 数、执行轮数、Agent 数量或自动化频率，而看合并率、返工率、缺陷率、回滚率、Review 成本、用户价值和团队理解程度。人类 owner 必须能复述目标、当前状态、关键变更、证据、残余风险和停止理由；否则就是认知外包，不是工程闭环。
 
 使用时建议直接说明：
 
@@ -309,6 +314,10 @@
 
 ```text
 用 AI Native Engineering Loop：按当前材料选 Loop Profile，输出 owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派。
+```
+
+```text
+设计工程 Loop：不要继续堆 Prompt；请把目标、状态载体、自动化触发、Agent 分工、反馈源、验证者、预算、停止条件、记忆回写和人工接管设计出来。
 ```
 
 ```text
