@@ -190,6 +190,46 @@
       "expected_handling": "进入 SDD 生产代码模式，读取 spec-template-practices、code-delivery-closed-loop 和 verification-review-release；先检查 Spec 是否清晰、完整、上下文化、具体、可测试，并能作为事实来源；补结构化契约、输入输出示例、正反例、边界/错误处理、测试计划和五支柱验证；AI 生成失败时按复现失败、检查 Spec 清晰度、分类 AI 错误模式、回写失败场景到 Spec/AC/测试、重新生成或实现、独立验证推进，设置重试上限并升级人工 owner。"
     },
     {
+      "id": "ai-native-should-knowledge-expression-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入知识表达门禁：这个需求现在只有老板一句话、几篇文章和一个 AI 草稿，请判断是否足以让 AI 执行，输出目标、对象、规则、约束、验收样例、反馈源和缺口 owner；不要直接进 GSD/CAD/Loop。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入知识表达 / 意图可执行门禁模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出 Knowledge-to-Execution Card，覆盖原始输入、业务目标、业务对象、状态/生命周期、规则/策略、约束/非目标、验收样例、反馈源、需要保留的领域知识、待确认缺口和下一 owner；缺少对象、规则、验收样例或反馈源时，不进入 GSD/CAD/Loop、代码修改或执行授权。"
+    },
+    {
+      "id": "ai-native-should-nonstandard-problem-mode",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入非标问题模式：客户和运营都说这个能力必须做，但没人能说清标准答案，请先定义问题主体、影响面、已知事实、关键不确定性、研究路径、候选方案、最小可逆实验、决策标准和停止条件。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入非标问题模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；输出非标问题处理包，覆盖问题主体、影响面、已知事实、关键不确定性、现有替代方案/绕行方式、研究/证据路径、候选方案、最小可逆实验、决策标准、owner/下一步和停止条件；产品侧缺口路由产品架构专家，工程侧缺口路由资深架构师，不能把无标准答案问题拆成机械执行清单。"
+    },
+    {
+      "id": "ai-native-should-practical-coding-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入实际项目编码 Loop：这个 GSD Wave 里有一个明确 Task ID，需要在真实代码库持续推进，请给 Coding Loop Contract，包含写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入实际项目编码 Loop 模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
+    },
+    {
+      "id": "ai-native-should-feedback-loop-verification-cluster",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Coding 已经能快速生成和修复代码，但测试通过和覆盖率提升并不能证明系统没有变坏。请给 AI Native Loop 增加反馈闭环成熟度门禁，围绕支付幂等高风险业务不变量建立验证簇，说明 L2/L3/L4/L5、生产证据、独立 Checker、预算和停止条件。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入反馈闭环成熟度 / 验证簇准入模式，按默认输出骨架给出结论、当前模式、owner/下一步分派、交接物、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、verification-review-release 和架构师 testing.md，先判断当前是 L2/L3/L4/L5 候选，强调测试通过、覆盖率、bug 下降只是证据不是事实；输出 Verification Cluster Gate，覆盖高风险业务不变量、验证簇 ID、场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度、来源、独立 Checker、预算/分层执行、状态回写和停止条件；L5 只能标为目标架构，不能写成当前已具备能力。"
+    },
+    {
       "id": "ai-native-should-quality-test-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点。",
@@ -374,6 +414,26 @@
       "expected_handling": "进入架构设计和测试设计路径，输出边界、契约、不变量、风险和可验证任务。"
     },
     {
+      "id": "senior-should-nonstandard-engineering-problem",
+      "skill": "senior-software-architect",
+      "query": "这是一个跨订单、支付和账务的非标工程问题，没有现成 SOP：线上状态偶发不一致，业务目标和现有边界都有冲突。请先输出问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、写入边界和停止条件，不要直接大范围重构。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入非标工程问题路径，读取 architecture.md 的非标工程问题和问题核心诊断，先输出非标工程问题卡，覆盖问题背景、可见症状、结构证据、核心机制、影响面、关键不确定性、候选方案、最小可逆实验、验证命令/观测指标、决策标准、写入边界、回滚/降级、owner/下一步和停止条件；需要编码时再进入 workflow、testing 和项目本地规范，优先构造失败测试或可复现反馈环，不直接大范围重构。"
+    },
+    {
+      "id": "senior-should-invariant-verification-cluster",
+      "skill": "senior-software-architect",
+      "query": "支付幂等和账务状态机是高风险域，AI 补了很多测试但语义仍然不强。请基于核心业务不变量设计验证簇，而不是盲目堆覆盖率，区分场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度和 CI 分层。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入架构师测试资产治理路径，读取 testing.md 的不变量验证簇方法；先确认高风险业务不变量和业务 owner，再输出验证簇，覆盖验证簇 ID、关联需求/AC、场景测试、属性/变形测试、历史回归、必要生产重放样本、有限变异/对抗检查、置信度、来源、是否人工确认、CI 分层、预算和失败处理；强调测试通过、覆盖率提高和 AI 生成测试数量不是事实本身，生产重放只能作为证据，不能反向定义需求。"
+    },
+    {
       "id": "senior-should-push-back-tech-first-architecture",
       "skill": "senior-software-architect",
       "query": "我们准备先把订单系统拆成微服务，缓存、MQ、网关、分层框架都先定下来，后面再把业务需求塞进去；帮我评审这个架构思路。",
@@ -515,6 +575,16 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
       "expected_handling": "进入产品架构专家内部 po-backlog-manager 路径，先做机会清单输入归一化、业务价值和工程代价评估，再用业务/用户/工程三桌校验输出 P0/P1/P2、拒绝或延后理由、User Story、AC、技术现实主义风险、owner 和待确认项。"
+    },
+    {
+      "id": "product-should-nonstandard-problem-solution",
+      "skill": "product-architecture-expert",
+      "query": "老板、销售和客户都说要做一个智能运营能力，但表达很散，UED 也反馈现有流程交互阻塞。请不要做传话筒，先输出真实问题、影响面、失败成本、当前替代方式、目标用户、解决方案假设、验收种子、UED 重点验证的交互/状态和下一步验证动作。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入非标产品问题与解决方案责任路径，读取 product-architecture-methodology 的非标问题小节，输出非标产品问题卡，覆盖原始诉求、真实问题、影响面、失败成本、当前替代方式、目标用户/被影响主体、业务约束、解决方案假设、验收种子、需要 UED 重点验证的交互/状态、待确认项、下一步验证动作和进入 PRD/Backlog/AI Native/非目标结论；产品专家提供解决方案假设和验收，不把老板/销售/客户/运营诉求原样转发给研发。"
     },
     {
       "id": "product-should-insight-opportunity-radar",

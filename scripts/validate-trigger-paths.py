@@ -117,6 +117,7 @@ production_readiness = "senior-software-architect/references/production-readines
 ai_large_project = "senior-software-architect/references/ai-large-project-orchestration.md"
 cad_mode = "senior-software-architect/references/cad-mode.md"
 negative_constraints = "senior-software-architect/references/negative-constraints.md"
+architecture = "senior-software-architect/references/architecture.md"
 testing = "senior-software-architect/references/testing.md"
 coding = "senior-software-architect/references/coding-standards.md"
 knowledge_graph = "senior-software-architect/references/knowledge-graph.md"
@@ -240,6 +241,16 @@ ai_native_terms = [
     "Agent 闭环工程",
     "生产可用 Loop",
     "生产可用门禁",
+    "知识表达",
+    "意图可执行",
+    "Knowledge-to-Execution Card",
+    "非标问题",
+    "实际项目编码 Loop",
+    "Coding Loop Contract",
+    "失败测试",
+    "独立 Checker",
+    "状态回写",
+    "提交切片",
     "三卡交接",
     "Product Context Card",
     "产品上下文交接卡",
@@ -336,6 +347,16 @@ ai_native_terms = [
     "验证矩阵",
     "代码 CR",
     "发布复盘",
+    "反馈闭环成熟度",
+    "验证簇",
+    "不变量验证簇",
+    "高风险不变量",
+    "测试通过不是事实",
+    "覆盖率提升",
+    "L2/L3/L4/L5",
+    "生产重放",
+    "变异测试",
+    "对抗测试",
     "默认授权",
     "自动推进",
     "按任务计划推进",
@@ -395,8 +416,8 @@ ai_native_terms = [
     "数据分析",
     "基础设施操作",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 payment_terms = [
     "清结算",
     "对账",
@@ -1665,6 +1686,8 @@ check(
         ai_native_workflow_skill,
         [
             "Agent Loop Engineering",
+            "实际项目编码 Loop",
+            "Coding Loop Contract",
             "references/agent-loop-engineering.md",
             "状态载体",
             "反馈源",
@@ -1683,6 +1706,26 @@ check(
             "Loop 不是更长的 Prompt",
             "State -> Decide -> Act -> Observe -> Verify -> Stop / Continue",
             "最小 Loop 契约",
+            "真实项目编码 Loop 额外字段",
+            "Coding Loop Contract",
+            "实际项目编码 Loop",
+            "反馈闭环成熟度",
+            "L2 / L3 / L4 / L5",
+            "Verification Cluster Gate",
+            "业务不变量",
+            "验证簇 ID",
+            "生产重放样本",
+            "有限变异 / 对抗检查",
+            "测试通过、覆盖率提高和 bug 下降都只是证据",
+            "L5 只能作为目标架构",
+            "代码写入范围",
+            "只读范围",
+            "失败测试 / 验收样例",
+            "TDD 顺序",
+            "验证命令",
+            "独立 Checker",
+            "状态回写位置",
+            "提交切片",
             "GSD + Goal + Loop",
             "反馈与验证",
             "预算和停止条件",
@@ -1775,6 +1818,114 @@ check(
             "状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件",
             "Skill 作为复用单位",
             "不把 `/goal`、`/loop` 或 auto mode 写成无条件授权",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps knowledge expression and nonstandard problem gates",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "知识表达先于自动执行",
+            "非标问题先建模",
+            "知识表达 / 意图可执行门禁模式",
+            "Knowledge-to-Execution Card",
+            "非标问题模式",
+            "实际项目编码 Loop 模式",
+            "Coding Loop Contract",
+            "知识可执行性",
+            "编码 Loop 可用性",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "Round 0E：知识表达门禁",
+            "Knowledge-to-Execution Card",
+            "Round 0F：非标问题门禁",
+            "非标问题处理包",
+            "文章观点、管理要求、产品口号、工具能力、AI 草稿和用户愿望只能作为输入",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "回到本质：软件到底应该怎么造？",
+            "高水平工程师都擅长解决“非标问题”",
+            "一文读懂什么是Loop",
+            "知识表达门禁",
+            "实际项目编码 Loop 契约",
+            "不得让 Loop 在缺少失败测试 / 验收样例、写入范围、验证命令、独立 Checker 和状态回写位置时修改生产代码",
+        ],
+    ),
+)
+check(
+    "product and senior skills keep nonstandard problem responsibility",
+    has_all(
+        product_skill,
+        [
+            "非标诉求不做传话筒",
+            "产品岗提供解决方案，不被动搬运需求",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "非标产品问题",
+            "1.4 非标问题与解决方案责任",
+            "不做传话筒",
+        ],
+    )
+    and has_all(
+        product_architecture,
+        [
+            "1.4 非标问题与解决方案责任",
+            "非标产品问题卡",
+            "产品岗和 UED 同属产品侧",
+            "解决方案假设",
+            "验收种子",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "高水平工程师都擅长解决“非标问题”",
+            "非标诉求",
+            "避免退化为传话筒",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "非标工程问题先建模",
+            "最小可逆实验",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "非标工程问题 / 无标准答案",
+            "1.3 非标工程问题",
+            "最小可逆实验",
+        ],
+    )
+    and has_all(
+        architecture,
+        [
+            "1.3 非标工程问题",
+            "非标工程问题卡",
+            "问题机制",
+            "最小可逆实验",
+            "验证命令",
+            "进入实际项目编码 Loop 时还要有状态回写位置和独立 Checker",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "软件本质与非标工程问题",
+            "回到本质：软件到底应该怎么造？",
+            "高水平工程师都擅长解决“非标问题”",
         ],
     ),
 )
@@ -2058,6 +2209,10 @@ check(
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-code-delivery-closed-loop",
             "ai-native-should-production-sdd-source-of-truth",
+            "ai-native-should-knowledge-expression-gate",
+            "ai-native-should-nonstandard-problem-mode",
+            "ai-native-should-practical-coding-loop",
+            "ai-native-should-feedback-loop-verification-cluster",
             "ai-native-should-spec-template-practices",
             "ai-native-should-development-standards-gate",
             "ai-native-should-product-system-dna-gate",
@@ -2073,6 +2228,9 @@ check(
             "ai-native-negative-prd-from-prototype",
             "ai-native-negative-code-review",
             "ai-native-negative-structured-codegen",
+            "product-should-nonstandard-problem-solution",
+            "senior-should-nonstandard-engineering-problem",
+            "senior-should-invariant-verification-cluster",
             "ai-native-engineering-workflow",
         ],
     )
@@ -5068,6 +5226,27 @@ check(
         [
             "## 12. 何时读取 testing-practices.md",
             "不要绕过本文件的测试选择",
+        ],
+    ),
+)
+check(
+    "senior testing keeps invariant verification cluster method",
+    has_all(
+        testing,
+        [
+            "不变量支撑的验证簇",
+            "测试通过、覆盖率提高、bug 下降都只是证据，不是事实本身",
+            "高风险业务不变量",
+            "验证簇 ID",
+            "场景测试",
+            "属性 / 变形测试",
+            "历史回归入口",
+            "生产重放样本",
+            "有限变异 / 对抗检查",
+            "置信度",
+            "来源",
+            "CI 分层",
+            "生产重放只能作为证据，不能反向定义需求",
         ],
     ),
 )
@@ -8262,6 +8441,26 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "spec-template-practices.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native knowledge expression gate",
+        prompt="进入知识表达门禁：这个需求只有老板一句话、几篇文章和一个 AI 草稿，请判断是否足以让 AI 执行，输出目标、对象、规则、约束、验收样例、反馈源和缺口 owner；不要直接进 GSD/CAD/Loop",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native nonstandard problem mode",
+        prompt="进入非标问题模式：客户和运营都说这个能力必须做，但没人能说清标准答案，请先定义问题主体、影响面、已知事实、关键不确定性、研究路径、候选方案、最小可逆实验、决策标准和停止条件",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="AI Native practical coding loop",
+        prompt="进入实际项目编码 Loop：这个 GSD Wave 里有一个明确 Task ID，需要在真实代码库持续推进，请给 Coding Loop Contract，包含写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件",
+        routes={"ai-native", "agent-loop-engineering.md", "gsd-cad-admission.md", "code-delivery-closed-loop.md", "verification-review-release.md", "senior", "testing.md", "workflow.md"},
+    ),
+    RouteFixture(
+        name="AI Native feedback loop verification cluster",
+        prompt="AI Coding 已经能快速生成和修复代码，但测试通过和覆盖率提升并不能证明系统没有变坏。请给 AI Native Loop 增加反馈闭环成熟度门禁，围绕支付幂等等高风险业务不变量建立验证簇，说明 L2/L3/L4/L5、生产证据、独立 Checker、预算和停止条件",
+        routes={"ai-native", "agent-loop-engineering.md", "verification-review-release.md", "senior", "testing.md"},
+    ),
+    RouteFixture(
         name="AI Native quality test gate",
         prompt="做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点",
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md"},
@@ -8330,6 +8529,16 @@ scenario_fixtures: list[RouteFixture] = [
         name="architecture diagram output",
         prompt="画一张系统架构图和状态机，说明工程落点和验证方式",
         routes={"senior", "diagram-output.md"},
+    ),
+    RouteFixture(
+        name="senior nonstandard engineering problem",
+        prompt="这是一个跨订单支付账务的非标工程问题，没有现成 SOP，线上状态偶发不一致。请先输出问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、写入边界和停止条件，不要直接大范围重构",
+        routes={"senior", "architecture.md", "adr-and-tradeoff.md", "workflow.md", "testing.md"},
+    ),
+    RouteFixture(
+        name="senior invariant verification cluster",
+        prompt="支付幂等和账务状态机是高风险域，AI 补了很多测试但语义仍然不强。请基于核心业务不变量设计验证簇，而不是盲目堆覆盖率，区分场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度和 CI 分层",
+        routes={"senior", "testing.md", "workflow.md"},
     ),
     RouteFixture(
         name="external sdk freshness ignores case",
@@ -8420,6 +8629,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="product backlog decision from opportunity list",
         prompt="这里有 15 个客户、销售和老板提的机会点，请帮我做 Backlog 决策，按 BV/EE 排 P0/P1/P2，并转成 User Story 和 AC，说明哪些要拒绝或延后",
         routes={"product", "product-scenario-routing.md", "po-backlog-manager.md"},
+    ),
+    RouteFixture(
+        name="product nonstandard problem solution",
+        prompt="老板、销售和客户都说要做一个智能运营能力，但表达很散，UED 也反馈现有流程交互阻塞。请不要做传话筒，先输出真实问题、影响面、失败成本、当前替代方式、目标用户、解决方案假设、验收种子、UED 重点验证的交互状态和下一步验证动作",
+        routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(
         name="AI Native product context to GSD CAD handoff",
@@ -8526,9 +8740,9 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
         route.add("ai-native")
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标"]):
             route.add("prd-system-design-review.md")
@@ -8536,15 +8750,15 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债"]):
+        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债"]):
             route.add("agent-loop-engineering.md")
             route.add("agentic-engineering-governance.md")
             route.add("verification-review-release.md")
-            if contains_any(prompt, ["GSD", "CAD", "Plan Grant", "Wave", "Atomic Task", "Execution Grant"]):
+            if contains_any(prompt, ["GSD", "CAD", "Plan Grant", "Wave", "Atomic Task", "Execution Grant", "Task ID", "提交切片"]):
                 route.add("gsd-cad-admission.md")
             if contains_any(prompt, ["Goal", "GSD + Goal", "目标", "Goal Ledger"]):
                 route.add("goal-composition.md")
-            if contains_any(prompt, ["交付", "代码", "CR", "测试", "Spec", "回写", "返工", "缺陷", "验证", "生产可用", "能上线", "发布回滚", "发布/回滚", "观测审计", "人工接管"]):
+            if contains_any(prompt, ["交付", "代码", "CR", "测试", "失败测试", "TDD", "Spec", "回写", "返工", "缺陷", "验证", "验证命令", "状态回写", "生产可用", "能上线", "发布回滚", "发布/回滚", "观测审计", "人工接管"]):
                 route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "事实来源", "系统 DNA", "不变量", "状态流转", "结构化契约", "正例 / 反例", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
@@ -8561,7 +8775,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("verification-review-release.md")
         if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "Production Loop Card", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡"]):
             route.add("gsd-cad-admission.md")
-        if contains_any(prompt, ["验证矩阵", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
+        if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
         if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Understand Anything", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
@@ -8572,6 +8786,12 @@ def route_fixture(prompt: str) -> set[str]:
             "测试",
             "TDD",
             "失败测试",
+            "验证簇",
+            "不变量验证簇",
+            "高风险业务不变量",
+            "生产重放",
+            "变异测试",
+            "对抗测试",
             "陌生代码库",
             "架构现状",
             "接手侦察",
@@ -8616,9 +8836,18 @@ def route_fixture(prompt: str) -> set[str]:
             "类图",
             "部署图",
             "迁移图",
+            "非标工程问题",
+            "无标准答案",
+            "没有现成 SOP",
+            "问题机制",
+            "最小可逆实验",
         ],
     ):
         route.add("senior")
+    if contains_any(prompt, ["非标工程问题", "无标准答案", "没有现成 SOP", "问题机制", "关键不确定性", "最小可逆实验", "写入边界"]):
+        route.update({"architecture.md", "adr-and-tradeoff.md", "workflow.md"})
+        if contains_any(prompt, ["验证命令", "失败测试", "TDD", "测试"]):
+            route.add("testing.md")
     if contains_any(prompt, ["陌生代码库", "架构现状", "接手侦察", "Node.js", "技术栈", "入口路径", "部署链路"]):
         route.update({"language-agnostic-architecture.md", "workflow.md"})
     if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶", "InMemory", "内存版业务 Service", "Map 存储实现"]):
@@ -8631,8 +8860,10 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"security-architecture.md", "negative-constraints.md"})
     if contains_any(prompt, product_terms):
         route.add("product")
-    if contains_any(prompt, ["测试", "TDD", "失败测试"]):
+    if contains_any(prompt, ["测试", "TDD", "失败测试", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "覆盖率"]):
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
+    if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
+        route.update({"senior", "testing.md", "workflow.md"})
     if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
     if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "AI 编码", "编码约规", "流程能力", "Agent", "CAD"]):
@@ -8690,6 +8921,10 @@ for case_id in [
     "ai-native-should-gsd-product-engineering-collaboration",
     "ai-native-should-demand-analysis-collaboration-gate",
     "ai-native-should-development-standards-gate",
+    "ai-native-should-knowledge-expression-gate",
+    "ai-native-should-nonstandard-problem-mode",
+    "ai-native-should-practical-coding-loop",
+    "ai-native-should-feedback-loop-verification-cluster",
     "ai-native-should-gsd-cad-admission-gate",
     "ai-native-should-gsd-goal-composition",
     "ai-native-should-agent-loop-engineering",
@@ -8700,6 +8935,140 @@ for case_id in [
     "ai-native-should-route-cr-work",
 ]:
     expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-knowledge-expression-gate",
+    (
+        "知识表达 / 意图可执行门禁模式",
+        "Knowledge-to-Execution Card",
+        "业务目标",
+        "业务对象",
+        "状态/生命周期",
+        "规则/策略",
+        "约束/非目标",
+        "验收样例",
+        "反馈源",
+        "待确认缺口",
+        "不进入 GSD/CAD/Loop、代码修改或执行授权",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-nonstandard-problem-mode",
+    (
+        "非标问题模式",
+        "非标问题处理包",
+        "问题主体",
+        "影响面",
+        "已知事实",
+        "关键不确定性",
+        "研究/证据路径",
+        "候选方案",
+        "最小可逆实验",
+        "决策标准",
+        "不能把无标准答案问题拆成机械执行清单",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-practical-coding-loop",
+    (
+        "实际项目编码 Loop 模式",
+        "agent-loop-engineering",
+        "Coding Loop Contract",
+        "任务 ID/关联 Goal/Wave",
+        "代码写入范围",
+        "只读范围",
+        "失败测试/验收样例",
+        "TDD 顺序",
+        "验证命令",
+        "独立 Checker",
+        "状态回写位置",
+        "提交切片",
+        "回滚/撤销方式",
+        "路由资深架构师",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-feedback-loop-verification-cluster",
+    (
+        "反馈闭环成熟度 / 验证簇准入模式",
+        "L2/L3/L4/L5",
+        "测试通过",
+        "覆盖率",
+        "bug 下降只是证据不是事实",
+        "Verification Cluster Gate",
+        "高风险业务不变量",
+        "验证簇 ID",
+        "场景测试",
+        "属性/变形测试",
+        "历史回归",
+        "生产重放样本",
+        "有限变异/对抗检查",
+        "置信度",
+        "独立 Checker",
+        "预算/分层执行",
+        "L5 只能标为目标架构",
+    ),
+)
+
+expected_handling_has(
+    "product-should-nonstandard-problem-solution",
+    (
+        "非标产品问题与解决方案责任路径",
+        "非标产品问题卡",
+        "真实问题",
+        "影响面",
+        "失败成本",
+        "当前替代方式",
+        "解决方案假设",
+        "验收种子",
+        "UED",
+        "不把老板/销售/客户/运营诉求原样转发给研发",
+    ),
+)
+
+expected_handling_has(
+    "senior-should-nonstandard-engineering-problem",
+    (
+        "非标工程问题路径",
+        "architecture.md",
+        "非标工程问题卡",
+        "问题背景",
+        "可见症状",
+        "结构证据",
+        "核心机制",
+        "影响面",
+        "关键不确定性",
+        "候选方案",
+        "最小可逆实验",
+        "验证命令/观测指标",
+        "写入边界",
+        "停止条件",
+        "不直接大范围重构",
+    ),
+)
+
+expected_handling_has(
+    "senior-should-invariant-verification-cluster",
+    (
+        "不变量验证簇方法",
+        "高风险业务不变量",
+        "业务 owner",
+        "验证簇 ID",
+        "关联需求/AC",
+        "场景测试",
+        "属性/变形测试",
+        "历史回归",
+        "生产重放样本",
+        "有限变异/对抗检查",
+        "置信度",
+        "CI 分层",
+        "测试通过、覆盖率提高和 AI 生成测试数量不是事实本身",
+        "生产重放只能作为证据",
+    ),
+)
 
 expected_handling_has(
     "ai-native-should-agent-loop-engineering",

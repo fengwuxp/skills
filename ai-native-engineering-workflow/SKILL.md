@@ -38,6 +38,9 @@ description: |
 6. **证据闭环优先**：输出必须能回到用户反馈、验收种子、测试、lint、CR、监控、回滚准备和复盘结论。
 7. **授权按风险分级**：GSD/CAD 可以在 Plan Grant / Wave Grant / CAD Grant 范围内推进低风险本地任务；越过 Grant、工具权限、写入边界、验证失败或高风险业务时必须停下。
 8. **正式文档不混过程**：PRD、系分、OpenSpec/SDD 只放最终有效结论；讨论过程、AI 推理轨迹、被拒方案和迭代草稿进入过程资产。
+9. **知识表达先于自动执行**：软件交付本质上是把业务知识固化为可执行、可验证、可维护的能力；目标、对象、规则、约束、样例和反馈源没有表达清楚前，不进入 GSD/CAD/Loop 或代码修改。
+10. **非标问题先建模**：没有标准答案、跨角色、跨系统或目标含糊的问题，先定义问题主体、影响面、假设、证据、最小实验和决策标准，再分派产品、架构或 Agent。
+11. **反馈闭环强于生成速度**：测试通过、覆盖率提高和 bug 下降都只是证据，不是事实本身；高风险 Loop 必须回到业务不变量、验证簇、独立 Checker、预算和停止条件。
 
 ## 使用时机
 
@@ -47,6 +50,8 @@ description: |
 - 用户要求 PRD / 系分预审、MAGI 三角色合议、AI 预扫描、最终文档准出、Spec/SDD 模板最佳实践、AI 代码交付闭环或质量 / 测试门禁。
 - 用户要求代码库级阅读分析、设计-代码对齐、变更可理解性、影响可视化、Gemini CLI / AgentRC / Understand Anything 等工具准入。
 - 用户要求提炼顶层原则、处事方式、Skill 类型拆分、owner 路由、知识回流或授权学习。
+- 用户要求“进入知识表达门禁”“意图可执行性检查”“非标问题模式”“实际项目编码 Loop”“按 Loop 跑真实代码任务”。
+- 用户要求反馈闭环成熟度、L2/L3/L4/L5、验证簇、不变量验证、生产重放、变异 / 对抗测试，或质疑“测试通过、覆盖率提升是否足够证明系统没变坏”。
 
 ## 路由边界
 
@@ -83,6 +88,8 @@ Owner / 下一步分派：
 ## 快速落地入口
 
 - **Round 0 补齐**：只有想法、文章观点、口头需求或原型截图时，先输出问题、证据、owner、风险、验收和待确认清单。
+- **知识表达 / 意图可执行门禁模式**：把模糊想法、文章观点、口头目标或 AI 生成草稿转成 Knowledge-to-Execution Card；至少确认目标、业务对象、状态 / 规则、约束 / 非目标、验收样例、反馈源和缺口 owner，缺失时不进入 GSD/CAD/Loop 或编码。
+- **非标问题模式**：面对无标准答案、跨团队、跨系统、用户只给方向或老板 / 客户说不清的任务，先输出问题定义、影响面、已知事实、关键不确定性、研究 / 证据路径、候选方案、最小可逆实验、决策标准和停止条件，再路由产品专家或架构师。
 - **交接包模式**：已有业务目标、对象、规则或 AI 原型/eval 时，输出产品上下文包、PRD-Lite 缺口和交给架构师的最小材料。
 - **三卡交接模式**：三卡交接协议由本技能编排；跨产品专家、AI Native、架构师时，先输出产品上下文交接卡（Product Context Card）、工程执行交接卡（Engineering Handoff Card）、生产 Loop 交接卡（Production Loop Card）的缺口、下一 owner 和停止条件；缺任一卡不进入对应执行层。
 - **需求分析协同门禁模式**：输出需求分析结论卡，明确根源需求、产品定义、产品边界、稳定点 / 变化点、边界坐标、上下游分工和进入 PRD / 系分预审 / GSD Round 0 的结论。
@@ -97,11 +104,13 @@ Owner / 下一步分派：
 - **Spec 模板模式 / SDD 生产代码模式 / AI 代码交付闭环模式**：Spec / SDD / OpenSpec 模板最佳实践和 Spec 模板最佳实践由本技能编排；当编码提速没有带来交付体感时进入代码交付闭环模式，输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流、一次通过率 / 返工率 / 缺陷密度等指标。
 - **Skill 类型路由模式 / 知识回流模式**：Skill 类型与 owner 路由由本技能编排；判断主类型、owner、交接物、验证证据、回流位置，以及是否只需补 reference / fixture / 脚本。
 - **Agent Loop Engineering / Loop-GSD-CAD 协同模式**：输出 Loop 准入、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、生产可用门禁、Plan Grant + Loop 预算绑定和下一 owner；Loop 不等于 Prompt、cron、Goal、Harness、Plan Grant、Execution Grant、测试通过或上线审批，不把 Loop 写成无条件自动授权。
+- **实际项目编码 Loop 模式**：面向真实代码库中的一个 Goal / Wave / Task，输出 Coding Loop Contract，明确代码写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件；具体设计、编码、测试和 CR 仍路由到 `资深架构师`。
+- **反馈闭环成熟度 / 验证簇准入模式**：判断当前是 L2 / L3 / L4 / L5 候选，输出 Verification Cluster Gate；L4 只围绕高风险业务不变量建立验证簇，L5 只能作为目标架构，不写成当前已具备能力。
 - **Goal 组合模式**：Goal 组合由本技能编排；输出 Goal 组合包、Goal 卡、GSD Wave / Goal 映射、状态、预算 / 时间盒、验证证据和停止条件；Goal 不等于 Execution Grant，不自动创建运行时 Goal。
 
 ## 参考路由
 
-- `references/product-to-engineering-lifecycle.md`：产品发现、AI 原型/eval、PRD-Lite、产品上下文包、需求分析协同门禁、问题核心诊断、产品 / 系统 DNA、三卡交接到工程交接。
+- `references/product-to-engineering-lifecycle.md`：产品发现、AI 原型/eval、PRD-Lite、知识表达门禁、非标问题建模、产品上下文包、需求分析协同门禁、问题核心诊断、产品 / 系统 DNA、三卡交接到工程交接。
 - `references/prd-system-design-review.md`：PRD / 系分合议预审、MAGI 三角色、IPD 式互审和决策日志。
 - `references/agentic-engineering-governance.md`：OpenSpec、Superpowers、Harness、权限边界、多 Agent 协作和事实边界。
 - `references/gsd-cad-admission.md`：GSD Round 0、Wave/Atomic Task、CAD 候选、GSD/CAD 授权策略、Execution Grant 缺口和三卡到架构师消费规则。
@@ -109,7 +118,7 @@ Owner / 下一步分派：
 - `references/spec-template-practices.md`：Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、spec-lint、AC 覆盖、漂移检查和五支柱验证。
 - `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness 到最终可交付代码的闭环。
 - `references/goal-composition.md`：GSD + Goal、CAD + Goal、Spec + Goal、Goal 卡、状态机、Ledger、预算 / 时间盒和停止条件。
-- `references/agent-loop-engineering.md`：Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
+- `references/agent-loop-engineering.md`：Agent Loop、实际项目编码 Loop、反馈闭环成熟度、验证簇准入、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
 - `references/verification-review-release.md`：验证矩阵、质量 / 测试门禁、CR、发布、监控、复盘和学习闭环。
 - `references/superpowers-skill-library.md`：`obra/superpowers` 外部 skill 调度矩阵、供应链安全边界和不吸收项。
 - `references/skill-type-owner-routing.md`：Skill 类型与 owner 路由、拆分门禁、产品验证种子、架构侧 Runbook / CI/CD / 质量能力细化和回流验证。
@@ -120,6 +129,7 @@ Owner / 下一步分派：
 按当前任务选择最小产物，不默认全量输出：
 
 - 流程准入结论：当前模式、owner、交接物、验证门禁、停止条件。
+- Knowledge-to-Execution Card、非标问题处理包、Coding Loop Contract、Verification Cluster Gate。
 - GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口、授权策略卡。
 - 三卡交接包：Product Context Card、Engineering Handoff Card、Production Loop Card 的已具备字段、缺口、owner、验证证据和不可替代项。
 - 质量 / 测试门禁、代码库理解结论包、工具准入包、Spec 模板落地包、AI 代码交付闭环报告。
@@ -132,7 +142,10 @@ Owner / 下一步分派：
 - **完整性**：至少覆盖目标、非目标、owner、输入、产出、权限、验证、提交切片、停止条件、交接和残余风险；GSD 输出还必须说明生产可用能力、真实业务入口、验收证据和发布/回滚边界。
 - **授权可执行性**：说明当前是只读、默认低风险授权、GSD + Goal 计划授权、Wave Grant、CAD Grant 还是需显式确认；不得停留在“每个任务都问”或“全部默认通过”两个极端。
 - **Loop 可控性**：说明状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物；生产可用 Loop 还必须说明隔离执行、独立验证、观测审计、人工接管和发布/回滚。
+- **编码 Loop 可用性**：真实项目编码 Loop 必须绑定一个 Goal / Wave / Task，并具备代码写入范围、只读范围、失败测试或验收样例、验证命令、独立 Checker、状态回写位置和提交切片；缺任一关键项只能只读侦察或补上下文。
+- **反馈可信性**：高风险任务不能只用测试绿灯、覆盖率或 AI 生成测试数量证明正确；必须说明业务不变量、验证簇、证据来源、置信度、独立 Checker、预算 / CI 分层和停止条件。
 - **三卡可消费性**：产品事实必须能落到 Product Context Card，工程执行必须能落到 Engineering Handoff Card，生产可用 Loop 必须能落到 Production Loop Card；三卡缺失、混同或互相替代时先补交接，不进入实现、CAD 或自动循环。
+- **知识可执行性**：知识表达必须能落到对象、规则、边界、样例、反馈源和责任 owner；无法落地的观点、口号或未经验证的文章经验只作为待确认输入。
 - **抗幻觉性**：结论、任务、实现建议和工具判断必须有用户目标、来源材料、源码锚点、验收种子或验证证据支撑；无支撑内容必须标为推断、待确认或范围外不做。
 
 ## 红线

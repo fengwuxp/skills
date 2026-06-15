@@ -33,6 +33,7 @@
 | Bug、异常、测试失败或生产现象 | `快速路由表` 中 Bug、生产现象行，`组合场景处理` 中 Bug/TDD、生产现象组合 | 不跳过复现和证据闭环直接重构 |
 | 写测试、补测试或 TDD | `快速路由表` 中测试行，`组合场景处理` 中 DDD/分层架构 + 测试行，再读 `testing.md` | 不以内部实现细节作为测试通过条件 |
 | 图形化、系分、ADR 或生产变更 | `快速路由表` 中图形、系分、选型、上线行，再读对应专项 reference | 不用图或 ADR 掩盖缺少验证的设计 |
+| 非标工程问题 / 无标准答案问题 | `快速路由表` 中非标工程问题行，再读 `architecture.md` 的“1.3 非标工程问题” | 不把复杂问题拆成机械执行清单 |
 | 外部依赖、AI 协作或多 Agent 推进 | `快速路由表` 中外部 API、AI 编码协作行，再读 `workflow.md`、`ai-assisted-engineering.md`；中大型项目继续读 `ai-large-project-orchestration.md` | 不凭模型记忆处理时效性外部规则，不照搬外部工作流命令 |
 
 ## 使用顺序
@@ -48,6 +49,7 @@
 | 场景 | 必读参考 | 输出重点 |
 | --- | --- | --- |
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
+| 非标工程问题 / 无标准答案 / 跨模块跨团队 / 复杂遗留问题 / AI 编码失控 | `architecture.md`、`adr-and-tradeoff.md`、`workflow.md`；涉及测试或编码时加读 `testing.md`，涉及生产时加读 `production-readiness.md` | 先输出非标工程问题卡：问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、决策标准和停止条件；不直接进入大范围改造。 |
 | PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构 | `product-design.md`、`architecture.md`、`system-analysis-design.md`；AI Native 端到端产品到研发流程先由 `ai-native-engineering-workflow` 编排，产品侧缺口回 `产品架构专家` 的 `ai-native-product-context.md`；涉及验收种子、TDD 或测试计划时加读 `testing.md` | 先校准产品目标、核心业务用例、对象状态、规则矩阵、验收场景和风险 owner；架构师只消费已确认的 Hardened Candidate 或 AI Native 交接结论，再把业务 driver 转成服务/模块边界、质量属性场景、接口、数据、测试、监控、发布和取舍；需要 TDD 时输出业务驱动验证到测试资产映射。 |
 | 架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物 | `diagram-output.md`，按场景再读 `architecture.md`、`system-analysis-design.md`、`production-readiness.md` 或专项 reference | 图形目标、图形类型、工程落点、默认 SVG 输出、验证动作和剩余风险；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出。 |
 | 陌生代码库接手 / 项目现状分析 / 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先做项目清单、技术指纹、入口路径、目录语义、配置、测试、数据和运行链路侦察，再迁移通用原则，不强套 Java/Spring 规则。 |
@@ -75,6 +77,7 @@
 
 - **系分 + 生产变更**：先用 `system-analysis-design.md` 固定背景、目标、边界和详细设计，再用 `production-readiness.md` 检查 SLO、容量、灰度、监控、应急和回滚。
 - **PRD/产品方案 + 系统设计**：先用 `product-design.md` 检查目标、核心业务用例、对象状态、规则、数据和验收是否足以支撑工程落地；缺口回到产品专家补齐，已确认内容再进入 `architecture.md` 和 `system-analysis-design.md`。
+- **非标工程问题 + 编码任务**：先用 `architecture.md` 的“1.3 非标工程问题”固定问题机制、影响面、候选方案、最小可逆实验和验证命令；需要代码时再进入 `workflow.md`、`testing.md` 和项目本地规范，优先构造失败测试或可复现反馈环。
 - **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，说明新增节点、通信边、隐藏状态、观测入口和退出策略，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
 - **外部 API / SDK / 云产品版本变化**：先用 `workflow.md` 的外部知识时效性门禁核验权威来源、版本、生效/发布日期和本地实际依赖，再用 `adr-and-tradeoff.md`、`production-readiness.md` 和 `negative-constraints.md` 检查兼容、安全、成本、上线和回滚。
 - **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
@@ -97,6 +100,7 @@
 - 用户要“接手/分析陌生代码库”：输出代码库定位、入口、核心模块、关键链路、本地验证、主要风险和下一步，不自动创建新文档。
 - 用户要“架构坏味/深度质量扫描”：在普通 Review 后输出坏味、证据、风险和最小整改步骤，避免无边界重构。
 - 用户要“设计”：输出架构方案或系分结构，必须包含目标、非目标、边界、数据、可靠性、安全、验证和发布。
+- 用户要“处理非标工程问题 / 无标准答案问题”：读取 `architecture.md`，先输出非标工程问题卡和最小可逆实验；只有验证路径、写入边界和风险 owner 清楚后，才进入实现、重构、TDD 或 GSD/CAD。
 - 用户要“画图 / 图形化产物”：读取 `diagram-output.md`，先说明图形目标、图形类型和工程落点；正式图形化交付默认只生成 SVG 并报告验证结论；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式只在用户明确提出时生成。
 - 用户要“写测试 / 补测试 / 加测试 / 按 TDD 推进”：先输出或执行测试选择，说明测试层级、真实链路、替身边界、断言事实和验证命令；TDD 场景先构造失败测试，再推进实现。
 - 用户要“修 Bug / 查异常 / 诊断失败”：先输出或执行复现与证据计划，说明反馈环、假设、插桩边界、最小修复和回归验证；生产故障补事实时间线和 5-Why 复盘草稿。
