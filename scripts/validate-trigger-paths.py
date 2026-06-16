@@ -591,6 +591,7 @@ check(
             "设计 Loop，不是把认知外包给 Agent",
             "人必须能解释目标、当前状态、关键变更、证据链、残余风险和停止理由",
             "实际项目编码 Loop",
+            "AI 注释去噪 / 可理解性门禁",
             "证据边界：事实 / 推断 / 待确认 / 范围外不做",
             "内存版业务 Service",
             "不做无根据的猜测、推导、补全、脑补式需求扩张或超出用户目标的实现",
@@ -633,6 +634,9 @@ check(
             "一次通过率",
             "返工率",
             "缺陷密度",
+            "AI 注释去噪与可读性门禁",
+            "注释是否复述显而易见的 What / How",
+            "优先进入测试资产",
         ],
     )
     and has_all(
@@ -2469,6 +2473,42 @@ check(
     ),
 )
 check(
+    "senior skill and references guard comment readability",
+    has_all(
+        senior_skill,
+        [
+            "不得用注释替代可读性重构",
+            "命名、方法抽取、常量/枚举、强类型和值对象、测试表达意图",
+            "Why not",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "注释说明“为什么这样做、为什么不那样做、边界是什么、风险是什么”",
+            "不得用注释掩盖弱命名、长方法、魔法值、弱类型或隐式契约",
+            "AI 生成代码交付前必须做注释去噪",
+            "测试用例名、Given/When/Then 结构和关键断言可以作为可执行文档",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "注释与可读性重构",
+            "注释替代表达",
+            "AI 注释噪声",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "编写高质量代码注释与可读性重构指南",
+            "注释只补充业务约束、设计取舍、外部规则、历史坑点和 Why not",
+            "不得用注释掩盖弱命名、长方法、魔法值、弱类型、隐式契约或缺测试",
+        ],
+    ),
+)
+check(
     "senior metadata triggers diagram output",
     all(
         term in frontmatter(senior_skill)
@@ -2521,6 +2561,40 @@ check(
             "AI 生成和低成本原型场景",
             "避免无效功能噪声",
             "先控噪声再扩展",
+        ],
+    ),
+)
+check(
+    "product expert hands off domain naming to reduce comment debt",
+    has_all(
+        product_skill,
+        [
+            "领域术语",
+            "产品上下文交接卡（Product Context Card）",
+        ],
+    )
+    and has_all(
+        product_ai_native_context,
+        [
+            "领域术语 / 业务命名建议",
+            "下游建模、代码命名、测试命名和规则追踪",
+            "减少工程注释债",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "领域术语、规则名、状态名和异常名",
+            "不要让研发只能用注释解释未命名的业务规则",
+            "领域命名",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "领域命名与工程可读性",
+            "编写高质量代码注释与可读性重构指南",
+            "减少下游工程只能靠注释解释未命名业务规则的注释债",
         ],
     ),
 )

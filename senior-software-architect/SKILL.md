@@ -65,6 +65,7 @@ description: |
 8. **【强制】不得引入无主依赖** – 新增依赖、starter、中间件、代码生成器或运行时代理前必须说明必要性、替代方案、版本风险和维护责任。
 9. **【强制】Java/Spring/Wind 模型与持久化约规不可绕过** – 对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity；模型转换优先使用 MapStruct；查询禁止 `LambdaQueryWrapper`，使用 MyBatis Flex `XxxRefs`；写库默认使用 selective 方法；不得擅自修改或删除有明确用途的注释代码。
 10. **【强制】业务代码不得用内存版 Service 冒充生产实现** – 除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外，生产源码路径不得出现 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或只在进程内保留状态的应用服务来承载真实业务能力。
+11. **【强制】不得用注释替代可读性重构** – AI 生成或人工代码应优先通过命名、方法抽取、常量/枚举、强类型和值对象、测试表达意图；注释只补充代码无法自表达的业务约束、设计取舍、外部规则、历史坑点或 Why not。
 
 ## 测试红线
 

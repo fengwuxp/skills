@@ -81,6 +81,7 @@
 - 产品合议评审与多 Agent PRD：检索“产品大师”“MAGI”“多 Agent”“PM Reviewer Controller”“合议评审”“AI 生成 PRD”。
 - PRD 文档质量治理：检索“高质量需求文档”“PRD/MRD/BRD”“版本管理”“评审机制”。
 - 需求评审 AI 预扫描：检索“完整不等于可测”“需求评审”“完整性”“一致性”“可测试性”“二义性”“AI 预扫描”。
+- 领域命名与工程可读性：检索“代码注释”“可读性重构”“领域术语”“业务命名”“注释债”。
 - 通用产品架构与业务驱动验证：检索“Impact Mapping”“BDD”“业务目标”“验收场景”“产品到架构交接”。
 - PRD 模板与发布验证：检索“Atlassian PRD”“assumptions”“success metrics”“release criteria”“bidirectional traceability”。
 - 官方规则与监管：检索“Nacha”“Visa Core Rules”“Mastercard Rules”“监管来源”，并继续回到 `regulatory-baseline.md` 核验。
@@ -144,6 +145,7 @@
 - 微信公众号文章《架构师必备--让AI画架构图》：`https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg`。作者/账号为 `方兴集`，发布时间为 2026-04-30 16:28:31；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（本机 Chrome headless）加载取证但返回异常。公开内容用于参考 AI + draw.io 的自然语言生成、文档转图、图像参考、版本历史、可编辑 draw.io XML 和本地模型/凭据边界；不复制原文示例图、提示词、项目安装说明、工具宣传语或作者表达，也不把具体工具能力写成产品图质量结论。
 - 微信公众号文章《架构30：架构思维：需求分析》：`https://mp.weixin.qq.com/s/B8Rap_MmAKmVN3f7eAnvCw`。作者字段为 `开心就好TF`，页面时间字段为 2026-06-07 09:34:00 Asia/Shanghai；2026-06-09 `web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文（发布时间取页面时间字段）。公开内容用于参考 `product-architecture-methodology.md` 与 `product-design-and-prd.md` 中根源需求、产品定义、产品边界、上下游分工、稳定点 / 变化点和边界坐标门禁；不复制原文、案例、作者表达、标题传播话术或时间投入比例，也不把文章观点写成组织制度、项目事实或执行授权。
 - 微信公众号文章《[013] 标准不是摆设——需求标准、设计标准、编码标准怎么写》：`https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw`；《[014] 85%返工都是需求的锅——为啥说需求是软件的根本》：`https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q`。作者/账号字段为 `AIIIIlIIII`，页面时间字段分别为 2026-05-23 07:24:00 与 2026-05-26 06:21:00 Asia/Shanghai；2026-06-09 首篇 `web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后两篇均通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。公开内容用于参考 `product-prd-quality-gates.md` 与 `product-design-and-prd.md` 的需求条目标准、图文追踪、系统/外部需求未确认不下钻、衍生需求、可验证性和可追踪性门禁；不复制原文、适航/DO-178C 语境、标题比例、作者表达、案例或标准条文，也不把文章观点写成产品团队制度、合规结论或执行授权。
+- 微信公众号文章《编写高质量代码注释与可读性重构指南》：`https://mp.weixin.qq.com/s/oDZRKB4rNlIrgbuP-qDbDA`。作者字段为 `techfightyang`，账号字段为 `秋之筠的技术哲思`，页面 `ct` 字段转换为 2026-06-13 21:14:40 Asia/Shanghai；2026-06-16 `web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。公开内容用于参考产品上下文交接中的领域术语、业务命名建议、规则名、状态名、异常名和验收种子，减少下游工程只能靠注释解释未命名业务规则的注释债；不复制原文、代码示例、表格、作者表达或标题传播话术，也不把产品命名建议替代架构师模块/类/接口设计、代码 CR 或验证证据。
 - 微信公众号文章《需求分析和设计活动关键要点总结》：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`。作者为 `常识`，公众号为 `软件需求分析和设计`，发布时间为 2026-05-26 10:29:23；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，并已尝试 Playwright 等价浏览器（本机 Chrome headless）加载取证。公开内容用于参考功能定义、功能分配追溯、需求分析外部视角和设计内部视角的分工；不复制原文中的 GJB 章节表述、推荐书目、课程机构推荐或作者表达，也不把军标/适航语境写成通用产品强制流程。
 - 微信公众号文章《清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484523&idx=1&sn=bab6c18e89728feaf921bccbc5cb88d3`。公开内容用于参考外卡/跨境收单清算文件延迟排查，覆盖交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject、批次 ID、三段链路归因和资金链路事故升级信号。
 - 微信公众号文章《外卡收单钱收到了，战争才刚开始》：`https://mp.weixin.qq.com/s?__biz=MzI3ODQ1MjQwOA==&mid=2247484517&idx=1&sn=a171eb833dc25e6e83be75c407ad69ff`。公开内容用于参考外卡收单争议治理，覆盖 Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration 链路、卡争议与非卡争议分轨、争议率/CB 率红线、止血/组证/representment 决策和反馈回流；Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准。
@@ -211,6 +213,7 @@
 ## 提炼边界
 
 - 可以使用公开文章主题、通用支付概念和行业方法，整理成原创工作流、清单和模板。
+- 可以吸收领域术语、业务命名、规则名、状态名、异常名和验收种子对工程可读性的帮助；不得让产品专家替代架构师做模块、类、接口或代码级 Review 判断。
 - 不复制文章正文、付费课程内容、书籍章节、原图、课件、原型或专有案例。
 - 不声称技能代表作者本人观点；当用户要求“陈天宇宙怎么说”时，应改为“公开资料中常见的提炼是……”。
 - 对当前不可复核、已删除或只剩索引页的文章，不得继续作为已吸收来源；相关能力只能按通用方法、项目事实或其他可核验来源表达，并标明待核验。

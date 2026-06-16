@@ -151,6 +151,7 @@ Review 输出要说明真实后果，不只写“建议优化”。
 
 ## Review 问题模式
 
+- **注释与可读性重构**：Review 注释前先问能否通过命名、抽方法、常量/枚举、值对象、参数对象或测试名消除解释；好注释解释 Why / Why not，坏注释复述 What / How；删除或改写注释前先判断是否承载历史决策、兼容背景、临时降级、迁移参考或用户要求保留的信息。
 - **业务规则错层**：规则写在 Controller、Converter、Mapper、Job 或工具类中。
 - **贫血用例**：ApplicationService 只搬运数据，领域规则散落在多个私有方法和 if/else 中。
 - **DDD 战略缺失**：代码堆满 Aggregate、Entity、ValueObject 等名词，但没有通用语言、限界上下文、上下文映射和防腐层，业务人员说的概念在代码里找不到。
@@ -159,6 +160,7 @@ Review 输出要说明真实后果，不只写“建议优化”。
 - **隐式副作用**：看似查询的方法实际修改状态、发消息、调用外部系统或写审计。
 - **转换黑盒**：MapStruct、BeanUtils 或反射拷贝掩盖字段语义差异。
 - **伪复用**：为 DTO 构建、一行包装或偶发重复提取公有方法/工具类，导致调用链变深、语义变弱。
+- **注释替代表达 / AI 注释噪声**：代码依赖大段注释才能理解业务意图，或 AI 生成大量复述代码的步骤注释；先做可读性重构，再保留必要 Why 注释。
 - **原则误用**：用 DRY 强行抽象不同业务知识，用 KISS 压缩成难懂表达，用 YAGNI 拒绝必要边界，用 Boy Scout Rule 混入大范围重构。
 - **伪 Clean 分层**：目录名看似 domain/usecase/adapter，但内层仍 import Controller、ORM Entity、Mapper、SDK 或框架配置。
 - **端口倒置失败**：Use Case 依赖具体 Repository、Mapper、HTTP Client 或 SDK，端口定义在外层导致核心规则被实现细节牵引。
