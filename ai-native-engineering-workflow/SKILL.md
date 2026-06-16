@@ -53,6 +53,7 @@ description: |
 - 用户要求 PRD / 系分预审、MAGI 三角色合议、AI 预扫描、最终文档准出、Spec/SDD 模板最佳实践、AI 代码交付闭环或质量 / 测试门禁。
 - 用户要求代码库级阅读分析、设计-代码对齐、变更可理解性、影响可视化、Gemini CLI / AgentRC / Understand Anything 等工具准入。
 - 用户要求提炼顶层原则、处事方式、Skill 类型拆分、owner 路由、知识回流或授权学习。
+- 用户要求把 Loop 取舍校准、Wisdom Lens、huaxia-wisdom、东方智慧、东方判断层、阴阳平衡、中庸之道、先为不可胜、庖丁解牛、循名责实、无为而治、每日三省、知行合一或一张一弛用于 AI Native Loop 调度判断。
 - 用户要求“进入知识表达门禁”“意图可执行性检查”“非标问题模式”“实际项目编码 Loop”“按 Loop 跑真实代码任务”。
 - 用户要求反馈闭环成熟度、L2/L3/L4/L5、验证簇、不变量验证、生产重放、变异 / 对抗测试，或质疑“测试通过、覆盖率提升是否足够证明系统没变坏”。
 
@@ -117,6 +118,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 - **Spec 模板模式 / SDD 生产代码模式 / AI 代码交付闭环模式**：Spec / SDD / OpenSpec 模板最佳实践和 Spec 模板最佳实践由本技能编排；当编码提速没有带来交付体感时进入代码交付闭环模式，输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流、一次通过率 / 返工率 / 缺陷密度等指标。
 - **Skill 类型路由模式 / 知识回流模式**：Skill 类型与 owner 路由由本技能编排；判断主类型、owner、交接物、验证证据、回流位置，以及是否只需补 reference / fixture / 脚本。
 - **Agent Loop Engineering**：输出 Loop 准入、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、生产可用门禁、Plan Grant + Loop 预算绑定和下一 owner；强调工程师负责设计 Loop 和审查关键结果，不只是继续提示 AI；Loop 不等于 Prompt、cron、Goal、Harness、Plan Grant、Execution Grant、测试通过或上线审批，不把 Loop 写成无条件自动授权。
+- **Loop 取舍校准 / Wisdom Lens**：在 Loop 准入、GSD Wave 拆解、Grant 授权粒度、执行核验和复盘回流中，借用 `huaxia-wisdom` 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏和反偏判断；“东方判断层”只作为触发别名。默认只输出工程化判断卡，不改成老祖宗口吻，不替代事实、证据、测试、CR、授权或上线审批。
 - **实际项目编码 Loop**：面向真实代码库中的一个 Goal / Wave / Task，输出 Coding Loop Contract，明确代码写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件；具体设计、编码、测试和 CR 仍路由到 `资深架构师`。
 - **反馈闭环成熟度 / 验证簇准入**：判断当前是 L2 / L3 / L4 / L5 候选，输出 Verification Cluster Gate；L4 只围绕高风险业务不变量建立验证簇，L5 只能作为目标架构，不写成当前已具备能力。
 - **Goal 组合层**：Goal 组合由本技能编排；输出 Goal 组合包、Goal 卡、GSD Wave / Goal 映射、状态、预算 / 时间盒、验证证据和停止条件；Goal 不等于 Execution Grant，不自动创建运行时 Goal。
@@ -132,6 +134,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 - `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness 到最终可交付代码的闭环。
 - `references/goal-composition.md`：Loop 目标层、Goal 卡、状态机、Ledger、预算 / 时间盒、GSD / CAD / Spec 关联和停止条件。
 - `references/agent-loop-engineering.md`：统一 Loop Contract、四类 Loop Profile、实际项目编码 Loop、反馈闭环成熟度、验证簇准入、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
+- `references/wisdom-loop-lens.md`：huaxia-wisdom、Loop 取舍校准、东方判断层触发别名、阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛在 Loop 准入、拆解、执行核验、授权纠偏和复盘回流中的工程化映射。
 - `references/verification-review-release.md`：验证矩阵、质量 / 测试门禁、CR、发布、监控、复盘和学习闭环。
 - `references/superpowers-skill-library.md`：`obra/superpowers` 外部 skill 调度矩阵、供应链安全边界和不吸收项。
 - `references/skill-type-owner-routing.md`：Skill 类型与 owner 路由、拆分门禁、产品验证种子、架构侧 Runbook / CI/CD / 质量能力细化和回流验证。
@@ -158,6 +161,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 - **理解保持性**：Loop 输出必须让人能复述目标、状态、改动、证据、风险和下一步；不得把 AI 生成、AI Review、AI 测试和自动化执行叠加成无人理解的认知外包链。
 - **编码 Loop 可用性**：真实项目编码 Loop 必须绑定一个 Goal / Wave / Task，并具备代码写入范围、只读范围、失败测试或验收样例、验证命令、独立 Checker、状态回写位置和提交切片；缺任一关键项只能只读侦察或补上下文。
 - **反馈可信性**：高风险任务不能只用测试绿灯、覆盖率或 AI 生成测试数量证明正确；必须说明业务不变量、验证簇、证据来源、置信度、独立 Checker、预算 / CI 分层和停止条件。
+- **Loop 取舍校准边界**：只作为取舍、止损、拆解、节奏和复盘的辅助判断镜片；不得替代来源事实、源码锚点、测试结果、CR 结论、Execution Grant、上线审批或专业确认。
 - **三卡可消费性**：产品事实必须能落到 Product Context Card，工程执行必须能落到 Engineering Handoff Card，生产可用 Loop 必须能落到 Production Loop Card；三卡缺失、混同或互相替代时先补交接，不进入实现、CAD 或自动循环。
 - **知识可执行性**：知识表达必须能落到对象、规则、边界、样例、反馈源和责任 owner；无法落地的观点、口号或未经验证的文章经验只作为待确认输入。
 - **抗幻觉性**：结论、任务、实现建议和工具判断必须有用户目标、来源材料、源码锚点、验收种子或验证证据支撑；无支撑内容必须标为推断、待确认或范围外不做。
@@ -174,3 +178,4 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 8. 不把 Codex “替我审批”用于 Git、联网、依赖安装、密钥、生产、部署、不可逆操作或高风险业务变更的自动放行。
 9. 不把 PR 数、执行轮数、自动化次数、Agent 数量或“全程手机审批”当成工程价值；必须回到合并率、返工率、缺陷率、回滚率、Review 成本、用户价值和团队理解程度。
 10. 不让人类只剩“点同意”动作；关键结果必须有人类 owner 能解释为什么做、改了什么、证据在哪里、风险是什么、何时停止或接管。
+11. 不把 `huaxia-wisdom`、东方智慧或任何判断框架写成项目事实、工程证据、默认口吻、默认安装、默认 Git 操作、默认审批或生产授权。

@@ -207,6 +207,7 @@ ai_native_spec_template_practices = "ai-native-engineering-workflow/references/s
 ai_native_code_delivery_closed_loop = "ai-native-engineering-workflow/references/code-delivery-closed-loop.md"
 ai_native_goal_composition = "ai-native-engineering-workflow/references/goal-composition.md"
 ai_native_agent_loop_engineering = "ai-native-engineering-workflow/references/agent-loop-engineering.md"
+ai_native_wisdom_loop_lens = "ai-native-engineering-workflow/references/wisdom-loop-lens.md"
 ai_native_verification_release = "ai-native-engineering-workflow/references/verification-review-release.md"
 ai_native_superpowers_library = "ai-native-engineering-workflow/references/superpowers-skill-library.md"
 ai_native_skill_type_owner_routing = "ai-native-engineering-workflow/references/skill-type-owner-routing.md"
@@ -241,6 +242,20 @@ ai_native_terms = [
     "Agent 闭环工程",
     "生产可用 Loop",
     "生产可用门禁",
+    "Loop 取舍校准",
+    "东方判断层",
+    "Wisdom Lens",
+    "huaxia-wisdom",
+    "东方智慧",
+    "阴阳平衡",
+    "先为不可胜",
+    "庖丁解牛",
+    "中庸之道",
+    "循名责实",
+    "无为而治",
+    "每日三省",
+    "知行合一",
+    "一张一弛",
     "知识表达",
     "意图可执行",
     "Knowledge-to-Execution Card",
@@ -416,6 +431,22 @@ ai_native_terms = [
     "数据分析",
     "基础设施操作",
 ]
+wisdom_lens_terms = [
+    "Loop 取舍校准",
+    "东方判断层",
+    "Wisdom Lens",
+    "huaxia-wisdom",
+    "东方智慧",
+    "阴阳平衡",
+    "先为不可胜",
+    "庖丁解牛",
+    "中庸之道",
+    "循名责实",
+    "无为而治",
+    "每日三省",
+    "知行合一",
+    "一张一弛",
+]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
 product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 payment_terms = [
@@ -496,6 +527,7 @@ reference_headers = [
     ai_native_code_delivery_closed_loop,
     ai_native_goal_composition,
     ai_native_agent_loop_engineering,
+    ai_native_wisdom_loop_lens,
     ai_native_verification_release,
     ai_native_superpowers_library,
     ai_native_skill_type_owner_routing,
@@ -574,6 +606,7 @@ check(
             "references/goal-composition.md",
             "references/verification-review-release.md",
             "references/superpowers-skill-library.md",
+            "references/wisdom-loop-lens.md",
             "references/skill-type-owner-routing.md",
             "references/source-map.md",
         ],
@@ -622,6 +655,54 @@ check(
             "产品边界",
             "需求 / 设计 / 编码标准门禁",
             "需求基线稳定性",
+        ],
+    ),
+)
+check(
+    "ai-native workflow exposes wisdom lens for Loop judgment",
+    has_reference_header(ai_native_wisdom_loop_lens)
+    and has_task_reading_index(ai_native_wisdom_loop_lens)
+    and has_all(
+        ai_native_workflow_skill,
+        [
+            "Loop 取舍校准 / Wisdom Lens",
+            "references/wisdom-loop-lens.md",
+            "huaxia-wisdom",
+            "阴阳平衡",
+            "先为不可胜",
+            "庖丁解牛",
+            "循名责实",
+            "不替代事实、证据、测试、CR、授权或上线审批",
+        ],
+    )
+    and has_all(
+        ai_native_wisdom_loop_lens,
+        [
+            "Wisdom Lens Card",
+            "准入前",
+            "拆解时",
+            "执行中",
+            "复盘后",
+            "Loop Contract、Grant、Verification 和 Stop/Handoff",
+            "不把传统智慧框架当作项目事实、合规结论、架构批准、Execution Grant、测试通过或生产审批",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "Loop 取舍校准 / Wisdom Lens",
+            "用 Loop 取舍校准增强 AI Native Loop",
+            "不要替代证据、测试、CR、授权或上线审批",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "Gitee 仓库 `aiami/huaxia-wisdom`",
+            "eef49d54e6266b1afc568ef591a6a2d4abd5ad8e",
+            "Wisdom Lens",
+            "不复制原文、示例、口吻或经典表达",
+            "不把传统智慧框架写成事实证据、项目制度、Execution Grant、测试通过、CR 结论、Git 授权或上线审批",
         ],
     ),
 )
@@ -3073,6 +3154,21 @@ check(
             "superpowers-skill-library.md",
             "不复制或运行外部脚本、hooks、插件 manifest、package 脚本",
             "不把外部默认文档路径、自动提交、Git 推送、worktree、subagent 连续执行要求写成本仓库默认行为",
+        ],
+    ),
+)
+check(
+    "README records huaxia wisdom source boundary",
+    has_all(
+        "README.md",
+        [
+            "aiami/huaxia-wisdom",
+            "Loop 取舍校准 / Wisdom Lens",
+            "Loop 准入、GSD 拆解、执行核验、授权纠偏和复盘回流",
+            "2026-06-16",
+            "eef49d54e6266b1afc568ef591a6a2d4abd5ad8e",
+            "不复制原文、示例、口吻或经典表达",
+            "不把传统智慧框架写成事实证据、项目制度、Execution Grant、测试通过、CR 结论、Git 授权或上线审批",
         ],
     ),
 )
@@ -8263,6 +8359,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "agent-loop-engineering.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native wisdom lens for loop scheduling",
+        prompt="用 Loop 取舍校准增强 AI Native Loop：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏和停止判断；不要替代事实、测试、CR、授权或上线审批",
+        routes={"ai-native", "wisdom-loop-lens.md", "agent-loop-engineering.md", "gsd-cad-admission.md", "verification-review-release.md", "source-map.md"},
+    ),
+    RouteFixture(
         name="AI Native three card handoff protocol",
         prompt="进入三卡交接：产品专家输出 Product Context Card 和验收种子，AI Native 输出 Engineering Handoff Card，生产可用 Loop 再补 Production Loop Card，缺任一卡都不要进入实现、CAD 或自动 Loop",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "gsd-cad-admission.md", "agent-loop-engineering.md", "verification-review-release.md", "product", "product-scenario-routing.md"},
@@ -8622,6 +8723,13 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("goal-composition.md")
             if contains_any(prompt, ["交付", "代码", "CR", "测试", "失败测试", "TDD", "Spec", "回写", "返工", "缺陷", "验证", "验证命令", "状态回写", "生产可用", "能上线", "发布回滚", "发布/回滚", "观测审计", "人工接管"]):
                 route.add("code-delivery-closed-loop.md")
+        if contains_any(prompt, wisdom_lens_terms):
+            route.add("wisdom-loop-lens.md")
+            route.add("agent-loop-engineering.md")
+            route.add("verification-review-release.md")
+            route.add("source-map.md")
+            if contains_any(prompt, ["GSD", "CAD", "Grant", "授权", "拆解", "Wave", "Atomic Task", "Execution Grant", "执行核验"]):
+                route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "事实来源", "系统 DNA", "不变量", "状态流转", "结构化契约", "正例 / 反例", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
         if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚"]):
@@ -8793,6 +8901,7 @@ for case_id in [
     "ai-native-should-gsd-goal-composition",
     "ai-native-should-agent-loop-engineering",
     "ai-native-should-design-engineering-loop-not-prompting",
+    "ai-native-should-wisdom-lens-loop-scheduling",
     "ai-native-should-review-ai-coding-process",
     "ai-native-should-code-delivery-closed-loop",
     "ai-native-should-fact-boundary-check",
@@ -8993,6 +9102,28 @@ expected_handling_has(
         "团队理解程度",
         "不能让人类只剩点同意",
         "人类 owner 能解释目标、状态、关键变更、证据、残余风险和停止理由",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-wisdom-lens-loop-scheduling",
+    (
+        "Loop 取舍校准 / Wisdom Lens 模式",
+        "wisdom-loop-lens",
+        "Wisdom Lens Card",
+        "触发原因",
+        "Loop 阶段",
+        "推荐框架",
+        "反偏问题",
+        "底线问题",
+        "证据要求",
+        "回写位置",
+        "不替代项",
+        "准入前用阴阳平衡和先为不可胜",
+        "拆解时用庖丁解牛和中庸之道",
+        "执行中用循名责实和无为而治",
+        "复盘后用每日三省、知行合一和一张一弛",
+        "不能替代事实、测试、CR、Execution Grant、上线审批或专业确认",
     ),
 )
 

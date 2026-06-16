@@ -37,6 +37,7 @@
 
 - 产品语义 / PRD / Backlog / 验收：用 `产品架构专家`，先把用户、主体、目标、对象、流程、规则、验收和待确认项讲清楚。
 - 产研协同 / GSD / CAD / Goal / Spec / Harness：用 `AI Native Engineering Loop`，它负责 Loop Profile、owner、顺序、交接物、门禁、授权策略和停止条件；GSD/CAD/Goal 是内部层，不替代正文产物或源码实现。
+- Loop 取舍校准 / Wisdom Lens：只在 AI Native Loop 准入、GSD 拆解、授权粒度、执行核验或复盘回流需要取舍、止损、节奏和反偏判断时使用；默认不改成老祖宗口吻，不替代事实、测试、CR、授权或上线审批。
 - 系分 / 架构 / 代码 / Bug / 测试 / CR / 发布：用 `资深架构师`，直接进入工程事实、源码锚点、验证命令和生产风险。
 - Java Service 脚手架：只有 DDL、schema、Java 类或字段表格齐全时，才用 `java-service-code-generator`；业务语义和表设计仍需先确认。
 - 图形化交付：产品语义图用产品专家，工程架构图用架构师；复杂可编辑架构图、代码库结构转图或架构描述转图先由架构师判断是否使用 Architecture Diagram Generator；复杂视觉续作用 `$fireworks-tech-graph`。正式图形默认 SVG，PNG 仅在明确要求时导出。
@@ -72,6 +73,7 @@
 - `GSD + Goal 按任务计划推进`：作为交付 Loop 的 Goal + GSD 内部层形成 Plan Grant，范围内低风险本地任务按计划推进；Goal 不替代 Execution Grant，Git、联网、生产、密钥、部署和不可逆操作仍需显式授权。
 - `生产可用 Loop 门禁`：检查 Agent Loop 是否有自动化心跳、隔离执行、可复现状态、独立验证、观测审计、人工接管和发布/回滚；能自动跑不等于能上线。
 - `进入实际项目编码 Loop`：把一个真实代码库 Goal / Wave / Task 变成 Read-only scout、RED、Implement、Verify、Checker、状态回写和提交候选；必须有写入范围、失败测试或验收样例、验证命令和独立 Checker。
+- `用 Loop 取舍校准增强 AI Native Loop`：在准入前、拆解时、执行中、复盘后分别用阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏和停止判断；不要替代证据、测试、CR、授权或上线审批。
 - `进入反馈闭环成熟度 / 验证簇门禁`：当测试通过、覆盖率提升或 AI 补测仍不能证明高风险业务没变坏时，围绕业务不变量建立验证簇，输出场景测试、属性 / 变形测试、历史回归、生产重放样本、有限变异 / 对抗检查、置信度、CI 分层和停止条件。
 - `三卡交接`：产品专家给 Product Context Card，AI Native 给 Engineering Handoff Card，生产可用 Loop 再给 Production Loop Card；三卡都不是 Execution Grant、测试通过或上线审批。
 - `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
@@ -120,6 +122,7 @@
 - **从想法推进到可开发方案**：先由 `产品架构专家` 产出 Product Context Card，再由 `AI Native Engineering Loop` 判断进入只读理解、产研交付、验证发布还是知识回流，最后交给 `资深架构师` 做系分、TDD、CR 和验证。
 - **大项目要进入交付 Loop**：用 `AI Native Engineering Loop` 固定真实交付目标、成功标准、GSD Wave、Atomic Task、CAD 候选、Plan Grant、验证证据和停止条件。最佳实践是按阶段形成可验证切片，Git 提交仍需授权；避免让 AI 推进模拟模块、无业务入口 demo 或内存版业务 Service。
 - **需要持续自动推进或后台 Agent**：先做 `生产可用 Loop 门禁`。最佳实践是检查状态载体、隔离执行、Maker / Checker、预算 / 时间盒、独立验证、人工接管、发布 / 回滚和残余风险；能自动跑不等于能上线。
+- **AI Native Loop 出现取舍、止损或节奏问题**：说 `用 Loop 取舍校准增强 AI Native Loop`。最佳实践是只输出 Wisdom Lens Card，说明触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置和下一 owner；不要把传统智慧框架写成事实、测试、CR、Execution Grant 或上线审批。
 - **真实代码任务要用 Loop 推进**：说 `进入实际项目编码 Loop`。最佳实践是先绑定一个 Task ID，明确写入范围、只读范围、失败测试或验收样例、验证命令、Checker 输入、状态回写位置、提交切片和回滚方式；缺这些时只做只读侦察或补上下文。
 - **高风险域要证明没变坏**：说 `进入反馈闭环成熟度 / 验证簇门禁`。最佳实践是先确认 3-5 个业务不变量，再让 AI Native 判断 L2/L3/L4/L5 候选，由架构师把验证簇落到测试、生产重放证据、有限变异 / 对抗检查、置信度和 CI 分层；生产重放只能作为证据，不能反向定义需求。
 - **阅读分析代码库或对齐设计和代码**：代码库级理解、设计-代码对齐、工具准入或知识图谱用 `AI Native 研发流程编排`；单个文件、函数、报错或 PR diff 直接用 `资深架构师`。最佳实践是要求源码锚点、入口路径、影响模块、测试证据和残余风险。
@@ -135,9 +138,9 @@
 
 [AI Native Engineering Loop](./ai-native-engineering-workflow)
 
-- 适合：AI 时代产品到研发编码流程、Agentic Engineering、产品专家到架构师交接、AI 原型 / 评测到 PRD-Lite/OpenSpec/Harness、统一 Loop 准入、GSD/CAD/Goal 内部层、Agent Loop Engineering / `/goal` / `/loop` 准入、Spec/SDD 模板最佳实践、PRD/系分合议预审、AI 代码交付闭环、AI 原生工具协作、Gemini CLI/AgentRC/Understand Anything 等代码理解工具安装与调用准入、设计-代码对齐、代码库知识图谱准入、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、CR 流程门禁、发布复盘和组织职责边界。
+- 适合：AI 时代产品到研发编码流程、Agentic Engineering、产品专家到架构师交接、AI 原型 / 评测到 PRD-Lite/OpenSpec/Harness、统一 Loop 准入、GSD/CAD/Goal 内部层、Agent Loop Engineering / `/goal` / `/loop` 准入、Loop 取舍校准 / Wisdom Lens、Spec/SDD 模板最佳实践、PRD/系分合议预审、AI 代码交付闭环、AI 原生工具协作、Gemini CLI/AgentRC/Understand Anything 等代码理解工具安装与调用准入、设计-代码对齐、代码库知识图谱准入、质量/测试门禁、代码库理解结论包、变更可理解性/影响可视化门禁、验证矩阵、CR 流程门禁、发布复盘和组织职责边界。
 - 边界：可以作为 PRD、Backlog、架构设计、代码 CR、测试、生产变更或 Java Service 代码生成的流程入口，但只负责成熟度、owner、交接物、停止条件和工具边界；具体产物继续分派给产品专家、架构师或代码生成器。
-- 常用说法：“进入 AI Native 交付 Loop”“进入只读理解 Loop”“进入验证发布 Loop”“进入知识回流 Loop”“设计一套 AI 时代产品到研发编码流程”“把产品专家、架构师和 Codex/Claude/Copilot 这类 AI 工具协同起来”“对 PRD 和系分做 MAGI 三角色合议预审”“评审我们的 AI 编码流程是否有 OpenSpec、Harness、验证矩阵和 CR 闭环”“落地 Spec 模板最佳实践”“编码提速了但交付没有体感，做 AI 代码交付闭环评审”“做 GSD + Goal，把目标、成功标准、Wave、CAD 候选、验证证据和停止条件串起来”“进入 Agent Loop Engineering 模式，让 /goal / /loop / auto mode 按状态、反馈、验证和停止条件持续推进”“判断大项目是否进入 GSD Round 0、Wave、Atomic Task 和 CAD 候选”“评估是否安装 Gemini CLI / AgentRC / Understand Anything 阅读代码”“评估代码库知识图谱工具”“用 AI 快速阅读代码库并整理结论包”“对齐设计和代码实现”“AI 生成代码后怎么让团队看懂结构和影响范围”“从 AI 原型到工程化怎么交接”。
+- 常用说法：“进入 AI Native 交付 Loop”“进入只读理解 Loop”“进入验证发布 Loop”“进入知识回流 Loop”“设计一套 AI 时代产品到研发编码流程”“把产品专家、架构师和 Codex/Claude/Copilot 这类 AI 工具协同起来”“用 Loop 取舍校准增强 AI Native Loop”“对 PRD 和系分做 MAGI 三角色合议预审”“评审我们的 AI 编码流程是否有 OpenSpec、Harness、验证矩阵和 CR 闭环”“落地 Spec 模板最佳实践”“编码提速了但交付没有体感，做 AI 代码交付闭环评审”“做 GSD + Goal，把目标、成功标准、Wave、CAD 候选、验证证据和停止条件串起来”“进入 Agent Loop Engineering 模式，让 /goal / /loop / auto mode 按状态、反馈、验证和停止条件持续推进”“判断大项目是否进入 GSD Round 0、Wave、Atomic Task 和 CAD 候选”“评估是否安装 Gemini CLI / AgentRC / Understand Anything 阅读代码”“评估代码库知识图谱工具”“用 AI 快速阅读代码库并整理结论包”“对齐设计和代码实现”“AI 生成代码后怎么让团队看懂结构和影响范围”“从 AI 原型到工程化怎么交接”。
 
 [产品架构专家](./product-architecture-expert)
 
@@ -217,7 +220,7 @@
 
 它承接 AI Native 产品研发流程，但不直接替代 PRD 正文、系分正文、代码实现、测试通过、CR 结论或上线审批；核心职责是把 Goal、State、Plan、Action、Observe、Decide、Verify、Stop/Handoff、owner、交接物、授权策略和验证门禁排成可执行链路。
 
-优先用它的场景是跨角色、跨阶段、跨工具的流程问题：从 AI 原型到 PRD-Lite / OpenSpec / Harness，产品专家和架构师如何接力，大项目如何用 GSD Wave 做计划、用 CAD Atomic 做原子执行、用 Goal 保持目标和状态一致，编码提速如何转成最终代码交付能力，质量 / 测试 / CR / 发布门禁如何闭环，Gemini CLI / AgentRC / Understand Anything 等工具是否允许安装或调用。只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`；只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`。
+优先用它的场景是跨角色、跨阶段、跨工具的流程问题：从 AI 原型到 PRD-Lite / OpenSpec / Harness，产品专家和架构师如何接力，大项目如何用 GSD Wave 做计划、用 CAD Atomic 做原子执行、用 Goal 保持目标和状态一致，编码提速如何转成最终代码交付能力，质量 / 测试 / CR / 发布门禁如何闭环，Gemini CLI / AgentRC / Understand Anything 等工具是否允许安装或调用，以及是否需要用 Loop 取舍校准帮助 Loop 做取舍、止损、拆解和复盘。只写一份 PRD、只做产品方案或 Backlog 决策时，直接用 `产品架构专家`；只做系统设计、代码 CR、Bug、测试或生产变更时，直接用 `资深架构师`。
 
 瘦身后的职责边界：`产品架构专家` 只补产品上下文包、验收种子和产品侧交接条件，不直接判定 GSD/CAD 准入或 Execution Grant；`AI Native Engineering Loop` 负责端到端 Loop 准入、GSD/CAD 内部层准入、授权策略、AI 代码交付闭环、质量/测试门禁、代码库理解结论包和变更可理解性/影响可视化协作位，只编排 GSD Round 0、Wave/Atomic Task 候选、CAD 候选缺口、授权策略缺口、Spec 强度、独立验证证据、CR 减负、知识回流、测试矩阵、验证顺序、CR 前置条件、失败回退、入口路径、源码锚点、结构影响说明和残余风险交接；`资深架构师` 只消费已确认的 AI Native 交接结论，继续做 OpenSpec、Harness、工程编排、CAD 门禁、测试策略、TDD、补测试、源码级 CR 和风险，不在架构师侧重建产品流程。
 
@@ -233,6 +236,7 @@
 - `GSD + Goal 按任务计划推进`：把 Goal 任务计划升级为 Plan Grant，低风险本地任务按计划推进，不再每个任务都停下来等 Execution Grant；默认给提交切片，授权后可按已验证任务做本地 commit。
 - `生产可用 Loop 门禁`：把 Agent Loop 从自动执行候选升级为可生产化门禁，检查状态落盘、隔离执行、Maker / Checker 解耦、观测审计、人工接管、发布/回滚和理解债。
 - `设计工程 Loop`：把“人提示 AI”升级为“人设计循环”，输出 Automations、Worktrees、Skills、Connectors、Sub-agents、Memory、状态载体、反馈源、验证者、停止条件和人类理解检查。
+- `用 Loop 取舍校准增强 AI Native Loop`：只在 Loop 准入、GSD 拆解、授权粒度、执行核验或复盘回流需要额外判断时使用，输出 Wisdom Lens Card；默认不切换成老祖宗口吻，不替代事实、测试、CR、Execution Grant 或上线审批。
 - `做 PRD / 系分合议预审`：用 MAGI 三角色先挑刺，再输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
 - `做 PRD 评审会前预扫描`：产品专家先按完整性、一致性、可测试性、二义性输出疑似问题，AI Native 再把结果接入合议预审和决策日志。
 - `做 GSD/CAD 准入`：判断是否需要 Round 0、Wave/Atomic Task、CAD 候选缺口、授权策略和显式确认缺口。
@@ -252,6 +256,7 @@
 - **Goal 目标层**：说 `GSD + Goal`、`CAD + Goal` 或目标驱动推进时，输出 Goal 卡、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、Goal 状态、预算 / 时间盒、验证证据、提交切片、Plan Grant 判断、授权策略、停止条件、交接节奏和 Ledger 更新；Goal 不等于 Execution Grant，只有 Plan Grant 字段齐备时才推进范围内低风险任务。
 - **GSD/CAD 内部层**：已有产品上下文、OpenSpec 或明确变更目标时，在交付 Loop 内设计 GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口、授权策略、显式确认缺口和验证矩阵草案。
 - **授权策略模式**：用户要求 GSD/CAD 计划内授权、按任务计划推进、自动推进、阶段提交或 Codex “替我审批”时，输出只读 / 计划内低风险执行 / Plan Grant / Wave Grant / CAD Grant / Git 策略 / 显式确认分级；Plan Grant 字段齐备后，范围内低风险本地任务直接推进，Git 提交只有授权后才执行，联网、生产等硬边界仍显式确认。
+- **Loop 取舍校准 / Wisdom Lens 模式**：用户点名 huaxia-wisdom、东方智慧、阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一或一张一弛时，读取 `wisdom-loop-lens.md`，输出触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；它只做判断镜片，不替代 Loop Contract、Grant、Verification、CR 或专业确认。
 - **PRD / 系分预审模式**：PRD、PRD-Lite、OpenSpec 输入、系分、详细设计或 Harness 候选需要正式评审前预审时，按 MAGI 三角色做多视角合议，输出锚点化问题、`ACCEPT/REJECT/PENDING` 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由。
 - **PRD AI 预扫描模式**：PRD 评审会前先由产品专家按完整性、一致性、可测试性、二义性找疑似问题和建议追问，再由 AI Native 接入 `review_task / evaluation_task / reporting_task`，人工 owner 决定采纳、拒绝或待确认。
 - **最终文档准出模式**：PRD、系分、Spec 或 OpenSpec 已经混入讨论过程、迭代草稿、AI 推理轨迹或被拒方案时，先区分当前有效结论与过程资产；正文只保留目标、范围、规则、设计取舍、风险、待确认、验收和必要版本状态，过程内容外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划。
@@ -542,6 +547,7 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - [zjunlp/SkillX](https://github.com/zjunlp/SkillX) 与论文 [SkillX: Automatically Constructing Skill Knowledge Bases for Agents](https://arxiv.org/abs/2604.04804)：作为从 Agent 执行轨迹提炼规划技能、功能技能、原子技能，迭代精炼、合并过滤和探索扩展技能知识库的公开参考来源。本仓库只吸收“经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证”的方法，不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码；任何长期学习仍必须遵守 `AGENTS.md` 的本地协作学习授权和隐私边界。
 - 微信文章 [《【译】别再手动写 Prompt 了，去写 Loop——但 Loop 到底是什么？》](https://mp.weixin.qq.com/s/cxRvqwWW4Yo4UmufAsXEEA)：作为 `ai-native-engineering-workflow` 的 Agent Loop Engineering 参考来源，用于 Loop 准入、GSD + Goal + Loop、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、反馈自检和 Skill 作为复用单位；2026-06-11 已通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文，页面时间字段为 2026-06-09 21:13:56 Asia/Shanghai。本仓库只吸收可迁移方法，不复制原文、推文、图片、成本数字、工具宣传、作者表达、命令示例或标题传播话术，也不把 `/goal`、`/loop`、auto mode、后台 Agent 或任一工具能力写成当前会话默认能力、最新事实、执行授权或上线审批。
 - 微信文章 [《Loop Engineering（Agent 闭环工程）》](https://mp.weixin.qq.com/s/mbjdMlSTqQG1EptOGoo6og)：作为 `ai-native-engineering-workflow` 的生产可用 Loop 门禁参考来源，用于自动化心跳、隔离 worktree、Skill 上下文、连接器权限、Maker / Checker 解耦、状态持久化、质量卡口、成本预算、观测审计、人工接管、发布/回滚和理解债控制；2026-06-12 已通过移动端微信 UA 公开 HTML 读取标题、作者、账号、页面时间字段和正文。本仓库只吸收可迁移门禁，不复制原文、工具宣传、示例 Prompt 或命令，也不把 `/goal`、`/loop`、Automations、Worktrees、Connectors、Sub-agents 或任何当前工具能力写成默认可用、默认授权、测试通过、CR 结论、合并判断或上线审批。
+- Gitee 仓库 [aiami/huaxia-wisdom](https://gitee.com/aiami/huaxia-wisdom.git)：作为 `ai-native-engineering-workflow` 的 Loop 取舍校准 / Wisdom Lens 参考来源，用于 Loop 准入、GSD 拆解、执行核验、授权纠偏和复盘回流中的取舍、止损、节奏和反偏判断。2026-06-16 已安装到本地 Codex 技能目录并读取 `SKILL.md` 与各 reference，安装时 HEAD 为 `eef49d54e6266b1afc568ef591a6a2d4abd5ad8e`。本仓库只吸收工程化判断映射，不复制原文、示例、口吻或经典表达，不默认切换成文化化输出，也不把传统智慧框架写成事实证据、项目制度、Execution Grant、测试通过、CR 结论、Git 授权或上线审批。
 - 微信文章 [《一个让Codex变得越来越聪明的小方法》](https://mp.weixin.qq.com/s/G-tZjkhAd_yMAABBgNGVdw)：作为 `ai-native-engineering-workflow` 授权学习、经验归位和知识回流的公开参考来源。2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，页面作者字段为 `Dr.Joyi`，既有账号线索保留 `像素与咖啡时光`，页面时间字段为 2026-06-04；本仓库只吸收“反复踩坑来自稳定上下文缺失，执行经验、偏好理念和项目知识要进入合适载体”的可迁移方法，不复制原文、个人经历、提示词或作者口吻，也不把用户长期偏好写入仓库、安装目录或未授权学习目录。
 - 微信文章 [《架构8：架构设计三原则》](https://mp.weixin.qq.com/s/wc3xeSbBqb6ktEDz2ZuK7g)：作为 `资深架构师` 合适、简单、演化三类架构评审原则的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收当前约束匹配、结构/逻辑复杂度评估和演进式设计门禁，不复制文章案例、代码示例、图片或作者表达。
 - 微信文章 [《架构师底层思维能力要求-这7种尽早练习》](https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q)：作为 `资深架构师` 抽象、逻辑、结构化、批判、成长型、复盘和数据思维的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收底层思维能力框架、架构判断落点和常见误区，不复制原文图片、推荐书目、排版结构或作者表达。

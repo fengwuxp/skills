@@ -246,6 +246,21 @@
       "expected_handling": "进入 Agent Loop Engineering / 设计工程 Loop，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，强调不是继续堆 Prompt，而是设计可运行、可验证、可停止、可接管的工程循环；输出 Automations、Worktrees / 隔离工作区、Skills、Plugins / Connectors、Sub-agents / Maker-Checker、Memory / 状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、失败回写、人类理解检查和知识回流位置；价值指标不看 PR 数、执行轮数或 Agent 数量，而看合并率、返工率、缺陷率、回滚率、Review 成本、用户价值和团队理解程度；明确不能让人类只剩点同意，关键结果必须有人类 owner 能解释目标、状态、关键变更、证据、残余风险和停止理由。"
     },
     {
+      "id": "ai-native-should-wisdom-lens-loop-scheduling",
+      "skill": "ai-native-engineering-workflow",
+      "query": "用 Loop 取舍校准增强 AI Native Loop：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏和停止判断；不要替代事实、测试、CR、授权或上线审批。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
+    },
+    {
       "id": "ai-native-should-review-ai-coding-process",
       "skill": "ai-native-engineering-workflow",
       "query": "评审我们现在的 AI 编码流程，看看是不是有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、CR、发布监控和复盘闭环，给出可落地改造顺序。",
