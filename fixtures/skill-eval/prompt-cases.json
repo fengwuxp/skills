@@ -81,6 +81,21 @@
       "expected_handling": "进入 AI Native Engineering Loop 重构路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；明确对外只推荐只读理解、产研交付、验证发布、知识回流四类 Loop，GSD 是 Plan/Wave 层，CAD 是 Atomic 子循环，Goal 是目标层，Harness 是执行契约层，Grant 是授权层；保留旧说法触发，但不再要求用户手动选择多个模式。"
     },
     {
+      "id": "ai-native-should-plan-to-goal-bridge-without-new-flow",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入 AI Native：先输出计划，我确认后创建 Goal，并按计划推进到验证完成；不要新增流程，只用现有 Loop / Goal / Plan Grant。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研交付 Loop 的 Plan-to-Goal 桥接路径，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；明确 Plan-to-Goal 不是新增 Loop Profile 或独立流程，而是把计划成熟度、成功标准、假设、执行步骤、验证证据和阻塞项桥接到 Goal / Plan Grant；用户要求确认后创建 Goal 时，先只输出可确认计划，确认后再创建运行时 Goal 或 Goal 卡；只有 Plan Grant 字段齐备且低风险本地范围明确时才按计划推进；关闭时必须用验证证据对照成功标准，不把步骤执行完等同于 Goal Verified / Closed。"
+    },
+    {
       "id": "ai-native-should-demand-analysis-collaboration-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "AI Native 研发流程进入需求分析协同门禁：这批用户原始诉求里混了功能解法，请先输出需求分析结论卡，明确根源需求、产品定义、产品边界、稳定点/变化点、边界坐标和上下游分工，再判断能否进入 PRD / 系分预审或 GSD Round 0。",
@@ -124,6 +139,21 @@
         "variance_check"
       ],
       "expected_handling": "进入产品 / 系统 DNA 门禁，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；先区分产品 DNA 和系统 DNA，检查核心对象、业务不变量、生命周期/状态、责任边界、演化规则、验证方式和待确认 owner；缺少 DNA 时回退产品架构专家补产品上下文、回退资深架构师补系分系统 DNA，不进入 OpenSpec、GSD Wave、CAD 候选或 AI 编码。"
+    },
+    {
+      "id": "ai-native-should-intent-to-production-role-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考 Loop Engineering，把 AI 工作流从意图 / 需求收集做到生产交付闭环，区分业务 owner、产品专家、UED、架构师、AI Maker、AI Checker、质量 / 测试门禁和发布 owner 在每个阶段的分工、交接物、验证门禁和停止条件。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入意图到生产交付角色 Loop，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、验证门禁、停止条件和残余风险；读取 intent-to-production-loop 并输出 Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品澄清、PRD/OpenSpec 输入、PRD/系分合议预审、系分设计与 Harness/Plan、TDD/实现/AI Maker 执行、AI Checker/架构师 CR/质量门禁、发布监控回滚和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
     },
     {
       "id": "ai-native-should-prd-system-design-deliberation-review",
@@ -381,6 +411,21 @@
         "variance_check"
       ],
       "expected_handling": "进入反馈闭环成熟度 / 验证簇准入模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering、verification-review-release 和架构师 testing.md，先判断当前是 L2/L3/L4/L5 候选，强调测试通过、覆盖率、bug 下降只是证据不是事实；输出 Verification Cluster Gate，覆盖高风险业务不变量、验证簇 ID、场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度、来源、独立 Checker、预算/分层执行、状态回写和停止条件；L5 只能标为目标架构，不能写成当前已具备能力。"
+    },
+    {
+      "id": "ai-native-should-architecture-entropy-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入架构排熵 Loop：系统长期只加不删，出现承重 bug、废弃 API、循环依赖、概念膨胀、治理规则失效和局部性丧失。请设计持续巡检、状态回写、低风险修复、Maker/Checker、人工 triage、守卫自检和停止条件，不要把能扫描当成能自动删除。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入架构排熵 Loop / 腐朽门禁模式，按默认输出骨架给出结论、Loop Profile、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，输出 Architecture Entropy Card，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、扫描输入、状态回写位置、低风险动作、Maker / Checker、人工 triage、架构师路由和停止条件；强调排熵 Loop 只能自动化发现、低风险收敛和证据回写，不把能自动扫描当成可以自动删除、迁移、重写或上线。"
     },
     {
       "id": "ai-native-should-quality-test-gate",
@@ -668,6 +713,21 @@
       "expected_handling": "进入架构师测试资产治理路径，读取 testing.md 的不变量验证簇方法；先确认高风险业务不变量和业务 owner，再输出验证簇，覆盖验证簇 ID、关联需求/AC、场景测试、属性/变形测试、历史回归、必要生产重放样本、有限变异/对抗检查、置信度、来源、是否人工确认、CI 分层、预算和失败处理；强调测试通过、覆盖率提高和 AI 生成测试数量不是事实本身，生产重放只能作为证据，不能反向定义需求。"
     },
     {
+      "id": "senior-should-architecture-decay-entropy-review",
+      "skill": "senior-software-architect",
+      "query": "请用资深架构师视角 CR 这个遗留模块是否已经架构腐朽：大家不敢删旧代码，出现承重 bug、废弃 API、新旧 final 版本并存、循环依赖和治理规则失效。给出可删除性评审、守卫自检和最小排熵计划，不要建议大重写。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入遗留系统改造 / 架构排熵评审路径，读取 evolutionary-architecture、coding-review-deep-dive、adr-and-tradeoff 和 production-readiness；输出 Architecture Entropy Review，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、下线候选、契约测试、灰度/回滚、owner、验证命令和最小排熵计划；不直接大重写，不在缺证据时删除或迁移生产路径。"
+    },
+    {
       "id": "senior-should-push-back-tech-first-architecture",
       "skill": "senior-software-architect",
       "query": "我们准备先把订单系统拆成微服务，缓存、MQ、网关、分层框架都先定下来，后面再把业务需求塞进去；帮我评审这个架构思路。",
@@ -882,6 +942,21 @@
         "variance_check"
       ],
       "expected_handling": "进入非标产品问题与解决方案责任路径，读取 product-architecture-methodology 的非标问题小节，输出非标产品问题卡，覆盖原始诉求、真实问题、影响面、失败成本、当前替代方式、目标用户/被影响主体、业务约束、解决方案假设、验收种子、需要 UED 重点验证的交互/状态、待确认项、下一步验证动作和进入 PRD/Backlog/AI Native/非目标结论；产品专家提供解决方案假设和验收，不把老板/销售/客户/运营诉求原样转发给研发。"
+    },
+    {
+      "id": "product-should-concept-lifecycle-retirement",
+      "skill": "product-architecture-expert",
+      "query": "这个产品已经有很多新旧概念和规则并存，需求每次只加不减，用户、运营和研发都搞不清哪个概念是事实源。请做概念生命周期与退役边界，说明新概念进入、旧规则收敛、迁移、下线、验收和 owner。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入概念定名与概念生命周期治理路径，读取 product-architecture-methodology；输出 Concept Lifecycle Card，覆盖核心概念、事实源、目标主体、适用场景、非目标、与旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、数据口径、下线 owner 和待确认项；强调产品专家不能只加新名词或转发需求，必须说明旧概念如何被替代、保留、归档或停止使用。"
     },
     {
       "id": "product-should-insight-opportunity-radar",

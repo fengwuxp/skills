@@ -1,7 +1,7 @@
 ---
 name: ai-native-engineering-workflow
 description: |
-  AI Native Engineering Loop 流程编排与准入门禁。用户要求把产品专家、架构师、AI Agent、GSD/CAD/Goal、Spec/Harness、验证发布和知识回流串成可交接、可验证、可停止的工程闭环时触发。普通 PRD、Bug、测试、源码级 CR 或 Java Service 代码生成优先交给对应专门 Skill。
+  AI Native Engineering Loop 流程编排与准入门禁。用户要求把产品专家、架构师、AI Agent、GSD/CAD/Goal 与验证发布、知识回流串成可交接、可验证、可停止的工程闭环时触发。普通 PRD、Bug、测试、源码级 CR 或 Java Service 代码生成优先交给对应专门 Skill。
 ---
 
 # AI Native Engineering Workflow
@@ -47,15 +47,10 @@ description: |
 
 ## 使用时机
 
-- 用户要求设计、评审或优化 AI 时代产品、研发、编码、测试、CR、发布、复盘流程。
-- 用户希望把产品专家、架构师、AI Agent、Codex/Claude/Copilot/Cursor、GSD、CAD、Goal、Loop、OpenSpec、Harness、Superpowers 或 AI 原生工具协同起来。
-- 用户说“进入 AI Native 交付 Loop”“进入只读理解 Loop”“进入验证发布 Loop”“进入知识回流 Loop”“进入 GSD 产研协同研发流程”“GSD + Goal”“按任务计划推进”“开启默认授权策略”“生产可用 Loop 门禁”“三卡交接”“做 GSD/CAD 准入”。
-- 用户要求 PRD / 系分预审、MAGI 三角色合议、AI 预扫描、最终文档准出、Spec/SDD 模板最佳实践、AI 代码交付闭环或质量 / 测试门禁。
-- 用户要求代码库级阅读分析、设计-代码对齐、变更可理解性、影响可视化、Gemini CLI / AgentRC / Understand Anything 等工具准入。
-- 用户要求提炼顶层原则、处事方式、Skill 类型拆分、owner 路由、知识回流或授权学习。
-- 用户要求把 Loop 取舍校准、Wisdom Lens、huaxia-wisdom、东方智慧、东方判断层、阴阳平衡、中庸之道、先为不可胜、庖丁解牛、循名责实、无为而治、每日三省、知行合一或一张一弛用于 AI Native Loop 调度判断。
-- 用户要求“进入知识表达门禁”“意图可执行性检查”“非标问题模式”“实际项目编码 Loop”“按 Loop 跑真实代码任务”。
-- 用户要求反馈闭环成熟度、L2/L3/L4/L5、验证簇、不变量验证、生产重放、变异 / 对抗测试，或质疑“测试通过、覆盖率提升是否足够证明系统没变坏”。
+- **流程编排**：设计、评审或优化 AI 时代产品、研发、编码、测试、CR、发布、复盘流程。
+- **跨角色协同**：把产品专家、架构师、AI Agent、Codex/Claude/Copilot/Cursor、OpenSpec、Harness、Superpowers 或 AI 原生工具串成工程闭环。
+- **Loop 入口别名**：用户说“进入 AI Native 交付 Loop”“只读理解 Loop”“验证发布 Loop”“知识回流 Loop”“GSD 产研协同研发流程”“GSD + Goal”“先计划再创建 Goal”“按任务计划推进”“三卡交接”“做 GSD/CAD 准入”。
+- **专项门禁**：PRD / 系分预审、MAGI 合议、AI 预扫描、Spec/SDD 模板、代码交付闭环、质量 / 测试门禁、代码库理解、设计-代码对齐、工具准入、Wisdom Lens、知识表达、非标问题、实际项目编码 Loop、反馈闭环成熟度、验证簇、架构排熵 Loop 或腐朽门禁。
 
 ## 路由边界
 
@@ -97,35 +92,23 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 优先使用四类 Loop Profile，旧的 GSD、CAD、Goal 说法只作为触发别名或内部层：
 
 - **只读理解 Loop**：用于阅读分析代码库、设计-代码对齐、外部工具准入、事实边界检查和影响范围识别；默认不写文件、不安装、不联网、不生成执行任务。
-- **产研交付 Loop**：用于从产品事实、PRD/Spec、系分、任务计划、TDD、实现、CR 到验证发布的端到端编排；内部可调用 Goal 目标层、GSD Wave 计划层、CAD Atomic 执行层和 Harness 执行契约。
+- **产研交付 Loop**：用于从意图 / 需求收集、产品事实、PRD/Spec、系分、任务计划、TDD、实现、CR 到生产发布和反馈回流的端到端编排；内部可调用 Goal 目标层、GSD Wave 计划层、CAD Atomic 执行层和 Harness 执行契约。
 - **验证发布 Loop**：用于测试矩阵、质量门禁、CR 前置条件、失败回退、发布监控、残余风险和复盘回流；测试实现和源码级 CR 继续路由 `资深架构师`。
 - **知识回流 Loop**：用于把已验证经验沉淀到 Skill、reference、fixture、脚本、用户指南或 source-map；外部文章只保留可迁移方法、边界和证据索引。
 
-- **Round 0 补齐**：只有想法、文章观点、口头需求或原型截图时，先输出问题、证据、owner、风险、验收和待确认清单。
-- **知识表达 / 意图可执行门禁**：把模糊想法、文章观点、口头目标或 AI 生成草稿转成 Knowledge-to-Execution Card；至少确认目标、业务对象、状态 / 规则、约束 / 非目标、验收样例、反馈源和缺口 owner，缺失时不进入执行 Loop 或编码。
-- **非标问题模式**：面对无标准答案、跨团队、跨系统、用户只给方向或老板 / 客户说不清的任务，先输出问题定义、影响面、已知事实、关键不确定性、研究 / 证据路径、候选方案、最小可逆实验、决策标准和停止条件，再路由产品专家或架构师。
-- **交接包模式**：已有业务目标、对象、规则或 AI 原型/eval 时，输出产品上下文包、PRD-Lite 缺口和交给架构师的最小材料。
-- **三卡交接模式**：三卡交接协议由本技能编排；跨产品专家、AI Native、架构师时，先输出产品上下文交接卡（Product Context Card）、工程执行交接卡（Engineering Handoff Card）、生产 Loop 交接卡（Production Loop Card）的缺口、下一 owner 和停止条件；缺任一卡不进入对应执行层。
-- **需求分析协同门禁模式**：输出需求分析结论卡，明确根源需求、产品定义、产品边界、稳定点 / 变化点、边界坐标、上下游分工和进入 PRD / 系分预审 / GSD Round 0 的结论。
-- **问题核心诊断模式**：问题核心诊断由本技能编排；用户要求抓住问题核心、判断需求是否无止境、区分价值与意义、做定向/定性/定位/定量时，先定核心再定流程，输出核心问题、症状证据、整体边界、系统结构、可验证实验、owner 和停止条件。
-- **产品 / 系统 DNA 门禁模式**：产品 / 系统 DNA 门禁由本技能编排，避免按“需求 -> 功能 -> 事故 -> 补规则”的顺序推进；检查核心对象、不变量、状态流转、责任边界、演化规则和验证方式。
-- **GSD 产研协同别名**：旧提示“进入 GSD 产研协同研发流程”统一进入产研交付 Loop；目标仍是交付生产可用能力，产品专家先做需求分析 / 产品设计 / 确认，再编排架构师的系分设计 / 编码 / TDD / CR / 验证发布。
-- **Goal / 授权策略层**：形成 Goal 卡、提交切片、Plan Grant 判断、计划内低风险执行范围、显式确认边界和停止条件；Goal 不等于 Execution Grant。
-- **工程编排层**：在产研交付 Loop 内输出 GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口和验证矩阵草案。
-- **质量门禁 / CR 发布模式**：输出测试矩阵、验证顺序、CR 前置条件、失败回退、发布门禁、监控和复盘动作。
-- **PRD / 系分预审模式**：进入 PRD / 系分合议预审时，用 MAGI 三角色评审、A2A 虚拟评审或 IPD 式互审组织 `review_task`、`evaluation_task`、`reporting_task`，输出 `ACCEPT/REJECT/PENDING` 决策日志和下一步路由。
-- **理解门禁 / 工具准入模式**：输出代码库理解结论包、源码锚点、影响范围、工具权限边界和人工替代路径。
-- **Spec 模板模式 / SDD 生产代码模式 / AI 代码交付闭环模式**：Spec / SDD / OpenSpec 模板最佳实践和 Spec 模板最佳实践由本技能编排；当编码提速没有带来交付体感时进入代码交付闭环模式，输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流、一次通过率 / 返工率 / 缺陷密度等指标。
-- **Skill 类型路由模式 / 知识回流模式**：Skill 类型与 owner 路由由本技能编排；判断主类型、owner、交接物、验证证据、回流位置，以及是否只需补 reference / fixture / 脚本。
-- **Agent Loop Engineering**：输出 Loop 准入、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、生产可用门禁、Plan Grant + Loop 预算绑定和下一 owner；强调工程师负责设计 Loop 和审查关键结果，不只是继续提示 AI；Loop 不等于 Prompt、cron、Goal、Harness、Plan Grant、Execution Grant、测试通过或上线审批，不把 Loop 写成无条件自动授权。
-- **Loop 取舍校准 / Wisdom Lens**：在 Loop 准入、GSD Wave 拆解、Grant 授权粒度、执行核验和复盘回流中，借用 `huaxia-wisdom` 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏和反偏判断；“东方判断层”只作为触发别名。默认只输出工程化判断卡，不改成老祖宗口吻，不替代事实、证据、测试、CR、授权或上线审批。
-- **实际项目编码 Loop**：面向真实代码库中的一个 Goal / Wave / Task，输出 Coding Loop Contract，明确代码写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件；具体设计、编码、测试和 CR 仍路由到 `资深架构师`。
-- **AI 注释去噪 / 可理解性门禁**：当 AI 生成代码出现大量解释性注释、步骤注释或 Review 者难以复述改动时，进入代码交付闭环；先让架构师判断是否应通过命名、方法抽取、常量/枚举、强类型或测试表达意图，再保留必要 Why 注释。
-- **反馈闭环成熟度 / 验证簇准入**：判断当前是 L2 / L3 / L4 / L5 候选，输出 Verification Cluster Gate；L4 只围绕高风险业务不变量建立验证簇，L5 只能作为目标架构，不写成当前已具备能力。
-- **Goal 组合层**：Goal 组合由本技能编排；输出 Goal 组合包、Goal 卡、GSD Wave / Goal 映射、状态、预算 / 时间盒、验证证据和停止条件；Goal 不等于 Execution Grant，不自动创建运行时 Goal。
+高频内部路由按下面分组选择，细节读取对应 reference：
+
+- **产品到工程准入**：Round 0 补齐、需求分析协同门禁模式、问题核心诊断模式、知识表达 / 意图可执行门禁、非标问题模式、产品 / 系统 DNA 门禁模式、交接包模式和三卡交接模式；读 `product-to-engineering-lifecycle.md`。问题核心诊断由本技能编排，先定核心再定流程；用户要求抓住问题核心、判断需求是否无止境、区分价值与意义、做定向/定性/定位/定量时，先产出问题诊断和 Knowledge-to-Execution Card。产品 / 系统 DNA 门禁由本技能编排，避免按“需求 -> 功能 -> 事故 -> 补规则”推进；三卡交接协议由本技能编排，三卡交接包包含产品上下文交接卡（Product Context Card）、工程执行交接卡（Engineering Handoff Card）和生产 Loop 交接卡（Production Loop Card），并检查三卡可消费性。
+- **意图到生产交付角色闭环**：用户要求从意图 / 需求收集到生产交付闭环、区分多角色分工或说明每阶段谁做什么时，读 `references/intent-to-production-loop.md`，输出 Intent-to-Production Role Loop Map。它只定义阶段 owner、交接物、AI Maker / Checker 边界、验证门禁和停止条件，并串联业务 owner、产品专家、UED、质量 / 测试门禁、发布 owner；具体 PRD、系分、测试、CR、编码和发布审批仍交给对应 owner。
+- **目标与大项目编排**：GSD 产研协同别名、Plan-to-Goal 桥接、Goal 组合由本技能编排、Goal 组合层、Goal / 授权策略层、工程编排层和 GSD/CAD 准入；读 `goal-composition.md`、`gsd-cad-admission.md` 和 `agentic-engineering-governance.md`。输出 Goal 组合包；Goal 不等于 Execution Grant，也不自动创建运行时 Goal。
+- **评审与规格门禁**：PRD / 系分合议预审、MAGI 三角色评审、A2A 虚拟评审、IPD 式互审、PRD / 系分预审模式、Spec / SDD / OpenSpec 模板最佳实践、Spec 模板最佳实践由本技能编排、Spec 模板模式、SDD 生产代码模式和 AI 代码交付闭环模式；读 `prd-system-design-review.md`、`spec-template-practices.md` 和 `code-delivery-closed-loop.md`。输出 PRD / 系分合议预审报告、Spec 模板落地包或代码交付闭环模式结论；合议流程保留 review_task、evaluation_task、reporting_task 与 ACCEPT/REJECT/PENDING。代码交付闭环用于编码提速没有带来交付体感时，检查最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和一次通过率 / 返工率 / 缺陷密度。
+- **理解与工具门禁**：理解门禁 / 工具准入模式、代码库理解结论包、设计-代码对齐、Gemini CLI / AgentRC / Understand Anything 准入和 AI 注释去噪 / 可理解性门禁；读 `code-understanding-tools.md`、`verification-review-release.md` 和 `code-delivery-closed-loop.md`。
+- **Loop 执行与质量门禁**：Agent Loop Engineering、实际项目编码 Loop、Coding Loop Contract、反馈闭环成熟度 / 验证簇准入、架构排熵 Loop / 腐朽门禁、质量门禁 / CR 发布模式；读 `agent-loop-engineering.md` 和 `verification-review-release.md`，源码级设计、TDD、测试实现、架构腐朽评审和 CR 仍交给 `资深架构师`。实际编码 Loop 必须声明状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测和生产可用门禁；架构排熵 Loop 只能自动化发现、低风险收敛和证据回写，不把能扫描当成可以自动删除、迁移、重写或上线；Loop 不等于 Prompt、cron、Goal、Harness、Plan Grant、Execution Grant、测试通过或上线审批，不把 Loop 写成无条件自动授权。
+- **治理与回流**：Loop 取舍校准 / Wisdom Lens、Skill 类型路由模式、知识回流模式、授权学习和 source-map；读 `wisdom-loop-lens.md`、`skill-type-owner-routing.md`、`superpowers-skill-library.md` 和 `source-map.md`。`huaxia-wisdom` 只用于阴阳平衡、先为不可胜、庖丁解牛、循名责实等取舍校准，不替代事实、证据、测试、CR、授权或上线审批。Skill 类型与 owner 路由由本技能编排，输出 Skill 类型 owner 路由包。
 
 ## 参考路由
 
+- `references/intent-to-production-loop.md`：从意图 / 需求收集到生产交付的端到端角色 Loop、阶段 owner、AI Maker / Checker 边界、交接物、验证门禁和停止条件。
 - `references/product-to-engineering-lifecycle.md`：产品发现、AI 原型/eval、PRD-Lite、知识表达门禁、非标问题建模、产品上下文包、需求分析协同门禁、问题核心诊断、产品 / 系统 DNA、三卡交接到工程交接。
 - `references/prd-system-design-review.md`：PRD / 系分合议预审、MAGI 三角色、IPD 式互审和决策日志。
 - `references/agentic-engineering-governance.md`：OpenSpec、Superpowers、Harness、权限边界、多 Agent 协作和事实边界。
@@ -133,8 +116,8 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 - `references/code-understanding-tools.md`：Gemini CLI、AgentRC、Understand Anything 等 AI 代码理解 / 上下文工程 / 知识图谱工具准入。
 - `references/spec-template-practices.md`：Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、spec-lint、AC 覆盖、漂移检查和五支柱验证。
 - `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness 到最终可交付代码的闭环。
-- `references/goal-composition.md`：Loop 目标层、Goal 卡、状态机、Ledger、预算 / 时间盒、GSD / CAD / Spec 关联和停止条件。
-- `references/agent-loop-engineering.md`：统一 Loop Contract、四类 Loop Profile、实际项目编码 Loop、反馈闭环成熟度、验证簇准入、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
+- `references/goal-composition.md`：Loop 目标层、Plan-to-Goal 桥接、Goal 卡、状态机、Ledger、预算 / 时间盒、GSD / CAD / Spec 关联和停止条件。
+- `references/agent-loop-engineering.md`：统一 Loop Contract、四类 Loop Profile、实际项目编码 Loop、反馈闭环成熟度、验证簇准入、架构排熵 Loop / 腐朽门禁、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
 - `references/wisdom-loop-lens.md`：huaxia-wisdom、Loop 取舍校准、东方判断层触发别名、阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛在 Loop 准入、拆解、执行核验、授权纠偏和复盘回流中的工程化映射。
 - `references/verification-review-release.md`：验证矩阵、质量 / 测试门禁、CR、发布、监控、复盘和学习闭环。
 - `references/superpowers-skill-library.md`：`obra/superpowers` 外部 skill 调度矩阵、供应链安全边界和不吸收项。
@@ -146,11 +129,13 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 按当前任务选择最小产物，不默认全量输出：
 
 - Loop 准入结论：Loop Profile、owner、交接物、Loop Contract、验证门禁、停止条件。
+- Intent-to-Production Role Loop Map：阶段链路、角色边界、交接物、验证门禁和停止条件。
 - Engineering Loop Contract、Knowledge-to-Execution Card、非标问题处理包、Coding Loop Contract、Verification Cluster Gate。
+- Architecture Entropy Card：可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、状态回写、低风险动作、Maker / Checker、人工 triage 和停止条件。
 - GSD/CAD 编排准入结论、Harness 摘要、GSD Wave 建议、CAD 候选缺口、授权策略卡。
 - 三卡交接包：Product Context Card、Engineering Handoff Card、Production Loop Card 的已具备字段、缺口、owner、验证证据和不可替代项。
 - 质量 / 测试门禁、代码库理解结论包、工具准入包、Spec 模板落地包、AI 代码交付闭环报告。
-- Goal 目标层包、Skill 类型 owner 路由包、知识回流 / 授权学习计划、PRD / 系分合议预审报告、研发编码流程评审报告。
+- Plan-to-Goal 桥接卡、Goal 目标层包、Skill 类型 owner 路由包、知识回流 / 授权学习计划、PRD / 系分合议预审报告、研发编码流程评审报告。
 
 ## 完成度自检
 
@@ -160,12 +145,8 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Verify / Stop-
 - **授权可执行性**：说明当前是只读、计划内低风险执行、Wave Grant、CAD Grant 还是需显式确认；不得停留在“每个任务都问”或“全部默认通过”两个极端。
 - **Loop 可控性**：说明状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物；生产可用 Loop 还必须说明隔离执行、独立验证、观测审计、人工接管和发布/回滚。
 - **理解保持性**：Loop 输出必须让人能复述目标、状态、改动、证据、风险和下一步；不得把 AI 生成、AI Review、AI 测试和自动化执行叠加成无人理解的认知外包链。
-- **代码可读性**：真实编码 Loop 的准出必须检查 AI 注释噪声；代码应优先用命名、结构、类型和测试表达意图，注释只补充业务约束、设计取舍、外部规则、历史坑点和 Why not。
-- **编码 Loop 可用性**：真实项目编码 Loop 必须绑定一个 Goal / Wave / Task，并具备代码写入范围、只读范围、失败测试或验收样例、验证命令、独立 Checker、状态回写位置和提交切片；缺任一关键项只能只读侦察或补上下文。
-- **反馈可信性**：高风险任务不能只用测试绿灯、覆盖率或 AI 生成测试数量证明正确；必须说明业务不变量、验证簇、证据来源、置信度、独立 Checker、预算 / CI 分层和停止条件。
-- **Loop 取舍校准边界**：只作为取舍、止损、拆解、节奏和复盘的辅助判断镜片；不得替代来源事实、源码锚点、测试结果、CR 结论、Execution Grant、上线审批或专业确认。
-- **三卡可消费性**：产品事实必须能落到 Product Context Card，工程执行必须能落到 Engineering Handoff Card，生产可用 Loop 必须能落到 Production Loop Card；三卡缺失、混同或互相替代时先补交接，不进入实现、CAD 或自动循环。
-- **知识可执行性**：知识表达必须能落到对象、规则、边界、样例、反馈源和责任 owner；无法落地的观点、口号或未经验证的文章经验只作为待确认输入。
+- **交接可消费性 / 三卡可消费性**：产品事实、工程执行和生产可用 Loop 必须能落到对应交接物；缺失、混同或互相替代时先补交接，不进入实现、CAD 或自动循环。
+- **执行可落地性 / 知识可执行性 / 编码 Loop 可用性**：知识表达、真实编码 Loop、反馈闭环、图形化理解和工具准入必须有对象、边界、验证、状态回写和责任 owner；缺任一关键项只能只读侦察或补上下文。
 - **抗幻觉性**：结论、任务、实现建议和工具判断必须有用户目标、来源材料、源码锚点、验收种子或验证证据支撑；无支撑内容必须标为推断、待确认或范围外不做。
 
 ## 红线

@@ -62,6 +62,7 @@
 | 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件；同时说明关键节点/通信边、复杂度从哪里转移到哪里，以及隐藏边是否可观测、可追踪和可回滚。 |
 | 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md` | 业务不变量、事务边界、幂等、去重、补偿、对账、告警和一致性窗口。 |
 | 遗留系统改造 / 迁移 | `evolutionary-architecture.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 防腐层、契约测试、双写/回填/切流、灰度、回滚、下线标准。 |
+| 架构腐朽 / 排熵 / 可删除性评审 / 不敢删 / 承重 bug | `evolutionary-architecture.md`、`coding-review-deep-dive.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、下线候选和最小排熵计划。 |
 | 安全架构 / 权限 / 租户 / 敏感数据 / Spring Security | `security-architecture.md`、`negative-constraints.md` | 资产、主体、边界、威胁、认证授权、隔离、密钥、审计和安全测试；Spring 项目追加 SecurityFilterChain、方法级授权、CSRF、CORS、代理头、限流和错误响应检查。 |
 | 生产变更 / 上线评审 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | 影响范围、灰度、开关、监控、应急、回滚、审计、验收。 |
 | 生产现象 / 线上异常 / 故障排查 | `debugging-diagnosis.md`、`production-readiness.md`、`negative-constraints.md` | 先定影响面、时间线、止血和只读证据，再做根因假设、最小修复、回滚和复盘。 |

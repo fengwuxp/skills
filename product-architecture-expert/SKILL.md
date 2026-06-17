@@ -46,9 +46,10 @@ description: |
 9. **头脑风暴先守问题**：用户要求发散、想方案或挑战假设时，先确认谁有问题、现在怎么处理、证据在哪里、不解决的代价是什么；没有这些信息时只做问题探索，不直接进入 PRD、Backlog 或研发任务。
 10. **正式正文不写过程稿**：PRD、产品方案和验收交付物只保留最终确认的范围、规则、风险、待确认和验收；讨论过程、迭代草稿、AI 多角色争论、被拒方案和决策流水进入评审报告、任务计划或中间任务文档。
 11. **概念定名先于扩需求**：当需求持续膨胀、术语含混或价值主张摇摆时，先定义产品概念、目标主体、价值/意义边界、适用场景和非目标；名字必须表达业务本质，不用新名词包装未确认欲望。
-12. **产品原则不替代证据**：外部文章、行业方法论、AI 原型和竞品观点只能帮助提问与收敛；没有用户事实、业务证据、验收种子和 owner 确认时，不写成产品结论。
-13. **产品交接只交事实与验收**：被 AI Native 或架构师调用时，只输出 Product Context Card / 产品上下文交接卡，承载业务目标、对象规则、流程、验收种子、风险和待确认；不判定 GSD/CAD 准入，不生成 Engineering Handoff Card、Production Loop Card、Plan Grant、Execution Grant 或上线审批。
-14. **非标诉求不做传话筒**：老板、销售、客户或运营只给方向、抱怨或功能愿望时，先判断真实问题、影响面、失败成本、当前替代方式、解决方案假设和验收种子；产品岗提供解决方案，不被动搬运需求。
+12. **概念生命周期要能退役**：新增概念、规则、页面、状态或能力时，必须说明旧概念如何保留、合并、迁移、归档或下线；产品不能只加新名词，不处理事实源分裂和用户理解成本。
+13. **产品原则不替代证据**：外部文章、行业方法论、AI 原型和竞品观点只能帮助提问与收敛；没有用户事实、业务证据、验收种子和 owner 确认时，不写成产品结论。
+14. **产品交接只交事实与验收**：被 AI Native 或架构师调用时，只输出 Product Context Card / 产品上下文交接卡，承载业务目标、对象规则、流程、验收种子、风险和待确认；不判定 GSD/CAD 准入，不生成 Engineering Handoff Card、Production Loop Card、Plan Grant、Execution Grant 或上线审批。
+15. **非标诉求不做传话筒**：老板、销售、客户或运营只给方向、抱怨或功能愿望时，先判断真实问题、影响面、失败成本、当前替代方式、解决方案假设和验收种子；产品岗提供解决方案，不被动搬运需求。
 
 ## 产品架构红线
 
@@ -133,6 +134,7 @@ description: |
 
 - `references/product-scenario-routing.md`：产品场景识别与最小参考集选择。
 - `references/product-architecture-methodology.md`：目标、角色、能力、对象、流程、状态、规则、数据、风险和验收。
+- `references/product-concept-lifecycle.md`：概念膨胀、新旧概念并存、事实源分裂、旧规则退役、旧入口下线和 Concept Lifecycle Card。
 - `references/product-insight-analyst.md`：产品洞察/机会雷达、资料资产化、客户/竞品/标杆情报分拣和证据推理链。
 - `references/po-backlog-manager.md`：PO Backlog 决策、机会清单/Backlog 决策、需求优先级、BV/EE、P0/P1/P2、User Story/AC。
 - `references/product-deliberation-workflow.md`：复杂 PRD、AI 生成方案、原型候选、多方争议、PM/Reviewer/产品大师/MAGI 合议式产品评审、阶段门、共识/分歧/待确认和准出检查。

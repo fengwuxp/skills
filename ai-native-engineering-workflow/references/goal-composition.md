@@ -15,6 +15,7 @@
 - 需要把 GSD/CAD 默认授权和阶段提交收敛到 Goal / Plan Grant / Wave / CAD Grant，减少每个任务重复审批但保留高风险硬门禁。
 - GSD/CAD 默认授权收敛到 Goal / Plan Grant / Wave / CAD Grant；只有在用户明确要求按任务计划推进且 Plan Grant 字段齐备时，才允许范围内低风险任务默认推进。
 - 需要把 `/goal`、`/loop`、auto mode、后台 Agent 或持续编排挂到 Goal，避免 Loop 漂移、无限循环或把执行轮数误当完成证据。
+- 用户要求“先输出计划”“确认后创建 Goal”“先计划再执行到验证完成”或等价表达，需要把计划成熟度桥接到 Goal / Plan Grant，而不是新增一套流程。
 
 ## 不适用场景
 
@@ -30,6 +31,7 @@
 - 若涉及持续编排，一份 Loop 目标层判断：Loop ID、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物。
 - 一份 Goal 状态结论：`Draft / Ready / Active / Blocked / Verified / Closed / Superseded` 之一，并说明证据。
 - 一份 Goal Ledger 更新：最近证据、变化假设、开放风险、提交切片、下一 owner、下一动作和复盘回流位置。
+- 若用户要求先计划再执行，一份 Plan-to-Goal 桥接卡：计划成熟度、成功标准、假设、执行步骤、验证证据、阻塞项、运行时 Goal 创建条件和 Plan Grant 判断。
 - 明确说明 Goal 不会自动创建运行时 Goal，不会自动扩大写入范围、提交权限或 Codex 替我审批范围；GSD 规划必须给出提交切片，实际 `git add` / `git commit` 只有在用户明确授权 Git 策略且 Plan Grant 字段齐备时执行。
 
 ## 需要继续读取的 reference
@@ -47,6 +49,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `gsd-cad-admission.md` | 输出为产研交付 Loop，不展开 CAD 执行细则 |
+| 先计划再创建 Goal / 推进执行 | `Plan-to-Goal Bridge`、`1. Goal 边界`、`3A. Plan Grant` | 不新增 Loop Profile，不把计划等同授权 |
 | 做 `GSD + Goal + Loop` | `1. Goal 边界`、`3B. GSD + Goal + Loop`，再读 `agent-loop-engineering.md` | 不把 Loop 当授权或完成证据 |
 | 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `agentic-engineering-governance.md` | 输出为 CAD 原子子循环，不把 Goal 当 Execution Grant |
 | 将默认授权挂到 Goal | `1. Goal 边界`、`3. GSD + Goal`、`4. CAD + Goal`，再读 `gsd-cad-admission.md` | 不把 Goal 状态当授权 |
@@ -54,6 +57,37 @@
 | 做 `Spec + Goal` | `1. Goal 边界`、`5. Spec + Goal`，再读 `spec-template-practices.md` | 不重复写完整 Spec 模板 |
 | 做 CR / 发布 Goal 验证 | `6. CR/发布 + Goal`，再读 `verification-review-release.md` | 不把测试通过当 Goal 自动关闭 |
 | 长任务状态交接 | `2. Goal 卡`、`7. 状态和 Ledger` | 不用长报告替代状态更新 |
+
+## Plan-to-Goal Bridge
+
+Plan-to-Goal Bridge 是进入 Goal / Plan Grant 前的桥接检查，不是新的 Loop Profile、模式或独立 Skill。它用于把“先计划，再创建 Goal / 按计划推进 / 验证完成”这类诉求收敛进现有产研交付 Loop。
+
+最小结构：
+
+```text
+Plan-to-Goal Bridge:
+关联 Loop Profile:
+计划成熟度: Draft / Confirmable / Ready
+目标:
+成功标准:
+关键假设:
+执行步骤:
+验证命令 / 证据:
+阻塞项:
+运行时 Goal: 不创建 / 等用户确认后创建 / 已明确要求创建
+Plan Grant: Draft / Active / 不适用
+停止条件:
+交接 / Ledger:
+```
+
+桥接规则：
+
+- 用户只要求“先出计划”“先评估”“不要改”时，只输出可确认计划和缺口，不创建运行时 Goal，不进入执行。
+- 用户要求“我确认后创建 Goal”时，先输出 `Confirmable` 计划；确认后再按当前运行时工具协议创建 Goal，或输出可交接的 Goal 卡。
+- 用户要求“低风险直接执行”“按计划推进”时，只有 Goal 为 `Ready / Active`、任务计划字段齐备、Plan Grant 为 `Active`，才允许范围内低风险本地任务推进。
+- 计划必须至少覆盖目标、成功标准、假设、执行步骤、验证方式、阻塞项和停止条件；缺任一项只能停在 `Draft / Confirmable`。
+- 完成判断必须用验证证据对照成功标准；步骤执行完、文件改完或测试绿灯都不能单独等同于 Goal `Verified / Closed`。
+- 运行时 Goal、Plan Grant 和 Loop 都不能扩大写入范围、Git 权限、联网权限、生产权限或高风险业务确认边界。
 
 ## 1. Goal 边界
 
