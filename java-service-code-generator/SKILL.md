@@ -1,6 +1,6 @@
 ---
 name: java-service-code-generator
-description: 根据 DDL/SQL、schema 文件、Java 类或字段表格生成 Wind/Nobe 风格 Java Service 配套代码。适用于把结构化业务模型转换为 MyBatis-Flex Entity、Mapper、DTO、Request、Query、MapStruct Converter、Service、ServiceImpl 和测试夹具；仅在用户明确要求“生成/转换/脚手架/配套代码”时触发，代码评审、Bug 修复和补测试优先交给架构师。
+description: 根据 DDL/schema、Java 类或字段表格生成 Wind/Nobe Java Service 脚手架；仅在用户明确要求生成、转换、脚手架或配套代码，且有结构化输入时触发。代码评审、Bug 修复和补测试优先交给架构师。
 ---
 
 # Java Service 代码生成
@@ -16,15 +16,16 @@ description: 根据 DDL/SQL、schema 文件、Java 类或字段表格生成 Wind
 ## 工作流程
 
 1. 读取用户输入：DDL/SQL、schema 文件路径、Java 类、字段说明表格、目标表名、业务模块；优先根据用户已有材料生成，不强制要求用户补 DDL。输入源与详细规程见 `references/code-generation-rules.md`。
-2. 生成前先检查业务模块：
+2. 被 AI Native 分派时，先消费 Engineering Handoff Card、授权策略和写入范围；缺少结构化输入、目标模块、覆盖边界或验证命令时，只输出缺口，不直接写源码。
+3. 生成前先检查业务模块：
    - 定位 `*-face/src/main/java` 和 `*-impl/src/main/java`。
    - 从已有 Java `package` 声明推断基础包名，例如 `com.example.skill.codegen`；无法从源码推断时必须要求用户显式提供 `--base-package`，不要使用真实项目包名兜底。
    - 检查相邻 Entity、Model、Service、Mapper、Converter，确认本地命名、包路径和注解风格。
-3. 只有存在真实歧义时才询问用户；不要猜测有歧义的模块对、限界上下文、基础包名、枚举类型或类名。
-4. 将输入源归一为内部表结构模型，识别表名、表注释、字段、主键、空值约束、默认值、自增、字段注释和逻辑删除/租户/版本字段。
-5. 优先使用内置 `scripts/generate_scaffold.py` 做确定性生成；在本仓库维护时可使用 `python3 java-service-code-generator/scripts/generate_scaffold.py`，安装到 Codex 后可使用 `$CODEX_HOME/skills/java-service-code-generator/scripts/generate_scaffold.py`。
-6. 不确定时先生成到评审目录；业务模块和包名明确时，才直接生成到模块源码目录。
-7. 生成后对比附近已有代码，并按 `资深架构师` 的代码约规做一次审查，重点检查注释、空指针处理、参数数量、伪复用、MapStruct、Lombok、不可变对象、验证注解和查询链路可读性。
+4. 只有存在真实歧义时才询问用户；不要猜测有歧义的模块对、限界上下文、基础包名、枚举类型或类名。
+5. 将输入源归一为内部表结构模型，识别表名、表注释、字段、主键、空值约束、默认值、自增、字段注释和逻辑删除/租户/版本字段。
+6. 优先使用内置 `scripts/generate_scaffold.py` 做确定性生成；在本仓库维护时可使用 `python3 java-service-code-generator/scripts/generate_scaffold.py`，安装到 Codex 后可使用 `$CODEX_HOME/skills/java-service-code-generator/scripts/generate_scaffold.py`。
+7. 不确定时先生成到评审目录；业务模块和包名明确时，才直接生成到模块源码目录。
+8. 生成后对比附近已有代码，并按 `资深架构师` 的代码约规做一次审查，重点检查注释、空指针处理、参数数量、伪复用、MapStruct、Lombok、不可变对象、验证注解和查询链路可读性。
 
 ## 输入源路由
 
@@ -70,6 +71,14 @@ description: 根据 DDL/SQL、schema 文件、Java 类或字段表格生成 Wind
 - 检查 Entity、Request、Query、Service、ServiceImpl、Converter 是否符合 `references/code-generation-rules.md` 与 `资深架构师` 编码约规。
 - 如果写入真实项目模块，条件允许时运行受影响模块的定向 Maven 编译或测试。
 - 最终向用户报告生成/修改的文件、关键假设和剩余风险；本仓库 Git 操作默认由用户执行。
+
+生成后交接卡至少包含：
+
+- 生成 / 修改文件、写入目录和是否覆盖既有文件。
+- 输入来源、结构化字段、脚本参数和推断假设。
+- 需要架构师、DBA 或业务 owner 确认的表设计、索引、枚举、金额精度、生命周期和状态机问题。
+- 已执行的验证命令、结果、未执行原因和残余风险。
+- 交回 AI Native / 架构师的下一步 owner、验证门禁和停止条件。
 
 ## 不适用场景
 

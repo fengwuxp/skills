@@ -48,8 +48,8 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `gsd-cad-admission.md` | 输出为产研交付 Loop，不展开 CAD 执行细则 |
-| 先计划再创建 Goal / 推进执行 | `Plan-to-Goal Bridge`、`1. Goal 边界`、`3A. Plan Grant` | 不新增 Loop Profile，不把计划等同授权 |
+| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `gsd-cad-admission.md` | 输出为角色协作 Loop 的产研交付视图，不展开 CAD 执行细则 |
+| 先计划再创建 Goal / 推进执行 | `Plan-to-Goal Bridge`、`1. Goal 边界`、`3A. Plan Grant` | 不新增场景视图，不把计划等同授权 |
 | 做 `GSD + Goal + Loop` | `1. Goal 边界`、`3B. GSD + Goal + Loop`，再读 `agent-loop-engineering.md` | 不把 Loop 当授权或完成证据 |
 | 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `agentic-engineering-governance.md` | 输出为 CAD 原子子循环，不把 Goal 当 Execution Grant |
 | 将默认授权挂到 Goal | `1. Goal 边界`、`3. GSD + Goal`、`4. CAD + Goal`，再读 `gsd-cad-admission.md` | 不把 Goal 状态当授权 |
@@ -60,13 +60,13 @@
 
 ## Plan-to-Goal Bridge
 
-Plan-to-Goal Bridge 是进入 Goal / Plan Grant 前的桥接检查，不是新的 Loop Profile、模式或独立 Skill。它用于把“先计划，再创建 Goal / 按计划推进 / 验证完成”这类诉求收敛进现有产研交付 Loop。
+Plan-to-Goal Bridge 是进入 Goal / Plan Grant 前的桥接检查，不是新的场景视图、模式或独立 Skill。它用于把“先计划，再创建 Goal / 按计划推进 / 验证完成”这类诉求收敛进角色协作 Loop 的产研交付视图。
 
 最小结构：
 
 ```text
 Plan-to-Goal Bridge:
-关联 Loop Profile:
+关联角色 Loop 场景视图:
 计划成熟度: Draft / Confirmable / Ready
 目标:
 成功标准:

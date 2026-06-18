@@ -1,6 +1,6 @@
-# 产研交付 Loop 内部 GSD/CAD 准入
+# 角色协作 Loop 产研交付视图内部 GSD/CAD 准入
 
-本文定义 AI Native Engineering Loop 中对中大型 AI 编码任务的 GSD/CAD 内部层准入判断。GSD 不再作为对外独立模式，而是产研交付 Loop 的分波计划层；CAD 不再作为对外独立模式，而是单个原子任务的受控执行子循环。本文只回答是否需要 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些缺口阻断 CAD、下一步交给谁；不替代资深架构师的工程任务包、`cad-mode.md` 或 Execution Grant。
+本文定义 AI Native Engineering Loop 中对中大型 AI 编码任务的 GSD/CAD 内部层准入判断。GSD 不再作为对外独立模式，而是角色协作 Loop 产研交付视图的分波计划层；CAD 不再作为对外独立模式，而是单个原子任务的受控执行子循环。本文只回答是否需要 GSD Round 0、如何形成 Wave/Atomic Task 候选、哪些缺口阻断 CAD、下一步交给谁；不替代资深架构师的工程任务包、`cad-mode.md` 或 Execution Grant。
 
 ## 使用时机
 
@@ -23,7 +23,7 @@
 
 ## 读取后必须产出
 
-- 产研交付 Loop 准入结论：轻量执行、进入 GSD Round 0、只做只读侦察、可形成 CAD 候选，或必须停止补上下文。
+- 角色协作 Loop 产研交付视图准入结论：轻量执行、进入 GSD Round 0、只做只读侦察、可形成 CAD 候选，或必须停止补上下文。
 - GSD / Loop / CAD 协同状态机：当前处于 Round 0、GSD Candidate、Wave Plan、Plan Grant Active、Loop Candidate、CAD Candidate、CAD Loop Active、Verified、Paused、Escalated 还是 Closed。
 - GSD Round 0 缺口：目标、非目标、对象/规则、OpenSpec、owner、写入范围、验证命令、风险确认方和停止条件。
 - Wave / Atomic Task 候选：只给候选形态、依赖顺序、owner、写入/只读边界、生产可用能力锚点、事实/推断/待确认边界和验证证据，不写成执行授权。
@@ -73,7 +73,7 @@ GSD/CAD 在 AI Native Engineering Loop 中分五层：
 
 | 层级 | 回答的问题 | owner |
 | --- | --- | --- |
-| AI Native Engineering Loop | 是否进入只读理解、产研交付、验证发布或知识回流 Loop，谁接下一步。 | 本技能 |
+| AI Native Engineering Loop | 是否进入角色协作 Loop，当前采用只读理解、产研交付、验证发布或知识回流哪个场景视图，谁接下一步。 | 本技能 |
 | GSD-like 大项目编排 | 什么可以被执行，如何用 Stage/Wave/Atomic Task 和上下文账本保持可恢复。 | `资深架构师` |
 | Agent Loop | 每轮如何读取状态、执行动作、吸收反馈、验证、停止和交接。 | 本技能编排，执行侧按 owner 分派 |
 | CAD Mode | 已选定的单个原子任务是否可以受控自动推进。 | `资深架构师` |
@@ -81,7 +81,7 @@ GSD/CAD 在 AI Native Engineering Loop 中分五层：
 
 边界句：
 
-- AI Native Engineering Loop 决定“是否进入产研交付 Loop、是否启用 GSD/CAD 内部层，以及下一步 owner”。
+- AI Native Engineering Loop 决定“是否进入角色协作 Loop 的产研交付视图、是否启用 GSD/CAD 内部层，以及下一步 owner”。
 - GSD-like 决定“哪些阶段和任务可以被执行”。
 - CAD Mode 决定“当前选中的原子任务是否可以自动执行”。
 - Agent Loop 决定“每轮如何读取状态、执行动作、吸收反馈、验证和停止”。
