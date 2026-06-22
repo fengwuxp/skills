@@ -116,7 +116,7 @@
 | 产品洞察、需求洞察、资料资产化、客户/竞品/标杆情报、机会雷达、证据推理链 | `product-insight-analyst.md`, `product-architecture-methodology.md` | 产品洞察报告：资料资产表、三类情报分拣、机会雷达、证据与推理链、置信度、待验证和建议去向；机会需要排序时再读 `po-backlog-manager.md` |
 | 产品头脑风暴、问题探索、方案发散、假设挑战、HMW、第一性原理、OODA、逆向头脑风暴 | `product-architecture-methodology.md` | 头脑风暴结论：探索模式、核心问题、目标用户、当前替代方式、关键假设、发散选项、删除/少做选项、反模式、下一步验证动作和进入问题地图/机会雷达/Backlog/PRD 的结论 |
 | 非标产品问题、老板/销售/客户/运营只给方向、跨团队诉求、需要产品专家判断解决方案 | `product-architecture-methodology.md` | 非标产品问题卡：真实问题、影响面、失败成本、现有替代方式、解决方案假设、验收种子、验证动作和进入 PRD/Backlog/AI Native 的结论 |
-| 概念膨胀、新旧规则并存、需求只加不减、事实源分裂、旧入口下线或概念生命周期 | `product-concept-lifecycle.md` | Concept Lifecycle Card：核心概念、事实源、旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、下线 owner 和待确认项 |
+| 概念膨胀、新旧规则并存、需求只加不减、事实源分裂、旧入口下线或概念生命周期 | `product-concept-lifecycle.md` | Concept Lifecycle Card：核心概念、事实源、新增/替代关系、净增概念数、旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、下线 owner、复审日期、退役条件和待确认项 |
 | 洞察太多、机会清单、需求池、路线图候选、Backlog 决策、优先级、P0/P1/P2、User Story、AC | `po-backlog-manager.md`, `product-design-and-prd.md` | Backlog 决策包：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、拒绝理由、User Story、AC、技术现实主义风险和待确认项 |
 | AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师 | `ai-native-product-context.md`, `product-architecture-methodology.md`；端到端流程和 GSD/CAD 准入交给 `ai-native-engineering-workflow`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和产品侧交接条件；不把可运行等同于可上线 |
 | 产品方案要交给架构师继续系统设计、业务驱动架构交接、产品语义到工程验证、验收种子到 TDD 交接 | `product-architecture-methodology.md`, `product-design-and-prd.md`, `product-prd-quality-gates.md` | 业务驱动架构交接包：目标/非目标/成功指标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项；必要时输出验收种子交接矩阵 |

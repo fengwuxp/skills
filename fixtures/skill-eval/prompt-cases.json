@@ -156,6 +156,21 @@
       "expected_handling": "进入角色协作 Loop / 意图到生产交付角色 Loop，按默认输出骨架给出结论、角色 Loop 场景视图、当前阶段、角色视角、能力/约规来源、owner/下一步分派、交接物、Loop Contract、证据边界、验证门禁、停止条件和残余风险；读取 intent-to-production-loop 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；GSD/CAD/Goal/Harness 只作为内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
     },
     {
+      "id": "ai-native-should-autonomous-discovery-to-delivery-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "进入 AI Native 角色协作 Loop：让 AI 可以自我挖掘需求和代码上下文，确认边界，设计并 CR 需求，然后执行 TDD、编码、代码 CR、验证实际可行，最后判断完成、继续 Loop、停止或需要人工确认；请给自主交付控制卡和人工确认边界。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入自主挖掘到交付的角色协作 Loop，按默认输出骨架给出结论、角色 Loop 场景视图、当前阶段、角色视角、能力/约规来源、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 intent-to-production-loop、agent-loop-engineering、code-delivery-closed-loop 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、代码 CR、安全可靠和发布风险回到资深架构师；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认。"
+    },
+    {
       "id": "ai-native-should-prd-system-design-deliberation-review",
       "skill": "ai-native-engineering-workflow",
       "query": "对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文。",
@@ -440,7 +455,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入架构排熵 Loop / 腐朽门禁模式，按默认输出骨架给出结论、角色 Loop 场景视图、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，输出 Architecture Entropy Card，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、扫描输入、状态回写位置、低风险动作、Maker / Checker、人工 triage、架构师路由和停止条件；强调排熵 Loop 只能自动化发现、低风险收敛和证据回写，不把能自动扫描当成可以自动删除、迁移、重写或上线。"
+      "expected_handling": "进入架构排熵 Loop / 腐朽门禁模式，按默认输出骨架给出结论、角色 Loop 场景视图、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 agent-loop-engineering，输出 Architecture Entropy Card，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、可执行约束 / 可追溯理由链、时间边界三问、复杂度棘轮、熵增仪表、理由保鲜、扫描输入、状态回写位置、低风险动作、Maker / Checker、人工 triage、架构师路由和停止条件；强调排熵 Loop 只能自动化发现、低风险收敛和证据回写，不把能自动扫描当成可以自动删除、迁移、重写或上线。"
     },
     {
       "id": "ai-native-should-quality-test-gate",
@@ -740,7 +755,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入遗留系统改造 / 架构排熵评审路径，读取 evolutionary-architecture、coding-review-deep-dive、adr-and-tradeoff 和 production-readiness；输出 Architecture Entropy Review，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、下线候选、契约测试、灰度/回滚、owner、验证命令和最小排熵计划；不直接大重写，不在缺证据时删除或迁移生产路径。"
+      "expected_handling": "进入遗留系统改造 / 架构排熵评审路径，读取 evolutionary-architecture、coding-review-deep-dive、adr-and-tradeoff 和 production-readiness；输出 Architecture Entropy Review，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、可执行约束 / 可追溯理由链、时间边界三问、棘轮基线、熵增仪表、理由保鲜、下线候选、契约测试、灰度/回滚、owner、验证命令和最小排熵计划；不直接大重写，不在缺证据时删除或迁移生产路径。"
     },
     {
       "id": "senior-should-push-back-tech-first-architecture",
@@ -971,7 +986,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入概念定名与概念生命周期治理路径，读取 product-architecture-methodology；输出 Concept Lifecycle Card，覆盖核心概念、事实源、目标主体、适用场景、非目标、与旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、数据口径、下线 owner 和待确认项；强调产品专家不能只加新名词或转发需求，必须说明旧概念如何被替代、保留、归档或停止使用。"
+      "expected_handling": "进入概念定名与概念生命周期治理路径，读取 product-architecture-methodology；输出 Concept Lifecycle Card，覆盖核心概念、事实源、目标主体、适用场景、非目标、新增 / 替代关系、净增概念数、谁拥有、与旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、数据口径、下线 owner、复审日期、退役条件和待确认项；强调产品专家不能只加新名词或转发需求，必须说明旧概念替代了什么、如何被替代、保留、归档或停止使用。"
     },
     {
       "id": "product-should-insight-opportunity-radar",

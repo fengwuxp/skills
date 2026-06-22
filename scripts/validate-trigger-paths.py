@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Validate high-value skill trigger and reference routing invariants.
 
 This is a small regression guard for the repo's most important skill routes.
@@ -390,6 +391,9 @@ ai_native_terms = [
     "生产重放",
     "变异测试",
     "对抗测试",
+    "自我挖掘",
+    "自主交付控制卡",
+    "人工确认边界",
     "默认授权",
     "自动推进",
     "按任务计划推进",
@@ -1214,7 +1218,10 @@ check(
             "第 3 篇：一个好的 Loop 到底由什么组成",
             "Seeek X",
             "AI Native Engineering Loop 统一入口和 GSD/CAD/Goal 压缩重构",
-            "Loop Contract、四类场景视图和 GSD/CAD/Goal 内部层映射",
+            "Loop Contract",
+            "四类场景视图",
+            "GSD/CAD/Goal 内部层映射",
+            "自主交付控制卡",
             "终于有人开始解决 AI Coding 最大的问题了：看不懂代码",
             "变更可理解性、结构上下文、影响可视化",
             "任何外部可视化 CLI、IDE 插件或厂商预览能力写成默认依赖",
@@ -1345,6 +1352,63 @@ check(
             "系分、TDD、编码、CR、安全可靠和发布回到 `资深架构师`",
             "结构化 Java Service 生成回到 `java-service-code-generator`",
             "设计、设计评审、TDD、编码、编码评审、可用性/安全性评估、验证发布",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps autonomous discovery delivery loop",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "自主交付闭环",
+            "自我挖掘",
+            "自主交付控制卡",
+            "必须人工确认",
+            "自我规划不能替代人工授权",
+        ],
+    )
+    and has_all(
+        ai_native_intent_to_production,
+        [
+            "自我挖掘与确认边界",
+            "自主交付控制卡",
+            "可自我挖掘",
+            "可自我规划",
+            "可自动执行",
+            "必须人工确认",
+            "确认规则",
+            "不能确认业务意图、需求价值、用户验收、架构批准、测试通过、CR 准出、Git 授权或上线审批",
+        ],
+    )
+    and has_all(
+        ai_native_agent_loop_engineering,
+        [
+            "自主推进边界",
+            "Discover evidence",
+            "Confirm boundary",
+            "Requirement CR",
+            "TDD candidate / RED",
+            "Complete / Loop / Stop / Human handoff",
+            "自我规划当人工确认",
+        ],
+    )
+    and has_all(
+        ai_native_code_delivery_closed_loop,
+        [
+            "自主交付完成判断",
+            "Agent 自述触发",
+            "Complete / Loop / Stop / Human handoff",
+            "必须人工确认项",
+            "不能把任务标记为完成",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "自主交付控制卡",
+            "需求确认",
+            "AI 自述完成",
+            "Complete / Loop / Stop / Human handoff",
         ],
     ),
 )
@@ -1866,6 +1930,7 @@ check(
             "架构排熵 Loop",
             "腐朽门禁",
             "Architecture Entropy Card",
+            "排熵循环必须能执行也能追溯",
             "低风险动作",
         ],
     )
@@ -1880,6 +1945,11 @@ check(
             "废弃 API / dead path",
             "概念膨胀 / 事实源分裂",
             "治理自腐 / 守卫自检",
+            "可执行约束 / 可追溯理由链",
+            "时间边界三问",
+            "复杂度棘轮",
+            "熵增仪表",
+            "理由保鲜",
             "低风险动作",
             "人工 triage owner",
             "不把能自动扫描当成可以自动删除",
@@ -1895,6 +1965,9 @@ check(
             "账号字段为 `浮之静`",
             "架构排熵 Loop",
             "Architecture Entropy Card",
+            "2026-06-22",
+            "可执行约束 / 可追溯理由链",
+            "时间边界三问",
             "不把能自动扫描写成可以自动删除、迁移、重写、合并、测试通过、CR 结论、执行授权或上线审批",
         ],
     )
@@ -5521,6 +5594,9 @@ check(
         senior_skill,
         [
             "架构代谢",
+            "可执行约束",
+            "可追溯理由链",
+            "时间边界先过三问",
             "可删除性",
             "排熵通道",
         ],
@@ -5548,8 +5624,32 @@ check(
             "概念膨胀",
             "治理自腐",
             "守卫自检",
+            "可执行约束 / 可追溯理由链",
+            "时间边界三问",
+            "棘轮基线",
+            "熵增仪表",
+            "理由保鲜",
+            "非对称稳定性",
             "最小排熵计划",
             "不得把自动扫描结果直接等同于可删除、可迁移、可重写或可上线结论",
+        ],
+    )
+    and has_all(
+        architecture,
+        [
+            "架构规则 = 被持续执行的约束 x 能追溯的理由链",
+            "执行点",
+            "理由指针",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "时间边界三问",
+            "重启之后",
+            "重放之时",
+            "状态不明时",
+            "时间边界缺失",
         ],
     )
     and has_all(
@@ -5559,6 +5659,9 @@ check(
             "深度思考：架构腐朽 & Loop Engineering",
             "https://mp.weixin.qq.com/s/wINKSDQCroWBvf29h567zA",
             "Architecture Entropy Review",
+            "2026-06-22",
+            "可执行约束 / 可追溯理由链",
+            "时间边界三问",
             "不把自动扫描、Loop、Checker 或规则检查写成可以自动删除、迁移、重写、合并、测试通过、CR 结论、执行授权或上线审批",
         ],
     ),
@@ -5570,7 +5673,8 @@ check(
         [
             "概念生命周期要能退役",
             "新增概念、规则、页面、状态或能力",
-            "旧概念如何保留、合并、迁移、归档或下线",
+            "谁拥有、替代什么",
+            "何时复审与退役",
         ],
     )
     and has_all(
@@ -5580,6 +5684,10 @@ check(
             "新旧概念并存",
             "概念生命周期与退役",
             "Concept Lifecycle Card",
+            "新增/替代关系",
+            "净增概念数",
+            "复审日期",
+            "退役条件",
             "不把概念退役写成工程删除授权",
         ],
     )
@@ -5589,10 +5697,14 @@ check(
             "产品概念生命周期与退役",
             "Concept Lifecycle Card",
             "当前事实源",
+            "新增 / 替代关系",
+            "净增概念数",
             "与旧概念 / 旧规则关系",
             "收敛 / 合并 / 废弃规则",
             "迁移路径",
             "下线 owner",
+            "复审日期",
+            "退役条件",
             "产品专家不把概念退役写成工程删除授权",
         ],
     )
@@ -5602,6 +5714,11 @@ check(
             "概念生命周期与退役",
             "深度思考：架构腐朽 & Loop Engineering",
             "https://mp.weixin.qq.com/s/wINKSDQCroWBvf29h567zA",
+            "2026-06-22",
+            "新增 / 替代关系",
+            "净增概念数",
+            "复审日期",
+            "退役条件",
             "不把概念退役写成工程删除、数据迁移、公共契约变更、执行授权或上线审批",
         ],
     ),
@@ -8532,6 +8649,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "intent-to-production-loop.md", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "agent-loop-engineering.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native autonomous discovery to delivery loop",
+        prompt="进入 AI Native 角色协作 Loop，让 AI 自我挖掘需求和代码上下文，确认边界，设计并 CR 需求，再执行 TDD、编码、代码 CR、验证实际可行，最后判断完成、继续 Loop、停止或需要人工确认，输出自主交付控制卡",
+        routes={"ai-native", "intent-to-production-loop.md", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "agent-loop-engineering.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native PRD system design deliberation review",
         prompt="对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -8909,7 +9031,7 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
-    if contains_any(prompt, ["意图到生产交付", "从意图", "需求收集", "生产交付闭环", "Intent-to-Production", "多角色分工", "阶段分工", "角色协作 Loop", "设计评审", "编码评审", "可用性安全性评估", "可用性 / 安全性", "按设计、设计评审、TDD、编码"]):
+    if contains_any(prompt, ["意图到生产交付", "从意图", "需求收集", "生产交付闭环", "Intent-to-Production", "多角色分工", "阶段分工", "角色协作 Loop", "设计评审", "编码评审", "可用性安全性评估", "可用性 / 安全性", "按设计、设计评审、TDD、编码", "自我挖掘", "自主交付控制卡", "人工确认边界"]):
         route.update(
             {
                 "ai-native",
@@ -8943,17 +9065,17 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
-        if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标"]):
+        if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "需求 CR", "CR 需求"]):
             route.add("prd-system-design-review.md")
         if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "问题核心诊断", "抓住问题的核心", "病机", "病 / 证 / 症", "定向", "定性", "定位", "定量", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债"]):
+        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债"]):
             route.add("agent-loop-engineering.md")
             route.add("agentic-engineering-governance.md")
             route.add("verification-review-release.md")
@@ -8974,7 +9096,7 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "事实来源", "系统 DNA", "不变量", "状态流转", "结构化契约", "正例 / 反例", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
-        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚"]):
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断"]):
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
@@ -9146,6 +9268,7 @@ for case_id in [
     "ai-native-should-demand-analysis-collaboration-gate",
     "ai-native-should-development-standards-gate",
     "ai-native-should-intent-to-production-role-loop",
+    "ai-native-should-autonomous-discovery-to-delivery-loop",
     "ai-native-should-role-collaboration-loop-main-flow",
     "ai-native-should-knowledge-expression-gate",
     "ai-native-should-nonstandard-problem-mode",
@@ -9194,6 +9317,39 @@ expected_handling_has(
         "TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师",
         "写代码的 Agent 不能自证通过",
         "不等于默认授权、测试通过、CR 结论或上线审批",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-autonomous-discovery-to-delivery-loop",
+    (
+        "自主挖掘到交付",
+        "角色协作 Loop",
+        "intent-to-production-loop",
+        "agent-loop-engineering",
+        "code-delivery-closed-loop",
+        "verification-review-release",
+        "自主交付控制卡",
+        "已读事实源",
+        "候选需求/问题",
+        "可自我挖掘",
+        "可自我规划",
+        "可自动执行",
+        "必须人工确认",
+        "置信度",
+        "状态回写位置",
+        "产品/交互设计",
+        "需求 CR/设计评审",
+        "TDD/测试设计",
+        "编码实现",
+        "代码 CR",
+        "验证发布",
+        "产品/交互设计和验收种子回到产品架构专家",
+        "TDD/测试设计、编码实现、代码 CR、安全可靠和发布风险回到资深架构师",
+        "Complete / Loop / Stop / Human handoff",
+        "不能把自我规划当授权",
+        "不能把 Agent 自述完成当证据",
+        "公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认",
     ),
 )
 
