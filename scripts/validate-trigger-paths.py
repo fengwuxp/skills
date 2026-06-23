@@ -5564,6 +5564,27 @@ check(
     ),
 )
 check(
+    "Java coding style follows project conventions first",
+    has_all(
+        senior_skill,
+        [
+            "编码风格以项目为准",
+            "默认先遵循项目统一编码规范、格式化配置、lint/静态检查和团队约规",
+            "参考当前项目已有代码的命名、分层、包结构、异常日志、测试和格式风格",
+            "不得按个人偏好或通用模板自行发挥",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "项目统一编码规范优先",
+            "局部风格服从项目已有代码、自动化检查和团队约规",
+            "编码前先查项目统一编码规范、格式化配置、lint/静态检查和邻近模块既有代码",
+            "不得自创一套写法",
+        ],
+    ),
+)
+check(
     "Java DTO atomic field ban is encoded in coding standards",
     has_all(
         coding,
