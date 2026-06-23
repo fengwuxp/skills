@@ -18,12 +18,13 @@ description: |
 
 1. **Clean Code**：代码先给人读，再给机器执行；命名、函数、注释、异常、测试和格式都服务于可理解性。
 2. **Clean Architecture**：以用例和业务规则为中心，框架、数据库、Web、消息、缓存和第三方 SDK 都是外围细节。
-3. **Simplicity**：坚持 KISS/YAGNI，只为确定需求引入必要抽象，不为未知未来制造当前复杂度。
+3. **Simplicity / 最小正确实现**：坚持 KISS/YAGNI，编码前先查已有实现、标准库、平台原生能力和已安装依赖；只为确定需求引入必要抽象，不为未知未来制造当前复杂度。
 4. **约束优先**：代码生成越便宜，越要先定义问题、边界、接口、状态和不做什么；用前置约束控制复杂度和注意力成本，不把后验修补当工程能力。
 5. **因境制宜**：架构必须响应业务阶段、组织能力、代码现状、运行环境和验证成本；外部方法论只能辅助判断，不能替代当前场景证据。
 6. **演进式治理**：系统是业务、技术、组织、运行环境共同作用的整体；架构取舍必须兼顾稳定与变化、复用与局部清晰、效率与可维护。
 7. **架构代谢**：健康架构不仅能新增能力，也能删除旧路径、收敛概念、下线临时适配和恢复治理检查；架构规则必须同时具备可执行约束和可追溯理由链，系统一旦长期只加不减，就要评估可删除性和排熵通道。
-8. **验证优先**：原则必须落到模块结构、接口契约、测试、静态检查、监控指标或评审清单；不得以口号替代工程验证。
+8. **深模块与信息隐藏**：好的模块用简单接口承载足够能力，把复杂度隔离在内部；警惕浅模块、直通方法、直通变量和公共知识泄露导致调用方理解成本上升。
+9. **验证优先**：原则必须落到模块结构、接口契约、测试、静态检查、监控指标或评审清单；不得以口号替代工程验证。
 
 ## 架构判断观
 
@@ -65,7 +66,7 @@ description: |
 4. **【强制】公共契约不可随意破坏** – 对外 API、DTO、枚举、错误码、配置项、消息体、数据库字段的破坏性变更必须给兼容方案、迁移路径和废弃周期。
 5. **【强制】不得返回模糊契约** – 公共 API 的空值、异常、权限、幂等和分页语义必须明确；内部 Java 空值契约遵循 JSpecify，列表默认返回空集合，不以 `null` 表示空列表。
 6. **【强制】不得把业务规则塞进错误层次** – Controller 不写领域规则，Mapper/Repository 不写业务决策，通用工具类不沉淀业务规则。
-7. **【强制】不得为了复用而复用** – 不为 DTO 构建、一行代码或偶发重复提取公有方法/工具类；公有方法参数超过 5 个必须先和用户确认。
+7. **【强制】不得为了复用而复用** – 不为 DTO 构建、一行代码或偶发重复提取公有方法/工具类；不得为了“少写”省略必要边界、错误处理、安全/权限/资金兜底或测试；公有方法参数超过 5 个必须先和用户确认。
 8. **【强制】不得引入无主依赖** – 新增依赖、starter、中间件、代码生成器或运行时代理前必须说明必要性、替代方案、版本风险和维护责任。
 9. **【强制】Java/Spring/Wind 模型与持久化约规不可绕过** – 对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity；模型转换优先使用 MapStruct；查询禁止 `LambdaQueryWrapper`，使用 MyBatis Flex `XxxRefs`；写库默认使用 selective 方法；不得擅自修改或删除有明确用途的注释代码。
 10. **【强制】业务代码不得用内存版 Service 冒充生产实现** – 除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外，生产源码路径不得出现 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或只在进程内保留状态的应用服务来承载真实业务能力。
@@ -103,7 +104,7 @@ description: |
 - **通用架构**：DDD、整洁架构、六边形架构、CQRS、事件驱动、模块化单体、微服务、数据一致性、可靠性、安全、可观测性和工程治理。
 - **分析表达**：产品语义校准、系分设计、工程能力映射、用例/流程/时序图、陌生代码库图形化理解、架构描述转图、技术方案、评审文档和故障复盘。
 - **跨语言工程**：识别语言运行时、构建、依赖、测试、质量和部署体系，按项目生态选择验证手段。
-- **AI 编码执行侧**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor 和验证闭环；端到端流程准入先由 AI Native 编排，中大型项目、长任务、上下文衰减、多 Agent/Wave 编排读 `references/ai-large-project-orchestration.md`，CAD Mode、Execution Grant 和自动分轮推进细节只读 `references/cad-mode.md`。
+- **AI 编码执行侧**：使用 OpenSpec / Superpowers / Harness 管理规格、TDD、Review、Refactor 和验证闭环；用最小正确实现门禁控制过度设计和无主复杂度；端到端流程准入先由 AI Native 编排，中大型项目、长任务、上下文衰减、多 Agent/Wave 编排读 `references/ai-large-project-orchestration.md`，CAD Mode、Execution Grant 和自动分轮推进细节只读 `references/cad-mode.md`。
 - **AI Native 交接消费**：消费 Product Context Card、Engineering Handoff Card 和 Production Loop Card，把已确认产品事实、工程执行边界和生产 Loop 门禁转成系统设计、任务包、测试策略、CAD 门禁、CR 重点和发布风险。
 - **Java/Spring/Wind**：Java 8+ / 21 / 25、JVM、JUC、Spring Boot、Validation、Transaction、Security、MyBatis Flex、Redis、MQ、缓存、事务、一致性与幂等。
 - **测试与交付**：TDD、测试分层、真实代码优先验证、Mock/Fake/Recording 边界、Spring 最小上下文、H2/Testcontainers、ArchUnit、P3C/PMD/SpotBugs/SonarLint、CI/CD、灰度、回滚和可观测性。

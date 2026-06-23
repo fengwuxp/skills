@@ -222,6 +222,7 @@ codegen_action_terms = ["生成", "转换", "转成", "脚手架", "配套代码
 codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Query", "Converter", "Entity", "代码"]
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
 ai_native_terms = [
+    "AI Native Engineering Loop",
     "AI Native 研发流程",
     "AI 流程",
     "AI 工作流",
@@ -436,6 +437,10 @@ ai_native_terms = [
     "上下文漂移",
     "变更可理解性",
     "影响可视化",
+    "复杂度投资",
+    "战术化编码",
+    "浅模块",
+    "直通包装",
     "图形化理解",
     "架构描述转图",
     "授权学习",
@@ -614,13 +619,12 @@ check(
             "产品语义、业务对象、机会雷达、Backlog、PRD、产品上下文包和 Product Context Card 由 `产品架构专家` 主导",
             "系统设计、OpenSpec、完整 Harness Plan、GSD/CAD 工程执行策略、代码实现、测试、CR、生产风险和 CAD Mode 由 `资深架构师` 主导",
             "本技能负责端到端角色协作 Loop 准入、owner、阶段顺序、角色视角、停止条件、授权策略和交接结论",
-            "GSD、CAD、Goal 不再作为对外并列模式",
+            "GSD、CAD、Goal、Harness、Grant、Agent Loop 都是角色协作 Loop 的内部层",
             "产研交付视图",
             "角色协作主流程",
             "目标与大项目编排",
             "评审与规格门禁",
             "质量门禁 / CR 发布模式",
-            "设计 Loop，不是把认知外包给 Agent",
             "人必须能解释目标、当前状态、关键变更、证据链、残余风险和停止理由",
             "实际项目编码 Loop",
             "证据边界：事实 / 推断 / 待确认 / 范围外不做",
@@ -731,8 +735,8 @@ check(
         "README.md",
         [
             "Wisdom Lens",
-            "角色协作 Loop 的内部路由",
-            "ai-native-engineering-workflow/references/",
+            "内部路由",
+            "Gitee 仓库 [aiami/huaxia-wisdom]",
         ],
     )
     and has_all(
@@ -1142,6 +1146,9 @@ check(
             "Gemini CLI",
             "AgentRC",
             "Understand Anything",
+            "Ponytail",
+            "最小正确实现工具",
+            "过度设计门禁",
             "安装 / 调用准入",
             "设计-代码对齐",
             "知识图谱",
@@ -1152,12 +1159,15 @@ check(
             "联网需求",
             "认证 / token",
             "工具输出交接格式",
+            "环境可用性记录规则",
+            "不把某台机器的安装路径、版本、shell 配置或登录状态写成默认可用能力",
             "不把任何工具写成默认依赖",
             "不默认安装、联网、登录、写文件、写配置或改代码",
-            "不默认运行远端安装脚本、插件安装命令、`/understand`、`/understand --auto-update`、dashboard、本地服务、post-commit hook 或 Git LFS 配置",
+            "不默认运行远端安装脚本、插件安装命令、lifecycle hook、`/understand`、`/understand --auto-update`、dashboard、本地服务、post-commit hook 或 Git LFS 配置",
             "不默认写入 `.github/copilot-instructions.md`、`.vscode/mcp.json`",
             "不默认写入、提交或同步 `.understand-anything/`、`knowledge-graph.json`、图谱中间产物、dashboard 产物或 hook",
             "不把工具输出当作 Execution Grant、CAD 授权、测试通过、发布批准或合规结论",
+            "不把 Ponytail 的“少写”当作删除输入校验、错误处理、安全、可访问性、资金/权限/生产兜底或必要测试的理由",
         ],
     )
     and has_all(
@@ -1349,7 +1359,7 @@ check(
         [
             "进入角色协作 Loop",
             "能力来源：产品 / 交互设计和验收种子回到 `产品架构专家`",
-            "系分、TDD、编码、CR、安全可靠和发布回到 `资深架构师`",
+            "系分、TDD、编码、最小正确实现检查、CR、安全可靠和发布回到 `资深架构师`",
             "结构化 Java Service 生成回到 `java-service-code-generator`",
             "设计、设计评审、TDD、编码、编码评审、可用性/安全性评估、验证发布",
         ],
@@ -1364,7 +1374,7 @@ check(
             "自我挖掘",
             "自主交付控制卡",
             "必须人工确认",
-            "自我规划不能替代人工授权",
+            "不把“可继续推进”写成“已经授权”",
         ],
     )
     and has_all(
@@ -1824,6 +1834,14 @@ check(
             "只读范围",
             "失败测试 / 验收样例",
             "TDD 顺序",
+            "最小正确实现门禁",
+            "复杂度投资门禁",
+            "控制 AI 战术化编码和复杂性扩散",
+            "不把测试变绿、PR 变多或代码更短当设计质量",
+            "如果简单需求牵动大量文件",
+            "浅模块",
+            "直通包装",
+            "测试变绿，但设计更难理解",
             "验证命令",
             "独立 Checker",
             "状态回写位置",
@@ -1903,7 +1921,8 @@ check(
         "README.md",
         [
             "AI 代码交付闭环",
-            "角色协作 Loop 的内部路由",
+            "内部路由",
+            "Agent Loop Engineering",
         ],
     )
     and has_all(
@@ -1930,14 +1949,14 @@ check(
             "架构排熵 Loop",
             "腐朽门禁",
             "Architecture Entropy Card",
-            "排熵循环必须能执行也能追溯",
+            "排熵与复杂度投资优先于战术生成",
             "低风险动作",
         ],
     )
     and has_all(
         ai_native_agent_loop_engineering,
         [
-            "### 4E. 架构排熵 Loop",
+            "## 4E. 架构排熵 Loop",
             "Architecture Entropy Card",
             "可删除性",
             "局部推理边界",
@@ -1954,6 +1973,7 @@ check(
             "人工 triage owner",
             "不把能自动扫描当成可以自动删除",
             "守卫自检必须和扫描结果一起输出",
+            "Ponytail-style 过度设计检查只能标注可删除复杂度候选",
         ],
     )
     and has_all(
@@ -1969,13 +1989,16 @@ check(
             "可执行约束 / 可追溯理由链",
             "时间边界三问",
             "不把能自动扫描写成可以自动删除、迁移、重写、合并、测试通过、CR 结论、执行授权或上线审批",
+            "DietrichGebert Ponytail",
+            "最小正确实现门禁",
+            "过度设计专项 CR",
         ],
     )
     and has_all(
         "README.md",
         [
             "架构排熵",
-            "角色协作 Loop 的内部路由",
+            "内部路由",
             "深度思考：架构腐朽 & Loop Engineering",
         ],
     ),
@@ -1990,8 +2013,8 @@ check(
             "Knowledge-to-Execution Card",
             "实际项目编码 Loop",
             "Coding Loop Contract",
-            "知识可执行性",
-            "编码 Loop 可用性",
+            "执行可靠性",
+            "知识表达、真实编码 Loop、反馈闭环",
         ],
     )
     and has_all(
@@ -2409,7 +2432,7 @@ check(
             "目标层、计划层、原子执行层和执行契约是内部层",
             "角色协作阶段只是编排坐标，不是能力来源",
             "能力来源：产品 / 交互设计和验收种子回到 `产品架构专家`",
-            "系分、TDD、编码、CR、安全可靠和发布回到 `资深架构师`",
+            "系分、TDD、编码、最小正确实现检查、CR、安全可靠和发布回到 `资深架构师`",
             "结构化 Java Service 生成回到 `java-service-code-generator`",
             "Java Service 脚手架",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
@@ -2447,20 +2470,20 @@ check(
             "默认不写文件、不联网、不安装",
             "做质量门禁",
             "测试矩阵、验证顺序、CR 前置条件、失败回退和残余风险交接",
-            "三卡交接",
-            "### 7. 不要这样用",
-            "只写一份普通 PRD、产品方案或 Backlog 决策",
-            "只做系统设计、代码 CR、Bug、测试或生产变更",
-            "角色协作 Loop 的目标是交付生产可用能力",
-            "内存版业务 Service",
-            "### 8. 最小输入清单",
+            "### 7. 最小输入清单",
             "`AI Native 研发流程编排`：当前材料成熟度",
             "`产品架构专家`：业务目标",
             "`资深架构师`：代码或文档路径",
             "`java-service-code-generator`：DDL/schema/Java 类/字段表格",
             "画图 / 工具准入",
+            "### 8. 不要这样用",
+            "只写一份普通 PRD、产品方案或 Backlog 决策",
+            "只做系统设计、代码 CR、Bug、测试或生产变更",
+            "角色协作 Loop 的目标是交付生产可用能力",
+            "内存版业务 Service",
             "## 完整能力索引",
-            "[AI Native Engineering Loop](./ai-native-engineering-workflow)",
+            "### AI Native Engineering Loop",
+            "路径：[ai-native-engineering-workflow](./ai-native-engineering-workflow)",
             "跨产品、UED、架构、AI Maker / Checker",
             "目标拆解、任务计划",
             "Spec/Harness",
@@ -2471,18 +2494,17 @@ check(
             "质量门禁",
             "只负责成熟度、owner、交接物、停止条件、授权策略和工具边界",
             "产品正文交给产品专家",
-            "工程实现交给架构师",
+            "工程实现、最小正确实现检查和过度设计 CR 交给架构师",
             "结构化代码生成交给代码生成器",
+            "内部路由",
             "从 AI 原型到工程化",
-            "### AI Native Engineering Loop 怎么用",
-            "当前输入成熟度：想法 / 原型 / 产品上下文包 / OpenSpec / 代码变更 / 发布计划",
-            "角色协作：设计 / 设计评审 / TDD / 编码 / 编码评审 / 可用性安全性评估 / 发布复盘",
-            "能力来源：产品 / 交互设计和验收种子回到产品架构专家",
-            "结构化 Java Service 生成回到 java-service-code-generator",
-            "目标产物：流程评审 / 交接包 / 授权策略卡 / 质量门禁 / 工具准入 / 发布复盘",
-            "先判断阶段、owner、能力来源和停止条件",
-            "再把正文产物分派给 `产品架构专家` 或 `资深架构师`",
-            "先做准入，不默认安装、联网或写配置",
+            "### 提示词公式",
+            "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
+            "用 AI Native Engineering Loop：按当前材料进入角色协作 Loop，输出当前阶段、角色视角、能力来源、owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派。",
+            "不覆盖现有文件",
+            "### 最佳实践",
+            "修改技能后先运行 `./scripts/validate.sh`",
+            "`./sync-skills.sh --dry-run all`",
         ],
     ),
 )
@@ -2491,33 +2513,32 @@ check(
     has_all(
         "README.md",
         [
-            "### 产品架构专家怎么用",
-            "`产品架构专家` 是产品语义和产品交付物的主入口",
-            "不负责工程实现、代码 CR、生产排障或工程执行授权",
-            "想法 / 口头需求 / 原型候选",
-            "PRD / 产品方案",
-            "需求评审前置扫描",
-            "AI 生成方案 / 多方争议",
-            "客户访谈 / 工单 / 竞品 / 行业资料",
-            "支付与资金产品",
-            "产品图形化交付",
+            "### 产品架构专家",
+            "路径：[product-architecture-expert](./product-architecture-expert)",
+            "PRD、产品方案、需求说明",
+            "产品洞察/机会雷达",
+            "Backlog 决策",
+            "原型/HTML/页面截图/交互稿反推 PRD",
+            "能力地图、业务流程、状态机、规则矩阵",
+            "支付与资金是重点能力",
             "输入材料、目标产物、业务边界、评审重点、验证要求",
             "Product Context Card",
             "业务目标、非目标、角色 / 主体、核心对象与状态、主流程与异常、关键规则、验收种子、风险与待确认项、专业确认方",
-            "### AI Native Engineering Loop 怎么用",
+            "不负责工程实现、代码 Review 和生产排障",
+            "### 资深架构师",
+            "路径：[senior-software-architect](./senior-software-architect)",
+            "架构设计、系统分析设计、技术方案、ADR、代码 Review、Bug 修复、测试/TDD、生产变更",
+            "架构腐朽 / 排熵 / 可删除性评审",
+            "代码或文档路径、现象/目标、运行环境、约束、期望验证命令",
+            "不替代产品专家定义复杂业务语义、PRD 和金融产品规则",
+            "### AI Native Engineering Loop",
             "`AI Native Engineering Loop` 是编排入口，不是万能执行入口",
-            "唯一外显主流程是角色协作 Loop",
-            "只读理解、产研交付、验证发布或知识回流视图",
-            "当前输入成熟度：想法 / 原型 / 产品上下文包 / OpenSpec / 代码变更 / 发布计划",
-            "目标产物：流程评审 / 交接包 / 授权策略卡 / 质量门禁 / 工具准入 / 发布复盘",
-            "角色协作：设计 / 设计评审 / TDD / 编码 / 编码评审 / 可用性安全性评估 / 发布复盘",
-            "能力来源：产品 / 交互设计和验收种子回到产品架构专家",
-            "结构化 Java Service 生成回到 java-service-code-generator",
-            "证据边界：事实 / 推断 / 待确认 / 范围外不做；禁止无根据猜测或超出用户目标的实现",
-            "授权策略：只读 / 计划内低风险执行 / 分波执行授权 / 原子任务授权 / 显式确认；Codex 替我审批仅限当前授权范围内低风险动作",
-            "先判断阶段、owner、能力来源和停止条件",
-            "再把正文产物分派给 `产品架构专家` 或 `资深架构师`",
-            "先做准入，不默认安装、联网或写配置",
+            "产品正文交给 `产品架构专家`",
+            "工程实现交给 `资深架构师`",
+            "角色协作阶段只是编排坐标，不是能力来源",
+            "不允许让 AI 随机推进模拟模块",
+            "内存版业务 Service",
+            "Gemini CLI / AgentRC / Understand Anything / Ponytail 准入",
             "用 AI Native Engineering Loop：按当前材料进入角色协作 Loop，输出当前阶段、角色视角、能力来源、owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派。",
         ],
     ),
@@ -3276,45 +3297,42 @@ check(
             "进入只读理解 Loop",
             "默认不写文件、不联网、不安装",
             "做质量门禁",
-            "三卡交接",
-            "### 7. 不要这样用",
+            "### 7. 最小输入清单",
+            "`AI Native 研发流程编排`：当前材料成熟度",
+            "`产品架构专家`：业务目标",
+            "`资深架构师`：代码或文档路径",
+            "`java-service-code-generator`：DDL/schema/Java 类/字段表格",
+            "画图 / 工具准入",
+            "### 8. 不要这样用",
             "只写一份普通 PRD、产品方案或 Backlog 决策",
             "只做系统设计、代码 CR、Bug、测试或生产变更",
             "从纯自然语言直接生成生产代码",
             "不要把工具、模板、目标、计划或授权机制名当主流程",
             "角色协作 Loop 的目标是交付生产可用能力",
             "内存版业务 Service",
-            "### 8. 最小输入清单",
-            "`AI Native 研发流程编排`：当前材料成熟度",
-            "`产品架构专家`：业务目标",
-            "`资深架构师`：代码或文档路径",
-            "`java-service-code-generator`：DDL/schema/Java 类/字段表格",
-            "画图 / 工具准入",
             "## 完整能力索引",
             "日常使用优先看上面的快速指南",
-            "[AI Native Engineering Loop](./ai-native-engineering-workflow)",
-            "[资深架构师](./senior-software-architect)",
-            "[产品架构专家](./product-architecture-expert)",
-            "[java-service-code-generator](./java-service-code-generator)",
+            "路径：[ai-native-engineering-workflow](./ai-native-engineering-workflow)",
+            "路径：[senior-software-architect](./senior-software-architect)",
+            "路径：[product-architecture-expert](./product-architecture-expert)",
+            "路径：[java-service-code-generator](./java-service-code-generator)",
             "原型/HTML/页面截图/交互稿反推 PRD",
             "正式图形默认 SVG",
-            "调用 `$fireworks-tech-graph` 续作",
+            "需要精细视觉时再调用 `$fireworks-tech-graph`",
             "## 5 分钟上手",
             "sync-skills.sh --dry-run all",
             "./scripts/validate.sh",
-            "先定业务和验收",
-            "根据页面截图反推可评审 PRD",
-            "先输出到 /tmp/order-scaffold 评审目录",
-            "### 常用组合路线",
+            "从 AI 原型到工程化",
+            "产品专家补产品上下文包、Backlog 和 PRD-Lite",
+            "架构师补 OpenSpec、Harness、测试策略、TDD、源码级 CR 和发布风险",
+            "### 常见组合",
             "从想法到工程",
-            "从原型到 PRD",
             "从普通图到复杂图",
-            "从架构描述到可编辑架构图",
-            "来源已审查且工具可用时，再让 Architecture Diagram Generator 生成可编辑草案",
+            "复杂可编辑架构图、代码库结构转图或多层架构图",
             "### 提示词公式",
             "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
-            "### 最佳实践与常见误用",
-            "不要把 `AI Native 研发流程编排` 当作 PRD 正文、源码级 CR 或代码生成的替代品",
+            "### 最佳实践",
+            "不要把 AI 原生工具的产品宣传或历史文章能力描述当作当前会话可用工具、执行授权、合规结论或生产审批",
             "## 维护者与高级扩展",
         ],
     ),
@@ -3518,6 +3536,25 @@ check(
             "架构评审、业务验证、测试资产和图形检查项",
             "不复制原文、SVG 插图、产品对比或作者表达",
             "不把通信复杂度绝对化为唯一复杂度来源",
+        ],
+    ),
+)
+check(
+    "README records software design philosophy source",
+    has_all(
+        "README.md",
+        [
+            "《软件设计的哲学》：复杂性的本质与模块化设计",
+            "https://mp.weixin.qq.com/s/gXhOwvKH5t6BxsxcoqUS2w",
+            "《软件设计的哲学》：实践智慧与超越代码的哲学",
+            "https://mp.weixin.qq.com/s/J9d5Ws6rIdsATPbT-UutAA",
+            "复杂性治理、深模块/浅模块、信息隐藏、设计两次、错误处理聚合、注释命名意图表达、AI 战术化编码风险和 TDD 后设计质量回看",
+            "南山斯帕克",
+            "深安斯帕克",
+            "2026-06-22 10:38:07",
+            "2026-06-23 07:47:00",
+            "移动端微信 UA `curl` 公开 HTML 读取标题、作者、账号、发布时间和正文",
+            "不把读书笔记写成官方标准、执行授权、测试通过、CR 结论或 AI 自动扩大范围的理由",
         ],
     ),
 )
@@ -3905,6 +3942,30 @@ check(
     ),
 )
 check(
+    "senior source map records software design philosophy notes",
+    has_all(
+        senior_source_map,
+        [
+            "微信公众号文章：《软件设计的哲学》读书笔记组",
+            "https://mp.weixin.qq.com/s/gXhOwvKH5t6BxsxcoqUS2w",
+            "《软件设计的哲学》：复杂性的本质与模块化设计",
+            "https://mp.weixin.qq.com/s/J9d5Ws6rIdsATPbT-UutAA",
+            "《软件设计的哲学》：实践智慧与超越代码的哲学",
+            "深安斯帕克",
+            "南山斯帕克",
+            "2026-06-22 10:38:07 Asia/Shanghai",
+            "2026-06-23 07:47:00 Asia/Shanghai",
+            "公开 HTML 读取标题、作者、账号、发布时间和正文",
+            "深模块与信息隐藏原则",
+            "复杂度可控、错误处理低层屏蔽 / 高层聚合",
+            "复杂性投资检查",
+            "复杂度投资门禁",
+            "不把“定义错误不存在”解释为吞异常",
+            "不把 TDD 反思写成反对测试",
+        ],
+    ),
+)
+check(
     "senior source map and README record Clean Architecture dependency rule source",
     has_all(
         senior_source_map,
@@ -4169,6 +4230,26 @@ check(
             "TDD、监控和评审门禁是让关键边上的业务事实、状态传播和失败语义变成反馈的手段",
             "通信复杂度搬家",
             "隐藏边抽象",
+        ],
+    ),
+)
+check(
+    "senior architecture keeps deep module information hiding lens",
+    has_all(
+        "senior-software-architect/references/architecture.md",
+        [
+            "### 5.3.2 深模块与信息隐藏",
+            "深模块",
+            "浅模块",
+            "信息隐藏",
+            "按任务职责分解",
+            "设计两次",
+            "多文件小改动信号",
+            "长度不是坏味本身，复杂性才是",
+            "减少直通包装",
+            "模块是否像深模块一样用简单接口封装复杂性",
+            "一个小需求是否出现多文件小改动、直通包装、重复协议知识、重复状态码或重复文件格式解析",
+            "是否比较过至少两种可行设计",
         ],
     ),
 )
@@ -4473,6 +4554,18 @@ check(
             "每条强制 / 推荐规则必须说明原因、适用范围、反例或示例、验证方式",
             "防御式编程规则覆盖输入校验、边界检查、类型转换、金额/精度、除零、异常传播、故障隔离和统一错误处理",
             "避免无上限递归、无界循环、共享全局状态、不可控随机/时间和有副作用表达式",
+            "最小正确",
+            "编码前执行最小正确实现门禁",
+            "已有实现可复用、标准库/平台原生/已安装依赖可覆盖",
+            "单实现接口、单调用工厂",
+            "不得以“少写代码”为理由删除输入校验、错误处理、防御式编程、安全/权限/资金兜底",
+            "复杂度可控",
+            "错误处理优先低层屏蔽",
+            "定义错误不存在",
+            "变量、方法、类和测试命名以阅读者能否理解为准",
+            "## 19. 设计质量回看",
+            "接口是否照顾 90% 常用场景",
+            "测试是否保护设计",
         ],
     )
     and has_all(
@@ -4483,6 +4576,31 @@ check(
             "不直接设计测试或用测试替代需求确认",
             "鲁棒性、异常恢复、安全监控、越界输入、状态异常和失败处理测试必须回链需求、AC、质量属性或已确认风险",
             "测试发现需求缺失、矛盾或不可测时，先回写 PRD / OpenSpec / 系分或待确认项",
+        ],
+    ),
+)
+check(
+    "senior review keeps minimal implementation and over-engineering pass",
+    has_all(
+        review,
+        [
+            "过度设计专项 CR",
+            "最小正确实现 / 过度设计专项 CR",
+            "不替代正确性、安全、性能和业务语义 Review",
+            "是否无需新增、是否已有 helper / type / pattern 可复用",
+            "JDK / Spring / 数据库 / 平台原生能力是否覆盖",
+            "单实现接口、单调用工厂、没人设置的配置项",
+            "输出每条建议时保持四要素：位置、可删内容、替代方案、不可删边界",
+            "替代方案优先级为：不做、复用仓库已有能力、标准库、平台原生能力、已安装依赖、最小显式实现",
+            "不得把过度设计专项 CR 当成正确性、安全、性能或发布准出结论",
+            "复杂性和模块边界 Review",
+            "追加复杂性投资检查",
+            "浅模块堆叠",
+            "直通包装",
+            "信息泄露",
+            "多文件小改动",
+            "战术 AI 代码",
+            "浅模块 / Classitis",
         ],
     ),
 )
@@ -5623,6 +5741,7 @@ check(
             "概念膨胀",
             "治理自腐",
             "守卫自检",
+            "最小正确实现 / 过度设计候选",
             "可执行约束 / 可追溯理由链",
             "时间边界三问",
             "棘轮基线",
@@ -5631,6 +5750,7 @@ check(
             "非对称稳定性",
             "最小排熵计划",
             "不得把自动扫描结果直接等同于可删除、可迁移、可重写或可上线结论",
+            "Ponytail-style 过度设计检查只能提出可删除复杂度候选",
         ],
     )
     and has_all(
@@ -6233,7 +6353,6 @@ check(
         "README.md",
         [
             "产品洞察/机会雷达",
-            "把这批客户访谈和竞品资料整理成机会雷达",
             "为什么你的 AI 只能写总结，别的产品经理已经用AI在挖需求机会了？附skill模板和调试方法",
             "product-insight-analyst.md",
             "产品洞察、资料资产化、客户/竞品/标杆情报分拣、机会雷达、证据与推理链和产品负责人决策边界",
@@ -6597,6 +6716,28 @@ check(
     ),
 )
 check(
+    "AI Native source map records software design philosophy complexity gate",
+    has_all(
+        ai_native_source_map,
+        [
+            "《软件设计的哲学》：复杂性的本质与模块化设计",
+            "https://mp.weixin.qq.com/s/gXhOwvKH5t6BxsxcoqUS2w",
+            "《软件设计的哲学》：实践智慧与超越代码的哲学",
+            "https://mp.weixin.qq.com/s/J9d5Ws6rIdsATPbT-UutAA",
+            "复杂度投资门禁、AI 战术化编码风险、人类理解责任和 Coding Loop 设计质量回看",
+            "深安斯帕克",
+            "南山斯帕克",
+            "2026-06-22 10:38:07",
+            "2026-06-23 07:47:00",
+            "移动端微信 UA `curl` 公开 HTML 读取标题、作者、账号、发布时间和正文",
+            "测试变绿、PR 变多或代码更短",
+            "浅模块、直通包装、公共知识泄露、多文件小改动、AI 注释噪声和只为过测试的战术实现",
+            "可以吸收复杂度投资门禁、深模块 / 浅模块、信息隐藏、设计两次",
+            "不得把读书笔记写成官方标准、吞异常依据、执行授权、测试通过、CR 结论或 AI 自动扩大范围的理由",
+        ],
+    ),
+)
+check(
     "product source map records diagram and service blueprint sources",
     has_all(
         product_source_map,
@@ -6795,8 +6936,6 @@ check(
     and has_all(
         "README.md",
         [
-            "产品大师 / MAGI 合议评审",
-            "用产品大师/MAGI 方式多视角评审这个 AI 生成 PRD",
             "我让3个AI吵了一整天架，它们把PRD写完了",
             "Kira2red/magi-product",
             "Kira2red/Kira-product-monster-skills",
@@ -8788,6 +8927,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md", "code-understanding-tools.md"},
     ),
     RouteFixture(
+        name="AI Native Ponytail minimal implementation admission",
+        prompt="用 AI Native Engineering Loop 评估 Ponytail 是否适合加入编码 Loop：要求编码前做最小正确实现检查，CR 时做过度设计专项检查，但不要默认启用 hook 或替代 TDD、安全和架构师源码级 Review",
+        routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md"},
+    ),
+    RouteFixture(
         name="AI Native authorized learning and knowledge flow",
         prompt="参考让 Codex 越用越聪明的方法，完善 AI 流程里的经验回流、授权学习、知识归位和不要把用户长期偏好写进仓库的边界",
         routes={"ai-native", "agentic-engineering-governance.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
@@ -9064,7 +9208,7 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
@@ -9097,7 +9241,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("spec-template-practices.md")
         if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "授权学习", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断"]):
             route.add("code-delivery-closed-loop.md")
-        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
+        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
@@ -9110,7 +9254,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "授权学习", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Understand Anything", "知识图谱工具", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -9207,6 +9351,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
     if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
         route.update({"senior", "testing.md", "workflow.md"})
+    if contains_any(prompt, ["Ponytail", "最小正确实现", "过度设计 CR", "过度设计专项", "源码级 Review"]):
+        route.update({"senior", "coding-review-deep-dive.md", "coding-standards.md"})
     if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
     if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "AI 编码", "编码约规", "流程能力", "Agent", "CAD"]):
