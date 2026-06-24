@@ -2,7 +2,7 @@
 
 本仓库用于维护可安装到 Codex 的 Skills。它不是轻量 prompt 集，而是一套可长期演进的 Agent 运行时资产库。
 
-仓库采用分层治理：`AGENTS.md` 保存每个会话都应知道的默认规则和安全边界；各技能的 `SKILL.md` 保存特定任务的入口、路由和红线；详细知识、模板和方法论放在对应技能的 `references/` 中；确定性生成、验证、同步和安全检查放在 `scripts/` 中；使用者长期学习数据只保存在用户目录 `~/.skill-learning/` 或 `SKILL_LEARNING_HOME`，不进入仓库。
+仓库采用分层治理：`AGENTS.md` 保存每个会话都应知道的默认规则和安全边界；各技能的 `SKILL.md` 保存特定任务的入口、路由和红线；详细知识、模板和方法论放在对应技能的 `references/` 中；确定性生成、验证、同步和安全检查放在 `scripts/` 中；Skill 改进只基于脱敏后的执行记录、验证结果、CR 结论和人工反馈。
 
 ## 用户使用指南
 
@@ -35,7 +35,7 @@
 - **只读理解视图**：阅读分析代码库、设计-代码对齐、工具准入、事实边界检查和影响范围识别；默认不写文件、不联网、不安装。
 - **产研交付视图**：从产品事实、PRD/Spec、设计评审、TDD、编码、编码评审、可用性/安全性评估到生产发布和反馈回流，目标是交付真实、可验证、可接手的生产可用能力。
 - **验证发布视图**：测试矩阵、质量门禁、CR 前置条件、失败回退、发布监控、残余风险和复盘。
-- **知识回流视图**：把已验证经验沉淀到 Skill、reference、fixture、脚本、用户指南或 source-map。
+- **知识回流视图**：把已验证经验沉淀到 Skill、reference、fixture、脚本、用户指南或 source-map；需要改进 Skill 时输出 Skill Improvement Card。
 
 AI Native 的默认输出骨架固定为：结论、角色 Loop 场景视图、当前阶段、角色视角、Owner / 下一步分派、交接物、Loop Contract、证据边界、任务层级、授权策略、验证门禁、停止条件、残余风险 / 需要确认。证据边界必须区分事实、推断、待确认和范围外不做；授权策略必须区分只读、计划内低风险执行、分波执行授权、原子任务授权和显式确认。
 
@@ -202,7 +202,7 @@ CODEX_HOME=/path/to/codex-home ./sync-skills.sh all
 
 `sync-skills.sh` 使用 `rsync --delete` 保持安装目录和仓库技能目录一致。正式同步前会备份已有目标技能目录到 `$CODEX_HOME/skills/.backups/`，但仍建议先执行 `--dry-run`，确认 `CODEX_HOME` 和目标技能列表正确。
 
-不要把使用者长期学习数据放在本仓库或安装后的技能目录中；技能同步可能删除安装目录里的额外文件。长期学习数据应保存在用户目录 `~/.skill-learning/`，或由 `SKILL_LEARNING_HOME` 指定的位置。
+不要把个人长期偏好、私有对话轨迹、客户资料、生产数据或敏感配置放在本仓库或安装后的技能目录中；技能同步可能删除安装目录里的额外文件。
 
 ## 维护者与高级扩展
 
@@ -237,13 +237,14 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - [google/eng-practices](https://github.com/google/eng-practices)：作为 `资深架构师` 代码评审标准、评论分级、变更颗粒度、作者/评审者协作和持续改善代码健康的公开参考来源。本仓库只吸收可迁移的 Review 与 Change Author 原则，不把它扩展为完整架构设计方法论；复用具体文本、示例或派生产物时必须保留来源、确认 CC-BY 3.0 归因要求并避免复制大段原文。
 - [Ivy-piger/Ivy-skills](https://github.com/Ivy-piger/Ivy-skills)：作为架构师陌生代码库侦察、Java 架构坏味启发式扫描、生产故障时间线、5-Why 复盘草稿和 Spring Boot 安全检查清单的公开参考来源。本仓库只吸收可复用流程和检查项，不安装或复制 Claude Code 专用 frontmatter、`CLAUDE.md` 流程、外部脚本或服务端运行逻辑；如需复用具体文本、脚本或资产，必须保留来源、确认许可证并执行供应链安全审查。
 - [cg0x-skills/cg0x-frame-analysis](https://github.com/cg0x-skills/cg0x-frame-analysis)：作为探索期反路径锁定、多框架分析、假设/盲区/失败条件自检的公开参考来源。本仓库只吸收通用方法到产品专家和架构师 reference，不引入 `alwaysApply`、`/on` `/off` 开关、单文件长 Skill 或默认不收敛的交付方式；复杂问题先展开问题地图，正式交付仍必须回到可评审、可验证、可验收的产物。
-- [zjunlp/SkillX](https://github.com/zjunlp/SkillX) 与论文 [SkillX: Automatically Constructing Skill Knowledge Bases for Agents](https://arxiv.org/abs/2604.04804)：作为从 Agent 执行轨迹提炼规划技能、功能技能、原子技能，迭代精炼、合并过滤和探索扩展技能知识库的公开参考来源。本仓库只吸收“经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证”的方法，不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码；任何长期学习仍必须遵守 `AGENTS.md` 的本地协作学习授权和隐私边界。
+- [zjunlp/SkillX](https://github.com/zjunlp/SkillX) 与论文 [SkillX: Automatically Constructing Skill Knowledge Bases for Agents](https://arxiv.org/abs/2604.04804)：作为从 Agent 执行轨迹提炼规划技能、功能技能、原子技能，迭代精炼、合并过滤和探索扩展技能知识库的公开参考来源。本仓库只吸收“经验分层、过滤噪音、合并重复、工具约束和失败模式进入确定性验证”的方法，不引入自动读取历史轨迹、自动学习用户数据、外部训练流水线或未审查代码。
 - 微信文章 [《Loop Engineering：让 AI 自己跑起来，你只管验收》](https://mp.weixin.qq.com/s/Ng_qit1H5t6yhqjVGNIHzg)：作为 `ai-native-engineering-workflow` 的意图到生产交付角色 Loop 和 Agent Loop Engineering 参考来源，用于 Automations、Worktrees、Skills、Connectors、Sub-agents、State、Maker / Checker 分离、状态落盘、人类验收、理解债和认知外包风险。2026-06-17 普通 `curl` 返回微信“环境异常”验证页，随后通过移动端微信 UA 公开 HTML 读取标题、作者/账号、meta 描述和正文；作者/账号字段为 `算法屋`，页面时间字段为 2026-06-11 08:00:00 Asia/Shanghai。本仓库只吸收可迁移方法，不复制原文、表格、比喻、引用表达、案例细节、作者口吻或标题传播话术，也不把 `/goal`、定时器、连接器、自动开 PR、sub-agent、worktree 或任何工具能力写成当前会话默认可用、默认授权、测试通过、CR 结论、合并判断或上线审批。
 - 微信文章 [《【译】别再手动写 Prompt 了，去写 Loop——但 Loop 到底是什么？》](https://mp.weixin.qq.com/s/cxRvqwWW4Yo4UmufAsXEEA)：作为 `ai-native-engineering-workflow` 的 Agent Loop Engineering 参考来源，用于 Loop 准入、GSD + Goal + Loop、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、反馈自检和 Skill 作为复用单位；2026-06-11 已通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文，页面时间字段为 2026-06-09 21:13:56 Asia/Shanghai。本仓库只吸收可迁移方法，不复制原文、推文、图片、成本数字、工具宣传、作者表达、命令示例或标题传播话术，也不把 `/goal`、`/loop`、auto mode、后台 Agent 或任一工具能力写成当前会话默认能力、最新事实、执行授权或上线审批。
 - 微信文章 [《Loop Engineering（Agent 闭环工程）》](https://mp.weixin.qq.com/s/mbjdMlSTqQG1EptOGoo6og)：作为 `ai-native-engineering-workflow` 的生产可用 Loop 门禁参考来源，用于自动化心跳、隔离 worktree、Skill 上下文、连接器权限、Maker / Checker 解耦、状态持久化、质量卡口、成本预算、观测审计、人工接管、发布/回滚和理解债控制；2026-06-12 已通过移动端微信 UA 公开 HTML 读取标题、作者、账号、页面时间字段和正文。本仓库只吸收可迁移门禁，不复制原文、工具宣传、示例 Prompt 或命令，也不把 `/goal`、`/loop`、Automations、Worktrees、Connectors、Sub-agents 或任何当前工具能力写成默认可用、默认授权、测试通过、CR 结论、合并判断或上线审批。
 - 微信文章 [《深度思考：架构腐朽 & Loop Engineering》](https://mp.weixin.qq.com/s/wINKSDQCroWBvf29h567zA)：作为 `ai-native-engineering-workflow`、`资深架构师` 和 `产品架构专家` 的架构排熵、可删除性、概念生命周期和治理自检参考来源。2026-06-17 `web.open` 未取得正文，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者/账号、meta 描述和正文；作者字段为 `lencx`，账号字段为 `浮之静`。2026-06-22 再次通过移动端微信 UA 读取公开 HTML，补充吸收“架构规则 = 可执行约束 x 可追溯理由链”、时间边界三问、复杂度棘轮、熵增仪表、理由保鲜、非对称稳定性和概念退场机制。本仓库只吸收持续排熵、可删除性、承重行为、概念膨胀、规则外置、Maker / Checker、Memory、守卫自检、人工 triage 和时间边界等可迁移门禁，不复制原文、图片、比喻、作者表达或标题传播话术，也不把自动扫描写成可以自动删除、迁移、重写、合并、测试通过、CR 结论、执行授权或上线审批。
 - Gitee 仓库 [aiami/huaxia-wisdom](https://gitee.com/aiami/huaxia-wisdom.git)：作为 `ai-native-engineering-workflow` 的 Loop 取舍校准 / Wisdom Lens 参考来源，用于 Loop 准入、GSD 拆解、执行核验、授权纠偏和复盘回流中的取舍、止损、节奏和反偏判断。2026-06-16 已安装到本地 Codex 技能目录并读取 `SKILL.md` 与各 reference，安装时 HEAD 为 `eef49d54e6266b1afc568ef591a6a2d4abd5ad8e`。本仓库只吸收工程化判断映射，不复制原文、示例、口吻或经典表达，不默认切换成文化化输出，也不把传统智慧框架写成事实证据、项目制度、Execution Grant、测试通过、CR 结论、Git 授权或上线审批。
-- 微信文章 [《一个让Codex变得越来越聪明的小方法》](https://mp.weixin.qq.com/s/G-tZjkhAd_yMAABBgNGVdw)：作为 `ai-native-engineering-workflow` 授权学习、经验归位和知识回流的公开参考来源。2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，页面作者字段为 `Dr.Joyi`，既有账号线索保留 `像素与咖啡时光`，页面时间字段为 2026-06-04；本仓库只吸收“反复踩坑来自稳定上下文缺失，执行经验、偏好理念和项目知识要进入合适载体”的可迁移方法，不复制原文、个人经历、提示词或作者口吻，也不把用户长期偏好写入仓库、安装目录或未授权学习目录。
+- 微信文章 [《一个让Codex变得越来越聪明的小方法》](https://mp.weixin.qq.com/s/G-tZjkhAd_yMAABBgNGVdw)：作为 `ai-native-engineering-workflow` 经验归位和知识回流的公开参考来源。2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，页面作者字段为 `Dr.Joyi`，既有账号线索保留 `像素与咖啡时光`，页面时间字段为 2026-06-04；本仓库只吸收“反复踩坑来自稳定上下文缺失，执行经验和项目知识要进入合适载体”的可迁移方法，不复制原文、个人经历、提示词或作者口吻，也不把个人长期偏好写入仓库或安装目录。
+- 微信文章 [《如何为你的 Skills 构建自我改进循环》](https://mp.weixin.qq.com/s/nMLDamB1Esj5UoGQQ68LKQ)：作为 `ai-native-engineering-workflow` Skill 自我改进外循环和知识回流的公开参考来源。2026-06-23 普通 `curl` 返回微信环境异常验证页，随后通过移动端微信 UA 公开 HTML 读取标题、页面时间字段和正文。本仓库只吸收“内循环执行 Skill，外循环按执行记录和人工反馈审查并生成最小 Skill 改进 diff”的可迁移方法，落实到 `AGENTS.md`、`code-delivery-closed-loop.md` 和本 README；不复制原文、图片、案例、平台实现或作者表达，也不把外循环写成自动提交、自动同步、读取私有轨迹或个人记忆机制。
 - 微信文章 [《架构8：架构设计三原则》](https://mp.weixin.qq.com/s/wc3xeSbBqb6ktEDz2ZuK7g)：作为 `资深架构师` 合适、简单、演化三类架构评审原则的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收当前约束匹配、结构/逻辑复杂度评估和演进式设计门禁，不复制文章案例、代码示例、图片或作者表达。
 - 微信文章 [《架构师底层思维能力要求-这7种尽早练习》](https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q)：作为 `资深架构师` 抽象、逻辑、结构化、批判、成长型、复盘和数据思维的公开参考来源。2026-05-28 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收底层思维能力框架、架构判断落点和常见误区，不复制原文图片、推荐书目、排版结构或作者表达。
 - 微信文章 [《软件复杂性的本质是通信复杂性》](https://mp.weixin.qq.com/s/1MbijKDxD2B4wa1E9QTnAw)：作为 `资深架构师` 通信复杂度、节点/边/状态传播、抽象隐藏边、复杂度转移检查，以及业务驱动架构/TDD 桥接的公开参考来源。2026-05-29 已通过公开 HTML 和本机 Chrome headless 读取标题、公众号、作者、发布时间和正文；本仓库只吸收架构评审、业务验证、测试资产和图形检查项，不复制原文、SVG 插图、产品对比或作者表达，也不把通信复杂度绝对化为唯一复杂度来源。
@@ -272,38 +273,23 @@ python3 scripts/skillx_export_adapter.py --validate-output /tmp/skillx-out/skill
 - [NASA SWE-052 Bidirectional Traceability](https://swehb.nasa.gov/x/AwIfBg)、[arc42](https://arc42.org/overview)、[C4 Model](https://c4model.com/diagrams)、[Atlassian PRD guide](https://www.atlassian.com/agile/product-management/requirements) 与 [ISO/IEC 25010 质量模型摘要](https://iso25000.com/index.php/en/iso-25000-standards/iso-25010)：作为需求到设计到验证的追踪、架构视图、质量属性和 PRD 假设/发布验证的公开参考来源。本仓库只吸收轻量检查项和模板槽位，不复制外部模板、图示、示例或品牌化流程。
 - [NN/g UX Mapping Methods](https://www.nngroup.com/articles/ux-mapping-cheat-sheet/)、[NN/g Service Blueprints](https://www.nngroup.com/articles/service-blueprints-definition/) 与 [draw.io GitHub integration](https://www.drawio.com/docs/integrations/github/)：作为产品图形化中用户旅程、服务蓝图、体验地图、可编辑图资产和仓库化维护的公开参考来源。2026-06-01 已读取公开页面；本仓库只吸收图型选择、前后台触点、支撑流程、证据/物料、可编辑源文件和权限边界，不复制 NN/g 表格/图示/课程材料、draw.io 集成步骤或品牌表达。
 
-### 本地协作学习机制
+### Skill 自我改进外循环
 
-本仓库只维护技能定义和协议，不保存使用者个人学习数据。本地协作学习机制用于提升使用者与技能的配合度，并在合适场景下协助使用者改进判断、表达和设计质量。该机制是可选项，默认关闭；只有用户明确同意启用后，才会在用户目录下创建 `~/.skill-learning/` 并保存长期使用习惯、团队决策偏好、业务背景和技能演进记录。如需自定义位置，可以设置 `SKILL_LEARNING_HOME`。
+Skill 改进分为内外循环：内循环按现有 Skill 执行真实任务；外循环基于脱敏后的执行记录、验证结果、CR 结论和人工反馈，生成最小 Skill 改进 diff。
 
-首次问询不是第一次使用技能时必问，而是先通过“学习时机判定算法”判断当前任务是否已经出现稳定偏好、团队约规、业务背景、反复决策方式等长期沉淀价值，并且不会打断关键任务时才询问。用户在单个技能场景下同意时，默认只开启当前技能；只有明确要求“所有技能”或“全局开启”时，才对所有技能生效。
-
-学习时机判定采用轻量算法：先识别候选观察，再从稳定性、复用价值、证据强度、可执行性、安全性五个维度评分，之后经过风险门禁决定不学习、静默进入 `Pending Observations`、显示确认后记录，或只做纠偏讨论。涉及隐私、金融/合规/安全、生产上线、权限边界、强约束偏好或用户可能错误判断时，不得静默学习。
-
-推荐结构：
+进入外循环前先写 Skill Improvement Card：
 
 ```text
-~/.skill-learning/
-  consent.md
-  global.md          # 可选：仅全局授权或明确跨技能约定时创建
-  skills/
-    <skill-id>.md
-  archive/
+目标 Skill:
+触发样例:
+错误表现:
+反馈证据:
+最小修改位置:
+验证方式:
+不得吸收:
 ```
 
-- `consent.md` 保存本地协作学习机制的启用标记。
-- `global.md` 保存跨技能通用约定，仅在全局授权或明确跨技能约定时创建。
-- `skills/<skill-id>.md` 保存单个技能的长期学习记录。
-- 技能目录只保存技能定义和 references，避免同步或重构时覆盖学习数据。
-- 用户明确拒绝启用时，不创建学习目录或文件，后续也不主动提示，除非用户主动提及。
-- 用户同意启用但未说明范围时，默认只开启当前技能。
-- 启用后默认采用混合模式：低风险常规观察可静默保存到 `Pending Observations`；可能影响长期行为、跨技能复用、业务/合规/隐私边界或强约束偏好的记录需要显示确认。
-- 启用后也不是所有观察都记录；必须先经过学习时机判定，并且去重、可追溯、可撤销。
-- 用户可以随时切换为静默模式、显示确认模式或混合模式。
-- 启用后默认采用协作型学习模型；用户可以切换为记录型、协作型或审查型。
-- 如果发现用户判断或设计可能存在错误、逻辑漏洞或红线风险，需要显示提示用户，并讨论确认改进方式。
-- 协作时会按当前话题动态判断用户专业程度，用于校准解释深度和纠偏强度；该判断不得固化为用户全局标签。
-- 提交、上传或共享到远程前需要用户确认。
+不得从单次失败泛化永久规则；不得把个人长期偏好、私有对话轨迹、客户资料、生产数据、密钥、外部文章原文、工具宣传或 Agent 自述写入仓库；不得自动提交、同步或发布。
 - 未经用户确认，不应把 `Pending Observations` 提升为 `Confirmed Agreements`。
 
 详细约定见 [AGENTS.md](./AGENTS.md)。

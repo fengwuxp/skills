@@ -9,9 +9,9 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind/Nobe Java Se
 
 本技能的代码生成规程参考 `https://github.com/fengwuxp/wind-middleware/tree/main/tools/mybatis-flex-codegen`，并叠加 `资深架构师` 技能中的代码约规与审查红线。
 
-## 本地协作学习机制
+## Skill 自我改进外循环
 
-本地协作学习机制遵循仓库 `AGENTS.md`；本技能不保存学习数据，学习记录只允许在用户明确同意后写入 `~/.skill-learning/` 或 `SKILL_LEARNING_HOME`。
+Skill 自我改进外循环遵循仓库 `AGENTS.md`。本技能只接收基于生成失败、fixture 失败、CR 反馈或项目约规偏差的最小改进；不保存个人长期偏好或私有轨迹，不把业务私有 schema 或生产配置写入仓库。
 
 ## 工作流程
 
