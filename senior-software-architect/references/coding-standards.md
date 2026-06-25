@@ -297,6 +297,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 【强制】Query 使用 `XxxQuery`，Request 使用 `XxxRequest`，DTO 使用 `XxxDTO`；创建、更新、保存等语义通过 `CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest` 等前缀区分。
 - 【强制】对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity、Mapper、Repository、内部状态机对象或持久化实现细节。
 - 【强制】Controller / Web API / face/api 对外契约禁止直接接收或返回 Entity；ApplicationService、DomainQueryService 对外返回 DTO/VO/Result，不把 Entity 泄露到模块边界外。
+- 【强制】接口、Service、ApplicationService、Facade、Adapter 的拆分必须承载真实业务职责、业务抽象或稳定契约，例如用例编排、事务边界、权限/审计、状态转换、跨资源协调、异常聚合或对外协议隔离；不得新增只透传调用、只改名转发、一行包装或似是而非的抽象。没有新增业务职责时，优先直接复用现有服务或保持局部实现。
 - 【强制】DTO、VO、Request、Response、Query、Command、Event 等数据传输对象的成员变量不得使用 `boolean`、`byte`、`short`、`int`、`long`、`float`、`double`、`char` 等 Java 原生基本类型，也不得使用 `AtomicInteger`、`AtomicLong`、`AtomicBoolean`、`AtomicReference`、`LongAdder`、`DoubleAdder` 等并发原子类型。数据传输对象是序列化契约和数据快照，应使用包装类型、枚举、值对象或明确的业务类型表达可缺省、默认值、精度和序列化语义；并发计数、CAS 状态变更和累加逻辑应在领域服务、聚合或基础设施层完成，再映射为普通契约字段。
 - 【强制】业务代码不得用内存版 Service 冒充生产实现。除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外，生产源码路径不得新增 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或只在进程内保留状态的应用服务来承载真实业务能力；需要临时验证时必须放在测试源码、fixture、demo 边界或受控沙盒中，并在交付中说明不能代表生产能力。
 - 【推荐】模块内部基础服务可以使用 Entity，但跨层、跨模块、跨系统传递时必须通过 Converter 转为 DTO、Request、Query、Command 或 Event。

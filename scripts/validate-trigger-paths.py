@@ -5587,6 +5587,36 @@ check(
     ),
 )
 check(
+    "Java service and interface split requires real business responsibility",
+    has_all(
+        senior_skill,
+        [
+            "接口和服务拆分必须有真实业务职责",
+            "ApplicationService",
+            "只透传调用",
+            "似是而非的抽象",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "接口、Service、ApplicationService、Facade、Adapter 的拆分必须承载真实业务职责",
+            "用例编排、事务边界、权限/审计、状态转换、跨资源协调",
+            "不得新增只透传调用、只改名转发、一行包装或似是而非的抽象",
+            "没有新增业务职责时，优先直接复用现有服务或保持局部实现",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "服务拆分职责检查",
+            "新增接口、Service、ApplicationService、Facade 或 Adapter 是否承载真实业务职责",
+            "透传式应用服务",
+            "用例编排、事务边界、权限/审计、状态转换、跨资源协调或对外契约隔离",
+        ],
+    ),
+)
+check(
     "Java DTO atomic field ban is encoded in coding standards",
     has_all(
         coding,
