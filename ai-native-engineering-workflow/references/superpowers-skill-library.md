@@ -1,18 +1,22 @@
 # Superpowers Skill Library 外部参考
 
-本文记录 `obra/superpowers` skills 下载结果、供应链边界和 AI Native 调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。
+本文记录 `obra/superpowers` 和 Matt Pocock skills 的审查结果、供应链边界和 AI Native 调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。
 
 ## 使用时机
 
 - 用户点名 Superpowers、Superpowers skills、brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting-code-review、verification-before-completion 等外部技能。
+- 用户点名 Matt Pocock skills、Grill-Me、Grilling、Trellis、轻量问询、盘问式澄清或一次一个问题的需求 / 设计收敛。
 - 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入 AI Native 研发流程编排。
+- 需要把模糊意图先收敛为关键分叉、建议答案、验收标准和任务树真相源，再交给产品专家、架构师或 AI Maker。
 - 需要判断某个 AI 编码任务应参考哪类工程纪律：澄清、计划、TDD、并行 Agent、代码评审、调试、完成前验证或分支收尾。
 - 需要审查外部 skill 包是否可作为方法来源、是否可复制、是否可安装或是否会引入脚本 / hooks / Git 操作风险。
 
 ## 不适用场景
 
 - 不直接安装 Superpowers 插件，不注册 marketplace，不运行外部 hooks，不执行外部脚本。
+- 不直接安装 Matt Pocock skills 全仓库、不运行 npm/package 脚本、不接入 Claude plugin 或 hooks；只在用户授权后考虑安装已审查的最小 Markdown skill。
 - 不把 Superpowers 的英文默认文档路径、自动提交、Git 推送、worktree 或 subagent 流程写成本仓库默认行为。
+- 不把 Trellis、Grilling 或任一外部 skill 写成默认依赖、默认联网、默认任务系统、默认执行授权或默认安装结果。
 - 不用外部 skill 的硬门禁覆盖用户授权、仓库 `AGENTS.md`、Codex 当前工具能力、项目验证命令或 `资深架构师` 的工程判断。
 - 不把外部 skill 原文当作当前项目事实、测试通过、CR 结论、Execution Grant、发布批准或合规结论。
 
@@ -22,6 +26,7 @@
 - 边界结论：哪些只是方法来源，哪些需要项目本地规则、人类 owner 或架构师继续确认。
 - 安全结论：是否涉及安装、脚本、联网、hooks、Git 推送、worktree、subagent 或写入范围扩大；如涉及，必须列为待授权或停止条件。
 - AI Native 映射：Superpowers skill 对应 OpenSpec、Harness、GSD/CAD、Spec 模板、TDD、CR 或验证发布的哪一段。
+- 轻量问询映射：Grilling / Grill-Me 对应角色协作 Loop 的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
 
 ## 需要继续读取的 reference
 
@@ -36,6 +41,8 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断 Superpowers 如何接入 AI Native | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
+| 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
+| 复杂 / 模糊需求轻量问询 | `grilling` 方法摘要，再回 `intent-to-production-loop.md` 和产品专家 | 不连续抛出多问题，不把问询过程写进正式 PRD |
 | 需求澄清 / Spec 前置 | `external-superpowers/brainstorming/SKILL.md`，再回 `product-to-engineering-lifecycle.md` | 不强制保存 `docs/superpowers/specs` |
 | 写实施计划 | `external-superpowers/writing-plans/SKILL.md`，再回 `spec-template-practices.md` | 不复制默认 plan 路径和提交步骤 |
 | 执行计划 / 多 Agent | `external-superpowers/executing-plans/SKILL.md`、`external-superpowers/subagent-driven-development/SKILL.md`、`external-superpowers/dispatching-parallel-agents/SKILL.md`，再回 `gsd-cad-admission.md` | 不默认启动 subagent、worktree 或并行写入 |
@@ -73,6 +80,17 @@
 - `writing-plans`
 - `writing-skills`
 
+## 1A. Matt Pocock skills 审查状态
+
+- 来源仓库：`https://github.com/mattpocock/skills`
+- 审查日期：2026-06-28
+- 读取方式：GitHub API / raw 读取仓库目录、`package.json`、LICENSE 和目标 skill；`git clone` 与 zip 下载在当前网络环境下超时，未完成全量落盘。
+- 许可证：MIT License。
+- 已审查最小目标：`skills/productivity/grilling/SKILL.md` 和 `skills/productivity/grill-me/SKILL.md` 均为纯 Markdown Skill，无脚本、hooks 或依赖；`grill-me` 只是转入 `grilling`。
+- 安装状态：已尝试使用 Codex 官方 skill-installer 安装 `skills/productivity/grilling` 与 `skills/productivity/grill-me`，被当前自动审批策略拦截；本仓库不得绕过审批手动写入安装目录。
+- 可吸收方法：复杂或模糊计划先沿设计树一次问一个问题；每问给建议答案；能通过代码库或材料自答的问题先自答；问询结论进入任务树、产品上下文卡、工程交接卡或下一阶段输入。
+- 不吸收项：不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis 或外部任务系统；不复制原文长提示；不采用 `dangerously-skip-permissions` 或任何跳过权限的默认模式。
+
 ## 2. 调度矩阵
 
 | Superpowers skill | AI Native 位置 | 调度方式 |
@@ -91,6 +109,8 @@
 | `finishing-a-development-branch` | 分支收尾 / PR / merge 决策 | 只作为收尾检查清单；不默认 push、merge 或 PR。 |
 | `writing-skills` | Skill 维护 | 只吸收测试、评估和渐进加载思路；本仓库以 `skill-creator` 和 `AGENTS.md` 为准。 |
 | `using-superpowers` | 外部库导览 | 只用于理解 Superpowers skill system，不作为执行入口。 |
+| `grilling` | 意图收集、自我挖掘、产品发现、设计评审、任务树前置 | 只吸收“一次一个问题 + 给建议答案 + 能自答先自答”；正式产品结论仍交给 `产品架构专家`，工程结论仍交给 `资深架构师`。 |
+| `grill-me` | `grilling` 的快捷触发 | 仅作为触发别名，不单独形成流程。 |
 
 ## 3. 安全边界
 
@@ -99,6 +119,7 @@
 - 当前仓库 OpenSpec / Superpowers / Harness 生成的文档或计划默认使用中文，除非用户明确要求其他语言。
 - 涉及资金、合规、安全、生产数据、不可逆操作或外部规则变化时，Superpowers 只能作为方法参考，必须保留专业确认、dry-run、回滚和审计边界。
 - 如果需要安装官方 Superpowers 插件，应另开工具准入判断：核验当前 Codex 插件状态、用户授权、目标目录、联网需求、同步影响和回滚方式。
+- 如果需要安装 Matt Pocock skills，只安装已审查的最小 Markdown skill，并通过 Codex 官方 installer 或用户明确授权的安全路径执行；安装失败或审批被拦截时，不绕过权限边界。
 
 ## 4. 调度输出模板
 
