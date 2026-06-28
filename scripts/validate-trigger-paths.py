@@ -462,6 +462,10 @@ ai_native_terms = [
     "架构描述转图",
     "Skill 自我改进",
     "经验归位",
+    "上下文资产化",
+    "知识生产 Loop",
+    "技术早报",
+    "WorkBuddy",
     "Skill 类型",
     "Skill 分类经验",
     "Anthropic内部Skills",
@@ -699,6 +703,9 @@ check(
             "AI 注释去噪与可读性门禁",
             "注释是否复述显而易见的 What / How",
             "优先进入测试资产",
+            "知识生产 Loop",
+            "先资产化业务背景、术语、标准格式、常用模板和历史坑点",
+            "不把厂商工具写成默认依赖",
         ],
     )
     and has_all(
@@ -801,6 +808,54 @@ check(
             "轻量问询 / 自我回答",
             "复杂或模糊任务一次只问一个关键问题",
             "能从材料、源码或测试自答的先自答",
+        ],
+    ),
+)
+
+check(
+    "ai-native workflow absorbs WorkBuddy as context asset practice not dependency",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "上下文资产和知识生产流程",
+            "上下文资产化、知识生产 Loop",
+            "上下文资产化 / 知识生产 Loop / Skill Improvement Card",
+        ],
+    )
+    and has_all(
+        ai_native_code_delivery_closed_loop,
+        [
+            "调研、早报、教程、培训、行业情报或团队知识传播",
+            "知识生产 Loop",
+            "先资产化业务背景、术语、标准格式、常用模板和历史坑点",
+            "不要每次从空白提示词重建上下文",
+            "不把厂商工具写成默认依赖",
+            "不替代架构判断、CR、测试结果、Git 授权或发布审批",
+        ],
+    )
+    and has_all(
+        product_insight,
+        [
+            "团队知识传播做成产品侧知识资产",
+            "产品侧知识资产包",
+            "业务理解、验收种子、团队复用和过期清理",
+        ],
+    )
+    and has_all(
+        ai_engineering,
+        [
+            "工程知识资产判断",
+            "代码库教程、架构培训、技术早报和方案沉淀必须能回链源码路径",
+            "不要用字数、生成速度或内容条数当工程价值指标",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "20年架构老兵的AI探索，让WorkBuddy帮你超越身边的人",
+            "腾讯云开发者",
+            "知识库先行、常用工作流固化成专家、信息整理可自动化、规则越具体越稳定、工具按职责分工",
+            "不把 WorkBuddy 写成默认依赖",
         ],
     ),
 )
@@ -9200,6 +9255,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native knowledge production loop",
+        prompt="参考 WorkBuddy 做 AI 技术早报和团队培训流程，把资料、业务背景和常用模板先上下文资产化，再设计知识生产 Loop、来源标识、验收 owner、更新频率和停用条件，但不要把厂商工具写成默认依赖",
+        routes={"ai-native", "code-delivery-closed-loop.md", "source-map.md"},
+    ),
+    RouteFixture(
         name="AI Native visual understanding for unfamiliar codebase",
         prompt="这个陌生多 Agent 代码库看不懂，先做图形化理解和架构描述转图的门禁，说明组件入口、启动顺序、认证权限、外部系统、数据消息流、源码锚点和进入 CR 的条件",
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md"},
@@ -9506,7 +9566,7 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "事实来源", "系统 DNA", "不变量", "状态流转", "结构化契约", "正例 / 反例", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
-        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断"]):
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断"]):
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")

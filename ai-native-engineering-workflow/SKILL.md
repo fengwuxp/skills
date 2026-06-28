@@ -105,7 +105,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Ask-or-Decide 
 - **只读理解视图**：用于阅读分析代码库、设计-代码对齐、外部工具准入、事实边界检查和影响范围识别；默认不写文件、不安装、不联网、不生成执行任务。
 - **产研交付视图**：角色协作 Loop 的完整交付视图，用于从意图 / 需求收集、产品事实、PRD/Spec、系分、设计评审、TDD、实现、编码评审、可用性 / 安全性 / 可靠性评估到生产发布和反馈回流的端到端编排；内部可调用目标层、计划层、原子执行层和执行契约。
 - **验证发布视图**：用于测试矩阵、质量门禁、CR 前置条件、失败回退、发布监控、残余风险和复盘回流；测试实现和源码级 CR 继续路由 `资深架构师`。
-- **知识回流视图**：用于把已验证经验沉淀到 Skill、reference、fixture、脚本、用户指南或 source-map；外部文章只保留可迁移方法、边界和证据索引。
+- **知识回流视图**：用于把已验证经验、上下文资产和知识生产流程沉淀到 Skill、reference、fixture、脚本、用户指南或 source-map；外部文章只保留可迁移方法、边界和证据索引。
 
 高频内部路由按下面分组选择，细节读取对应 reference：
 
@@ -115,7 +115,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Ask-or-Decide 
 - **评审与规格门禁**：PRD / 系分合议预审、MAGI、Spec / SDD / OpenSpec 模板最佳实践、AI 代码交付闭环；读 `prd-system-design-review.md`、`spec-template-practices.md` 和 `code-delivery-closed-loop.md`，只判断准入、角色分工、证据边界和准出路由。
 - **理解与工具门禁**：代码库理解、设计-代码对齐、Gemini CLI / AgentRC / Understand Anything / Ponytail、AI 注释去噪、最小正确实现门禁；读 `code-understanding-tools.md`、`verification-review-release.md` 和 `code-delivery-closed-loop.md`，先做权限、联网、写入和证据边界判断。
 - **Loop 执行与质量门禁**：自主交付控制卡、实际项目编码 Loop、Coding Loop Contract、反馈闭环成熟度、验证簇、架构排熵、最小正确实现、质量门禁 / CR 发布模式；读 `agent-loop-engineering.md` 和 `verification-review-release.md`。排熵只编排可执行约束、理由链、守卫自检和状态回写；源码级设计、TDD、测试实现、架构腐朽评审、Ponytail-style 过度设计 CR 和普通 CR 仍交给 `资深架构师`。
-- **治理与回流**：Loop 取舍校准 / Wisdom Lens、Skill 类型路由、外部 skill 轻量问询准入、知识回流、Skill 自我改进外循环和 source-map；读 `wisdom-loop-lens.md`、`skill-type-owner-routing.md`、`superpowers-skill-library.md` 和 `source-map.md`。`huaxia-wisdom` 只做取舍校准，不替代事实、证据、测试、CR、授权或上线审批。
+- **治理与回流**：Loop 取舍校准 / Wisdom Lens、Skill 类型路由、外部 skill 轻量问询准入、上下文资产化、知识生产 Loop、Skill 自我改进外循环和 source-map；读 `wisdom-loop-lens.md`、`skill-type-owner-routing.md`、`superpowers-skill-library.md`、`code-delivery-closed-loop.md` 和 `source-map.md`。`huaxia-wisdom` 只做取舍校准，不替代事实、证据、测试、CR、授权或上线审批。
 
 ## 参考路由
 
@@ -126,7 +126,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Ask-or-Decide 
 - `references/gsd-cad-admission.md`：角色协作 Loop 产研交付视图内部的大项目计划层、原子执行候选、授权边界、执行授权缺口和三卡到架构师消费规则。
 - `references/code-understanding-tools.md`：Gemini CLI、AgentRC、Understand Anything、Ponytail 等 AI 代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具准入。
 - `references/spec-template-practices.md`：Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、spec-lint、AC 覆盖、漂移检查和五支柱验证。
-- `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness 到最终可交付代码的闭环。
+- `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness 到最终可交付代码、知识回流和知识生产的闭环。
 - `references/goal-composition.md`：Loop 目标层、目标桥接、Goal 卡、状态机、Ledger、预算 / 时间盒、内部计划 / 原子执行 / Spec 关联和停止条件。
 - `references/agent-loop-engineering.md`：统一 Loop Contract、四类角色 Loop 场景视图、实际项目编码 Loop、反馈闭环成熟度、验证簇准入、架构排熵 Loop / 腐朽门禁、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
 - `references/wisdom-loop-lens.md`：huaxia-wisdom、Loop 取舍校准、东方判断层触发别名、阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛在 Loop 准入、拆解、执行核验、授权纠偏和复盘回流中的工程化映射。
@@ -146,7 +146,7 @@ Loop Contract：Goal / State / Plan / Action / Observe / Decide / Ask-or-Decide 
 - 大项目 Loop 准入结论、执行契约摘要、计划切片建议、原子执行缺口、授权边界卡。
 - 三卡交接包：Product Context Card、Engineering Handoff Card、Production Loop Card 的已具备字段、缺口、owner、验证证据和不可替代项。
 - 质量 / 测试门禁、代码库理解结论包、最小正确实现门禁、工具准入包、Spec 模板落地包、AI 代码交付闭环报告。
-- 目标桥接卡、Goal 目标层包、Skill 类型 owner 路由包、知识回流 / Skill Improvement Card、PRD / 系分合议预审报告、研发编码流程评审报告。
+- 目标桥接卡、Goal 目标层包、Skill 类型 owner 路由包、上下文资产化 / 知识生产 Loop / Skill Improvement Card、PRD / 系分合议预审报告、研发编码流程评审报告。
 
 ## 完成度自检
 
