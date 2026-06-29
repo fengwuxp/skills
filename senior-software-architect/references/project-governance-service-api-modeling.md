@@ -6,11 +6,13 @@
 
 - 需要评审 Service 调用链、Entity 暴露边界、API/DTO/Query 或方法命名。
 - 需要检查模型命名、Lombok/MapStruct、空值、异常、时间和金额约束。
+- 项目本地 `AGENTS.md` 明确 opt-in Wind 项目编码约规时，先读 `wind-project-coding-conventions.md` 再回到本文做通用建模对照。
 
 ## 不适用场景
 
 - 数据库、日志、安全、测试治理读 `project-governance-data-security-quality.md`。
 - 单文件 Java 编码细则优先读 `coding-standards.md`。
+- Wind/Nobe 风格项目的 face/impl、Processor/Executor、基础服务和分包约规优先读 `wind-project-coding-conventions.md`，不要机械套本文四类服务。
 
 ## 读取后必须产出
 
@@ -20,19 +22,20 @@
 
 - 深度编码规范读 `coding-standards.md`。
 - 代码 Review 定级读 `coding-review-deep-dive.md`。
+- Wind 项目编码约规 opt-in 时读 `wind-project-coding-conventions.md`。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| Service 分层和调用链 | 5 | API 和编码细则 |
+| Service 分层和调用链 | 5；Wind opt-in 时先读 `wind-project-coding-conventions.md` | API 和编码细则 |
 | 方法命名、Query/DTO | 6、7 | 服务层背景 |
 | API 设计 | 8 | 命名细节 |
 | 编码原则和模型规范 | 9 | API 细节 |
 
 ## 5. 服务层划分与调用关系
 
-服务层只允许以下四类：
+通用服务层建议优先归入以下四类；项目已有更具体的 face/impl、Processor/Executor、support 或应用层约规时，以项目规则为准，Wind opt-in 项目先读 `wind-project-coding-conventions.md`，不得为了套四类服务新增浅层透传。
 
 | 类型 | 命名 | 职责 |
 | --- | --- | --- |

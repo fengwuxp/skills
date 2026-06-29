@@ -121,6 +121,8 @@ negative_constraints = "senior-software-architect/references/negative-constraint
 architecture = "senior-software-architect/references/architecture.md"
 testing = "senior-software-architect/references/testing.md"
 coding = "senior-software-architect/references/coding-standards.md"
+wind_coding = "senior-software-architect/references/wind-project-coding-conventions.md"
+wind_coding_examples = "senior-software-architect/references/wind-project-coding-examples.md"
 knowledge_graph = "senior-software-architect/references/knowledge-graph.md"
 review = "senior-software-architect/references/coding-review-deep-dive.md"
 debugging = "senior-software-architect/references/debugging-diagnosis.md"
@@ -581,10 +583,86 @@ reference_headers = [
     ai_native_superpowers_library,
     ai_native_skill_type_owner_routing,
     ai_native_source_map,
-] + project_governance_refs + testing_practice_refs + skill_tree_refs
+] + project_governance_refs + [wind_coding, wind_coding_examples] + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
+
+check(
+    "senior architect exposes Wind project coding conventions opt-in",
+    has_reference_header(wind_coding)
+    and has_task_reading_index(wind_coding)
+    and has_all(
+        senior_skill,
+        [
+            "references/wind-project-coding-conventions.md",
+            "references/wind-project-coding-examples.md",
+            "项目 `AGENTS.md` 明确 opt-in",
+            "face/impl 边界",
+            "服务分层",
+            "模型归属",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "Wind 项目编码约规",
+            "项目 AGENTS.md opt-in",
+            "wind-project-coding-conventions.md",
+            "wind-project-coding-examples.md",
+            "不把 Wind 规则强套到所有 Java 项目",
+            "不为了套分层新增浅服务、透传接口或内存版业务实现",
+        ],
+    )
+    and has_all(
+        wind_coding,
+        [
+            "项目本地 `AGENTS.md` 明确标明",
+            "face/impl 模块边界",
+            "基础服务",
+            "应用层服务",
+            "DTO/Request/Query/Entity",
+            "分包规则",
+            "MyBatis Flex",
+            "内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传",
+            "`DomainService` / `DomainQueryService` 不是 Wind 项目强制分层",
+            "写操作用业务动词",
+            "公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc",
+            "`DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型",
+            "ApplicationService / ServiceImpl 流程测试保留真实内部协作者",
+            "TDD 先写能失败的行为测试",
+            "基础服务测试重点验证 QueryWrapper、Mapper 语义、分页、排序、selective 写库、事务事实和异常语义",
+            "完成 TDD 或 AI 生成实现后做设计质量回看",
+            "生产源码路径不得新增 `InMemoryXxxService`",
+            "项目本地 `AGENTS.md` 写明即可",
+            "需要最佳实践正反例时读 `wind-project-coding-examples.md`",
+        ],
+    )
+    and has_reference_header(wind_coding_examples)
+    and has_task_reading_index(wind_coding_examples)
+    and has_all(
+        wind_coding_examples,
+        [
+            "Wind 项目编码最佳实践示例",
+            "不是代码生成模板",
+            "ApplicationService 不是透传层",
+            "基础服务不是 Mapper 包装",
+            "模型边界不穿透",
+            "MyBatis Flex 查询集中表达",
+            "TDD 测真实链路",
+            "当前代码更接近反例还是正例",
+            "不把示例当模板复制",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "Wind 项目编码约规",
+            "项目 `AGENTS.md` 标明",
+            "不需要新建独立 Skill",
+        ],
+    ),
+)
 
 check(
     "repo agents constrain final deliverable documents",
@@ -9004,6 +9082,21 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "coding-review-deep-dive.md", "negative-constraints.md", "coding-standards.md"},
     ),
     RouteFixture(
+        name="wind project coding conventions opt in review",
+        prompt="这个 capte-domain 项目的 AGENTS.md 标明遵守 Wind 项目编码约规，帮我 CR face/impl 模块、基础服务、ApplicationService、DTO/Entity 分层和 MyBatis Flex 查询",
+        routes={"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"},
+    ),
+    RouteFixture(
+        name="wind project coding conventions opt in tdd",
+        prompt="这个 wind 项目 AGENTS.md 已标明遵守 Wind 项目编码约规，帮我按 TDD 给 ServiceImpl 和基础服务补测试，重点看真实内部链路、QueryWrapper、Mapper 语义和外部端口替身边界",
+        routes={"senior", "coding-standards.md", "testing.md", "wind-project-coding-conventions.md"},
+    ),
+    RouteFixture(
+        name="wind project coding examples",
+        prompt="这个项目已 opt-in Wind 项目编码约规，给 AI Maker 一些服务层、基础服务、DTO/Entity、MyBatis Flex 和 TDD 的最佳实践正反例参考",
+        routes={"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+    ),
+    RouteFixture(
         name="architecture decay entropy review",
         prompt="请用资深架构师视角 CR 这个遗留模块是否已经架构腐朽：大家不敢删旧代码，出现承重 bug、废弃 API、新旧 final 版本并存、循环依赖和治理规则失效。给出可删除性评审、守卫自检和最小排熵计划，不要建议大重写",
         routes={"senior", "evolutionary-architecture.md", "coding-review-deep-dive.md", "adr-and-tradeoff.md", "production-readiness.md"},
@@ -9675,6 +9768,10 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
+    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模块规则", "分包规则", "MyBatis Flex"]):
+        route.update({"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
+        if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker"]):
+            route.add("wind-project-coding-examples.md")
     if contains_any(prompt, ["架构腐朽", "架构排熵", "可删除性", "不敢删", "承重 bug", "承重行为", "废弃 API", "dead path", "final 版本", "治理规则失效", "治理自腐", "守卫自检", "最小排熵"]):
         route.update({"senior", "evolutionary-architecture.md", "coding-review-deep-dive.md", "adr-and-tradeoff.md", "production-readiness.md"})
     if contains_any(prompt, ["时间线", "5-Why", "故障复盘", "事故复盘", "线上复盘", "生产复盘", "回调大量超时", "影响面", "止血"]):

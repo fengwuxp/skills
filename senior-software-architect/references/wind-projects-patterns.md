@@ -40,31 +40,9 @@
 | 端口适配和 Starter 模式 | `4. 架构模式提炼` | 不让业务代码直接依赖厂商 SDK |
 | Java/Wind 落地 Review | `6. 对资深架构师 Skill 的 Java/Wind 落地要求`、`7. 可复用检查清单` | 不重复造已有基础能力 |
 
-## 目录
-
-- `1. 总体架构定位`
-- `2. API 设计风格`
-- `3. 编码风格提炼`
-- `4. 架构模式提炼`
-- `5. 模块治理提炼`
-- `6. 对资深架构师 Skill 的 Java/Wind 落地要求`
-- `7. 可复用检查清单`
-
 ## 1. 总体架构定位
 
 ### 1.1 项目族分层
-
-```text
-业务应用
-  ↓
-wind-security      安全、认证、授权、验证码、MFA、JWT
-wind-integration   企业集成：OSS、KMS、消息、IM、Office、指标、工作流、基础设施扩展
-wind-middleware    通用基础架构与中间件：Core、Web、Trace、Config、Client、Sentinel、RocketMQ、Sequence、Script、Mask、Archetype
-  ↓
-Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel / JVM
-```
-
-架构设计思路：
 
 - `wind-middleware` 提供应用运行底座和基础协议，优先沉淀跨项目通用能力。
 - `wind-integration` 提供企业应用集成能力，重点是外部服务抽象、适配器和基础设施扩展。
@@ -80,46 +58,21 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 
 ## 2. API 设计风格
 
-### 2.1 接口优先
-
-典型接口：
-
-- `ApiResponse<T>`：统一响应模型，包含 data、success、errorCode、errorMessage、traceId。
-- `WindTracer`：上下文追踪抽象，提供 traceId/spanId/context 读取和作用域执行。
-- `WindOssClient`：OSS 能力抽象，隐藏云厂商 SDK。
-- `MessageDefinition<T>` / `MessageSender<M>`：消息定义与发送通道解耦。
-- `AuthenticationTokenCodecService`：认证 token 生成、解析、验证、撤销。
-- `CaptchaManager` / `CaptchaStorage` / `CaptchaContentGenerator`：验证码生成、存储、发送、验证分离。
-- `MultiFactorAuthenticator`：MFA 类型与验证实现解耦。
-
-落地原则：
+典型接口：`ApiResponse<T>`、`WindTracer`、`WindOssClient`、`MessageDefinition<T>` / `MessageSender<M>`、`AuthenticationTokenCodecService`、`CaptchaManager`、`MultiFactorAuthenticator`。
 
 - 面向能力定义接口，不面向具体框架定义接口。
 - 接口方法体现业务语义，例如 `generateToken`、`parseAndValidateToken`、`revokeAllToken`、`verify`、`uploadFile`。
 - 可选能力使用 default 方法提供便利重载，核心能力保留抽象方法。
 - 支持扩展的接口必须提供 `supports(...)` 或唯一 `getName()` 识别机制。
 
-### 2.2 统一响应与异常
-
-- 响应模型包含 traceId，便于请求链路关联。
-- 成功与失败通过 `ExceptionCode.SUCCESSFUL` 等错误码统一判断。
-- `BaseException` 包含 `ExceptionCode`、消息模板、日志级别，支持友好异常、未授权、禁止、未找到等静态工厂方法。
-- Web 层通过统一过滤器和响应工厂将异常转换为 API 响应。
-
-落地原则：
+### 2.1 统一响应与异常
 
 - 业务异常必须携带错误码和可诊断消息。
 - 对外响应必须包含 traceId。
 - 异常转换应集中处理，避免 Controller 分散 try/catch。
 - 友好提示与内部错误诊断信息要分层处理。
 
-### 2.3 空值与参数约束
-
-- 内部服务、领域服务、应用服务和不会暴露到 API 层的端口契约，使用 `org.jspecify.annotations.Nullable` / `@NonNull` / `@NullMarked` 表达空值契约。
-- 会暴露到 API 层的参数、Request/Response/DTO/Query/Command 等数据模型，使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 表达 API 入参和字段约束；项目已迁移 Jakarta EE / Spring Boot 3+ 时使用 `jakarta.validation` 等价注解。
-- 查询对象、实体和接口均通过注解说明契约，而不是依赖口头约定。
-
-落地原则：
+### 2.2 空值与参数约束
 
 - 内部 Java 契约用 JSpecify，API 数据契约用 Bean Validation，其他前置条件和状态条件用 `AssertUtils`。
 - 已由 JSpecify 标注为非空的普通参数、返回值和字段，不再重复写无业务语义的空判断。
@@ -127,35 +80,9 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 
 ## 3. 编码风格提炼
 
-### 3.1 命名风格
-
-- 统一前缀：基础能力使用 `Wind` 前缀，例如 `WindTracer`、`WindOssClient`、`WindSecurityAccessOperations`。
-- 不可变模型使用 `ImmutableXxx`，例如 `ImmutableApiResponse`、`ImmutableCaptcha`。
-- 配置类使用 `XxxProperties`，自动装配类使用 `XxxAutoConfiguration`。
-- 能力抽象使用 `XxxClient`、`XxxOperations`、`XxxManager`、`XxxStorage`、`XxxFactory`、`XxxProvider`、`XxxRepository`。
-- 领域枚举实现 `DescriptiveEnum`，通过 `getDesc()` 提供展示语义。
-
-### 3.2 类结构
-
-- 工具类使用 `final class + private constructor + AssertionError` 防实例化。
-- 数据模型使用 Lombok 或 record，减少样板代码。
-- 不可变响应和事件模型倾向 final 字段、构造器和 Jackson 注解。
-- 组合模式使用 record 简化，例如 `CompositeMessageSender`、`CompositeMultiFactorAuthenticator`。
-- 可测试可见性使用 `@VisibleForTesting` 标识，不随意扩大生产 API。
-
-### 3.3 注释与文档
-
-- 公共接口、公有方法、核心模型字段保留 Javadoc。
-- 注释重点说明业务意图、边界、约束和第三方协议细节。
-- 对复杂算法或边界条件使用示例说明，例如游标分页和全文索引查询。
-- 外部协议常量、内网接口、安全约束需要写明风险边界。
-
-### 3.4 断言与错误处理
-
-- 业务前置条件优先使用 `AssertUtils`。
-- 不直接返回模糊错误；错误信息尽量包含参数名、资源名、场景名。
-- 允许“测试便利”分支，但必须有注释说明，例如无 Web 请求时设备类型回退为 UNKNOWN。
-- 可忽略异常必须限制范围并写明意图。
+- 命名：基础能力使用 `Wind` 前缀；不可变模型用 `ImmutableXxx`；配置类用 `XxxProperties`；自动装配类用 `XxxAutoConfiguration`；能力抽象常用 `XxxClient`、`XxxOperations`、`XxxManager`、`XxxStorage`、`XxxFactory`、`XxxProvider`、`XxxRepository`。
+- 类结构：工具类防实例化；简单模型可用 Lombok 或 record；组合模式可用 record 简化；可测试可见性用 `@VisibleForTesting`，不随意扩大生产 API。
+- 文档与错误：公共接口、公有方法和核心模型保留 Javadoc；业务前置条件优先 `AssertUtils`；错误信息包含参数名、资源名、场景名；可忽略异常必须限制范围并写明意图。
 
 ## 4. 架构模式提炼
 
@@ -191,14 +118,6 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 
 ### 4.3 Spring Boot Starter 自动装配模式
 
-典型样本：
-
-- `WindSecurityAutoConfiguration`。
-- `CaptchaAutoConfiguration`。
-- `WindOssAutoConfiguration`。
-
-落地原则：
-
 - 使用 `@ConditionalOnProperty` 控制能力开关。
 - 使用 `@ConditionalOnMissingBean` 支持业务方覆盖默认实现。
 - 使用 `@ConditionalOnBean` 组合已有能力，避免硬绑定。
@@ -207,105 +126,26 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 
 ### 4.4 上下文传播模式
 
-典型样本：
-
-- `WindTracer` / `WindTraceContext` 管理 traceId、spanId 和上下文变量。
-- `TraceFilter` 从请求头、IP、Host、Referer、User-Agent 等提取上下文并写回响应头。
-- `ContextPropagationTaskDecorator` 用于异步任务上下文传播。
-- 日志配置将 traceId、spanId、tenant、userId、requestUrl 等写入结构化日志。
-
-落地原则：
-
-- 入口处创建或接收 traceId，出口处返回 traceId。
-- 异步任务、线程池、消息消费必须显式传播上下文。
-- 日志、指标、响应和错误处理都应带 traceId。
-- 上下文变量应有统一 key，不在业务代码中散落魔法字符串。
+- `WindTracer` / `WindTraceContext`、`TraceFilter`、`ContextPropagationTaskDecorator` 承接 traceId/spanId/context；入口创建或接收，出口返回，异步任务、线程池、消息消费、日志、指标、响应和错误处理都要显式传播，不在业务代码散落魔法 key。
 
 ### 4.5 查询与分页模式
 
-典型样本：
-
-- `AbstractCursorQuery` 限制最大查询大小，要求游标字段参与排序。
-- `MybatisQueryHelper` 将统一 Query 对象转换为 MyBatis Flex `QueryWrapper`、`Page`、`Pagination`。
-- 查询排序使用 `QueryOrderField` / `QueryOrderType`，避免前端直接传 SQL 字段。
-
-落地原则：
-
-- 查询必须使用 Query 对象，禁止 Controller 传散装查询参数进入 Mapper。
-- 排序字段必须白名单化。
-- 深分页场景优先游标分页。
-- 分页转换、游标计算、排序构建应集中在 helper，不散落在 Service。
+- `AbstractCursorQuery`、`MybatisQueryHelper`、`QueryOrderField` / `QueryOrderType` 用于 Query 对象、最大页大小、排序白名单、游标分页和 MyBatis Flex `QueryWrapper` 构造；禁止 Controller 传散装查询参数进入 Mapper。
 
 ### 4.6 安全域模式
 
-典型样本：
-
-- JWT：`JwtTokenCodec` 负责签发、解析、校验 access/refresh token。
-- Token 状态：`AuthenticationTokenUserMapFactory` 维护 user/device 与 token id 的映射，用于撤销和单设备控制。
-- RBAC：`WindRbacRole`、`WindRbacPermission`、`WebRequestAuthorizationManager` 抽象请求权限加载和校验。
-- 验证码：生成、存储、发送、验证、流控分离。
-- MFA：注解 `@MultiFactorAuthentication` + AOP 拦截 + 状态管理 + Sentinel 限流。
-
-落地原则：
-
-- 身份认证、权限校验、二次认证、验证码流控必须分层建模。
-- Token 不应只校验签名，还应具备撤销、设备隔离和刷新令牌管理能力。
-- 安全动作必须具备限流、防重放、失败次数控制、审计和错误收敛。
-- 权限模型应以资源、角色、权限、请求加载器解耦，避免硬编码 URL 权限。
+- JWT、Token 状态、RBAC、验证码和 MFA 分层建模；Token 不只校验签名，还要考虑撤销、设备隔离和刷新令牌；安全动作必须有流控、防重放、失败次数控制、审计和错误收敛。
 
 ### 4.7 企业集成模式
 
-典型样本：
-
-- OSS/KMS/Email/DingTalk/IM/Office/Workflow 都先定义业务端口，再引入具体实现。
-- `WindTaskDefinition`、`WindTaskRunnable` 表达可重试、可串行、可限速的业务任务。
-- `LockTemplate`、`RedissonWindLock`、`ProgrammaticTransactionTemplate` 封装基础设施能力。
-- `EnvIsolationObject`、`TenantIsolationObject`、`BaseEntity`、`TreeEntity` 建立通用数据模型约定。
-
-落地原则：
-
-- 企业集成模块必须隔离外部 SDK 和协议差异。
-- 跨系统任务必须考虑幂等、重试、串行、限速、上下文和补偿。
-- 环境隔离、租户隔离、资源定义应成为模型契约，而不是散落字段。
-- 内网接口必须有明确前缀和安全边界，例如 `/inc/basic` 与 `/inc/secure`。
+- OSS/KMS/Email/DingTalk/IM/Office/Workflow 先定义业务端口再接具体实现；跨系统任务考虑幂等、重试、串行、限速、上下文和补偿；环境隔离、租户隔离、资源定义成为模型契约；内网接口有明确前缀和安全边界。
 
 ## 5. 模块治理提炼
 
-### 5.1 wind-middleware 模块地图
-
-- `wind-core`：基础 API、响应、异常、签名、查询、枚举、资源模型。
-- `wind-common`：锁、配置、事件、Spring 工具、缓存 Map、限流等通用能力。
-- `wind-web` / `wind-server`：Web 响应、TraceFilter、异常处理、审计、i18n、Actuator、过滤器自动装配。
-- `wind-tracer`：trace 上下文和异步传播。
-- `wind-client`：RestClient/Retrofit 客户端、签名、响应解包、请求日志。
-- `wind-config-center`：配置仓储与 Nacos 适配。
-- `wind-sentinel`：限流资源和配置中心数据源。
-- `wind-rocketmq`：RocketMQ listener/producer 增强。
-- `wind-sequence`：序列号生成与存储。
-- `wind-idempotent`：幂等调用抽象。
-- `object-mask` / `logback-kafka-appender`：脱敏与结构化日志。
-- `wind-archetype`：应用项目模板。
-
-### 5.2 wind-integration 模块地图
-
-- `core`：消息、任务、工作流参与人、通用实体、资源定义。
-- `extends/infra-commons`：Redisson 锁、KMS 加密器、事务模板等基础设施扩展。
-- `extends/mybatis-flex-extends`：加密 TypeHandler、Locale TypeHandler、环境隔离插入监听、查询 helper。
-- `office`：Office/Excel 导入导出任务模型。
-- `wind-oss`：OSS API、阿里云适配器、starter。
-- `wind-kms`：KMS API、阿里云适配器。
-- `wind-message`：钉钉、邮件消息发送。
-- `wind-im`：WebSocket/Socket.IO 即时通信。
-- `wind-metrics`：指标聚合、标签、统计执行器。
-- `wind-workflow`：审批流定义模型。
-
-### 5.3 wind-security 模块地图
-
-- `core`：安全访问操作、RBAC 资源、角色、权限、变更事件。
-- `jwt`：JWT 编解码和过期异常。
-- `authentication`：token 编解码、用户 token 映射、请求权限管理、自动装配。
-- `captcha`：验证码类型、内容生成、存储、发送、流控、自动装配。
-- `mfa`：TOTP、MFA 状态管理、MFA 注解与方法拦截。
+- `wind-middleware` 侧重基础 API、统一响应、Web/Trace、Client、MQ、Sequence、幂等、脱敏和项目模板。
+- `wind-integration` 侧重 OSS、KMS、消息、IM、Office、指标、工作流、MyBatis Flex 扩展和基础设施适配。
+- `wind-security` 侧重认证、授权、JWT、验证码、MFA、Token 状态和请求权限管理。
+- 模块地图只用于能力定位；当前项目的真实模块、依赖、包名和验证命令仍以本地仓库为准。
 
 ## 6. 对资深架构师 Skill 的 Java/Wind 落地要求
 
@@ -324,22 +164,5 @@ Spring / MyBatis Flex / Redis / MQ / OSS / KMS / Kafka / ElasticJob / Sentinel /
 
 ## 7. 可复用检查清单
 
-### 7.1 设计评审
-
-- 是否复用了已有 Wind 基础能力，而不是重复造轮子？
-- 核心接口是否隔离了 Spring、厂商 SDK 和中间件细节？
-- 自动装配是否支持配置开关和 Bean 覆盖？
-- Trace、错误码、日志、异常是否贯通？
-- 安全能力是否考虑撤销、流控、重放、失败次数和审计？
-- 查询是否有最大页大小、排序白名单和深分页策略？
-- 外部集成是否有幂等、重试、超时、限流和补偿？
-
-### 7.2 代码评审
-
-- 公共接口是否有 Javadoc、validation、nullability？
-- 命名是否符合 `WindXxx`、`ImmutableXxx`、`XxxProperties`、`XxxAutoConfiguration`、`XxxClient` 等项目风格？
-- 是否存在直接使用厂商 SDK 的业务代码？
-- 是否存在 Controller 直接处理认证、验证码、MFA、消息发送、OSS 操作的流程编排？
-- 是否存在魔法字符串形式的 trace key、header name、cache name、resource name？
-- 是否存在不支持类型时静默失败的 Composite/Manager？
-- 是否存在吞异常、缺少 traceId、缺少错误码或缺少日志上下文？
+- 设计评审：是否复用已有 Wind 基础能力；核心接口是否隔离 Spring、厂商 SDK 和中间件细节；自动装配是否支持开关和 Bean 覆盖；Trace、错误码、日志、异常是否贯通；安全、查询和外部集成边界是否完整。
+- 代码评审：公共接口是否有 Javadoc、validation、nullability；命名是否符合 `WindXxx`、`ImmutableXxx`、`XxxProperties`、`XxxAutoConfiguration`、`XxxClient` 风格；是否直接使用厂商 SDK、在 Controller 拼装安全/消息/OSS 流程、散落魔法 key、静默忽略不支持类型、吞异常或缺少 traceId。
