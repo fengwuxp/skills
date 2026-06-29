@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 项目本地 `AGENTS.md` 明确标明、任务说明或用户要求遵守 Wind 项目编码约规。
-- 评审 face/impl 模块边界、基础服务、应用层服务、DTO/Request/Query/Entity、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
+- 评审 face/impl 模块边界、基础服务、应用层服务、DTO/Request/Query/Entity、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
 
 ## 不适用场景
 
@@ -24,26 +24,28 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| opt-in / 模块 / 分包 / Service / 模型 / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
+| opt-in / 模块 / 分包 / 模型包归位 / Service / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
 | 最佳实践 / 示例 / 正反例参照 | `wind-project-coding-examples.md` | 不把示例当完整模板或代码生成规则 |
 
 ## 1. 启用、模块与分包
 
 - 启用：项目本地 `AGENTS.md` 写明即可，例如“本项目遵守 Wind 项目编码约规”；启用后仍按项目 `AGENTS.md`、OpenSpec、ADR、CI、附近代码、本规约的顺序取舍。
 
-- 模块：`*-face` 只放对外契约：`service/services`、`dto`、`request`、`query`、`enums`、`constants`；`*-impl` 放 `service/impl`、`impl`、`dal/entities`、`dal/mapper`、`mapstruct`、`support`、`configuration`；Controller 不直接访问 Mapper/Entity。
+- 模块：`*-face` 只放对外契约：`service/services`、必要的 `application` 契约、`dto`、`request`、`query`、`enums`、`constants` 和明确需要跨模块消费的 `event`；同一 face 有多个业务子域时，可按业务名继续分包，例如 `transaction/dto`、`channel/request`、`domain/dto`、`domain/request`，但 `domain` 必须表示稳定业务语义，不得作为杂物包。`*-impl` 放内部 `service` / `service/impl`、`application/impl`、`domain` / `domain/impl`、`impl`、`dal/entities`、`dal/mapper`、`mapstruct`、业务/通道 `converter`、`support`、`configuration` 和内部枚举；`web-api` / `web-security` 放 Controller、Web VO、Web 登录/表单 Request 和 Web 层 Converter；`core` 只放跨域共享的值对象、枚举和事件，不放业务模块私有 DTO/Request/Query/Entity。Controller 不直接访问 Mapper/Entity。
 
 ## 2. 服务层
 
-- Face Service 是对外稳定契约，`ServiceImpl` 承接校验、状态、事务和数据访问协调；ApplicationService 只在完整用例编排、事务边界、权限/审计、跨服务协调或外部副作用明确时使用。
+- Face Service 是对外稳定契约，`ServiceImpl` 承接校验、状态、事务和数据访问协调；ApplicationService 只在完整用例编排、事务边界、权限/审计、跨服务协调或外部副作用明确时使用。若 ApplicationService 作为对外用例契约出现，接口放 `*-face/application`，实现放 `*-impl/application/impl`，签名仍只用 Request/DTO/Query/值对象。
+- 服务层接口先按调用方契约设计：face Service 和跨模块接口只暴露 `DTO`、`Request`、`Query`、`Command`、枚举或值对象，不暴露 `Entity`；`ServiceImpl` 可在内部读取和更新 `Entity`，但不得把 `Entity` 透传给 Controller、face、ApplicationService 对外方法、Facade、Adapter 或其他域。
 - 内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传；接口、Service、Facade、Adapter 必须有真实业务职责，不新增一行 wrapper、改名转发、浅模块或似是而非抽象。
-- `DomainService` / `DomainQueryService` 不是 Wind 项目强制分层；只有确有领域规则、状态变化、查询模型或统计读模型时才引入，不为套分层新增浅服务。
+- `DomainService` / `DomainQueryService` 不是 Wind 项目强制分层；只有确有领域规则、状态变化、查询模型或统计读模型时才在 `*-impl` 内部 `domain` / `domain/impl` 落位，不为套分层新增浅服务或 Mapper 包装。
 - 写操作用业务动词，例如 submit、approve、reject、freeze、unfreeze、pay、refund、settle；查询按 `get/find/query/exists/count/stats` 区分必然存在、可空、条件查询和统计，不用 handle/process/doXxx 掩盖语义。
 - 事务边界放在真实用例边界；事务内避免不可控远程调用、长耗时计算和无上限循环，确需调用时说明超时、补偿和失败处理。
 
 ## 3. 模型与契约
 
-- 模型：`Request` 写入命令，`Query` 查询条件，`DTO` 对外或跨模块契约，`Entity` 只表达持久化结构；Controller、face、跨模块调用和 ApplicationService 对外返回不得暴露 Entity/Mapper/Repository。
+- 模型：`Request` 写入命令，`Query` 查询条件，`DTO` 对外或跨模块契约，`Entity` 只表达持久化结构。Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口、事件/消息契约不得以 Entity、Mapper、Repository 或 MyBatis `Page` 作为入参、返回值或泛型；离开 `*-impl` 边界前必须转换为 `DTO`、`Request`、`Query`、`Command`、`Event` 或值对象。
+- 模型包归位：业务模块自己的 `dto`、`request`、`query`、`enums`、`event` 优先放在对应 `*-face` 的业务包下；同一 face 内多个子域可用 `xxx/dto`、`xxx/request`、`xxx/query`、`xxx/event` 分包，`domain/dto|request` 仅用于跨子域、稳定业务概念，不得把 `domain` 当杂物包。持久化 `Entity`、Mapper、Repository、MyBatis `Refs` 和 MapStruct Converter 放在对应 `*-impl` 的 `dal/*` 或 `mapstruct` 下；业务/通道事件 Converter 可放 `*-impl` 的 `converter` 或 `support`，但只做适配转换，不承载公共契约或核心业务决策。Web 展示 VO、登录/表单 Request 和页面组合模型放 `web-api` / `web-security`，不得回流到 face 契约；跨域共享模型只有在两个以上业务模块稳定复用且不依赖 Web/DAL 时，才放 `core` 的 `model`、`enums` 或 `event`。
 - `DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型承载契约字段；使用包装类型、枚举、值对象或明确业务类型表达缺省、精度和序列化语义。
 - 公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc，说明职责、调用方、空值、异常、权限、幂等、事务和副作用；注释说明 Why / Why not，不翻译代码。
 - 内部 Java 空值契约用 JSpecify；API 入参用 Bean Validation；业务前置条件和状态条件用项目断言工具。已由 JSpecify 标为非空的值，不再加无业务语义的空判断。
@@ -69,4 +71,4 @@
 - Bug 修复先补能复现失败的回归测试；新增资金、权限、审计、状态机、幂等或并发逻辑时补对应红线断言。
 - 测试说明放在测试方法名、Javadoc 或方法级注释中，表达场景、输入、行为、输出和红线；测试结构优先 Given/When/Then 或 Arrange/Act/Assert。
 - 完成 TDD 或 AI 生成实现后做设计质量回看：是否新增浅服务、透传接口、无主依赖、过度抽象、内部链路 mock、AI 注释噪声或只为过测试的战术实现。
-- CR 检查 opt-in、face/impl、Controller、Service 职责、模型归属、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
+- CR 检查 opt-in、face/impl、Controller、Service 职责、Entity 是否泄漏到服务层/接口契约、模型包归位、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。

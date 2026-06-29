@@ -2,7 +2,7 @@
 
 参考模块：`https://github.com/fengwuxp/wind-middleware/tree/main/tools/mybatis-flex-codegen`
 
-该模块使用 Freemarker 模板生成 DTO、Request、Query、Mapper、MapStruct、Service、ServiceImpl 等代码。本技能不直接复刻全部实现，但应吸收以下稳定规程。
+该模块使用 Freemarker 模板生成 DTO、Request、Query、Mapper、MapStruct、Service、ServiceImpl 等代码。本技能不直接复刻全部实现，但应吸收以下稳定规程。这些生成模板视为 Wind 项目编码约规的标准实现样本；若模板规则和项目约规冲突，以 `资深架构师` 的 Wind 项目编码约规和项目本地 `AGENTS.md` 为准。
 
 ## 使用时机
 
@@ -54,6 +54,7 @@
 ## DTO / Request / Query
 
 - DTO 保持简单数据承载，不默认生成构造器、Builder 或业务方法。
+- DTO / Request / Query / Service 是 face 对外契约；不得把 Entity、Mapper、Repository 或 MyBatis `Page` 暴露到 face、Controller、Facade、Adapter、跨模块接口或事件消息契约。
 - 创建请求排除主键、`gmt_create`、`gmt_modified`。
 - 更新请求只对主键 ID 保留必填校验，其他字段不生成必填校验，避免破坏局部更新语义。
 - 查询对象不承载分页继承关系；分页和排序由服务方法的 `WindQuery<? extends QueryOrderField> options` 承载。
@@ -78,6 +79,7 @@
 - 单 ID 删除可以作为接口 default 方法委托批量删除，这是服务契约便利方法；ServiceImpl 只实现批量删除。
 - 查询实现优先内联 `QueryWrapper` 构造，除非本地已有复杂分支，不为了“复用”提取一行方法或伪工具类。
 - 公共方法参数不得超过 5 个。生成代码当前以 Request/Query/Options 聚合参数，避免长参数列表。
+- Entity 只在 ServiceImpl、DAL、Mapper 和 Converter 内部流转；离开 impl 边界前必须转换为 DTO、Request、Query、Command、Event 或值对象。
 
 ## 资深架构师审查要点
 

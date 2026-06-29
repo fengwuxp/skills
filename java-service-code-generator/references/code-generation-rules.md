@@ -1,6 +1,6 @@
 # Java Service 代码生成规程
 
-本文承接 `SKILL.md` 中的代码生成细则。只有在需要实际生成、调整、审查 Wind/Nobe 风格 Java Service 配套代码时读取；普通技能识别和路由不需要加载本文。
+本文承接 `SKILL.md` 中的代码生成细则。只有在需要实际生成、调整、审查 Wind/Nobe 风格 Java Service 配套代码时读取；普通技能识别和路由不需要加载本文。本生成器输出的基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service 和 ServiceImpl 是 Wind 项目编码约规的标准模板实现面；规则权威来源仍是 `资深架构师` 的 `wind-project-coding-conventions.md`。
 
 ## 使用时机
 
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- Wind/Nobe 模块风格读 `nobe-patterns.md`；具体代码红线和 Review 交给 `资深架构师`。
+- Wind/Nobe 模块风格读 `nobe-patterns.md`；具体代码红线、Entity 不外露和服务接口职责 Review 交给 `资深架构师` 的 Wind 项目编码约规。
 
 ## 按任务读取索引
 
@@ -150,6 +150,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - Converter 包：`${basePackage}.services.mapstruct`
 - ServiceImpl 包：`${basePackage}.services.impl`
 - DTO、Request、Query、Service 通常位于 face 模块下的 `${basePackage}.model.*` 和 `${basePackage}.services`。
+- face 模块生成的 Service 契约只暴露 DTO/Request/Query/WindQuery/分页结果，不暴露 Entity、Mapper、Repository 或 MyBatis `Page`；Entity 只在 impl/DAL/Converter 内部流转。
 - 生成描述尽可能使用中文：
   - 表注释、字段注释优先来自 SQL DDL。
   - 有 SQL 注释时，JavaDoc、`@Schema(description = "...")`、断言消息和服务方法说明应尽量使用中文。

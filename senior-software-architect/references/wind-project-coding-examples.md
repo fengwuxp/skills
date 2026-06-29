@@ -42,17 +42,23 @@
 
 ### 3. 模型边界不穿透
 
-- 反例：Controller、face 或跨模块接口直接暴露 Entity，DTO/Request/Query 使用 primitive 字段表达可空或缺省。
-- 正例：`Request` 表达写入命令，`Query` 表达查询条件，`DTO` 表达对外契约，`Entity` 只在 impl / DAL 内部流转。
-- 验证点：公共契约有 Javadoc、Bean Validation / JSpecify 语义明确，MapStruct 转换测试覆盖字段、枚举、空值和默认值。
+- 反例：Face Service 返回 `XxxEntity`，ApplicationService 对外方法接收 `XxxEntity`，Controller、Facade、Adapter 或事件消息 payload 直接透传 Entity；DTO/Request/Query 使用 primitive 字段表达可空或缺省。
+- 正例：face Service 返回 `XxxDTO`，写入使用 `CreateXxxRequest` / `UpdateXxxRequest`，查询使用 `XxxQuery`，跨模块和消息契约使用 DTO/Command/Event；`Entity` 只在 impl / DAL / Mapper / Repository 内部流转，出边界前由 MapStruct 转换。
+- 验证点：公开接口签名不得出现 Entity、Mapper、Repository 或 MyBatis `Page`；公共契约有 Javadoc、Bean Validation / JSpecify 语义明确，MapStruct 转换测试覆盖字段、枚举、空值和默认值。
 
-### 4. MyBatis Flex 查询集中表达
+### 4. 模型包归位清晰
+
+- 反例：把 Web 页面 VO 放进 `*-face` 的 DTO 包，把业务模块私有 Request 放进 `core`，把 `domain` 当杂物包，把跨模块事件放在 impl 内部，或在 web Controller 直接复用 Entity。
+- 正例：业务契约模型放 `*-face` 的 `dto/request/query/enums/event`；同一 face 内有多个业务子域时，用 `transaction/dto`、`channel/request`、`domain/dto|request` 等子包表达稳定业务语义；持久化模型放 `*-impl` 的 `dal/entities`、`dal/mapper`、`mapstruct`；内部领域规则放 `*-impl/domain|domain/impl`，业务/通道事件适配 Converter 可放 `*-impl/converter`；Web VO 和登录/表单 Request 放 `web-api` / `web-security`；真正跨域稳定复用的值对象、枚举和事件才放 `core`。
+- 验证点：按包名能判断模型 owner、生命周期和调用边界；移动模型时同步检查 import 方向、公共契约兼容性和 MapStruct 转换。
+
+### 5. MyBatis Flex 查询集中表达
 
 - 反例：Service 到处手写裸字符串字段、散落 `QueryWrapper`，排序字段直接信任外部入参。
 - 正例：用 `XxxRefs` 和统一 helper 构造查询；分页有 cap，排序有白名单，复杂 SQL 说明索引、数据量和慢查询风险。
 - 验证点：单测断言查询条件、分页上限、排序白名单、selective 写库和 null 更新语义。
 
-### 5. TDD 测真实链路，不测内部表演
+### 6. TDD 测真实链路，不测内部表演
 
 - 反例：mock 内部 Repository / Converter / Policy 后只验证调用次数，业务状态和持久化事实没有断言。
 - 正例：ApplicationService / ServiceImpl 测试保留真实内部协作者、转换器、Repository、事务和状态变化，只替换第三方 HTTP、MQ、Redis、时间、ID、随机数等外部边界。
