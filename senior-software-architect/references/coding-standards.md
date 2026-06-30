@@ -229,7 +229,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 - 【强制】MapStruct 只负责模型转换，不承载业务规则、外部调用、数据库查询、权限判断、状态流转或审计写入。
 - 【强制】跨层模型转换优先集中在 Converter/MapStruct 层，禁止在业务代码中散落 `BeanUtils`、反射拷贝或手写重复转换。
-- 【强制】Converter 放在 `mapstruct` 包或项目既有等价转换包中，命名为 `XxxConverter`；Wind/Nobe 风格项目优先使用 `services.mapstruct` 包。
+- 【强制】Converter 放在 `mapstruct` 包或项目既有等价转换包中，命名为 `XxxConverter`；Wind opt-in 项目以独立 `wind-project-coding-conventions` Skill 为包位权威，未 opt-in 或历史项目按附近代码风格收敛。
 - 【强制】MapStruct 方法命名使用 `convertToXxx`、`convertToXxxDTO`、`convertToEntity` 等能表达目标模型的名称，不使用 `to`、`build`、`copy` 这类语义过弱的方法名。
 - 【强制】有语义差异、字段重命名、枚举转换、空值策略、默认值的映射必须显式声明，并补充测试覆盖。
 - 【强制】更新已有对象时必须明确 null 处理策略，避免源对象的 null 意外覆盖目标对象。

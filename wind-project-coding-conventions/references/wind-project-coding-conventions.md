@@ -10,7 +10,7 @@
 
 ## 不适用场景
 
-- 非 Java/Spring/Wind 项目先读 `language-agnostic-architecture.md`，不得强套本规约。
+- 非 Java/Spring/Wind 项目先读架构师 `references/language-agnostic-architecture.md`，不得强套本规约。
 - 项目 `AGENTS.md`、OpenSpec、ADR、CI 或附近代码已有更具体规则时，以项目本地规则为准。
 
 ## 读取后必须产出
@@ -19,7 +19,7 @@
 
 ## 需要继续读取的 reference
 
-- Java/Spring/Wind 强制规则读 `coding-standards.md`；Service/API/DTO/Query 读 `project-governance-service-api-modeling.md`；测试/TDD 读 `testing.md` 和 `testing-practices.md`；模块依赖读 `project-governance-codebase-and-modules.md`；深度 CR 读 `coding-review-deep-dive.md`；需要最佳实践正反例时读 `wind-project-coding-examples.md`。
+- Java/Spring/Wind 强制规则读架构师 `references/coding-standards.md`；Service/API/DTO/Query 读架构师 `references/project-governance-service-api-modeling.md`；测试/TDD 读架构师 `references/testing.md` 和 `references/testing-practices.md`；模块依赖读架构师 `references/project-governance-codebase-and-modules.md`；深度 CR 读架构师 `references/coding-review-deep-dive.md`；需要最佳实践正反例时读本 Skill 的 `wind-project-coding-examples.md`。
 
 ## 按任务读取索引
 

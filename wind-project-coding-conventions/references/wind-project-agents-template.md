@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 新 Wind/Nobe Java 项目需要初始化 `AGENTS.md`，明确 opt-in Wind 项目编码约规。
-- 既有项目已有 `AGENTS.md`，需要补齐 AI 协作入口、Wind 分层、测试/CR 红线或验证交接。
+- 既有项目已有 `AGENTS.md`，需要补齐 AI 协作入口、Wind opt-in、模块边界、测试/CR 红线或验证命令。
 - AI Native Engineering Loop 需要为某个遵循 Wind 约规的项目生成或改进项目级 Agent 运行契约。
 
 ## 不适用场景
@@ -17,7 +17,7 @@
 ## 读取后必须产出
 
 - 初始化时：一份可直接放入项目根目录的 `AGENTS.md` 草案，并标出必须由项目 owner 填写的命令、模块和验证项。
-- 改进时：只输出最小 patch 建议，说明新增/替换位置、保留的本地规则、删除的重复项和验收标准。
+- 改进时：只输出最小 patch 建议，说明新增/替换位置、保留的本地规则、删除的重复项和验收标准；优先让 `AGENTS.md` 变短、变准。
 - 必须区分事实、推断、待确认和范围外不做；不得把模板写成本项目已验证事实。
 
 ## 需要继续读取的 reference
@@ -41,6 +41,10 @@
 ```markdown
 # AGENTS.md
 
+> 本文件是 `<项目名>` 的常驻项目契约，只保留每次会话都应知道的项目定位、模块边界、验证命令和 Skill 路由。
+> 通用 Java 编码、测试、Review、AI Native Loop 和 Wind/Nobe 约规不在本文件重复展开；按 Skill 路由读取。
+> 每次修改代码前必须阅读并遵守本文件。
+
 本项目遵守 Wind 项目编码约规。任何 AI Agent、脚本化改动或人工协作都必须先读本文件，再读任务相关源码、测试、OpenSpec/ADR 和附近代码风格。
 
 ## 项目身份
@@ -49,6 +53,8 @@
 - 核心业务：<一句话说明真实业务能力>
 - 主要模块：<列出 face / impl / web-api / core / infrastructure 等模块>
 - 默认验证命令：<如 mvn test / ./gradlew test / just test；未知则写待确认>
+
+不要在本文件维护可从 `pom.xml`、`build.gradle` 或模块依赖自动获得的技术栈清单；只保留 Java 版本、构建命令、模块边界等会影响 Agent 决策的稳定约束。
 
 ## 顶层原则
 
@@ -68,32 +74,59 @@
 - Wind face/impl、模型归位、Entity 不外露、ServiceImpl、MyBatis Flex 和测试边界规则判断：使用 `wind-project-coding-conventions`。
 - 结构化 Java Service 脚手架生成：使用 `java-service-code-generator`；必须有 DDL/schema/Java 类/字段表格，不从纯自然语言生成生产代码。
 
-## 授权与范围
+## 项目约规入口
 
-- 只读分析默认允许读取仓库内源码、测试和文档；读取仓库外文件、联网、安装依赖、修改 Git 历史、删除文件、访问密钥、部署或生产操作必须显式授权。
-- 低风险本地改动只能在用户指定范围内进行，并在完成后给出验证命令和结果。
-- Git add/commit/push、同步 Codex、发布、回滚和不可逆操作必须单独确认。
+- Wind 规则权威只读 `wind-project-coding-conventions`；本文件不复制完整规则，避免与 Skill 主规则漂移。
+- 每次涉及 face/impl、模型归位、Entity 不外露、ServiceImpl、MyBatis Flex、币种枚举、TDD/CR 或代码生成后审查，先回 Wind Skill 判断规则，再由架构师闭环源码设计、测试和验证。
+- 本项目额外模块边界：<仅填写本项目独有模块、包名兼容点或历史例外；没有则写待确认>
+- 本项目验证命令：<仅填写已验证可运行命令；未知则写待确认>
 
-## Wind 编码约规
+## 项目级红线
 
-- `*-face` 放对外契约：Service、Application 契约、DTO、Request、Query、Command、对外枚举、常量、事件和 callback/spi。
-- `*-impl` 放实现：ServiceImpl、内部服务、Application 实现、domain、dal/entities、dal/mapper、mapstruct、converter、configuration、listener、webhook。
-- `web-api` / `web-security` 放 Controller、Web VO、Web 表单 Request 和 Web Converter。
-- `core` 只放跨模块稳定公共能力；`infrastructure` 只放技术适配、框架配置和通用 helper。
-- 新 DTO/Request/Query/Command 优先放 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`；历史项目可兼容既有 `*.dto`、`*.request`、`*.query`、`*.command`。
-- Entity、Mapper、Repository、MyBatis Page 和 QueryWrapper 不得出现在 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口或事件消息契约中。
-- Service / ApplicationService / Facade / Adapter 必须有真实业务职责；不得新增一行透传方法、Mapper 包装、浅服务或似是而非抽象。
-- ApplicationService 只在完整用例编排、事务边界、权限/审计、跨服务协调或外部副作用明确时使用。
-- MyBatis Flex 查询使用 `XxxRefs` 和项目统一 helper；禁止裸字符串字段名和新增 `LambdaQueryWrapper`。
-- 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`；外部字符串币种只在 Adapter/Converter 边界转换。
-- 生产源码路径不得新增内存版业务 Service、Fake/Mock 业务实现、模拟模块或看上去可用的样子货。
+- 不把 Entity、Mapper、Repository、MyBatis Page 或 QueryWrapper 暴露到 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口或事件消息契约。
+- 不新增一行透传方法、Mapper 包装、浅服务、似是而非的 ApplicationService、内存版业务 Service、Fake/Mock 业务实现或看上去可用的样子货。
+- TDD 和测试按公开契约黑盒验证；不为凑绿感知私有方法、内部调用顺序、Mapper/Repository 调用次数、临时字段、内部 Mock 交互或当前实现步骤。
 
-## 测试与 CR
+## 验证命令
 
-- TDD 和测试按公开契约黑盒验证，观察 Controller、face Service、ApplicationService、ServiceImpl 的业务结果、状态流转、持久化事实、异常、幂等和可观察副作用。
-- 不为凑绿感知私有方法、内部调用顺序、Mapper/Repository 调用次数、临时字段、内部 Mock 交互或当前实现步骤。
-- Bug 修复先补能复现失败的回归测试；红变绿必须修改生产实现，不靠放宽断言、硬凑 fixture 或迎合当前实现。
-- 完成实现后检查是否新增浅模块、直通包装、无主依赖、AI 注释噪声、过度抽象、内部链路 mock 或只为过测试的战术实现。
+仅修改文档、产品设计、系统分析设计、方案讨论、需求澄清、流程图或说明性材料时，不要求运行编译；交付时说明未运行编译的原因。
+
+构建与验证默认使用 <Java 版本，如 Java 21>。修改代码、测试代码、构建配置、数据库迁移脚本或运行时配置前，先确认 JDK：
+
+```bash
+<mvn -version 或 ./gradlew --version>
+```
+
+修改后至少执行：
+
+```bash
+<项目默认编译命令>
+```
+
+按范围执行相关测试：
+
+```bash
+<项目默认测试命令>
+```
+
+提交前执行团队认可的规约扫描：
+
+```bash
+<项目默认规约扫描命令；未知则写待确认>
+```
+
+若命令失败，必须说明失败模块、失败原因、是否与本次变更相关，以及已采取的替代验证。
+
+## Skill 路由
+
+AI Native Engineering Loop 是项目端到端协作入口，只负责阶段、owner、交接物、授权策略、验证与停止条件；不能替代专项 Skill、测试通过、CR 结论、Git 授权或上线审批。Wind 约规判断只使用 `wind-project-coding-conventions`；真实源码修改、测试和验证继续由 `资深架构师` 执行。
+
+| 场景 | 必用 Skill | 产物边界 |
+| --- | --- | --- |
+| 端到端角色协作、Goal/Loop/GSD/CAD 编排、owner/交接物/授权/验证/停止条件 | `ai-native-engineering-workflow` | 只做流程准入、角色协作和交接闭环；不替代产品、架构、代码、测试和 Git 授权。 |
+| 编码、编码设计、架构设计、系统分析、技术方案、代码评审、重构评估、测试设计、工程治理 | `资深架构师` | 工程边界、模块设计、接口契约、代码修改、测试策略、验证命令、Review 结论和交付说明。 |
+| Wind/Nobe 编码约规判断、face/impl、模型归位、基础服务、Entity 不外露、MyBatis Flex、ServiceImpl 和 TDD/CR 约规 | `wind-project-coding-conventions`，源码执行配合 `资深架构师` | 判断是否偏离 Wind 约规、给最小整改建议；真实源码修改和验证由架构师闭环。 |
+| 产品架构、PRD、业务建模、能力地图、业务流程、状态机、规则矩阵、产品验收 | `产品架构专家` | 产品目标、角色、对象、流程、状态、规则、权限、指标、异常路径、产品验收和风险清单。 |
 
 ## 交付格式
 
@@ -110,7 +143,9 @@
 
 ## 改进规则
 
-- 已有 `AGENTS.md` 有同义规则时，不新增近义条款；只补缺失的 Wind opt-in、AI 路由、授权边界、验证命令或项目特有模块。
+- 已有 `AGENTS.md` 有同义规则时，不新增近义条款；只补缺失的 Wind opt-in、AI 路由、验证命令或项目特有模块。
+- `AGENTS.md` 只保留每次会话都应知道的稳定项目契约；技术栈清单、Git 常规权限、长期学习声明、通用交付格式等能由全局规则或工具约束覆盖的内容，不默认写入项目模板。
+- 旧术语只在 Skill 路由中作为触发别名出现；正文优先使用 `AI Native Loop`，不新增独立 CAD/Loop 权限章节。
 - 模板里的 `<...>` 占位符必须由项目事实填充；无法确认时保留“待确认”，不要推断。
 - 不把 `capte-domain`、`nobe`、`wind-integration` 的历史包名、业务模块名或命令照搬成新项目事实。
 - 改进结论优先给最小 patch 和验收标准；不输出冗长操作步骤。

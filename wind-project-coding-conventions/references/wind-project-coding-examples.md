@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- 规则原文读 `wind-project-coding-conventions.md`；Java 强规约读 `coding-standards.md`；Service/API/DTO 细节读 `project-governance-service-api-modeling.md`；测试落地读 `testing.md`。
+- 规则原文读本 Skill 的 `wind-project-coding-conventions.md`；Java 强规约读架构师 `references/coding-standards.md`；Service/API/DTO 细节读架构师 `references/project-governance-service-api-modeling.md`；测试落地读架构师 `references/testing.md`。
 
 ## 按任务读取索引
 
