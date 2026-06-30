@@ -66,7 +66,7 @@
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `4. 机器验证与独立证据` | 不把模板写成外部 ASD/SSD 目录 |
 | 处理 AI 生成失败或反复返工 | `4A. Spec 回写与重试闭环`，再读 `verification-review-release.md` | 不只换提示词或放宽测试 |
 | 设计 Harness 闸门 | `3. Harness 三层闭环`、`4. 机器验证与独立证据` | 不替代架构师测试实现 |
-| 接入 SDD v6 任务闭环 | `3A. SDD v6 任务闭环`，再读 `agentic-engineering-governance.md` 和 `superpowers-skill-library.md` | 不运行 `task-brief`、`review-package`、`sdd-workspace` 或默认创建 `.superpowers/sdd/` |
+| 接入 SDD v6 任务闭环 | `3A. SDD v6 任务闭环`，再读 `agentic-engineering-governance.md` 和 `superpowers-skill-library.md` | helper 已 vendored；未获授权不运行 `task-brief`、`review-package`、`sdd-workspace` 或创建 `.superpowers/sdd/` |
 | 降低 CR 认知负荷 | `5. CR 减负与可理解交接` | 不做源码级 CR |
 | 做复盘和知识回流 | `6. 知识回流`、`6A. Skill 自我改进外循环`、`7. 指标闭环` | 不写个人长期偏好或私有轨迹到仓库 |
 | 做调研、教程、早报或培训材料 | `6B. 知识生产 Loop`、`7. 指标闭环` | 不把厂商工具写成默认依赖 |
@@ -169,6 +169,8 @@ Task Reviewer:
 修复回环:
 progress ledger 回写:
 final broad review:
+Harness v3 状态:
+恢复入口:
 ```
 
 判断规则：
@@ -179,8 +181,9 @@ final broad review:
 - Reviewer 无法从 diff 判断的要求，必须标为 `can't verify from diff`，回到 controller、架构师或人工 owner 读取更大上下文，不得臆测通过。
 - 每轮修复都要回写失败原因、修复动作、验证证据和下一步；同类问题重复或无新增证据时停止。
 - 任务级通过后仍需 final broad review，检查跨任务契约、公共 API、错误码、状态机、数据迁移、测试覆盖、风险边界和知识回流。
+- Harness v3 要求任务状态只能在 `Ready / Running / Review / Fix / Verified / Blocked / Handoff` 间流转；缺少 owner、写入范围、验证命令、恢复入口或状态回写时，不进入 AI Maker 执行。
 
-文件化交接建议使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue；只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/` 或运行 v6 的 `task-brief`、`review-package`、`sdd-workspace`。缺少授权时，只采用方法契约，不声明外部 SDD 套件已安装或已执行。
+文件化交接建议使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue。`task-brief`、`review-package` 和 `sdd-workspace` 已随 vendored SDD v6.0.3 skill 提供；只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/` 或运行这些 helper。缺少授权时，只采用方法契约，不声明外部 SDD 执行套件已启用。
 
 ## 4. 机器验证与独立证据
 

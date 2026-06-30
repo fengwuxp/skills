@@ -42,7 +42,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断 Superpowers 如何接入 AI Native | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
-| 升级 SDD / Superpowers 6.0 套件 | `1B. Superpowers v6.0.3 / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不整包复制 v6 脚本、不默认启用 `.superpowers/sdd/` |
+| 升级 SDD / Superpowers 6.0 套件 | `1B. Superpowers v6.0.3 / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不默认运行 helper、不默认启用 `.superpowers/sdd/` |
 | 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
 | 复杂 / 模糊需求轻量问询 | `grilling` 方法摘要，再回 `intent-to-production-loop.md` 和产品专家 | 不连续抛出多问题，不把问询过程写进正式 PRD |
 | 需求澄清 / Spec 前置 | `external-superpowers/brainstorming/SKILL.md`，再回 `product-to-engineering-lifecycle.md` | 不强制保存 `docs/superpowers/specs` |
@@ -62,8 +62,8 @@
 - main commit：`6fd4507659784c351abbd2bc264c7162cfd386dc`
 - zip SHA256：`ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3`
 - 许可证：MIT License，已保存 `external-superpowers/LICENSE`。
-- 本仓库复制范围：仅复制 `skills/` 下 Markdown 资源和 LICENSE。
-- 排除范围：未复制外部脚本、hooks、插件 manifest、package 脚本、shell/js/ts 可执行文件、图片资产和安装流程。
+- 本仓库复制范围：初始导入仅复制 `skills/` 下 Markdown 资源和 LICENSE；2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级，并纳入 `task-reviewer-prompt.md`、`implementer-prompt.md` 和三个本地 helper。
+- 排除范围：除上述本地 helper 外，不复制或运行 hooks、插件 manifest、package 脚本、shell/js/ts 其他可执行文件、图片资产和安装流程；helper 只在明确进入 SDD 执行并获得用户授权时运行。
 
 已下载的 14 个外部 skill：
 
@@ -85,14 +85,14 @@
 ## 1B. Superpowers v6.0.3 / SDD 套件升级结论
 
 - 上游最新核验：2026-06-30 通过 GitHub Releases API 核验 `obra/superpowers` 最新 release 为 `v6.0.3`，发布时间为 2026-06-18，tag commit 为 `896224c4b1879920ab573417e68fd51d2ccc9072`。
-- 本地审查包：`v6.0.3` zip SHA256 为 `46584706bbcdb0330d82cf8d8acba08acfb5a3766cdbb819a461604eace7994b`。
+- 本地审查包：`v6.0.3` GitHub archive zip SHA256 为 `45e79c9525328a9dd6653c2d01d49895eaf083cf321a4902ea71d7ba5705bbf0`。
 - v6 关键变化：`subagent-driven-development` 把 `spec-reviewer-prompt.md` 与 `code-quality-reviewer-prompt.md` 合并为 `task-reviewer-prompt.md`，按一次 diff 读取同时给出 spec-compliance 和 quality 两类结论。
 - v6 关键变化：任务交接从会话粘贴改为文件化，核心脚本包括 `task-brief`、`review-package` 和 `sdd-workspace`；`v6.0.3` 把 task brief、implementer report、review diff 和 progress ledger 放到工作区 `.superpowers/sdd/`。
 - v6 关键变化：执行前增加 pre-flight plan review，先检查计划内部冲突、会被 reviewer 判为缺陷的要求和跨任务接口不一致。
 - v6 关键变化：每次 dispatch 必须声明 model，并按任务风险选择合适成本层；最终再做一次 whole-branch broad review。
-- 升级结论：本仓库升级到 **SDD v6 方法契约**，但不整包替换 `external-superpowers/`，不复制或运行 v6 的外部脚本、hooks、插件 manifest、package 脚本、server 或安装流程。
-- AI Native 映射：pre-flight plan review 进入 Harness 准入；`task-reviewer-prompt.md` 映射为单一 Task Reviewer 角色；文件化 handoff 映射为本仓库任务文档 / review package / 验证证据；progress ledger 映射为 Goal Ledger、Harness Plan、任务文档或当前项目允许的状态文件。
-- 停止条件：若任务必须依赖 `task-brief`、`review-package`、`sdd-workspace` 或 `.superpowers/sdd/` 真实脚本运行，必须先做工具准入和用户授权；缺授权时只能使用方法规则，不声明已安装或已启用 v6 SDD 套件。
+- 升级结论：本仓库对 `external-superpowers/subagent-driven-development` 做替换覆盖式升级，已 vendored v6.0.3 的 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace`；其他 Superpowers skill 保持原基线，不复制 hooks、插件 manifest、package 脚本、server 或安装流程。
+- AI Native 映射：pre-flight plan review 进入 Harness v3 准入；`task-reviewer-prompt.md` 映射为单一 Task Reviewer 角色；文件化 handoff 映射为本仓库任务文档 / review package / 验证证据；progress ledger 映射为 Goal Ledger、Harness Plan、任务文档或当前项目允许的状态文件；`task-brief`、`review-package`、`sdd-workspace` 只作为授权后的本地 helper，不等于默认安装外部 Harness。
+- 停止条件：`task-brief`、`review-package` 和 `sdd-workspace` 只允许在当前任务明确进入 SDD 执行且用户授权写入本地工作区时运行；缺授权时只能使用方法规则，不创建 `.superpowers/sdd/`，不声明已启用外部 SDD 执行套件。
 
 ## 1A. Matt Pocock skills 审查状态
 
@@ -112,7 +112,7 @@
 | `brainstorming` | Round 0、PRD-Lite、OpenSpec 前置澄清 | 吸收“先澄清目标、约束、成功标准，再进设计”的方法；产品语义仍交给 `产品架构专家`。 |
 | `writing-plans` | OpenSpec / Harness / GSD 任务拆解 | 吸收小步任务、明确文件、验证命令和 TDD 步骤；完整工程计划仍交给 `资深架构师`。 |
 | `executing-plans` | GSD Wave 执行节奏 | 作为批次执行和检查点参考；不替代 Execution Grant。 |
-| `subagent-driven-development` | 多 Agent / GSD 编排 | 升级为 SDD v6 方法契约：先做 pre-flight plan review，再由 AI Maker 执行，单一 Task Reviewer 同时检查规格符合度和代码质量，交接以文件 / 任务文档 / review package / progress ledger 为状态载体；仅在当前会话有可用 subagent 工具且用户授权时使用，不运行 v6 脚本。 |
+| `subagent-driven-development` | 多 Agent / GSD 编排 | 已替换为 SDD v6.0.3 vendored skill：先做 pre-flight plan review，再由 AI Maker 执行，单一 Task Reviewer 同时检查规格符合度和代码质量，交接以文件 / 任务文档 / review package / progress ledger 为状态载体；仅在当前会话有可用 subagent 工具且用户授权时运行 helper。 |
 | `dispatching-parallel-agents` | 并行只读侦察或互不重叠任务 | 只用于依赖清楚、写入范围不重叠的场景；否则回到人工串行。 |
 | `test-driven-development` | TDD、补测试、回归验证 | 作为红绿重构纪律参考；具体测试设计和代码实现交给 `资深架构师`。 |
 | `systematic-debugging` | Bug / 生产问题前置诊断 | 映射到时间线、假设、证据和根因路径；具体排障交给 `资深架构师`。 |
@@ -134,7 +134,7 @@
 - 涉及资金、合规、安全、生产数据、不可逆操作或外部规则变化时，Superpowers 只能作为方法参考，必须保留专业确认、dry-run、回滚和审计边界。
 - 如果需要安装官方 Superpowers 插件，应另开工具准入判断：核验当前 Codex 插件状态、用户授权、目标目录、联网需求、同步影响和回滚方式。
 - 如果需要安装 Matt Pocock skills，只安装已审查的最小 Markdown skill，并通过 Codex 官方 installer 或用户明确授权的安全路径执行；安装失败或审批被拦截时，不绕过权限边界。
-- Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace`、`.superpowers/sdd/` 和 progress ledger 只作为方法参考；未获授权前不得在项目中创建目录、写 scratch 文件、运行脚本或把它们写成默认 Harness。
+- Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace` 会在运行时创建 `.superpowers/sdd/` 和 progress ledger；未获授权前不得在项目中创建目录、写 scratch 文件、运行脚本或把它们写成默认 Harness。
 
 ## 4. 调度输出模板
 

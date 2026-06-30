@@ -472,6 +472,10 @@ ai_native_terms = [
     "知识生产 Loop",
     "技术早报",
     "WorkBuddy",
+    "Karpathy",
+    "Andrej",
+    "外科手术式变更",
+    "Surgical Changes",
     "Harness Engineering",
     "架构真功夫",
     "专才 Agent",
@@ -832,6 +836,14 @@ check(
             "事实、推断、待确认分层表达",
             "最终文档只放最终结论",
             "授权按风险分级，执行按证据闭环",
+            "最小交付与第一性原则",
+            "不知道就问",
+            "没要求的不写",
+            "只改被要求的范围",
+            "优先给验收标准、验证结果和停止条件",
+            "外科手术式变更",
+            "每一行修改都必须能回到用户目标、验收标准、源码事实或验证失败",
+            "不顺手重构、不改无关注释格式、不做未要求的“顺便优化”",
         ],
     ),
 )
@@ -864,6 +876,8 @@ check(
             "系统设计、OpenSpec、完整执行契约、内部计划 / 原子执行策略、代码实现、测试、CR、生产风险和受控工程执行由 `资深架构师` 主导",
             "本技能负责端到端角色协作 Loop 准入、owner、阶段顺序、角色视角、停止条件、授权策略和交接结论",
             "Goal、GSD、CAD、Harness、Grant 等旧术语只作为角色协作 Loop 的内部实现层和历史触发别名",
+            "高频内部路由只按当前问题命中最小 reference",
+            "未命中的分组不读取、不展开、不输出菜单",
             "产研交付视图",
             "角色协作主流程",
             "大项目 Loop 编排",
@@ -878,6 +892,16 @@ check(
             "内存版业务 Service",
             "不做无根据的猜测、推导、补全、脑补式需求扩张或超出用户目标的实现",
             "不把 PR 数、执行轮数、自动化次数、Agent 数量或“全程手机审批”当成工程价值",
+            "最小交付优先",
+            "不知道就问",
+            "没要求的不写",
+            "只改被要求的范围",
+            "验收标准、验证结果、停止条件和下一 owner",
+            "外科手术式改动",
+            "每个改动行可追溯到用户目标、验收标准、源码事实或失败测试",
+            "不顺手重构、不改无关注释 / 格式 / 风格",
+            "最小变更可追溯性",
+            "Karpathy-style Guidelines",
             "不把 Codex “替我审批”用于 Git、联网、依赖安装、密钥、生产、部署、不可逆操作或高风险业务变更的自动放行",
             "references/product-to-engineering-lifecycle.md",
             "references/agentic-engineering-governance.md",
@@ -1084,6 +1108,41 @@ check(
             "腾讯云开发者",
             "知识库先行、常用工作流固化成专家、信息整理可自动化、规则越具体越稳定、工具按职责分工",
             "不把 WorkBuddy 写成默认依赖",
+        ],
+    ),
+)
+
+check(
+    "ai-native workflow absorbs Karpathy coding hygiene without new dependency",
+    has_all(
+        agents_rules,
+        [
+            "外科手术式变更",
+            "每一行修改都必须能回到用户目标、验收标准、源码事实或验证失败",
+            "只清理本次改动制造的 orphan",
+        ],
+    )
+    and has_all(
+        ai_native_workflow_skill,
+        [
+            "外科手术式改动",
+            "每个改动行可追溯到用户目标、验收标准、源码事实或失败测试",
+            "不顺手重构、不改无关注释 / 格式 / 风格",
+            "最小变更可追溯性",
+            "Karpathy-style Guidelines",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "multica-ai/andrej-karpathy-skills",
+            "Think Before Coding",
+            "Simplicity First",
+            "Surgical Changes",
+            "Goal-Driven Execution",
+            "先暴露假设和分歧、简单优先、外科手术式变更、把任务转成可验证目标并循环验证",
+            "不安装该仓库",
+            "不得把其变成新流程、安装依赖、替代 TDD / 架构师 CR / 项目编码规范",
         ],
     ),
 )
@@ -1411,7 +1470,7 @@ check(
             "OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
             "Superpowers skills 下载资源、外部 skill 调度矩阵、MIT 许可和安全边界读 `superpowers-skill-library.md`",
             "调度 Superpowers skills",
-            "AI Native Harness Contract v2",
+            "AI Native Harness Contract v3",
             "内部执行契约版本",
             "pre-flight plan review",
             "单一 Task Reviewer",
@@ -1419,9 +1478,13 @@ check(
             "progress ledger",
             "final broad review",
             "model / cost policy",
-            "不复制或运行 Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace`",
-            "Harness 契约版本: v1 / AI Native Harness Contract v2",
+            "execution state gate",
+            "authorized workspace policy",
+            "`external-superpowers/subagent-driven-development` 已替换为 Superpowers v6.0.3 vendored skill",
+            "`task-brief`、`review-package`、`sdd-workspace` 只在明确进入 SDD 执行且用户授权写入工作区时运行",
+            "Harness 契约版本: v1 / AI Native Harness Contract v2 / AI Native Harness Contract v3",
             "SDD 套件版本: 无 / SDD v6 方法契约 / 外部工具已授权",
+            "执行状态: Ready / Running / Review / Fix / Verified / Blocked / Handoff",
             "`obra/superpowers` 已作为外部 skill library 下载并隔离到 `external-superpowers/`",
             "brainstorming 用于前置澄清",
             "writing-plans 用于计划拆解",
@@ -1582,6 +1645,8 @@ check(
             "认证 / token",
             "工具输出交接格式",
             "环境可用性记录规则",
+            "当前机器已验证 Gemini CLI `0.49.0` 可在 Node `20.20.2` 下启动",
+            "优先用 Gemini 只读启动",
             "不把某台机器的安装路径、版本、shell 配置或登录状态写成默认可用能力",
             "不把任何工具写成默认依赖",
             "不默认安装、联网、登录、写文件、写配置或改代码",
@@ -1702,7 +1767,8 @@ check(
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
             "references/external-superpowers/",
             "superpowers-skill-library.md",
-            "不复制或运行外部脚本、hooks、插件 manifest、package 脚本",
+            "2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级并纳入本地 helper",
+            "除此之外不复制或运行 hooks、插件 manifest、package 脚本",
         ],
     ),
 )
@@ -1981,7 +2047,7 @@ check(
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
             "Superpowers v6.0.3 / SDD 套件升级结论",
             "896224c4b1879920ab573417e68fd51d2ccc9072",
-            "46584706bbcdb0330d82cf8d8acba08acfb5a3766cdbb819a461604eace7994b",
+            "45e79c9525328a9dd6653c2d01d49895eaf083cf321a4902ea71d7ba5705bbf0",
             "task-reviewer-prompt.md",
             "task-brief",
             "review-package",
@@ -1989,11 +2055,12 @@ check(
             ".superpowers/sdd/",
             "pre-flight plan review",
             "progress ledger",
-            "不整包替换 `external-superpowers/`",
-            "不声明已安装或已启用 v6 SDD 套件",
+            "已 vendored v6.0.3 的 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace`",
+            "不创建 `.superpowers/sdd/`，不声明已启用外部 SDD 执行套件",
             "MIT License",
-            "仅复制 `skills/` 下 Markdown 资源和 LICENSE",
-            "未复制外部脚本、hooks、插件 manifest、package 脚本",
+            "初始导入仅复制 `skills/` 下 Markdown 资源和 LICENSE",
+            "仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级",
+            "除上述本地 helper 外，不复制或运行 hooks、插件 manifest、package 脚本",
             "外部 skill 原文里出现的 Git 提交、Git 推送、worktree、subagent、插件安装",
             "当前仓库 Git 操作仍遵守 `AGENTS.md`",
             "当前仓库 OpenSpec / Superpowers / Harness 生成的文档或计划默认使用中文",
@@ -2499,6 +2566,9 @@ check(
         [
             "非标诉求不做传话筒",
             "产品岗提供解决方案，不被动搬运需求",
+            "第一性原理先于模板",
+            "不知道就问，没要求的不写",
+            "验收标准、解决方案假设和待确认项",
         ],
     )
     and has_all(
@@ -2532,6 +2602,9 @@ check(
         [
             "非标工程问题先建模",
             "最小可逆实验",
+            "验收优先于步骤",
+            "只改被要求的范围",
+            "Bug 修复先追根因",
         ],
     )
     and has_all(
@@ -2650,9 +2723,9 @@ check(
             "失败回写 Spec 再重试",
             "Orchestrator / Knowledge / Delivery 三层 Harness",
             "`obra/superpowers` v6.0.3",
-            "SDD v6 方法契约",
+            "替换覆盖式升级",
             "task-reviewer-prompt.md",
-            "不整包替换 `external-superpowers/`",
+            "本地 helper",
             "不把外部 Harness 写成当前会话默认依赖或执行授权",
             "不把文章中的比例和团队经验写成通用事实或项目当前指标",
         ],
@@ -2901,14 +2974,13 @@ check(
             "系分 / 架构 / 代码 / Bug / 测试 / CR / 发布",
             "跨角色产研交付 / 目标拆解 / 任务计划 / Spec / Harness / 质量发布 / 知识生产闭环",
             "默认进入角色协作 Loop",
-            "按设计、设计评审、TDD、编码、编码评审、可用性/安全性评估、验证发布和复盘回流分角色推进",
             "目标层、计划层、原子执行层和执行契约是内部层",
             "角色协作阶段只是编排坐标，不是能力来源",
             "能力来源：产品 / 交互设计和验收种子回到 `产品架构专家`",
             "系分、TDD、编码、最小正确实现检查、CR、安全可靠和发布回到 `资深架构师`",
             "结构化 Java Service 生成回到 `java-service-code-generator`",
             "角色协作 Loop 的处理步骤",
-            "自我问询 / 回答",
+            "轻量问询 / 自我回答",
             "Auto-Decide Next",
             "Auto-Ask Owner",
             "Auto-Loop",
@@ -2923,9 +2995,10 @@ check(
             "产研交付视图",
             "验证发布视图",
             "知识回流视图",
-            "默认输出骨架固定为",
+            "默认最小输出只保留",
+            "结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
             "证据边界必须区分事实、推断、待确认和范围外不做",
-            "内部实现层默认不展开旧模式名",
+            "只有用户要求完整方案、评审报告或模板",
             "授权策略必须区分只读、计划内低风险执行、受控执行授权和显式确认",
             "### 4. 产品到工程的默认闭环",
             "产品发现",
@@ -2945,7 +3018,6 @@ check(
             "进入角色协作 Loop",
             "按目标和任务计划推进",
             "目标不等于执行授权",
-            "进入自主交付闭环",
             "进入只读理解 Loop",
             "默认不写文件、不联网、不安装",
             "做质量门禁",
@@ -2961,7 +3033,7 @@ check(
             "只做系统设计、代码 CR、Bug、测试或生产变更",
             "角色协作 Loop 的目标是交付生产可用能力",
             "内存版业务 Service",
-            "## 完整能力索引",
+            "## 进阶能力索引",
             "### AI Native Engineering Loop",
             "路径：[ai-native-engineering-workflow](./ai-native-engineering-workflow)",
             "跨产品、UED、架构、AI Maker / Checker",
@@ -2978,13 +3050,25 @@ check(
             "结构化代码生成交给代码生成器",
             "内部路由",
             "从 AI 原型到工程化",
-            "### 提示词公式",
-            "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
-            "用 AI Native Engineering Loop：按当前材料进入角色协作 Loop，输出当前阶段、角色视角、能力来源、自我问询/回答、owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派。",
+            "### 提示词示例",
+            "可直接复制这些示例",
             "不覆盖现有文件",
             "### 最佳实践",
             "修改技能后先运行 `./scripts/validate.sh`",
             "`./sync-skills.sh --dry-run all`",
+        ],
+    ),
+)
+check(
+    "README user guide avoids heavy default output template",
+    has_none(
+        "README.md",
+        [
+            "默认输出骨架固定为",
+            "进入自主交付闭环",
+            "## 完整能力索引",
+            "### 提示词公式",
+            "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
         ],
     ),
 )
@@ -3133,6 +3217,36 @@ check(
             "运行时按三步加载",
             "复杂产品问题先读 `references/product-scenario-routing.md`",
             "只读取当前任务必要的 reference",
+        ],
+    ),
+)
+check(
+    "product skill separates PRD review from rewrite",
+    has_all(
+        product_skill,
+        [
+            "当用户只要求评审 PRD、需求评审、评审会前 AI 预扫描、找问题或给修改建议时",
+            "输出问题清单、必改项、待确认项、owner 和验收影响",
+            "不要默认重写全文",
+            "用户明确要求“按评审结论重写/整理最终版”时，再进入 PRD 产出工作流",
+        ],
+    ),
+)
+check(
+    "product routing separates PRD review from rewrite",
+    has_all(
+        product_routing,
+        [
+            "写作、生成、完善、补全或改写 PRD",
+            "用户只要求需求评审、PRD 评审会前扫描或需求评审 Skill 化",
+            "不默认重写全文",
+        ],
+    )
+    and has_none(
+        product_routing,
+        [
+            "写作、生成、完善或评审 PRD",
+            "完善 PRD、评审 PRD",
         ],
     ),
 )
@@ -3743,7 +3857,6 @@ check(
             "产品语义 / PRD / Backlog / 验收",
             "跨角色产研交付 / 目标拆解 / 任务计划 / Spec / Harness / 质量发布 / 知识生产闭环",
             "默认进入角色协作 Loop",
-            "按设计、设计评审、TDD、编码、编码评审、可用性/安全性评估、验证发布和复盘回流分角色推进",
             "系分 / 架构 / 代码 / Bug / 测试 / CR / 发布",
             "Java Service 脚手架",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
@@ -3773,7 +3886,6 @@ check(
             "进入角色协作 Loop",
             "按目标和任务计划推进",
             "目标不等于执行授权",
-            "进入自主交付闭环",
             "进入只读理解 Loop",
             "默认不写文件、不联网、不安装",
             "做质量门禁",
@@ -3790,7 +3902,7 @@ check(
             "不要把工具、模板、目标、计划或授权机制名当主流程",
             "角色协作 Loop 的目标是交付生产可用能力",
             "内存版业务 Service",
-            "## 完整能力索引",
+            "## 进阶能力索引",
             "日常使用优先看上面的快速指南",
             "路径：[ai-native-engineering-workflow](./ai-native-engineering-workflow)",
             "路径：[senior-software-architect](./senior-software-architect)",
@@ -3809,8 +3921,8 @@ check(
             "从想法到工程",
             "从普通图到复杂图",
             "复杂可编辑架构图、代码库结构转图或多层架构图",
-            "### 提示词公式",
-            "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
+            "### 提示词示例",
+            "可直接复制这些示例",
             "### 最佳实践",
             "不要把 AI 原生工具的产品宣传或历史文章能力描述当作当前会话可用工具、执行授权、合规结论或生产审批",
             "## 维护者与高级扩展",
@@ -3831,7 +3943,8 @@ check(
             "MIT",
             "ai-native-engineering-workflow/references/external-superpowers/",
             "superpowers-skill-library.md",
-            "不复制或运行外部脚本、hooks、插件 manifest、package 脚本",
+            "2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级并纳入本地 helper",
+            "除此之外不复制或运行 hooks、插件 manifest、package 脚本",
             "不把外部默认文档路径、自动提交、Git 推送、worktree、subagent 连续执行要求写成本仓库默认行为",
         ],
     ),
@@ -9639,6 +9752,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md"},
     ),
     RouteFixture(
+        name="AI Native Karpathy coding hygiene admission",
+        prompt="参考 Andrej Karpathy / karpathy-guidelines 优化 AI 编码 Loop：要求先暴露假设和分歧、简单优先、外科手术式变更、把任务转成可验证目标，但不要新增流程或替代 TDD、架构师 CR 和项目编码规范",
+        routes={"ai-native", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md"},
+    ),
+    RouteFixture(
         name="AI Native skill self-improvement and knowledge flow",
         prompt="参考让 Codex 越用越聪明的方法，完善 AI 流程里的经验回流、Skill 自我改进、知识归位和不要把个人长期偏好写进仓库的边界",
         routes={"ai-native", "agentic-engineering-governance.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
@@ -9659,6 +9777,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "verification-review-release.md", "agentic-engineering-governance.md", "code-understanding-tools.md"},
     ),
     RouteFixture(
+        name="AI Native read code with Gemini readonly",
+        prompt="要求阅读或分析代码时，优先启动 Gemini CLI 这类代码阅读工具，只读扫描入口路径、模块职责、调用关系和源码锚点，不能写文件或替代架构师 CR",
+        routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md"},
+    ),
+    RouteFixture(
         name="AI Native tool install admission",
         prompt="评估 Gemini CLI / AgentRC / Understand Anything：列来源、安装认证联网写入边界、只读范围、隐私风险、人工替代路径和 CR 条件；Understand Anything 还要列 .understand-anything、dashboard、auto-update、hook 和图谱提交边界",
         routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md"},
@@ -9677,6 +9800,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native fact boundary check",
         prompt="做事实边界检查：这份 AI 生成的 GSD/CAD 流程里有推测和额外实现建议，请区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张",
         routes={"ai-native", "agentic-engineering-governance.md", "gsd-cad-admission.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native minimal delivery first principles",
+        prompt="用 AI Native 研发流程约束 AI 不要乱写代码：不知道就问，没要求的不写，只改被要求的范围，给验收标准别给步骤，并用第一性原理判断目标是否清楚、路径是否最短",
+        routes={"ai-native", "agentic-engineering-governance.md", "verification-review-release.md", "product-to-engineering-lifecycle.md"},
     ),
     RouteFixture(
         name="AI Native routes PRD work",
@@ -9922,11 +10050,11 @@ def route_fixture(prompt: str) -> set[str]:
         )
     if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
         route.add("ai-native")
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "需求 CR", "CR 需求"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "问题核心诊断", "抓住问题的核心", "病机", "病 / 证 / 症", "定向", "定性", "定位", "定量", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "问题核心诊断", "抓住问题的核心", "病机", "病 / 证 / 症", "定向", "定性", "定位", "定量", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "不知道就问", "没要求的不写", "只改被要求的范围", "路径是否最短", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "目标驱动", "持续推进"]):
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
@@ -9968,9 +10096,9 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("verification-review-release.md")
         if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant 缺口", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "Production Loop Card", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡"]):
             route.add("gsd-cad-admission.md")
-        if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
+        if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "知识图谱工具", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -10073,7 +10201,7 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
     if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
         route.update({"senior", "testing.md", "workflow.md"})
-    if contains_any(prompt, ["Ponytail", "最小正确实现", "过度设计 CR", "过度设计专项", "源码级 Review"]):
+    if contains_any(prompt, ["Ponytail", "Karpathy", "Andrej", "karpathy-guidelines", "最小正确实现", "外科手术式变更", "外科手术式改动", "过度设计 CR", "过度设计专项", "源码级 Review"]):
         route.update({"senior", "coding-review-deep-dive.md", "coding-standards.md"})
     if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
