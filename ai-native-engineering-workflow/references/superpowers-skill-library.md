@@ -7,6 +7,7 @@
 - 用户点名 Superpowers、Superpowers skills、brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting-code-review、verification-before-completion 等外部技能。
 - 用户点名 Matt Pocock skills、Grill-Me、Grilling、Trellis、轻量问询、盘问式澄清或一次一个问题的需求 / 设计收敛。
 - 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入 AI Native 研发流程编排。
+- 需要评估或升级 SDD / Superpowers 6.0 套件、`subagent-driven-development`、任务评审、文件化交接或 Harness 版本。
 - 需要把模糊意图先收敛为关键分叉、建议答案、验收标准和任务树真相源，再交给产品专家、架构师或 AI Maker。
 - 需要判断某个 AI 编码任务应参考哪类工程纪律：澄清、计划、TDD、并行 Agent、代码评审、调试、完成前验证或分支收尾。
 - 需要审查外部 skill 包是否可作为方法来源、是否可复制、是否可安装或是否会引入脚本 / hooks / Git 操作风险。
@@ -41,6 +42,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断 Superpowers 如何接入 AI Native | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
+| 升级 SDD / Superpowers 6.0 套件 | `1B. Superpowers v6.0.3 / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不整包复制 v6 脚本、不默认启用 `.superpowers/sdd/` |
 | 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
 | 复杂 / 模糊需求轻量问询 | `grilling` 方法摘要，再回 `intent-to-production-loop.md` 和产品专家 | 不连续抛出多问题，不把问询过程写进正式 PRD |
 | 需求澄清 / Spec 前置 | `external-superpowers/brainstorming/SKILL.md`，再回 `product-to-engineering-lifecycle.md` | 不强制保存 `docs/superpowers/specs` |
@@ -80,6 +82,18 @@
 - `writing-plans`
 - `writing-skills`
 
+## 1B. Superpowers v6.0.3 / SDD 套件升级结论
+
+- 上游最新核验：2026-06-30 通过 GitHub Releases API 核验 `obra/superpowers` 最新 release 为 `v6.0.3`，发布时间为 2026-06-18，tag commit 为 `896224c4b1879920ab573417e68fd51d2ccc9072`。
+- 本地审查包：`v6.0.3` zip SHA256 为 `46584706bbcdb0330d82cf8d8acba08acfb5a3766cdbb819a461604eace7994b`。
+- v6 关键变化：`subagent-driven-development` 把 `spec-reviewer-prompt.md` 与 `code-quality-reviewer-prompt.md` 合并为 `task-reviewer-prompt.md`，按一次 diff 读取同时给出 spec-compliance 和 quality 两类结论。
+- v6 关键变化：任务交接从会话粘贴改为文件化，核心脚本包括 `task-brief`、`review-package` 和 `sdd-workspace`；`v6.0.3` 把 task brief、implementer report、review diff 和 progress ledger 放到工作区 `.superpowers/sdd/`。
+- v6 关键变化：执行前增加 pre-flight plan review，先检查计划内部冲突、会被 reviewer 判为缺陷的要求和跨任务接口不一致。
+- v6 关键变化：每次 dispatch 必须声明 model，并按任务风险选择合适成本层；最终再做一次 whole-branch broad review。
+- 升级结论：本仓库升级到 **SDD v6 方法契约**，但不整包替换 `external-superpowers/`，不复制或运行 v6 的外部脚本、hooks、插件 manifest、package 脚本、server 或安装流程。
+- AI Native 映射：pre-flight plan review 进入 Harness 准入；`task-reviewer-prompt.md` 映射为单一 Task Reviewer 角色；文件化 handoff 映射为本仓库任务文档 / review package / 验证证据；progress ledger 映射为 Goal Ledger、Harness Plan、任务文档或当前项目允许的状态文件。
+- 停止条件：若任务必须依赖 `task-brief`、`review-package`、`sdd-workspace` 或 `.superpowers/sdd/` 真实脚本运行，必须先做工具准入和用户授权；缺授权时只能使用方法规则，不声明已安装或已启用 v6 SDD 套件。
+
 ## 1A. Matt Pocock skills 审查状态
 
 - 来源仓库：`https://github.com/mattpocock/skills`
@@ -98,7 +112,7 @@
 | `brainstorming` | Round 0、PRD-Lite、OpenSpec 前置澄清 | 吸收“先澄清目标、约束、成功标准，再进设计”的方法；产品语义仍交给 `产品架构专家`。 |
 | `writing-plans` | OpenSpec / Harness / GSD 任务拆解 | 吸收小步任务、明确文件、验证命令和 TDD 步骤；完整工程计划仍交给 `资深架构师`。 |
 | `executing-plans` | GSD Wave 执行节奏 | 作为批次执行和检查点参考；不替代 Execution Grant。 |
-| `subagent-driven-development` | 多 Agent / GSD 编排 | 作为“任务隔离 + 规格审查 + 质量审查”的参考；仅在当前会话有可用 subagent 工具且用户授权时使用。 |
+| `subagent-driven-development` | 多 Agent / GSD 编排 | 升级为 SDD v6 方法契约：先做 pre-flight plan review，再由 AI Maker 执行，单一 Task Reviewer 同时检查规格符合度和代码质量，交接以文件 / 任务文档 / review package / progress ledger 为状态载体；仅在当前会话有可用 subagent 工具且用户授权时使用，不运行 v6 脚本。 |
 | `dispatching-parallel-agents` | 并行只读侦察或互不重叠任务 | 只用于依赖清楚、写入范围不重叠的场景；否则回到人工串行。 |
 | `test-driven-development` | TDD、补测试、回归验证 | 作为红绿重构纪律参考；具体测试设计和代码实现交给 `资深架构师`。 |
 | `systematic-debugging` | Bug / 生产问题前置诊断 | 映射到时间线、假设、证据和根因路径；具体排障交给 `资深架构师`。 |
@@ -120,6 +134,7 @@
 - 涉及资金、合规、安全、生产数据、不可逆操作或外部规则变化时，Superpowers 只能作为方法参考，必须保留专业确认、dry-run、回滚和审计边界。
 - 如果需要安装官方 Superpowers 插件，应另开工具准入判断：核验当前 Codex 插件状态、用户授权、目标目录、联网需求、同步影响和回滚方式。
 - 如果需要安装 Matt Pocock skills，只安装已审查的最小 Markdown skill，并通过 Codex 官方 installer 或用户明确授权的安全路径执行；安装失败或审批被拦截时，不绕过权限边界。
+- Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace`、`.superpowers/sdd/` 和 progress ledger 只作为方法参考；未获授权前不得在项目中创建目录、写 scratch 文件、运行脚本或把它们写成默认 Harness。
 
 ## 4. 调度输出模板
 

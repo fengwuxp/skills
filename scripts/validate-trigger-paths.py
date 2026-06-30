@@ -1385,6 +1385,17 @@ check(
             "OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
             "Superpowers skills 下载资源、外部 skill 调度矩阵、MIT 许可和安全边界读 `superpowers-skill-library.md`",
             "调度 Superpowers skills",
+            "AI Native Harness Contract v2",
+            "内部执行契约版本",
+            "pre-flight plan review",
+            "单一 Task Reviewer",
+            "文件化 handoff",
+            "progress ledger",
+            "final broad review",
+            "model / cost policy",
+            "不复制或运行 Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace`",
+            "Harness 契约版本: v1 / AI Native Harness Contract v2",
+            "SDD 套件版本: 无 / SDD v6 方法契约 / 外部工具已授权",
             "`obra/superpowers` 已作为外部 skill library 下载并隔离到 `external-superpowers/`",
             "brainstorming 用于前置澄清",
             "writing-plans 用于计划拆解",
@@ -1942,6 +1953,18 @@ check(
             "2026-06-07",
             "6fd4507659784c351abbd2bc264c7162cfd386dc",
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
+            "Superpowers v6.0.3 / SDD 套件升级结论",
+            "896224c4b1879920ab573417e68fd51d2ccc9072",
+            "46584706bbcdb0330d82cf8d8acba08acfb5a3766cdbb819a461604eace7994b",
+            "task-reviewer-prompt.md",
+            "task-brief",
+            "review-package",
+            "sdd-workspace",
+            ".superpowers/sdd/",
+            "pre-flight plan review",
+            "progress ledger",
+            "不整包替换 `external-superpowers/`",
+            "不声明已安装或已启用 v6 SDD 套件",
             "MIT License",
             "仅复制 `skills/` 下 Markdown 资源和 LICENSE",
             "未复制外部脚本、hooks、插件 manifest、package 脚本",
@@ -2538,6 +2561,11 @@ check(
             "Delivery",
             "机器验证与独立证据",
             "生成者不能自己给自己签字",
+            "SDD v6 任务闭环",
+            "Task Reviewer",
+            "can't verify from diff",
+            "final broad review",
+            "只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/`",
             "Spec 回写与重试闭环",
             "处理 AI 生成失败或反复返工",
             "AI 生成失败不是只换提示词",
@@ -2595,6 +2623,10 @@ check(
             "code-delivery-closed-loop.md",
             "失败回写 Spec 再重试",
             "Orchestrator / Knowledge / Delivery 三层 Harness",
+            "`obra/superpowers` v6.0.3",
+            "SDD v6 方法契约",
+            "task-reviewer-prompt.md",
+            "不整包替换 `external-superpowers/`",
             "不把外部 Harness 写成当前会话默认依赖或执行授权",
             "不把文章中的比例和团队经验写成通用事实或项目当前指标",
         ],
@@ -9486,6 +9518,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native upgrades SDD suite and Harness contract",
+        prompt="AI Native 看下整体升级 SDD/SSD 套件以及 Harness 版本，参考 Superpowers 6.0 的 task-reviewer、task-brief、review-package、progress ledger 和 pre-flight plan review，补验证门禁和停止条件，但不要默认运行外部脚本",
+        routes={"ai-native", "agentic-engineering-governance.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "source-map.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native routes Matt Pocock grilling skills",
         prompt="AI Native 看下安装 mattpocock/skills，用 grilling 协同产品专家和任务树推进模糊需求，说明安装边界和安全风险",
         routes={"ai-native", "agent-loop-engineering.md", "intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
@@ -9847,7 +9884,7 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
@@ -9882,11 +9919,11 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "事实来源", "系统 DNA", "不变量", "状态流转", "结构化契约", "正例 / 反例", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
-        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断"]):
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "SDD v6", "SSD 套件", "SDD 套件", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断", "task-reviewer", "progress ledger", "pre-flight plan review"]):
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
+        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
         if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Harness Engineering", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):

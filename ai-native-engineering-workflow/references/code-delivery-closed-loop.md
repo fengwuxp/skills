@@ -12,6 +12,7 @@
 - 需要把 AI 工作流 Loop 做成生产可用闭环，明确隔离执行、可复现状态、独立验证、观测审计、人工接管、发布/回滚和责任 owner。
 - 需要让 AI 在真实项目中自我挖掘需求和代码上下文、形成计划、完成低风险执行，并判断何时完成、继续、停止或人工确认。
 - 需要落地 Spec / SDD / OpenSpec 模板、AC 验收、测试映射、spec-lint、AC 覆盖或漂移检查。
+- 需要把 Superpowers v6 SDD 的 task reviewer、file handoff、progress ledger、pre-flight plan review 或最终 broad review 接入现有 AI Native Loop。
 - 需要把 CR 高频问题、测试失败、发布问题和复盘发现回流到项目知识、规范、模板、脚本或验证门禁。
 - 需要把调研、早报、教程、培训、行业情报或团队知识传播做成可复用的知识生产 Loop，而不是每次从空白提示词开始。
 - 需要设计“最终代码可交付”的准出条件，而不是只看 Agent 是否生成了代码。
@@ -35,6 +36,7 @@
 - 一份自主交付完成判断：已读事实源、候选需求、人工确认边界、执行证据、独立验证、Complete / Loop / Stop / Human handoff。
 - 一份生产可用 Loop 准出判断：自动化心跳、隔离工作区、上下文资产、连接器权限、Maker / Checker 解耦、可复现状态、观测审计、人工接管和发布/回滚是否齐备。
 - 一份 Harness 传感器清单：测试、lint、静态检查、架构规则、覆盖率、漂移检测、发布监控和人工确认。
+- 一份 SDD v6 任务闭环判断：计划预检、AI Maker、Task Reviewer、文件化交接、progress ledger、最终整体复核和脚本授权边界。
 - 一份回流计划：哪些经验进入 `CONTEXT.md`、`AGENTS.md` / `CLAUDE.md`、ADR、Spec 模板、测试、fixture、脚本或技能 reference；哪些只是一次性试错。
 - 一份知识生产 Loop 判断：资料范围、上下文资产、输出标准、自动化触发、来源标识、验收 owner、更新频率和停用条件。
 - 一份经验归位判断：哪些是项目公共知识、哪些是 Skill 方法增强、哪些不得回流。
@@ -64,6 +66,7 @@
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `4. 机器验证与独立证据` | 不把模板写成外部 ASD/SSD 目录 |
 | 处理 AI 生成失败或反复返工 | `4A. Spec 回写与重试闭环`，再读 `verification-review-release.md` | 不只换提示词或放宽测试 |
 | 设计 Harness 闸门 | `3. Harness 三层闭环`、`4. 机器验证与独立证据` | 不替代架构师测试实现 |
+| 接入 SDD v6 任务闭环 | `3A. SDD v6 任务闭环`，再读 `agentic-engineering-governance.md` 和 `superpowers-skill-library.md` | 不运行 `task-brief`、`review-package`、`sdd-workspace` 或默认创建 `.superpowers/sdd/` |
 | 降低 CR 认知负荷 | `5. CR 减负与可理解交接` | 不做源码级 CR |
 | 做复盘和知识回流 | `6. 知识回流`、`6A. Skill 自我改进外循环`、`7. 指标闭环` | 不写个人长期偏好或私有轨迹到仓库 |
 | 做调研、教程、早报或培训材料 | `6B. 知识生产 Loop`、`7. 指标闭环` | 不把厂商工具写成默认依赖 |
@@ -153,6 +156,31 @@ Goal Ledger 更新:
 ```
 
 不把外部文章中的 ASD / SSD Harness、命令体系、目录结构或脚本写成本技能默认依赖；本技能只吸收“Orchestrator / Knowledge / Delivery 分层、独立验证和知识回流”的方法。
+
+### 3A. SDD v6 任务闭环
+
+Superpowers v6 的 SDD 经验应作为 AI Native 的任务级质量环，而不是新增一个并列流程。最小闭环：
+
+```text
+pre-flight plan review:
+AI Maker 执行:
+实现报告 / 红绿证据:
+Task Reviewer:
+修复回环:
+progress ledger 回写:
+final broad review:
+```
+
+判断规则：
+
+- 计划预检先于编码：检查任务是否互相冲突、接口是否清楚、全局约束是否传递到每个任务、验证命令是否存在、是否命中授权边界。
+- AI Maker 只按当前任务写入范围执行，必须交出实现报告、变更文件、测试 / lint / 静态检查证据和未验证项。
+- Task Reviewer 是独立 Checker，一次读取任务 diff，同时给出规格符合度和质量结论；不得被 Maker 的解释、成本理由或“先忽略这个问题”影响。
+- Reviewer 无法从 diff 判断的要求，必须标为 `can't verify from diff`，回到 controller、架构师或人工 owner 读取更大上下文，不得臆测通过。
+- 每轮修复都要回写失败原因、修复动作、验证证据和下一步；同类问题重复或无新增证据时停止。
+- 任务级通过后仍需 final broad review，检查跨任务契约、公共 API、错误码、状态机、数据迁移、测试覆盖、风险边界和知识回流。
+
+文件化交接建议使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue；只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/` 或运行 v6 的 `task-brief`、`review-package`、`sdd-workspace`。缺少授权时，只采用方法契约，不声明外部 SDD 套件已安装或已执行。
 
 ## 4. 机器验证与独立证据
 
