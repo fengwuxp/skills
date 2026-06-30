@@ -111,6 +111,10 @@ def expected_handling_has(case_id: str, required_terms: tuple[str, ...]) -> None
 senior_skill = "senior-software-architect/SKILL.md"
 senior_agent = "senior-software-architect/agents/openai.yaml"
 senior_routing = "senior-software-architect/references/scenario-routing.md"
+wind_skill = "wind-project-coding-conventions/SKILL.md"
+wind_skill_agent = "wind-project-coding-conventions/agents/openai.yaml"
+wind_skill_conventions = "wind-project-coding-conventions/references/wind-project-coding-conventions.md"
+wind_skill_examples = "wind-project-coding-conventions/references/wind-project-coding-examples.md"
 senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
 ai_engineering = "senior-software-architect/references/ai-assisted-engineering.md"
@@ -468,6 +472,10 @@ ai_native_terms = [
     "知识生产 Loop",
     "技术早报",
     "WorkBuddy",
+    "Harness Engineering",
+    "架构真功夫",
+    "专才 Agent",
+    "专项 Skill",
     "Skill 类型",
     "Skill 分类经验",
     "Anthropic内部Skills",
@@ -583,24 +591,47 @@ reference_headers = [
     ai_native_superpowers_library,
     ai_native_skill_type_owner_routing,
     ai_native_source_map,
-] + project_governance_refs + [wind_coding, wind_coding_examples] + testing_practice_refs + skill_tree_refs
+] + project_governance_refs + [wind_coding, wind_coding_examples, wind_skill_conventions, wind_skill_examples] + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
 
 check(
-    "senior architect exposes Wind project coding conventions opt-in",
-    has_reference_header(wind_coding)
-    and has_task_reading_index(wind_coding)
+    "Wind project coding conventions split into dedicated opt-in skill",
+    has_all(
+        wind_skill,
+        [
+            "name: wind-project-coding-conventions",
+            "Wind/Nobe Java 项目编码约规",
+            "项目 AGENTS.md 明确 opt-in",
+            "references/wind-project-coding-conventions.md",
+            "references/wind-project-coding-examples.md",
+            "资深架构师",
+            "java-service-code-generator",
+            "Wind Rule Check Card",
+            "未 opt-in 的普通 Java/Spring 项目，不强行套 Wind",
+            "生产源码路径不得新增内存版业务 Service",
+        ],
+    )
+    and has_all(
+        wind_skill_agent,
+        [
+            "Wind 项目编码约规",
+            "face/impl",
+            "服务分层",
+            "模型归位",
+            "Entity 不外露",
+            "ServiceImpl",
+        ],
+    )
     and has_all(
         senior_skill,
         [
             "references/wind-project-coding-conventions.md",
-            "references/wind-project-coding-examples.md",
+            "Wind 项目编码约规的兼容索引",
+            "`wind-project-coding-conventions` Skill",
             "项目 `AGENTS.md` 明确 opt-in",
-            "face/impl 边界",
-            "服务分层",
-            "模型归属",
+            "架构师负责源码级设计、TDD、CR 和验证",
         ],
     )
     and has_all(
@@ -608,17 +639,22 @@ check(
         [
             "Wind 项目编码约规",
             "项目 AGENTS.md opt-in",
-            "wind-project-coding-conventions.md",
-            "wind-project-coding-examples.md",
+            "`wind-project-coding-conventions` Skill",
+            "源码级设计、TDD、CR",
             "不把 Wind 规则强套到所有 Java 项目",
             "不为了套分层新增浅服务、透传接口或内存版业务实现",
         ],
     )
+    and has_reference_header(wind_skill_conventions)
+    and has_task_reading_index(wind_skill_conventions)
     and has_all(
-        wind_coding,
+        wind_skill_conventions,
         [
+            "`wind-project-coding-conventions` Skill 的主规则",
             "项目本地 `AGENTS.md` 明确标明",
+            "wind-integration / nobe / capte-domain 源码观察",
             "face/impl 模块边界",
+            "接口放置",
             "基础服务",
             "应用层服务",
             "DTO/Request/Query/Entity",
@@ -626,25 +662,54 @@ check(
             "分包规则",
             "MyBatis Flex",
             "`web-api` / `web-security` 放 Controller、Web VO、Web 登录/表单 Request 和 Web 层 Converter",
-            "`core` 只放跨域共享的值对象、枚举和事件",
+            "放置四问",
+            "对外或跨模块调用进 `*-face`",
+            "模块内部实现进 `*-impl`",
+            "跨模块稳定公共能力进 `core`",
+            "技术适配和框架配置进 `infrastructure`",
+            "`model/dto`、`model/request`、`model/query`、`model/command`",
+            "历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包",
+            "`*-impl` 一般不放对外 DTO/Request/Query/Command",
+            "回调入口、扩展点或业务 SPI 的 `callback/spi`",
+            "`core` 放跨模块稳定基础契约、值对象、枚举、事件、上下文、规则、告警、缓存兑换、操作人等公共能力",
+            "`infrastructure` 放消息发送、KMS、MyBatis Flex helper、通用工具和框架配置等技术适配",
+            "源码样本中 `*-face` 常见 `service/services`",
+            "`*-impl` 常见 `service/impl`、`application/impl`、`dal/entities`、`dal/mapper`、`mapstruct`",
             "必要的 `application` 契约",
             "同一 face 有多个业务子域时，可按业务名继续分包",
             "`domain` 必须表示稳定业务语义，不得作为杂物包",
             "`*-impl` 放内部 `service` / `service/impl`、`application/impl`、`domain` / `domain/impl`",
+            "listener",
+            "webhook",
+            "接口落位",
+            "完整用例契约才放 `*-face/application`",
+            "只被本模块实现层使用的接口留在 `*-impl/service`、`*-impl/domain` 或 `*-impl/support`",
             "face Service 和跨模块接口只暴露 `DTO`、`Request`、`Query`、`Command`、枚举或值对象，不暴露 `Entity`",
             "接口放 `*-face/application`，实现放 `*-impl/application/impl`",
             "内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传",
+            "公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`",
+            "`WindQuery<? extends QueryOrderField>`",
             "`DomainService` / `DomainQueryService` 不是 Wind 项目强制分层",
             "写操作用业务动词",
             "Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口、事件/消息契约不得以 Entity、Mapper、Repository 或 MyBatis `Page` 作为入参、返回值或泛型",
             "离开 `*-impl` 边界前必须转换为 `DTO`、`Request`、`Query`、`Command`、`Event` 或值对象",
-            "业务模块自己的 `dto`、`request`、`query`、`enums`、`event` 优先放在对应 `*-face` 的业务包下",
-            "`domain/dto|request` 仅用于跨子域、稳定业务概念",
+            "新代码的 `DTO`、`Request`、`Query`、`Command` 优先放在 `*-face` 或 `core` 的 `model/dto`、`model/request`、`model/query`、`model/command` 下",
+            "对应 Java 包名通常是 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`",
+            "历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包",
+            "对应 `*.dto`、`*.request`、`*.query`、`*.command`",
+            "`*-impl` 一般不放 DTO/Request/Query/Command",
+            "`domain` 仅用于跨子域、稳定业务概念",
             "业务/通道事件 Converter 可放 `*-impl` 的 `converter` 或 `support`",
+            "事件/消息契约跟业务 owner 走",
+            "事件监听器、Webhook handler、投递 executor 放 `*-impl/listener` 或 `*-impl/webhook`",
             "Web 展示 VO、登录/表单 Request 和页面组合模型放 `web-api` / `web-security`，不得回流到 face 契约",
             "跨域共享模型只有在两个以上业务模块稳定复用且不依赖 Web/DAL 时，才放 `core` 的 `model`、`enums` 或 `event`",
             "公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc",
             "`DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型",
+            "`MybatisQueryHelper.from(options)`",
+            "`XxxNameRefs`",
+            "`Pagination.empty()`",
+            "impl 的 `webhook`、`listener`、`handler`、`executor` 负责协议解析、签名校验、状态映射、幂等和投递",
             "ApplicationService / ServiceImpl 流程测试保留真实内部协作者",
             "TDD 先写能失败的行为测试",
             "基础服务测试重点验证 QueryWrapper、Mapper 语义、分页、排序、selective 写库、事务事实和异常语义",
@@ -652,15 +717,17 @@ check(
             "生产源码路径不得新增 `InMemoryXxxService`",
             "Entity 是否泄漏到服务层/接口契约",
             "模型包归位",
+            "core/infrastructure 是否变成公共垃圾桶",
             "项目本地 `AGENTS.md` 写明即可",
             "需要最佳实践正反例时读 `wind-project-coding-examples.md`",
         ],
     )
-    and has_reference_header(wind_coding_examples)
-    and has_task_reading_index(wind_coding_examples)
+    and has_reference_header(wind_skill_examples)
+    and has_task_reading_index(wind_skill_examples)
     and has_all(
-        wind_coding_examples,
+        wind_skill_examples,
         [
+            "`wind-project-coding-conventions` Skill 的示例参考",
             "Wind 项目编码最佳实践示例",
             "不是代码生成模板",
             "ApplicationService 不是透传层",
@@ -672,13 +739,27 @@ check(
             "公开接口签名不得出现 Entity",
             "Web 页面 VO 放进 `*-face` 的 DTO 包",
             "把 `domain` 当杂物包",
-            "业务契约模型放 `*-face` 的 `dto/request/query/enums/event`",
-            "`domain/dto|request` 等子包表达稳定业务语义",
-            "内部领域规则放 `*-impl/domain|domain/impl`",
+            "把只给本模块用的接口提前放进 face/core",
+            "业务契约模型新代码优先放 `*-face` 的 `model/dto`、`model/request`、`model/query`、`model/command`",
+            "对应 Java 包名 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`",
+            "历史兼容既有 `dto/request/query/command`",
+            "跨模块稳定 Service 放 `*-face/service`",
+            "回调入口和业务 SPI 放 `*-face/callback/*`",
+            "`domain/model/dto|request` 等子包表达稳定业务语义",
             "业务/通道事件适配 Converter 可放 `*-impl/converter`",
+            "内部领域规则放 `*-impl/domain|domain/impl`",
+            "内部 DTO/Request/Query/Command 只能留在 impl 内部",
             "Web VO 和登录/表单 Request 放 `web-api` / `web-security`",
+            "跨模块稳定公共能力放 `core`",
+            "技术适配和框架配置放 `infrastructure`",
             "MyBatis Flex 查询集中表达",
+            "公开接口返回 `WindPagination<DTO>`",
+            "`MybatisQueryHelper.from(options)`",
+            "`Pagination.empty()`",
             "TDD 测真实链路",
+            "源码样本只提炼稳定共性",
+            "`wind-integration / nobe / capte-domain 源码观察`",
+            "`dal/entities`、`dal/mapper`、`mapstruct`",
             "当前代码更接近反例还是正例",
             "不把示例当模板复制",
         ],
@@ -688,7 +769,12 @@ check(
         [
             "Wind 项目编码约规",
             "项目 `AGENTS.md` 标明",
-            "不需要新建独立 Skill",
+            "`wind-project-coding-conventions` 做规则判断",
+            "`wind-project-coding-conventions` 作为规则权威",
+            "路径：[wind-project-coding-conventions](./wind-project-coding-conventions)",
+            "只做规则判断和偏差说明",
+            "未 opt-in 的普通 Java/Spring 项目，不强套 Wind 约规",
+            "用 wind-project-coding-conventions 检查这个已 opt-in Wind 约规的项目",
         ],
     ),
 )
@@ -1164,6 +1250,12 @@ check(
             "补 fixture / validator",
             "补脚本",
             "新建顶层 Skill",
+            "专项 Skill 拆分先走 V 字判断",
+            "向下拆清职责",
+            "向上合并复用",
+            "Harness 校验",
+            "运行一段再抽离",
+            "如果只是多一个提示词入口，就不拆",
             "产品专家被 AI Native 调用",
             "产品验证种子",
             "架构师被 AI Native 调用",
@@ -1171,6 +1263,22 @@ check(
             "CI/CD 与发布门禁",
             "基础设施操作",
             "source-map.md",
+        ],
+    ),
+)
+check(
+    "ai-native source map records Harness Engineering split boundary",
+    has_all(
+        ai_native_source_map,
+        [
+            "给野马套上缰绳：Agent Harness 工程实践",
+            "Harness Engineering",
+            "2 Agent + N Skill",
+            "工具签名即文档",
+            "事务边界",
+            "独立 Reviewer",
+            "skill-type-owner-routing.md",
+            "不把多 Agent、Sub-Agent、RPA、外部 Harness、自动开 PR、状态文件或任一工具能力写成当前会话默认可用",
         ],
     ),
 )
@@ -1881,6 +1989,9 @@ check(
             "需求基线稳定性门禁",
             "系统/产品需求未确认、需求条目不可验证、图文不可追踪或衍生需求无 owner",
             "关键标准没有强制/推荐分级、原因/示例、验证方式或适用范围",
+            "Delta Spec",
+            "ADDED / MODIFIED / REMOVED",
+            "影响的 PRD、SDD / OpenSpec、实现 Spec、AC、测试、接口 / 事件、发布风险和通知 owner",
             "五段式结构",
             "Form Follows Reviewer",
             "More Context, Less Control",
@@ -1893,6 +2004,8 @@ check(
             "spec-lint",
             "AC 覆盖",
             "漂移检查",
+            "代码偏离、Spec 缺失或需求变化",
+            "Spec 缺失先补 Spec 并重新 Review",
             "风险自查",
             "AI 生成失败时，先把失败场景回写到 Spec / AC / 测试或项目规则",
             "Spec 也是实现和 CR 的检查清单",
@@ -2494,6 +2607,9 @@ check(
         [
             "经验归位判断",
             "Skill 自我改进外循环",
+            "Knowledge Harness",
+            "症状 / 根因 / 解决方案 / 预防策略 / 适用条件 / 验证证据",
+            "不默认新建 `docs/solutions/`",
             "稳定上下文、项目规则、验证样例或 Skill 规则没有进入合适载体",
             "项目公共知识",
             "Skill 方法增强",
@@ -2508,6 +2624,10 @@ check(
         [
             "一个让Codex变得越来越聪明的小方法",
             "如何为你的 Skills 构建自我改进循环",
+            "有人把 5.7 万星 OpenSpec 和 24 万星 Superpowers 融合成一个工作流在 Github 开源",
+            "Spec-First：每次 AI coding 的经验，都不应该消失",
+            "Delta Spec",
+            "Knowledge Harness",
             "像素与咖啡时光",
             "Skill 自我改进外循环",
             "经验归位",
@@ -2522,6 +2642,8 @@ check(
             "一个让Codex变得越来越聪明的小方法",
             "Skill 自我改进外循环",
             "Skill Improvement Card",
+            "有人把 5.7 万星 OpenSpec 和 24 万星 Superpowers 融合成一个工作流在 Github 开源",
+            "Spec-First：每次 AI coding 的经验，都不应该消失",
             "不得把个人长期偏好、私有对话轨迹、客户资料、生产数据、密钥、外部文章原文、工具宣传或 Agent 自述写入仓库",
         ],
     ),
@@ -7576,8 +7698,14 @@ check(
             "PRD 说明要做什么和如何验收",
             "MRD 说明市场、客户机会和为什么做",
             "BRD 说明商业价值、投入产出和决策依据",
+            "按角色分层消费",
+            "决策层回答 Why / What 和成功标准",
+            "方案层回答 How、取舍、成本和风险",
+            "实现层回答输入、输出、边界、异常、接口和验收",
             "功能名不能替代需求",
             "需求变更必须更新版本号、影响范围、通知对象、当前评审结论和过程记录链接",
+            "需求变更必须生成影响清单",
+            "目标/范围、流程/交互、规则/字段、接口/事件、验收种子、测试用例、发布风险和通知对象",
             "最终 PRD 不保留讨论过程、迭代草稿、AI prompt/回答轨迹、多角色争论或被拒方案展开",
         ],
     ),
@@ -7748,6 +7876,12 @@ check(
             "每个进入开发候选的需求必须能关联场景、能力或功能、关键规则和验收种子",
             "正式 PRD 以最终标准版本为主",
             "文档控制只保留当前版本号、状态、owner、发布日期、评审结论摘要和过程记录链接",
+            "按角色分层消费",
+            "决策层服务业务 / 管理者",
+            "方案层服务产品 / 设计 / 架构",
+            "实现层服务开发 / 测试 / 发布",
+            "需求变更必须补影响清单",
+            "影响清单进入过程资产，正式 PRD 只保留当前有效结论和链接",
             "最终 PRD 不保留“第一版/第二版怎么改”",
             "默认不展开文档控制、完整状态机、字段字典、规则矩阵、权限矩阵、非功能、发布运营和金融资金全表",
             "主文档优先用短句、卡片和编号流程帮助扫读",
@@ -9049,8 +9183,9 @@ check(
         codegen_skill,
         [
             "基础服务、DTO、Request、Query、Entity、Mapper、MapStruct、Service、ServiceImpl 模板是 Wind 项目编码约规的标准生成面",
-            "权威规则以 `资深架构师` Skill 的 Wind 项目编码约规为准",
-            "生成后审查回到 `资深架构师` 的 Wind 项目编码约规",
+            "权威规则以 `wind-project-coding-conventions` Skill 为准",
+            "生成后规则审查回到 `wind-project-coding-conventions`",
+            "源码级 CR / TDD 回到 `资深架构师`",
             "Entity 不外露",
         ],
     )
@@ -9058,7 +9193,7 @@ check(
         codegen_rules,
         [
             "Wind 项目编码约规的标准模板实现面",
-            "规则权威来源仍是 `资深架构师` 的 `wind-project-coding-conventions.md`",
+            "规则权威来源是 `wind-project-coding-conventions` Skill",
             "face 模块生成的 Service 契约只暴露 DTO/Request/Query/WindQuery/分页结果",
             "不暴露 Entity、Mapper、Repository 或 MyBatis `Page`",
         ],
@@ -9067,7 +9202,7 @@ check(
         codegen_nobe_patterns,
         [
             "Wind 项目编码约规的标准实现样本",
-            "以 `资深架构师` 的 Wind 项目编码约规和项目本地 `AGENTS.md` 为准",
+            "以 `wind-project-coding-conventions` 和项目本地 `AGENTS.md` 为准",
             "DTO / Request / Query / Service 是 face 对外契约",
             "Entity 只在 ServiceImpl、DAL、Mapper 和 Converter 内部流转",
         ],
@@ -9143,27 +9278,32 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="wind project coding conventions opt in review",
         prompt="这个 capte-domain 项目的 AGENTS.md 标明遵守 Wind 项目编码约规，帮我 CR face/impl 模块、基础服务、ApplicationService、DTO/Entity 分层和 MyBatis Flex 查询",
-        routes={"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"},
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project entity exposure review",
         prompt="这个项目遵守 Wind 项目编码约规，帮我检查服务层和接口设计有没有 Entity 暴露到 face Service、ApplicationService、Controller、Facade、Adapter 或跨模块接口",
-        routes={"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project model package ownership review",
-        prompt="结合 capte-domain 的包名划分，补充 Wind 项目编码约规里 DTO、Request、Query、Event、VO、Entity、Mapper、MapStruct、application、domain、converter、core 共享模型应该放什么包",
-        routes={"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+        prompt="结合 capte-domain 的包名划分，补充 Wind 项目编码约规里包、接口、模型应该放哪个模块：DTO、Request、Query、Command 优先放 *.model.dto、*.model.request、*.model.query、*.model.command 还是兼容 *.dto、*.request、*.query、*.command；Event、VO、Entity、Mapper、MapStruct、application、domain、converter、callback/spi、listener、webhook、core、infrastructure 分别怎么归位",
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+    ),
+    RouteFixture(
+        name="wind project source observation conventions",
+        prompt="阅读 wind-integration、nobe、capte-domain 代码库的项目结构、模块划分、包名划分、命名风格、编码习惯和 API 使用，完善 Wind 项目编码约规",
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
     ),
     RouteFixture(
         name="wind project coding conventions opt in tdd",
         prompt="这个 wind 项目 AGENTS.md 已标明遵守 Wind 项目编码约规，帮我按 TDD 给 ServiceImpl 和基础服务补测试，重点看真实内部链路、QueryWrapper、Mapper 语义和外部端口替身边界",
-        routes={"senior", "coding-standards.md", "testing.md", "wind-project-coding-conventions.md"},
+        routes={"wind", "senior", "coding-standards.md", "testing.md", "wind-project-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project coding examples",
         prompt="这个项目已 opt-in Wind 项目编码约规，给 AI Maker 一些服务层、基础服务、DTO/Entity、MyBatis Flex 和 TDD 的最佳实践正反例参考",
-        routes={"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
     ),
     RouteFixture(
         name="architecture decay entropy review",
@@ -9262,7 +9402,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native intent to production role loop",
-        prompt="参考 Loop Engineering，把 AI 工作流从意图 / 需求收集做到生产交付闭环，区分业务 owner、产品专家、UED、架构师、AI Maker、AI Checker、质量 / 测试门禁和发布 owner 在每个阶段的分工、交接物、验证门禁和停止条件",
+        prompt="参考 Loop Engineering，把 AI 工作流从意图 / 需求收集做到生产交付闭环，区分业务 owner、产品专家、UED、架构师、AI Maker、AI Checker、质量 / 测试门禁和发布 owner 在每个阶段的分工、交接物、验证门禁和停止条件；需求变更进入 Loop 时先识别 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接的影响",
         routes={"ai-native", "intent-to-production-loop.md", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "agent-loop-engineering.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -9354,6 +9494,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native skill type owner routing",
         prompt="参考 Anthropic 内部 Skills 经验，细化 AI 流程、产品专家和架构师能力，但 AI Native 仍作为主入口；判断产品验证、代码质量、Runbook、CI/CD、模板脚手架、数据分析和基础设施操作分别由谁负责、交接物和验证证据是什么",
         routes={"ai-native", "skill-type-owner-routing.md", "product-to-engineering-lifecycle.md", "agentic-engineering-governance.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native skill split gate",
+        prompt="AI Native 参考 Harness Engineering 和架构真功夫，评估项目下的 skill 是否应该多拆分几个更专项的 skill，再由 AI 流程统一调用；请判断哪些只更新 reference、哪些补 fixture / validator、哪些未来才新建顶层 Skill",
+        routes={"ai-native", "skill-type-owner-routing.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI coding workflow CR",
@@ -9744,7 +9889,7 @@ def route_fixture(prompt: str) -> set[str]:
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
-        if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
+        if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Harness Engineering", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
             route.add("skill-type-owner-routing.md")
             route.add("product-to-engineering-lifecycle.md")
             route.add("verification-review-release.md")
@@ -9752,7 +9897,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "知识图谱工具", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -9838,8 +9983,8 @@ def route_fixture(prompt: str) -> set[str]:
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
     if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity"]):
-        route.update({"senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
-        if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker", "模型包归位", "模型归位", "包名划分"]):
+        route.update({"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
+        if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker", "模型包归位", "模型归位", "包名划分", "源码观察", "代码库", "API 使用", "编码习惯"]):
             route.add("wind-project-coding-examples.md")
         if contains_any(prompt, ["CR", "Review", "review", "检查", "审查", "暴露", "泄漏"]):
             route.add("coding-review-deep-dive.md")
@@ -10023,6 +10168,8 @@ expected_handling_has(
         "可用性/安全性/可靠性评估",
         "验证发布",
         "复盘回流",
+        "需求变更进入 Loop 时，先做影响识别再改文档或代码",
+        "PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接",
         "产品/交互设计和验收种子回到产品架构专家",
         "TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师",
         "结构化 Java Service 生成回到 java-service-code-generator",
@@ -10422,6 +10569,18 @@ expected_handling_has(
         "CAD 候选",
         "实现建议",
         "授权缺口",
+    ),
+)
+
+expected_handling_has(
+    "wind-project-coding-conventions-should-trigger-opt-in",
+    (
+        "Wind 项目编码约规规则检查",
+        "项目已 opt-in",
+        "wind-project-coding-conventions 主规则",
+        "适用性",
+        "触发约规",
+        "源码级设计、TDD、CR 和生产风险继续交给资深架构师",
     ),
 )
 

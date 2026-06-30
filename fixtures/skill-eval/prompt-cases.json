@@ -198,7 +198,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 角色协作 Loop 主流程，读取 intent-to-production-loop 和 verification-review-release；按默认输出骨架给出结论、角色 Loop 场景视图、当前阶段、角色视角、能力/约规来源、owner/下一步分派、交接物、Loop Contract、证据边界、验证门禁、停止条件和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确旧术语只作内部实现层和历史触发别名，不替代角色协作、测试通过、CR 结论或发布审批。"
+      "expected_handling": "进入 AI Native 角色协作 Loop 主流程，读取 intent-to-production-loop 和 verification-review-release；按默认输出骨架给出结论、角色 Loop 场景视图、当前阶段、角色视角、能力/约规来源、owner/下一步分派、交接物、Loop Contract、证据边界、验证门禁、停止条件和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确旧术语只作内部实现层和历史触发别名，不替代角色协作、测试通过、CR 结论或发布审批。"
     },
     {
       "id": "ai-native-should-prd-ai-prescan-review",
@@ -352,9 +352,24 @@
       "expected_handling": "进入 AI 代码交付闭环模式，按默认输出骨架给出结论、角色 Loop 场景视图、owner/下一步分派、交接物、Loop Contract、证据边界、授权策略、验证门禁、停止条件和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
     },
     {
+      "id": "ai-native-should-skill-split-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Native 参考 Harness Engineering 和架构真功夫，评估项目下的 skill 是否应该多拆分几个更专项的 skill，再由 AI 流程统一调用；请判断哪些只更新 reference、哪些补 fixture / validator、哪些未来才新建顶层 Skill。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing 和 source-map；先用 V 字判断确认向下职责是否单纯、向上是否可合并复用，再按只更新 reference、补 fixture / validator、补脚本、未来新建顶层 Skill 分级；AI Native 保持编排主入口，产品专家、架构师和代码生成器保持专项 owner，不把流程阶段、工具名、外部文章案例或单次组织实践拆成新 Skill。"
+    },
+    {
       "id": "ai-native-should-spec-template-practices",
       "skill": "ai-native-engineering-workflow",
-      "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请先区分 PRD / SDD / 实现 Spec 三层是否齐备，再输出 Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",
+      "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请先区分 PRD / SDD / 实现 Spec 三层是否齐备，再输出 Spec 强度、Delta Spec、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -364,7 +379,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，先区分 PRD / SDD / 实现 Spec 三层边界，说明已具备、缺失和不可让 AI 猜的层；输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；把实现 Spec 作为实现和 CR 检查清单，偏差先判断是否需要更新 Spec，再要求 AI 修改代码；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
+      "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，先区分 PRD / SDD / 实现 Spec 三层边界，说明已具备、缺失和不可让 AI 猜的层；输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、Delta Spec 的 ADDED / MODIFIED / REMOVED 影响、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；把实现 Spec 作为实现和 CR 检查清单，偏差先判断是代码偏离、Spec 缺失还是需求变化，再决定修代码、更新 Spec 或走影响识别；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
     },
     {
       "id": "ai-native-should-production-sdd-source-of-truth",
@@ -1056,6 +1071,58 @@
         "trigger_accuracy"
       ],
       "negative_reason": "这是工程架构和发布风险评审，不是产品语义、PRD 或支付产品方案。"
+    },
+    {
+      "id": "wind-project-coding-conventions-should-trigger-opt-in",
+      "skill": "wind-project-coding-conventions",
+      "query": "这个项目 AGENTS.md 已标明遵守 Wind 项目编码约规，请按 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、Entity 不外露和 MyBatis Flex 查询做一轮规则检查。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "进入 Wind 项目编码约规规则检查；先确认项目已 opt-in，再读取 wind-project-coding-conventions 主规则，输出适用性、触发约规、当前偏差、建议改法、后续 owner 和验证方式；规则判断由 wind-project-coding-conventions 承担，源码级设计、TDD、CR 和生产风险继续交给资深架构师。"
+    },
+    {
+      "id": "wind-project-coding-conventions-should-trigger-package-ownership",
+      "skill": "wind-project-coding-conventions",
+      "query": "这个仓库的 AGENTS.md 已写明采用统一 face/impl 项目编码约规，请判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、callback/spi、listener、webhook、core、infrastructure 的模块和包归位。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入项目编码约规归位检查；确认本地 AGENTS.md opt-in 后读取 Wind 主规则和必要示例，输出模型、接口、事件、Web 展示模型、core 与 infrastructure 的归位判断，并标明需要架构师源码级 CR 的部分。"
+    },
+    {
+      "id": "wind-project-coding-conventions-negative-generic-java-review",
+      "skill": "wind-project-coding-conventions",
+      "query": "这个普通 Spring Boot 项目没有本地编码约规 opt-in，帮我 CR Service 层事务边界、实体暴露、循环依赖和测试缺口。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "没有 Wind 约规 opt-in，且任务是源码级代码 Review，应交给资深架构师，不强套 Wind 项目编码约规。"
+    },
+    {
+      "id": "wind-project-coding-conventions-negative-structured-codegen",
+      "skill": "wind-project-coding-conventions",
+      "query": "根据这段 CREATE TABLE 生成 Wind/Nobe Java Service 配套代码，包括 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl。",
+      "should_trigger": false,
+      "preferred_skill": "java-service-code-generator",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "用户要求结构化代码生成，应交给 java-service-code-generator；Wind 约规只作为生成后规则审查来源。"
     },
     {
       "id": "codegen-should-ddl-to-service",

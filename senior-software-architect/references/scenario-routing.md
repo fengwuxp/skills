@@ -54,7 +54,7 @@
 | 架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物 | `diagram-output.md`，按场景再读 `architecture.md`、`system-analysis-design.md`、`production-readiness.md` 或专项 reference | 图形目标、图形类型、工程落点、默认 SVG 输出、验证动作和剩余风险；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出。 |
 | 陌生代码库接手 / 项目现状分析 / 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先做项目清单、技术指纹、入口路径、目录语义、配置、测试、数据和运行链路侦察，再迁移通用原则，不强套 Java/Spring 规则。 |
 | Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | Java 约规、空值契约、Lombok/MapStruct、测试与验证；涉及模块/服务/API/DB 综合治理时再读 `project-governance-standards.md`。 |
-| Wind 项目编码约规 / 项目 AGENTS.md opt-in / face-impl 分层 | `wind-project-coding-conventions.md`、`coding-standards.md`、`project-governance-service-api-modeling.md`；需要最佳实践正反例时读 `wind-project-coding-examples.md` | 只在项目本地 `AGENTS.md`、任务说明或用户明确要求时加载；不把 Wind 规则强套到所有 Java 项目。 |
+| Wind 项目编码约规 / 项目 AGENTS.md opt-in / face-impl 分层 | 权威规则先用 `wind-project-coding-conventions` Skill；架构师执行源码级设计、TDD、CR 时再读 `coding-standards.md`、`project-governance-service-api-modeling.md`；需要最佳实践正反例时读 Wind 示例 reference。 | 只在项目本地 `AGENTS.md`、任务说明或用户明确要求时加载；不把 Wind 规则强套到所有 Java 项目。 |
 | 架构坏味 / 深度代码质量扫描 | `coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md`，Java 项目再读 `coding-standards.md` | 先按业务语义、边界、契约和失败路径 Review，再追加上帝类、循环依赖、过长方法、Feature Envy、Data Clumps 等启发式扫描。 |
 | Bug 修复 / 调试诊断 / 根因分析 / 测试失败 | `debugging-diagnosis.md`、`testing.md`、`workflow.md`，Java 项目再读 `coding-standards.md` | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试；高风险问题补时间线和 5-Why 复盘草稿。 |
 | 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 | `testing.md`，Java 项目再读 `coding-standards.md` | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、保护对象、风险来源、真实链路和替身边界；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
@@ -83,7 +83,7 @@
 - **技术选型 + 新依赖**：先用 `adr-and-tradeoff.md` 比较备选方案，说明新增节点、通信边、隐藏状态、观测入口和退出策略，再用 `negative-constraints.md` 检查依赖必要性、许可证、安全风险和维护责任。
 - **外部 API / SDK / 云产品版本变化**：先用 `workflow.md` 的外部知识时效性门禁核验权威来源、版本、生效/发布日期和本地实际依赖，再用 `adr-and-tradeoff.md`、`production-readiness.md` 和 `negative-constraints.md` 检查兼容、安全、成本、上线和回滚。
 - **Java Review + 公共契约变更**：先用 `coding-standards.md` 和 `coding-review-deep-dive.md` 查代码、边界与契约语义，再用 `review-and-output-templates.md` 检查兼容性治理；涉及项目级模块/API/DB 约规时再读 `project-governance-standards.md`。
-- **Wind 项目约规 opt-in + 代码实现 / CR / TDD**：项目本地 `AGENTS.md` 明确写明遵守 Wind 项目编码约规时，加载 `wind-project-coding-conventions.md`，再按任务读取 `coding-standards.md`、`project-governance-service-api-modeling.md`、`coding-review-deep-dive.md` 或 `testing.md`；需要最佳实践正反例时追加 `wind-project-coding-examples.md`。先以项目本地规则和附近代码为准，不为了套分层新增浅服务、透传接口或内存版业务实现。
+- **Wind 项目约规 opt-in + 代码实现 / CR / TDD**：项目本地 `AGENTS.md` 明确写明遵守 Wind 项目编码约规时，先用 `wind-project-coding-conventions` Skill 取得规则判断，再按源码级任务读取 `coding-standards.md`、`project-governance-service-api-modeling.md`、`coding-review-deep-dive.md` 或 `testing.md`；需要最佳实践正反例时追加 Wind 示例 reference。先以项目本地规则和附近代码为准，不为了套分层新增浅服务、透传接口或内存版业务实现。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再追加架构坏味启发式扫描，最后回到具体强规约。
 - **Bug 修复 + TDD**：先用 `debugging-diagnosis.md` 建立稳定失败反馈环，再用 `testing.md` 选择回归测试形态；修复后必须证明原失败路径通过且旧行为未回退。
 - **业务驱动验证 + TDD**：先用 `product-design.md` 第 3.3 节把业务目标、参与方、行为、对象规则、质量属性、验收样例、节点/通信边和状态传播分为可代码化、可观测化和可评审化，再用 `testing.md` 选择第一批失败测试候选；不要把业务确认、合规确认、运营验收或隐藏边排障强行写成单元测试。

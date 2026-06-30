@@ -269,6 +269,7 @@ AC 覆盖清点:
 - 必填段落是否存在。
 - Spec ID、owner、状态、风险等级和写入范围是否存在。
 - 关联 Goal、成功标准、预算 / 时间盒和停止条件是否存在；轻量任务可说明“不适用”。
+- 需求或设计变更是否按 Delta Spec 标记 `ADDED / MODIFIED / REMOVED`，并说明影响的 PRD、SDD / OpenSpec、实现 Spec、AC、测试、接口 / 事件、发布风险和通知 owner。
 - AC 编号是否唯一、稳定、无跳过误用。
 - P0/P1 AC 是否有验证映射。
 - 是否存在无 owner 的待确认、开放式 TODO 或执行授权缺口。
@@ -292,6 +293,7 @@ AC 覆盖清点至少检查：
 - DDL / schema 与 Spec 数据约束是否一致。
 - API 路由、错误码、权限、状态枚举、配置键和消息契约是否偏离 Spec。
 - OpenSpec / 系分 / Harness 与代码入口、测试和发布脚本是否仍可追踪。
+- CR、测试或实现发现漂移时，先分类为代码偏离、Spec 缺失或需求变化；代码偏离修实现，Spec 缺失先补 Spec 并重新 Review，需求变化先走 Delta Spec 和影响清单。
 
 生产级 SDD 闸门至少按五支柱清点：
 

@@ -146,7 +146,7 @@ Java/Wind 与代码质量：
 - `references/debugging-diagnosis.md` – Bug 修复、复杂异常、测试失败、生产现象和根因分析闭环。
 - `references/clean-code.md` – Clean Code / Clean Architecture / Refactoring 启发。
 - `references/wind-projects-patterns.md` – Wind 项目族 API 风格、模块边界、扩展点和评审清单。
-- `references/wind-project-coding-conventions.md` – 项目 `AGENTS.md` 明确 opt-in 时的 Wind 项目编码约规、face/impl 边界、服务分层、模型归属、分包、DAL 和外部集成规则；需要最佳实践正反例时再读 `references/wind-project-coding-examples.md`。
+- `references/wind-project-coding-conventions.md` – Wind 项目编码约规的兼容索引；项目 `AGENTS.md` 明确 opt-in 时，权威规则优先使用 `wind-project-coding-conventions` Skill，架构师负责源码级设计、TDD、CR 和验证。
 - `references/project-governance-standards.md` – 项目级治理综合规范索引；按任务路由到 `references/project-governance-codebase-and-modules.md`、`references/project-governance-service-api-modeling.md`、`references/project-governance-data-security-quality.md`、`references/project-governance-delivery-and-platform.md`。
 
 测试与验证：

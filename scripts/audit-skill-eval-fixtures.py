@@ -25,6 +25,7 @@ SKILLS = {
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
+    "wind-project-coding-conventions",
 }
 SKILL_MENTIONS = {
     "ai-native-engineering-workflow": [
@@ -50,6 +51,7 @@ SKILL_MENTIONS = {
     "java-service-code-generator": ["java-service-code-generator"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
     "senior-software-architect": ["资深架构师", "senior-software-architect"],
+    "wind-project-coding-conventions": ["wind-project-coding-conventions", "Wind 项目编码约规"],
 }
 REQUIRED_DIMENSIONS = {
     "trigger_accuracy",

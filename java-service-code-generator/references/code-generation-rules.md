@@ -1,6 +1,6 @@
 # Java Service 代码生成规程
 
-本文承接 `SKILL.md` 中的代码生成细则。只有在需要实际生成、调整、审查 Wind/Nobe 风格 Java Service 配套代码时读取；普通技能识别和路由不需要加载本文。本生成器输出的基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service 和 ServiceImpl 是 Wind 项目编码约规的标准模板实现面；规则权威来源仍是 `资深架构师` 的 `wind-project-coding-conventions.md`。
+本文承接 `SKILL.md` 中的代码生成细则。只有在需要实际生成、调整、审查 Wind/Nobe 风格 Java Service 配套代码时读取；普通技能识别和路由不需要加载本文。本生成器输出的基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service 和 ServiceImpl 是 Wind 项目编码约规的标准模板实现面；规则权威来源是 `wind-project-coding-conventions` Skill。
 
 ## 使用时机
 
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- Wind/Nobe 模块风格读 `nobe-patterns.md`；具体代码红线、Entity 不外露和服务接口职责 Review 交给 `资深架构师` 的 Wind 项目编码约规。
+- Wind/Nobe 模块风格读 `nobe-patterns.md`；具体代码红线、Entity 不外露和服务接口职责规则审查交给 `wind-project-coding-conventions`，源码级 Review 交给 `资深架构师`。
 
 ## 按任务读取索引
 
