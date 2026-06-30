@@ -610,6 +610,7 @@ check(
             "java-service-code-generator",
             "Wind Rule Check Card",
             "未 opt-in 的普通 Java/Spring 项目，不强行套 Wind",
+            "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
             "生产源码路径不得新增内存版业务 Service",
         ],
     )
@@ -656,6 +657,10 @@ check(
             "face/impl 模块边界",
             "接口放置",
             "基础服务",
+            "方法签名",
+            "服务命名",
+            "模型命名",
+            "枚举命名",
             "应用层服务",
             "DTO/Request/Query/Entity",
             "模型包归位",
@@ -675,6 +680,9 @@ check(
             "`infrastructure` 放消息发送、KMS、MyBatis Flex helper、通用工具和框架配置等技术适配",
             "源码样本中 `*-face` 常见 `service/services`",
             "`*-impl` 常见 `service/impl`、`application/impl`、`dal/entities`、`dal/mapper`、`mapstruct`",
+            "capte-domain platform 样本补充",
+            "`platform/*-face` 中稳定出现 `service`、`dto`、`request`、`query`、`enums`、`task`",
+            "`platform/*-impl` 中稳定出现 `service/impl`、`dal/entities`、`dal/mapper`、`mapstruct`",
             "必要的 `application` 契约",
             "同一 face 有多个业务子域时，可按业务名继续分包",
             "`domain` 必须表示稳定业务语义，不得作为杂物包",
@@ -687,6 +695,12 @@ check(
             "face Service 和跨模块接口只暴露 `DTO`、`Request`、`Query`、`Command`、枚举或值对象，不暴露 `Entity`",
             "接口放 `*-face/application`，实现放 `*-impl/application/impl`",
             "内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传",
+            "基础服务通用模板",
+            "`XxxService`，实现为 `XxxServiceImpl`",
+            "`createXxx(CreateXxxRequest)` 返回 `@NonNull Long`",
+            "`WindPagination<XxxDTO> queryXxxs(XxxQuery query, WindQuery<? extends QueryOrderField> options)`",
+            "ServiceImpl 通用实现",
+            "`createQueryWrapper` 或 `fillQueryWrapper`",
             "公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`",
             "`WindQuery<? extends QueryOrderField>`",
             "`DomainService` / `DomainQueryService` 不是 Wind 项目强制分层",
@@ -694,6 +708,8 @@ check(
             "Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口、事件/消息契约不得以 Entity、Mapper、Repository 或 MyBatis `Page` 作为入参、返回值或泛型",
             "离开 `*-impl` 边界前必须转换为 `DTO`、`Request`、`Query`、`Command`、`Event` 或值对象",
             "新代码的 `DTO`、`Request`、`Query`、`Command` 优先放在 `*-face` 或 `core` 的 `model/dto`、`model/request`、`model/query`、`model/command` 下",
+            "模型命名",
+            "`CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest`、`ExecuteXxxRequest`",
             "对应 Java 包名通常是 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`",
             "历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包",
             "对应 `*.dto`、`*.request`、`*.query`、`*.command`",
@@ -706,6 +722,11 @@ check(
             "跨域共享模型只有在两个以上业务模块稳定复用且不依赖 Web/DAL 时，才放 `core` 的 `model`、`enums` 或 `event`",
             "公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc",
             "`DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型",
+            "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举",
+            "外部协议中的字符串币种只在 Adapter/Converter 边界转换",
+            "枚举命名和模板",
+            "生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`",
+            "公开枚举优先实现 `DescriptiveEnum`",
             "`MybatisQueryHelper.from(options)`",
             "`XxxNameRefs`",
             "`Pagination.empty()`",
@@ -762,6 +783,11 @@ check(
             "`dal/entities`、`dal/mapper`、`mapstruct`",
             "当前代码更接近反例还是正例",
             "不把示例当模板复制",
+            "平台基础服务模板可复用但不硬套",
+            "`createXxx(CreateXxxRequest) -> Long`",
+            "`queryXxxs(XxxQuery, WindQuery<? extends QueryOrderField>) -> WindPagination<XxxDTO>`",
+            "枚举是业务语言，不是字符串常量袋",
+            "`XxxState`、`XxxType`、`XxxAction`",
         ],
     )
     and has_all(
@@ -9323,8 +9349,18 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
     ),
     RouteFixture(
+        name="wind project currency enum redline",
+        prompt="这个项目遵守 Wind 项目编码约规，检查 DTO、Request、Entity 和事件里的币种字段是否统一使用 com.wind.transaction.core.enums.CurrencyIsoCode 枚举，不要用 String currency",
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+    ),
+    RouteFixture(
         name="wind project source observation conventions",
         prompt="阅读 wind-integration、nobe、capte-domain 代码库的项目结构、模块划分、包名划分、命名风格、编码习惯和 API 使用，完善 Wind 项目编码约规",
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+    ),
+    RouteFixture(
+        name="wind project platform service enum template",
+        prompt="阅读 capte-domain platform 目录下的 system、alert、iam 相关模块，完善 Wind 项目编码约规：基础服务通用模板、方法签名、服务命名、DTO/Request/Query 放置位置、枚举命名和枚举类模板",
         routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
     ),
     RouteFixture(
@@ -10019,9 +10055,9 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
-    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity"]):
+    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity"]):
         route.update({"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
-        if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker", "模型包归位", "模型归位", "包名划分", "源码观察", "代码库", "API 使用", "编码习惯"]):
+        if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker", "模板", "方法签名", "服务命名", "模型命名", "枚举命名", "模型包归位", "模型归位", "包名划分", "源码观察", "代码库", "API 使用", "编码习惯"]):
             route.add("wind-project-coding-examples.md")
         if contains_any(prompt, ["CR", "Review", "review", "检查", "审查", "暴露", "泄漏"]):
             route.add("coding-review-deep-dive.md")

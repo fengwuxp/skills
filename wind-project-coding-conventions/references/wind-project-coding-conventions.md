@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 项目本地 `AGENTS.md` 明确标明、任务说明或用户要求遵守 Wind 项目编码约规。
-- 评审 face/impl 模块边界、接口放置、基础服务、应用层服务、DTO/Request/Query/Entity、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
+- 评审 face/impl 模块边界、接口放置、基础服务、方法签名、服务/模型/枚举命名、应用层服务、DTO/Request/Query/Entity、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
 
 ## 不适用场景
 
@@ -24,7 +24,7 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| opt-in / 模块 / 分包 / 接口放置 / 模型包归位 / Service / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
+| opt-in / 模块 / 分包 / 接口放置 / 模型包归位 / Service / 基础服务模板 / 方法签名 / 命名 / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
 | 最佳实践 / 示例 / 正反例参照 | `wind-project-coding-examples.md` | 不把示例当完整模板或代码生成规则 |
 
 ## 1. 启用、模块与分包
@@ -39,6 +39,8 @@
 
 - 包名判断：源码样本中 `*-face` 常见 `service/services`、`application`、`dto|model/dto`、`request|model/request`、`query|model/query`、`event`、`callback/spi`；`*-impl` 常见 `service/impl`、`application/impl`、`dal/entities`、`dal/mapper`、`mapstruct`、`converter`、`listener`、`webhook`；`web-api` 常见 `controller`；`core` 常见跨模块 `enums`、`event`、`context`、`operator`；`infrastructure` 常见 `dal` helper、外部技术 adapter 和 framework config。新代码优先按这些 owner 放置，不把 web、dal、第三方 SDK 或具体实现依赖上推到 face/core。
 
+- capte-domain platform 样本补充：`platform/*-face` 中稳定出现 `service`、`dto`、`request`、`query`、`enums`、`task`，`platform/*-impl` 中稳定出现 `service/impl`、`dal/entities`、`dal/mapper`、`mapstruct`、`configuration`、`notification`；这说明历史项目可沿用直连 `dto/request/query/enums` 包，但不改变新代码优先 `model/*` 的规则。
+
 ## 2. 服务层
 
 - Face Service 是对外稳定契约，`ServiceImpl` 承接校验、状态、事务和数据访问协调；ApplicationService 只在完整用例编排、事务边界、权限/审计、跨服务协调或外部副作用明确时使用。若 ApplicationService 作为对外用例契约出现，接口放 `*-face/application`，实现放 `*-impl/application/impl`，签名仍只用 Request/DTO/Query/值对象。
@@ -47,6 +49,8 @@
 - 包位：新代码的 face Service 生产实现默认放 `*-impl/.../service/impl`；`*-impl/.../impl` 根包只作为历史兼容或附近代码已有明确约定时保留，不作为新 ServiceImpl 默认落点。
 - 基础服务落位：被其他模块、组合 Service 或外部适配层稳定消费时，接口放 `*-face/service`；只封装本 impl 内 Mapper、QueryWrapper 或内部状态流转时，留在 `*-impl/service`；只是 Mapper 透传时不应新增服务。
 - 内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传；接口、Service、Facade、Adapter 必须有真实业务职责，不新增一行 wrapper、改名转发、浅模块或似是而非抽象。
+- 基础服务通用模板：公开基础服务命名为 `XxxService`，实现为 `XxxServiceImpl`；创建用 `createXxx(CreateXxxRequest)` 返回 `@NonNull Long`，创建/更新统一入口才用 `saveXxx(SaveXxxRequest)`；更新用 `updateXxx(UpdateXxxRequest)` 返回 `void`；删除用 `deleteXxxByIds(@NonNull Long... ids)`，单删可提供 `default deleteXxxById(id)` 代理；必然存在查询用 `@NonNull XxxDTO getXxxById(id)`，可能不存在查询用 `findXxx...` 并显式 `@Nullable`；分页查询用 `WindPagination<XxxDTO> queryXxxs(XxxQuery query, WindQuery<? extends QueryOrderField> options)`；非分页列表查询只在业务确需时提供 `List<XxxDTO> get/queryXxxs(XxxQuery query)`；状态动作使用明确业务动词，例如 `enable/disable/cancel/execute`，不得用泛化 `handle/process/doXxx`。
+- ServiceImpl 通用实现：`@Service` + 构造注入，Mapper 字段 `final`；Request 先经 `XxxConverter.INSTANCE.convertToXxx` 转 Entity；新增优先 `insertSelective`，保存类入口可用 `insertOrUpdateSelective`，更新必须先找现有数据并校验影响行数；删除先校验 ids 非空和影响行数；私有 `findXxx(id)` 负责 id 非空和不存在断言；查询条件集中在 `createQueryWrapper` 或 `fillQueryWrapper`，使用 `MybatisQueryHelper.from(options)`、`XxxNameRefs`、`counter`、`resultQueryFunc`、`converter` 输出 DTO。
 - 查询服务形态：公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`，查询选项使用 `WindQuery<? extends QueryOrderField>` 或项目既有分页选项；`ServiceImpl` 内部再组合 `QueryWrapper`、Mapper、Converter 和 result enricher。默认方法只用于复用已有公开契约上的小型断言或组合查询，不新增绕过实现层的业务状态。
 - 多实现组合：同一 face Service 有多个生产实现时，保留一个主对外实现做组合编排，其他实现必须承担清晰业务职责；通过 `@Primary`、明确 bean name 或项目统一装配规则解决注入歧义，不用 `Processor`、`Handler` 这类泛名掩盖服务职责。
 - `DomainService` / `DomainQueryService` 不是 Wind 项目强制分层；只有确有领域规则、状态变化、查询模型或统计读模型时才在 `*-impl` 内部 `domain` / `domain/impl` 落位，不为套分层新增浅服务或 Mapper 包装。
@@ -57,6 +61,7 @@
 
 - 模型：`Request` 写入命令，`Query` 查询条件，`DTO` 对外或跨模块契约，`Entity` 只表达持久化结构。Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口、事件/消息契约不得以 Entity、Mapper、Repository 或 MyBatis `Page` 作为入参、返回值或泛型；离开 `*-impl` 边界前必须转换为 `DTO`、`Request`、`Query`、`Command`、`Event` 或值对象。
 - 模型包归位：新代码的 `DTO`、`Request`、`Query`、`Command` 优先放在 `*-face` 或 `core` 的 `model/dto`、`model/request`、`model/query`、`model/command` 下，对应 Java 包名通常是 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`；历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包，对应 `*.dto`、`*.request`、`*.query`、`*.command`。业务模块自己的 `enums`、`event` 优先放在对应 `*-face` 的业务包下；同一 face 内多个子域可用 `xxx/model/dto`、`xxx/model/request`、`xxx/model/query`、`xxx/event` 分包，兼容既有 `xxx/dto`、`xxx/request`、`xxx/query`、`domain/dto|request`，其中 `domain` 仅用于跨子域、稳定业务概念，不得当杂物包。持久化 `Entity`、Mapper、Repository、MyBatis `Refs` 和 MapStruct Converter 放在对应 `*-impl` 的 `dal/*` 或 `mapstruct` 下；`*-impl` 一般不放 DTO/Request/Query/Command，除非是内部模型且不进入 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、事件/消息或跨模块接口。业务/通道事件 Converter 可放 `*-impl` 的 `converter` 或 `support`，但只做适配转换，不承载公共契约或核心业务决策。Web 展示 VO、登录/表单 Request 和页面组合模型放 `web-api` / `web-security`，不得回流到 face 契约；跨域共享模型只有在两个以上业务模块稳定复用且不依赖 Web/DAL 时，才放 `core` 的 `model`、`enums` 或 `event`。
+- 模型命名：对外读模型用 `XxxDTO`；写入模型按语义用 `CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest`、`ExecuteXxxRequest`，只有确实统一新增/更新时才用 `Save`；查询条件用 `XxxQuery`，历史兼容可保留 `XxxQueryParams`；导出、任务、回调等执行型输入用业务动词前缀；Web 展示对象用 `XxxVO` 且只留在 Web 模块。
 - 事件/消息契约跟业务 owner 走：模块对外事件放 `*-face/event` 或子域 `event`；平台公共事件放 `core/event`；事件监听器、Webhook handler、投递 executor 放 `*-impl/listener` 或 `*-impl/webhook`。
 
 | 对象 | 默认位置 |
@@ -69,6 +74,8 @@
 | 框架配置、通用技术适配、MyBatis Flex helper | `infrastructure` |
 
 - `DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型承载契约字段；使用包装类型、枚举、值对象或明确业务类型表达缺省、精度和序列化语义。
+- 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举，覆盖 DTO、Request、Query、Command、Entity、事件和内部模型；不得用 `String currency`、Integer、业务私有币种枚举或魔法常量承载。外部协议中的字符串币种只在 Adapter/Converter 边界转换，进入服务契约和领域处理前必须归一为 `CurrencyIsoCode`。
+- 枚举命名和模板：生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`；对外枚举放 `*-face/enums` 或稳定公共 `core/enums`，只给 impl 使用的内部枚举留在 `*-impl`。公开枚举优先实现 `DescriptiveEnum`，使用 `@Getter`、`@AllArgsConstructor`、`private final String desc`，枚举值使用大写下划线；需要颜色、层级或前端展示时通过 DTO/Converter 输出，不把展示字段随意塞进业务枚举。
 - 公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc，说明职责、调用方、空值、异常、权限、幂等、事务和副作用；注释说明 Why / Why not，不翻译代码。
 - 内部 Java 空值契约用 JSpecify；API 入参用 Bean Validation；业务前置条件和状态条件用项目断言工具。已由 JSpecify 标为非空的值，不再加无业务语义的空判断。
 - 金额必须明确币种、精度和舍入规则；时间必须明确格式、时区和精度；ID 必须考虑唯一性、可追踪、并发和外部暴露风险。

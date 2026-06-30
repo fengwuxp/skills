@@ -75,3 +75,15 @@
 - 反例：看到 nobe 有 `services/impl`、capte-domain 有 `dto/request/query` 直连包、某个模块叫 `global-face`，就把这些历史路径全部写成新项目强制模板。
 - 正例：从 `wind-integration / nobe / capte-domain 源码观察` 中只提炼稳定判断：face 放公开契约，impl 放 `dal/entities`、`dal/mapper`、`mapstruct` 和实现层协作，web-api 放 Controller，core 放跨模块稳定对象，infrastructure 放技术 helper；新代码优先用 `model/dto|request|query|command`，历史项目兼容既有包名。
 - 验证点：新增规则能回答“谁调用、生命周期归谁、变化 owner 在哪、依赖方向是否越界”，而不是复刻某个仓库的目录树。
+
+### 9. 平台基础服务模板可复用但不硬套
+
+- 反例：为每张表生成 `create/update/delete/get/query` 全套接口，哪怕业务没有公开入口；或者把 `saveXxx`、`createXxx`、`updateXxx` 混用，调用方无法判断幂等和新增/更新语义。
+- 正例：平台基础能力优先使用 `XxxService` / `XxxServiceImpl`，公开契约只暴露 `Request`、`Query`、`DTO` 和业务枚举；常见签名是 `createXxx(CreateXxxRequest) -> Long`、`updateXxx(UpdateXxxRequest)`、`deleteXxxByIds(Long... ids)`、`getXxxById(id) -> XxxDTO`、`queryXxxs(XxxQuery, WindQuery<? extends QueryOrderField>) -> WindPagination<XxxDTO>`。只有新增/更新确实统一时才用 `saveXxx(SaveXxxRequest)`，状态动作使用 `enable/disable/cancel/execute` 等业务动词。
+- 验证点：`ServiceImpl` 是否只在内部接触 Entity、Mapper 和 QueryWrapper；是否用 `XxxConverter` 做边界转换；查询条件是否集中在 `createQueryWrapper/fillQueryWrapper`；是否存在无业务语义的一行 Mapper 包装。
+
+### 10. 枚举是业务语言，不是字符串常量袋
+
+- 反例：`String state`、`Integer type`、`String currency` 或私有魔法常量出现在 DTO、Request、Entity、事件或公开服务签名中。
+- 正例：状态、类型、动作分别命名为 `XxxState`、`XxxType`、`XxxAction`，公开枚举放 face/core 的 `enums`，实现 `DescriptiveEnum` 并提供 `desc`；币种统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，外部字符串只在 Adapter/Converter 边界转换。
+- 验证点：公共契约、Entity、MapStruct 和测试是否都使用同一枚举类型；前端展示所需的名称、颜色、树结构是否通过 DTO/Converter 输出，而不是污染业务枚举。

@@ -16,7 +16,7 @@ description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 o
 - 项目 `AGENTS.md`、任务说明或用户明确写明“遵守 Wind 项目编码约规”。
 - 用户要求检查 Wind/Nobe 风格项目的 `face` / `impl` 模块边界、接口放置、模型归属、分包规则或 ServiceImpl 实现方式。
 - 用户要求判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、Converter、callback/spi、listener、webhook、core、infrastructure 应放在哪个模块或包。
-- 用户要求基于 Wind 约规做服务层、基础服务、ApplicationService、Entity 不外露、MyBatis Flex 查询或 TDD/CR 的正反例判断。
+- 用户要求基于 Wind 约规做服务层、基础服务、方法签名、服务命名、模型命名、枚举命名、ApplicationService、Entity 不外露、MyBatis Flex 查询或 TDD/CR 的正反例判断。
 
 ## 工作流程
 
@@ -48,6 +48,7 @@ description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 o
 
 - 未 opt-in 的普通 Java/Spring 项目，不强行套 Wind face/impl、基础服务或模型包规则。
 - 对外接口、Controller、Facade、Adapter、跨模块接口和事件契约不得暴露 Entity、Mapper、Repository 或 MyBatis Page。
+- 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，不得用 String、业务私有枚举或魔法常量承载。
 - 不为了套分层新增浅服务、透传接口、似是而非的 ApplicationService 或 Mapper 包装。
 - 生产源码路径不得新增内存版业务 Service、模拟模块或看上去可用的样子货。
 - 项目统一编码规范和附近代码风格优先；没有统一规范时，再按 Wind 约规和已有代码风格收敛。
