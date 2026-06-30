@@ -2,6 +2,6 @@ interface:
   display_name: "AI Native Engineering Loop"
   short_description: "以角色协作 Loop 编排产品专家、UED、架构师、AI Maker/Checker、TDD、CR、质量发布和自主问询闭环"
   brand_color: "#7C3AED"
-  default_prompt: "Use $ai-native-engineering-workflow 按当前材料进入角色协作 Loop，输出当前阶段、角色视角、能力/约规来源、自我问询/回答、owner、交接物、Loop Contract、授权策略、验证门禁、停止条件和下一步分派。"
+  default_prompt: "Use $ai-native-engineering-workflow 按当前材料进入角色协作 Loop，只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险。"
 policy:
   allow_implicit_invocation: true

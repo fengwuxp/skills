@@ -40,49 +40,57 @@
 - 正例：基础服务沉淀稳定查询、QueryWrapper helper、分页上限、排序白名单、selective 更新和基础数据访问语义。
 - 验证点：测试覆盖 QueryWrapper 条件、Mapper 语义、分页/排序、事务事实和异常语义。
 
-### 3. 模型边界不穿透
+### 3. Mapper default 不承载业务状态机
+
+- 反例：`UserCouponMapper.confirmLocked(...)` 用 default 方法直接更新锁定、核销、释放、退回等业务状态，`ServiceImpl` 把它当核心用例步骤调用；或把无生产调用的 `releaseXxx` 预留方法包装成服务。
+- 正例：业务状态动作迁到 `*-impl/service` 的内部基础服务，例如 `UserCouponService.confirmLockedUserCoupon(...)`，实现放 `service/impl` 并在内部使用 Mapper / `UpdateChain`；无调用的预留 default 直接删除，单一低层资源占用的原子更新可暂留 Mapper。
+- 验证点：先 `rg` 查调用方；Mapper 只保留 `BaseMapper`、必要自定义 SQL 或贴近 SQL 的原子条件更新；内部基础服务不暴露 Entity / QueryWrapper，测试覆盖影响行数、状态前置条件和并发幂等。
+
+### 4. 模型边界不穿透
 
 - 反例：Face Service 返回 `XxxEntity`，ApplicationService 对外方法接收 `XxxEntity`，Controller、Facade、Adapter 或事件消息 payload 直接透传 Entity；DTO/Request/Query 使用 primitive 字段表达可空或缺省。
 - 正例：face Service 返回 `XxxDTO`，写入使用 `CreateXxxRequest` / `UpdateXxxRequest`，查询使用 `XxxQuery`，跨模块和消息契约使用 DTO/Command/Event；`Entity` 只在 impl / DAL / Mapper / Repository 内部流转，出边界前由 MapStruct 转换。
+- 运行时变量反例：DTO/Context 的 `toVariables()` 调用 Supplier、Cache、当前用户或租户解析器，或先 `put(key, null)` 再由服务覆盖。
+- 运行时变量正例：DTO/Context 只展开自身字段和调用方传入的扩展变量；ServiceImpl/ApplicationService 组装运行时派生变量，有值才写入变量表，测试分别锁住模型边界和服务行为。
 - 验证点：公开接口签名不得出现 Entity、Mapper、Repository 或 MyBatis `Page`；公共契约有 Javadoc、Bean Validation / JSpecify 语义明确，MapStruct 转换测试覆盖字段、枚举、空值和默认值。
 
-### 4. 模型包归位清晰
+### 5. 模型包归位清晰
 
 - 反例：把 Web 页面 VO 放进 `*-face` 的 DTO 包，把业务模块私有 Request 放进 `core`，把 `domain` 当杂物包，把跨模块事件放在 impl 内部，把只给本模块用的接口提前放进 face/core，或在 web Controller 直接复用 Entity。
 - 正例：业务契约模型新代码优先放 `*-face` 的 `model/dto`、`model/request`、`model/query`、`model/command`，对应 Java 包名 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`，历史兼容既有 `dto/request/query/command`；跨模块稳定 Service 放 `*-face/service`，完整用例契约放 `*-face/application`，回调入口和业务 SPI 放 `*-face/callback/*`；同一 face 内有多个业务子域时，用 `transaction/model/dto`、`channel/model/request`、`domain/model/dto|request` 等子包表达稳定业务语义，兼容既有 `transaction/dto`、`channel/request`、`domain/dto|request`；持久化模型放 `*-impl` 的 `dal/entities`、`dal/mapper`、`mapstruct`；业务/通道事件适配 Converter 可放 `*-impl/converter`；内部领域规则放 `*-impl/domain|domain/impl`，内部 DTO/Request/Query/Command 只能留在 impl 内部；Web VO 和登录/表单 Request 放 `web-api` / `web-security`；跨模块稳定公共能力放 `core`，技术适配和框架配置放 `infrastructure`。
 - 验证点：按包名能判断模型 owner、生命周期和调用边界；移动模型时同步检查 import 方向、公共契约兼容性和 MapStruct 转换。
 
-### 5. MyBatis Flex 查询集中表达
+### 6. MyBatis Flex 查询集中表达
 
 - 反例：Service 到处手写裸字符串字段、散落 `QueryWrapper`，排序字段直接信任外部入参。
 - 正例：公开接口返回 `WindPagination<DTO>`，入参使用 `XxxQuery` 与 `WindQuery<? extends QueryOrderField>`；`ServiceImpl` 用 `MybatisQueryHelper.from(options)` 或项目 helper 创建 `QueryWrapper`，通过 `XxxNameRefs` 拼条件，再走 `MybatisQueryHelper.<Entity, DTO>query(queryWrapper).counter(mapper::selectCountByQuery).resultQueryFunc(mapper::selectListByQuery).converter(XxxConverter.INSTANCE::convertToXxxDTO).query(options)` 统一输出 DTO 分页；前置检索无结果时返回 `Pagination.empty()`。
 - 验证点：单测断言查询条件、分页上限、排序白名单、selective 写库、null 更新语义、无结果分支和 Entity 到 DTO 转换。
 
-### 6. TDD 测真实链路，不测内部表演
+### 7. TDD 测真实链路，不测内部表演
 
-- 反例：mock 内部 Repository / Converter / Policy 后只验证调用次数，业务状态和持久化事实没有断言。
-- 正例：ApplicationService / ServiceImpl 测试保留真实内部协作者、转换器、Repository、事务和状态变化，只替换第三方 HTTP、MQ、Redis、时间、ID、随机数等外部边界。
-- 验证点：先有失败的行为测试；红变绿靠生产实现修正，不靠硬凑 fixture、放宽断言或迎合当前实现。
+- 反例：mock 内部 Repository / Converter / Policy 后只验证调用次数；为凑绿断言私有方法、内部调用顺序、临时字段或 Mapper 调用次数，业务状态和持久化事实没有断言。
+- 正例：从 Controller / face Service / ApplicationService / ServiceImpl 的公开契约写失败测试，断言 DTO/分页结果、状态流转、持久化事实、异常、幂等、审计或可观察副作用；测试保留真实内部协作者、转换器、Repository、事务和状态变化，只替换第三方 HTTP、MQ、Redis、时间、ID、随机数等外部边界。
+- 验证点：先有失败的行为测试；红变绿靠生产实现修正，不靠硬凑 fixture、放宽断言、mock 内部步骤或迎合当前实现；如果必须窥探内部才能测试，先调整服务契约或验收种子。
 
-### 7. ServiceImpl 包位和多实现组合清晰
+### 8. ServiceImpl 包位和多实现组合清晰
 
 - 反例：新 `XxxServiceImpl` 落在 `*-impl/.../impl` 根包；同一 `XxxService` 多个实现靠 `Processor`、`Handler` 泛名区分，调用方不知道哪个是对外入口。
 - 正例：face Service 实现默认落 `*-impl/.../service/impl`；多实现时保留一个主对外实现组合编排，其他实现用职责命名并通过 `@Primary`、bean name 或项目统一装配规则消除注入歧义。
 - 验证点：结构守卫能发现错误包位；Spring 装配测试能证明同一 Service 的默认注入唯一且符合业务入口。
 
-### 8. 源码样本只提炼稳定共性
+### 9. 源码样本只提炼稳定共性
 
 - 反例：看到 nobe 有 `services/impl`、capte-domain 有 `dto/request/query` 直连包、某个模块叫 `global-face`，就把这些历史路径全部写成新项目强制模板。
 - 正例：从 `wind-integration / nobe / capte-domain 源码观察` 中只提炼稳定判断：face 放公开契约，impl 放 `dal/entities`、`dal/mapper`、`mapstruct` 和实现层协作，web-api 放 Controller，core 放跨模块稳定对象，infrastructure 放技术 helper；新代码优先用 `model/dto|request|query|command`，历史项目兼容既有包名。
 - 验证点：新增规则能回答“谁调用、生命周期归谁、变化 owner 在哪、依赖方向是否越界”，而不是复刻某个仓库的目录树。
 
-### 9. 平台基础服务模板可复用但不硬套
+### 10. 平台基础服务模板可复用但不硬套
 
 - 反例：为每张表生成 `create/update/delete/get/query` 全套接口，哪怕业务没有公开入口；或者把 `saveXxx`、`createXxx`、`updateXxx` 混用，调用方无法判断幂等和新增/更新语义。
 - 正例：平台基础能力优先使用 `XxxService` / `XxxServiceImpl`，公开契约只暴露 `Request`、`Query`、`DTO` 和业务枚举；常见签名是 `createXxx(CreateXxxRequest) -> Long`、`updateXxx(UpdateXxxRequest)`、`deleteXxxByIds(Long... ids)`、`getXxxById(id) -> XxxDTO`、`queryXxxs(XxxQuery, WindQuery<? extends QueryOrderField>) -> WindPagination<XxxDTO>`。只有新增/更新确实统一时才用 `saveXxx(SaveXxxRequest)`，状态动作使用 `enable/disable/cancel/execute` 等业务动词。
 - 验证点：`ServiceImpl` 是否只在内部接触 Entity、Mapper 和 QueryWrapper；是否用 `XxxConverter` 做边界转换；查询条件是否集中在 `createQueryWrapper/fillQueryWrapper`；是否存在无业务语义的一行 Mapper 包装。
 
-### 10. 枚举是业务语言，不是字符串常量袋
+### 11. 枚举是业务语言，不是字符串常量袋
 
 - 反例：`String state`、`Integer type`、`String currency` 或私有魔法常量出现在 DTO、Request、Entity、事件或公开服务签名中。
 - 正例：状态、类型、动作分别命名为 `XxxState`、`XxxType`、`XxxAction`，公开枚举放 face/core 的 `enums`，实现 `DescriptiveEnum` 并提供 `desc`；币种统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，外部字符串只在 Adapter/Converter 边界转换。

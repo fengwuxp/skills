@@ -114,6 +114,7 @@ senior_routing = "senior-software-architect/references/scenario-routing.md"
 wind_skill = "wind-project-coding-conventions/SKILL.md"
 wind_skill_agent = "wind-project-coding-conventions/agents/openai.yaml"
 wind_skill_conventions = "wind-project-coding-conventions/references/wind-project-coding-conventions.md"
+wind_skill_agents_template = "wind-project-coding-conventions/references/wind-project-agents-template.md"
 wind_skill_examples = "wind-project-coding-conventions/references/wind-project-coding-examples.md"
 senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
@@ -269,6 +270,10 @@ ai_native_terms = [
     "Loop Engineering",
     "Agent 闭环工程",
     "小闭环",
+    "任务结束责任闭环",
+    "交付责任自检",
+    "下一任务计划问询",
+    "最小计划草案",
     "Ask-or-Decide",
     "Auto-Decide",
     "Auto-Ask",
@@ -472,6 +477,7 @@ ai_native_terms = [
     "知识生产 Loop",
     "技术早报",
     "WorkBuddy",
+    "本地执行型 Coding Agent",
     "Karpathy",
     "Andrej",
     "外科手术式变更",
@@ -595,7 +601,7 @@ reference_headers = [
     ai_native_superpowers_library,
     ai_native_skill_type_owner_routing,
     ai_native_source_map,
-] + project_governance_refs + [wind_coding, wind_coding_examples, wind_skill_conventions, wind_skill_examples] + testing_practice_refs + skill_tree_refs
+] + project_governance_refs + [wind_coding, wind_coding_examples, wind_skill_conventions, wind_skill_agents_template, wind_skill_examples] + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
@@ -609,6 +615,7 @@ check(
             "Wind/Nobe Java 项目编码约规",
             "项目 AGENTS.md 明确 opt-in",
             "references/wind-project-coding-conventions.md",
+            "references/wind-project-agents-template.md",
             "references/wind-project-coding-examples.md",
             "资深架构师",
             "java-service-code-generator",
@@ -627,6 +634,7 @@ check(
             "模型归位",
             "Entity 不外露",
             "ServiceImpl",
+            "AGENTS 初始化",
         ],
     )
     and has_all(
@@ -744,7 +752,42 @@ check(
             "模型包归位",
             "core/infrastructure 是否变成公共垃圾桶",
             "项目本地 `AGENTS.md` 写明即可",
+            "wind-project-agents-template.md",
+            "AI Native Engineering Loop 能按项目规则调度产品、架构、Wind 规则和代码生成能力",
             "需要最佳实践正反例时读 `wind-project-coding-examples.md`",
+        ],
+    )
+    and has_reference_header(wind_skill_agents_template)
+    and has_task_reading_index(wind_skill_agents_template)
+    and has_all(
+        wind_skill_agents_template,
+        [
+            "`wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板",
+            "wind-integration / nobe / capte-domain",
+            "AI Native Engineering Loop",
+            "Karpathy-style 工程纪律",
+            "不知道就问",
+            "没要求的不写",
+            "只改被要求的部分",
+            "给验收标准、验证结果和停止条件",
+            "从第一性原理看原始需求和问题本质",
+            "每一行修改都要能回到用户目标、验收标准、源码事实或失败测试",
+            "本项目遵守 Wind 项目编码约规",
+            "项目身份",
+            "AI 协作入口",
+            "授权与范围",
+            "Wind 编码约规",
+            "测试与 CR",
+            "交付格式",
+            "face/impl",
+            "`*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`",
+            "Entity、Mapper、Repository、MyBatis Page 和 QueryWrapper 不得出现在 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口或事件消息契约中",
+            "Service / ApplicationService / Facade / Adapter 必须有真实业务职责",
+            "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
+            "生产源码路径不得新增内存版业务 Service",
+            "TDD 和测试按公开契约黑盒验证",
+            "不得把“可继续推进”写成“已经授权”",
+            "不把 `capte-domain`、`nobe`、`wind-integration` 的历史包名、业务模块名或命令照搬成新项目事实",
         ],
     )
     and has_reference_header(wind_skill_examples)
@@ -858,14 +901,14 @@ check(
             "Loop 自主推进统一外显，旧术语内部化",
             "阶段名不是能力来源",
             "本技能不得绕开专项 Skill 自由发挥",
-            "角色 Loop 场景视图：只读理解 / 产研交付 / 验证发布 / 知识回流（不是并列入口）",
-            "Loop Contract：Goal / State / Plan / Action / Observe / Decide / Ask-or-Decide / Verify / Stop-Handoff",
+            "默认最小输出",
             "Ask-or-Decide",
-            "自我问询：已知问题 / 可自答问题 / 需 owner 问题",
-            "自我回答：答案 / 证据来源 / 置信度 / 进入下一阶段理由",
-            "小闭环 Ask-or-Decide：Auto-Decide Next / Auto-Ask Owner / Auto-Loop / Stop-Handoff",
-            "内部实现层：默认不对外展开",
-            "能力 / 约规来源：产品架构专家 / 资深架构师 / java-service-code-generator / reference / script",
+            "每个小闭环统一走 Ask-or-Decide",
+            "任务结束责任闭环",
+            "交付责任自检",
+            "下一任务计划问询",
+            "需要时补证据边界和残余风险",
+            "只有用户要求完整方案、评审报告或模板时",
             "产品 / 交互设计",
             "设计评审",
             "TDD / 测试设计",
@@ -879,14 +922,17 @@ check(
             "高频内部路由只按当前问题命中最小 reference",
             "未命中的分组不读取、不展开、不输出菜单",
             "产研交付视图",
-            "角色协作主流程",
-            "大项目 Loop 编排",
-            "评审与规格门禁",
-            "质量门禁 / CR 发布模式",
+            "产品到工程 / 角色主流程",
+            "项目约规入口",
+            "Wind/Nobe 风格项目初始化或改进项目 `AGENTS.md`",
+            "`wind-project-coding-conventions` 读取 `wind-project-agents-template.md`",
+            "模板和规则权威交给 `wind-project-coding-conventions`",
+            "计划授权 / 大项目编排",
+            "评审规格 / 代码交付",
+            "理解工具 / 质量发布",
             "人必须能解释目标、当前状态、关键变更、证据链、残余风险和停止理由",
             "实际项目编码 Loop",
-            "证据边界：事实 / 推断 / 待确认 / 范围外不做",
-            "小闭环 Ask-or-Decide Card",
+            "区分事实 / 推断 / 待确认 / 范围外不做",
             "协同有效性 / 能力归属性",
             "不能只写“产品 / 架构 / TDD / 编码”阶段名",
             "内存版业务 Service",
@@ -981,10 +1027,9 @@ check(
         ai_native_workflow_skill,
         [
             "轻量问询先于长方案",
-            "轻量问询 / Grilling",
-            "任务树真相源",
             "Matt Pocock skills / Grilling",
-            "轻量问询：关键分叉 / 建议答案 / 已自答 / 需 owner 判断",
+            "Ask-or-Decide",
+            "一次只问一个问题",
         ],
     )
     and has_all(
@@ -1048,7 +1093,7 @@ check(
     and has_all(
         "README.md",
         [
-            "轻量问询 / 自我回答",
+            "Ask-or-Decide",
             "复杂或模糊任务一次只问一个关键问题",
             "能从材料、源码或测试自答的先自答",
         ],
@@ -1061,8 +1106,8 @@ check(
         ai_native_workflow_skill,
         [
             "上下文资产和知识生产流程",
-            "上下文资产化、知识生产 Loop",
-            "上下文资产化 / 知识生产 Loop / Skill Improvement Card",
+            "知识回流视图",
+            "可复用方法",
         ],
     )
     and has_all(
@@ -1113,6 +1158,39 @@ check(
 )
 
 check(
+    "ai-native workflow gates WorkBuddy style local coding agent without replacing project standards",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "WorkBuddy 类本地执行型 Agent",
+            "本技能只做准入、权限、联网/认证/写入边界和交接格式判断",
+            "不把外部 Superpowers skill、Matt Pocock skills、Grilling、Ponytail、WorkBuddy",
+        ],
+    )
+    and has_all(
+        ai_native_code_understanding_tools,
+        [
+            "WorkBuddy / 本地执行型 Coding Agent",
+            "读项目上下文 -> 对齐项目 / 架构 / Wind 约规 -> 明确写入范围 -> 生成候选 diff",
+            "依赖 / 配置冲突 Ask-or-Decide",
+            "项目明确 opt-in Wind 时，以 `wind-project-coding-conventions` 为项目约规权威",
+            "系统设计、TDD、源码级 CR、安全可靠性、生产风险和受控工程执行仍回 `资深架构师`",
+            "不把 WorkBuddy 类工具输出当成项目编码约规",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "WorkBuddy 驱动 SpringBoot 应用开发实战：一句话生成 JWT 登录+RabbitMQ 消费+MyBatis-Plus 全套代码",
+            "行者全栈开发",
+            "本地 IDE / 文件系统执行",
+            "不把 WorkBuddy 写成默认依赖、当前会话可用工具、项目编码约规、Wind 项目约规替代、架构师 CR 替代、TDD 替代、Git 授权、测试通过或上线审批",
+            "可以吸收 WorkBuddy 类本地执行型 Coding Agent 的上下文扫描、项目规则读取、写入范围确认、候选 diff、依赖 / 配置冲突 Ask-or-Decide、验证命令和交接闭环",
+        ],
+    ),
+)
+
+check(
     "ai-native workflow absorbs Karpathy coding hygiene without new dependency",
     has_all(
         agents_rules,
@@ -1154,7 +1232,6 @@ check(
     and has_all(
         ai_native_workflow_skill,
         [
-            "Loop 取舍校准 / Wisdom Lens",
             "references/wisdom-loop-lens.md",
             "huaxia-wisdom",
             "阴阳平衡",
@@ -1201,11 +1278,9 @@ check(
         ai_native_workflow_skill,
         [
             "三卡交接",
-            "三卡交接包",
             "Product Context Card",
             "Engineering Handoff Card",
             "Production Loop Card",
-            "三卡可消费性",
         ],
     )
     and has_all(
@@ -1316,9 +1391,8 @@ check(
     and has_all(
         ai_native_workflow_skill,
         [
-            "Skill 类型路由",
             "references/skill-type-owner-routing.md",
-            "Skill 类型 owner 路由包",
+            "owner 路由",
         ],
     )
     and has_all(
@@ -1384,33 +1458,40 @@ check(
         [
             "以角色协作 Loop 编排产品专家、UED、架构师、AI Maker/Checker、TDD、CR、质量发布和自主问询闭环",
             "按当前材料进入角色协作 Loop",
-            "当前阶段、角色视角",
-            "自我问询/回答、owner、交接物、Loop Contract、授权策略、验证门禁、停止条件和下一步分派",
+            "只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
         ],
     ),
 )
 check(
-    "ai-native workflow defines stable default output skeleton",
+    "ai-native workflow defines minimal default output",
     has_all(
         ai_native_workflow_skill,
         [
-            "默认输出骨架",
+            "默认最小输出",
             "结论：",
+            "当前阶段：",
+            "Owner：",
+            "交接物：",
+            "授权策略：",
+            "验证与停止条件：",
+            "需要时补证据边界和残余风险",
+            "只有用户要求完整方案、评审报告或模板时",
+        ],
+    ),
+)
+check(
+    "ai-native workflow avoids heavy default output template",
+    has_none(
+        ai_native_workflow_skill,
+        [
+            "默认输出骨架",
+            "角色 Loop 场景视图：只读理解 / 产研交付 / 验证发布 / 知识回流（不是并列入口）",
             "当前阶段：设计 / 设计评审 / TDD-测试设计 / 编码实现 / 编码评审 / 可用性-安全性-可靠性评估 / 发布复盘",
             "角色视角：主责角色 / 协作角色 / AI Maker / AI Checker / 人工 owner",
-            "角色 Loop 场景视图：只读理解 / 产研交付 / 验证发布 / 知识回流（不是并列入口）",
-            "Owner / 下一步分派：",
-            "交接物：",
             "Loop Contract：Goal / State / Plan / Action / Observe / Decide / Ask-or-Decide / Verify / Stop-Handoff",
             "自我问询：已知问题 / 可自答问题 / 需 owner 问题",
             "自我回答：答案 / 证据来源 / 置信度 / 进入下一阶段理由",
-            "证据边界：事实 / 推断 / 待确认 / 范围外不做",
-            "内部实现层：默认不对外展开",
-            "授权策略：只读 / 计划内低风险执行 / 受控执行授权 / 显式确认",
-            "验证门禁：",
-            "停止条件：",
-            "残余风险 / 需要确认：",
-            "只有用户要求完整方案、评审报告或模板时",
+            "小闭环 Ask-or-Decide：Auto-Decide Next / Auto-Ask Owner / Auto-Loop / Stop-Handoff",
         ],
     ),
 )
@@ -1781,11 +1862,8 @@ check(
         [
             "角色协作 Loop",
             "references/intent-to-production-loop.md",
-            "Role Collaboration Loop Map",
-            "Intent-to-Production Role Loop Map",
             "从意图 / 需求收集到生产交付",
             "AI Maker / Checker",
-            "能力 / 约规来源",
             "设计评审",
             "编码评审",
             "可用性 / 安全性 / 可靠性评估",
@@ -1902,6 +1980,9 @@ check(
             "Auto-Loop",
             "Stop-Handoff",
             "自我规划当人工确认",
+            "任务结束责任闭环",
+            "交付责任自检",
+            "下一任务计划问询",
         ],
     )
     and has_all(
@@ -1931,7 +2012,7 @@ check(
         [
             "问题核心诊断",
             "先抓核心，后开药方",
-            "Knowledge-to-Execution Card",
+            "references/product-to-engineering-lifecycle.md",
         ],
     )
     and has_all(
@@ -2076,8 +2157,7 @@ check(
     and has_all(
         ai_native_workflow_skill,
         [
-            "Spec / SDD / OpenSpec 模板最佳实践",
-            "Spec 模板落地包",
+            "Spec / SDD / OpenSpec",
             "references/spec-template-practices.md",
         ],
     )
@@ -2250,8 +2330,7 @@ check(
     and has_all(
         ai_native_workflow_skill,
         [
-            "大项目 Loop 编排",
-            "目标组合包",
+            "计划授权 / 大项目编排",
             "references/goal-composition.md",
             "执行授权缺口",
         ],
@@ -2319,14 +2398,8 @@ check(
         ai_native_workflow_skill,
         [
             "实际项目编码 Loop",
-            "Coding Loop Contract",
             "references/agent-loop-engineering.md",
-            "状态载体",
-            "反馈源",
-            "验证者",
-            "预算 / 最大轮次",
-            "无进展检测",
-            "生产可用 Loop 门禁",
+            "验证与停止条件",
         ],
     )
     and has_all(
@@ -2467,10 +2540,8 @@ check(
         ai_native_workflow_skill,
         [
             "架构排熵 Loop",
-            "腐朽门禁",
-            "Architecture Entropy Card",
+            "references/agent-loop-engineering.md",
             "排熵与复杂度投资优先于战术生成",
-            "低风险动作",
         ],
     )
     and has_all(
@@ -2530,11 +2601,9 @@ check(
         [
             "知识表达",
             "非标问题",
-            "Knowledge-to-Execution Card",
             "实际项目编码 Loop",
-            "Coding Loop Contract",
             "执行可靠性",
-            "知识表达、真实编码 Loop、反馈闭环",
+            "references/product-to-engineering-lifecycle.md",
         ],
     )
     and has_all(
@@ -2746,6 +2815,10 @@ check(
             "Skill 方法增强",
             "Skill Improvement Card",
             "目标 Skill、触发样例、错误表现、反馈证据、最小修改位置、验证方式和不得吸收项",
+            "目标 Skill / 真实失败模式 / 可复用规则 / 权威落点 / 验证方式",
+            "不把业务对象写进 AI Native",
+            "只更新对应 Skill 或 reference",
+            "同步更新触发 fixture / validator",
             "已回流、建议回流、待人工确认、不得回流",
             "不得把个人长期偏好、个人工作方式或私有对话历史写进本仓库或安装目录",
         ],
@@ -2823,7 +2896,6 @@ check(
             "PRD / 系分合议预审",
             "MAGI",
             "references/prd-system-design-review.md",
-            "PRD / 系分合议预审报告",
         ],
     )
     and has_reference_header(ai_native_prd_system_design_review)
@@ -2919,6 +2991,7 @@ check(
             "ai-native-should-gsd-cad-default-authorization",
             "ai-native-should-gsd-goal-composition",
             "ai-native-should-agent-loop-engineering",
+            "ai-native-should-loop-task-end-accountability",
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-code-delivery-closed-loop",
             "ai-native-should-production-sdd-source-of-truth",
@@ -2938,6 +3011,7 @@ check(
             "ai-native-should-route-prd-work",
             "ai-native-should-route-cr-work",
             "ai-native-should-route-codegen-work",
+            "ai-native-should-route-wind-agents-init",
             "ai-native-negative-prd-from-prototype",
             "ai-native-negative-code-review",
             "ai-native-negative-structured-codegen",
@@ -2980,11 +3054,13 @@ check(
             "系分、TDD、编码、最小正确实现检查、CR、安全可靠和发布回到 `资深架构师`",
             "结构化 Java Service 生成回到 `java-service-code-generator`",
             "角色协作 Loop 的处理步骤",
-            "轻量问询 / 自我回答",
+            "Ask-or-Decide",
             "Auto-Decide Next",
             "Auto-Ask Owner",
             "Auto-Loop",
             "Stop-Handoff",
+            "任务结束责任闭环",
+            "下一任务计划问询",
             "Java Service 脚手架",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
             "正式图形默认 SVG，PNG 仅在明确要求时导出",
@@ -2997,6 +3073,7 @@ check(
             "知识回流视图",
             "默认最小输出只保留",
             "结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
+            "只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
             "证据边界必须区分事实、推断、待确认和范围外不做",
             "只有用户要求完整方案、评审报告或模板",
             "授权策略必须区分只读、计划内低风险执行、受控执行授权和显式确认",
@@ -3065,10 +3142,12 @@ check(
         "README.md",
         [
             "默认输出骨架固定为",
+            "按默认输出骨架",
             "进入自主交付闭环",
             "## 完整能力索引",
             "### 提示词公式",
             "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
+            "输出当前阶段、角色视角、能力来源、自我问询/回答、owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派",
         ],
     ),
 )
@@ -3103,7 +3182,7 @@ check(
             "不允许让 AI 随机推进模拟模块",
             "内存版业务 Service",
             "Gemini CLI / AgentRC / Understand Anything / Ponytail 准入",
-            "用 AI Native Engineering Loop：按当前材料进入角色协作 Loop，输出当前阶段、角色视角、能力来源、自我问询/回答、owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派。",
+            "用 AI Native Engineering Loop：按当前材料进入角色协作 Loop，只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险。",
         ],
     ),
 )
@@ -6233,6 +6312,33 @@ check(
             "新增接口、Service、ApplicationService、Facade 或 Adapter 是否承载真实业务职责",
             "透传式应用服务",
             "用例编排、事务边界、权限/审计、状态转换、跨资源协调或对外契约隔离",
+        ],
+    ),
+)
+check(
+    "Java single-line pass-through methods are banned unless semantic",
+    has_all(
+        senior_skill,
+        [
+            "不得保留无业务语义的单行透传方法",
+            "原样转调、原样传参、改名包装或返回下游结果",
+            "应直接删除并内联调用",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "不得保留无业务语义的单行透传方法",
+            "公有或私有方法如果只是原样转调、原样传参、改名包装或返回下游结果",
+            "单行方法只有在承载领域语言、兼容 API、框架回调、权限边界、异常语义、埋点审计或可替换策略时才有保留价值",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "无业务语义的单行透传方法必须作为可删除复杂度处理",
+            "公有或私有方法只原样转调、原样传参、改名包装或返回下游结果时，应删除并内联",
+            "单行透传方法无论公有或私有，都应优先删除并内联",
         ],
     ),
 )
@@ -9597,6 +9703,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "intent-to-production-loop.md", "agent-loop-engineering.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native loop task end accountability",
+        prompt="进入 AI Native 角色协作 Loop：每一次任务结束都要先对交付内容负责，做交付责任自检和 Ask-or-Decide，再判断修复、交接、停止，还是开启下一任务计划问询或最小计划草案",
+        routes={"ai-native", "intent-to-production-loop.md", "agent-loop-engineering.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native PRD system design deliberation review",
         prompt="对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -9762,9 +9873,19 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native skill self-improvement from repeated chat feedback",
+        prompt="结合这几轮聊天交互，对 AI Native / Wind 项目编码约规做 Skill 自我改进外循环：把反复 CR 出来的职责归位、基础服务、Mapper default、同步已安装 Skill 和验证门禁沉淀到正确 Skill，不要把订单优惠券业务细节写进 AI Native",
+        routes={"ai-native", "code-delivery-closed-loop.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native knowledge production loop",
         prompt="参考 WorkBuddy 做 AI 技术早报和团队培训流程，把资料、业务背景和常用模板先上下文资产化，再设计知识生产 Loop、来源标识、验收 owner、更新频率和停用条件，但不要把厂商工具写成默认依赖",
         routes={"ai-native", "code-delivery-closed-loop.md", "source-map.md"},
+    ),
+    RouteFixture(
+        name="AI Native WorkBuddy local coding agent admission",
+        prompt="参考 WorkBuddy 的本地 IDE 和文件系统执行方式，增强 AI Native 的本地执行型 Coding Agent 准入：先读项目上下文、明确写入范围、生成候选 diff、跑验证、依赖和配置冲突 Ask-or-Decide，再交给架构师 CR；不要和 Wind 项目编码约规或架构师编码约规冲突",
+        routes={"ai-native", "code-understanding-tools.md", "code-delivery-closed-loop.md", "verification-review-release.md", "source-map.md", "senior", "coding-standards.md", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md", "wind", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "coding-review-deep-dive.md"},
     ),
     RouteFixture(
         name="AI Native visual understanding for unfamiliar codebase",
@@ -10058,7 +10179,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "任务树", "Task Tree", "Trellis", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "一次一个问题", "建议答案"]):
+        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "任务树", "Task Tree", "Trellis", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "一次一个问题", "建议答案"]):
             route.add("agent-loop-engineering.md")
             route.add("agentic-engineering-governance.md")
             route.add("verification-review-release.md")
@@ -10070,7 +10191,7 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("goal-composition.md")
             if contains_any(prompt, ["交付", "代码", "CR", "测试", "失败测试", "TDD", "Spec", "回写", "返工", "缺陷", "验证", "验证命令", "状态回写", "生产可用", "能上线", "发布回滚", "发布/回滚", "观测审计", "人工接管"]):
                 route.add("code-delivery-closed-loop.md")
-        if contains_any(prompt, ["小闭环", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "轻量问询", "盘问", "一次一个问题", "建议答案", "Grilling", "grill-me", "Grill-Me"]):
+        if contains_any(prompt, ["小闭环", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "轻量问询", "盘问", "一次一个问题", "建议答案", "Grilling", "grill-me", "Grill-Me"]):
             route.add("intent-to-production-loop.md")
             route.add("agent-loop-engineering.md")
             route.add("verification-review-release.md")
@@ -10085,7 +10206,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("spec-template-practices.md")
         if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "SDD v6", "SSD 套件", "SDD 套件", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断", "task-reviewer", "progress ledger", "pre-flight plan review"]):
             route.add("code-delivery-closed-loop.md")
-        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
+        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
@@ -10098,7 +10219,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -10183,8 +10304,10 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
-    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity"]):
+    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity"]):
         route.update({"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
+        if contains_any(prompt, ["AGENTS", "AGENTS.md", "初始化", "改进", "模板", "项目约规入口", "AI Native"]):
+            route.update({"wind-project-agents-template.md", "ai-native"})
         if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker", "模板", "方法签名", "服务命名", "模型命名", "枚举命名", "模型包归位", "模型归位", "包名划分", "源码观察", "代码库", "API 使用", "编码习惯"]):
             route.add("wind-project-coding-examples.md")
         if contains_any(prompt, ["CR", "Review", "review", "检查", "审查", "暴露", "泄漏"]):
@@ -10243,16 +10366,14 @@ for fixture in negative_route_fixtures:
     expected_absent(fixture.name, route_fixture(fixture.prompt), fixture.routes)
 
 ai_native_outline_terms = (
-    "默认输出骨架",
+    "默认最小输出",
     "结论",
-    "角色 Loop 场景视图",
-    "owner/下一步分派",
+    "当前阶段",
+    "owner",
     "交接物",
-    "Loop Contract",
-    "证据边界",
-    "验证门禁",
+    "授权策略",
+    "验证与停止条件",
     "停止条件",
-    "残余风险",
 )
 
 for case_id in [
@@ -10281,8 +10402,25 @@ for case_id in [
     "ai-native-should-fact-boundary-check",
     "ai-native-should-route-prd-work",
     "ai-native-should-route-cr-work",
+    "ai-native-should-route-wind-agents-init",
 ]:
     expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-route-wind-agents-init",
+    (
+        "项目约规入口编排路径",
+        "项目事实待确认项",
+        "owner",
+        "授权边界",
+        "协作路由",
+        "wind-project-coding-conventions",
+        "wind-project-agents-template.md",
+        "项目 AGENTS.md 草案",
+        "源码级设计、TDD、CR 和验证继续交给资深架构师",
+        "不猜测构建命令、生产流程、模块事实或 Git 授权",
+    ),
+)
 
 expected_handling_has(
     "ai-native-should-intent-to-production-role-loop",
@@ -10782,6 +10920,20 @@ expected_handling_has(
         "适用性",
         "触发约规",
         "源码级设计、TDD、CR 和生产风险继续交给资深架构师",
+    ),
+)
+
+expected_handling_has(
+    "wind-project-coding-conventions-should-trigger-agents-template",
+    (
+        "Wind 项目 AGENTS 初始化",
+        "AI Native Engineering Loop 做项目约规入口编排",
+        "wind-project-agents-template.md",
+        "AGENTS.md 草案",
+        "项目事实待确认项",
+        "授权边界",
+        "验收标准",
+        "不猜测构建命令、生产流程、模块事实或 Git 授权",
     ),
 )
 

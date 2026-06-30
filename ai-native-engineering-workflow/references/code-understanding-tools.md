@@ -1,10 +1,10 @@
 # AI 代码理解工具入口
 
-本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具在 AI Native 研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论或做过度设计门禁；不把任何工具写成默认依赖，也不替代源码阅读、测试、CR 或用户授权。
+本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 本地执行型 Coding Agent 工具在 AI Native 研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁或生成候选 diff；不把任何工具写成默认依赖，也不替代源码阅读、测试、CR、项目编码约规或用户授权。
 
 ## 使用时机
 
-- 用户直接点名 Gemini CLI、AgentRC、Understand Anything、Ponytail、AI 快速阅读代码、上下文工程工具、代码库理解工具、知识图谱工具、最小正确实现、过度设计 CR 或“安装/调用某个工具分析代码”。
+- 用户直接点名 Gemini CLI、AgentRC、Understand Anything、Ponytail、WorkBuddy、本地执行型 Coding Agent、AI 快速阅读代码、上下文工程工具、代码库理解工具、知识图谱工具、最小正确实现、过度设计 CR 或“安装/调用某个工具分析代码”。
 - 陌生代码库需要快速形成入口路径、模块职责、关键调用关系、运行方式和风险结论。
 - PRD、OpenSpec、系统设计、Harness Plan 或 ADR 已有，但需要对齐真实代码实现、模块边界、测试和运行脚本。
 - AI 生成了多文件 diff、重构计划、接口迁移或状态机调整，团队看不清影响范围。
@@ -19,10 +19,11 @@
 
 ## 读取后必须产出
 
-- 工具触发结论：不用工具、只读侦察、建议安装/调用 Gemini CLI、建议安装/调用 AgentRC、建议安装/调用 Understand Anything、建议启用 Ponytail 最小正确实现门禁，或只记录人工替代路径。
+- 工具触发结论：不用工具、只读侦察、建议安装/调用 Gemini CLI、建议安装/调用 AgentRC、建议安装/调用 Understand Anything、建议启用 Ponytail 最小正确实现门禁、建议按 WorkBuddy 类本地执行型 Agent 准入生成候选 diff，或只记录人工替代路径。
 - 安装 / 调用准入：来源、安装方式、认证要求、联网需求、写入范围、隐私边界、是否 dry-run、用户授权缺口。
 - 代码库理解任务包：目标、输入材料、只读范围、禁止事项、期望输出、源码锚点、验证证据和残余风险。
 - 设计-代码对齐结论：设计条款、代码入口、实现状态、偏差、测试证据、需架构师确认的问题。
+- 本地执行型 Coding Agent 准入：项目上下文扫描、项目编码约规来源、写入范围、依赖 / 配置变更、候选 diff、验证命令、冲突 Ask-or-Decide、架构师 CR 和回写位置。
 - 工具输出交接：事实 / 推断、置信度、文件路径、函数/类型/配置锚点、命令证据、上下文漂移检查和下一步 owner。
 
 ## 需要继续读取的 reference
@@ -44,6 +45,7 @@
 | Gemini CLI 代码理解 | 3、8 | 不默认联网或授权写文件 |
 | Understand Anything 代码库知识图谱 | 3、9 | 不默认安装插件、写 `.understand-anything/`、启用 hook 或提交图谱 |
 | Ponytail 最小正确实现 / 过度设计 CR | 3、10 | 不替代 correctness/security review、TDD 或架构师源码级判断 |
+| WorkBuddy 类本地执行型 Agent | 3、6A、11 | 不替代项目编码约规、Wind 项目编码约规、TDD 或架构师 CR |
 | 工具输出进入 CR | 6、11 | 不把总结当验证结果 |
 
 ## 1. 触发分级
@@ -58,6 +60,7 @@
 | “安装 AgentRC / 生成 agent instructions / readiness” | 先做写入范围和生成物治理检查。 |
 | “安装 Understand Anything / 生成知识图谱 / 打开 dashboard” | 先做插件安装、写入目录、hook、图谱提交和隐私边界检查。 |
 | “安装 Ponytail / 用 Ponytail review / 做最小正确实现检查” | 先做 Codex 插件、lifecycle hook、Node 依赖、写入配置和 CR 范围检查。 |
+| “参考 WorkBuddy / 让本地 Agent 读项目、改代码、跑验证” | 先做本地执行型 Coding Agent 准入；只允许生成候选 diff，必须读取项目上下文、写入范围、验证命令和冲突 Ask-or-Decide。 |
 | “让工具直接改代码/跑测试/提交” | 回到 Harness、Execution Grant 和 `资深架构师`；本技能不授权执行。 |
 
 ## 2. 安装 / 调用准入
@@ -93,6 +96,7 @@
 | AgentRC | 评估仓库 AI-readiness、生成/评估 agent instructions、eval、开发配置、监控上下文漂移。 | 默认写入 `.github/copilot-instructions.md`、`.vscode/mcp.json`、`.vscode/settings.json`、`agentrc.eval.json`、CI 配置或组织级策略。 |
 | Understand Anything | 把大型代码库、文档库或知识库转成可搜索、可点击、可提问的知识图谱；适合新人 onboarding、团队共享结构视图、diff impact、domain view 和代码库理解 dashboard。 | 默认安装插件、运行远端安装脚本、写 `.understand-anything/`、启用 post-commit hook、提交 graph、把图谱当架构事实或替代 CR。 |
 | Ponytail | 编码实现前做最小正确实现门禁，编码评审时做过度设计专项检查，识别可复用现有代码、标准库、平台原生能力、已安装依赖、单实现抽象、无用配置和可删除复杂度。 | 作为新主流程、替代 TDD / correctness / security / 架构 CR，或以“少写”为理由删除边界校验、错误处理、资金/权限/安全兜底和必要测试。 |
+| WorkBuddy / 本地执行型 Coding Agent | 在已授权本地仓库中先读项目上下文，再按项目规则生成候选 diff、依赖 / 配置变更建议、验证结果和修复建议。 | 默认安装、联网、写文件、覆盖配置、替代 `AGENTS.md`、Wind 项目编码约规、`资深架构师` 编码约规、TDD、CR 或生产授权。 |
 | 人工 / Codex 内置工具 | 只读查看源码、运行本地验证、生成可审查结论。 | 大规模跨仓库上下文治理或外部工具专有能力。 |
 
 环境可用性记录规则：
@@ -161,6 +165,22 @@
 ```
 
 没有源码锚点、没有验证证据、不能区分事实和推断的工具输出，不进入合并、发布或 CAD 判断。
+
+## 6A. 本地执行型 Coding Agent 准入
+
+WorkBuddy 类工具的可取之处是本地 IDE / 文件系统上下文扫描和生成-验证-修复闭环，不是代码风格来源。进入 AI Maker 前使用最小顺序：
+
+```text
+读项目上下文 -> 对齐项目 / 架构 / Wind 约规 -> 明确写入范围 -> 生成候选 diff -> 依赖 / 配置冲突 Ask-or-Decide -> 运行验证 -> 架构师 CR -> 回写经验
+```
+
+准入规则：
+
+- 先读取 `AGENTS.md`、现有包名 / 分层 / 命名 / 测试 / 构建脚本；项目明确 opt-in Wind 时，以 `wind-project-coding-conventions` 为项目约规权威。
+- 生成物只能作为候选 diff；系统设计、TDD、源码级 CR、安全可靠性、生产风险和受控工程执行仍回 `资深架构师`。
+- 新增依赖、配置、公共 API、消息 / 状态 / 权限 / 安全、数据库迁移、覆盖同名配置或写入外部目录时，必须显式确认。
+- 冲突时走 Ask-or-Decide：能根据源码和项目规则自答则记录依据；仍涉及 owner 选择、兼容性或风险责任时只问关键问题。
+- 验证必须给出命令、范围和结果；无法验证时只能交接为“候选修改”，不能写成完成、测试通过或可上线。
 
 ## 7. AgentRC 触发入口
 
@@ -267,13 +287,14 @@ Ponytail 插件准入必须检查：
 
 ## 11. 红线
 
-- 不把 Gemini CLI、AgentRC、Understand Anything、Ponytail 或任何外部工具写成当前会话默认可用。
+- 不把 Gemini CLI、AgentRC、Understand Anything、Ponytail、WorkBuddy 或任何外部工具写成当前会话默认可用。
 - 不默认安装、联网、登录、写文件、写配置或改代码；需要时必须列出授权缺口并等待用户确认。
 - 不默认运行远端安装脚本、插件安装命令、lifecycle hook、`/understand`、`/understand --auto-update`、dashboard、本地服务、post-commit hook 或 Git LFS 配置。
 - 不默认写入 `.github/copilot-instructions.md`、`.vscode/mcp.json`、`.vscode/settings.json`、`agentrc.eval.json`、`AGENTS.md`、CI 配置或组织级策略。
 - 不默认写入、提交或同步 `.understand-anything/`、`knowledge-graph.json`、图谱中间产物、dashboard 产物或 hook。
 - 不在未授权时安装 npm 包、运行 `npx`、登录 OAuth、读取 token、写配置、修改代码或启动 CI。
 - 不把工具生成的说明文件、eval 或 MCP 配置直接当团队规范；必须进入 CR。
+- 不把 WorkBuddy 类工具输出当成项目编码约规；默认先服从项目 `AGENTS.md`、项目已有代码风格、`wind-project-coding-conventions` opt-in 规则和 `资深架构师` 源码级判断。
 - 不把工具总结当作源码事实；关键结论必须回链文件路径、函数、类型、配置或验证命令。
 - 不把 Ponytail 的“少写”当作删除输入校验、错误处理、安全、可访问性、资金/权限/生产兜底或必要测试的理由。
 - 不把工具输出当作 Execution Grant、CAD 授权、测试通过、发布批准或合规结论。
