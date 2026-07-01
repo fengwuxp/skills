@@ -35,6 +35,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断是否要拆新 Skill | `1. 路由矩阵`、`2. 拆分门禁` | 不直接新建目录 |
+| Skill 工程化反向验证 | `1. 路由矩阵`、`2. 拆分门禁`、`5. 回流与验证` | 不把外部 allowed-tools / hooks / user-prefs 写成本仓库默认能力 |
 | 产品验证和验收种子 | `1. 路由矩阵`、`3. 产品侧细化`，再读产品上下文包 | 不把验收实现交给产品专家 |
 | 代码质量、Runbook、发布 | `1. 路由矩阵`、`4. 架构侧细化`，再读架构师 reference | 不让 AI Native 做源码级判断 |
 | 流程可用性 CR | `5. 回流与验证` | 不只更新说明文字 |
@@ -106,6 +107,13 @@
 架构侧消费 Engineering Handoff Card 和必要时的 Production Loop Card：先检查 Goal、Spec/AC、Wave/Task、写入范围、验证命令、停止条件、失败回写、授权策略、状态载体、隔离执行、Maker / Checker、独立验证、预算、人工接管和发布/回滚。可消费后才进入 OpenSpec、Harness、GSD 任务包、CAD 候选、TDD、源码级 CR 或发布风险设计。
 
 ## 5. 回流与验证
+
+Skill 工程化反向验证按四步做：
+
+1. **触发验证**：description 与真实提示词、负向提示词是否命中正确 owner。
+2. **路由验证**：`SKILL.md` 是否只做路由和红线，resource 引用是否说明触发时机、资源位置和预期产出。
+3. **资源验证**：reference 是否按需可发现，脚本是否确定性、离线、安全、幂等，复杂规则是否有 fixture / validator。
+4. **交付验证**：变更后运行 trigger-path、skill eval、统一 validate 和 sync dry-run；仍有不确定项时只写待确认和停止条件。
 
 任何细化都必须落到至少一种可复核载体：
 

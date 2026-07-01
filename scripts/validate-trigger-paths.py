@@ -483,6 +483,13 @@ ai_native_terms = [
     "外科手术式变更",
     "Surgical Changes",
     "Harness Engineering",
+    "Skill 原理",
+    "Skill 最佳实践",
+    "SKILL.md 路由器",
+    "资源加载契约",
+    "触发测试",
+    "功能走查",
+    "反向验证",
     "架构真功夫",
     "专才 Agent",
     "专项 Skill",
@@ -1409,6 +1416,12 @@ check(
             "补脚本",
             "新建顶层 Skill",
             "专项 Skill 拆分先走 V 字判断",
+            "Skill 工程化反向验证",
+            "触发验证",
+            "路由验证",
+            "资源验证",
+            "交付验证",
+            "触发时机、资源位置和预期产出",
             "向下拆清职责",
             "向上合并复用",
             "Harness 校验",
@@ -7689,6 +7702,45 @@ check(
     ),
 )
 check(
+    "AI Native source map and README record Harness skill best practices source",
+    has_all(
+        ai_native_source_map,
+        [
+            "Harness 工程之道：Skill 原理与最佳实践",
+            "https://mp.weixin.qq.com/s/yo2f5edeNNkYtCte9P0yhQ",
+            "Skill 反向验证参考来源",
+            "渐进性披露、`SKILL.md` 路由器、description 触发机制、资源加载契约、工具权限最小化、脚本确定性、状态快照、触发测试、功能走查和性能对比",
+            "张梦杰",
+            "阿里云开发者",
+            "2026-07-01 08:30:00 Asia/Shanghai",
+            "2026-07-01 普通 `curl` 返回微信“环境异常”验证页，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、账号、作者、页面时间字段和 `#js_content` 正文",
+            "不复制原文、图片、目录结构",
+            "平台宣传",
+            "不把文中工具能力、个人偏好持久化、自动执行或外部 Harness 写成当前 Codex 默认能力、执行授权、测试通过、CR 结论或上线审批",
+            "可以吸收 Skill 反向验证方法",
+            "资源引用必须说明触发时机 / 资源位置 / 预期产出",
+            "真实提示词覆盖触发测试、功能走查、负向路径和对照评估",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "Harness 工程之道：Skill 原理与最佳实践",
+            "https://mp.weixin.qq.com/s/yo2f5edeNNkYtCte9P0yhQ",
+            "仓库级 Skill 反向验证",
+            "`AI Native 研发流程编排` 工程化参考来源",
+            "渐进性披露、`SKILL.md` 路由器、description 触发、资源加载契约、工具权限最小化、脚本确定性、状态快照、触发测试、功能走查和性能对比",
+            "张梦杰",
+            "阿里云开发者",
+            "2026-07-01 08:30:00 Asia/Shanghai",
+            "通过移动端微信 UA `curl` 公开 HTML 读取标题、账号、作者、页面时间字段和正文",
+            "不复制原文、图片、案例",
+            "平台宣传",
+            "不把外部机制写成当前 Codex 默认能力、执行授权、测试通过、CR 结论或上线审批",
+        ],
+    ),
+)
+check(
     "README records PRD AI prescan source boundary",
     has_all(
         "README.md",
@@ -9797,6 +9849,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "skill-type-owner-routing.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native Harness skill best practices reverse validation",
+        prompt="AI Native 参考《Harness 工程之道：Skill 原理与最佳实践》，对项目下的 Skill 做反向验证和最小重构：检查 SKILL.md 是否只是路由器、description 是否触发准确、references/scripts/fixtures 是否按需加载和可验证，并提炼最佳实践原则；不要照搬外部权限字段、运行钩子、用户偏好持久化或自动推送机制",
+        routes={"ai-native", "skill-type-owner-routing.md", "source-map.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI coding workflow CR",
         prompt="评审我们的 AI 编码流程是否有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、代码 CR、发布监控和复盘闭环",
         routes={"ai-native", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -10210,7 +10267,7 @@ def route_fixture(prompt: str) -> set[str]:
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
-        if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Harness Engineering", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
+        if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Harness Engineering", "Skill 原理", "Skill 最佳实践", "SKILL.md 路由器", "资源加载契约", "触发测试", "功能走查", "反向验证", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
             route.add("skill-type-owner-routing.md")
             route.add("product-to-engineering-lifecycle.md")
             route.add("verification-review-release.md")
@@ -10218,7 +10275,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -10418,6 +10475,28 @@ expected_handling_has(
         "项目 AGENTS.md 草案",
         "源码级设计、TDD、CR 和验证继续交给资深架构师",
         "不猜测构建命令、生产流程、模块事实或 Git 授权",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-harness-skill-best-practices-review",
+    (
+        "Skill 工程化反向验证路径",
+        "skill-type-owner-routing",
+        "source-map",
+        "verification-review-release",
+        "文章已读取正文",
+        "不吸收边界",
+        "触发验证",
+        "路由验证",
+        "资源验证",
+        "交付验证",
+        "最小重构",
+        "source-map",
+        "fixture",
+        "validator",
+        "evaluate-skills.py",
+        "不把外部权限字段、运行钩子、用户偏好持久化、日志埋点、自动推送或 skill-creator 操作流程写成本仓库默认能力",
     ),
 )
 

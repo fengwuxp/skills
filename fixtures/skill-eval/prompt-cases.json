@@ -382,6 +382,21 @@
       "expected_handling": "进入 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing 和 source-map；先用 V 字判断确认向下职责是否单纯、向上是否可合并复用，再按只更新 reference、补 fixture / validator、补脚本、未来新建顶层 Skill 分级；AI Native 保持编排主入口，产品专家、架构师和代码生成器保持专项 owner，不把流程阶段、工具名、外部文章案例或单次组织实践拆成新 Skill。"
     },
     {
+      "id": "ai-native-should-harness-skill-best-practices-review",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考《Harness 工程之道：Skill 原理与最佳实践》，对项目下的 Skill 做反向验证和最小重构：检查 SKILL.md 是否只是路由器、description 是否触发准确、references/scripts/fixtures 是否按需加载和可验证，并提炼最佳实践原则；不要照搬外部权限字段、运行钩子、用户偏好持久化或自动推送机制。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI Native 的 Skill 工程化反向验证路径，读取 skill-type-owner-routing、source-map 和 verification-review-release；先核对文章已读取正文和不吸收边界，再按触发验证、路由验证、资源验证、交付验证检查每个 Skill；只做最小重构，优先补 source-map、fixture、validator 或 evaluate-skills.py，不把外部权限字段、运行钩子、用户偏好持久化、日志埋点、自动推送或 skill-creator 操作流程写成本仓库默认能力。"
+    },
+    {
       "id": "ai-native-should-spec-template-practices",
       "skill": "ai-native-engineering-workflow",
       "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请先区分 PRD / SDD / 实现 Spec 三层是否齐备，再输出 Spec 强度、Delta Spec、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",

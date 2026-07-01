@@ -24,9 +24,11 @@ SKILL_DIRS = [
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
+    "wind-project-coding-conventions",
 ]
-SCRIPTLESS_ORCHESTRATION_SKILLS = {
+SCRIPTLESS_VALIDATED_SKILLS = {
     "ai-native-engineering-workflow",
+    "wind-project-coding-conventions",
 }
 REQUIRED_VALIDATE_HOOKS = [
     "scripts/validate-trigger-paths.py",
@@ -365,7 +367,7 @@ def score_deterministic(
     prompt_stats: dict[str, Any],
 ) -> tuple[int, list[str]]:
     warnings: list[str] = []
-    if script_count == 0 and skill_name in SCRIPTLESS_ORCHESTRATION_SKILLS:
+    if script_count == 0 and skill_name in SCRIPTLESS_VALIDATED_SKILLS:
         score = 80
         if prompt_stats["positive_cases"] >= 2 and prompt_stats["hard_negative_cases"] >= 2:
             score += 10
@@ -391,6 +393,7 @@ def score_trigger(skill_name: str, trigger_text: str) -> tuple[int, list[str]]:
         "java-service-code-generator": ["java service generator", "structured input", "codegen"],
         "product-architecture-expert": ["payment product", "product diagram", "airwallex"],
         "senior-software-architect": ["architecture diagram", "bug diagnosis", "write tests"],
+        "wind-project-coding-conventions": ["wind project coding conventions", "wind project entity exposure", "wind project coding examples"],
     }
     terms = expected_terms.get(skill_name, [])
     hits = sum(1 for term in terms if term.casefold() in trigger_text.casefold())
