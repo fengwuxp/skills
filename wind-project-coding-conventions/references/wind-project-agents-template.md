@@ -1,6 +1,6 @@
 # Wind 项目 AGENTS.md 模板
 
-本文是 `wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 项目编码约规、AI Native 角色协作 Loop 和 Karpathy-style 工程纪律；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 项目编码约规、AI Native 角色协作 Loop、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
 
 ## 使用时机
 
@@ -41,7 +41,7 @@
 ```markdown
 # AGENTS.md
 
-> 本文件是 `<项目名>` 的常驻项目契约，只保留每次会话都应知道的项目定位、模块边界、验证命令和 Skill 路由。
+> 本文件是 `<项目名>` 的常驻项目契约，只保留每次会话都应知道且在项目中重复出现的项目定位、模块边界、验证命令和 Skill 路由。
 > 通用 Java 编码、测试、Review、AI Native Loop 和 Wind/Nobe 约规不在本文件重复展开；按 Skill 路由读取。
 > 每次修改代码前必须阅读并遵守本文件。
 
@@ -54,7 +54,7 @@
 - 主要模块：<列出 face / impl / web-api / core / infrastructure 等模块>
 - 默认验证命令：<如 mvn test / ./gradlew test / just test；未知则写待确认>
 
-不要在本文件维护可从 `pom.xml`、`build.gradle` 或模块依赖自动获得的技术栈清单；只保留 Java 版本、构建命令、模块边界等会影响 Agent 决策的稳定约束。
+不要在本文件维护可从 `pom.xml`、`build.gradle` 或模块依赖自动获得的技术栈清单；只保留 Java 版本、构建命令、模块边界等会影响 Agent 决策的稳定约束。不要记录临时讨论、个人偏好、长期记忆、一次性试错或未验证结论。
 
 ## 顶层原则
 
@@ -144,7 +144,8 @@ AI Native Engineering Loop 是项目端到端协作入口，只负责阶段、ow
 ## 改进规则
 
 - 已有 `AGENTS.md` 有同义规则时，不新增近义条款；只补缺失的 Wind opt-in、AI 路由、验证命令或项目特有模块。
-- `AGENTS.md` 只保留每次会话都应知道的稳定项目契约；技术栈清单、Git 常规权限、长期学习声明、通用交付格式等能由全局规则或工具约束覆盖的内容，不默认写入项目模板。
+- `AGENTS.md` 只保留每次会话都应知道且在项目中重复出现的稳定项目契约；技术栈清单、Git 常规权限、长期学习声明、通用交付格式等能由全局规则或工具约束覆盖的内容，不默认写入项目模板。
+- 新增项目规则必须来自重复踩坑、CR 结论、验证失败、团队确认或本地源码事实；不得把单次对话、个人偏好、一次性探索、未验证外部文章或 AI 推理轨迹写入项目 `AGENTS.md`。
 - 旧术语只在 Skill 路由中作为触发别名出现；正文优先使用 `AI Native Loop`，不新增独立 CAD/Loop 权限章节。
 - 模板里的 `<...>` 占位符必须由项目事实填充；无法确认时保留“待确认”，不要推断。
 - 不把 `capte-domain`、`nobe`、`wind-integration` 的历史包名、业务模块名或命令照搬成新项目事实。
