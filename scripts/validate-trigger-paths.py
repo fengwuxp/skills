@@ -1578,8 +1578,9 @@ check(
             "model / cost policy",
             "execution state gate",
             "authorized workspace policy",
-            "`external-superpowers/subagent-driven-development` 已替换为 Superpowers v6.0.3 vendored skill",
+            "`external-superpowers/subagent-driven-development` 已替换为 Superpowers v6.0.3 vendored skill；上游 latest 已到 v6.1.0",
             "`task-brief`、`review-package`、`sdd-workspace` 只在明确进入 SDD 执行且用户授权写入工作区时运行",
+            "v6.1.0 的 Codex marketplace、bootstrap 压缩、SessionStart hook 移除和 Gemini CLI 支持移除",
             "Harness 契约版本: v1 / AI Native Harness Contract v2 / AI Native Harness Contract v3",
             "SDD 套件版本: 无 / SDD v6 方法契约 / 外部工具已授权",
             "执行状态: Ready / Running / Review / Fix / Verified / Blocked / Handoff",
@@ -2143,9 +2144,12 @@ check(
             "2026-06-07",
             "6fd4507659784c351abbd2bc264c7162cfd386dc",
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
-            "Superpowers v6.0.3 / SDD 套件升级结论",
+            "Superpowers v6.x / SDD 套件升级结论",
             "896224c4b1879920ab573417e68fd51d2ccc9072",
+            "f268f7c953744036f0fa7e9d4b73535c04e57cb8",
             "45e79c9525328a9dd6653c2d01d49895eaf083cf321a4902ea71d7ba5705bbf0",
+            "v6.1.0 取舍结论",
+            "Gemini CLI 于 2026-06-18 EOL",
             "task-reviewer-prompt.md",
             "task-brief",
             "review-package",
@@ -2154,6 +2158,7 @@ check(
             "pre-flight plan review",
             "progress ledger",
             "已 vendored v6.0.3 的 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace`",
+            "上游 v6.1.0 暂不覆盖本地 SDD helper",
             "不创建 `.superpowers/sdd/`，不声明已启用外部 SDD 执行套件",
             "MIT License",
             "初始导入仅复制 `skills/` 下 Markdown 资源和 LICENSE",
@@ -2809,9 +2814,12 @@ check(
             "失败回写 Spec 再重试",
             "Orchestrator / Knowledge / Delivery 三层 Harness",
             "`obra/superpowers` v6.0.3",
+            "`obra/superpowers` v6.1.0",
+            "Token 砍半、速度翻倍：Superpowers 6.0.3 到底升级了什么？",
             "替换覆盖式升级",
             "task-reviewer-prompt.md",
             "本地 helper",
+            "上游 latest 已到 v6.1.0",
             "不把外部 Harness 写成当前会话默认依赖或执行授权",
             "不把文章中的比例和团队经验写成通用事实或项目当前指标",
         ],
@@ -4040,6 +4048,8 @@ check(
             "ai-native-engineering-workflow/references/external-superpowers/",
             "superpowers-skill-library.md",
             "2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级并纳入本地 helper",
+            "2026-07-01 核验上游 latest 已到 v6.1.0",
+            "移除 Gemini CLI 支持",
             "除此之外不复制或运行 hooks、插件 manifest、package 脚本",
             "不把外部默认文档路径、自动提交、Git 推送、worktree、subagent 连续执行要求写成本仓库默认行为",
         ],
@@ -9839,6 +9849,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native checks Superpowers 6.x latest boundary",
+        prompt="AI Native 确认 Superpowers 6.x 是否已经升级到最新 v6.1.0，区分本地 vendored SDD helper、上游 latest、Codex marketplace、Gemini CLI 支持移除和不默认运行外部脚本",
+        routes={"ai-native", "agentic-engineering-governance.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "source-map.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native routes Matt Pocock grilling skills",
         prompt="AI Native 看下安装 mattpocock/skills，用 grilling 协同产品专家和任务树推进模糊需求，说明安装边界和安全风险",
         routes={"ai-native", "agent-loop-engineering.md", "intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
@@ -10274,9 +10289,11 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
+        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.0", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
+            if contains_any(prompt, ["升级", "版本", "上游 latest", "latest release", "v6.1.0", "helper", "不默认运行外部脚本", "Harness", "Gemini CLI 支持移除"]):
+                route.add("verification-review-release.md")
         if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Harness Engineering", "Skill 原理", "Skill 最佳实践", "SKILL.md 路由器", "资源加载契约", "触发测试", "功能走查", "反向验证", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
             route.add("skill-type-owner-routing.md")
             route.add("product-to-engineering-lifecycle.md")
