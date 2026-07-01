@@ -902,7 +902,7 @@ check(
     has_all(
         ai_native_workflow_skill,
         [
-            "AI Native Engineering Loop 的角色协作与准入门禁",
+            "用户要求用 AI Native Engineering Loop 编排跨角色产研交付",
             "默认进入角色协作 Loop",
             "Loop 自主推进统一外显，旧术语内部化",
             "阶段名不是能力来源",
@@ -1463,11 +1463,9 @@ check(
     all(
         term in frontmatter(ai_native_workflow_skill)
         for term in [
-            "AI Native Engineering Loop 的角色协作与准入门禁",
-            "跨产品 UED 架构 AI Maker-Checker 到质量发布",
-            "GSD/CAD/Goal 等旧说法要求流程编排",
-            "可交接可验证可停止",
-            "普通 PRD、Bug、测试、源码级 CR 或 Java Service 生成优先路由专门 Skill",
+            "用 AI Native Engineering Loop 编排跨角色产研交付",
+            "GSD/CAD/Goal 等旧说法要求协作门禁、授权边界、验证交接和停止条件",
+            "普通 PRD、代码修改、测试评审或 Java Service 生成优先路由专门 Skill",
         ]
     )
     and has_all(
@@ -1745,7 +1743,8 @@ check(
             "工具输出交接格式",
             "环境可用性记录规则",
             "当前机器已验证 Gemini CLI `0.49.0` 可在 Node `20.20.2` 下启动",
-            "优先用 Gemini 只读启动",
+            "作为只读候选",
+            "当前状态核验通过",
             "不把某台机器的安装路径、版本、shell 配置或登录状态写成默认可用能力",
             "不把任何工具写成默认依赖",
             "不默认安装、联网、登录、写文件、写配置或改代码",
