@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 项目本地 `AGENTS.md` 明确标明、任务说明或用户要求遵守 Wind 项目编码约规。
-- 评审 face/impl 模块边界、接口放置、基础服务、方法签名、服务/模型/枚举命名、应用层服务、DTO/Request/Query/Entity、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
+- 评审 face/impl 模块边界、接口放置、基础服务、方法签名、服务/模型/枚举命名、应用层服务、DTO/Request/Query/Entity、查询字段命名、内网 API、安全等级、系统字典/国际化、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
 - 初始化或改进遵循 Wind 约规项目的本地 `AGENTS.md`，让 AI Native Engineering Loop 能按项目规则调度产品、架构、Wind 规则和代码生成能力。
 
 ## 不适用场景
@@ -19,14 +19,16 @@
 
 ## 需要继续读取的 reference
 
-- Java/Spring/Wind 强制规则读架构师 `references/coding-standards.md`；Service/API/DTO/Query 读架构师 `references/project-governance-service-api-modeling.md`；测试/TDD 读架构师 `references/testing.md` 和 `references/testing-practices.md`；模块依赖读架构师 `references/project-governance-codebase-and-modules.md`；深度 CR 读架构师 `references/coding-review-deep-dive.md`；需要最佳实践正反例时读本 Skill 的 `wind-project-coding-examples.md`。
+- Java/Spring/Wind 强制规则读架构师 `references/coding-standards.md`；Service/API/DTO/Query 的通用设计读架构师 `references/project-governance-service-api-modeling.md`；测试/TDD 读架构师 `references/testing.md` 和 `references/testing-practices.md`；模块依赖读架构师 `references/project-governance-codebase-and-modules.md`；深度 CR 读架构师 `references/coding-review-deep-dive.md`；需要最佳实践正反例时读本 Skill 的 `wind-project-coding-examples.md`。
+
+重复规则归位：通用 Java 命名、异常、技术日志、敏感信息、数据库 DDL、依赖治理、Spring/Lombok/MapStruct 使用和测试方法论归 `资深架构师`；Wind opt-in 后的 face/impl、模型包位、基础服务模板、查询方法语义、`XxxQuery` 后缀、内网 API 路径安全等级、系统字典/国际化和业务事件 Key 归本 Skill。两边有冲突时，项目本地 `AGENTS.md` / OpenSpec / ADR 优先；其次 Wind 项目特化规则优先；源码实现、TDD、CR 和风险判断仍回架构师。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | opt-in / 项目 AGENTS 初始化或改进 | `wind-project-agents-template.md`，再按本地项目事实填充 | 不猜测构建命令、生产流程、模块事实或团队授权 |
-| 模块 / 分包 / 接口放置 / 模型包归位 / Service / 基础服务模板 / 方法签名 / 命名 / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
+| 模块 / 分包 / 接口放置 / 模型包归位 / Service / 基础服务模板 / 方法签名 / 查询命名 / 内网 API / 字典国际化 / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
 | 最佳实践 / 示例 / 正反例参照 | `wind-project-coding-examples.md` | 不把示例当完整模板或代码生成规则 |
 
 ## 1. 启用、模块与分包
@@ -59,8 +61,10 @@
 - ServiceImpl 通用实现：`@Service` + 构造注入，Mapper 字段 `final`；Request 先经 `XxxConverter.INSTANCE.convertToXxx` 转 Entity；新增优先 `insertSelective`，保存类入口可用 `insertOrUpdateSelective`，更新必须先找现有数据并校验影响行数；删除先校验 ids 非空和影响行数；私有 `findXxx(id)` 负责 id 非空和不存在断言；查询条件集中在 `createQueryWrapper` 或 `fillQueryWrapper`，使用 `MybatisQueryHelper.from(options)`、`XxxNameRefs`、`counter`、`resultQueryFunc`、`converter` 输出 DTO。
 - 查询服务形态：公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`，查询选项使用 `WindQuery<? extends QueryOrderField>` 或项目既有分页选项；`ServiceImpl` 内部再组合 `QueryWrapper`、Mapper、Converter 和 result enricher。默认方法只用于复用已有公开契约上的小型断言或组合查询，不新增绕过实现层的业务状态。
 - 多实现组合：同一 face Service 有多个生产实现时，保留一个主对外实现做组合编排，其他实现必须承担清晰业务职责；通过 `@Primary`、明确 bean name 或项目统一装配规则解决注入歧义，不用 `Processor`、`Handler` 这类泛名掩盖服务职责。
-- `DomainService` / `DomainQueryService` 不是 Wind 项目强制分层；只有确有领域规则、状态变化、查询模型或统计读模型时才在 `*-impl` 内部 `domain` / `domain/impl` 落位，不为套分层新增浅服务或 Mapper 包装。
-- 写操作用业务动词，例如 submit、approve、reject、freeze、unfreeze、pay、refund、settle；查询按 `get/find/query/exists/count/stats` 区分必然存在、可空、条件查询和统计，不用 handle/process/doXxx 掩盖语义。
+- 四类服务是判断框，不是强制新增层：`XxxService` 承接基础契约，`XxxDomainService` 承接真实领域写规则，`XxxDomainQueryService` 承接真实领域读模型，`XxxApplicationService` 承接完整业务场景编排。`DomainService` / `DomainQueryService` 不是 Wind 项目强制分层；没有稳定领域规则、读写分离、跨对象场景、事务/权限/审计/外部副作用时，不新增 DomainService、DomainQueryService 或 ApplicationService；已有 `service/services/application/domain` 历史包名时，以职责、owner、生命周期和调用边界判断，不为迁移名称而改。
+- 新服务命名避免 `Manager`、`BizService`、泛化 `Facade` 这类职责不明后缀；若项目已有 Adapter/Facade 边界，必须表示协议适配或门面入口，不得作为服务层杂物筐。
+- 写操作用业务动词，例如 submit、approve、reject、freeze、unfreeze、pay、refund、settle；不用 handle/process/doXxx 掩盖语义。
+- 查询方法命名：`get` 表示必然存在，找不到抛业务异常；`find` 表示可能不存在，返回 `@Nullable` 或 `Optional` 并写清空值契约；`query` 表示条件查询、列表、分页或统计，入参优先 `XxxQuery`，不要散落多个查询参数；`exists`、`count`、`stats/summary` 分别表示存在性、数量、统计/汇总。服务层不得使用 `select/load/fetch` 这类 Repository/SQL 语义；历史 `queryXxxById` 仅在附近代码已经统一使用时兼容，新代码优先按 `get/find` 表达是否必然存在。
 - 事务边界放在真实用例边界；事务内避免不可控远程调用、长耗时计算和无上限循环，确需调用时说明超时、补偿和失败处理。
 
 ## 3. 模型与契约
@@ -69,6 +73,7 @@
 - 模型对象职责：DTO、Request、Query、Command、Context 只表达契约字段、输入范围和确定性自有派生；不得依赖 Service、Supplier、Cache、当前用户/租户解析器、远程端口或数据库查询。规则变量、租户名称、当前操作者等运行时派生值由 ServiceImpl、ApplicationService 或 Adapter 在用例边界组装，有值才写入变量上下文，不写无业务语义的 `null` 占位。
 - 模型包归位：新代码的 `DTO`、`Request`、`Query`、`Command` 优先放在 `*-face` 或 `core` 的 `model/dto`、`model/request`、`model/query`、`model/command` 下，对应 Java 包名通常是 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`；历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包，对应 `*.dto`、`*.request`、`*.query`、`*.command`。业务模块自己的 `enums`、`event` 优先放在对应 `*-face` 的业务包下；同一 face 内多个子域可用 `xxx/model/dto`、`xxx/model/request`、`xxx/model/query`、`xxx/event` 分包，兼容既有 `xxx/dto`、`xxx/request`、`xxx/query`、`domain/dto|request`，其中 `domain` 仅用于跨子域、稳定业务概念，不得当杂物包。持久化 `Entity`、Mapper、Repository、MyBatis `Refs` 和 MapStruct Converter 放在对应 `*-impl` 的 `dal/*` 或 `mapstruct` 下；`*-impl` 一般不放 DTO/Request/Query/Command，除非是内部模型且不进入 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、事件/消息或跨模块接口。业务/通道事件 Converter 可放 `*-impl` 的 `converter` 或 `support`，但只做适配转换，不承载公共契约或核心业务决策。Web 展示 VO、登录/表单 Request 和页面组合模型放 `web-api` / `web-security`，不得回流到 face 契约；跨域共享模型只有在两个以上业务模块稳定复用且不依赖 Web/DAL 时，才放 `core` 的 `model`、`enums` 或 `event`。
 - 模型命名：对外读模型用 `XxxDTO`；写入模型按语义用 `CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest`、`ExecuteXxxRequest`，只有确实统一新增/更新时才用 `Save`；查询条件用 `XxxQuery`，历史兼容可保留 `XxxQueryParams`；导出、任务、回调等执行型输入用业务动词前缀；Web 展示对象用 `XxxVO` 且只留在 Web 模块。
+- 查询字段命名：`XxxQuery` 字段用 `<field><OperatorSuffix>` 表达业务语义，默认等值查询不加后缀，例如 `status`；集合用 `In/NotIn`；模糊用 `Contains/StartsWith/EndsWith`，只有确需暴露 SQL 语义时才用 `Like`；比较用 `Gt/Gte/Lt/Lte`；时间、金额和数量范围优先用 `Min/Max`，不用 `Start/End`、`Begin/End`、`From/To`；闭区间可用 `Between`；空值用 `IsNull/IsNotNull`。字段名表达业务条件，不表达 SQL 拼接方式；未来若引入自动 Query Parser，必须另有设计、测试和兼容策略，不因命名规范自动获得解析能力。
 - 事件/消息契约跟业务 owner 走：模块对外事件放 `*-face/event` 或子域 `event`；平台公共事件放 `core/event`；事件监听器、Webhook handler、投递 executor 放 `*-impl/listener` 或 `*-impl/webhook`。
 
 | 对象 | 默认位置 |
@@ -83,6 +88,7 @@
 - `DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型承载契约字段；使用包装类型、枚举、值对象或明确业务类型表达缺省、精度和序列化语义。
 - 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举，覆盖 DTO、Request、Query、Command、Entity、事件和内部模型；不得用 `String currency`、Integer、业务私有币种枚举或魔法常量承载。外部协议中的字符串币种只在 Adapter/Converter 边界转换，进入服务契约和领域处理前必须归一为 `CurrencyIsoCode`。
 - 枚举命名和模板：生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`；对外枚举放 `*-face/enums` 或稳定公共 `core/enums`，只给 impl 使用的内部枚举留在 `*-impl`。公开枚举优先实现 `DescriptiveEnum`，使用 `@Getter`、`@AllArgsConstructor`、`private final String desc`，枚举值使用大写下划线；需要颜色、层级或前端展示时通过 DTO/Converter 输出，不把展示字段随意塞进业务枚举。
+- 系统字典、国际化和业务事件：Key 是稳定契约，展示文案可调整；业务逻辑、持久化判断和状态机只能依赖 code、enum、errorCode 或 eventKey，不依赖中文、英文文案或翻译结果。Key 按场景分命名空间，常用前缀为 `ui.`、`enum.`、`error.`、`event.`、`config.`；同一中文在不同业务场景也不要复用 Key。业务事件、审计展示和可回放消息存 `{eventKey, params}`，不存渲染后的中文句子；params 放业务 code 或变量值，不放“已支付”这类可变文案。Key 只能新增和废弃，语义改变必须新建 Key，历史 Key 不随意删除。
 - 公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc，说明职责、调用方、空值、异常、权限、幂等、事务和副作用；注释说明 Why / Why not，不翻译代码。
 - 内部 Java 空值契约用 JSpecify；API 入参用 Bean Validation；业务前置条件和状态条件用项目断言工具。已由 JSpecify 标为非空的值，不再加无业务语义的空判断。若 `ServiceImpl` 会为 Request 字段补默认值，该字段的 Bean Validation 必须允许缺省，默认值应在服务入口归一化后再参与幂等查询、唯一键判断、转换和落库；不得把基础服务内部默认值泄露给调用方或上层 ApplicationService。
 - 金额必须明确币种、精度和舍入规则；时间必须明确格式、时区和精度；ID 必须考虑唯一性、可追踪、并发和外部暴露风险。
@@ -92,10 +98,11 @@
 ## 4. DAL 与外部集成
 
 - MyBatis Flex 使用 `XxxRefs` 和统一 helper 构造 `QueryWrapper`；禁止新增 `LambdaQueryWrapper` 或裸字符串字段名；分页有上限，排序白名单，写库默认 selective。
-- QueryWrapper 构造逻辑优先沉淀到 helper 或基础服务，避免到处手写条件；源码样本中的标准链路是 `MybatisQueryHelper.from(options)` 或项目 helper 构造排序/分页，再用 `XxxNameRefs` 拼条件，最后通过 `MybatisQueryHelper.<Entity, DTO>query(queryWrapper).counter(mapper::selectCountByQuery).resultQueryFunc(mapper::selectListByQuery).converter(XxxConverter.INSTANCE::convertToXxxDTO).query(options)` 输出分页 DTO。复杂 SQL 说明索引、分页、排序、数据量和慢查询风险。
+- QueryWrapper 构造逻辑优先沉淀到 helper 或基础服务，避免到处手写条件；源码样本中的标准链路是 `MybatisQueryHelper.from(options)` 或项目 helper 构造排序/分页，再用 `XxxNameRefs` 拼条件，最后通过 `MybatisQueryHelper.<Entity, DTO>query(queryWrapper).counter(mapper::selectCountByQuery).resultQueryFunc(mapper::selectListByQuery).converter(XxxConverter.INSTANCE::convertToXxxDTO).query(options)` 输出分页 DTO。排序入参优先使用项目统一的 `orderFields` / `orderTypes` 或 `WindQuery<? extends QueryOrderField>`，必须白名单校验字段和方向；复杂 SQL 说明索引、分页、排序、数据量和慢查询风险。
 - 空结果分支：关键词、权限、外部检索等前置条件查不到数据时，优先返回 `Pagination.empty()` / `CursorPagination.empty()` 这类统一空分页，不返回 null、不伪造一页空对象、不绕过总数语义。
 - 需要把字段更新为 null 时，必须显式指定更新列，说明业务语义，并处理 `gmt_modified`。
 - 外部调用先定义端口再写适配器；回调和扩展点在 face 可用 `callback/spi` 表达端口，impl 的 `webhook`、`listener`、`handler`、`executor` 负责协议解析、签名校验、状态映射、幂等和投递。异步、Webhook、MQ、批处理和回调必须有超时、重试、幂等、补偿、告警、审计和时间边界三问。
+- 内网 API 路径表达安全等级：默认形态为 `/inc/{security-level}/{domain}/{resource}/{action}`。`/inc/basic/**` 只用于低风险内部查询和无敏感副作用能力；涉及用户数据、资金、权限、配置变更、关键业务状态或可被重放造成影响的操作，必须走 `/inc/secure/**`，并保留内部来源校验、appKey/timestamp/nonce/signature 或项目等价签名鉴权边界。安全等级不得藏在 header、query 参数或接口说明里；公共 `/api/**`、内网 `/inc/basic/**` 和安全内网 `/inc/secure/**` 不混用。
 - 生产实现：生产源码路径不得新增 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或进程内状态应用服务来承载真实业务能力。
 
 ## 5. 测试与 CR
@@ -109,5 +116,6 @@
 - Bug 修复先补能复现失败的回归测试；新增资金、权限、审计、状态机、幂等或并发逻辑时补对应红线断言。
 - 测试说明放在测试方法名、Javadoc 或方法级注释中，表达场景、输入、行为、输出和红线；测试结构优先 Given/When/Then 或 Arrange/Act/Assert。
 - 完成 TDD 或 AI 生成实现后做设计质量回看：是否新增浅服务、透传接口、无主依赖、过度抽象、内部链路 mock、AI 注释噪声或只为过测试的战术实现。
-- CR 检查 opt-in、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
+- CR 检查 opt-in、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全等级、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
 - Wind opt-in 项目可加低成本结构守卫：`*ServiceImpl` 不落错误根包；face 公开签名不出现 Entity、Mapper、Repository 或 MyBatis `Page`；impl 内部基础服务接口不暴露 Entity 或 QueryWrapper；组合、生命周期、应用层服务不直接依赖已有实体 Mapper；同一 Service 多实现时存在唯一主对外实现或明确装配规则。
+- 接入 Open Code Review / OCR 时，Wind 约规可作为项目 `.opencodereview/rule.json` 或 `ocr review --background` 的规则输入，重点覆盖 face/impl、模型归位、Entity 不外露、基础服务、查询命名、内网 API、字典/国际化、MyBatis Flex、币种枚举、测试黑盒和内存服务红线；但 OCR 不是 Wind 规则权威，工具输出必须由 `资深架构师` 按源码事实、项目 `AGENTS.md`、测试结果和本 Skill 重新判读。

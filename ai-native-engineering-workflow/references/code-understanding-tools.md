@@ -1,10 +1,10 @@
 # AI 代码理解工具入口
 
-本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 本地执行型 Coding Agent 工具在 AI Native 研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁或生成候选 diff；不把任何工具写成默认依赖，也不替代源码阅读、测试、CR、项目编码约规或用户授权。
+本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 外部代码评审工具 / 本地执行型 Coding Agent 工具在 AI Native 研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁、提供外部 Review 证据或生成候选 diff；不把任何工具写成默认依赖，也不替代源码阅读、测试、CR、项目编码约规或用户授权。
 
 ## 使用时机
 
-- 用户直接点名 Gemini CLI、AgentRC、Understand Anything、Ponytail、WorkBuddy、本地执行型 Coding Agent、AI 快速阅读代码、上下文工程工具、代码库理解工具、知识图谱工具、最小正确实现、过度设计 CR 或“安装/调用某个工具分析代码”。
+- 用户直接点名 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、OCR、WorkBuddy、本地执行型 Coding Agent、AI 快速阅读代码、上下文工程工具、代码库理解工具、知识图谱工具、AI 代码评审工具、最小正确实现、过度设计 CR 或“安装/调用某个工具分析代码 / 审查代码”。
 - 陌生代码库需要快速形成入口路径、模块职责、关键调用关系、运行方式和风险结论。
 - PRD、OpenSpec、系统设计、Harness Plan 或 ADR 已有，但需要对齐真实代码实现、模块边界、测试和运行脚本。
 - AI 生成了多文件 diff、重构计划、接口迁移或状态机调整，团队看不清影响范围。
@@ -19,7 +19,7 @@
 
 ## 读取后必须产出
 
-- 工具触发结论：不用工具、只读侦察、建议安装/调用 Gemini CLI、建议安装/调用 AgentRC、建议安装/调用 Understand Anything、建议启用 Ponytail 最小正确实现门禁、建议按 WorkBuddy 类本地执行型 Agent 准入生成候选 diff，或只记录人工替代路径。
+- 工具触发结论：不用工具、只读侦察、建议安装/调用 Gemini CLI、建议安装/调用 AgentRC、建议安装/调用 Understand Anything、建议启用 Ponytail 最小正确实现门禁、建议调用 Open Code Review 作为外部代码评审 Checker、建议按 WorkBuddy 类本地执行型 Agent 准入生成候选 diff，或只记录人工替代路径。
 - 安装 / 调用准入：来源、安装方式、认证要求、联网需求、写入范围、隐私边界、是否 dry-run、用户授权缺口。
 - 代码库理解任务包：目标、输入材料、只读范围、禁止事项、期望输出、源码锚点、验证证据和残余风险。
 - 设计-代码对齐结论：设计条款、代码入口、实现状态、偏差、测试证据、需架构师确认的问题。
@@ -45,6 +45,7 @@
 | Gemini CLI 代码理解 | 3、8 | 不默认联网或授权写文件 |
 | Understand Anything 代码库知识图谱 | 3、9 | 不默认安装插件、写 `.understand-anything/`、启用 hook 或提交图谱 |
 | Ponytail 最小正确实现 / 过度设计 CR | 3、10 | 不替代 correctness/security review、TDD 或架构师源码级判断 |
+| Open Code Review 代码评审 Checker | 3、10A | 不替代项目编码约规、Wind 项目编码约规、TDD 或架构师 CR |
 | WorkBuddy 类本地执行型 Agent | 3、6A、11 | 不替代项目编码约规、Wind 项目编码约规、TDD 或架构师 CR |
 | 工具输出进入 CR | 6、11 | 不把总结当验证结果 |
 
@@ -60,6 +61,7 @@
 | “安装 AgentRC / 生成 agent instructions / readiness” | 先做写入范围和生成物治理检查。 |
 | “安装 Understand Anything / 生成知识图谱 / 打开 dashboard” | 先做插件安装、写入目录、hook、图谱提交和隐私边界检查。 |
 | “安装 Ponytail / 用 Ponytail review / 做最小正确实现检查” | 先做 Codex 插件、lifecycle hook、Node 依赖、写入配置和 CR 范围检查。 |
+| “安装 Open Code Review / 用 OCR review / 接入 AI 代码评审工具” | 先做 CLI、Codex plugin、LLM provider、联网 / token、读取范围、写入会话目录、项目规则来源和架构师裁决边界检查。 |
 | “参考 WorkBuddy / 让本地 Agent 读项目、改代码、跑验证” | 先做本地执行型 Coding Agent 准入；只允许生成候选 diff，必须读取项目上下文、写入范围、验证命令和冲突 Ask-or-Decide。 |
 | “让工具直接改代码/跑测试/提交” | 回到 Harness、Execution Grant 和 `资深架构师`；本技能不授权执行。 |
 
@@ -86,7 +88,7 @@
 用户授权缺口:
 ```
 
-默认建议先选择只读、非写入、最小范围、可审计输出。需要 `npm install`、`npx`、OAuth、API key、GitHub token、写入 `.github/`、`.vscode/`、`AGENTS.md`、CI 或项目配置时，必须显式列出并等待用户授权。当前机器已验证 Gemini CLI `0.49.0` 可在 Node `20.20.2` 下启动；这只代表本地命令可用，不代表已登录、可联网、可搜索、可读取任意仓库或可写文件。
+默认建议先选择只读、非写入、最小范围、可审计输出。需要 `npm install`、`npx`、OAuth、API key、GitHub token、LLM token、写入 `.github/`、`.vscode/`、`AGENTS.md`、CI、项目配置或用户级工具配置时，必须显式列出并等待用户授权。当前机器已验证 Gemini CLI `0.49.0` 可在 Node `20.20.2` 下启动；这只代表本地命令可用，不代表已登录、可联网、可搜索、可读取任意仓库或可写文件。
 
 ## 3. 工具选择
 
@@ -96,6 +98,7 @@
 | AgentRC | 评估仓库 AI-readiness、生成/评估 agent instructions、eval、开发配置、监控上下文漂移。 | 默认写入 `.github/copilot-instructions.md`、`.vscode/mcp.json`、`.vscode/settings.json`、`agentrc.eval.json`、CI 配置或组织级策略。 |
 | Understand Anything | 把大型代码库、文档库或知识库转成可搜索、可点击、可提问的知识图谱；适合新人 onboarding、团队共享结构视图、diff impact、domain view 和代码库理解 dashboard。 | 默认安装插件、运行远端安装脚本、写 `.understand-anything/`、启用 post-commit hook、提交 graph、把图谱当架构事实或替代 CR。 |
 | Ponytail | 编码实现前做最小正确实现门禁，编码评审时做过度设计专项检查，识别可复用现有代码、标准库、平台原生能力、已安装依赖、单实现抽象、无用配置和可删除复杂度。 | 作为新主流程、替代 TDD / correctness / security / 架构 CR，或以“少写”为理由删除边界校验、错误处理、资金/权限/安全兜底和必要测试。 |
+| Open Code Review | 对 Git diff、commit 或分支差异做结构化 AI 代码评审；适合在架构师 CR 前提供文件覆盖、行级问题和外部 Checker 证据，也可用 `.opencodereview/rule.json` 承载项目规则。 | 替代架构师源码级判断、项目编码约规、Wind 约规、TDD、测试结果、发布审批、自动修复授权，或在 LLM provider 未配置时写成可用 CR 结论。 |
 | WorkBuddy / 本地执行型 Coding Agent | 在已授权本地仓库中先读项目上下文，再按项目规则生成候选 diff、依赖 / 配置变更建议、验证结果和修复建议。 | 默认安装、联网、写文件、覆盖配置、替代 `AGENTS.md`、Wind 项目编码约规、`资深架构师` 编码约规、TDD、CR 或生产授权。 |
 | 人工 / Codex 内置工具 | 只读查看源码、运行本地验证、生成可审查结论。 | 大规模跨仓库上下文治理或外部工具专有能力。 |
 
@@ -286,9 +289,53 @@ Ponytail 插件准入必须检查：
 - **不把少写当目标**：代码变少是结果，不是 code golf；目标是只写任务需要且不牺牲输入校验、错误处理、安全、可访问性、资金 / 权限 / 生产兜底、持久化意图、幂等、审计和必要测试。
 - **不把 benchmark 当项目事实**：外部 benchmark 和收益数据只能作为参考，项目内仍看 diff 体积、返工率、CR 轮次、缺陷率、回滚率和 owner 理解程度。
 
+## 10A. Open Code Review 触发入口
+
+Open Code Review 适合做“外部代码评审 Checker”，不是新的编码规范来源：
+
+- 对当前 staged / unstaged / untracked diff 做结构化 Review，先用 `ocr review --preview` 看覆盖范围。
+- 对单个 commit 或分支差异做 Review，使用 `--commit` 或 `--from` / `--to`。
+- 用 `--background` 注入业务目标、OpenSpec、验收种子、Wind 约规或架构师 CR 重点，降低泛泛而谈。
+- 用项目级 `.opencodereview/rule.json` 或 `--rule` 引用项目规则；Wind opt-in 项目可把 Wind 约规摘要作为规则输入，但权威仍是 `wind-project-coding-conventions` 和项目 `AGENTS.md`。
+
+准入检查：
+
+```text
+CLI 是否可用:
+Codex plugin 是否可用:
+版本 / 来源:
+LLM provider 是否配置并通过 ocr llm test:
+是否允许联网 / 调 LLM:
+是否允许上传 diff / 代码片段到模型端:
+读取范围: workspace / commit / from-to / scan path
+文件覆盖: preview 的 Will review / Excluded 清单是否覆盖本次关键文件
+写入范围: ~/.opencodereview session / 项目 rule.json / 无
+规则来源: 项目 AGENTS.md / 架构师编码约规 / Wind 约规 / 自定义 rule
+是否只预览:
+是否允许自动修复:
+架构师 CR owner:
+```
+
+默认调用顺序：
+
+```text
+ocr review --preview
+ocr llm test
+ocr review --audience agent --background "<业务目标 / Spec / 约规 / Review 重点>"
+```
+
+边界：
+
+- `ocr review --preview` 只证明文件选择可预览，不证明 LLM 连通、Review 有效或代码通过。
+- 先检查 `ocr review --preview` 的 Will review / Excluded 清单；被 `unsupported_ext` 或规则过滤排除的 Markdown、Skill 文档、配置、SQL、脚本等关键文件，不能算入 OCR 覆盖证据，必须由架构师或对应 Skill 继续人工 / 脚本 CR。
+- `ocr llm test` 未通过时，不进入 OCR AI Review；只能报告配置缺口和人工替代路径。
+- OCR 输出必须按严重级别、源码锚点、真实性、是否符合项目 / Wind / 架构师约规重新判读；低置信度、定位失败或无上下文建议不得直接采纳。
+- 自动修复必须单独授权，且修复后仍需 TDD / 测试 / 静态检查 / 架构师 CR；不能把 OCR 的 fix 建议当 Execution Grant、Git 授权或合并准出。
+- 对敏感代码、生产配置、密钥、客户数据或禁止外发仓库，必须确认模型端、网关和脱敏边界；不清楚时不调用 OCR。
+
 ## 11. 红线
 
-- 不把 Gemini CLI、AgentRC、Understand Anything、Ponytail、WorkBuddy 或任何外部工具写成当前会话默认可用。
+- 不把 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 或任何外部工具写成当前会话默认可用。
 - 不默认安装、联网、登录、写文件、写配置或改代码；需要时必须列出授权缺口并等待用户确认。
 - 不默认运行远端安装脚本、插件安装命令、lifecycle hook、`/understand`、`/understand --auto-update`、dashboard、本地服务、post-commit hook 或 Git LFS 配置。
 - 不默认写入 `.github/copilot-instructions.md`、`.vscode/mcp.json`、`.vscode/settings.json`、`agentrc.eval.json`、`AGENTS.md`、CI 配置或组织级策略。
@@ -298,5 +345,6 @@ Ponytail 插件准入必须检查：
 - 不把 WorkBuddy 类工具输出当成项目编码约规；默认先服从项目 `AGENTS.md`、项目已有代码风格、`wind-project-coding-conventions` opt-in 规则和 `资深架构师` 源码级判断。
 - 不把工具总结当作源码事实；关键结论必须回链文件路径、函数、类型、配置或验证命令。
 - 不把 Ponytail 的“少写”当作删除输入校验、错误处理、安全、可访问性、资金/权限/生产兜底或必要测试的理由。
+- 不把 Open Code Review 输出当作项目规范、架构师 CR 结论、测试通过、发布准出或自动修复授权；它只是外部 Checker 证据源。
 - 不把外部 benchmark、star 数或插件生态热度写成当前项目收益、工程质量、测试通过、CR 结论或上线依据。
 - 不把工具输出当作 Execution Grant、CAD 授权、测试通过、发布批准或合规结论。

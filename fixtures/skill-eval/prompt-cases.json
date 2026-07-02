@@ -679,6 +679,20 @@
       "expected_handling": "进入代码生成前置编排路径，只判断结构化输入、写入范围、覆盖风险和人工确认点，再把实际生成分派给 java-service-code-generator。"
     },
     {
+      "id": "ai-native-should-admit-open-code-review",
+      "skill": "ai-native-engineering-workflow",
+      "query": "用 AI Native 评估并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，同时和架构师编码约规、Wind 项目约规协作，不要替代 TDD、源码级 CR 或自动修复授权。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Wind opt-in 项目把 Wind 约规作为 .opencodereview/rule.json 或 --background 规则输入；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
+    },
+    {
       "id": "ai-native-should-route-wind-agents-init",
       "skill": "ai-native-engineering-workflow",
       "query": "用 AI Native Engineering Loop 给一个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续产品专家、资深架构师、Wind 约规和代码生成器按项目规则协作。",
@@ -1164,7 +1178,7 @@
     {
       "id": "wind-project-coding-conventions-should-trigger-opt-in",
       "skill": "wind-project-coding-conventions",
-      "query": "这个项目 AGENTS.md 已标明遵守 Wind 项目编码约规，请按 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、Entity 不外露和 MyBatis Flex 查询做一轮规则检查。",
+      "query": "这个项目 AGENTS.md 已标明遵守 Wind 项目编码约规，请按 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、查询字段和服务查询方法、内网 API、安全等级、字典国际化、Entity 不外露和 MyBatis Flex 查询做一轮规则检查。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1172,7 +1186,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "进入 Wind 项目编码约规规则检查；先确认项目已 opt-in，再读取 wind-project-coding-conventions 主规则，输出适用性、触发约规、当前偏差、建议改法、后续 owner 和验证方式；规则判断由 wind-project-coding-conventions 承担，源码级设计、TDD、CR 和生产风险继续交给资深架构师。"
+      "expected_handling": "进入 Wind 项目编码约规规则检查；先确认项目已 opt-in，再读取 wind-project-coding-conventions 主规则，覆盖 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、查询字段命名、get/find/query 服务查询方法、/inc/basic 与 /inc/secure 内网 API、安全等级、系统字典/国际化、Entity 不外露和 MyBatis Flex；输出适用性、触发约规、当前偏差、建议改法、后续 owner 和验证方式；规则判断由 wind-project-coding-conventions 承担，通用 Java/日志/异常/数据库/测试方法论和源码级设计、TDD、CR、生产风险继续交给资深架构师。"
     },
     {
       "id": "wind-project-coding-conventions-should-trigger-package-ownership",

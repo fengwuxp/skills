@@ -22,6 +22,12 @@
 - Wind 示例权威：`wind-project-coding-conventions` Skill 的 `references/wind-project-coding-examples.md`。
 - 源码级实现、测试或 CR：回到 `coding-standards.md`、`project-governance-service-api-modeling.md`、`coding-review-deep-dive.md`、`testing.md` 和 `testing-practices.md`。
 
+## 重复规则归位
+
+- 通用 Java 命名、异常、技术日志、敏感信息、数据库 DDL、依赖治理、Spring/Lombok/MapStruct 使用和测试方法论，仍以架构师通用 reference 为准。
+- Wind opt-in 后的 face/impl、模型包位、基础服务模板、服务查询方法、`XxxQuery` 字段后缀、内网 API `/inc/basic` / `/inc/secure`、系统字典/国际化和业务事件 Key，回到 `wind-project-coding-conventions`。
+- 两边都提到 Service/API/DTO/Query 时，架构师负责源码事实、测试和风险闭环，Wind Skill 负责项目特化规则；不要把通用四层服务模型机械强套到 Wind 项目，也不要用 Wind 项目特化规则替代所有 Java 项目治理。
+
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |

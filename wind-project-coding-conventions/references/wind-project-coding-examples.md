@@ -95,3 +95,21 @@
 - 反例：`String state`、`Integer type`、`String currency` 或私有魔法常量出现在 DTO、Request、Entity、事件或公开服务签名中。
 - 正例：状态、类型、动作分别命名为 `XxxState`、`XxxType`、`XxxAction`，公开枚举放 face/core 的 `enums`，实现 `DescriptiveEnum` 并提供 `desc`；币种统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，外部字符串只在 Adapter/Converter 边界转换。
 - 验证点：公共契约、Entity、MapStruct 和测试是否都使用同一枚举类型；前端展示所需的名称、颜色、树结构是否通过 DTO/Converter 输出，而不是污染业务枚举。
+
+### 12. Query 字段命名表达语义
+
+- 反例：`startTime`、`endTime`、`nameLike`、`statusList`、`selectByStatus` 混用，调用方不知道是闭区间、模糊匹配、集合查询还是 SQL 直译。
+- 正例：默认等值不加后缀，例如 `status`；模糊用 `nameContains`；时间和金额范围用 `createdAtMin` / `createdAtMax`、`amountMin` / `amountMax`；集合用 `statusIn`；空值用 `deletedAtIsNull`。服务方法按 `get/find/query/exists/count/stats/summary` 表达存在性、条件查询和统计。
+- 验证点：`XxxQuery` 字段是否只表达业务条件；Service 是否避免 `select/load/fetch`；历史 `queryXxxById` 是否只是附近代码兼容，新代码能否改成 `get/find`。
+
+### 13. 内网 API 路径即安全语义
+
+- 反例：所有内部接口都放 `/inc/order/query`，再靠 header、备注或调用方约定区分是否需要签名；涉及资金、权限或用户数据的写操作仍走低风险路径。
+- 正例：低风险内部查询走 `/inc/basic/{domain}/{resource}/{action}`；涉及用户数据、资金、权限、关键配置或业务状态变化的接口走 `/inc/secure/{domain}/{resource}/{action}`，并由网关或拦截器验证内部来源、appKey、timestamp、nonce 和 signature。
+- 验证点：路径能否一眼看出安全等级；`basic` 是否只承载低风险能力；`secure` 是否有签名/鉴权、重放防护、审计和测试。
+
+### 14. 字典国际化不驱动业务逻辑
+
+- 反例：业务判断依赖 `"已支付"`、`"Paid"` 或前端展示名称；业务事件直接保存一整句中文，历史记录随文案修改而漂移。
+- 正例：业务逻辑依赖 `PaymentState.PAID`、`error.payment.order-not-found` 或 `event.payment.order-paid`；业务事件保存 `{eventKey, params}`，params 放订单号、金额、状态 code 等变量值，展示层再按语言渲染。
+- 验证点：Key 是否按 `ui.`、`enum.`、`error.`、`event.`、`config.` 等命名空间区分；同一中文在不同场景是否避免复用 Key；语义变化是否新增 Key 而不是改旧 Key。

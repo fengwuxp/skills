@@ -641,6 +641,9 @@ check(
             "Wind Rule Check Card",
             "未 opt-in 的普通 Java/Spring 项目，不强行套 Wind",
             "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
+            "查询字段/方法",
+            "内网 API",
+            "字典国际化",
             "生产源码路径不得新增内存版业务 Service",
         ],
     )
@@ -653,6 +656,7 @@ check(
             "模型归位",
             "Entity 不外露",
             "ServiceImpl",
+            "查询/API/字典",
             "AGENTS 初始化",
         ],
     )
@@ -664,6 +668,16 @@ check(
             "`wind-project-coding-conventions` Skill",
             "项目 `AGENTS.md` 明确 opt-in",
             "架构师负责源码级设计、TDD、CR 和验证",
+        ],
+    )
+    and has_all(
+        wind_coding,
+        [
+            "重复规则归位",
+            "服务查询方法",
+            "内网 API `/inc/basic` / `/inc/secure`",
+            "系统字典/国际化",
+            "架构师负责源码事实、测试和风险闭环，Wind Skill 负责项目特化规则",
         ],
     )
     and has_all(
@@ -693,6 +707,9 @@ check(
             "模型命名",
             "枚举命名",
             "应用层服务",
+            "查询字段命名",
+            "内网 API",
+            "系统字典/国际化",
             "DTO/Request/Query/Entity",
             "模型包归位",
             "分包规则",
@@ -735,11 +752,22 @@ check(
             "公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`",
             "`WindQuery<? extends QueryOrderField>`",
             "`DomainService` / `DomainQueryService` 不是 Wind 项目强制分层",
+            "四类服务是判断框，不是强制新增层",
+            "查询方法命名",
+            "`get` 表示必然存在",
+            "`find` 表示可能不存在",
+            "`query` 表示条件查询、列表、分页或统计",
+            "服务层不得使用 `select/load/fetch`",
             "写操作用业务动词",
             "Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口、事件/消息契约不得以 Entity、Mapper、Repository 或 MyBatis `Page` 作为入参、返回值或泛型",
             "离开 `*-impl` 边界前必须转换为 `DTO`、`Request`、`Query`、`Command`、`Event` 或值对象",
             "新代码的 `DTO`、`Request`、`Query`、`Command` 优先放在 `*-face` 或 `core` 的 `model/dto`、`model/request`、`model/query`、`model/command` 下",
             "模型命名",
+            "查询字段命名",
+            "默认等值查询不加后缀",
+            "`Contains/StartsWith/EndsWith`",
+            "`Min/Max`",
+            "`IsNull/IsNotNull`",
             "`CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest`、`ExecuteXxxRequest`",
             "对应 Java 包名通常是 `*.model.dto`、`*.model.request`、`*.model.query`、`*.model.command`",
             "历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包",
@@ -758,9 +786,16 @@ check(
             "枚举命名和模板",
             "生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`",
             "公开枚举优先实现 `DescriptiveEnum`",
+            "系统字典、国际化和业务事件",
+            "业务逻辑、持久化判断和状态机只能依赖 code、enum、errorCode 或 eventKey",
+            "业务事件、审计展示和可回放消息存 `{eventKey, params}`",
             "`MybatisQueryHelper.from(options)`",
             "`XxxNameRefs`",
+            "`orderFields` / `orderTypes`",
             "`Pagination.empty()`",
+            "内网 API 路径表达安全等级",
+            "`/inc/basic/**`",
+            "`/inc/secure/**`",
             "impl 的 `webhook`、`listener`、`handler`、`executor` 负责协议解析、签名校验、状态映射、幂等和投递",
             "ApplicationService / ServiceImpl 流程测试保留真实内部协作者",
             "TDD 先写能失败的行为测试",
@@ -769,6 +804,8 @@ check(
             "生产源码路径不得新增 `InMemoryXxxService`",
             "Entity 是否泄漏到服务层/接口契约",
             "模型包归位",
+            "`XxxQuery` 字段后缀",
+            "字典/国际化 Key",
             "core/infrastructure 是否变成公共垃圾桶",
             "项目本地 `AGENTS.md` 写明即可",
             "wind-project-agents-template.md",
@@ -853,6 +890,15 @@ check(
             "`queryXxxs(XxxQuery, WindQuery<? extends QueryOrderField>) -> WindPagination<XxxDTO>`",
             "枚举是业务语言，不是字符串常量袋",
             "`XxxState`、`XxxType`、`XxxAction`",
+            "Query 字段命名表达语义",
+            "默认等值不加后缀",
+            "`nameContains`",
+            "`createdAtMin` / `createdAtMax`",
+            "内网 API 路径即安全语义",
+            "`/inc/basic/{domain}/{resource}/{action}`",
+            "`/inc/secure/{domain}/{resource}/{action}`",
+            "字典国际化不驱动业务逻辑",
+            "`{eventKey, params}`",
         ],
     )
     and has_all(
@@ -1187,7 +1233,7 @@ check(
         [
             "WorkBuddy 类本地执行型 Agent",
             "本技能只做准入、权限、联网/认证/写入边界和交接格式判断",
-            "不把外部 Superpowers skill、Matt Pocock skills、Grilling、Ponytail、WorkBuddy",
+            "不把外部 Superpowers skill、Matt Pocock skills、Grilling、Ponytail、Open Code Review、WorkBuddy",
         ],
     )
     and has_all(
@@ -3317,7 +3363,7 @@ check(
             "角色协作阶段只是编排坐标，不是能力来源",
             "不允许让 AI 随机推进模拟模块",
             "内存版业务 Service",
-            "Gemini CLI / AgentRC / Understand Anything / Ponytail 准入",
+            "Gemini CLI / AgentRC / Understand Anything / Ponytail / Open Code Review 准入",
             "用 AI Native Engineering Loop：按当前材料进入角色协作 Loop，只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险。",
         ],
     ),
@@ -9844,6 +9890,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
     ),
     RouteFixture(
+        name="wind project query api dictionary conventions",
+        prompt="这个项目已 opt-in Wind 项目编码约规，参考查询字段命名、服务层查询方法命名、内网 API 命名及安全、系统字典配置与国际化规范做规则检查，并判断和架构师编码约规是否重复",
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"},
+    ),
+    RouteFixture(
         name="wind project coding conventions opt in tdd",
         prompt="这个 wind 项目 AGENTS.md 已标明遵守 Wind 项目编码约规，帮我按 TDD 给 ServiceImpl 和基础服务补测试，重点看真实内部链路、QueryWrapper、Mapper 语义和外部端口替身边界",
         routes={"wind", "senior", "coding-standards.md", "testing.md", "wind-project-coding-conventions.md"},
@@ -10147,6 +10198,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native Ponytail minimal implementation admission",
         prompt="用 AI Native Engineering Loop 评估 Ponytail 是否适合加入编码 Loop：要求编码前做最小正确实现检查，CR 时做过度设计专项检查，但不要默认启用 hook 或替代 TDD、安全和架构师源码级 Review",
         routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md"},
+    ),
+    RouteFixture(
+        name="AI Native Open Code Review checker admission",
+        prompt="安装并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，结合架构师编码约规和 Wind 项目约规做 CR，但不要替代 TDD、源码级 CR、Git 授权或自动修复审批",
+        routes={"ai-native", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "wind", "wind-project-coding-conventions.md"},
     ),
     RouteFixture(
         name="AI Native Karpathy coding hygiene admission",
@@ -10507,7 +10563,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("spec-template-practices.md")
         if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "SDD", "SDD v6", "SSD 套件", "SDD 套件", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "update-context", "上下文回写", "L0/L1/L2", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断", "task-reviewer", "progress ledger", "pre-flight plan review"]):
             route.add("code-delivery-closed-loop.md")
-        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
+        if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "代码评审工具", "独立 Checker", "外部 Checker", ".opencodereview", "rule.json", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "上下文工程", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.0", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "Trellis", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
@@ -10522,7 +10578,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "设计模式的本质", "找到变化", "封装变化", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "设计模式的本质", "找到变化", "封装变化", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -10607,7 +10663,7 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
-    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity", "浅服务", "单实现抽象", "套设计模式"]):
+    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity", "浅服务", "单实现抽象", "套设计模式", "查询字段命名", "服务层查询方法", "服务查询方法", "XxxQuery", "内网 API", "/inc/basic", "/inc/secure", "系统字典", "国际化", "eventKey"]):
         route.update({"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
         if contains_any(prompt, ["AGENTS", "AGENTS.md", "初始化", "改进", "模板", "项目约规入口", "AI Native"]):
             route.update({"wind-project-agents-template.md", "ai-native"})
@@ -10627,7 +10683,7 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
     if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
         route.update({"senior", "testing.md", "workflow.md"})
-    if contains_any(prompt, ["Ponytail", "Karpathy", "Andrej", "karpathy-guidelines", "最小正确实现", "外科手术式变更", "外科手术式改动", "过度设计 CR", "过度设计专项", "源码级 Review", "设计模式", "找到变化", "封装变化", "真实变化轴", "接口", "策略", "工厂", "状态机", "规则层", "配置化"]):
+    if contains_any(prompt, ["Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "外部 Checker", "独立 Checker", "Karpathy", "Andrej", "karpathy-guidelines", "最小正确实现", "外科手术式变更", "外科手术式改动", "过度设计 CR", "过度设计专项", "源码级 Review", "设计模式", "找到变化", "封装变化", "真实变化轴", "接口", "策略", "工厂", "状态机", "规则层", "配置化"]):
         route.update({"senior", "coding-review-deep-dive.md", "coding-standards.md"})
     if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
@@ -10657,6 +10713,13 @@ def route_fixture(prompt: str) -> set[str]:
             route.update({"ai-native", "product-to-engineering-lifecycle.md"})
         if contains_any(prompt, ["pm-skills", "phuryn/pm-skills"]):
             route.add("source-map.md")
+        if contains_any(prompt, ["Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", ".opencodereview", "rule.json", "外部 Checker", "独立 Checker"]):
+            route.add("code-understanding-tools.md")
+            route.add("verification-review-release.md")
+            route.add("coding-review-deep-dive.md")
+            if contains_any(prompt, ["Wind", "Wind 项目约规", "Wind 项目编码约规", "项目约规"]):
+                route.add("wind")
+                route.add("wind-project-coding-conventions.md")
     if contains_any(prompt, ["产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链"]):
         route.add("product-insight-analyst.md")
     if contains_any(prompt, ["产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "Reviewer", "AI 生成的", "AI 生成方案"]):
@@ -11318,14 +11381,38 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "ai-native-should-admit-open-code-review",
+    (
+        "工具准入",
+        "Open Code Review / OCR",
+        "CLI",
+        "Codex plugin",
+        "LLM provider",
+        "preview 文件覆盖/排除清单",
+        "Wind 约规",
+        "外部 Checker 证据",
+        "资深架构师",
+        "不替代 TDD",
+        "源码级 CR",
+        "Git 授权",
+        "上线审批",
+    ),
+)
+
+expected_handling_has(
     "wind-project-coding-conventions-should-trigger-opt-in",
     (
         "Wind 项目编码约规规则检查",
         "项目已 opt-in",
         "wind-project-coding-conventions 主规则",
+        "查询字段命名",
+        "get/find/query 服务查询方法",
+        "/inc/basic 与 /inc/secure 内网 API",
+        "系统字典/国际化",
         "适用性",
         "触发约规",
-        "源码级设计、TDD、CR 和生产风险继续交给资深架构师",
+        "通用 Java/日志/异常/数据库/测试方法论",
+        "源码级设计、TDD、CR、生产风险继续交给资深架构师",
     ),
 )
 
