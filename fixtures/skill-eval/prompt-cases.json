@@ -323,7 +323,7 @@
     {
       "id": "ai-native-should-wisdom-lens-loop-scheduling",
       "skill": "ai-native-engineering-workflow",
-      "query": "用 Loop 取舍校准增强 AI Native Loop：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏和停止判断；不要替代事实、测试、CR、授权或上线审批。",
+      "query": "请老祖宗用 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -333,7 +333,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
+      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
     },
     {
       "id": "ai-native-should-review-ai-coding-process",
