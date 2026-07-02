@@ -34,6 +34,7 @@
 
 - **可读优先**：代码首先写给人看，命名、结构、注释和测试应能表达业务意图。
 - **边界清晰**：Controller、Application、Domain、Infrastructure、Converter、Repository、Test 各司其职，不穿透职责边界。
+- **体用不混**：业务逻辑表达不变量、状态、规则和决策；控制逻辑处理遍历、查找、异步、回调、线程、IO、协议解析等机制，并收进 helper、适配层、状态机或基础设施。
 - **契约明确**：入参、返回、异常、空值、权限、幂等、分页、兼容和序列化语义必须清楚。
 - **最小正确**：新增代码前先确认是否无需新增、已有实现可复用、标准库/平台原生/已安装依赖可覆盖，再写最小可验证实现。
 - **失败可控**：异常、事务、重试、补偿、日志、告警和人工兜底必须匹配业务风险。
@@ -140,6 +141,7 @@
 - 【强制】不得为单实现接口、单调用工厂、没人配置的配置项、未来可能才需要的扩展点或无 owner 依赖新增复杂度；真实变化轴、owner、验收方式和测试边界不清时，先保持显式代码。
 - 【强制】不得为了套设计模式而新增接口、策略、工厂、状态对象、规则层或配置项；只有业务规则、状态行为、外部依赖、平台差异或技术选型已经形成真实变化轴，并能说明 owner、验收方式和测试边界时，才允许封装变化。
 - 【强制】不得以“少写代码”为理由删除输入校验、错误处理、防御式编程、安全/权限/资金兜底、审计、可访问性、持久化意图、幂等或必要测试。
+- 【强制】业务逻辑与控制逻辑不得混杂在同一方法中；一个方法不应同时负责取数、遍历、分支、状态修改、异步调度和业务决策。先定业务不变量、状态、规则和决策，再把遍历、查找、线程、回调、IO、协议解析等控制机制收进 helper、适配层、状态机或基础设施。
 - 【强制】不得为了隐藏复杂度而制造过深调用链；抽取方法后仍应能从调用点理解业务主流程、状态变化和副作用。
 - 【强制】不得保留无业务语义的单行透传方法；公有或私有方法如果只是原样转调、原样传参、改名包装或返回下游结果，且没有新增业务命名、边界校验、权限/审计、事务语义、异常转换、观测埋点、稳定契约或可测试隔离，应删除并内联调用。
 - 【推荐】DTO、VO、Request、Response、Query、Command 等模型的构建逻辑通常没有跨业务复用价值；除非存在稳定映射规则、兼容转换或多处强一致契约，否则不要提取为公有工具方法。
@@ -305,6 +307,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 【强制】Query 使用 `XxxQuery`，Request 使用 `XxxRequest`，DTO 使用 `XxxDTO`；创建、更新、保存等语义通过 `CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest` 等前缀区分。
 - 【强制】对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity、Mapper、Repository、内部状态机对象或持久化实现细节。
 - 【强制】Controller / Web API / face/api 对外契约禁止直接接收或返回 Entity；ApplicationService、DomainQueryService 对外返回 DTO/VO/Result，不把 Entity 泄露到模块边界外。
+- 【强制】Controller、Web API、MQ Listener、Webhook handler、回调函数和定时任务入口不得承载核心业务规则；这些入口只做协议解析、权限/签名校验、幂等入口、模型转换和转交，业务决策回到 Service、ApplicationService、Domain Service 或领域模型边界。
 - 【强制】接口、Service、ApplicationService、Facade、Adapter 的拆分必须承载真实业务职责、业务抽象或稳定契约，例如用例编排、事务边界、权限/审计、状态转换、跨资源协调、异常聚合或对外协议隔离；不得新增只透传调用、只改名转发、一行包装或似是而非的抽象。没有新增业务职责时，优先直接复用现有服务或保持局部实现。
 - 【强制】DTO、VO、Request、Response、Query、Command、Event 等数据传输对象的成员变量不得使用 `boolean`、`byte`、`short`、`int`、`long`、`float`、`double`、`char` 等 Java 原生基本类型，也不得使用 `AtomicInteger`、`AtomicLong`、`AtomicBoolean`、`AtomicReference`、`LongAdder`、`DoubleAdder` 等并发原子类型。数据传输对象是序列化契约和数据快照，应使用包装类型、枚举、值对象或明确的业务类型表达可缺省、默认值、精度和序列化语义；并发计数、CAS 状态变更和累加逻辑应在领域服务、聚合或基础设施层完成，再映射为普通契约字段。
 - 【强制】业务代码不得用内存版 Service 冒充生产实现。除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外，生产源码路径不得新增 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或只在进程内保留状态的应用服务来承载真实业务能力；需要临时验证时必须放在测试源码、fixture、demo 边界或受控沙盒中，并在交付中说明不能代表生产能力。
