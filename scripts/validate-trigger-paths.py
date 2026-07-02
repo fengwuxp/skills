@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 agents_rules = "AGENTS.md"
+repo_source_map = "references/source-map.md"
 
 
 def read(path: str) -> str:
@@ -1349,7 +1350,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "设计模式的本质",
             "真实变化轴、稳定边界、职责分离、依赖倒置",
@@ -1387,7 +1388,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "Wisdom Lens",
             "内部路由",
@@ -2236,7 +2237,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "问题核心诊断、反脑补证据边界、概念定名、需求止损",
             "定向 / 定性 / 定位 / 定量变化治理",
@@ -2419,7 +2420,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "Spec/SDD 模板最佳实践",
             "Spec 驱动开发：让 AI 知道该写什么，不该写什么",
@@ -2627,7 +2628,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "Loop Engineering又是啥？一文讲清企业Agent落地的四层工程进化论",
             "L1-L4 工程成熟度诊断参考来源",
@@ -2765,7 +2766,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "架构排熵",
             "内部路由",
@@ -3023,7 +3024,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "一个让Codex变得越来越聪明的小方法",
             "Skill 自我改进外循环",
@@ -3062,7 +3063,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "如何让 AI 画出高质量架构图，一个Skill搞定",
             "陌生代码库图形化理解",
@@ -4000,7 +4001,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "如何评估你写的 SKILL.md 质量？一套完整的 Eval 方法论",
             "触发准确率、输出质量、效率指标、真实 prompt、难负例、对照实验和方差检查",
@@ -4191,9 +4192,9 @@ check(
     ),
 )
 check(
-    "README records Superpowers skills library source",
+    "repo source map records Superpowers skills library source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "obra/superpowers",
             "外部 skills library",
@@ -4213,9 +4214,9 @@ check(
     ),
 )
 check(
-    "README records intent to production loop engineering source",
+    "repo source map records intent to production loop engineering source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "Loop Engineering：让 AI 自己跑起来，你只管验收",
             "https://mp.weixin.qq.com/s/Ng_qit1H5t6yhqjVGNIHzg",
@@ -4227,9 +4228,9 @@ check(
     ),
 )
 check(
-    "README records huaxia wisdom source boundary",
+    "repo source map records huaxia wisdom source boundary",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "aiami/huaxia-wisdom",
             "Loop 取舍校准 / Wisdom Lens",
@@ -4242,9 +4243,9 @@ check(
     ),
 )
 check(
-    "README records Anthropic internal skills practice source",
+    "repo source map records Anthropic internal skills practice source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "重磅！Anthropic内部Skills经验公开了！",
             "仓库级 Skill 治理",
@@ -4259,9 +4260,9 @@ check(
     ),
 )
 check(
-    "README records AI product postmortem source boundary",
+    "repo source map records AI product postmortem source boundary",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "阿里内网万言离职书〈置身钉内〉原文，已刷屏",
             "公开转述/OCR 复盘参考来源",
@@ -4275,9 +4276,9 @@ check(
     ),
 )
 check(
-    "README records AI full-stack workflow article boundary",
+    "repo source map records AI full-stack workflow article boundary",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
             "AI Native 研发流程编排",
@@ -4290,9 +4291,9 @@ check(
     ),
 )
 check(
-    "README records fireworks tech graph reference source",
+    "repo source map records fireworks tech graph reference source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "yizhiyanhua-ai/fireworks-tech-graph",
             "图形化 Skill 产品化、风格系统、语义形状/箭头、模板化、fixture 化、SVG 导出和渲染校验思路",
@@ -4302,9 +4303,9 @@ check(
     ),
 )
 check(
-    "README records Google engineering practices reference source",
+    "repo source map records Google engineering practices reference source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "google/eng-practices",
             "代码评审标准、评论分级、变更颗粒度、作者/评审者协作和持续改善代码健康",
@@ -4314,9 +4315,9 @@ check(
     ),
 )
 check(
-    "README records Ivy skills reference source",
+    "repo source map records Ivy skills reference source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "Ivy-piger/Ivy-skills",
             "陌生代码库侦察",
@@ -4330,9 +4331,9 @@ check(
     ),
 )
 check(
-    "README records cg0x frame analysis reference source",
+    "repo source map records cg0x frame analysis reference source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "cg0x-skills/cg0x-frame-analysis",
             "探索期反路径锁定、多框架分析、假设/盲区/失败条件自检",
@@ -4343,9 +4344,9 @@ check(
     ),
 )
 check(
-    "README records SkillX reference source",
+    "repo source map records SkillX reference source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "zjunlp/SkillX",
             "SkillX: Automatically Constructing Skill Knowledge Bases for Agents",
@@ -4356,9 +4357,9 @@ check(
     ),
 )
 check(
-    "README records architecture principles WeChat source",
+    "repo source map records architecture principles WeChat source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "架构8：架构设计三原则",
             "https://mp.weixin.qq.com/s/wc3xeSbBqb6ktEDz2ZuK7g",
@@ -4369,9 +4370,9 @@ check(
     ),
 )
 check(
-    "README records architect thinking WeChat source",
+    "repo source map records architect thinking WeChat source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "架构师底层思维能力要求-这7种尽早练习",
             "https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q",
@@ -4382,9 +4383,9 @@ check(
     ),
 )
 check(
-    "README records communication complexity WeChat source",
+    "repo source map records communication complexity WeChat source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "软件复杂性的本质是通信复杂性",
             "https://mp.weixin.qq.com/s/1MbijKDxD2B4wa1E9QTnAw",
@@ -4396,9 +4397,9 @@ check(
     ),
 )
 check(
-    "README records software design philosophy source",
+    "repo source map records software design philosophy source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "《软件设计的哲学》：复杂性的本质与模块化设计",
             "https://mp.weixin.qq.com/s/gXhOwvKH5t6BxsxcoqUS2w",
@@ -4415,9 +4416,9 @@ check(
     ),
 )
 check(
-    "README records AI diagram and UX mapping sources",
+    "repo source map records AI diagram and UX mapping sources",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "架构师必备--让AI画架构图",
             "https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg",
@@ -4435,9 +4436,9 @@ check(
     ),
 )
 check(
-    "README records requirements analysis and design source",
+    "repo source map records requirements analysis and design source",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "需求分析和设计活动关键要点总结",
             "https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q",
@@ -4450,9 +4451,9 @@ check(
     ),
 )
 check(
-    "README records AI-shaped readiness advisor boundary",
+    "repo source map records AI-shaped readiness advisor boundary",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "现在我敢评测这个 skill 了，产品负责人来看看这个自评卡吧",
             "https://mp.weixin.qq.com/s/ZUwtGYYTzt-c2YRXn8ryJw",
@@ -4467,9 +4468,9 @@ check(
     ),
 )
 check(
-    "README records product manager methodology book boundary",
+    "repo source map records product manager methodology book boundary",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "产品经理方法论",
             "赵丹阳",
@@ -4481,9 +4482,9 @@ check(
     ),
 )
 check(
-    "README records business-driven architecture reference sources",
+    "repo source map records business-driven architecture reference sources",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "SEI ATAM",
             "Microsoft Azure Domain Analysis",
@@ -4822,7 +4823,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record Clean Architecture dependency rule source",
+    "senior source maps record Clean Architecture dependency rule source",
     has_all(
         senior_source_map,
         [
@@ -4841,7 +4842,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "Clean Architecture 整洁架构",
             "Clean Architecture 依赖规则、依赖反转、业务规则/用例规则分离和可测试性诊断",
@@ -4852,7 +4853,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record DDD principles architecture tradeoff article group",
+    "senior source maps record DDD principles architecture tradeoff article group",
     has_all(
         senior_source_map,
         [
@@ -4872,7 +4873,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "用了 DDD 还是写不好业务代码？因为你把它当成了架构模式",
             "7 条开发原则你都知道，但一条都用不对",
@@ -5214,7 +5215,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record GSD workflow boundary",
+    "senior source maps record GSD workflow boundary",
     has_all(
         senior_source_map,
         [
@@ -5231,7 +5232,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "GSD工作流-适合中大型项目的精准框架",
             "中大型 AI 编码流程治理、上下文衰减、阶段状态、多 Agent 编排、Wave 依赖、原子可追溯和 Git 版本化意识",
@@ -5241,7 +5242,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record Codex runtime collaboration boundary",
+    "senior source maps record Codex runtime collaboration boundary",
     has_all(
         senior_source_map,
         [
@@ -5259,7 +5260,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "Codex 官方团队：如何把 Codex 用到极致",
             "Codex 运行时协作、durable thread、voice/transcript、steering/queuing、tool reach、automation/goal、side panel/artifact 和 shared written context",
@@ -5270,7 +5271,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record AI Native architect boundary",
+    "senior source maps record AI Native architect boundary",
     has_all(
         senior_source_map,
         [
@@ -5287,7 +5288,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "放下代码：AI Native是通往架构师的快车道",
             "AI Native 架构师角色升级、hardened 标准、Agent 工作流设计、系统判断和技术战略职责",
@@ -5296,7 +5297,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record AI old-system postmortem boundary",
+    "senior source maps record AI old-system postmortem boundary",
     has_all(
         senior_source_map,
         [
@@ -5316,7 +5317,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "阿里内网万言离职书〈置身钉内〉原文，已刷屏",
             "公开转述/OCR 复盘参考来源",
@@ -5326,7 +5327,7 @@ check(
     ),
 )
 check(
-    "senior source map and README record AI full-stack workflow boundary",
+    "senior source maps record AI full-stack workflow boundary",
     has_all(
         senior_source_map,
         [
@@ -5341,7 +5342,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
             "模糊需求到结构化需求文档、业务流、原型/页面说明、开发任务和验收发布路径",
@@ -7308,7 +7309,7 @@ check(
     ),
 )
 check(
-    "product source map and README record product brainstorming boundary",
+    "product source maps record product brainstorming boundary",
     has_all(
         product_source_map,
         [
@@ -7324,7 +7325,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "`product-brainstorming` Skill 原文中文版",
             "产品头脑风暴、问题探索、方案发散和假设挑战纪律",
@@ -7367,7 +7368,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "从一份模糊需求，到一套可开发系统：AI 全栈工作流的一次实战",
             "产品架构专家",
@@ -7376,7 +7377,7 @@ check(
     ),
 )
 check(
-    "product source map and README record product insight article boundary",
+    "product source maps record product insight article boundary",
     has_all(
         product_source_map,
         [
@@ -7397,7 +7398,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "产品洞察/机会雷达",
             "为什么你的 AI 只能写总结，别的产品经理已经用AI在挖需求机会了？附skill模板和调试方法",
@@ -7426,7 +7427,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "放下 PRD：写给AI Native时代的产品经理朋友们",
             "PRD 从静态翻译文档升级为上下文包、验收种子和工程交接门禁",
@@ -7435,7 +7436,7 @@ check(
     ),
 )
 check(
-    "product source map and README record backlog decision article boundary",
+    "product source maps record backlog decision article boundary",
     has_all(
         product_source_map,
         [
@@ -7458,7 +7459,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "有了洞察还不够，产品负责人真正值钱的是 Backlog 决策",
             "洞察/机会清单到 Backlog 决策",
@@ -7527,7 +7528,7 @@ check(
     ),
 )
 check(
-    "source maps and README record architecture demand analysis source",
+    "source maps record architecture demand analysis source",
     has_all(
         product_source_map,
         [
@@ -7570,7 +7571,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "架构30：架构思维：需求分析",
             "需求分析协同门禁、根源需求、产品定义、产品边界、上下游分工、稳定点 / 变化点、边界坐标",
@@ -7580,7 +7581,7 @@ check(
     ),
 )
 check(
-    "source maps and README record requirements standards sources",
+    "source maps record requirements standards sources",
     has_all(
         product_source_map,
         [
@@ -7624,7 +7625,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "[013] 标准不是摆设",
             "[014] 85%返工都是需求的锅",
@@ -7687,7 +7688,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "软件工程最大的 Bug：我们把系统生长顺序做反了",
             "为什么优秀架构越来越像生命？",
@@ -7721,7 +7722,7 @@ check(
     ),
 )
 check(
-    "source maps and README record business architecture product value sources",
+    "source maps record business architecture product value sources",
     has_all(
         product_source_map,
         [
@@ -7753,7 +7754,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "业务 / 产品 / 技术交叉准入参考来源",
             "业务同质性、价值函数、成本函数、主要矛盾",
@@ -7785,7 +7786,7 @@ check(
     ),
 )
 check(
-    "source maps and README record architecture true-skill article",
+    "source maps record architecture true-skill article",
     has_all(
         ai_native_source_map,
         [
@@ -7815,7 +7816,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "认知跃迁16-如何练成架构设计真功夫",
             "https://mp.weixin.qq.com/s/6EFJZpH39ryWA3u_Wlxuzw",
@@ -7922,7 +7923,7 @@ check(
     ),
 )
 check(
-    "AI Native source map and README record good skill design methodology source",
+    "AI Native source maps record good skill design methodology source",
     has_all(
         ai_native_source_map,
         [
@@ -7942,7 +7943,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "设计一个好 Skill，通用方法论",
             "https://mp.weixin.qq.com/s/KEDcjuDFFAeeL0iqsHejIQ",
@@ -7958,7 +7959,7 @@ check(
     ),
 )
 check(
-    "AI Native source map and README record Harness skill best practices source",
+    "AI Native source maps record Harness skill best practices source",
     has_all(
         ai_native_source_map,
         [
@@ -7979,7 +7980,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "Harness 工程之道：Skill 原理与最佳实践",
             "https://mp.weixin.qq.com/s/yo2f5edeNNkYtCte9P0yhQ",
@@ -7997,9 +7998,9 @@ check(
     ),
 )
 check(
-    "README records PRD AI prescan source boundary",
+    "repo source map records PRD AI prescan source boundary",
     has_all(
-        "README.md",
+        repo_source_map,
         [
             "完整不等于可测：需求评审的四个AI新维度",
             "https://mp.weixin.qq.com/s/7EiFz1Oka1tYQmfbBferQg",
@@ -8035,7 +8036,7 @@ check(
     ),
 )
 check(
-    "product source map and README record deliberation workflow sources",
+    "product source maps record deliberation workflow sources",
     has_all(
         product_source_map,
         [
@@ -8064,7 +8065,7 @@ check(
         ],
     )
     and has_all(
-        "README.md",
+        repo_source_map,
         [
             "我让3个AI吵了一整天架，它们把PRD写完了",
             "Kira2red/magi-product",
