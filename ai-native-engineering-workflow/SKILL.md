@@ -97,7 +97,7 @@ Owner：
 
 - **只读理解视图**：用于阅读分析代码库、设计-代码对齐、外部工具准入、事实边界检查和影响范围识别；Gemini CLI 仅在本机可用、认证 / 读取范围获授权且当前状态核验通过时作为只读候选，失败则回退 Codex 内置工具；默认不写文件、不安装、不生成执行任务。
 - **产研交付视图**：用于从意图 / 需求收集、产品事实、PRD/Spec、系分、设计评审、TDD、实现、编码评审、可用性 / 安全性 / 可靠性评估到生产发布和反馈回流的端到端编排；内部可调用目标层、计划层、原子执行层和执行契约。
-- **验证发布视图**：用于测试矩阵、质量门禁、CR 前置条件、失败回退、发布监控、残余风险和复盘回流；测试实现和源码级 CR 继续路由 `资深架构师`。
+- **验证发布视图**：用于测试矩阵、质量门禁、源码质量评审 Loop、CR 前置条件、失败回退、发布监控、残余风险和复盘回流；测试实现和源码级 CR 继续路由 `资深架构师`。
 - **知识回流视图**：用于把已验证经验、上下文资产和知识生产流程沉淀到 Skill、reference、fixture、脚本、用户指南或 source-map；外部文章只保留可迁移方法、边界和证据索引。
 
 高频内部路由只按当前问题命中最小 reference；未命中的分组不读取、不展开、不输出菜单：
@@ -106,7 +106,7 @@ Owner：
 - **项目约规入口**：Wind/Nobe 项目 `AGENTS.md` 初始化或改进时，先回 `wind-project-coding-conventions` 的 `wind-project-agents-template.md`，AI Native 只补 owner、授权、待确认事实和协作路由。
 - **计划授权 / 大项目编排**：读 `goal-composition.md`、`gsd-cad-admission.md` 或 `agentic-engineering-governance.md`，只输出目标层、计划切片、执行授权缺口和下一 owner。
 - **评审规格 / 代码交付**：读 `prd-system-design-review.md`、`spec-template-practices.md` 或 `code-delivery-closed-loop.md`，只判断准入、角色分工、证据边界和准出路由。
-- **理解工具 / 质量发布**：读 `code-understanding-tools.md`、`agent-loop-engineering.md` 或 `verification-review-release.md`，先判断权限、写入边界、测试 / CR / 发布证据、外部 Checker 证据和停止条件。
+- **理解工具 / 源码质量评审 / 质量发布**：读 `code-understanding-tools.md`、`agent-loop-engineering.md` 或 `verification-review-release.md`，先判断权限、写入边界、代码理解证据、编码约规来源、测试 / CR / 发布证据、外部 Checker 证据和停止条件。
 - **治理回流 / 取舍校准**：读 `wisdom-loop-lens.md`、`skill-type-owner-routing.md`、`superpowers-skill-library.md` 或 `source-map.md`，只沉淀可复用方法、触发边界、owner 路由和验证方式。
 
 ## 参考路由
@@ -122,7 +122,7 @@ Owner：
 - `references/goal-composition.md`：Loop 目标层、目标桥接、Goal 卡、状态机、Ledger、预算 / 时间盒、内部计划 / 原子执行 / Spec 关联和停止条件。
 - `references/agent-loop-engineering.md`：统一 Loop Contract、四类角色 Loop 场景视图、实际项目编码 Loop、反馈闭环成熟度、验证簇准入、架构排熵 Loop / 腐朽门禁、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督、生产可用 Loop 门禁和 Skill 复用单位。
 - `references/wisdom-loop-lens.md`：huaxia-wisdom、Loop 取舍校准、东方判断层触发别名、阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛在 Loop 准入、拆解、执行核验、授权纠偏和复盘回流中的工程化映射。
-- `references/verification-review-release.md`：验证矩阵、质量 / 测试门禁、CR、发布、监控、复盘和学习闭环。
+- `references/verification-review-release.md`：验证矩阵、质量 / 测试门禁、源码质量评审 Loop、CR、发布、监控、复盘和学习闭环。
 - `references/superpowers-skill-library.md`：`obra/superpowers`、SDD v6 方法契约与 Matt Pocock skills 外部 skill 调度矩阵、供应链安全边界和不吸收项。
 - `references/skill-type-owner-routing.md`：Skill 类型与 owner 路由、拆分门禁、产品验证种子、架构侧 Runbook / CI/CD / 质量能力细化和回流验证。
 - `references/source-map.md`：公开来源、读取状态、工具能力时效性和不吸收边界。

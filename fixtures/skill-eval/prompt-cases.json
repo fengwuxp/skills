@@ -693,6 +693,20 @@
       "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Wind opt-in 项目把 Wind 约规作为 .opencodereview/rule.json 或 --background 规则输入；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
     },
     {
+      "id": "ai-native-should-source-quality-review-loop",
+      "skill": "ai-native-engineering-workflow",
+      "query": "用 AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools 和 wisdom-loop-lens；按准入定界、只读理解、规则装载 / 红线、业务架构裁决、代码坏味道细查、工具补扫、修复验证、回流收口推进；目标是遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Wind opt-in 项目读取 wind-project-coding-conventions；源码级裁决回资深架构师的 coding-review-deep-dive.md、coding-standards.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；输出工具证据、未采纳工具建议、残余风险和下一 owner。"
+    },
+    {
       "id": "ai-native-should-route-wind-agents-init",
       "skill": "ai-native-engineering-workflow",
       "query": "用 AI Native Engineering Loop 给一个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续产品专家、资深架构师、Wind 约规和代码生成器按项目规则协作。",
