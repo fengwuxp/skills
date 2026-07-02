@@ -7,6 +7,7 @@
 - 用户要求写作、生成、完善、补全或改写 PRD、产品需求文档、产品方案、业务流程、状态机、规则矩阵、运营后台或验收标准。
 - 用户提供原型、HTML、页面截图、页面说明或交互稿，要求反推、补写或改写 PRD。
 - 用户提供客户访谈、工单、竞品动态、行业/政策资料、标杆实践、Markdown 笔记或知识库资料，要求做产品洞察、需求洞察、机会挖掘或机会雷达。
+- 用户提到 `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘或增长实验，需要把分散材料串成证据、判断、取舍、不做项、下一产物和 owner。
 - 用户给出洞察、机会清单、需求池、老板/销售/客户诉求或路线图候选，要求做 Backlog 决策、需求优先级、User Story、AC 或研发可执行条目。
 - 用户要求产品头脑风暴、问题探索、假设挑战、HMW、第一性原理拆解、OODA、逆向头脑风暴或在写 PRD 前先把想法想透。
 - 用户提供老板/销售/客户/运营的模糊诉求、非标问题、跨团队问题或“先想一个方案”，需要产品专家先判断真实问题和解决方案责任。
@@ -35,6 +36,7 @@
 - AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD/CAD 准入、Harness/Agent 编排由 `ai-native-engineering-workflow` 处理。
 - 复杂 PRD、AI 生成方案、原型候选、多方争议、PM / Reviewer / 产品大师 / MAGI 多视角评审读 `product-deliberation-workflow.md`；它只提供产品合议评审流程，不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
 - 通用产品架构读 `product-architecture-methodology.md`。
+- `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘或增长实验场景，读 `product-judgment-action-chain.md`；它只串产品判断动作和交接路由，不安装外部 Skill。
 - 产品方案需要交给架构师继续做系统设计或业务驱动架构交接时，读 `product-architecture-methodology.md` 的“与技术架构的交接”和“业务驱动验证口径”，必要时加读 `product-prd-quality-gates.md`。
 - 产品洞察、资料资产化、客户/竞品/标杆情报分拣、证据推理链或机会雷达场景，读 `product-insight-analyst.md`；机会需要排序或转研发候选时，再读 `po-backlog-manager.md`。
 - 机会清单、需求池、Backlog 决策、优先级、路线图候选、User Story 或 AC 场景，读 `po-backlog-manager.md`，再按目标产物读取 `product-design-and-prd.md`。
@@ -55,6 +57,7 @@
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
 | PRD / 需求评审会前 AI 预扫描 | 快速路由表、产品语义门禁，并继续读 `product-prd-quality-gates.md` 的“AI 预扫描四维度” | 不把 AI 扫描结果当已确认缺陷，不替代正式评审 |
 | 产品洞察 / 资料分析 / 机会雷达 | 快速路由表、产品语义门禁，并继续读 `product-insight-analyst.md` | 不把资料摘要当机会决策 |
+| 产品判断动作链 / pm-skills 工作流参考 | 快速路由表、产品语义门禁，并继续读 `product-judgment-action-chain.md`，按缺口再读 `product-insight-analyst.md`、`po-backlog-manager.md` 或 PRD reference | 不安装或照搬外部 `pm-skills`，不把路线图愿望清单当产品判断 |
 | 产品头脑风暴 / 问题探索 / 假设挑战 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律” | 不把发散想法直接当 PRD、Backlog 或研发任务 |
 | 非标产品问题 / 老板客户只给方向 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“1.4 非标问题与解决方案责任” | 不做传话筒，不把诉求原样丢给研发 |
 | 概念膨胀 / 新旧概念并存 / 只加不减 / 概念生命周期与退役 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“1.3 概念定名与需求止损”和 `product-concept-lifecycle.md` | 不只加新名词，不把概念退役写成工程删除授权 |
@@ -113,6 +116,7 @@
 | 多 AI、PM/Reviewer、产品大师、MAGI、合议式评审复杂 PRD、AI 生成方案、HTML Demo 或产品方案 | `product-deliberation-workflow.md`, `product-prd-quality-gates.md`，需要正文时再读 `product-prd-template.md` 和 `product-design-and-prd.md` | 合议评审结论：触发原因、阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向 |
 | 产品经理方法论、产品专家能力补齐、产品经理知识体系、基础工作法校准 | `product-architecture-methodology.md`, `skill-tree.md` | 能力校准：文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析、知识库沉淀；并提升到复杂业务对象、规则、验收和交接能力 |
 | AI 产品工作成熟度、AI-shaped readiness、产品团队 AI 工作流改造、AI 是否形成产品优势 | `product-architecture-methodology.md` | AI 产品工作成熟度评审：业务优势、流程变化、上下文结构化、可追溯任务、人工责任、验证周期/决策质量/返工率指标；不安装外部 advisor，不照搬外部话术 |
+| pm-skills、产品判断成流程、产品动作链、路线图取舍、发布复盘、增长实验 | `product-judgment-action-chain.md`，按材料类型再读 `product-insight-analyst.md`、`po-backlog-manager.md`、PRD reference 或 `ai-native-product-context.md` | 产品判断动作链卡：已知事实 / 证据、合理推断、待确认、判断动作、取舍结论、不做项、下一产物、owner、验收 / 停止条件和交接路由；不安装外部 Skill |
 | 产品洞察、需求洞察、资料资产化、客户/竞品/标杆情报、机会雷达、证据推理链 | `product-insight-analyst.md`, `product-architecture-methodology.md` | 产品洞察报告：资料资产表、三类情报分拣、机会雷达、证据与推理链、置信度、待验证和建议去向；机会需要排序时再读 `po-backlog-manager.md` |
 | 产品头脑风暴、问题探索、方案发散、假设挑战、HMW、第一性原理、OODA、逆向头脑风暴 | `product-architecture-methodology.md` | 头脑风暴结论：探索模式、核心问题、目标用户、当前替代方式、关键假设、发散选项、删除/少做选项、反模式、下一步验证动作和进入问题地图/机会雷达/Backlog/PRD 的结论 |
 | 非标产品问题、老板/销售/客户/运营只给方向、跨团队诉求、需要产品专家判断解决方案 | `product-architecture-methodology.md` | 非标产品问题卡：真实问题、影响面、失败成本、现有替代方式、解决方案假设、验收种子、验证动作和进入 PRD/Backlog/AI Native 的结论 |
@@ -155,6 +159,7 @@
 - **用户要交给架构师继续设计或业务驱动架构交接**：输出产品侧交接包，覆盖目标/非目标/成功指标、参与方与 owner、核心行为、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。
 - **用户要补齐产品经理方法论或产品专家基础能力**：读取 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md`，把基础产品经理知识体系翻译为文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析和知识库沉淀，并说明哪些能力已覆盖、哪些能力需要提升到复杂业务对象、规则、验收和交接。
 - **用户要评估 AI 产品工作成熟度或 AI-shaped readiness**：读取 `product-architecture-methodology.md` 的“2A. AI-shaped 产品工作成熟度”，把外部 advisor 术语翻译成业务优势、流程变化、上下文结构化、任务可追溯、人工责任和验证指标；默认只借鉴方法，不安装或调用外部 Skill。
+- **用户要参考 pm-skills、把产品判断成流程、串联访谈 / 竞品 / 路线图 / PRD / 发布复盘 / 增长实验**：读取 `product-judgment-action-chain.md`，输出产品判断动作链卡，覆盖已知事实 / 证据、合理推断、待确认、范围外不做、判断动作、取舍结论、不做项 / 延后项、下一产物、owner、验收 / 停止条件和交接路由；按缺口再转产品洞察、Backlog、PRD、合议评审或 AI Native 前置门禁；不安装、复制或照搬外部 `pm-skills`。
 - **用户要基于资料、访谈、竞品、行业/政策或知识库做产品洞察、需求洞察或机会雷达**：读取 `product-insight-analyst.md`，先做资料资产化和客户/竞品/标杆情报分拣，再输出机会雷达、证据与推理链、置信度、待验证和建议去向；没有材料的类别明确留白，不用模型记忆补编。
 - **用户要产品头脑风暴、问题探索或假设挑战**：读取 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律”，先判断是问题探索、方案发散还是假设挑战，再输出核心问题、目标用户、当前替代方式、关键假设、发散选项、删除/少做选项、反模式和下一步验证动作；需要落地时再转问题地图、机会雷达、Backlog 或 PRD，不直接变研发任务。
 - **用户要处理非标产品问题、老板/销售/客户/运营只给方向或跨团队诉求**：读取 `product-architecture-methodology.md` 的“1.4 非标问题与解决方案责任”，先输出真实问题、影响面、失败成本、现有替代方式、解决方案假设、验收种子和验证动作；产品专家必须提供可评审解决方案，不把原始诉求直接转发给研发。

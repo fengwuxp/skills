@@ -180,6 +180,7 @@ product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_concept_lifecycle = "product-architecture-expert/references/product-concept-lifecycle.md"
+product_judgment_action_chain = "product-architecture-expert/references/product-judgment-action-chain.md"
 product_insight = "product-architecture-expert/references/product-insight-analyst.md"
 po_backlog_manager = "product-architecture-expert/references/po-backlog-manager.md"
 product_deliberation = "product-architecture-expert/references/product-deliberation-workflow.md"
@@ -238,6 +239,7 @@ ai_native_terms = [
     "AI 工作量",
     "AI 时代产品到研发编码流程",
     "角色协作 Loop",
+    "产品判断 Loop",
     "设计评审",
     "编码评审",
     "可用性安全性评估",
@@ -531,8 +533,9 @@ wisdom_lens_terms = [
     "知行合一",
     "一张一弛",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
 payment_terms = [
     "清结算",
     "对账",
@@ -930,7 +933,7 @@ check(
             "编码实现",
             "编码评审",
             "可用性 / 安全性 / 可靠性评估",
-            "产品语义、业务对象、机会雷达、Backlog、PRD、产品上下文包和 Product Context Card 由 `产品架构专家` 主导",
+            "产品语义、业务对象、机会雷达、产品判断动作链、Backlog、PRD、产品上下文包和 Product Context Card 由 `产品架构专家` 主导",
             "系统设计、OpenSpec、完整执行契约、内部计划 / 原子执行策略、代码实现、测试、CR、生产风险和受控工程执行由 `资深架构师` 主导",
             "本技能负责端到端角色协作 Loop 准入、owner、阶段顺序、角色视角、停止条件、授权策略和交接结论",
             "Goal、GSD、CAD、Harness、Grant 等旧术语只作为角色协作 Loop 的内部实现层和历史触发别名",
@@ -3177,7 +3180,7 @@ check(
             "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
             "目标、材料、边界、风险、验证",
             "### 2. 按交付物选入口",
-            "产品语义 / PRD / Backlog / 验收",
+            "产品语义 / 产品判断动作链 / PRD / Backlog / 验收",
             "系分 / 架构 / 代码 / Bug / 测试 / CR / 发布",
             "跨角色产研交付 / 目标拆解 / 任务计划 / Spec / Harness / 质量发布 / 知识生产闭环",
             "默认进入角色协作 Loop",
@@ -4066,7 +4069,7 @@ check(
             "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
             "先帮我选路",
             "### 2. 按交付物选入口",
-            "产品语义 / PRD / Backlog / 验收",
+            "产品语义 / 产品判断动作链 / PRD / Backlog / 验收",
             "跨角色产研交付 / 目标拆解 / 任务计划 / Spec / Harness / 质量发布 / 知识生产闭环",
             "默认进入角色协作 Loop",
             "系分 / 架构 / 代码 / Bug / 测试 / CR / 发布",
@@ -7142,6 +7145,90 @@ check(
             "代码不再稀缺，稀缺的是你如何对抗复杂度",
             "https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA",
             "实现成本下降、复杂度/注意力成本上升",
+        ],
+    ),
+)
+check(
+    "product expert exposes product judgment action chain",
+    has_reference_header(product_judgment_action_chain)
+    and has_task_reading_index(product_judgment_action_chain)
+    and has_all(
+        product_skill,
+        [
+            "产品判断要动作化",
+            "product-judgment-action-chain.md",
+            "产品判断动作链",
+            "pm-skills",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "产品判断动作链 / pm-skills 工作流参考",
+            "product-judgment-action-chain.md",
+            "不安装或照搬外部 `pm-skills`",
+        ],
+    )
+    and has_all(
+        product_judgment_action_chain,
+        [
+            "产品判断动作链卡",
+            "已知事实 / 证据",
+            "判断动作",
+            "取舍结论",
+            "不做项",
+            "下一产物",
+            "owner",
+            "验收 / 停止条件",
+            "AI Native 前置门禁",
+            "不安装 `phuryn/pm-skills`",
+        ],
+    )
+    and has_all(
+        ai_native_workflow_skill,
+        [
+            "产品判断 Loop 准入",
+            "product-judgment-action-chain.md",
+            "AI Native 只判断交接成熟度、owner 和停止条件",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "产品判断 Loop 准入卡",
+            "有材料但无判断",
+            "有判断但无取舍",
+            "有取舍但无验收种子",
+            "只有证据、取舍、owner、验收和停止条件同时具备",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "产品判断动作链",
+            "pm-skills：让产品判断成流程",
+            "https://mp.weixin.qq.com/s/LR6GB8m9lUSfJGZxUweg-g",
+            "phuryn/pm-skills",
+            "不安装该仓库",
+            "不得让 AI 替产品 owner 做路线图取舍",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "产品判断 Loop 准入",
+            "pm-skills：让产品判断成流程",
+            "phuryn/pm-skills",
+            "不得让 AI Native 替产品 owner 做路线图取舍",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "产品判断动作链",
+            "pm-skills",
+            "进入产品判断动作链",
+            "AI Native 再判断是否足以进入系分、TDD、编码或质量门禁",
         ],
     ),
 )
@@ -10247,6 +10334,16 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md", "po-backlog-manager.md"},
     ),
     RouteFixture(
+        name="product judgment action chain pm skills",
+        prompt="参考 pm-skills 把产品判断成流程：我们有访谈、工单、竞品、路线图、PRD 和发布材料，帮我用产品判断动作链判断现在做什么、为什么做、先不做什么，并把输出交给 AI Native",
+        routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md", "product-insight-analyst.md", "po-backlog-manager.md", "ai-native", "product-to-engineering-lifecycle.md", "source-map.md"},
+    ),
+    RouteFixture(
+        name="ai native product judgment loop admission",
+        prompt="AI Native 进入产品判断 Loop：先调用产品专家按产品判断动作链处理反馈、机会、Backlog、PRD 和验收种子，再判断是否进入系分、TDD 和编码，不要直接从漂亮 PRD 进工程",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "product", "product-scenario-routing.md", "product-judgment-action-chain.md"},
+    ),
+    RouteFixture(
         name="product nonstandard problem solution",
         prompt="老板、销售和客户都说要做一个智能运营能力，但表达很散，UED 也反馈现有流程交互阻塞。请不要做传话筒，先输出真实问题、影响面、失败成本、当前替代方式、目标用户、解决方案假设、验收种子、UED 重点验证的交互状态和下一步验证动作",
         routes={"product", "product-scenario-routing.md"},
@@ -10310,6 +10407,11 @@ negative_route_fixtures: list[RouteFixture] = [
         routes={"ai-native"},
     ),
     RouteFixture(
+        name="ai native on product judgment action chain only",
+        prompt="参考 pm-skills 把产品判断成流程：我们有访谈、工单、竞品、路线图、PRD 和发布材料，请用产品判断动作链判断现在做什么、为什么做、先不做什么、下一产物和 owner",
+        routes={"ai-native"},
+    ),
+    RouteFixture(
         name="ai native on concrete code review",
         prompt="做一轮代码 CR：这个 Spring Boot Service 改了事务边界、缓存一致性和异常处理，帮我按严重级别列问题并补测试建议",
         routes={"ai-native"},
@@ -10368,9 +10470,9 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
         route.add("ai-native")
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "发布复盘", "增长实验", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "边界坐标", "需求 CR", "CR 需求"]):
             route.add("prd-system-design-review.md")
@@ -10545,6 +10647,16 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
     if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
+    if contains_any(prompt, product_judgment_terms):
+        route.update({"product", "product-scenario-routing.md", "product-judgment-action-chain.md"})
+        if contains_any(prompt, ["访谈", "工单", "反馈", "竞品", "资料", "数据", "机会"]):
+            route.add("product-insight-analyst.md")
+        if contains_any(prompt, ["Backlog", "路线图", "优先级", "取舍", "User Story", "AC"]):
+            route.add("po-backlog-manager.md")
+        if contains_any(prompt, ["AI Native", "工程", "系分", "TDD", "编码", "架构师"]):
+            route.update({"ai-native", "product-to-engineering-lifecycle.md"})
+        if contains_any(prompt, ["pm-skills", "phuryn/pm-skills"]):
+            route.add("source-map.md")
     if contains_any(prompt, ["产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链"]):
         route.add("product-insight-analyst.md")
     if contains_any(prompt, ["产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "Reviewer", "AI 生成的", "AI 生成方案"]):
@@ -10857,6 +10969,47 @@ expected_handling_has(
         "Plan Grant 字段齐备",
         "验证证据对照成功标准",
         "不把步骤执行完等同于 Goal Verified / Closed",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-product-judgment-loop-admission",
+    (
+        "产品判断 Loop 准入路径",
+        "交接成熟度",
+        "owner",
+        "验证与停止条件",
+        "product-judgment-action-chain",
+        "已知事实 / 证据",
+        "判断动作",
+        "取舍结论",
+        "不做项",
+        "下一产物",
+        "工程交接结论",
+        "不直接进入系分、TDD、编码或 Execution Grant",
+        "不安装或照搬外部 pm-skills",
+    ),
+)
+
+expected_handling_has(
+    "product-should-pm-skills-judgment-action-chain",
+    (
+        "产品判断动作链路径",
+        "product-judgment-action-chain",
+        "产品判断动作链卡",
+        "已知事实 / 证据",
+        "合理推断",
+        "待确认项",
+        "范围外不做",
+        "判断动作",
+        "取舍结论",
+        "不做项 / 延后项",
+        "下一产物",
+        "owner",
+        "验收 / 停止条件",
+        "交接路由",
+        "AI Native 前置门禁",
+        "不安装、复制或照搬外部 pm-skills",
     ),
 )
 

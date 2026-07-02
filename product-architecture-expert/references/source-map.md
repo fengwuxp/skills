@@ -68,6 +68,7 @@
 - 模糊需求到可开发系统：检索“从一份模糊需求”“AI 全栈工作流”“内容系统”“多端平台”“结构化需求文档”“业务流”“高保真 HTML 原型”“开发任务”。
 - 产品洞察与机会雷达：检索“产品洞察”“需求洞察”“机会雷达”“资料资产化”“客户视角”“竞品视角”“标杆视角”“证据推理链”。
 - Backlog 决策与机会收敛：检索“Backlog”“机会清单”“需求池”“BV/EE”“User Story”“AC”“技术现实主义”“三桌校验”。
+- 产品判断动作链：检索“pm-skills”“产品判断成流程”“产品动作链”“路线图取舍”“发布复盘”“增长实验”“不只是写文档”。
 - AI-shaped 产品工作成熟度：检索“ai-shaped-readiness-advisor”“AI-shaped”“AI-first”“Context Design”“Agent Orchestration”“Outcome Acceleration”。
 - 产品经理方法论与基础能力：检索“产品经理方法论”“赵丹阳”“BRD/MRD/PRD”“流程图”“原型图”“产品架构图”“需求管理”“用户研究”“数据分析”。
 - 需求分析与产品定义：检索“架构30”“架构思维：需求分析”“根源需求”“产品定义”“产品边界”“稳定点”“变化点”“边界坐标”。
@@ -158,6 +159,8 @@
 - GitHub 仓库 `Kira2red/Kira-product-monster-skills`：`https://github.com/Kira2red/Kira-product-monster-skills`。2026-06-05 已读取公开 README、仓库文件树、`Kira-product-monster-prd/SKILL.md`、`Kira-product-monster-featurelist/SKILL.md`、`2red-product-whitepaper/SKILL.md`、`Kira-product-monster-prd/references/examples.md` 和 `gbg-holy-grail-war/SKILL.md`。本仓库只吸收 PRD 共享层/模块层分离、PRD 类型判定、界面状态与异常覆盖、图形触发条件、验收覆盖、Feature List 颗粒度和白皮书增量维护的检查思路；不复制外部 Skill 结构、README、示例正文，不复制游戏 Skill、纯中文绝对化约束、PlantUML 图片生成要求或产品白皮书全量维护流程。
 - 微信公众号文章《为什么你的 AI 只能写总结，别的产品经理已经用AI在挖需求机会了？附skill模板和调试方法》：`https://mp.weixin.qq.com/s/jsuVbuvKJxEXl8dZyzh23g`。作者为 `糖糖`，公众号为 `产品AI力学`，发布时间为 2026-04-23 19:30:00 Asia/Shanghai；2026-06-03 普通 curl/mobile UA 返回微信验证页，随后通过本机 Chrome headless 等价浏览器读取标题、作者、公众号、发布时间和正文。公开内容用于参考 `product-insight-analyst.md` 中产品洞察与机会雷达：资料资产化、客户/竞品/标杆三类情报分拣、证据与推理链、机会雷达、宁缺毋滥和产品负责人决策边界；不复制原文、模板正文、固定路径、外部 Skill 名称体系、作者表达或标题传播话术。
 - 微信公众号文章《有了洞察还不够，产品负责人真正值钱的是 Backlog 决策》：`https://mp.weixin.qq.com/s/stj1HjCpaG5PzXhxfxlWSg`。作者为 `糖糖`，公众号为 `产品AI力学`，发布时间为 2026-04-10 07:30:00 Asia/Shanghai；2026-06-03 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未执行 Playwright 等价浏览器取证。公开内容用于参考 `po-backlog-manager.md` 中洞察/机会清单到 Backlog 的收敛：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、User Story、AC、技术现实主义、拒绝或延后理由和决策偏好自检；不复制原文图片、外部 Skill 名称体系、作者表达、标题传播话术或前置文章内容。
+- 微信公众号文章《pm-skills：让产品判断成流程》：`https://mp.weixin.qq.com/s/LR6GB8m9lUSfJGZxUweg-g`。作者 / 账号字段为 `哒哒fan`，页面 `ct` 字段换算为 2026-06-20 10:23:21 Asia/Shanghai；2026-07-02 本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文。公开内容用于参考“产品工作的问题不是缺文档，而是访谈、竞品、路线图、PRD、发布和增长中的判断散落各处”的可迁移方法，并落实为 `product-judgment-action-chain.md` 的证据、判断动作、取舍结论、不做项、下一产物、owner、验收和回流；不复制原文、图片、作者表达、标题传播话术、workflow 数量、工具宣传或示例材料，也不把 AI 文档生成替代产品 owner 判断。
+- GitHub 仓库 `phuryn/pm-skills`：`https://github.com/phuryn/pm-skills`。2026-07-02 通过 GitHub raw 读取公开 `README.md`，仓库自述为 Product Management skills / chained workflows / plugins 的集合，覆盖 discovery、strategy、execution、market research、data analytics、GTM、marketing/growth、toolkit 和 AI shipping 等方向。本仓库只吸收 skills / commands / plugins 的产品工作分层、命令链会建议下一动作、以及小团队优先选高频场景的思路；不安装该仓库，不复制 68 个 skills、42 个 workflows、slash commands、plugins、PM toolkit、resume / NDA / privacy / grammar 等通用工具，也不把 Codex slash command 兼容说明写成本仓库默认能力。
 - 微信公众号文章《现在我敢评测这个 skill 了，产品负责人来看看这个自评卡吧》：`https://mp.weixin.qq.com/s/ZUwtGYYTzt-c2YRXn8ryJw`。作者为 `糖糖`，公众号为 `产品AI力学`，发布时间为 2026-05-02 10:00:00；2026-06-01 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文；本轮未再执行 Playwright 等价浏览器取证，后续如需精确引用原文或图片应重新浏览器核验。公开内容用于参考对 `ai-shaped-readiness-advisor` 的产品负责人视角评测：该 Skill 值得读但不宜原样推广，应把 AI-shaped、Context Design、Agent Orchestration、Outcome Acceleration、Team-AI Facilitation 和 Strategic Differentiation 翻译为团队可执行、可复盘、可担责的产品工作语言；不复制原文表达、图片、自评卡排版、作者类比或外部工具营销。
 - GitHub 仓库 `deanpeters/Product-Manager-Skills` 中的 `ai-shaped-readiness-advisor`：`https://github.com/deanpeters/Product-Manager-Skills`，原始文件入口 `https://raw.githubusercontent.com/deanpeters/Product-Manager-Skills/main/skills/ai-shaped-readiness-advisor/SKILL.md`。2026-06-01 已读取公开 `SKILL.md`，其定位为 15-20 分钟交互式 AI 产品组织成熟度评估，覆盖 Context Design、Agent Orchestration、Outcome Acceleration、Team-AI Facilitation 和 Strategic Differentiation。本仓库只吸收“区分 AI 提效与工作系统重构、上下文边界、可追溯流程、学习周期、人工责任和差异化指标”的可迁移检查项；当前不安装该 Skill、不复制交互协议、评分 rubrics、示例案例、关联 Skill 链接或外部执行流程。
 - 图书《产品经理方法论：构建完整的产品知识体系》及同作者同系列公开书目信息：读书网公开图书页 `https://m.dushu.com/book/13884861/`。该公开页显示作者为赵丹阳，出版社为人民邮电出版社，出版时间为 2021-11-01，ISBN 为 9787115571144；得到公开页面另显示同作者《产品经理方法论》和第2版推荐项等系列线索。2026-06-02 已读取公开图书页、内容简介、作者简介和目录，只按公开书目信息和目录结构做方法校准。本仓库只吸收公开目录呈现的产品经理基础知识体系，覆盖文档分型、流程图、原型图、产品架构图、用户研究、需求管理、数据分析、技术协作、项目管理、行业/商业分析、产品实践、学习方法和职业进阶；不复制书籍正文、章节内容、示例、图表、训练材料或作者表达，也不把基础岗位知识体系替代复杂业务产品架构专家能力。
@@ -215,6 +218,7 @@
 ## 提炼边界
 
 - 可以使用公开文章主题、通用支付概念和行业方法，整理成原创工作流、清单和模板。
+- 可以吸收 `pm-skills` 的产品判断动作化、workflow 链接和高频场景优先思路，用于串联资料、机会、Backlog、PRD、发布和增长复盘；不得安装、复制或照搬外部 Skill / commands / plugins，也不得让 AI 替产品 owner 做路线图取舍。
 - 可以吸收领域术语、业务命名、规则名、状态名、异常名和验收种子对工程可读性的帮助；不得让产品专家替代架构师做模块、类、接口或代码级 Review 判断。
 - 可以吸收概念生命周期与退役治理，用于处理概念膨胀、事实源分裂、新旧规则并存、需求只加不减和旧入口下线；不得把产品侧概念退役写成工程删除授权、数据迁移授权、公共契约变更或上线审批。
 - 不复制文章正文、付费课程内容、书籍章节、原图、课件、原型或专有案例。

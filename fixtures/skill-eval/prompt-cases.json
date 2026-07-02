@@ -20,6 +20,21 @@
   },
   "cases": [
     {
+      "id": "ai-native-should-product-judgment-loop-admission",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Native 进入产品判断 Loop：我们有访谈、工单、竞品、路线图、PRD 和发布复盘，先调用产品专家按产品判断动作链判断做什么、为什么做、先不做什么，再决定是否进入系分、TDD 和编码。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产品判断 Loop 准入路径，AI Native 只判断交接成熟度、owner、授权策略、验证与停止条件；先路由产品架构专家读取 product-judgment-action-chain，输出已知事实 / 证据、判断动作、取舍结论、不做项、下一产物、产品 owner、验收 / 停止条件和工程交接结论；不足时回产品专家补产品判断动作链，不直接进入系分、TDD、编码或 Execution Grant，也不安装或照搬外部 pm-skills。"
+    },
+    {
       "id": "ai-native-should-end-to-end-product-engineering-workflow",
       "skill": "ai-native-engineering-workflow",
       "query": "我们已经有 AI 原型/eval 和业务 dogfooding 反馈，想设计从 PRD-Lite 到 OpenSpec、Harness、GSD/CAD、验证矩阵、代码 CR 和发布复盘的流程，说明产品专家、架构师和 AI Agent 的职责边界。",
@@ -1031,6 +1046,21 @@
         "variance_check"
       ],
       "expected_handling": "进入产品架构专家内部 po-backlog-manager 路径，先做机会清单输入归一化、业务价值和工程代价评估，再用业务/用户/工程三桌校验输出 P0/P1/P2、拒绝或延后理由、User Story、AC、技术现实主义风险、owner 和待确认项。"
+    },
+    {
+      "id": "product-should-pm-skills-judgment-action-chain",
+      "skill": "product-architecture-expert",
+      "query": "参考 pm-skills，把产品判断成流程：我们有访谈、工单、竞品、路线图、PRD 和发布材料，请用产品判断动作链判断现在做什么、为什么做、先不做什么、下一产物和 owner。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产品判断动作链路径，读取 product-judgment-action-chain；输出产品判断动作链卡，覆盖原始输入、当前阶段、已知事实 / 证据、合理推断、待确认项、范围外不做、判断动作、取舍结论、不做项 / 延后项、下一产物、owner、验收 / 停止条件和交接路由；按缺口再转产品洞察、Backlog、PRD、合议评审或 AI Native 前置门禁；不安装、复制或照搬外部 pm-skills，不把路线图愿望清单当产品判断。"
     },
     {
       "id": "product-should-nonstandard-problem-solution",
