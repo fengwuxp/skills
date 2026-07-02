@@ -259,6 +259,11 @@ ai_native_terms = [
     "任务树",
     "Trellis",
     "Harness",
+    "Prompt Engineering",
+    "Context Engineering",
+    "Harness Engineering",
+    "L1-L4",
+    "四层嵌套",
     "GSD",
     "GSD + Goal",
     "Goal",
@@ -2541,6 +2546,11 @@ check(
             "Plan Grant 与 Loop 预算绑定",
             "失败回写路径",
             "生产可用 Loop 门禁",
+            "L1-L4 工程成熟度诊断",
+            "Prompt Engineering -> Context Engineering -> Harness Engineering -> Loop Engineering",
+            "先定位层级，再开药方",
+            "L3 未扎实时不进入 L4",
+            "理解债或认知投降风险",
             "自动化心跳",
             "隔离执行",
             "Maker / Checker 解耦",
@@ -2551,6 +2561,30 @@ check(
             "理解债控制",
             "Skill 是复用单位",
             "不把 Loop 写成无条件自动授权",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "Loop Engineering又是啥？一文讲清企业Agent落地的四层工程进化论",
+            "Prompt / Context / Harness / Loop 四层嵌套关系",
+            "Agent 生产不稳分层诊断",
+            "L3 先于 L4",
+            "最小 L4 试点",
+            "认知投降风险门禁",
+            "作者字段为 `李伟山`",
+            "账号字段为 `腾讯云开发者`",
+            "不把 GPT-5.5、Claude、Gemini、Codex / Claude Code、`/goal`、`/loop`、automation 等工具能力写成当前会话默认事实",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "Loop Engineering又是啥？一文讲清企业Agent落地的四层工程进化论",
+            "L1-L4 工程成熟度诊断参考来源",
+            "L3 优先加固",
+            "理解债 / 认知投降风险",
+            "不把单篇文章写成默认授权、工具能力、测试通过、CR 结论或上线审批",
         ],
     )
     and has_all(
@@ -9903,6 +9937,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agentic-engineering-governance.md", "agent-loop-engineering.md", "code-delivery-closed-loop.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native agent loop maturity diagnosis",
+        prompt="这个 Agent Demo 里表现很好，但上线后总是把客户信息和政策搞混，还反复用废弃 API；请不要先改 Prompt 或直接上 Loop，先按 Prompt Engineering、Context Engineering、Harness Engineering、Loop Engineering 四层嵌套判断当前瓶颈、最小修复和是否允许 L4 试点",
+        routes={"ai-native", "agentic-engineering-governance.md", "agent-loop-engineering.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native wisdom lens for loop scheduling",
         prompt="请老祖宗用 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批",
         routes={"ai-native", "wisdom-loop-lens.md", "agent-loop-engineering.md", "gsd-cad-admission.md", "verification-review-release.md", "source-map.md"},
@@ -10329,7 +10368,7 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis"]):
         route.add("ai-native")
         if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物"]):
             route.add("product-to-engineering-lifecycle.md")
@@ -10339,7 +10378,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal 组合", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "任务树", "Task Tree", "Trellis", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "一次一个问题", "建议答案"]):
+        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L1-L4", "四层嵌套", "Prompt Engineering", "Context Engineering", "Harness Engineering", "Agent 生产不稳", "生产不稳", "Demo 可用", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "任务树", "Task Tree", "Trellis", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "一次一个问题", "建议答案"]):
             route.add("agent-loop-engineering.md")
             route.add("agentic-engineering-governance.md")
             route.add("verification-review-release.md")
@@ -10557,6 +10596,7 @@ for case_id in [
     "ai-native-should-gsd-cad-admission-gate",
     "ai-native-should-gsd-goal-composition",
     "ai-native-should-agent-loop-engineering",
+    "ai-native-should-agent-loop-maturity-diagnosis",
     "ai-native-should-design-engineering-loop-not-prompting",
     "ai-native-should-wisdom-lens-loop-scheduling",
     "ai-native-should-review-ai-coding-process",
@@ -10944,6 +10984,30 @@ expected_handling_has(
         "/loop",
         "auto mode",
         "不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-agent-loop-maturity-diagnosis",
+    (
+        "Agent Loop Engineering / L1-L4 工程成熟度诊断",
+        "agent-loop-engineering",
+        "L1-L4 诊断结论",
+        "当前瓶颈层",
+        "不先做",
+        "最小修复",
+        "是否允许 L4 试点",
+        "L1 Prompt",
+        "L2 Context",
+        "L3 Harness",
+        "L4 Loop",
+        "先定位层级再开药方",
+        "生产不稳先加固 L3",
+        "不把 L2 问题误修成 Prompt",
+        "不跳过 L3 直接上 L4",
+        "低风险高频任务",
+        "Maker / Checker",
+        "理解债 / 认知投降",
     ),
 )
 
