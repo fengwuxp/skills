@@ -61,11 +61,13 @@
 - ServiceImpl 通用实现：`@Service` + 构造注入，Mapper 字段 `final`；Request 先经 `XxxConverter.INSTANCE.convertToXxx` 转 Entity；新增优先 `insertSelective`，保存类入口可用 `insertOrUpdateSelective`，更新必须先找现有数据并校验影响行数；删除先校验 ids 非空和影响行数；私有 `findXxx(id)` 负责 id 非空和不存在断言；查询条件集中在 `createQueryWrapper` 或 `fillQueryWrapper`，使用 `MybatisQueryHelper.from(options)`、`XxxNameRefs`、`counter`、`resultQueryFunc`、`converter` 输出 DTO。
 - 查询服务形态：公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`，查询选项使用 `WindQuery<? extends QueryOrderField>` 或项目既有分页选项；`ServiceImpl` 内部再组合 `QueryWrapper`、Mapper、Converter 和 result enricher。默认方法只用于复用已有公开契约上的小型断言或组合查询，不新增绕过实现层的业务状态。
 - 多实现组合：同一 face Service 有多个生产实现时，保留一个主对外实现做组合编排，其他实现必须承担清晰业务职责；通过 `@Primary`、明确 bean name 或项目统一装配规则解决注入歧义，不用 `Processor`、`Handler` 这类泛名掩盖服务职责。
+- 横切控制 wrapper：普通一行转发 wrapper 不应新增；但分布式锁、幂等、鉴权、审计、灰度、限流、通道适配等横切控制逻辑可以用 wrapper 隔离。wrapper 应实现同一 face Service，内部委托真实业务实现；默认入口通过 `@Primary`、明确 bean name 或项目统一装配规则确定。真实业务 `ServiceImpl` 仍实现原接口，并保留业务规则、状态流转、声明式事务和持久化协调，不把横切控制细节混入业务主流程。
 - 四类服务是判断框，不是强制新增层：`XxxService` 承接基础契约，`XxxDomainService` 承接真实领域写规则，`XxxDomainQueryService` 承接真实领域读模型，`XxxApplicationService` 承接完整业务场景编排。`DomainService` / `DomainQueryService` 不是 Wind 项目强制分层；没有稳定领域规则、读写分离、跨对象场景、事务/权限/审计/外部副作用时，不新增 DomainService、DomainQueryService 或 ApplicationService；已有 `service/services/application/domain` 历史包名时，以职责、owner、生命周期和调用边界判断，不为迁移名称而改。
 - 新服务命名避免 `Manager`、`BizService`、泛化 `Facade` 这类职责不明后缀；若项目已有 Adapter/Facade 边界，必须表示协议适配或门面入口，不得作为服务层杂物筐。
 - 写操作用业务动词，例如 submit、approve、reject、freeze、unfreeze、pay、refund、settle；不用 handle/process/doXxx 掩盖语义。
 - 查询方法命名：`get` 表示必然存在，找不到抛业务异常；`find` 表示可能不存在，返回 `@Nullable` 或 `Optional` 并写清空值契约；`query` 表示条件查询、列表、分页或统计，入参优先 `XxxQuery`，不要散落多个查询参数；`exists`、`count`、`stats/summary` 分别表示存在性、数量、统计/汇总。服务层不得使用 `select/load/fetch` 这类 Repository/SQL 语义；历史 `queryXxxById` 仅在附近代码已经统一使用时兼容，新代码优先按 `get/find` 表达是否必然存在。
 - 事务边界放在真实用例边界；事务内避免不可控远程调用、长耗时计算和无上限循环，确需调用时说明超时、补偿和失败处理。
+- 分布式锁和事务边界分开：分布式锁、幂等锁、限流锁等控制逻辑优先放在 wrapper、adapter 或基础设施边界；业务 `ServiceImpl` 使用声明式事务表达本地一致性。不要在业务事务中散落锁释放回调、线程同步、事务同步注册或复杂控制流。锁粒度按真实冲突资源建模，能锁单个业务资源就不锁集合；批量任务优先锁批次、活动、账户、用户等稳定业务资源之一，不把对象列表作为一次锁范围。锁等待和租约时间没有明确运维配置 owner 时，先用实现内常量，不提前配置化。
 
 ## 3. 模型与契约
 
@@ -117,5 +119,5 @@
 - 测试说明放在测试方法名、Javadoc 或方法级注释中，表达场景、输入、行为、输出和红线；测试结构优先 Given/When/Then 或 Arrange/Act/Assert。
 - 完成 TDD 或 AI 生成实现后做设计质量回看：是否新增浅服务、透传接口、无主依赖、过度抽象、内部链路 mock、AI 注释噪声或只为过测试的战术实现。
 - CR 检查 opt-in、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全等级、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
-- Wind opt-in 项目可加低成本结构守卫：`*ServiceImpl` 不落错误根包；face 公开签名不出现 Entity、Mapper、Repository 或 MyBatis `Page`；impl 内部基础服务接口不暴露 Entity 或 QueryWrapper；组合、生命周期、应用层服务不直接依赖已有实体 Mapper；同一 Service 多实现时存在唯一主对外实现或明确装配规则。
+- Wind opt-in 项目可加低成本结构守卫：`*ServiceImpl` 不落错误根包；face 公开签名不出现 Entity、Mapper、Repository 或 MyBatis `Page`；impl 内部基础服务接口不暴露 Entity 或 QueryWrapper；组合、生命周期、应用层服务不直接依赖已有实体 Mapper；同一 Service 多实现时存在唯一主对外实现或明确装配规则；并发控制守卫可以检查无内存业务实现、无无限锁等待、无批量集合锁、wrapper 不直接访问 Mapper。可先运行 `wind-project-coding-conventions/scripts/check_wind_conventions.py --root <project>` 做离线高信号扫描；结构守卫只守稳定架构红线，不断言私有方法名、源码字面量、内部调用顺序或临时实现步骤，也不替代架构师源码级 CR。
 - 接入 Open Code Review / OCR 时，Wind 约规可作为项目 `.opencodereview/rule.json` 或 `ocr review --background` 的规则输入，重点覆盖 face/impl、模型归位、Entity 不外露、基础服务、查询命名、内网 API、字典/国际化、MyBatis Flex、币种枚举、测试黑盒和内存服务红线；但 OCR 不是 Wind 规则权威，工具输出必须由 `资深架构师` 按源码事实、项目 `AGENTS.md`、测试结果和本 Skill 重新判读。

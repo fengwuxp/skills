@@ -76,7 +76,8 @@
 
 - Spring Bean 构造注入优先使用 Lombok `@AllArgsConstructor`。
 - 内部服务参数使用 `org.jspecify.annotations.NonNull`；实现方法内不再重复写无业务语义的 `AssertUtils.notNull`，只对集合内容、状态条件和查不到数据等运行时业务事实使用断言。
-- 单 ID 删除可以作为接口 default 方法委托批量删除，这是服务契约便利方法；ServiceImpl 只实现批量删除。
+- 单 ID 删除可以作为接口 default 方法委托批量删除，这是服务契约便利方法；必然存在的 ID 查询使用 `getXxxById`；ServiceImpl 只实现批量删除。
+- 币种字段使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，不生成 `String currency`。
 - 查询实现优先内联 `QueryWrapper` 构造，除非本地已有复杂分支，不为了“复用”提取一行方法或伪工具类。
 - 公共方法参数不得超过 5 个。生成代码当前以 Request/Query/Options 聚合参数，避免长参数列表。
 - Entity 只在 ServiceImpl、DAL、Mapper 和 Converter 内部流转；离开 impl 边界前必须转换为 DTO、Request、Query、Command、Event 或值对象。

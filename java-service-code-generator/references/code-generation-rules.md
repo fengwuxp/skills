@@ -214,6 +214,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - `datetime`、`timestamp` 映射为 `LocalDateTime`。
 - `date` 映射为 `LocalDate`。
 - `time` 映射为 `LocalTime`。
+- `currency`、`currency_code`、`currency_iso_code` 或字段注释为“币种”时映射为 `com.wind.transaction.core.enums.CurrencyIsoCode`。
 - `char`、`varchar`、`text`、`json` 默认映射为 `String`。
 - 类枚举字段默认保持 `String`；只有用户提供枚举映射或相邻代码能唯一确认枚举类型时，才生成枚举类型。
 

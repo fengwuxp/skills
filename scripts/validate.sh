@@ -64,6 +64,7 @@ python3 -m py_compile product-architecture-expert/scripts/check_product_delivera
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
+python3 -m py_compile wind-project-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py
@@ -86,6 +87,9 @@ echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py
+
+echo "==> wind convention guard"
+wind-project-coding-conventions/scripts/check_wind_conventions.py --self-test
 
 echo "==> reference index audit"
 scripts/audit-reference-indexes.py

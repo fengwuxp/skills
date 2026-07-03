@@ -11,8 +11,10 @@
 - 需要把 Agent Loop、`/goal`、`/loop`、auto mode 或后台 Agent 接入反馈、验证、预算和停止条件。
 - 需要把 AI 工作流 Loop 做成生产可用闭环，明确隔离执行、可复现状态、独立验证、观测审计、人工接管、发布/回滚和责任 owner。
 - 需要让 AI 在真实项目中自我挖掘需求和代码上下文、形成计划、完成低风险执行，并判断何时完成、继续、停止或人工确认。
+- 需要把多套 AI 工作流、GSD / CAD / GStack / Goal / Harness / 工具链混一为一个生产可用交付口径。
 - 需要落地 Spec / SDD / OpenSpec 模板、AC 验收、测试映射、spec-lint、AC 覆盖或漂移检查。
 - 需要把 Superpowers v6 SDD 的 task reviewer、file handoff、progress ledger、pre-flight plan review 或最终 broad review 接入现有 AI Native Loop。
+- 需要判断 Superpowers、GSD、GStack、Trellis 等 AI 编码框架应作为方法纪律、上下文状态、角色链审查还是仓库级记忆进入交付闭环。
 - 需要把 CR 高频问题、测试失败、发布问题和复盘发现回流到项目知识、规范、模板、脚本或验证门禁。
 - 需要把调研、早报、教程、培训、行业情报或团队知识传播做成可复用的知识生产 Loop，而不是每次从空白提示词开始。
 - 需要设计“最终代码可交付”的准出条件，而不是只看 Agent 是否生成了代码。
@@ -34,9 +36,12 @@
 - 一份 Spec 回写与重试闭环：复现失败、检查规范清晰度、分类 AI 错误模式、回写 Spec / AC / 测试、重新生成或实现、独立验证和人工升级条件。
 - 一份 Agent Loop 反馈闭环：状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和回写位置。
 - 一份自主交付完成判断：已读事实源、候选需求、人工确认边界、执行证据、独立验证、Complete / Loop / Stop / Human handoff。
+- 一份生产可用混一模型：一个入口、一个契约、一个准出；内部术语归内部层，准出只看证据。
+- 一份生产可用准出卡：真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、观测回滚、知识回流。
 - 一份生产可用 Loop 准出判断：自动化心跳、隔离工作区、上下文资产、连接器权限、Maker / Checker 解耦、可复现状态、观测审计、人工接管和发布/回滚是否齐备。
 - 一份 Harness 传感器清单：测试、lint、静态检查、架构规则、覆盖率、漂移检测、发布监控和人工确认。
 - 一份 SDD v6 任务闭环判断：计划预检、AI Maker、Task Reviewer、文件化交接、progress ledger、最终整体复核和脚本授权边界。
+- 一份 AI 编码框架分层判断：当前任务缺方法纪律、上下文状态、角色链审查还是仓库级记忆；外部框架只作为能力层，不作为默认工具或并列流程。
 - 一份回流计划：哪些经验进入 `CONTEXT.md`、`AGENTS.md` / `CLAUDE.md`、ADR、Spec 模板、测试、fixture、脚本或技能 reference；哪些只是一次性试错。
 - 一份知识生产 Loop 判断：资料范围、上下文资产、输出标准、自动化触发、来源标识、验收 owner、更新频率和停用条件。
 - 一份经验归位判断：哪些是项目公共知识、哪些是 Skill 方法增强、哪些不得回流。
@@ -61,12 +66,14 @@
 | 做 Goal 驱动交付闭环 | 先读 `goal-composition.md`，再读 `1. 交付闭环判断`、`3. Harness 三层闭环`、`7. 指标闭环` | 不把 Goal 状态写成准出证据 |
 | 做 Agent Loop 交付闭环 | 先读 `agent-loop-engineering.md`，再读 `4. 机器验证与独立证据`、`4A. Spec 回写与重试闭环`、`7. 指标闭环` | 不把 Loop 轮数当交付证据 |
 | 做自主交付完成判断 | `4B. Agent Loop 反馈闭环`、`4C. 自主交付完成判断`，再读 `agent-loop-engineering.md` | 不把 Agent 自述完成当证据 |
+| 混一 AI 工作流为生产可用口径 | `1A. 生产可用混一模型`、`4D. 生产可用准出卡`、`7. 指标闭环`，再读 `wisdom-loop-lens.md` | 不新增模式名，不把外部框架写成并列流程 |
 | 做生产可用 Loop 准出 | 先读 `agent-loop-engineering.md` 的生产可用门禁，再读 `4B. Agent Loop 反馈闭环` 和 `5. CR 减负与可理解交接` | 不把能自动跑当能上线 |
 | 设计 Spec / SDD 强度 | `2. 最小 Spec 强度`、`8. 轻重切换和停止`，模板细节读 `spec-template-practices.md` | 不复制外部 Harness |
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `4. 机器验证与独立证据` | 不把模板写成外部 ASD/SSD 目录 |
 | 处理 AI 生成失败或反复返工 | `4A. Spec 回写与重试闭环`，再读 `verification-review-release.md` | 不只换提示词或放宽测试 |
 | 设计 Harness 闸门 | `3. Harness 三层闭环`、`4. 机器验证与独立证据` | 不替代架构师测试实现 |
 | 接入 SDD v6 任务闭环 | `3A. SDD v6 任务闭环`，再读 `agentic-engineering-governance.md` 和 `superpowers-skill-library.md` | helper 已 vendored；未获授权不运行 `task-brief`、`review-package`、`sdd-workspace` 或创建 `.superpowers/sdd/` |
+| 判断 AI 编码框架分层 | 先读 `superpowers-skill-library.md`，再读 `agent-loop-engineering.md` 和 `1. 交付闭环判断` | 不默认安装 GStack / Trellis / GSD / Superpowers |
 | 降低 CR 认知负荷 | `5. CR 减负与可理解交接` | 不做源码级 CR |
 | 做复盘和知识回流 | `6. 知识回流`、`6A. Skill 自我改进外循环`、`7. 指标闭环` | 不写个人长期偏好或私有轨迹到仓库 |
 | 做调研、教程、早报或培训材料 | `6B. 知识生产 Loop`、`7. 指标闭环` | 不把厂商工具写成默认依赖 |
@@ -100,6 +107,15 @@ CR 是否能看懂入口路径、影响模块、源码锚点和边界变化：
 - 如果 CR 反复发现同类问题，优先把它转成 Harness 传感器、lint、ArchUnit、测试、fixture 或模板约束。
 - 如果测试通过但上线后仍失败，优先检查业务验收、发布监控、数据回滚和人工兜底。
 - 如果团队只统计代码量、PR 数或生成速度，应切到一次通过率、返工率、CR 轮次、缺陷密度和验证恢复成本。
+
+## 1A. 生产可用混一模型
+
+混一不是把 GSD、CAD、GStack、Goal、Harness、工具链合并成更大的菜单，而是压成生产交付判断链：一个入口、一个契约、一个准出。
+
+- 一个入口：角色协作 Loop，判断当前阶段、owner、能力来源和停止条件。
+- 一个契约：Engineering Loop Contract，承接目标、事实、写入范围、验证命令、Checker 和状态回写。
+- 一个准出：生产可用准出卡，只看真实业务入口、独立证据、发布 / 回滚和 owner 责任。
+- GSD / CAD / Goal / Harness 只做目标、计划、原子执行、状态和授权层；GStack 只做角色链审查；Wisdom Lens 只做取舍校准；工具只做能力补充。
 
 ## 2. 最小 Spec 强度
 
@@ -282,6 +298,12 @@ Agent Loop 只有在“写了、验证了、读到反馈、能纠正、会停止
 - `Human handoff`：存在需求取舍、公共契约、数据 / 权限 / 安全 / 合规 / 生产 / Git / 联网 / 部署 / 不可逆操作或低置信度判断。
 
 如果“必须人工确认项”非空，AI 可以整理证据、候选方案和推荐问题，但不能把任务标记为完成，也不能继续扩大实现范围。
+
+## 4D. 生产可用准出卡
+
+生产可用只按证据准出，不按 Agent 自述、PR 数、Loop 轮数或演示可运行准出。生产可用准出卡字段：真实业务入口、Owner、事实来源、Spec / Contract、写入范围、TDD / 验证、独立 CR、可用性 / 安全性 / 可靠性、发布观测、回滚 / 人工接管、知识回流、判断。
+
+八项缺一不可：真实业务入口不是 demo / mock / 内存版业务 Service；owner 清楚；事实 / 推断 / 待确认分层；Spec / Contract 含目标、非目标、写入范围和停止条件；TDD、测试或等价验证覆盖外部契约和业务不变量；独立 CR 对齐源码锚点、项目约规、架构原则和红线；发布可观测、可回滚、可人工接管；可复用经验回流到项目上下文、测试、fixture、脚本、ADR 或 Skill。
 
 ## 5. CR 减负与可理解交接
 
@@ -485,3 +507,4 @@ AI Native 交付指标要从“生成速度”切换到“交付可信度”：
 - 只写 Goal 标题，不把成功标准映射到 Spec / AC、测试、CR 和发布证据。
 - CR 高频问题长期靠人肉提醒，不沉淀为机器门禁。
 - 复盘只写总结，不更新知识、模板、测试、脚本或指标。
+- 把“混一”理解为把所有模式堆到一个超大流程，而不是收敛为一个入口、一个契约和一个准出。

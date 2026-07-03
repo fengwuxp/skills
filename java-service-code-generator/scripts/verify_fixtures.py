@@ -25,17 +25,26 @@ CASES = [
             "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": [
                 '@Table(SampleOrder.TABLE_NAME)',
                 'private Long id;',
+                'import com.wind.transaction.core.enums.CurrencyIsoCode;',
+                'private CurrencyIsoCode currency;',
                 '@Column(value = "is_deleted", isLogicDelete = true)',
             ],
             "face/com/example/skill/codegen/model/request/CreateSampleOrderRequest.java": [
                 "private String orderNo;",
                 "private BigDecimal amount;",
+                "private CurrencyIsoCode currency;",
+            ],
+            "face/com/example/skill/codegen/services/SampleOrderService.java": [
+                "SampleOrderDTO getSampleOrderById",
+            ],
+            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": [
+                "sampleOrderMapper.updateSelective(entity)",
             ],
         },
         "golden_hashes": {
-            "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": "f479d6c499120a007d44cbca52fbfdf66f61991e544eaf4942e4239a516eeadd",
-            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": "094adffcae1930c131f4b8d69142f25336cfa81f89b285fcf54ae06d208d5ecd",
-            "face/com/example/skill/codegen/services/SampleOrderService.java": "779ae03f0eb627618d1ea66a71d507983eff9869f432eb8686f66304b7e34ebb",
+            "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": "bf0bcefcc15aadcd026766ba3faef8722893fdb094803cefcc9046ea64eccc82",
+            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": "80a8612d1a3bfeb18acf192cad7f2fba8927618ac97813a9f58f06243ae8dbf5",
+            "face/com/example/skill/codegen/services/SampleOrderService.java": "158d589e2d01d911a78665cb2232541a3002b09667049774547e8f955087853f",
         },
     },
     {
@@ -59,11 +68,19 @@ CASES = [
                 "private String channelCode;",
                 "private Boolean enabled;",
             ],
+            "face/com/example/skill/codegen/services/SampleChannelService.java": [
+                "SampleChannelDTO getSampleChannelById",
+            ],
+            "impl/com/example/skill/codegen/services/impl/SampleChannelServiceImpl.java": [
+                "sampleChannelMapper.updateSelective(entity)",
+            ],
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": "a13d32ee0a7d3e3ad5cde36ee65c97cd6bb81f140339a49bfa1fa530f24fb16d",
             "impl/com/example/skill/codegen/services/mapstruct/SampleChannelConverter.java": "e21e1307512adef43d2dabdb2e01b2af7e83bbc0388328c4497ccb8eafa5c03a",
+            "impl/com/example/skill/codegen/services/impl/SampleChannelServiceImpl.java": "cd968148e29b3c8f86afd89b9e56978a0af3c4596ab28f4c335461986301482d",
             "face/com/example/skill/codegen/model/query/SampleChannelQuery.java": "6ae445ced82b7eb419fab48c2b7cfe3862dad643a754df7ec25b502361b73a1e",
+            "face/com/example/skill/codegen/services/SampleChannelService.java": "a3cddb82b11233b60c7374a26b0193bdfeec87121091eccefb484943acb92767",
         },
     },
     {
@@ -88,13 +105,17 @@ CASES = [
                 "private BigDecimal totalAmount;",
             ],
             "face/com/example/skill/codegen/services/SampleBatchService.java": [
+                "SampleBatchDTO getSampleBatchById",
                 "WindPagination<SampleBatchDTO> querySampleBatchs",
+            ],
+            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": [
+                "sampleBatchMapper.updateSelective(entity)",
             ],
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleBatch.java": "595864b4760c4fff7a374d15d187bd74c45fc709874efbfded0a3aeef474735f",
-            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": "0abe2690604252ec05ae60b0bd7d5cd427952c1be729be2fb323b376a2f94cd9",
-            "face/com/example/skill/codegen/services/SampleBatchService.java": "f771b55830adbce3f755ec318b3ef10c326b91690424d990241b9e2cc523d509",
+            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": "7f53987eebcfe5e980f328a16f0e6153d71ee7308f8470382ec3f28111f29d3e",
+            "face/com/example/skill/codegen/services/SampleBatchService.java": "8dc393c29a193876b8aecd37bc709f905ddd56eb3ea7ec582a06ccbd953bc717",
         },
     },
 ]

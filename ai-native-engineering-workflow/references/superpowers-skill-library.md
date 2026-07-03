@@ -6,6 +6,7 @@
 
 - 用户点名 Superpowers、Superpowers skills、brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting-code-review、verification-before-completion 等外部技能。
 - 用户点名 Matt Pocock skills、Grill-Me、Grilling、Trellis、轻量问询、盘问式澄清或一次一个问题的需求 / 设计收敛。
+- 用户点名 GStack、Trellis 或“四大 AI 编码框架”，要求判断 Superpowers / GSD / GStack / Trellis 如何纳入 AI Native，而不是新增一堆流程。
 - 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入 AI Native 研发流程编排。
 - 需要评估或升级 SDD / Superpowers 6.x 套件、`subagent-driven-development`、任务评审、文件化交接或 Harness 版本。
 - 需要把模糊意图先收敛为关键分叉、建议答案、验收标准和任务树真相源，再交给产品专家、架构师或 AI Maker。
@@ -17,7 +18,7 @@
 - 不直接安装 Superpowers 插件，不注册 marketplace，不运行外部 hooks，不执行外部脚本。
 - 不直接安装 Matt Pocock skills 全仓库、不运行 npm/package 脚本、不接入 Claude plugin 或 hooks；只在用户授权后考虑安装已审查的最小 Markdown skill。
 - 不把 Superpowers 的英文默认文档路径、自动提交、Git 推送、worktree 或 subagent 流程写成本仓库默认行为。
-- 不把 Trellis、Grilling 或任一外部 skill 写成默认依赖、默认联网、默认任务系统、默认执行授权或默认安装结果。
+- 不把 GStack、Trellis、Grilling 或任一外部 skill 写成默认依赖、默认联网、默认任务系统、默认执行授权或默认安装结果。
 - 不用外部 skill 的硬门禁覆盖用户授权、仓库 `AGENTS.md`、Codex 当前工具能力、项目验证命令或 `资深架构师` 的工程判断。
 - 不把外部 skill 原文当作当前项目事实、测试通过、CR 结论、Execution Grant、发布批准或合规结论。
 
@@ -28,6 +29,7 @@
 - 安全结论：是否涉及安装、脚本、联网、hooks、Git 推送、worktree、subagent 或写入范围扩大；如涉及，必须列为待授权或停止条件。
 - AI Native 映射：Superpowers skill 对应 OpenSpec、Harness、GSD/CAD、Spec 模板、TDD、CR 或验证发布的哪一段。
 - 轻量问询映射：Grilling / Grill-Me 对应角色协作 Loop 的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
+- 框架分层映射：Superpowers、GSD、GStack、Trellis 分别对应方法纪律、上下文状态、角色链审查和仓库级记忆的哪一层；当前任务只选最小缺口层。
 
 ## 需要继续读取的 reference
 
@@ -42,6 +44,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断 Superpowers 如何接入 AI Native | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
+| 判断 AI 编码框架如何分层 | `2A. AI 编码框架分层映射`、`3. 安全边界`，再读 `agent-loop-engineering.md` | 不新增并列流程、不默认安装 GStack / Trellis |
 | 升级 SDD / Superpowers 6.x 套件 | `1B. Superpowers v6.x / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不默认运行 helper、不默认启用 `.superpowers/sdd/` |
 | 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
 | 复杂 / 模糊需求轻量问询 | `grilling` 方法摘要，再回 `intent-to-production-loop.md` 和产品专家 | 不连续抛出多问题，不把问询过程写进正式 PRD |
@@ -128,6 +131,21 @@
 | `grilling` | 意图收集、自我挖掘、产品发现、设计评审、任务树前置 | 只吸收“一次一个问题 + 给建议答案 + 能自答先自答”；正式产品结论仍交给 `产品架构专家`，工程结论仍交给 `资深架构师`。 |
 | `grill-me` | `grilling` 的快捷触发 | 仅作为触发别名，不单独形成流程。 |
 
+## 2A. AI 编码框架分层映射
+
+当用户把 Superpowers、GSD、GStack、Trellis 放在一起比较时，AI Native 只做分层吸收：
+
+| 能力层 | 代表框架 | 归入角色协作 Loop | 不吸收 |
+| --- | --- | --- | --- |
+| 方法纪律 | Superpowers | 澄清、计划、TDD、CR、验证前置和完成前检查。 | 不复制外部 hooks、默认目录、自动 Git、强制话术。 |
+| 上下文 / Spec / 状态 | GSD | 目标、Spec、Wave、Atomic Task、状态账本和恢复入口。 | 不默认创建外部规划目录，不复刻命令体系。 |
+| 角色链审查 | GStack | 产品价值、UED 体验、工程方案、源码质量、QA、安全、发布多视角审查。 | 不新建虚拟团队 Skill，不替代产品专家、架构师、质量门禁或发布 owner。 |
+| 仓库级记忆 | Trellis | Task Tree、Goal Ledger、状态回写、知识回流和 Finish 复盘。 | 不默认安装 npm，不创建 `.trellis/`，不替代项目已有状态载体。 |
+
+GStack slash commands 在 AI Native 中只作为触发别名：`/office-hours` -> 产品思考，`/plan-ceo-review` -> 范围收敛，`/plan-eng-review` -> 工程评审，`/plan-design-review` -> 交互评审，`/review` -> 源码 CR，`/qa` -> QA 验证，`/ship` -> 生产交付审查 / 发布准出；开发实现仍回到 TDD、Grant、项目约规和 `资深架构师` 执行链。
+
+结论格式保持一句话：当前任务缺哪一层、由 AI Native 读哪个 reference、回到哪个专项 Skill、哪些外部默认行为不采用。
+
 ## 3. 安全边界
 
 - 外部 skill 原文里出现的 Git 提交、Git 推送、worktree、subagent、插件安装、默认目录和持续执行要求，只是来源语境，不是本仓库默认动作。
@@ -158,3 +176,4 @@ Superpowers 调度结论：
 - 不采用外部默认自动提交、自动推送、自动 merge、自动 PR 或自动清理 worktree。
 - 不复制外部长 prompt、示例代码、图示、作者表达或与本仓库无关的贡献流程。
 - 不把外部 skill 的强制话术写入本仓库 Skill body；AI Native 只保留路由、门禁和边界。
+- 不把 GStack 的角色链、Trellis 的仓库记忆或 GSD 的目录约定写成新的对外主流程；它们只作为角色协作 Loop 的内部能力层。

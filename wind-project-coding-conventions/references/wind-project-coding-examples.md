@@ -78,37 +78,96 @@
 - 正例：face Service 实现默认落 `*-impl/.../service/impl`；多实现时保留一个主对外实现组合编排，其他实现用职责命名并通过 `@Primary`、bean name 或项目统一装配规则消除注入歧义。
 - 验证点：结构守卫能发现错误包位；Spring 装配测试能证明同一 Service 的默认注入唯一且符合业务入口。
 
-### 9. 源码样本只提炼稳定共性
+### 9. 横切控制 wrapper 隔离锁和事务
+
+- 反例：业务 `ServiceImpl` 一个方法里同时做参数校验、加分布式锁、注册事务同步释放、遍历批量对象、访问 Mapper、改状态和执行业务规则；或者为了单行转发新增没有职责的 wrapper。
+- 正例：真实业务 `XxxServiceImpl` 仍实现 `XxxService`，只保留业务规则、状态流转、声明式事务和持久化协调；`XxxServiceLocksWrapper` 同样实现 `XxxService`，用 `@Primary` 做默认入口，只承接分布式锁这类横切控制逻辑，并委托 `@Qualifier("xxxServiceImpl") XxxService delegate`。
+- 模板：
+
+```java
+@Service
+@Primary
+public class XxxServiceLocksWrapper implements XxxService {
+
+    private static final long LOCK_WAIT_MILLIS = 5000;
+
+    private static final long LOCK_LEASE_MILLIS = 30000;
+
+    private final XxxService delegate;
+
+    private final LockFactory lockFactory;
+
+    public XxxServiceLocksWrapper(
+            @Qualifier("xxxServiceImpl") XxxService delegate,
+            LockFactory lockFactory) {
+        this.delegate = delegate;
+        this.lockFactory = lockFactory;
+    }
+
+    @Override
+    public XxxResult executeXxx(ExecuteXxxRequest request) {
+        AssertUtils.notNull(request, "请求不能为空");
+        AssertUtils.hasText(request.getTenantId(), "租户不能为空");
+        AssertUtils.hasText(request.getResourceSn(), "资源流水不能为空");
+        return lockWrapper(lockName(request.getTenantId(), request.getResourceSn()),
+                () -> delegate.executeXxx(request));
+    }
+
+    private <T> T lockWrapper(String lockName, Supplier<T> func) {
+        WindLock lock = lockFactory.apply(lockName);
+        try {
+            AssertUtils.isTrue(lock.tryLock(LOCK_WAIT_MILLIS, LOCK_LEASE_MILLIS, TimeUnit.MILLISECONDS),
+                    "业务资源锁获取超时");
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw BaseException.friendly("业务资源锁等待被中断");
+        }
+        try {
+            return func.get();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private String lockName(String tenantId, String resourceSn) {
+        return "domain:xxx:" + tenantId + ":" + resourceSn;
+    }
+}
+```
+
+- 验证点：锁粒度绑定单个真实冲突资源，例如 `tenantId + resourceSn`，不要对用户列表、对象列表做批量锁；无明确配置 owner 时等待和租约先用常量；wrapper 不直接访问 Mapper、不做业务判断、不注册事务同步回调、不用冗余 `boolean locked` 表达锁状态。
+
+### 10. 源码样本只提炼稳定共性
 
 - 反例：看到 nobe 有 `services/impl`、capte-domain 有 `dto/request/query` 直连包、某个模块叫 `global-face`，就把这些历史路径全部写成新项目强制模板。
 - 正例：从 `wind-integration / nobe / capte-domain 源码观察` 中只提炼稳定判断：face 放公开契约，impl 放 `dal/entities`、`dal/mapper`、`mapstruct` 和实现层协作，web-api 放 Controller，core 放跨模块稳定对象，infrastructure 放技术 helper；新代码优先用 `model/dto|request|query|command`，历史项目兼容既有包名。
 - 验证点：新增规则能回答“谁调用、生命周期归谁、变化 owner 在哪、依赖方向是否越界”，而不是复刻某个仓库的目录树。
 
-### 10. 平台基础服务模板可复用但不硬套
+### 11. 平台基础服务模板可复用但不硬套
 
 - 反例：为每张表生成 `create/update/delete/get/query` 全套接口，哪怕业务没有公开入口；或者把 `saveXxx`、`createXxx`、`updateXxx` 混用，调用方无法判断幂等和新增/更新语义。
 - 正例：平台基础能力优先使用 `XxxService` / `XxxServiceImpl`，公开契约只暴露 `Request`、`Query`、`DTO` 和业务枚举；常见签名是 `createXxx(CreateXxxRequest) -> Long`、`updateXxx(UpdateXxxRequest)`、`deleteXxxByIds(Long... ids)`、`getXxxById(id) -> XxxDTO`、`queryXxxs(XxxQuery, WindQuery<? extends QueryOrderField>) -> WindPagination<XxxDTO>`。只有新增/更新确实统一时才用 `saveXxx(SaveXxxRequest)`，状态动作使用 `enable/disable/cancel/execute` 等业务动词。
 - 验证点：`ServiceImpl` 是否只在内部接触 Entity、Mapper 和 QueryWrapper；是否用 `XxxConverter` 做边界转换；查询条件是否集中在 `createQueryWrapper/fillQueryWrapper`；是否存在无业务语义的一行 Mapper 包装。
 
-### 11. 枚举是业务语言，不是字符串常量袋
+### 12. 枚举是业务语言，不是字符串常量袋
 
 - 反例：`String state`、`Integer type`、`String currency` 或私有魔法常量出现在 DTO、Request、Entity、事件或公开服务签名中。
 - 正例：状态、类型、动作分别命名为 `XxxState`、`XxxType`、`XxxAction`，公开枚举放 face/core 的 `enums`，实现 `DescriptiveEnum` 并提供 `desc`；币种统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，外部字符串只在 Adapter/Converter 边界转换。
 - 验证点：公共契约、Entity、MapStruct 和测试是否都使用同一枚举类型；前端展示所需的名称、颜色、树结构是否通过 DTO/Converter 输出，而不是污染业务枚举。
 
-### 12. Query 字段命名表达语义
+### 13. Query 字段命名表达语义
 
 - 反例：`startTime`、`endTime`、`nameLike`、`statusList`、`selectByStatus` 混用，调用方不知道是闭区间、模糊匹配、集合查询还是 SQL 直译。
 - 正例：默认等值不加后缀，例如 `status`；模糊用 `nameContains`；时间和金额范围用 `createdAtMin` / `createdAtMax`、`amountMin` / `amountMax`；集合用 `statusIn`；空值用 `deletedAtIsNull`。服务方法按 `get/find/query/exists/count/stats/summary` 表达存在性、条件查询和统计。
 - 验证点：`XxxQuery` 字段是否只表达业务条件；Service 是否避免 `select/load/fetch`；历史 `queryXxxById` 是否只是附近代码兼容，新代码能否改成 `get/find`。
 
-### 13. 内网 API 路径即安全语义
+### 14. 内网 API 路径即安全语义
 
 - 反例：所有内部接口都放 `/inc/order/query`，再靠 header、备注或调用方约定区分是否需要签名；涉及资金、权限或用户数据的写操作仍走低风险路径。
 - 正例：低风险内部查询走 `/inc/basic/{domain}/{resource}/{action}`；涉及用户数据、资金、权限、关键配置或业务状态变化的接口走 `/inc/secure/{domain}/{resource}/{action}`，并由网关或拦截器验证内部来源、appKey、timestamp、nonce 和 signature。
 - 验证点：路径能否一眼看出安全等级；`basic` 是否只承载低风险能力；`secure` 是否有签名/鉴权、重放防护、审计和测试。
 
-### 14. 字典国际化不驱动业务逻辑
+### 15. 字典国际化不驱动业务逻辑
 
 - 反例：业务判断依赖 `"已支付"`、`"Paid"` 或前端展示名称；业务事件直接保存一整句中文，历史记录随文案修改而漂移。
 - 正例：业务逻辑依赖 `PaymentState.PAID`、`error.payment.order-not-found` 或 `event.payment.order-paid`；业务事件保存 `{eventKey, params}`，params 放订单号、金额、状态 code 等变量值，展示层再按语言渲染。

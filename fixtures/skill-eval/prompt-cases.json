@@ -68,7 +68,7 @@
     {
       "id": "ai-native-should-gsd-product-engineering-collaboration",
       "skill": "ai-native-engineering-workflow",
-      "query": "进入 GSD 产研协同研发流程：目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或看上去可用的样子货；产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。",
+      "query": "进入产研交付视图：目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或看上去可用的样子货；产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -78,12 +78,12 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图；旧说法 GSD 产研协同模式映射为角色协作 Loop 产研交付视图的内部计划层。按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
+      "expected_handling": "进入角色协作 Loop 的产研交付视图；目标层、计划层、原子执行层、执行契约和授权边界只作为内部层归位。按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
     },
     {
       "id": "ai-native-should-compress-gsd-cad-goal-into-loop",
       "skill": "ai-native-engineering-workflow",
-      "query": "现在 AI 流程里 GSD、Loop、CAD、Goal 太多了，请统一压缩成 Loop 机制，同时保留大项目分波、原子任务执行和授权门禁。",
+      "query": "现在 AI 流程里目标、计划、原子执行、执行契约和授权边界太多了，请统一压缩成角色协作 Loop，同时保留大项目分波、原子任务执行和授权门禁。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -93,7 +93,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native Engineering Loop 重构路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确对外只推荐角色协作 Loop，一个主流程下再选择只读理解、产研交付、验证发布、知识回流四类场景视图，GSD 是 Plan/Wave 层，CAD 是 Atomic 子循环，Goal 是目标层，Harness 是执行契约层，Grant 是授权层；保留旧说法触发，但不再要求用户手动选择多个模式。"
+      "expected_handling": "进入 AI Native Engineering Loop 重构路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确对外只推荐角色协作 Loop，一个主流程下再选择只读理解、产研交付、验证发布、知识回流四类场景视图；目标、计划、原子执行、执行契约和授权边界只作为内部层归位，不再要求用户手动选择多个模式。"
     },
     {
       "id": "ai-native-should-plan-to-goal-bridge-without-new-flow",
@@ -168,7 +168,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 intent-to-production-loop 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；旧术语只作内部实现层和历史触发别名，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
+      "expected_handling": "进入角色协作 Loop / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 intent-to-production-loop 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；目标、计划、原子执行、执行契约和授权边界只作内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
     },
     {
       "id": "ai-native-should-autonomous-discovery-to-delivery-loop",
@@ -213,7 +213,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 角色协作 Loop 主流程，读取 intent-to-production-loop 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确旧术语只作内部实现层和历史触发别名，不替代角色协作、测试通过、CR 结论或发布审批。"
+      "expected_handling": "进入 AI Native 角色协作 Loop 主流程，读取 intent-to-production-loop 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确目标、计划、原子执行、执行契约和授权边界只作内部层，不替代角色协作、测试通过、CR 结论或发布审批。"
     },
     {
       "id": "ai-native-should-prd-ai-prescan-review",
@@ -606,6 +606,66 @@
         "variance_check"
       ],
       "expected_handling": "进入 Superpowers 调度模式，先审查来源、许可证、下载范围和供应链边界，再把 brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting/receiving-code-review、systematic-debugging、verification-before-completion 等外部 skill 映射到 AI Native 阶段；不得默认安装插件、运行脚本、使用 hooks、创建 worktree、执行 Git 推送或启动 subagent，必须列出只读/写入/Git/联网/subagent 边界、验证门禁和不采用的外部默认流程。"
+    },
+    {
+      "id": "ai-native-should-layer-ai-coding-frameworks",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考 Superpowers、GSD、GStack、Trellis 这类 AI 编码框架，帮我判断应该怎么纳入 AI Native Engineering Loop，不要新增一堆流程或默认安装工具。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI 编码框架分层映射路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 superpowers-skill-library、agent-loop-engineering、code-delivery-closed-loop 和 source-map；把 Superpowers 归为方法纪律层，GSD 归为上下文 / Spec / 状态层，GStack 归为角色链审查层，Trellis 归为仓库级记忆 / 任务树层；由 AI Native 作为编排者，不新增并列流程、不要求用户在工具间选择；GStack 的 CEO / Design / Eng / Review / QA / Security / Ship 只映射到产品专家、UED、架构师、源码质量评审、质量门禁、安全发布 owner 等既有角色视角；Trellis 只吸收仓库级状态载体和 Finish 回流思想，不默认创建 .trellis、不安装 npm、不运行脚本、不写入 Git、不替代专项 Skill、测试、CR、发布审批或授权。"
+    },
+    {
+      "id": "ai-native-should-map-gstack-role-chain-template",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考 GStack 模板流程优化 AI Native：/office-hours 先做产品思考，/plan-ceo-review 收敛 MVP，/plan-eng-review 做工程评审，/plan-design-review 做 UI 设计评审，然后开发、/review、/qa、/ship，要求映射到角色协作 Loop，不新增外部命令菜单。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 GStack 角色链模板映射路径，读取 intent-to-production-loop、product-to-engineering-lifecycle、prd-system-design-review、superpowers-skill-library、verification-review-release 和 source-map；把 /office-hours 映射为产品思考，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 编码实现，把 /review 映射为源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为发布准出；命令名只作触发别名，不作为外部工具、默认命令菜单或新流程；产品思考回产品架构专家，工程评审、TDD、编码和源码 CR 回资深架构师，QA 由 AI Native 质量门禁编排并路由架构师 testing 能力，发布准出保留发布 owner；Git、PR、merge、部署和生产操作必须显式授权。"
+    },
+    {
+      "id": "ai-native-should-gstack-production-delivery-review",
+      "skill": "ai-native-engineering-workflow",
+      "query": "结合 GStack 流程：/office-hours 六个 forcing questions、/plan-ceo-review 收敛 MVP、/plan-eng-review、/plan-design-review、开发、/review、/qa、/ship，完善 AI Native 流程，并整理生产交付审查标准。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 GStack 角色链 + 生产交付审查路径，读取 intent-to-production-loop、verification-review-release、code-delivery-closed-loop、superpowers-skill-library 和 source-map；把 /office-hours 映射为产品思考 forcing questions，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 最小实现，把 /review 映射为独立源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为生产交付审查 / 发布准出；输出生产交付审查卡，覆盖产品价值、范围收敛、工程设计、交互可用、实现证据、独立 CR、QA 验证、发布观测、回滚 / 人工接管、残余风险和下一 owner；不新增命令菜单，不把测试通过、PR 数、Agent 自述、Git/PR/merge/部署或上线审批写成自动准出。"
+    },
+    {
+      "id": "ai-native-should-unify-production-ready-workflow-with-wisdom-lens",
+      "skill": "ai-native-engineering-workflow",
+      "query": "如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、Goal、Harness 和工具链收成一个入口、一个契约、一个准出。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery-closed-loop、wisdom-loop-lens、intent-to-production-loop、agent-loop-engineering、verification-review-release 和 source-map；把多套模式收敛为一个入口、一个契约、一个准出：角色协作 Loop 作为入口，Engineering Loop Contract 承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；用阴阳平衡校准推进与边界，用体用合一校准目标与工具，用循名责实校准完成名实；不新增流程名、命令菜单、外部工具依赖，不把老祖宗智慧替代事实、测试、CR、授权或上线审批。"
     },
     {
       "id": "ai-native-should-design-code-alignment",

@@ -22,6 +22,9 @@ RESERVED = {
     "volatile", "while", "record", "var", "yield", "sealed", "permits", "non-sealed",
 }
 
+CURRENCY_ENUM = "CurrencyIsoCode"
+CURRENCY_ENUM_IMPORT = "com.wind.transaction.core.enums.CurrencyIsoCode"
+
 
 @dataclasses.dataclass
 class Column:
@@ -624,6 +627,8 @@ def expected_column_from_field(field_name: str) -> str:
 
 
 def java_type(column: Column) -> str:
+    if is_currency_column(column):
+        return CURRENCY_ENUM
     t = column.sql_type.lower()
     base = re.sub(r"\s*\(.*\)", "", t).strip()
     if base in {"bigint", "bigserial"}:
@@ -649,6 +654,11 @@ def java_type(column: Column) -> str:
     if base in {"blob", "binary", "varbinary", "bytea"}:
         return "byte[]"
     return "String"
+
+
+def is_currency_column(column: Column) -> bool:
+    name = column.name.lower()
+    return name in {"currency", "currency_code", "currency_iso_code"} or column.comment.strip() == "币种"
 
 
 def extract_sql_type(rest: str) -> str:
@@ -714,6 +724,8 @@ def imports_for_types(columns: list[Column], entity: bool) -> set[str]:
         imports.add("java.time.LocalDateTime")
     if "LocalTime" in types:
         imports.add("java.time.LocalTime")
+    if CURRENCY_ENUM in types:
+        imports.add(CURRENCY_ENUM_IMPORT)
     if entity:
         imports.add("java.io.Serial")
         imports.add("java.io.Serializable")
@@ -1076,7 +1088,8 @@ public interface {name}Service {{
      * @param id {desc}ID
      * @return {desc}DTO
      */
-    {name}DTO query{name}ById(@NonNull Long id);
+    @NonNull
+    {name}DTO get{name}ById(@NonNull Long id);
 
     /**
      * 分页查询{desc}。
@@ -1177,7 +1190,7 @@ public class {name}ServiceImpl implements {name}Service {{
     public void update{name}(@NonNull Update{name}Request request) {{
         find{name}(request.getId());
         {name} entity = {name}Converter.INSTANCE.convertToEntity(request);
-        AssertUtils.isTrue({var}Mapper.update(entity) == 1, "更新{desc}失败");
+        AssertUtils.isTrue({var}Mapper.updateSelective(entity) == 1, "更新{desc}失败");
     }}
 
     /**
@@ -1199,7 +1212,8 @@ public class {name}ServiceImpl implements {name}Service {{
      * @return {desc}DTO
      */
     @Override
-    public {name}DTO query{name}ById(@NonNull Long id) {{
+    @NonNull
+    public {name}DTO get{name}ById(@NonNull Long id) {{
         return {name}Converter.INSTANCE.convertToDTO(find{name}(id));
     }}
 

@@ -21,6 +21,7 @@
 - Wind 规则权威：`wind-project-coding-conventions` Skill 的 `references/wind-project-coding-conventions.md`。
 - Wind 示例权威：`wind-project-coding-conventions` Skill 的 `references/wind-project-coding-examples.md`。
 - 源码级实现、测试或 CR：回到 `coding-standards.md`、`project-governance-service-api-modeling.md`、`coding-review-deep-dive.md`、`testing.md` 和 `testing-practices.md`。
+- 低成本结构守卫：可运行 `wind-project-coding-conventions/scripts/check_wind_conventions.py --root <project>`，再由架构师按源码事实、测试结果和项目本地规则定级。
 
 ## 重复规则归位
 
@@ -33,4 +34,4 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | Wind opt-in 规则判断 / 包位归属 / 示例 | `wind-project-coding-conventions` Skill | 不复制本文件作为规则全文 |
-| Wind opt-in 源码设计 / TDD / CR / 验证 | 先取 Wind 规则，再读架构师源码级 reference | 不把规则判断替代真实源码验证 |
+| Wind opt-in 源码设计 / TDD / CR / 验证 | 先取 Wind 规则，必要时运行结构守卫，再读架构师源码级 reference | 不把规则判断或脚本输出替代真实源码验证 |

@@ -31,12 +31,14 @@ description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 o
 5. 输出时把结论分成：适用性、触发的 Wind 约规、当前偏差、建议改法、需要回到架构师或代码生成器的后续动作。
 6. 如果涉及真实源码修改、TDD、深度 CR、生产发布或风险回滚，只给规则判断和路由建议，不替代 `资深架构师` 的执行与验证。
 7. 如果涉及 Open Code Review / OCR，只说明哪些 Wind 约规可作为 `.opencodereview/rule.json` 或 `--background` 的规则输入；OCR 输出仍交 `资深架构师` 做源码级判读。
+8. 需要低成本结构守卫时，可运行 `scripts/check_wind_conventions.py --root <project>`；脚本只检查高信号红线，不替代源码级 CR、测试或项目本地规则。
 
 ## Reference 路由
 
 - `references/wind-project-coding-conventions.md`：Wind 项目编码约规主规则；任何 opt-in Wind 约规任务都应读取。
 - `references/wind-project-agents-template.md`：Wind 项目本地 `AGENTS.md` 初始化 / 改进模板；只有用户要求项目 AGENTS 初始化、改进或 AI Native 项目约规入口时读取。
 - `references/wind-project-coding-examples.md`：正反例和最佳实践；只有用户要求示例、参考或 AI Maker 落地参照时读取。
+- `scripts/check_wind_conventions.py`：离线结构守卫；只有需要扫描真实 Wind Java 项目或做规则自测时运行。
 
 ## 输出要求
 
