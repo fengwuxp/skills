@@ -26,6 +26,16 @@ CURRENCY_ENUM = "CurrencyIsoCode"
 CURRENCY_ENUM_IMPORT = "com.wind.transaction.core.enums.CurrencyIsoCode"
 
 
+def avoid_reserved_identifier(name: str) -> str:
+    return f"{name}Value" if name in RESERVED else name
+
+
+def lower_camel_identifier(name: str) -> str:
+    if not name:
+        return name
+    return avoid_reserved_identifier(name[:1].lower() + name[1:])
+
+
 @dataclasses.dataclass
 class Column:
     name: str
@@ -319,6 +329,8 @@ def normalize_header(value: str) -> str:
         "field": "java_name",
         "fieldname": "java_name",
         "属性名": "java_name",
+        "java属性名": "java_name",
+        "java字段名": "java_name",
         "javaname": "java_name",
         "类型": "sql_type",
         "字段类型": "sql_type",
@@ -411,7 +423,7 @@ def parse_field_table(text: str, table_name: str | None = None, table_comment: s
             comment=(row.get("comment") or "").strip(),
             default=(row.get("default") or "").strip(),
         )
-        column.java_name = java_name or field_name_from_column(name)
+        column.java_name = avoid_reserved_identifier(java_name) if java_name else field_name_from_column(name)
         columns.append(column)
         if primary:
             primary_keys.append(name)
@@ -608,9 +620,7 @@ def field_name_from_column(column_name: str) -> str:
         result = snake_to_camel(column_name[3:])
     else:
         result = snake_to_camel(column_name)
-    if result in RESERVED:
-        return result + "Value"
-    return result
+    return avoid_reserved_identifier(result)
 
 
 def expected_column_from_field(field_name: str) -> str:
@@ -707,7 +717,7 @@ def column_annotation(column: Column) -> str:
 def prepare(table: Table, class_name: str | None) -> str:
     actual_class = class_name or class_name_from_table(table.name)
     for column in table.columns:
-        column.java_name = field_name_from_column(column.name)
+        column.java_name = avoid_reserved_identifier(column.java_name) if column.java_name else field_name_from_column(column.name)
         column.java_type = java_type(column)
         column.column_annotation = column_annotation(column)
     return actual_class
@@ -1122,7 +1132,7 @@ def render_query_conditions(table: Table, var: str) -> str:
 
 
 def render_service_impl(base_package: str, table: Table, name: str, author: str) -> str:
-    var = name[:1].lower() + name[1:]
+    var = lower_camel_identifier(name)
     desc = table_desc(table, name)
     today = dt.date.today().isoformat()
     deleted = next((c for c in table.columns if c.column_annotation and "isLogicDelete" in c.column_annotation), None)

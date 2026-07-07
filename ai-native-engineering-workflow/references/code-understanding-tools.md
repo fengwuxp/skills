@@ -1,6 +1,6 @@
 # AI 代码理解工具入口
 
-本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 外部代码评审工具 / 本地执行型 Coding Agent 工具在 AI Native 研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁、提供外部 Review 证据或生成候选 diff；不把任何工具写成默认依赖，也不替代源码阅读、测试、CR、项目编码约规或用户授权。
+本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 外部代码评审工具 / 本地执行型 Coding Agent 工具在 AI Native 研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁、提供外部 Review 证据或生成候选 diff；不把任何工具写成默认依赖，也不替代 Context System、源码阅读、测试、CR、项目编码约规或用户授权。
 
 ## 使用时机
 
@@ -25,6 +25,7 @@
 - 设计-代码对齐结论：设计条款、代码入口、实现状态、偏差、测试证据、需架构师确认的问题。
 - 本地执行型 Coding Agent 准入：项目上下文扫描、项目编码约规来源、写入范围、依赖 / 配置变更、候选 diff、验证命令、冲突 Ask-or-Decide、架构师 CR 和回写位置。
 - 工具输出交接：事实 / 推断、置信度、文件路径、函数/类型/配置锚点、命令证据、上下文漂移检查和下一步 owner。
+- 知识库工具判断：先确认 L0/L1/L2 权威上下文、隐私边界、读取范围和回链证据，再判断是否需要知识图谱、向量库或外部知识库；工具摘要不得替代源码、测试、CR 或 owner 结论。
 
 ## 需要继续读取的 reference
 
@@ -44,6 +45,7 @@
 | AgentRC 上下文工程 | 3、7 | 不默认写入 `.github/` 或 `.vscode/` |
 | Gemini CLI 代码理解 | 3、8 | 不默认联网或授权写文件 |
 | Understand Anything 代码库知识图谱 | 3、9 | 不默认安装插件、写 `.understand-anything/`、启用 hook 或提交图谱 |
+| Context / 知识库工具治理 | 3、9 | 不把外部知识库、向量库或图谱摘要当权威事实 |
 | Ponytail 最小正确实现 / 过度设计 CR | 3、10 | 不替代 correctness/security review、TDD 或架构师源码级判断 |
 | Open Code Review 代码评审 Checker | 3、10A | 不替代项目编码约规、Wind 项目编码约规、TDD 或架构师 CR |
 | WorkBuddy 类本地执行型 Agent | 3、6A、11 | 不替代项目编码约规、Wind 项目编码约规、TDD 或架构师 CR |

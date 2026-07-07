@@ -304,6 +304,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 | 事件 | `XxxEvent` |
 | 转换器 | `XxxConverter` |
 
+- 【强制】Java 标识符不得使用 Java 关键字、保留字或受限标识符；即使 `record`、`var`、`yield`、`sealed`、`permits` 等在部分 Java 版本或上下文可编译，也不得用于包、类、方法、字段、局部变量、方法参数、模型属性或测试名。外部列名、JSON 字段或协议字段确需保留这些名称时，Java 侧必须改成有业务语义的名称，并通过 `@Column`、`@JsonProperty` 等映射保留外部契约。
 - 【强制】Query 使用 `XxxQuery`，Request 使用 `XxxRequest`，DTO 使用 `XxxDTO`；创建、更新、保存等语义通过 `CreateXxxRequest`、`UpdateXxxRequest`、`SaveXxxRequest` 等前缀区分。
 - 【强制】对外 API 和跨模块契约使用 DTO、Request、Query，不暴露 Entity、Mapper、Repository、内部状态机对象或持久化实现细节。
 - 【强制】Controller / Web API / face/api 对外契约禁止直接接收或返回 Entity；ApplicationService、DomainQueryService 对外返回 DTO/VO/Result，不把 Entity 泄露到模块边界外。

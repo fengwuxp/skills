@@ -139,7 +139,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 
 - DDL、Java 类和字段表格三类输入。
 - 关键生成文件的 normalized golden hash，过滤 `@date` 和 `serialVersionUID` 这类运行时噪声后比较模板结构。
-- 负向路径：已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名。
+- 负向路径和红线防护：已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名、Java 关键字 / 保留字 / 受限标识符命名会被净化。
 
 当确实需要调整模板结构时，先人工审查生成 diff，再同步更新 golden hash；不得只为通过验证而更新 hash。
 
@@ -183,7 +183,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - `is_deleted`、`deleted`，或字段注释包含“逻辑删除”时，使用 `@Column(value = "实际列名", isLogicDelete = true)`。
 - Boolean 类型 `is_*` 字段默认去掉 `is` 前缀，例如 `is_enabled -> enabled`，并保留 `@Column("is_enabled")`。
 - `u_id` 转为 Java 字段 `uid`，并保留 `@Column("u_id")`。
-- Java 保留字必须重命名并保留 `@Column`，例如 `group -> groupValue`；如果相邻代码有其他约定，遵循本地约定。
+- Java 关键字、保留字或受限标识符必须重命名并保留映射，例如 `record -> recordValue`、`var -> varValue`、`yield -> yieldValue`、`group -> groupValue`；如果相邻代码有其他明确约定，遵循本地约定。字段表格显式提供的 Java 属性名同样必须净化，不能让外部输入绕过命名红线。
 
 ## Request 与 Query 规程
 

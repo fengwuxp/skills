@@ -196,6 +196,92 @@ def expect_failure(name: str, args: list[str], expected: str) -> None:
     print(f"OK negative fixture {name}")
 
 
+def run_reserved_identifier_cases(base_tmp: Path) -> None:
+    ddl = base_tmp / "reserved_keywords.sql"
+    ddl.write_text(
+        """CREATE TABLE `t_record` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `record` varchar(64) NOT NULL COMMENT '记录',
+  `var` varchar(64) DEFAULT NULL COMMENT '变量',
+  `yield` varchar(64) DEFAULT NULL COMMENT '产出',
+  PRIMARY KEY (`id`)
+) COMMENT='保留字样例';
+""",
+        encoding="utf-8",
+    )
+    ddl_out = base_tmp / "reserved-ddl"
+    ddl_result = run_generator(
+        [
+            "--ddl-file",
+            str(ddl),
+            "--table-name",
+            "t_record",
+            "--base-package",
+            BASE_PACKAGE,
+            "--author",
+            "codex",
+            "--output-dir",
+            str(ddl_out),
+        ]
+    )
+    if ddl_result.returncode != 0:
+        raise AssertionError(f"reserved DDL fixture failed: {ddl_result.stdout}{ddl_result.stderr}")
+    entity = (ddl_out / "impl/com/example/skill/codegen/dal/entities/Record.java").read_text(encoding="utf-8")
+    service_impl = (
+        ddl_out / "impl/com/example/skill/codegen/services/impl/RecordServiceImpl.java"
+    ).read_text(encoding="utf-8")
+    for snippet in ['@Column("record")', "private String recordValue;", '@Column("var")', "private String varValue;", '@Column("yield")', "private String yieldValue;"]:
+        if snippet not in entity:
+            raise AssertionError(f"reserved DDL entity missing snippet: {snippet}")
+    for forbidden in ["private String record;", "private String var;", "private String yield;"]:
+        if forbidden in entity:
+            raise AssertionError(f"reserved DDL entity contains forbidden snippet: {forbidden}")
+    if "private final RecordMapper recordValueMapper;" not in service_impl:
+        raise AssertionError("reserved DDL service impl did not sanitize mapper variable name")
+    if "private final RecordMapper recordMapper;" in service_impl:
+        raise AssertionError("reserved DDL service impl contains forbidden recordMapper variable")
+
+    field_table = base_tmp / "reserved_fields.md"
+    field_table.write_text(
+        """| 字段名 | Java 属性名 | 类型 | 说明 | 是否主键 | 是否必填 |
+| --- | --- | --- | --- | --- | --- |
+| id | id | bigint | ID | 是 | 是 |
+| group | record | varchar(64) | 分组 | 否 | 否 |
+""",
+        encoding="utf-8",
+    )
+    table_out = base_tmp / "reserved-table"
+    table_result = run_generator(
+        [
+            "--input-file",
+            str(field_table),
+            "--input-type",
+            "table",
+            "--table-name",
+            "t_reserved_field",
+            "--table-comment",
+            "保留字字段",
+            "--base-package",
+            BASE_PACKAGE,
+            "--author",
+            "codex",
+            "--output-dir",
+            str(table_out),
+        ]
+    )
+    if table_result.returncode != 0:
+        raise AssertionError(f"reserved field table fixture failed: {table_result.stdout}{table_result.stderr}")
+    table_entity = (
+        table_out / "impl/com/example/skill/codegen/dal/entities/ReservedField.java"
+    ).read_text(encoding="utf-8")
+    for snippet in ['@Column("group")', "private String recordValue;"]:
+        if snippet not in table_entity:
+            raise AssertionError(f"reserved field table entity missing snippet: {snippet}")
+    if "private String record;" in table_entity:
+        raise AssertionError("reserved field table entity contains forbidden record field")
+    print("OK fixture reserved identifiers")
+
+
 def create_ambiguous_module_repo(base_tmp: Path) -> Path:
     repo = base_tmp / "ambiguous-repo"
     module = repo / "multi-domain"
@@ -262,6 +348,7 @@ def main() -> int:
     try:
         for case in CASES:
             run_case(case, base_tmp)
+        run_reserved_identifier_cases(base_tmp)
         run_negative_cases(base_tmp)
     finally:
         shutil.rmtree(base_tmp)

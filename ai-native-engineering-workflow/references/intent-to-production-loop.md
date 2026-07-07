@@ -8,6 +8,10 @@
 
 - 用户要求把 AI 工作流从意图 / 需求收集推进到生产交付闭环。
 - 用户要求区分产品专家、UED、架构师、AI Agent、测试 / 质量门禁、发布 owner 等角色分工。
+- 用户要求 AI 工作流控制不同 Skill 完成任务，例如产品专家做需求和验收、架构师做系分和编码、Java 代码生成器做基础服务和模型、Wind 约规配合 CR、代码阅读工具和画图工具辅助理解。
+- 用户要求输出分角色 Loop、Skill、工具、框架的协作判断矩阵。
+- 用户要求参考 Andrew Ng / 吴恩达对 Loop Engineering 的理解，区分 AI 编码、开发者方向修正、真实用户 / 市场反馈三种不同时间尺度的 Loop。
+- 用户要求把 Superpowers、GSD、GStack、Trellis、SDD / Harness、Grilling、Ponytail、Open Code Review、Gemini、WorkBuddy 等外部框架或工具纳入分角色 Loop，并希望 AI 根据上下文选择最合适策略。
 - 用户要求按设计、设计评审、TDD、编码、编码评审、可用性 / 安全性 / 可靠性评估分别切换视角。
 - 用户提供 `/office-hours`、CEO Review、Eng Review、Design Review、`/review`、`/qa`、`/ship` 等 GStack 角色链，并要求整理成生产交付流程。
 - 用户希望 AI 工作流达到团队协作、协同检查、Maker / Checker 分离和多角色互相制衡的效果。
@@ -29,6 +33,9 @@
 - GStack 角色链审查结论：forcing questions、范围收敛、工程评审、交互评审、实现、源码 CR、QA、发布准出的 owner、证据和停止条件。
 - 小闭环 Ask-or-Decide 结论：每个阶段完成后先自我问询并用证据自答，再给出 Auto-Decide Next、Auto-Ask Owner、Auto-Loop 或 Stop-Handoff，并写清下一阶段输入。
 - 角色分工结论：只写当前任务涉及角色的主责、不替代项和下一步；通用职责以 `2. 角色边界` 为唯一权威来源。
+- 角色协作判断矩阵：当前任务处于哪个 Loop 节点、谁主责、调用哪个主 Skill、哪些工具 / 框架只是辅助、交接物是什么、不能替代什么。
+- 三层反馈节奏：当前任务主要处于 Agentic Coding、Developer Feedback 还是 External Feedback；外层慢反馈如何修正 Vision，中层如何修正 Spec，内层如何执行和验证。
+- 协同策略选择：当前更适合产品优先、架构优先、代码生成链、只读理解、质量门禁、发布准出还是知识回流；外部框架 / 工具只作为对应节点的策略补强。
 - 交接链路：产品上下文卡、工程执行交接卡、生产 Loop 交接卡、验证证据、发布 / 回滚证据和反馈回流位置。
 - 若信息不足，输出缺口 owner 和停止条件，不把模糊意图改写成可执行任务。
 
@@ -37,6 +44,11 @@
 - 产品上下文、需求分析、PRD-Lite、产品 / 系统 DNA 和三卡交接读 `product-to-engineering-lifecycle.md`。
 - 产品 / 交互设计、PRD、验收种子和产品合议由 `产品架构专家` 执行；按场景读取 `product-architecture-expert/references/product-scenario-routing.md`、`product-architecture-expert/references/product-design-and-prd.md`、`product-architecture-expert/references/product-prd-quality-gates.md`、`product-architecture-expert/references/product-deliberation-workflow.md` 或 `product-architecture-expert/references/ai-native-product-context.md`。
 - 系分、TDD、编码、CR、安全可靠和发布风险由 `资深架构师` 执行；按场景读取 `senior-software-architect/references/system-analysis-design.md`、`senior-software-architect/references/testing.md`、`senior-software-architect/references/workflow.md`、`senior-software-architect/references/coding-standards.md`、`senior-software-architect/references/coding-review-deep-dive.md`、`senior-software-architect/references/security-architecture.md` 或 `senior-software-architect/references/production-readiness.md`。
+- 结构化 Java Service 基础服务、DTO / Request / Query / Entity / Mapper / Converter / Service / ServiceImpl 骨架生成由 `java-service-code-generator` 执行；生成后按项目 opt-in 规则回 `wind-project-coding-conventions` 检查，再回 `资深架构师` 做源码级设计 / TDD / CR。
+- Wind / Nobe 项目编码指导和 CR 规则由 `wind-project-coding-conventions` 执行；它只提供项目约规和模板样例，架构裁决、测试策略、源码级 Review 和生产风险仍回 `资深架构师`。
+- 代码阅读理解、设计-代码对齐和外部理解工具准入读 `code-understanding-tools.md`；工具输出只是只读证据，不替代源码锚点、测试、CR 或 owner 判断。
+- 产品图和工程图分别回 `产品架构专家` / `资深架构师` 的 `diagram-output.md`；复杂图形渲染、Architecture Diagram Generator 或 `$fireworks-tech-graph` 只在语义 brief 已确认后作为可选生成后端。
+- 外部框架或工具只按当前角色节点补强：Superpowers / SDD / Harness 补工程纪律和独立验证，GStack 补角色链审查，Grilling 补轻量问询，Ponytail 补最小正确实现，Open Code Review 补外部 Checker，Gemini / AgentRC / WorkBuddy 补只读理解或本地执行准入；来源与边界读 `superpowers-skill-library.md`、`code-understanding-tools.md`、`source-map.md`。
 - PRD / 系分合议预审、多角色挑战、ACCEPT/REJECT/PENDING 决策日志读 `prd-system-design-review.md`。
 - OpenSpec、Harness、权限边界、事实边界和多 Agent 治理读 `agentic-engineering-governance.md`。
 - 实际编码 Loop、状态载体、Maker / Checker、自动化心跳、Worktrees、理解债和停止条件读 `agent-loop-engineering.md`。
@@ -49,6 +61,10 @@
 | --- | --- | --- |
 | 从意图到生产交付流程 | `1. 端到端阶段`、`2. 角色边界`、`3. 阶段交接门禁` | 不展开完整 PRD 或系分模板 |
 | 梳理多角色分工 | `2. 角色边界`、`4. 分工输出模板` | 不把 AI 角色写成 owner |
+| 控制不同 Skill 完成任务 | `1.1A 角色协作判断矩阵`、`3. 阶段交接门禁` | 不让 AI Native 直接代写专项产物 |
+| 判断角色 / Skill / 工具 / 框架协作方式 | `1.1A 角色协作判断矩阵`、`1.1B 外部框架 / 工具协同策略` | 不让工具或框架替代主 Skill |
+| 选择外部框架或工具策略 | `1.1B 外部框架 / 工具协同策略`、`1.2 角色视角顺序` | 不把工具名变成主流程或默认依赖 |
+| 校准三层反馈 Loop | `1.0A 三层反馈节奏`、`1.2 角色视角顺序`，必要时读 `wisdom-loop-lens.md` | 不让内层 AI 自测替代产品判断或真实用户反馈 |
 | 进入角色协作 Loop | `1. 端到端阶段`、`1.1 阶段能力与约规来源`、`1.2 角色视角顺序`、`3. 阶段交接门禁` | 不把 GSD/CAD/Goal 当主流程 |
 | 接入 GStack 角色链模板 | `1.2 角色视角顺序`、`1.2A GStack 角色链映射`、`3. 阶段交接门禁`，再读 `verification-review-release.md` 的 `7A. 生产交付审查标准` | 不把 slash 命令当外部工具或新流程菜单 |
 | 让 AI 自主推进到交付 | `1. 端到端阶段`、`1.3 自主挖掘与确认边界`，再读 `agent-loop-engineering.md` | 不把自我规划当授权 |
@@ -82,6 +98,18 @@
 
 规划到执行必须靠执行契约承接，不靠聊天记忆衔接：Spec / 设计 / 任务就绪后，先形成 Execution Contract，写清 owner、状态、写入范围、验证命令、Checker、停止条件和回写位置，再进入 TDD、编码和 CR。CR 或测试发现代码与 Spec 漂移时，先判断是代码偏离、Spec 缺失还是需求变化；代码偏离修代码，Spec 缺失先补 Spec，需求变化走影响识别。
 
+### 1.0A 三层反馈节奏
+
+三层 Loop 同时存在，但越外层越慢、越决定方向。内层可以自动化，中层必须有人类上下文，外层必须有真实用户、市场或生产证据。
+
+| 层 | 时间尺度 | 主责 | 修正对象 | 准出证据 | 不替代 |
+| --- | --- | --- | --- | --- | --- |
+| Agentic Coding Loop | 分钟到小时 | AI Maker + 架构师 | 代码、测试、实现细节 | Spec、Evals、失败测试、独立验证 | 不决定要做什么 |
+| Developer Feedback Loop | 小时到天 | 产品 / 架构 owner | Vision、范围、交互、Spec | 产品上下文、验收种子、设计评审、系分评审 | 不替代真实用户反馈 |
+| External Feedback Loop | 天到周 | 业务 / 产品 / 发布 owner | 用户价值、市场判断、生产风险 | 试用反馈、A/B、数据、工单、监控、复盘 | 不直接改代码，也不被内层测试通过替代 |
+
+节奏规则：先让外层反馈定方向，中层把方向翻译成 Spec，内层再执行和验证；如果只有内层绿灯，只能说明实现对当前 Spec 更接近，不能说明产品方向正确或可以发布。需要老祖宗视角时，回 `wisdom-loop-lens.md` 用“五德终始问时序、一张一弛问节奏、循名责实问证据”校准。
+
 | 阶段 | 主责 owner | AI 角色 | 交接物 | 门禁 / 停止 |
 | --- | --- | --- | --- | --- |
 | 意图收集 | 业务 owner / 产品专家 | 整理事实、问题和不确定性 | 原始意图、证据、影响面、成功/失败信号 | 缺少主体、场景、证据或验收方时停止 |
@@ -94,6 +122,8 @@
 | 可用性 / 安全性 / 可靠性评估 | UED / 架构师 / 安全或发布 owner | 辅助检查交互恢复、权限、敏感数据、监控和回滚 | 可用性风险、安全风险、可靠性风险、人工确认方 | 高风险项无 owner 或证据时停止 |
 | 验证发布 | 发布 owner / 架构师 / 运维 owner | 汇总证据、监控、回滚和交接 | 发布计划、监控指标、回滚方案、Runbook | 没有观测、回滚、人工接管或审批时停止 |
 | 反馈回流 | AI Native + 对应 owner | 整理复盘、知识归位和 fixture 缺口 | Decision Log、Goal Ledger、Skill / fixture / 脚本更新建议 | 不把未经验证经验沉淀为规则 |
+
+## 1A. 能力来源与协同矩阵
 
 ### 1.1 阶段能力与约规来源
 
@@ -109,6 +139,46 @@
 | 可用性 / 安全性 / 可靠性评估 | UED / `产品架构专家` + `资深架构师` + 安全或发布 owner | `product-design-and-prd.md`、`product-prd-quality-gates.md`、`senior-software-architect/references/security-architecture.md`、`senior-software-architect/references/production-readiness.md` | 不用流程编排替代 UED、安全、合规、SRE 或发布 owner 确认。 |
 | 验证发布 | `资深架构师` / 发布 owner | `verification-review-release.md`、`senior-software-architect/references/testing.md`、`senior-software-architect/references/production-readiness.md`、`senior-software-architect/references/review-and-output-templates.md` | 测试通过不等于上线审批，发布证据不足时停止。 |
 | 反馈回流 | AI Native + 对应 owner | `skill-type-owner-routing.md`、`source-map.md`、仓库 `AGENTS.md` | 未验证经验不进入正式约规或 Skill 改进材料。 |
+
+### 1.1A 角色协作判断矩阵
+
+本矩阵也是专项 Skill 控制矩阵。AI Native 只负责调度和门禁，不把自己变成万能执行者。先定 Loop 节点，再定主责角色，再选主 Skill；工具和框架只能补一个缺口，不能替代主 Skill、owner、测试、CR 或发布授权。
+
+| Loop 节点 | 主责角色 | 主 Skill | 可选工具 / 框架 | 交接物 | 不替代 |
+| --- | --- | --- | --- | --- | --- |
+| 意图 / 需求澄清 | 产品 owner / 产品专家 | `产品架构专家` | Grilling / Grill-Me、GStack `/office-hours`、Wisdom Lens | 产品上下文卡、问题定义、验收种子 | 不替代产品取舍或 owner 决策 |
+| 产品 / 交互设计 | 产品专家 / UED | `产品架构专家` | Architecture Diagram Generator、`$fireworks-tech-graph`、产品图形 reference | PRD / 方案、流程图、用例图、页面状态 | 不替代系分、编码或测试 |
+| 设计评审 / 系分 | 架构 owner | `资深架构师` | GStack Eng Review、OpenSpec、渐进式 SDD / Harness | 系分、接口、模块、数据流、风险清单 | 不替代 owner 决策或公共契约确认 |
+| Java 基础服务和模型骨架生成 | 工程 owner | `java-service-code-generator` | Wind 约规、Nobe / Wind 模板经验 | DTO / Request / Query / Entity / Mapper / Converter / Service / ServiceImpl 候选代码 | 不替代业务设计、TDD 或源码级 CR |
+| TDD / 编码实现 | 架构师 / AI Maker | `资深架构师` | Superpowers、Harness、Ponytail、项目 `AGENTS.md` | 失败测试、最小实现、状态回写、提交切片候选 | 不替代验证通过或授权扩大 |
+| Wind 项目约规 CR | 架构师 + Wind 规则 owner | `wind-project-coding-conventions` + `资深架构师` | Open Code Review、Ponytail、Wind 示例 | 规则偏差、P 级发现、正反例、最小修复建议 | 不替代架构裁决、测试策略或生产风险判断 |
+| 代码阅读 / 设计-代码对齐 | 架构师 | `code-understanding-tools.md` + `资深架构师` | Gemini、AgentRC、WorkBuddy、Understand Anything | 只读理解包、入口路径、影响面、工具准入结论 | 不替代源码事实、测试、CR 或 owner 确认 |
+| 源码 CR / 质量门禁 | AI Checker / 架构师 | `资深架构师` | Open Code Review、Ponytail、Wisdom Lens | CR 发现、测试结果、残余风险、修复优先级 | 不替代测试通过、CR 修复或发布审批 |
+| 发布准出 | 发布 owner / 架构师 | AI Native + `资深架构师` | GStack `/ship`、Harness 证据链、验证发布 reference | 生产交付审查卡、监控 / 回滚 / 人工接管证据 | 不替代 Git / PR / merge / 部署授权 |
+| 知识回流 | AI Native + 对应 owner | AI Native | Trellis 思想、Context System、source-map、fixture | reference / fixture / 用户指南 / source-map 更新建议 | 不沉淀未验证经验 |
+
+控制规则：
+
+- 先定当前阶段，再选一个主 Skill；需要多个 Skill 时按交接链串联，不并行自由发挥。
+- 每次交给专项 Skill 前，都写清输入、写入范围、验证方式、停止条件和下一 owner。
+- 代码生成器只做结构化骨架；Wind 约规只做项目规则；架构师做源码级工程判断；产品专家做业务问题和验收判断。
+- 图和工具只辅助理解与表达；没有源码、测试、owner 或业务证据支撑的图，不进入实现或 CR 结论。
+
+### 1.1B 外部框架 / 工具协同策略
+
+外部框架或工具不作为新流程入口，只按当前角色节点补一个缺口。先根据上下文选策略，再读对应 reference。
+
+| 上下文缺口 | 优先策略 | 可吸收能力 | 不允许 |
+| --- | --- | --- | --- |
+| 需求模糊、范围发散 | 产品优先 | Grilling / Grill-Me 的一次一个问题、GStack `/office-hours` forcing questions | 不把问询过程写进正式 PRD，不替代产品 owner |
+| 工程方案不稳、任务较大 | 架构优先 | Superpowers 方法纪律、GSD 上下文 / Spec / 状态、渐进式 SDD / Harness 规范化 | 不新增并列流程，不默认运行外部脚本 |
+| 同一方案需要多视角挑战 | 角色链审查 | GStack 角色链模板：CEO / Eng / Design / Review / QA / Ship | 命令名只作触发别名，不生成外部命令菜单 |
+| 已有结构化 Java 输入 | 代码生成链 | `java-service-code-generator` 生成骨架，Wind 约规审查，架构师 TDD / CR | 代码生成不替代业务设计、测试或源码级 CR |
+| 需要理解代码或对齐设计 | 只读理解 | Gemini / AgentRC / WorkBuddy / Understand Anything 作为候选只读工具 | 工具摘要不替代源码锚点、测试、CR 或 owner 确认 |
+| 需要代码质量补扫 | 质量门禁 | Ponytail 查过度设计，Open Code Review 做外部 Checker，Wisdom Lens 做取舍校准 | 外部工具不自证通过，不替代资深架构师 |
+| 要沉淀上下文或经验 | 知识回流 | Trellis 仓库级记忆思想、Context System、source-map、fixture | 不默认建设外部知识库，不沉淀未验证经验 |
+
+策略选择规则：没有明确用户指令时，按“当前最大不确定性”选择一个策略；如果缺口同时存在，先产品事实，再架构边界，再生成 / 编码，再验证发布，最后知识回流。
 
 ### 1.2 角色视角顺序
 

@@ -171,6 +171,21 @@
       "expected_handling": "进入角色协作 Loop / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 intent-to-production-loop 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；目标、计划、原子执行、执行契约和授权边界只作内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
     },
     {
+      "id": "ai-native-should-three-layer-feedback-loop-cadence",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考吴恩达对 Loop Engineering 的理解，优化 AI Native 分角色 Loop：区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop 三个时间尺度，并结合老祖宗智慧校准内层 AI 自测、中层 Spec 修正、外层真实用户/市场反馈的关系。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI Native 三层反馈节奏校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 intent-to-production-loop 的三层反馈节奏和 wisdom-loop-lens；区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop：内层 AI Maker 按 Spec / Evals / 失败测试执行和验证，只能证明实现更接近当前 Spec；中层产品 / 架构 owner 把上下文、Vision、范围和交互判断翻译成 Spec；外层业务 / 产品 / 发布 owner 用真实用户、市场、A/B、工单、监控或复盘慢反馈修正 Vision；用五德终始问时序、一张一弛问节奏、循名责实问证据；不得让 AI 自测、开发者品味或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权。"
+    },
+    {
       "id": "ai-native-should-autonomous-discovery-to-delivery-loop",
       "skill": "ai-native-engineering-workflow",
       "query": "进入 AI Native 角色协作 Loop：让 AI 可以自我挖掘需求和代码上下文，确认边界，设计并 CR 需求，然后执行 TDD、编码、代码 CR、验证实际可行，最后判断完成、继续 Loop、停止或需要人工确认；请给自主交付控制卡和人工确认边界。",
@@ -214,6 +229,21 @@
         "variance_check"
       ],
       "expected_handling": "进入 AI Native 角色协作 Loop 主流程，读取 intent-to-production-loop 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确目标、计划、原子执行、执行契约和授权边界只作内部层，不替代角色协作、测试通过、CR 结论或发布审批。"
+    },
+    {
+      "id": "ai-native-should-coordinate-specialized-skills",
+      "skill": "ai-native-engineering-workflow",
+      "query": "继续完善 AI 工作流分角色流程，用于控制不同 skills 完成任务：java-service-code-generator 负责 Java 基础服务、DTO、Request、Query 和模型生成；资深架构师负责架构设计、系分设计、代码设计、编码、TDD 和 CR；wind-project-coding-conventions 负责 Wind 项目编码指导并配合架构师 CR；产品专家负责需求分析、产品设计、目标对齐和产品验收；代码阅读理解、架构图、流程图等作为辅助能力接入。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI Native 分角色 Skill 调度路径，读取 intent-to-production-loop 的角色协作判断矩阵 / 专项 Skill 控制矩阵，并按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出 Loop 节点、主责角色、主 Skill、可选工具 / 框架、输入、交接物、不替代项和下一 owner；产品需求、目标对齐、产品设计和验收种子回到产品架构专家；架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险回到资深架构师；结构化 Java Service 基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service、ServiceImpl 骨架生成回到 java-service-code-generator；Wind/Nobe 项目编码指导、包名模块模型服务 API 规则和 CR 约束回到 wind-project-coding-conventions，并由资深架构师做源码级裁决；代码阅读理解、设计-代码对齐和外部理解工具准入读取 code-understanding-tools；架构图、流程图、时序图、状态机和代码库结构图回到产品/架构 diagram-output，复杂渲染再接 Architecture Diagram Generator 或 fireworks-tech-graph；AI Native 只做编排、门禁和交接，不直接代写专项产物，不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批。"
     },
     {
       "id": "ai-native-should-prd-ai-prescan-review",
@@ -366,6 +396,36 @@
       "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
     },
     {
+      "id": "ai-native-should-classic-wisdom-lens-supplement",
+      "skill": "ai-native-engineering-workflow",
+      "query": "结合周易、道德经、庄子、论语、中医、阴阳五德始终论等老祖宗智慧，对 huaxia-wisdom 和 AI Native Wisdom Lens 做补足：只沉淀工程取舍问题，不做玄学、医学建议或经典考据。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 的经典源补足路径，读取 wisdom-loop-lens 和 source-map；把周易映射为变与不变、太极点和可逆实验，道德经映射为最小干预和少做一步，庄子映射为顺着业务 / 代码 / 组织纹理拆解，论语映射为正名、owner、分寸和复盘，中医 / 黄帝内经映射为症 / 证 / 病机、治未病、阴平阳秘和回归防线，五德终始 / 阴阳五德始终映射为阶段迁移、旧规则退场和新能力接替证据；只输出命中的 1-3 个反偏问题，回写到 Loop Contract、验证矩阵、CR 发现、退场计划或知识回流；不得把传统智慧写成事实证据、医学建议、占卜、宿命、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
+    },
+    {
+      "id": "ai-native-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI 找到一个 bug 并给了补丁，参考 Linus 对 AI bug report 和创可贴式修复的提醒，结合老祖宗的循名责实、庖丁解牛、治未病做门禁：先判断是否有复现证据、根因、同类影响、最小修复、独立验证和下一 owner，不要让 AI patch 自证可合并。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI bug / 补丁门禁，读取 verification-review-release 和 wisdom-loop-lens，必要时读取 source-map；先把 AI bug report 归为待确认、继续根因分析或可进入 CR；要求复现 / 触发条件、源码锚点、根因假设、同类影响范围、最小修复、验证命令 / 结果、残余风险和下一 owner；用循名责实检查 bug 名实，用庖丁解牛检查是否修到根因和同类调用点，用治未病检查回归测试、规则、fixture 或静态检查，用先为不可胜检查失败回退，用无为而治删除无价值补丁；不得把模型自述、工具告警、局部 guard、放宽断言或 AI patch 写成测试通过、CR 结论、合并判断或上线审批。"
+    },
+    {
       "id": "ai-native-should-review-ai-coding-process",
       "skill": "ai-native-engineering-workflow",
       "query": "评审我们现在的 AI 编码流程，看看是不是有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、CR、发布监控和复盘闭环，给出可落地改造顺序。",
@@ -397,6 +457,51 @@
       "expected_handling": "进入 AI 代码交付闭环模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
     },
     {
+      "id": "ai-native-should-progressive-sdd-lattice-harness",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考渐进式 Spec Coding / PrismSpec 和 Lattice Harness，重构精简 AI 工作流：不要新增并列流程，按低风险轻量、中风险可评审、高风险 Harness、高不确定 TDD 分级，并用 Context、Verification、Evidence、Drift Check、Loop Learn 证明交付真的做对了。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入渐进式 SDD / Lattice Harness 规范化路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 spec-template-practices、code-delivery-closed-loop、agentic-engineering-governance 和 source-map；不新增并列流程，不复制外部命令或目录；按风险输出低风险轻量任务卡、中风险可评审 Spec、高风险 Harness/GSD Spec、高不确定 TDD 优先；用 Intent -> Context -> Spec -> Orchestrator -> Verification -> Evidence / Eval -> Drift Check -> Loop / Learn 收口；强调 Spec 是约束不是文档，生成者可以修复但不能自己宣布通过，准出必须来自测试、静态检查、验收覆盖、漂移检查、只读 Checker 或人工 owner；缺上下文补 Context，缺裁判补 Verification，缺追踪补 Evidence，缺漂移补 drift-check，缺学习补 Loop / Learn。"
+    },
+    {
+      "id": "ai-native-should-context-system-knowledge-base-governance",
+      "skill": "ai-native-engineering-workflow",
+      "query": "结合渐进式 SDD、Lattice Harness 和老祖宗智慧，给项目落地 context / 知识库治理：先梳理 AGENTS.md、CONTEXT.md、ADR、模块 reference、source-map、测试资产和 update-context，不要一上来就建设外部知识库。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入上下文治理视图 / 知识回流视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 code-delivery-closed-loop、wisdom-loop-lens、code-understanding-tools 和 source-map；先落 Context System，再评估知识库工具；按 L0 项目级上下文、L1 模块级上下文、L2 任务级上下文归位，输出 update-context 门禁、权威落点、owner、证据锚点、不得回写内容和停止条件；用名实、阴阳、纹理、知行做取舍校准；外部知识库、向量库、代码图谱或 Understand Anything 只能作为加速器，不替代源码、测试、CR、owner 确认或项目约规。"
+    },
+    {
+      "id": "ai-native-should-domain-expert-distillation",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Native 阅读这些 PRD / 系分 / 产品设计文档，把支付账务域蒸馏成可追溯业务专家和领域专家 Skill Pack，要求区分事实 / 推断 / 待确认 / 范围外不做，并给出 owner 追认和 test-prompts 压力测试。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release、wisdom-loop-lens 和 source-map；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；用循名责实、格物致知、知行合一和阴平阳秘校准，不把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
+    },
+    {
       "id": "ai-native-should-skill-split-gate",
       "skill": "ai-native-engineering-workflow",
       "query": "AI Native 参考 Harness Engineering 和架构真功夫，评估项目下的 skill 是否应该多拆分几个更专项的 skill，再由 AI 流程统一调用；请判断哪些只更新 reference、哪些补 fixture / validator、哪些未来才新建顶层 Skill。",
@@ -425,6 +530,21 @@
         "variance_check"
       ],
       "expected_handling": "进入 AI Native 的 Skill 工程化反向验证路径，读取 skill-type-owner-routing、source-map 和 verification-review-release；先核对文章已读取正文和不吸收边界，再按触发验证、路由验证、资源验证、交付验证检查每个 Skill；只做最小重构，优先补 source-map、fixture、validator 或 evaluate-skills.py，不把外部权限字段、运行钩子、用户偏好持久化、日志埋点、自动推送或 skill-creator 操作流程写成本仓库默认能力。"
+    },
+    {
+      "id": "ai-native-should-official-skill-methodology-with-wisdom-lens",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考 Anthropic 官方 Lessons from building Claude Code: How we use skills 和 Perplexity Agent Skills 文章，结合老祖宗的循名责实、庖丁解牛、治未病，推进项目下 Skill 治理：description 做路由、gotchas 优先、重复动作脚本化、先补正负触发 fixture，再决定是否拆 Skill。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 AI Native 的 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing、wisdom-loop-lens、source-map 和 verification-review-release；先核对官方 Anthropic 是否已读正文、Perplexity 是否已读正文或仅为待核验线索；用循名责实检查 name / description / SKILL.md / reference 是否名实相符，用庖丁解牛检查内容是否放在 SKILL.md、references、scripts 或 fixtures 的最小正确层级，用治未病检查是否已有正向触发、邻近 Skill 负例和不吸收边界；只补最小 reference、fixture、validator 或 source-map，不把未读取正文的来源、Claude hooks、marketplace、持久 memory、外部工具或组织实践写成本仓库默认能力。"
     },
     {
       "id": "ai-native-should-spec-template-practices",
