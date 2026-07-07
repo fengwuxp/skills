@@ -11,6 +11,7 @@
 - 用户给出洞察、机会清单、需求池、老板/销售/客户诉求或路线图候选，要求做 Backlog 决策、需求优先级、User Story、AC 或研发可执行条目。
 - 用户要求产品头脑风暴、问题探索、假设挑战、HMW、第一性原理拆解、OODA、逆向头脑风暴或在写 PRD 前先把想法想透。
 - 用户提供老板/销售/客户/运营的模糊诉求、非标问题、跨团队问题或“先想一个方案”，需要产品专家先判断真实问题和解决方案责任。
+- 用户要求判断产品阶段、PMF 前后团队缺什么贡献方式，或讨论产品团队不按岗位分工、原型验证、真实交付、复杂度清扫、增长放大和可靠维护。
 - 用户提到概念膨胀、新旧概念并存、需求只加不减、事实源分裂、旧规则退役、旧入口下线或产品概念生命周期。
 - 用户要求从 AI Native 产品流程、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 或 PRD 可执行上下文中提炼产品侧交接材料。
 - 用户要求多个 AI、PM / Reviewer、产品大师、MAGI、多视角、合议式评审 PRD / 产品方案 / AI 生成方案 / 原型候选，或希望按阶段确认前置依赖、方案概要、交互和 PRD。
@@ -42,6 +43,7 @@
 - 机会清单、需求池、Backlog 决策、优先级、路线图候选、User Story 或 AC 场景，读 `po-backlog-manager.md`，再按目标产物读取 `product-design-and-prd.md`。
 - 产品头脑风暴、问题探索、方案发散或假设挑战，读 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律”；产出只作为问题地图、机会雷达、Backlog 或 PRD 前置材料，不直接写成研发任务。
 - 非标产品问题、老板/销售/客户只给方向、跨团队诉求或产品岗容易退化成传话筒时，读 `product-architecture-methodology.md` 的“1.4 非标问题与解决方案责任”。
+- 产品阶段、PMF 前后团队能力配比、产品团队不按岗位分工或五类贡献方式诊断时，读 `product-architecture-methodology.md` 的“2.0F 产品阶段与贡献方式诊断”。
 - 概念膨胀、新旧概念并存、需求只加不减、事实源分裂、旧规则退役或旧入口下线时，读 `product-concept-lifecycle.md`。
 - 图形化产品交付读 `diagram-output.md`。
 - 支付资金场景读 `payment-scenario-routing.md` 和 `regulatory-baseline.md`；外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控同样先进入支付资金专项。
@@ -60,6 +62,7 @@
 | 产品判断动作链 / pm-skills 工作流参考 | 快速路由表、产品语义门禁，并继续读 `product-judgment-action-chain.md`，按缺口再读 `product-insight-analyst.md`、`po-backlog-manager.md` 或 PRD reference | 不安装或照搬外部 `pm-skills`，不把路线图愿望清单当产品判断 |
 | 产品头脑风暴 / 问题探索 / 假设挑战 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律” | 不把发散想法直接当 PRD、Backlog 或研发任务 |
 | 非标产品问题 / 老板客户只给方向 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“1.4 非标问题与解决方案责任” | 不做传话筒，不把诉求原样丢给研发 |
+| 产品阶段 / 团队贡献方式诊断 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0F 产品阶段与贡献方式诊断” | 不把贡献方式等同岗位、组织架构或绩效标准 |
 | 概念膨胀 / 新旧概念并存 / 只加不减 / 概念生命周期与退役 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“1.3 概念定名与需求止损”和 `product-concept-lifecycle.md` | 不只加新名词，不把概念退役写成工程删除授权 |
 | Backlog 决策 / 机会清单优先级 / User Story/AC | 快速路由表、产品语义门禁，并继续读 `po-backlog-manager.md` 和 `product-design-and-prd.md` | 不把洞察清单直接当研发任务 |
 | 产品经理方法论 / 产品专家基础能力补齐 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md` | 不把基础岗位清单替代复杂产品架构 |
@@ -120,6 +123,7 @@
 | 产品洞察、需求洞察、资料资产化、客户/竞品/标杆情报、机会雷达、证据推理链 | `product-insight-analyst.md`, `product-architecture-methodology.md` | 产品洞察报告：资料资产表、三类情报分拣、机会雷达、证据与推理链、置信度、待验证和建议去向；机会需要排序时再读 `po-backlog-manager.md` |
 | 产品头脑风暴、问题探索、方案发散、假设挑战、HMW、第一性原理、OODA、逆向头脑风暴 | `product-architecture-methodology.md` | 头脑风暴结论：探索模式、核心问题、目标用户、当前替代方式、关键假设、发散选项、删除/少做选项、反模式、下一步验证动作和进入问题地图/机会雷达/Backlog/PRD 的结论 |
 | 非标产品问题、老板/销售/客户/运营只给方向、跨团队诉求、需要产品专家判断解决方案 | `product-architecture-methodology.md` | 非标产品问题卡：真实问题、影响面、失败成本、现有替代方式、解决方案假设、验收种子、验证动作和进入 PRD/Backlog/AI Native 的结论 |
+| 产品阶段、PMF 前后、产品团队不按岗位分工、原型验证、真实交付、复杂度清扫、增长放大、可靠维护 | `product-architecture-methodology.md` | 产品阶段与贡献方式诊断卡：阶段证据、主要缺口、需要 / 暂缓的贡献方式、下一产物、owner 和验收 / 停止条件 |
 | 概念膨胀、新旧规则并存、需求只加不减、事实源分裂、旧入口下线或概念生命周期 | `product-concept-lifecycle.md` | Concept Lifecycle Card：核心概念、事实源、新增/替代关系、净增概念数、旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、下线 owner、复审日期、退役条件和待确认项 |
 | 洞察太多、机会清单、需求池、路线图候选、Backlog 决策、优先级、P0/P1/P2、User Story、AC | `po-backlog-manager.md`, `product-design-and-prd.md` | Backlog 决策包：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、拒绝理由、User Story、AC、技术现实主义风险和待确认项 |
 | AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师 | `ai-native-product-context.md`, `product-architecture-methodology.md`；端到端流程和 GSD/CAD 准入交给 `ai-native-engineering-workflow`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和产品侧交接条件；不把可运行等同于可上线 |
@@ -163,6 +167,7 @@
 - **用户要基于资料、访谈、竞品、行业/政策或知识库做产品洞察、需求洞察或机会雷达**：读取 `product-insight-analyst.md`，先做资料资产化和客户/竞品/标杆情报分拣，再输出机会雷达、证据与推理链、置信度、待验证和建议去向；没有材料的类别明确留白，不用模型记忆补编。
 - **用户要产品头脑风暴、问题探索或假设挑战**：读取 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律”，先判断是问题探索、方案发散还是假设挑战，再输出核心问题、目标用户、当前替代方式、关键假设、发散选项、删除/少做选项、反模式和下一步验证动作；需要落地时再转问题地图、机会雷达、Backlog 或 PRD，不直接变研发任务。
 - **用户要处理非标产品问题、老板/销售/客户/运营只给方向或跨团队诉求**：读取 `product-architecture-methodology.md` 的“1.4 非标问题与解决方案责任”，先输出真实问题、影响面、失败成本、现有替代方式、解决方案假设、验收种子和验证动作；产品专家必须提供可评审解决方案，不把原始诉求直接转发给研发。
+- **用户要判断产品阶段或团队贡献方式**：读取 `product-architecture-methodology.md` 的“2.0F 产品阶段与贡献方式诊断”，先判断当前产品处于 0-1、PMF 迹象期还是强 PMF 阶段，再输出需要的原型验证、真实交付、复杂度清扫、增长放大或可靠维护贡献方式；不得写成固定岗位、组织调整、招聘标准或绩效结论。
 - **用户要治理概念膨胀、新旧概念并存、需求只加不减或旧规则退役**：读取 `product-architecture-methodology.md` 的“1.3 概念定名与需求止损”和 `product-concept-lifecycle.md`，输出 Concept Lifecycle Card，说明事实源、旧概念关系、收敛/合并/废弃规则、迁移路径、用户/运营/UED 影响、验收种子、下线 owner 和待确认项；产品专家不能只加新名词，也不能把概念退役写成工程删除授权。
 - **用户要消化洞察、机会清单或需求池，做 Backlog 决策、优先级、User Story 或 AC**：读取 `po-backlog-manager.md`，先做输入归一化、BV/EE 和业务/用户/工程三桌校验，再输出 P0/P1/P2、拒绝/延后理由、User Story、AC、技术现实主义风险、owner 和待确认项；不要把洞察清单直接改写成研发任务。
 - **用户要图形化产物**：读取 `diagram-output.md`，先判断图形目标和图形类型；正式图形化交付默认只生成 SVG；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式只在用户明确提出时生成，并报告验证结论。

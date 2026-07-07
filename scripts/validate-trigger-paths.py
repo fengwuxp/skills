@@ -240,6 +240,8 @@ ai_native_terms = [
     "AI 工作流",
     "AI 工作量",
     "AI 时代产品到研发编码流程",
+    "角色 Loop",
+    "角色loop",
     "角色协作 Loop",
     "产品判断 Loop",
     "设计评审",
@@ -279,6 +281,14 @@ ai_native_terms = [
     "forcing questions",
     "生产交付审查",
     "生产交付审查卡",
+    "生产交付验证",
+    "生产生效验证",
+    "生产生效验证卡",
+    "业务场景模拟验收",
+    "预发环境",
+    "版本回读",
+    "配置回读",
+    "冒烟验证",
     "发布前评审",
     "交付生产",
     "Harness",
@@ -631,8 +641,8 @@ wisdom_lens_terms = [
     "知行合一",
     "一张一弛",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
 payment_terms = [
     "清结算",
@@ -2254,6 +2264,13 @@ check(
             "Eval 和测试不是同一个东西",
             "AI 代码 Review 优先顺序",
             "发布门禁",
+            "生产生效验证门禁",
+            "生产生效验证卡",
+            "版本回读",
+            "配置回读",
+            "冒烟验证",
+            "观测确认",
+            "工单 / Goal 回写",
             "观测和回滚",
             "复盘闭环",
             "当前可信度判断",
@@ -2270,6 +2287,8 @@ check(
             "知识回流",
             "一次通过率",
             "CR 高频问题",
+            "知识沉淀、规范统一、质量底线",
+            "技术债归类",
         ],
     )
     and has_all(
@@ -2307,6 +2326,11 @@ check(
             "AC 覆盖",
             "漂移检查",
             "一次通过率 / 返工率 / 缺陷密度",
+            "代码写完了，谁负责确认写对了，预发环境是OK吗？",
+            "大鱼北游",
+            "生产生效验证门禁",
+            "版本回读、配置回读、冒烟验证、观测确认和工单回写",
+            "不把“已部署”“已推配置”“测试通过”“页面能打开”写成预发 OK、生产 OK、合并判断或上线审批",
             "代码库理解结论包",
             "上下文漂移",
             "Anthropic 官方博客",
@@ -2360,6 +2384,7 @@ check(
             "# 角色协作 Loop：意图到生产交付",
             "Role Collaboration Loop Map",
             "Intent-to-Production Role Loop Map",
+            "生产生效验证结论",
             "能力 / 约规来源",
             "阶段能力与约规来源",
             "阶段名只是编排坐标，不是能力来源",
@@ -2385,6 +2410,7 @@ check(
             "forcing questions",
             "八段准出链",
             "生产交付审查卡",
+            "生产生效验证卡",
             "/office-hours",
             "/plan-ceo-review",
             "/plan-eng-review",
@@ -2395,6 +2421,9 @@ check(
             "命令名只作触发别名",
             "质量 / 测试门禁",
             "发布 owner",
+            "版本回读",
+            "配置回读",
+            "冒烟",
             "product-architecture-expert/references/product-design-and-prd.md",
             "senior-software-architect/references/testing.md",
             "senior-software-architect/references/coding-review-deep-dive.md",
@@ -2515,6 +2544,8 @@ check(
             "GStack 角色链模板",
             "生产交付审查",
             "生产交付审查卡",
+            "生产生效验证",
+            "业务场景模拟验收",
             "不替代测试通过、Git/PR/merge/部署或上线审批",
         ],
     )
@@ -2525,8 +2556,9 @@ check(
             "forcing questions",
             "连续逼问",
             "生产交付审查卡",
+            "生产生效验证卡",
             "八段准出链",
-            "Ship 只按生产交付审查卡准出",
+            "Ship 只按生产交付审查卡和生产生效验证卡准出",
         ],
     )
     and has_all(
@@ -2534,6 +2566,15 @@ check(
         [
             "生产交付审查标准",
             "生产交付审查卡",
+            "生产生效验证门禁",
+            "生产生效验证卡",
+            "业务场景模拟验收",
+            "业务场景模拟验收卡",
+            "场景来源",
+            "公开资料、业内共识、行业标准规范",
+            "版本回读证据",
+            "配置回读证据",
+            "工单 / Goal 回写",
             "Ready / Not Ready / Human Approval Required",
             "Git/PR/merge/部署授权",
             "P0 blockers",
@@ -3161,6 +3202,8 @@ check(
             "Loop 是否有状态载体、反馈源、验证者、预算和停止条件",
             "生产可用 Loop 准出判断",
             "Loop 是否具备隔离执行、可复现状态、Maker / Checker 解耦、观测审计、人工接管和发布/回滚",
+            "生产生效验证卡",
+            "版本回读、配置回读、冒烟验证、观测确认、工单 / Goal 回写",
             "连续两轮没有新增证据",
             "Loop 稳定性",
         ],
@@ -3453,6 +3496,8 @@ check(
             "Harness 摘要",
             "CR 高频问题",
             "一次通过率、CR 轮次、缺陷密度、知识回流命中、上下文漂移、机器门禁覆盖",
+            "知识沉淀、规范统一、质量底线",
+            "技术债归类",
         ],
     )
     and has_all(
@@ -3464,6 +3509,11 @@ check(
             "code-delivery-closed-loop.md",
             "失败回写 Spec 再重试",
             "Orchestrator / Knowledge / Delivery 三层 Harness",
+            "代码质量不是洁癖：Code Review与技术债治理的落地方法",
+            "Code Review 的三目标",
+            "代码写完了，谁负责确认写对了，预发环境是OK吗？",
+            "生产生效验证门禁",
+            "版本回读、配置回读、冒烟验证、观测确认和工单回写",
             "`obra/superpowers` v6.0.3",
             "`obra/superpowers` v6.1.0",
             "Token 砍半、速度翻倍：Superpowers 6.0.3 到底升级了什么？",
@@ -10790,6 +10840,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "intent-to-production-loop.md", "agentic-engineering-governance.md", "agent-loop-engineering.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
+        name="AI Native production effectiveness gate",
+        prompt="参考代码写完了谁负责确认写对了、预发环境是否 OK 这篇文章，增强角色 Loop 的生产交付验证：代码变更要做版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认和工单回写；实际业务场景可通过 owner 问询、项目材料、公开资料、业内共识或行业标准规范确认，避免只是测试通过或页面看似可用。",
+        routes={"ai-native", "intent-to-production-loop.md", "code-delivery-closed-loop.md", "verification-review-release.md", "source-map.md"},
+    ),
+    RouteFixture(
         name="AI Native unifies production ready workflow with wisdom lens",
         prompt="如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、Goal、Harness 和工具链收成一个入口、一个契约、一个准出。",
         routes={"ai-native", "intent-to-production-loop.md", "agentic-engineering-governance.md", "agent-loop-engineering.md", "goal-composition.md", "gsd-cad-admission.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "wisdom-loop-lens.md", "verification-review-release.md", "source-map.md"},
@@ -10921,8 +10976,8 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native source quality review loop",
-        prompt="AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程",
-        routes={"ai-native", "verification-review-release.md", "code-understanding-tools.md", "wisdom-loop-lens.md", "senior", "coding-review-deep-dive.md", "coding-standards.md", "wind", "wind-project-coding-conventions.md"},
+        prompt="参考 Code Review 与技术债治理文章，AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程，并把好的 CR 结论和业务知识回流到项目上下文",
+        routes={"ai-native", "verification-review-release.md", "code-understanding-tools.md", "wisdom-loop-lens.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md", "wind", "wind-project-coding-conventions.md"},
     ),
     RouteFixture(
         name="AI Native Karpathy coding hygiene admission",
@@ -11088,6 +11143,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="product AI-shaped readiness review",
         prompt="评估一下产品团队的 AI-shaped readiness，看看 AI 工作流是不是只在提效，还是形成了可复盘的产品优势",
         routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="product stage contribution mode diagnosis",
+        prompt="参考未来产品团队不再按岗位分工这篇文章，帮产品专家判断当前产品阶段和团队贡献方式：PMF 前后缺的是原型验证、真实交付、复杂度清扫、增长放大还是可靠维护",
+        routes={"product", "product-scenario-routing.md", "source-map.md"},
     ),
     RouteFixture(
         name="product brainstorming exploration",
@@ -11259,6 +11319,16 @@ def route_fixture(prompt: str) -> set[str]:
                     "source-map.md",
                 }
             )
+        if contains_any(prompt, ["生产交付验证", "生产生效验证", "业务场景模拟验收", "模拟验收", "实际业务场景", "预发环境", "版本回读", "配置回读", "冒烟验证", "观测确认", "工单回写"]):
+            route.update(
+                {
+                    "intent-to-production-loop.md",
+                    "code-delivery-closed-loop.md",
+                    "verification-review-release.md",
+                }
+            )
+            if contains_any(prompt, ["参考", "文章", "来源", "代码写完了"]):
+                route.add("source-map.md")
         if contains_any(prompt, ["混一", "生产可用混一模型", "一个入口", "一个契约", "一个准出", "生产可用准出卡"]):
             route.update(
                 {
@@ -11314,7 +11384,7 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("gsd-cad-admission.md")
         if contains_any(prompt, ["Spec 模板", "Spec/SDD 模板", "模板最佳实践", "规范驱动开发", "渐进式 SDD", "渐进式 Spec", "Spec Coding", "PrismSpec", "事实来源", "系统 DNA", "不变量", "状态流转", "结构化契约", "正例 / 反例", "正反例", "边界/错误处理", "边界错误处理", "五支柱验证", "PRD / SDD / 实现 Spec", "实现 Spec", "三层边界", "AC 验收", "AC 与测试映射", "Given-When-Then", "spec-lint", "AC 覆盖", "漂移检查", "五段式骨架", "风险自查", "最终文档准出", "正式交付文档", "过程资产"]):
             route.add("spec-template-practices.md")
-        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "AI 编码框架", "框架分层", "GStack", "Trellis", "/review", "/qa", "/ship", "源码 CR", "QA 验证", "发布准出", "SDD", "渐进式 SDD", "Spec Coding", "PrismSpec", "Lattice Harness", "SDD v6", "SSD 套件", "SDD 套件", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "上下文治理", "上下文治理视图", "Context System", "知识库治理", "update-context", "上下文回写", "L0/L1/L2", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "Drift Check", "Loop Learn", "Evidence / Eval", "Context / Orchestrator", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断", "task-reviewer", "progress ledger", "pre-flight plan review"]):
+        if contains_any(prompt, ["AI 代码交付闭环", "代码交付闭环", "交付闭环", "AI 编码框架", "框架分层", "GStack", "Trellis", "/review", "/qa", "/ship", "源码 CR", "QA 验证", "发布准出", "生产生效验证", "生产交付验证", "预发环境", "版本回读", "配置回读", "冒烟验证", "SDD", "渐进式 SDD", "Spec Coding", "PrismSpec", "Lattice Harness", "SDD v6", "SSD 套件", "SDD 套件", "生产级代码", "生产可用 Loop", "生产可用门禁", "Spec 强度", "编码提速", "交付体感", "生成失败", "反复返工", "回写 Spec", "重试", "AI 错误模式", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "知识生产 Loop", "技术早报", "上下文资产化", "上下文治理", "上下文治理视图", "Context System", "知识库治理", "update-context", "上下文回写", "L0/L1/L2", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "Drift Check", "Loop Learn", "Evidence / Eval", "Context / Orchestrator", "状态落盘", "可复现状态", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "自我挖掘", "自主交付控制卡", "完成判断", "task-reviewer", "progress ledger", "pre-flight plan review"]):
             route.add("code-delivery-closed-loop.md")
         if contains_any(prompt, ["业务专家蒸馏", "蒸馏业务专家", "领域专家 Skill Pack", "可追溯业务专家", "PRD / 系分 / 产品设计文档", "产品设计文档", "业务专家 Skill", "业务专家", "领域专家"]):
             route.update(
@@ -11444,6 +11514,8 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"security-architecture.md", "negative-constraints.md"})
     if contains_any(prompt, product_terms):
         route.add("product")
+        if contains_any(prompt, ["参考", "文章", "外部", "来源", "公开"]):
+            route.add("source-map.md")
     if contains_any(prompt, ["测试", "TDD", "失败测试", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "覆盖率"]):
         route.update({"testing.md", "coding-standards.md", "workflow.md"})
     if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
@@ -11544,6 +11616,7 @@ for case_id in [
     "ai-native-should-review-ai-coding-process",
     "ai-native-should-code-delivery-closed-loop",
     "ai-native-should-progressive-sdd-lattice-harness",
+    "ai-native-should-production-effectiveness-gate",
     "ai-native-should-context-system-knowledge-base-governance",
     "ai-native-should-domain-expert-distillation",
     "ai-native-should-fact-boundary-check",
@@ -11804,6 +11877,30 @@ expected_handling_has(
         "回滚 / 人工接管",
         "不新增命令菜单",
         "不把测试通过、PR 数、Agent 自述、Git/PR/merge/部署或上线审批写成自动准出",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-production-effectiveness-gate",
+    (
+        "验证发布视图 / 生产生效验证门禁",
+        "intent-to-production-loop",
+        "verification-review-release",
+        "code-delivery-closed-loop",
+        "source-map",
+        "代码变更",
+        "配置 / 开关 / prompt 变更",
+        "文档 / Skill-only 变更",
+        "高风险变更",
+        "版本回读",
+        "配置回读",
+        "冒烟验证",
+        "业务场景模拟验收",
+        "观测确认",
+        "工单 / Goal 回写",
+        "生产生效验证卡",
+        "公开资料、业内共识或行业标准规范只能作为补偿场景来源",
+        "不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批",
     ),
 )
 

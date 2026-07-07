@@ -773,6 +773,21 @@
       "expected_handling": "进入 GStack 角色链 + 生产交付审查路径，读取 intent-to-production-loop、verification-review-release、code-delivery-closed-loop、superpowers-skill-library 和 source-map；把 /office-hours 映射为产品思考 forcing questions，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 最小实现，把 /review 映射为独立源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为生产交付审查 / 发布准出；输出生产交付审查卡，覆盖产品价值、范围收敛、工程设计、交互可用、实现证据、独立 CR、QA 验证、发布观测、回滚 / 人工接管、残余风险和下一 owner；不新增命令菜单，不把测试通过、PR 数、Agent 自述、Git/PR/merge/部署或上线审批写成自动准出。"
     },
     {
+      "id": "ai-native-should-production-effectiveness-gate",
+      "skill": "ai-native-engineering-workflow",
+      "query": "参考代码写完了谁负责确认写对了、预发环境是否 OK 这篇文章，增强角色 Loop 的生产交付验证：代码变更要做版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认和工单回写；实际业务场景可通过 owner 问询、项目材料、公开资料、业内共识或行业标准规范确认，避免只是测试通过或页面看似可用。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入验证发布视图 / 生产生效验证门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；停止条件包括缺少版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认、工单 / Goal 回写或高风险 owner 确认。读取 intent-to-production-loop、verification-review-release、code-delivery-closed-loop 和 source-map；区分代码变更、配置 / 开关 / prompt 变更、文档 / Skill-only 变更和高风险变更；代码变更按版本回读 -> 配置回读 -> 冒烟验证 -> 业务场景模拟验收 -> 观测确认 -> 工单 / Goal 回写形成生产生效验证卡；业务场景优先来自 PRD、验收种子、客户反馈、工单、历史事故、owner 问询和项目材料，公开资料、业内共识或行业标准规范只能作为补偿场景来源并标注来源、读取日期和适用边界；配置变更可跳过部署但不能跳过配置回读、冒烟、业务场景模拟验收和观测；文档或 Skill-only 变更用仓库校验、diff check、安装态同步或人工审查作为生效证据；资金、权限、安全、公共契约或生产数据变更必须有 owner 人工确认；不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批。"
+    },
+    {
       "id": "ai-native-should-unify-production-ready-workflow-with-wisdom-lens",
       "skill": "ai-native-engineering-workflow",
       "query": "如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、Goal、Harness 和工具链收成一个入口、一个契约、一个准出。",
@@ -875,7 +890,7 @@
     {
       "id": "ai-native-should-source-quality-review-loop",
       "skill": "ai-native-engineering-workflow",
-      "query": "用 AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程。",
+      "query": "参考 Code Review 与技术债治理文章，用 AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程，并把好的 CR 结论和业务知识回流到项目上下文。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -884,7 +899,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools 和 wisdom-loop-lens；按准入定界、只读理解、规则装载 / 红线、业务架构裁决、代码坏味道细查、工具补扫、修复验证、回流收口推进；目标是遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Wind opt-in 项目读取 wind-project-coding-conventions；源码级裁决回资深架构师的 coding-review-deep-dive.md、coding-standards.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；输出工具证据、未采纳工具建议、残余风险和下一 owner。"
+      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools、wisdom-loop-lens 和 source-map；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Wind opt-in 项目读取 wind-project-coding-conventions；源码级裁决回资深架构师的 coding-review-deep-dive.md、coding-standards.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
     },
     {
       "id": "ai-native-should-route-wind-agents-init",
