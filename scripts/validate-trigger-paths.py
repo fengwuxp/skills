@@ -180,6 +180,7 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
+product_business_architecture = "product-architecture-expert/references/business-architecture-planning.md"
 product_concept_lifecycle = "product-architecture-expert/references/product-concept-lifecycle.md"
 product_judgment_action_chain = "product-architecture-expert/references/product-judgment-action-chain.md"
 product_insight = "product-architecture-expert/references/product-insight-analyst.md"
@@ -641,8 +642,8 @@ wisdom_lens_terms = [
     "知行合一",
     "一张一弛",
 ]
-product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
-product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
+product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "能力-项目-系统映射", "知识库回流", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
+product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
 payment_terms = [
     "清结算",
@@ -1077,6 +1078,10 @@ check(
             "默认最小输出",
             "Ask-or-Decide",
             "每个小闭环统一走 Ask-or-Decide",
+            "一次只问一个主 blocker",
+            "建议答案、依据、影响和默认暂停点",
+            "按你建议推进",
+            "不重开全局规划",
             "任务结束责任闭环",
             "交付责任自检",
             "下一任务计划问询",
@@ -2615,6 +2620,10 @@ check(
             "确认规则",
             "不能确认业务意图、需求价值、用户验收、架构批准、测试通过、CR 准出、Git 授权或上线审批",
             "每个阶段的小闭环完成后，先自问再问人",
+            "问询推进只处理一个主 blocker",
+            "默认暂停点",
+            "下一最高价值 blocker",
+            "不重新摊开全局方案",
             "Auto-Decide Next",
             "Auto-Ask Owner",
         ],
@@ -2637,6 +2646,8 @@ check(
             "任务结束责任闭环",
             "交付责任自检",
             "下一任务计划问询",
+            "当前主 blocker / 建议答案 / 依据 / 影响 / 默认暂停点:",
+            "不要同时摊开多个 blocker",
         ],
     )
     and has_all(
@@ -3783,6 +3794,7 @@ check(
             "ai-native-should-gsd-goal-composition",
             "ai-native-should-agent-loop-engineering",
             "ai-native-should-loop-task-end-accountability",
+            "ai-native-should-ask-or-decide-blocker-progression",
             "ai-native-should-review-ai-coding-process",
             "ai-native-should-code-delivery-closed-loop",
             "ai-native-should-production-sdd-source-of-truth",
@@ -7999,7 +8011,103 @@ check(
             "PRD 文档质量治理",
             "通用产品架构与业务驱动验证",
             "产品价值 / 成本函数与业务同质性",
+            "业务架构规划与项目组合",
             "官方规则与监管",
+        ],
+    ),
+)
+check(
+    "product expert routes business architecture planning",
+    has_all(
+        product_skill,
+        [
+            "业务架构规划",
+            "业务 IT 对齐",
+            "战略落项目",
+            "项目组合治理",
+            "能力-项目-系统映射",
+            "business-architecture-planning.md",
+            "按业务域或模块分区的知识库回流计划",
+            "不替代组织设计、系统架构、Execution Grant 或上线审批",
+        ],
+    )
+    and has_all(
+        product_agent,
+        [
+            "业务架构规划",
+            "能力地图",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "业务架构规划",
+            "业务 IT 对齐",
+            "战略落项目",
+            "项目组合治理",
+            "投资取舍",
+            "重复建设识别",
+            "能力-项目-系统映射",
+            "business-architecture-planning.md",
+            "复杂图形化表达加读 `diagram-output.md`",
+            "知识库回流计划",
+            "不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant",
+        ],
+    )
+    and has_reference_header(product_business_architecture)
+    and has_task_reading_index(product_business_architecture)
+    and has_all(
+        product_business_architecture,
+        [
+            "# 业务架构规划",
+            "业务架构准入卡",
+            "业务能力地图",
+            "价值流 / 关键业务流程",
+            "核心对象与规则卡",
+            "能力-项目-系统映射",
+            "差距 / 依赖 / 优先级矩阵",
+            "项目组合 / 路线图",
+            "## 5A. 图形化辅助路由",
+            "diagram-output.md",
+            "战略到能力：业务能力地图",
+            "端到端价值实现：价值流 / 跨角色流程图",
+            "能力落地现状：能力-项目-系统-数据映射图",
+            "投资取舍：差距 / 依赖 / 路线图",
+            "工程交接：产品到系统上下文图",
+            "高风险对象：对象生命周期 / 状态机 / 规则决策图",
+            "正式图形化交付默认只生成 SVG",
+            "图不能替代业务确认、产品判断、工程设计、Execution Grant 或上线审批",
+            "按业务域或模块分区保存",
+            "知识库规划卡",
+            "Product Context Card",
+            "这些交接卡都不是 Execution Grant、测试通过、CR 结论、上线审批或 Git 授权",
+        ],
+    ),
+)
+check(
+    "AI Native routes business architecture planning to product expert",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "业务架构规划",
+            "业务能力地图",
+            "战略到项目组合",
+            "product-architecture-expert/references/business-architecture-planning.md",
+            "AI Native 只判断交接成熟度、owner 和停止条件",
+            "知识库回流落点",
+        ],
+    )
+    and has_all(
+        ai_native_product_to_engineering,
+        [
+            "业务架构规划",
+            "业务能力地图",
+            "战略到项目组合",
+            "项目组合治理",
+            "能力-项目-系统映射",
+            "business-architecture-planning.md",
+            "AI Native 只做交接成熟度、owner、验证与停止条件",
+            "不把能力地图、项目组合或知识库回流计划当 Execution Grant",
         ],
     ),
 )
@@ -8455,6 +8563,25 @@ check(
             "业务同质性、价值函数、成本函数、主要矛盾",
             "Codex in-app Browser 的 Playwright 接口",
             "架构批准或 Execution Grant",
+        ],
+    ),
+)
+check(
+    "product source map records business architecture planning source",
+    has_all(
+        product_source_map,
+        [
+            "业务架构规划与项目组合",
+            "业务架构到底有什么用？",
+            "https://mp.weixin.qq.com/s/Xvu7hT4IH8D3BBY2PrTbnA",
+            "企业架构EA之家",
+            "2026-07-07 13:50:00 Asia/Shanghai",
+            "2026-07-08",
+            "Android MicroMessenger UA 公开 HTML 读取标题、作者、发布时间和正文",
+            "business-architecture-planning.md",
+            "共同业务语言、业务能力地图、战略到项目组合、能力-项目-系统映射、投资决策支持",
+            "知识库回流",
+            "不把文章观点写成组织制度、预算审批、系统设计、Execution Grant 或上线审批",
         ],
     ),
 )
@@ -10746,6 +10873,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "intent-to-production-loop.md", "agent-loop-engineering.md", "verification-review-release.md"},
     ),
     RouteFixture(
+        name="AI Native ask or decide blocker progression",
+        prompt="进入 AI Native 角色协作 Loop 问询推进：我接受你对当前 blocker 的建议，按你的建议推进下一步；不要重新展开全局规划，只关闭当前 blocker、写入下一阶段输入，再挑下一最高价值 blocker。",
+        routes={"ai-native", "intent-to-production-loop.md", "agent-loop-engineering.md"},
+    ),
+    RouteFixture(
         name="AI Native PRD system design deliberation review",
         prompt="对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -11151,6 +11283,16 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md"},
     ),
     RouteFixture(
+        name="business architecture planning product",
+        prompt="为客户中心转型做业务架构规划，梳理业务能力地图、战略到项目组合、重复建设识别、能力-项目-系统映射和知识库回流落点",
+        routes={"product", "product-scenario-routing.md", "business-architecture-planning.md"},
+    ),
+    RouteFixture(
+        name="business architecture planning diagram",
+        prompt="把客户中心业务架构规划可视化，画业务能力地图、价值流、能力-项目-系统映射图和路线图，用于评审项目组合取舍",
+        routes={"product", "product-scenario-routing.md", "business-architecture-planning.md", "diagram-output.md"},
+    ),
+    RouteFixture(
         name="product acceptance seeds for tdd handoff",
         prompt="会员权益产品方案要交给架构师按 TDD 推进，请补验收种子，区分可代码化、可观测化和可评审化，不要写工程测试代码",
         routes={"product", "product-scenario-routing.md"},
@@ -11194,6 +11336,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="ai native product judgment loop admission",
         prompt="AI Native 进入产品判断 Loop：先调用产品专家按产品判断动作链处理反馈、机会、Backlog、PRD 和验收种子，再判断是否进入系分、TDD 和编码，不要直接从漂亮 PRD 进工程",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "product", "product-scenario-routing.md", "product-judgment-action-chain.md"},
+    ),
+    RouteFixture(
+        name="ai native business architecture planning handoff",
+        prompt="AI Native 帮我编排业务架构规划到工程交接：先让产品专家做业务能力地图、战略到项目组合、能力-项目-系统映射和知识库回流计划，再判断 owner、验证和停止条件",
+        routes={"ai-native", "product-to-engineering-lifecycle.md", "product", "product-scenario-routing.md", "business-architecture-planning.md"},
     ),
     RouteFixture(
         name="product nonstandard problem solution",
@@ -11272,6 +11419,11 @@ negative_route_fixtures: list[RouteFixture] = [
         name="ai native on java service codegen",
         prompt="根据这段 CREATE TABLE 生成 Wind/Nobe 风格 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl",
         routes={"ai-native"},
+    ),
+    RouteFixture(
+        name="business architecture without diagram",
+        prompt="请做业务架构规划，但不要画图，只输出能力地图文字、项目组合和知识库回流计划",
+        routes={"diagram-output.md"},
     ),
 ]
 
@@ -11367,7 +11519,7 @@ def route_fixture(prompt: str) -> set[str]:
                     "source-map.md",
                 }
             )
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "需求分析", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "发布复盘", "增长实验", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物", "/office-hours", "/plan-ceo-review", "Office Hours", "CEO Review", "产品思考", "范围收敛", "MVP"]):
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "业务架构规划", "业务能力地图", "战略到项目组合", "项目组合治理", "能力-项目-系统映射", "知识库回流", "需求分析", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "发布复盘", "增长实验", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物", "/office-hours", "/plan-ceo-review", "Office Hours", "CEO Review", "产品思考", "范围收敛", "MVP"]):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "边界坐标", "需求 CR", "CR 需求", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "CEO Review", "Eng Review", "Design Review", "工程评审", "交互评审"]):
             route.add("prd-system-design-review.md")
@@ -11556,6 +11708,10 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
     if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
+    if contains_any(prompt, ["业务架构规划", "业务 IT 对齐", "业务能力地图", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流"]):
+        route.add("business-architecture-planning.md")
+        if contains_any(prompt, ["画图", "图形化", "可视化", "出图", "生成图", "映射图", "上下文图", "流程图", "状态机"]) and not contains_any(prompt, ["不要画图", "不画图", "无需画图", "只输出文字"]):
+            route.add("diagram-output.md")
     if contains_any(prompt, product_judgment_terms):
         route.update({"product", "product-scenario-routing.md", "product-judgment-action-chain.md"})
         if contains_any(prompt, ["访谈", "工单", "反馈", "竞品", "资料", "数据", "机会"]):
@@ -11579,7 +11735,7 @@ def route_fixture(prompt: str) -> set[str]:
         route.add("product-deliberation-workflow.md")
     if contains_any(prompt, ["Backlog", "机会清单", "机会点", "需求池", "需求优先级", "P0/P1/P2", "User Story"]):
         route.add("po-backlog-manager.md")
-    if contains_any(prompt, diagram_terms):
+    if contains_any(prompt, diagram_terms) and not contains_any(prompt, ["不要画图", "不画图", "无需画图", "只输出文字"]):
         route.add("diagram-output.md")
     if routes_codegen(prompt):
         route.update(codegen_route)
@@ -12078,6 +12234,25 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "ai-native-should-ask-or-decide-blocker-progression",
+    (
+        "小闭环 Ask-or-Decide",
+        "问询推进",
+        "自我问询 / 自我回答",
+        "一个主 blocker",
+        "按你建议推进",
+        "关闭当前 blocker",
+        "下一阶段输入",
+        "下一最高价值 blocker",
+        "建议答案",
+        "默认暂停点",
+        "不重新摊开全局方案",
+        "不同时展开多个 blocker",
+        "不把续作写成已授权",
+    ),
+)
+
+expected_handling_has(
     "ai-native-should-knowledge-expression-gate",
     (
         "知识表达 / 意图可执行门禁",
@@ -12216,6 +12391,28 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "ai-native-should-route-business-architecture-planning",
+    (
+        "业务架构规划到工程交接准入路径",
+        "交接成熟度",
+        "owner",
+        "授权策略",
+        "知识库回流落点",
+        "验证与停止条件",
+        "business-architecture-planning",
+        "业务架构准入卡",
+        "业务能力地图",
+        "价值流",
+        "核心对象与规则",
+        "能力-项目-系统映射",
+        "差距 / 依赖 / 优先级",
+        "项目组合 / 路线图",
+        "按业务域或模块分区",
+        "不直接生成系统设计、TDD、编码任务或 Execution Grant",
+    ),
+)
+
+expected_handling_has(
     "product-should-pm-skills-judgment-action-chain",
     (
         "产品判断动作链路径",
@@ -12234,6 +12431,44 @@ expected_handling_has(
         "交接路由",
         "AI Native 前置门禁",
         "不安装、复制或照搬外部 pm-skills",
+    ),
+)
+
+expected_handling_has(
+    "product-should-business-architecture-planning",
+    (
+        "业务架构规划路径",
+        "business-architecture-planning",
+        "真实问题",
+        "战略意图",
+        "决策场景",
+        "业务架构准入卡",
+        "业务能力地图",
+        "价值流",
+        "核心对象与规则",
+        "能力-项目-系统映射",
+        "差距 / 依赖 / 优先级",
+        "项目组合 / 路线图",
+        "Product Context Card",
+        "按业务域或模块分区",
+        "知识库回流计划",
+        "不把业务架构降级为全公司大图、组织架构图、系统清单或 Execution Grant",
+    ),
+)
+
+expected_handling_has(
+    "product-should-business-architecture-diagram-route",
+    (
+        "业务架构规划图形化路由",
+        "business-architecture-planning",
+        "diagram-output",
+        "业务能力地图",
+        "价值流 / 跨角色流程图",
+        "能力-项目-系统-数据映射图",
+        "差距 / 依赖 / 路线图",
+        "正式图形化交付默认只生成 SVG",
+        "图只辅助评审与沟通",
+        "不替代业务确认、产品判断、工程设计、Execution Grant 或上线审批",
     ),
 )
 
