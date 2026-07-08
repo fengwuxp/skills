@@ -489,7 +489,7 @@
     {
       "id": "ai-native-should-domain-expert-distillation",
       "skill": "ai-native-engineering-workflow",
-      "query": "AI Native 阅读这些 PRD / 系分 / 产品设计文档，把支付账务域蒸馏成可追溯业务专家和领域专家 Skill Pack，要求区分事实 / 推断 / 待确认 / 范围外不做，并给出 owner 追认和 test-prompts 压力测试。",
+      "query": "AI Native 阅读这些 PRD / 系分 / 产品设计文档，把支付账务域蒸馏成可追溯业务专家和领域专家 Skill Pack，要求规划学习方式和学习路径，整理学习资料，提前学习内容，按业务域或模块分开保存学习结果，输出学习结果知识库规划、owner 追认和 test-prompts 压力测试。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -499,7 +499,7 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release、wisdom-loop-lens 和 source-map；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；用循名责实、格物致知、知行合一和阴平阳秘校准，不把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
+      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release、wisdom-loop-lens 和 source-map；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；按预习定域 -> 逐篇精读 -> 横向建模 -> 三重验证 -> owner 追认 -> 结果归档规划学习路径；输出学习结果知识库规划，先按业务域或模块分区，再在分区内把阅读状态写入逐篇学习台账，正式来源和 owner 追认写入证据地图，术语对象写入术语与对象表，规则和开放问题写入领域知识卡，流程状态写入流程状态与判断规则，接口事件和数据事实写入接口事件与数据，追认问题和 test-prompts 写入待确认与压测；跨域共识、跨域流程和冲突规则放 cross-domain 或根索引；关键结论按 claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file 保存；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；用循名责实、格物致知、知行合一和阴平阳秘校准，不把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
     },
     {
       "id": "ai-native-should-skill-split-gate",

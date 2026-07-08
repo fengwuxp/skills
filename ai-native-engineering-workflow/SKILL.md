@@ -107,7 +107,7 @@ Owner：
 - **目标计划 / 大项目编排**：读 `goal-composition.md`、`gsd-cad-admission.md` 或 `agentic-engineering-governance.md`，只输出目标层、计划切片、执行授权缺口和下一 owner。
 - **评审规格 / 代码交付**：读 `prd-system-design-review.md`、`spec-template-practices.md` 或 `code-delivery-closed-loop.md`，只判断准入、角色分工、证据边界和准出路由。
 - **理解工具 / 源码质量评审 / 质量发布**：读 `code-understanding-tools.md`、`agent-loop-engineering.md` 或 `verification-review-release.md`，先判断权限、写入边界、代码理解证据、编码约规来源、测试 / CR / 版本回读 / 配置回读 / 冒烟 / 业务场景模拟验收 / 观测证据、外部 Checker 证据和停止条件。
-- **业务专家蒸馏 / 领域知识回流**：读 `domain-expert-distillation.md`、`product-to-engineering-lifecycle.md`、`verification-review-release.md` 和 `wisdom-loop-lens.md`，只把 PRD / 系分 / 产品设计文档、接口、事件、代码和测试证据蒸馏成可追溯 Skill Pack 草案；不把业务专家写成自由发挥角色。
+- **业务专家蒸馏 / 领域知识回流**：读 `domain-expert-distillation.md`、`product-to-engineering-lifecycle.md`、`verification-review-release.md` 和 `wisdom-loop-lens.md`，只把 PRD / 系分 / 产品设计文档、接口、事件、代码和测试证据蒸馏成可追溯 Skill Pack 草案，并输出按业务域或模块分区的学习结果知识库规划；不把业务专家写成自由发挥角色。
 - **治理回流 / 取舍校准**：读 `wisdom-loop-lens.md`、`skill-type-owner-routing.md`、`superpowers-skill-library.md` 或 `source-map.md`，只沉淀可复用方法、触发边界、owner 路由和验证方式。
 
 ## 参考路由
@@ -118,7 +118,7 @@ Owner：
 - `references/agentic-engineering-governance.md`：OpenSpec、Superpowers、Harness、AI Native Harness Contract v3、权限边界、多 Agent 协作和事实边界。
 - `references/gsd-cad-admission.md`：角色协作 Loop 产研交付视图内部的大项目计划层、原子执行候选、授权边界、执行授权缺口和三卡到架构师消费规则。
 - `references/code-understanding-tools.md`：Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 类本地执行型 Agent 等 AI 代码理解 / 上下文工程 / 知识图谱 / 最小正确实现 / 外部代码评审 / 本地执行工具准入。
-- `references/domain-expert-distillation.md`：从 PRD / 系分 / 产品设计文档、接口、事件、代码和测试证据蒸馏可追溯业务专家 Skill Pack 的准入、抽取器、三重验证、答题协议、压力测试和反偏红线。
+- `references/domain-expert-distillation.md`：从 PRD / 系分 / 产品设计文档、接口、事件、代码和测试证据蒸馏可追溯业务专家 Skill Pack 的准入、学习闭环、知识库规划、抽取器、三重验证、答题协议、压力测试和反偏红线。
 - `references/spec-template-practices.md`：Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、spec-lint、AC 覆盖、漂移检查和五支柱验证。
 - `references/code-delivery-closed-loop.md`：AI Coding / SDD / Spec / Harness、SDD v6 任务闭环到最终可交付代码、知识回流、知识生产和 AI 编码框架分层的闭环。
 - `references/goal-composition.md`：Loop 目标层、目标桥接、Goal 卡、状态机、Ledger、预算 / 时间盒、内部计划 / 原子执行 / Spec 关联和停止条件。
