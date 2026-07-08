@@ -124,6 +124,13 @@ def files_under(skill_dir: Path, subdir: str, pattern: str = "*") -> list[Path]:
     return sorted(path for path in root.glob(pattern) if path.is_file())
 
 
+def fixture_files_under(skill_dir: Path) -> list[Path]:
+    root = skill_dir / "fixtures"
+    if not root.exists():
+        return []
+    return sorted(path for path in root.rglob("*") if path.is_file())
+
+
 def score_ratio(value: int, target: int, full_score: int) -> int:
     if target <= 0:
         return 0
@@ -493,7 +500,7 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
     reference_stats = relative_reference_stats(skill_dir, refs)
     section_stats = all_reference_sections(skill_dir, refs)
     scripts = files_under(skill_dir, "scripts")
-    fixtures = files_under(skill_dir, "fixtures")
+    fixtures = fixture_files_under(skill_dir)
     ref_links = direct_reference_links(text)
     missing_refs = [ref for ref in ref_links if not (skill_dir / ref).exists()]
     reference_headers = sum(1 for item in reference_stats if item["has_progressive_headers"])
@@ -684,6 +691,11 @@ def run_self_test() -> None:
                 f"{item['name']}: realistic prompt fixture score too low: "
                 f"{item['dimensions']['realistic_prompt_fixtures']}"
             )
+        if (
+            item["name"] == "wind-project-coding-conventions"
+            and item["metrics"]["fixture_files"] < 2
+        ):
+            raise SystemExit(f"{item['name']}: missing runnable fixture files")
         if metrics["reference_files_over_hard_limit"]:
             names = ", ".join(
                 f"{ref['path']}={ref['lines']}"

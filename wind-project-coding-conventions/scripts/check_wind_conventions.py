@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import re
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -93,63 +92,21 @@ def print_findings(findings: list[Finding]) -> None:
     print(f"Wind convention guard: {errors} error(s), {warnings} warning(s)")
 
 
-def write(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text.strip() + "\n", encoding="utf-8")
-
-
 def self_test() -> None:
-    with tempfile.TemporaryDirectory(prefix="wind-convention-guard-") as tmp:
-        root = Path(tmp)
-        write(
-            root / "sample-face/src/main/java/com/acme/order/service/OrderService.java",
-            """
-            package com.acme.order.service;
-            import com.acme.order.model.dto.OrderDTO;
-            public interface OrderService {
-                OrderDTO getOrderById(Long id);
-            }
-            """,
-        )
-        valid = run(root)
-        if valid:
-            print_findings(valid)
-            raise SystemExit("valid fixture should pass")
+    fixture_root = Path(__file__).resolve().parents[1] / "fixtures"
 
-        write(
-            root / "sample-face/src/main/java/com/acme/order/service/BadOrderService.java",
-            """
-            package com.acme.order.service;
-            import com.acme.order.dal.entities.OrderEntity;
-            public interface BadOrderService {
-                OrderEntity queryOrderById(Long id);
-            }
-            """,
-        )
-        write(
-            root / "sample-face/src/main/java/com/acme/order/model/dto/BadOrderDTO.java",
-            """
-            package com.acme.order.model.dto;
-            public class BadOrderDTO {
-                private String currency;
-            }
-            """,
-        )
-        write(
-            root / "sample-impl/src/main/java/com/acme/order/service/impl/InMemoryOrderService.java",
-            """
-            package com.acme.order.service.impl;
-            public class InMemoryOrderService {
-            }
-            """,
-        )
-        invalid = run(root)
-        messages = "\n".join(item.message for item in invalid)
-        expected = ["不得使用 String", "不得暴露 Entity", "不得新增内存版"]
-        missing = [item for item in expected if item not in messages]
-        if missing:
-            print_findings(invalid)
-            raise SystemExit("invalid fixture missing: " + ", ".join(missing))
+    valid = run(fixture_root / "valid")
+    if valid:
+        print_findings(valid)
+        raise SystemExit("valid fixture should pass")
+
+    invalid = run(fixture_root / "invalid")
+    messages = "\n".join(item.message for item in invalid)
+    expected = ["不得使用 String", "不得暴露 Entity", "不得新增内存版"]
+    missing = [item for item in expected if item not in messages]
+    if missing:
+        print_findings(invalid)
+        raise SystemExit("invalid fixture missing: " + ", ".join(missing))
     print("OK wind convention guard self-test")
 
 

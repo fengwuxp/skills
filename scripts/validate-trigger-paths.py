@@ -240,6 +240,11 @@ ai_native_terms = [
     "AI 流程",
     "AI 工作流",
     "AI 工作量",
+    "CDD",
+    "Capability Discovery",
+    "Capability-Driven Development",
+    "能力发现",
+    "先找能力，再写代码",
     "AI 时代产品到研发编码流程",
     "角色 Loop",
     "角色loop",
@@ -340,6 +345,9 @@ ai_native_terms = [
     "生产可用门禁",
     "生产可用混一模型",
     "混一",
+    "一言而终",
+    "本于阴阳",
+    "神用无方",
     "一个入口",
     "一个契约",
     "一个准出",
@@ -367,6 +375,8 @@ ai_native_terms = [
     "五德终始",
     "五德始终",
     "阴阳五德始终",
+    "本于阴阳",
+    "神用无方",
     "病机",
     "正名",
     "阴平阳秘",
@@ -1330,22 +1340,29 @@ check(
         [
             "轻量问询先于长方案",
             "Matt Pocock skills / Grilling",
+            "Grill-Me 式盘问",
             "Ask-or-Decide",
             "一次只问一个问题",
+            "决策记录写入下一阶段输入",
         ],
     )
     and has_all(
         ai_native_intent_to_production,
         [
             "轻量问询结论",
+            "Grill-Me 盘问结论",
             "复杂或模糊任务不要先生成大段方案让用户审",
             "一次只问一个关键问题",
+            "Loop 推进中适时进入 Grill-Me",
             "问询结论必须写入产品上下文卡、工程交接卡、任务树 / 计划切片或下一阶段输入",
         ],
     )
     and has_all(
         ai_native_agent_loop_engineering,
         [
+            "Grill-Me 盘问门禁",
+            "关键分叉会改变业务目标、公共契约、状态机、验收样例、写入范围、发布风险",
+            "模糊回答 push back",
             "任务树真相源",
             "Task Tree / 任务树",
             "目标、输入、owner、验收标准、依赖、状态和停止条件",
@@ -1361,19 +1378,25 @@ check(
             "一次一个问题",
             "给建议答案",
             "能通过代码库或材料自答的问题先自答",
+            "Loop 推进中关键分叉复核",
+            "结构化决策摘要",
             "官方 skill-installer",
-            "被当前自动审批策略拦截",
+            "当前 Codex 安装目录存在",
         ],
     )
     and has_all(
         ai_native_source_map,
         [
             "GitHub 仓库 [mattpocock/skills]",
+            "热门Skill研究：Grill-Me，凭什么火遍整个开发者圈？",
+            "读行万里的AI日记",
+            "2026-06-04 07:00:00 Asia/Shanghai",
             "轻量问询",
             "grilling/SKILL.md",
             "grill-me/SKILL.md",
-            "未安装",
-            "不得把 `mattpocock/skills` 全仓库、Trellis、Claude plugin、npm 脚本、跳过权限模式或未安装工具写成当前默认能力",
+            "Loop 推进中遇到关键分叉未决",
+            "2026-07-08 已核验当前 Codex 安装目录存在",
+            "不得把 `mattpocock/skills` 全仓库、Trellis、Claude plugin、npm 脚本、跳过权限模式或未核验工具写成当前默认能力",
         ],
     )
     and has_all(
@@ -3255,6 +3278,68 @@ check(
             "状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件",
             "Skill 作为复用单位",
             "不把 `/goal`、`/loop` 或 auto mode 写成无条件授权",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps unified yinyang execution principle",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "混一总纲",
+            "以真实交付为体，以证据闭环为用",
+            "阴定边界，阳促推进",
+            "随事取最小可验证路径",
+            "不再作为并列工作流外显",
+        ],
+    )
+    and has_all(
+        ai_native_agent_loop_engineering,
+        [
+            "混一总纲",
+            "以真实交付为体，以证据闭环为用",
+            "阴定边界，阳促推进",
+            "随事取最小可验证路径",
+            "体不清则不动",
+            "用无证则不收",
+            "阴不足则停",
+            "阳不足则问",
+            "神用无方",
+            "不把它们写成并列菜单",
+        ],
+    ),
+)
+check(
+    "ai-native workflow keeps CDD capability discovery gate",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "CDD / Capability-Driven Development",
+            "实现前能力发现",
+            "非 T0 写入 / 交付任务先查已有 Skill / Tool / Workflow / 脚本 / 自动化和验收证据",
+        ],
+    )
+    and has_all(
+        ai_native_agent_loop_engineering,
+        [
+            "能力发现 / 最小正确实现门禁",
+            "Capability Discovery",
+            "触发条件、输入、动作、边界和验收证据",
+            "artifact / validator / readback / 用户确认",
+            "缺口明确后才新增实现",
+            "不把工具名当能力",
+            "不绕过既有 QC、readback、权限边界、失败处理、测试、CR、owner 确认或 Git / 上线授权",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "CDD：先找能力，再写代码",
+            "Willis x AI",
+            "2026-07-04 14:46:40 Asia/Shanghai",
+            "Capability-Driven Development",
+            "先找已有 Skill、Tool、Workflow、脚本、自动化和验收证据",
+            "不把工具名写成能力",
         ],
     ),
 )
@@ -11008,6 +11093,16 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "intent-to-production-loop.md", "agentic-engineering-governance.md", "agent-loop-engineering.md", "goal-composition.md", "gsd-cad-admission.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "wisdom-loop-lens.md", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
+        name="AI Native reusable work asset loop",
+        prompt="参考给产品经理的 loop engineering，把 PRD 评审规则、客户访谈总结器、发布检查清单和每周产品信号做成可复用工作资产 Loop，要有触发器、动作、证据、记忆、停止条件和可复测样例。",
+        routes={"ai-native", "agent-loop-engineering.md", "source-map.md"},
+    ),
+    RouteFixture(
+        name="AI Native CDD capability discovery gate",
+        prompt="参考外部文章 CDD：先找能力，再写代码，强化 AI Native 落地执行能力；非 T0 的代码、文件、报告或外部写入任务，先做 Capability Discovery，查已有 Skill、Tool、Workflow、脚本和自动化，再判断缺口是否需要新实现。",
+        routes={"ai-native", "agent-loop-engineering.md", "code-delivery-closed-loop.md", "source-map.md"},
+    ),
+    RouteFixture(
         name="AI Native upgrades SDD suite and Harness contract",
         prompt="AI Native 看下整体升级 SDD/SSD 套件以及 Harness 版本，参考 Superpowers 6.0 的 task-reviewer、task-brief、review-package、progress ledger 和 pre-flight plan review，补验证门禁和停止条件，但不要默认运行外部脚本",
         routes={"ai-native", "agentic-engineering-governance.md", "superpowers-skill-library.md", "code-delivery-closed-loop.md", "source-map.md", "verification-review-release.md"},
@@ -11020,6 +11115,11 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native routes Matt Pocock grilling skills",
         prompt="AI Native 看下安装 mattpocock/skills，用 grilling 协同产品专家和任务树推进模糊需求，说明安装边界和安全风险",
+        routes={"ai-native", "agent-loop-engineering.md", "intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="AI Native Grill-Me loop progression gate",
+        prompt="参考 Grill-Me 文章，加强 AI 工作流：Loop 推进中如果关键分叉未决、用户回答含糊或连续返工，适时进入 Grill-Me 盘问，一次只问一个问题、给推荐答案、能查先查，并把决策摘要写回下一阶段输入。",
         routes={"ai-native", "agent-loop-engineering.md", "intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -11066,6 +11166,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native context system knowledge base governance",
         prompt="结合渐进式 SDD、Lattice Harness 和老祖宗智慧，给项目落地 context / 知识库治理：先梳理 AGENTS.md、CONTEXT.md、ADR、模块 reference、source-map、测试资产和 update-context，不要一上来就建设外部知识库。",
         routes={"ai-native", "code-delivery-closed-loop.md", "wisdom-loop-lens.md", "code-understanding-tools.md", "source-map.md"},
+    ),
+    RouteFixture(
+        name="AI Native workflow yinyang unification",
+        prompt="AI Native skill 中各式各样的 AI 工作流，做一轮混一，知其要者，一言而终，本于阴阳，神用无方",
+        routes={"ai-native", "agent-loop-engineering.md", "code-delivery-closed-loop.md", "wisdom-loop-lens.md", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native domain expert distillation",
@@ -11507,7 +11612,7 @@ def route_fixture(prompt: str) -> set[str]:
             )
             if contains_any(prompt, ["参考", "文章", "来源", "代码写完了"]):
                 route.add("source-map.md")
-        if contains_any(prompt, ["混一", "生产可用混一模型", "一个入口", "一个契约", "一个准出", "生产可用准出卡"]):
+        if contains_any(prompt, ["混一", "一言而终", "本于阴阳", "神用无方", "生产可用混一模型", "一个入口", "一个契约", "一个准出", "生产可用准出卡"]):
             route.update(
                 {
                     "intent-to-production-loop.md",
@@ -11549,6 +11654,10 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("goal-composition.md")
             if contains_any(prompt, ["交付", "代码", "CR", "测试", "失败测试", "TDD", "Spec", "回写", "返工", "缺陷", "验证", "验证命令", "状态回写", "生产可用", "能上线", "发布回滚", "发布/回滚", "观测审计", "人工接管"]):
                 route.add("code-delivery-closed-loop.md")
+        if contains_any(prompt, ["CDD", "Capability Discovery", "Capability-Driven Development", "能力发现", "先找能力，再写代码"]):
+            route.add("agent-loop-engineering.md")
+            route.add("code-delivery-closed-loop.md")
+            route.add("source-map.md")
         if contains_any(prompt, ["小闭环", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "轻量问询", "盘问", "一次一个问题", "建议答案", "Grilling", "grill-me", "Grill-Me", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "GStack 角色链", "角色链模板"]):
             route.add("intent-to-production-loop.md")
             route.add("agent-loop-engineering.md")
@@ -11794,6 +11903,8 @@ for case_id in [
     "ai-native-should-agent-loop-engineering",
     "ai-native-should-agent-loop-maturity-diagnosis",
     "ai-native-should-design-engineering-loop-not-prompting",
+    "ai-native-should-reusable-work-asset-loop",
+    "ai-native-should-cdd-capability-discovery-gate",
     "ai-native-should-wisdom-lens-loop-scheduling",
     "ai-native-should-review-ai-coding-process",
     "ai-native-should-code-delivery-closed-loop",
@@ -11807,6 +11918,53 @@ for case_id in [
     "ai-native-should-route-wind-agents-init",
 ]:
     expected_handling_has(case_id, ai_native_outline_terms)
+
+expected_handling_has(
+    "ai-native-should-reusable-work-asset-loop",
+    (
+        "可复用工作资产 Loop",
+        "agent-loop-engineering",
+        "source-map",
+        "工作资产 Loop 卡",
+        "流程名称",
+        "触发器",
+        "输入",
+        "动作",
+        "质量证据 / 评测样例",
+        "记忆 / 保存位置",
+        "回流方式",
+        "停止条件",
+        "人工决策点",
+        "可复测样例",
+        "不得吸收",
+        "高频、低风险、有证据",
+        "不临时加长 Prompt",
+        "Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库",
+        "未核验业务知识",
+        "战略取舍",
+        "客户承诺",
+        "路线图改动",
+        "上线审批",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-cdd-capability-discovery-gate",
+    (
+        "CDD / 能力发现门禁",
+        "agent-loop-engineering",
+        "code-delivery-closed-loop",
+        "source-map",
+        "非 T0",
+        "Capability Discovery",
+        "已有 Skill / Tool / Workflow / 脚本 / 自动化",
+        "触发条件、输入、动作、边界和验收证据",
+        "artifact、validator、readback 或用户确认",
+        "缺口明确后才新增实现",
+        "不把工具名当能力",
+        "不绕过既有 QC、readback、权限边界、失败处理、测试、CR、owner 确认或 Git/上线授权",
+    ),
+)
 
 expected_handling_has(
     "ai-native-should-progressive-sdd-lattice-harness",
@@ -12263,6 +12421,31 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "ai-native-should-grill-me-loop-progression",
+    (
+        "Grill-Me 盘问门禁",
+        "Loop 推进",
+        "agent-loop-engineering",
+        "intent-to-production-loop",
+        "superpowers-skill-library",
+        "source-map",
+        "关键分叉未决",
+        "回答含糊",
+        "连续返工",
+        "一次只问一个问题",
+        "给推荐答案",
+        "能从代码库、文档、测试或日志自答的问题先自答",
+        "模糊回答 push back",
+        "决策树分支",
+        "已确认选择",
+        "被排除方案",
+        "待确认项",
+        "写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入",
+        "不把 Grill-Me 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批",
+    ),
+)
+
+expected_handling_has(
     "ai-native-should-knowledge-expression-gate",
     (
         "知识表达 / 意图可执行门禁",
@@ -12690,6 +12873,29 @@ expected_handling_has(
         "执行中用循名责实和无为而治",
         "复盘后用每日三省、知行合一和一张一弛",
         "不能替代事实、测试、CR、Execution Grant、上线审批或专业确认",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-unify-ai-workflows-with-yinyang-principle",
+    (
+        "AI Native 混一总纲 / Wisdom Lens 取舍校准路径",
+        "agent-loop-engineering",
+        "wisdom-loop-lens",
+        "code-delivery-closed-loop",
+        "verification-review-release",
+        "source-map",
+        "以真实交付为体，以证据闭环为用",
+        "阴定边界，阳促推进",
+        "随事取最小可验证路径",
+        "GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位",
+        "不作为并列工作流外显",
+        "体不清则不动",
+        "用无证则不收",
+        "阴不足则停",
+        "阳不足则问",
+        "神用无方是按上下文取最小有效组合",
+        "不把阴阳、神用无方、老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批",
     ),
 )
 
