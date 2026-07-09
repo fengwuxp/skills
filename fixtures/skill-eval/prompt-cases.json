@@ -440,9 +440,23 @@
       "expected_handling": "进入角色协作 Loop 的小闭环 Ask-or-Decide 问询推进路径；先对当前交付内容和新增证据做自我问询 / 自我回答，只处理一个主 blocker；用户接受建议或说按你建议推进时，先关闭当前 blocker，写入下一阶段输入，再挑下一最高价值 blocker；每次问询给出问题、建议答案、依据、影响和默认暂停点；不重新摊开全局方案，不同时展开多个 blocker，不把续作写成已授权。"
     },
     {
-      "id": "ai-native-should-grill-me-loop-progression",
+      "id": "ai-native-should-questioning-repair",
       "skill": "ai-native-engineering-workflow",
-      "query": "参考 Grill-Me 文章加强 AI 工作流：Loop 推进中如果关键分叉未决、用户回答含糊或连续返工，适时进入 Grill-Me 盘问，一次只问一个问题、给推荐答案、能查先查，并把决策摘要写回下一阶段输入。",
+      "query": "$ai-native-engineering-workflow 做一轮问询修复吧",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入角色协作 Loop 的问询修复路径；读取 agent-loop-engineering、intent-to-production-loop 和 verification-review-release；先定位当前问询触发、主 blocker、已自答证据和需 owner 判断项；只修复问询推进，不重开全局方案，不新增并列流程；每次只处理一个主 blocker，给出建议答案、依据、影响和默认暂停点；用户接受建议时关闭当前 blocker，写入下一阶段输入，再挑下一最高价值 blocker；命中关键分叉未决、回答含糊、半答或连续返工时再升级 grilling，且不做 Grill-Me 历史兼容。"
+    },
+    {
+      "id": "ai-native-should-grilling-loop-progression",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI 工作流中 grilling 流程触发不稳定，请优化角色 Loop 中自动按需触发：如果关键分叉未决、用户回答含糊或连续返工，适时进入 grilling 盘问，一次只问一个问题、给推荐答案、能查先查，并把决策摘要写回下一阶段输入。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -451,12 +465,38 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入 Grill-Me 盘问门禁 / 小闭环 Ask-or-Decide 路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、intent-to-production-loop、superpowers-skill-library 和 source-map；仅在 Loop 推进中出现关键分叉未决、回答含糊、半答、连续返工，或下一阶段会改变公共契约、状态机、验收样例、写入范围、发布风险时进入 Grill-Me；沿一个决策树分支深度优先推进，一次只问一个问题，每问给推荐答案和依据；能从代码库、文档、测试或日志自答的问题先自答，再让 owner 确认；对模糊回答 push back，必要时给半答案 strawman 让 owner 反驳；退出时输出已确认选择、被排除方案、待确认项和下一阶段输入，并写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入；不把 Grill-Me 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入 grilling 盘问门禁 / 小闭环 Ask-or-Decide 路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、intent-to-production-loop、superpowers-skill-library 和 source-map；显式提到 grilling 触发不稳定或角色 Loop 自动触发时，先审计四类信号；只以 `grilling` 作为运行入口，不做 `Grill-Me` 历史兼容；仅在 Loop 推进中出现关键分叉未决、回答含糊、半答、连续返工，或下一阶段会改变公共契约、状态机、验收样例、写入范围、发布风险时进入 grilling；沿一个决策树分支深度优先推进，一次只问一个问题，每问记录 question_id、已问问题和答案状态，并给推荐答案和依据；每问等待 owner 反馈，或能从代码库、文档、测试或日志自答的问题先自答，再让 owner 确认后进入下一问；下一问前检查已问问题，命中同义重复问题时只追问缺失项、关闭当前 blocker 或 push back 模糊点，不重问原问题；对模糊回答 push back，必要时给半答案 strawman 让 owner 反驳；退出时输出已确认选择、被排除方案、待确认项和下一阶段输入，并写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入；不把 grilling 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批。",
+      "behavior_contract": {
+        "first_response_must_include": [
+          "触发原因",
+          "当前分支",
+          "question_id",
+          "一个问题",
+          "推荐答案",
+          "依据",
+          "默认暂停点"
+        ],
+        "first_response_must_not_include": [
+          "第二个待答问题",
+          "完整方案",
+          "执行清单",
+          "已授权执行"
+        ],
+        "advance_gate": "等待 owner 反馈，或用代码库、文档、测试、日志证据自答并让 owner 确认后，才能进入下一问。",
+        "repeat_question_gate": "下一问前检查已问问题和答案状态；候选问题若是同义重复问题，只能关闭当前 blocker、只追问缺失项或 push back 模糊点，不得重问原问题。",
+        "exit_summary_must_include": [
+          "已确认选择",
+          "被排除方案",
+          "待确认项",
+          "下一阶段输入",
+          "写回位置"
+        ]
+      }
     },
     {
       "id": "ai-native-should-wisdom-lens-loop-scheduling",
       "skill": "ai-native-engineering-workflow",
-      "query": "请老祖宗用 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
+      "query": "请用华夏经世智慧（老祖宗智慧别名）和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -466,7 +506,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
+      "expected_handling": "进入华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确华夏经世智慧是正式名，老祖宗智慧是触发别名；它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
     },
     {
       "id": "ai-native-should-unify-ai-workflows-with-yinyang-principle",
@@ -481,7 +521,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 混一总纲 / Wisdom Lens 取舍校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、wisdom-loop-lens、code-delivery-closed-loop、verification-review-release 和 source-map；一言以蔽之：以真实交付为体，以证据闭环为用；阴定边界，阳促推进，随事取最小可验证路径；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；体不清则不动，用无证则不收，阴不足则停，阳不足则问；神用无方是按上下文取最小有效组合；不把阴阳、神用无方、老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入 AI Native 混一总纲 / Wisdom Lens 取舍校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、wisdom-loop-lens、code-delivery-closed-loop、verification-review-release 和 source-map；华夏经世智慧作为正式命名，老祖宗智慧作为触发别名；一言以蔽之：以真实交付为体，以证据闭环为用；阴定边界，阳促推进，随事取最小可验证路径；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；体不清则不动，用无证则不收，阴不足则停，阳不足则问；神用无方是按上下文取最小有效组合；不把阴阳、神用无方、华夏经世智慧 / 老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
     },
     {
       "id": "ai-native-should-classic-wisdom-lens-supplement",
@@ -888,7 +928,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery-closed-loop、wisdom-loop-lens、intent-to-production-loop、agent-loop-engineering、verification-review-release 和 source-map；把多套模式收敛为一个入口、一个契约、一个准出：角色协作 Loop 作为入口，Engineering Loop Contract 承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；用阴阳平衡校准推进与边界，用体用合一校准目标与工具，用循名责实校准完成名实；不新增流程名、命令菜单、外部工具依赖，不把老祖宗智慧替代事实、测试、CR、授权或上线审批。"
+      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery-closed-loop、wisdom-loop-lens、intent-to-production-loop、agent-loop-engineering、verification-review-release 和 source-map；把多套模式收敛为一个入口、一个契约、一个准出：角色协作 Loop 作为入口，Engineering Loop Contract 承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；用华夏经世智慧校准取舍，用阴阳平衡校准推进与边界，用体用合一校准目标与工具，用循名责实校准完成名实；不新增流程名、命令菜单、外部工具依赖，不把华夏经世智慧 / 老祖宗智慧替代事实、测试、CR、授权或上线审批。"
     },
     {
       "id": "ai-native-should-design-code-alignment",

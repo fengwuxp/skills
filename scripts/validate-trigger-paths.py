@@ -109,6 +109,25 @@ def expected_handling_has(case_id: str, required_terms: tuple[str, ...]) -> None
     check(f"prompt fixture expected handling outlines {case_id}{detail}", case is not None and not missing)
 
 
+def behavior_contract_has(case_id: str, required_keys: tuple[str, ...], required_terms: tuple[str, ...]) -> None:
+    cases = json.loads(read(skill_eval_prompt_fixture))["cases"]
+    case = next((item for item in cases if item.get("id") == case_id), None)
+    contract = {} if case is None else case.get("behavior_contract", {})
+    missing_keys = [key for key in required_keys if key not in contract]
+    contract_text = json.dumps(contract, ensure_ascii=False, sort_keys=True)
+    missing_terms = [term for term in required_terms if term not in contract_text]
+    detail_parts = []
+    if missing_keys:
+        detail_parts.append(f"missing_keys={missing_keys}")
+    if missing_terms:
+        detail_parts.append(f"missing_terms={missing_terms}")
+    detail = f" {' '.join(detail_parts)}" if detail_parts else ""
+    check(
+        f"prompt fixture behavior contract outlines {case_id}{detail}",
+        case is not None and isinstance(contract, dict) and not missing_keys and not missing_terms,
+    )
+
+
 senior_skill = "senior-software-architect/SKILL.md"
 senior_agent = "senior-software-architect/agents/openai.yaml"
 senior_routing = "senior-software-architect/references/scenario-routing.md"
@@ -246,6 +265,8 @@ ai_native_terms = [
     "能力发现",
     "先找能力，再写代码",
     "AI 时代产品到研发编码流程",
+    "$ai-native-engineering-workflow",
+    "ai-native-engineering-workflow",
     "角色 Loop",
     "角色loop",
     "角色协作 Loop",
@@ -263,11 +284,13 @@ ai_native_terms = [
     "Superpowers",
     "Matt Pocock",
     "mattpocock/skills",
-    "Grilling",
     "grilling",
-    "grill-me",
-    "Grill-Me",
+    "grilling 触发不稳定",
+    "grilling 触发不稳",
     "轻量问询",
+    "角色 Loop 问询推进",
+    "角色 Loop 问询修复",
+    "问询修复",
     "任务树",
     "Trellis",
     "GStack",
@@ -359,6 +382,8 @@ ai_native_terms = [
     "Loop 取舍校准",
     "东方判断层",
     "Wisdom Lens",
+    "华夏经世智慧",
+    "经世致用",
     "huaxia-wisdom",
     "东方智慧",
     "老祖宗",
@@ -622,6 +647,8 @@ wisdom_lens_terms = [
     "Loop 取舍校准",
     "东方判断层",
     "Wisdom Lens",
+    "华夏经世智慧",
+    "经世致用",
     "huaxia-wisdom",
     "东方智慧",
     "老祖宗",
@@ -1339,29 +1366,44 @@ check(
         ai_native_workflow_skill,
         [
             "轻量问询先于长方案",
-            "Matt Pocock skills / Grilling",
-            "Grill-Me 式盘问",
+            "Matt Pocock skills / `grilling`",
+            "`grilling` 式盘问",
+            "`grilling` 盘问门禁",
+            "grilling 触发不稳定",
             "Ask-or-Decide",
             "一次只问一个问题",
+            "已问问题",
+            "答案状态",
             "决策记录写入下一阶段输入",
+            "每问等待 owner 反馈或证据自答后再进入下一问",
         ],
     )
     and has_all(
         ai_native_intent_to_production,
         [
             "轻量问询结论",
-            "Grill-Me 盘问结论",
+            "`grilling` 盘问结论",
             "复杂或模糊任务不要先生成大段方案让用户审",
             "一次只问一个关键问题",
-            "Loop 推进中适时进入 Grill-Me",
+            "Loop 推进中适时进入 `grilling`",
+            "自动按需触发 `grilling` 只看四类信号",
+            "等待 owner 反馈",
+            "已问问题",
+            "同义",
+            "只追问缺失项",
             "问询结论必须写入产品上下文卡、工程交接卡、任务树 / 计划切片或下一阶段输入",
         ],
     )
     and has_all(
         ai_native_agent_loop_engineering,
         [
-            "Grill-Me 盘问门禁",
+            "`grilling` 盘问门禁",
+            "自动触发只看四类信号",
+            "角色 Loop 自动触发",
             "关键分叉会改变业务目标、公共契约、状态机、验收样例、写入范围、发布风险",
+            "每问必须等待 owner 反馈",
+            "已问问题和答案状态",
+            "不得重问原问题",
             "模糊回答 push back",
             "任务树真相源",
             "Task Tree / 任务树",
@@ -1373,15 +1415,16 @@ check(
         ai_native_superpowers_library,
         [
             "Matt Pocock skills",
-            "Grill-Me",
-            "Grilling",
+            "`grilling` 为能力本体",
+            "删除 `grill-me/SKILL.md` 所在 alias skill",
             "一次一个问题",
             "给建议答案",
+            "等待反馈",
             "能通过代码库或材料自答的问题先自答",
             "Loop 推进中关键分叉复核",
             "结构化决策摘要",
             "官方 skill-installer",
-            "当前 Codex 安装目录存在",
+            "保留当前 Codex 安装目录的 `grilling/SKILL.md`",
         ],
     )
     and has_all(
@@ -1394,8 +1437,10 @@ check(
             "轻量问询",
             "grilling/SKILL.md",
             "grill-me/SKILL.md",
+            "删除 `grill-me/SKILL.md` 所在 alias skill",
+            "每问给推荐答案并等待反馈",
             "Loop 推进中遇到关键分叉未决",
-            "2026-07-08 已核验当前 Codex 安装目录存在",
+            "2026-07-09 保留当前 Codex 安装目录的 `grilling/SKILL.md`",
             "不得把 `mattpocock/skills` 全仓库、Trellis、Claude plugin、npm 脚本、跳过权限模式或未核验工具写成当前默认能力",
         ],
     )
@@ -1403,7 +1448,7 @@ check(
         product_skill,
         [
             "轻量问询不写进正式 PRD",
-            "AI Native 交来轻量问询结论、Grilling 结论或任务树节点",
+            "AI Native 交来轻量问询结论、`grilling` 结论或任务树节点",
             "产品上下文交接卡",
         ],
     )
@@ -1411,7 +1456,7 @@ check(
         senior_skill,
         [
             "轻量问询只收敛工程分叉",
-            "AI Native 交来轻量问询结论、Grilling 结论或任务树节点",
+            "AI Native 交来轻量问询结论、`grilling` 结论或任务树节点",
             "问询过程不进入正式系分、ADR 或代码注释",
         ],
     )
@@ -1489,7 +1534,7 @@ check(
         [
             "WorkBuddy 类本地执行型 Agent",
             "本技能只做准入、权限、联网/认证/写入边界和交接格式判断",
-            "不把外部 Superpowers skill、Matt Pocock skills、Grilling、Ponytail、Open Code Review、WorkBuddy",
+            "不把外部 Superpowers skill、Matt Pocock skills / `grilling`、Ponytail、Open Code Review、WorkBuddy",
         ],
     )
     and has_all(
@@ -1622,7 +1667,9 @@ check(
         ai_native_workflow_skill,
         [
             "references/wisdom-loop-lens.md",
+            "华夏经世智慧",
             "huaxia-wisdom",
+            "老祖宗智慧",
             "阴阳平衡",
             "先为不可胜",
             "庖丁解牛",
@@ -1633,6 +1680,11 @@ check(
     and has_all(
         ai_native_wisdom_loop_lens,
         [
+            "华夏经世智慧",
+            "经世致用",
+            "huaxia-wisdom",
+            "老祖宗智慧",
+            "正式名称",
             "Wisdom Lens Card",
             "准入前",
             "拆解时",
@@ -1661,6 +1713,7 @@ check(
         repo_source_map,
         [
             "Wisdom Lens",
+            "华夏经世智慧",
             "内部路由",
             "Gitee 仓库 [aiami/huaxia-wisdom]",
         ],
@@ -1669,6 +1722,8 @@ check(
         ai_native_source_map,
         [
             "Gitee 仓库 `aiami/huaxia-wisdom`",
+            "正式展示名在本仓库统一为“华夏经世智慧”",
+            "老祖宗智慧保留为口语触发别名",
             "eef49d54e6266b1afc568ef591a6a2d4abd5ad8e",
             "Wisdom Lens",
             "不复制原文、示例、口吻或经典表达",
@@ -4961,6 +5016,7 @@ check(
         repo_source_map,
         [
             "aiami/huaxia-wisdom",
+            "华夏经世智慧",
             "Loop 取舍校准 / Wisdom Lens",
             "Loop 准入、GSD 拆解、执行核验、授权纠偏和复盘回流",
             "2026-06-16",
@@ -10973,6 +11029,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "intent-to-production-loop.md", "agent-loop-engineering.md"},
     ),
     RouteFixture(
+        name="AI Native questioning repair",
+        prompt="$ai-native-engineering-workflow 做一轮问询修复吧",
+        routes={"ai-native", "intent-to-production-loop.md", "agent-loop-engineering.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
         name="AI Native PRD system design deliberation review",
         prompt="对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文",
         routes={"ai-native", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "agentic-engineering-governance.md", "verification-review-release.md"},
@@ -11029,7 +11090,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native wisdom lens for loop scheduling",
-        prompt="请老祖宗用 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、计划拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批",
+        prompt="请用华夏经世智慧（老祖宗智慧别名）和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、计划拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批",
         routes={"ai-native", "wisdom-loop-lens.md", "agent-loop-engineering.md", "gsd-cad-admission.md", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
@@ -11118,8 +11179,8 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"ai-native", "agent-loop-engineering.md", "intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
-        name="AI Native Grill-Me loop progression gate",
-        prompt="参考 Grill-Me 文章，加强 AI 工作流：Loop 推进中如果关键分叉未决、用户回答含糊或连续返工，适时进入 Grill-Me 盘问，一次只问一个问题、给推荐答案、能查先查，并把决策摘要写回下一阶段输入。",
+        name="AI Native grilling loop progression gate",
+        prompt="参考 grilling 方法，加强 AI 工作流：Loop 推进中如果关键分叉未决、用户回答含糊或连续返工，适时进入 grilling 盘问，一次只问一个问题、给推荐答案、能查先查，并把决策摘要写回下一阶段输入。",
         routes={"ai-native", "agent-loop-engineering.md", "intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -11536,6 +11597,11 @@ negative_route_fixtures: list[RouteFixture] = [
         routes={"ai-native"},
     ),
     RouteFixture(
+        name="ai native grilling does not keep legacy Grill-Me alias",
+        prompt="AI Native 工作流中 Grill-Me 流程触发不稳定，请优化角色 Loop 中自动按需触发",
+        routes={"intent-to-production-loop.md", "superpowers-skill-library.md", "source-map.md"},
+    ),
+    RouteFixture(
         name="business architecture without diagram",
         prompt="请做业务架构规划，但不要画图，只输出能力地图文字、项目组合和知识库回流计划",
         routes={"diagram-output.md"},
@@ -11589,7 +11655,7 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "补足", "规范化", "重构", "精简", "工程取舍", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "上下文治理", "上下文治理视图", "Context System", "知识库治理", "业务专家蒸馏", "蒸馏业务专家", "领域专家 Skill Pack", "可追溯业务专家", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "Goal + 目标计划", "目标计划", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "生产可用 Loop", "生产可用门禁", "生产可用混一模型", "混一", "一个入口", "一个契约", "一个准出", "生产可用准出卡", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "AI 编码框架", "框架分层"]):
+    if contains_any(prompt, ai_native_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "补足", "规范化", "重构", "精简", "工程取舍", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "上下文治理", "上下文治理视图", "Context System", "知识库治理", "业务专家蒸馏", "蒸馏业务专家", "领域专家 Skill Pack", "可追溯业务专家", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "Goal + 目标计划", "目标计划", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "生产可用 Loop", "生产可用门禁", "生产可用混一模型", "混一", "一个入口", "一个契约", "一个准出", "生产可用准出卡", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "grilling", "轻量问询", "问询修复", "问询推进修复", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "AI 编码框架", "框架分层"]):
         route.add("ai-native")
         if contains_any(prompt, ["生产交付审查", "发布前评审", "forcing questions", "交付生产", "能不能上线"]):
             route.update(
@@ -11642,7 +11708,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("agentic-engineering-governance.md")
         if contains_any(prompt, ["GSD + Goal", "Goal + 目标计划", "Goal 组合", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行候选", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
             route.add("goal-composition.md")
-        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L1-L4", "四层嵌套", "Prompt Engineering", "Context Engineering", "Harness Engineering", "Agent 生产不稳", "生产不稳", "Demo 可用", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "任务树", "Task Tree", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "角色链审查", "AI 编码框架", "框架分层", "Matt Pocock", "mattpocock/skills", "Grill-Me", "grill-me", "Grilling", "grilling", "轻量问询", "一次一个问题", "建议答案"]):
+        if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L1-L4", "四层嵌套", "Prompt Engineering", "Context Engineering", "Harness Engineering", "Agent 生产不稳", "生产不稳", "Demo 可用", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "任务树", "Task Tree", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "角色链审查", "AI 编码框架", "框架分层", "Matt Pocock", "mattpocock/skills", "grilling", "轻量问询", "问询修复", "问询推进修复", "一次一个问题", "建议答案"]):
             route.add("agent-loop-engineering.md")
             route.add("agentic-engineering-governance.md")
             route.add("verification-review-release.md")
@@ -11658,7 +11724,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("agent-loop-engineering.md")
             route.add("code-delivery-closed-loop.md")
             route.add("source-map.md")
-        if contains_any(prompt, ["小闭环", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "轻量问询", "盘问", "一次一个问题", "建议答案", "Grilling", "grill-me", "Grill-Me", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "GStack 角色链", "角色链模板"]):
+        if contains_any(prompt, ["小闭环", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "Ask-or-Decide", "Auto-Decide", "Auto-Ask", "Auto-Loop", "Stop-Handoff", "轻量问询", "问询修复", "问询推进修复", "盘问", "一次一个问题", "建议答案", "grilling", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "GStack 角色链", "角色链模板"]):
             route.add("intent-to-production-loop.md")
             route.add("agent-loop-engineering.md")
             route.add("verification-review-release.md")
@@ -11687,7 +11753,7 @@ def route_fixture(prompt: str) -> set[str]:
             )
         if contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "代码评审工具", "独立 Checker", "外部 Checker", ".opencodereview", "rule.json", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "代码阅读理解", "阅读理解代码", "上下文工程", "上下文治理", "Context System", "知识库治理", "知识库工具", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.0", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "Grilling", "grilling", "grill-me", "Grill-Me", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
+        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.0", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grilling", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
             if contains_any(prompt, ["升级", "版本", "上游 latest", "latest release", "v6.1.0", "helper", "不默认运行外部脚本", "Harness", "Gemini CLI 支持移除"]):
@@ -12260,6 +12326,7 @@ expected_handling_has(
     "ai-native-should-unify-production-ready-workflow-with-wisdom-lens",
     (
         "生产可用混一模型路径",
+        "华夏经世智慧",
         "code-delivery-closed-loop",
         "wisdom-loop-lens",
         "intent-to-production-loop",
@@ -12280,7 +12347,7 @@ expected_handling_has(
         "体用合一",
         "循名责实",
         "不新增流程名、命令菜单、外部工具依赖",
-        "不把老祖宗智慧替代事实、测试、CR、授权或上线审批",
+        "不把华夏经世智慧 / 老祖宗智慧替代事实、测试、CR、授权或上线审批",
     ),
 )
 
@@ -12421,27 +12488,92 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "ai-native-should-grill-me-loop-progression",
+    "ai-native-should-questioning-repair",
     (
-        "Grill-Me 盘问门禁",
+        "问询修复路径",
+        "agent-loop-engineering",
+        "intent-to-production-loop",
+        "verification-review-release",
+        "当前问询触发",
+        "主 blocker",
+        "已自答证据",
+        "需 owner 判断项",
+        "只修复问询推进",
+        "不重开全局方案",
+        "不新增并列流程",
+        "每次只处理一个主 blocker",
+        "建议答案",
+        "默认暂停点",
+        "关闭当前 blocker",
+        "下一阶段输入",
+        "下一最高价值 blocker",
+        "再升级 grilling",
+        "不做 Grill-Me 历史兼容",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-grilling-loop-progression",
+    (
+        "grilling 盘问门禁",
         "Loop 推进",
         "agent-loop-engineering",
         "intent-to-production-loop",
         "superpowers-skill-library",
         "source-map",
+        "显式提到 grilling 触发不稳定或角色 Loop 自动触发时，先审计四类信号",
+        "只以 `grilling` 作为运行入口",
+        "不做 `Grill-Me` 历史兼容",
         "关键分叉未决",
         "回答含糊",
         "连续返工",
         "一次只问一个问题",
         "给推荐答案",
+        "每问等待 owner 反馈",
         "能从代码库、文档、测试或日志自答的问题先自答",
+        "让 owner 确认后进入下一问",
         "模糊回答 push back",
         "决策树分支",
         "已确认选择",
         "被排除方案",
         "待确认项",
         "写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入",
-        "不把 Grill-Me 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批",
+        "不把 grilling 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批",
+    ),
+)
+
+behavior_contract_has(
+    "ai-native-should-grilling-loop-progression",
+    (
+        "first_response_must_include",
+        "first_response_must_not_include",
+        "advance_gate",
+        "repeat_question_gate",
+        "exit_summary_must_include",
+    ),
+    (
+        "触发原因",
+        "当前分支",
+        "一个问题",
+        "推荐答案",
+        "依据",
+        "默认暂停点",
+        "question_id",
+        "已问问题",
+        "答案状态",
+        "同义重复问题",
+        "只追问缺失项",
+        "关闭当前 blocker",
+        "第二个待答问题",
+        "完整方案",
+        "执行清单",
+        "等待 owner 反馈",
+        "owner 确认",
+        "已确认选择",
+        "被排除方案",
+        "待确认项",
+        "下一阶段输入",
+        "写回位置",
     ),
 )
 
@@ -12852,7 +12984,7 @@ expected_handling_has(
 expected_handling_has(
     "ai-native-should-wisdom-lens-loop-scheduling",
     (
-        "Loop 取舍校准 / Wisdom Lens 模式",
+        "华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式",
         "wisdom-loop-lens",
         "Wisdom Lens Card",
         "触发原因",
@@ -12872,6 +13004,7 @@ expected_handling_has(
         "拆解时用庖丁解牛和中庸之道",
         "执行中用循名责实和无为而治",
         "复盘后用每日三省、知行合一和一张一弛",
+        "明确华夏经世智慧是正式名，老祖宗智慧是触发别名",
         "不能替代事实、测试、CR、Execution Grant、上线审批或专业确认",
     ),
 )
@@ -12880,6 +13013,7 @@ expected_handling_has(
     "ai-native-should-unify-ai-workflows-with-yinyang-principle",
     (
         "AI Native 混一总纲 / Wisdom Lens 取舍校准路径",
+        "华夏经世智慧",
         "agent-loop-engineering",
         "wisdom-loop-lens",
         "code-delivery-closed-loop",
@@ -12895,7 +13029,7 @@ expected_handling_has(
         "阴不足则停",
         "阳不足则问",
         "神用无方是按上下文取最小有效组合",
-        "不把阴阳、神用无方、老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批",
+        "不把阴阳、神用无方、华夏经世智慧 / 老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批",
     ),
 )
 

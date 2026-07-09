@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 用户点名 Superpowers、Superpowers skills、brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting-code-review、verification-before-completion 等外部技能。
-- 用户点名 Matt Pocock skills、Grill-Me、Grilling、Trellis、轻量问询、盘问式澄清、Loop 推进中进入 Grill-Me 或一次一个问题的需求 / 设计收敛。
+- 用户点名 Matt Pocock skills、`grilling`、Trellis、轻量问询、盘问式澄清、Loop 推进中进入 `grilling` 或一次一个问题的需求 / 设计收敛。
 - 用户点名 GStack、Trellis 或“四大 AI 编码框架”，要求判断 Superpowers / GSD / GStack / Trellis 如何纳入 AI Native，而不是新增一堆流程。
 - 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入 AI Native 研发流程编排。
 - 需要评估或升级 SDD / Superpowers 6.x 套件、`subagent-driven-development`、任务评审、文件化交接或 Harness 版本。
@@ -18,7 +18,7 @@
 - 不直接安装 Superpowers 插件，不注册 marketplace，不运行外部 hooks，不执行外部脚本。
 - 不直接安装 Matt Pocock skills 全仓库、不运行 npm/package 脚本、不接入 Claude plugin 或 hooks；只在用户授权后考虑安装已审查的最小 Markdown skill。
 - 不把 Superpowers 的英文默认文档路径、自动提交、Git 推送、worktree 或 subagent 流程写成本仓库默认行为。
-- 不把 GStack、Trellis、Grilling 或任一外部 skill 写成默认依赖、默认联网、默认任务系统、默认执行授权或默认安装结果。
+- 不把 GStack、Trellis、`grilling` 或任一外部 skill 写成默认依赖、默认联网、默认任务系统、默认执行授权或默认安装结果。
 - 不用外部 skill 的硬门禁覆盖用户授权、仓库 `AGENTS.md`、Codex 当前工具能力、项目验证命令或 `资深架构师` 的工程判断。
 - 不把外部 skill 原文当作当前项目事实、测试通过、CR 结论、Execution Grant、发布批准或合规结论。
 
@@ -28,7 +28,7 @@
 - 边界结论：哪些只是方法来源，哪些需要项目本地规则、人类 owner 或架构师继续确认。
 - 安全结论：是否涉及安装、脚本、联网、hooks、Git 推送、worktree、subagent 或写入范围扩大；如涉及，必须列为待授权或停止条件。
 - AI Native 映射：Superpowers skill 对应 OpenSpec、Harness、GSD/CAD、Spec 模板、TDD、CR 或验证发布的哪一段。
-- 轻量问询映射：Grilling / Grill-Me 对应角色协作 Loop 的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
+- 轻量问询映射：`grilling` 对应角色协作 Loop 的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
 - 框架分层映射：Superpowers、GSD、GStack、Trellis 分别对应方法纪律、上下文状态、角色链审查和仓库级记忆的哪一层；当前任务只选最小缺口层。
 
 ## 需要继续读取的 reference
@@ -105,9 +105,9 @@
 - 审查日期：2026-06-28
 - 读取方式：GitHub API / raw 读取仓库目录、`package.json`、LICENSE 和目标 skill；`git clone` 与 zip 下载在当前网络环境下超时，未完成全量落盘。
 - 许可证：MIT License。
-- 已审查最小目标：`skills/productivity/grilling/SKILL.md` 和 `skills/productivity/grill-me/SKILL.md` 均为纯 Markdown Skill，无脚本、hooks 或依赖；`grill-me` 只是转入 `grilling`。
-- 安装状态：2026-07-08 已核验当前 Codex 安装目录存在 `grilling/SKILL.md` 与 `grill-me/SKILL.md`；后续更新仍走官方 skill-installer 或用户显式授权路径，不绕过权限边界手动覆盖。
-- 可吸收方法：复杂或模糊计划先沿设计树一次问一个问题；每问给建议答案；能通过代码库或材料自答的问题先自答；Loop 推进中遇到关键分叉、含糊回答、半答或连续返工时做阶段性盘问，必要时给半答案 strawman 让 owner 反驳；问询结论进入任务树、产品上下文卡、工程交接卡、验证矩阵或下一阶段输入。
+- 已审查最小目标：`skills/productivity/grilling/SKILL.md` 和 `skills/productivity/grill-me/SKILL.md` 均为纯 Markdown Skill，无脚本、hooks 或依赖；`grilling` 为能力本体，`grill-me` 只是转入 `grilling` 的快捷触发别名，不作为本仓库运行时入口。
+- 安装状态：2026-07-09 保留当前 Codex 安装目录的 `grilling/SKILL.md`，删除 `grill-me/SKILL.md` 所在 alias skill；后续更新仍走官方 skill-installer 或用户显式授权路径，不绕过权限边界手动覆盖。
+- 可吸收方法：以 `grilling` 为 canonical；复杂或模糊计划先沿设计树一次问一个问题；每问给建议答案并等待反馈；能通过代码库或材料自答的问题先自答；Loop 推进中遇到关键分叉、含糊回答、半答或连续返工时做阶段性盘问，必要时给半答案 strawman 让 owner 反驳；问询结论进入任务树、产品上下文卡、工程交接卡、验证矩阵或下一阶段输入。
 - 不吸收项：不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis 或外部任务系统；不复制原文长提示；不采用 `dangerously-skip-permissions` 或任何跳过权限的默认模式。
 
 ## 2. 调度矩阵
@@ -128,8 +128,7 @@
 | `finishing-a-development-branch` | 分支收尾 / PR / merge 决策 | 只作为收尾检查清单；不默认 push、merge 或 PR。 |
 | `writing-skills` | Skill 维护 | 只吸收测试、评估和渐进加载思路；本仓库以 `skill-creator` 和 `AGENTS.md` 为准。 |
 | `using-superpowers` | 外部库导览 | 只用于理解 Superpowers skill system，不作为执行入口。 |
-| `grilling` | 意图收集、自我挖掘、产品发现、设计评审、任务树前置、Loop 推进中关键分叉复核 | 只吸收“一次一个问题 + 给建议答案 + 能自答先自答 + 模糊回答 push back + 结构化决策摘要”；正式产品结论仍交给 `产品架构专家`，工程结论仍交给 `资深架构师`。 |
-| `grill-me` | `grilling` 的快捷触发 | 仅作为触发别名，不单独形成流程。 |
+| `grilling` | 意图收集、自我挖掘、产品发现、设计评审、任务树前置、Loop 推进中关键分叉复核 | canonical 能力本体；只吸收“一次一个问题 + 给建议答案 + 等待反馈 + 能自答先自答 + 模糊回答 push back + 结构化决策摘要”；正式产品结论仍交给 `产品架构专家`，工程结论仍交给 `资深架构师`。 |
 
 ## 2A. AI 编码框架分层映射
 

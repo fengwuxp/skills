@@ -11,7 +11,7 @@
 - 用户要求 AI 工作流控制不同 Skill 完成任务，例如产品专家做需求和验收、架构师做系分和编码、Java 代码生成器做基础服务和模型、Wind 约规配合 CR、代码阅读工具和画图工具辅助理解。
 - 用户要求输出分角色 Loop、Skill、工具、框架的协作判断矩阵。
 - 用户要求参考 Andrew Ng / 吴恩达对 Loop Engineering 的理解，区分 AI 编码、开发者方向修正、真实用户 / 市场反馈三种不同时间尺度的 Loop。
-- 用户要求把 Superpowers、GSD、GStack、Trellis、SDD / Harness、Grilling、Ponytail、Open Code Review、Gemini、WorkBuddy 等外部框架或工具纳入分角色 Loop，并希望 AI 根据上下文选择最合适策略。
+- 用户要求把 Superpowers、GSD、GStack、Trellis、SDD / Harness、`grilling`、Ponytail、Open Code Review、Gemini、WorkBuddy 等外部框架或工具纳入分角色 Loop，并希望 AI 根据上下文选择最合适策略。
 - 用户要求按设计、设计评审、TDD、编码、编码评审、可用性 / 安全性 / 可靠性评估分别切换视角。
 - 用户提供 `/office-hours`、CEO Review、Eng Review、Design Review、`/review`、`/qa`、`/ship` 等 GStack 角色链，并要求整理成生产交付流程。
 - 用户希望 AI 工作流达到团队协作、协同检查、Maker / Checker 分离和多角色互相制衡的效果。
@@ -30,7 +30,7 @@
 - Role Collaboration Loop Map / Intent-to-Production Role Loop Map：阶段、主责 owner、协作角色、AI Maker、AI Checker、能力 / 约规来源、输入、交接物、验证门禁和停止条件。
 - 自主交付控制卡：可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、下一步和停止条件。
 - 轻量问询结论：复杂 / 模糊任务的关键分叉、建议答案、依据、已自答项、需 owner 判断项和进入下一阶段的输入。
-- Grill-Me 盘问结论：Loop 推进中关键分叉、含糊回答或连续返工触发的决策树分支、推荐答案、已确认选择、被排除方案、待确认项和写回位置。
+- `grilling` 盘问结论：Loop 推进中关键分叉、含糊回答或连续返工触发的决策树分支、`question_id`、已问问题、答案状态、推荐答案、已确认选择、被排除方案、待确认项和写回位置。
 - GStack 角色链审查结论：forcing questions、范围收敛、工程评审、交互评审、实现、源码 CR、QA、发布准出的 owner、证据和停止条件。
 - 小闭环 Ask-or-Decide 结论：每个阶段完成后先自我问询并用证据自答，再给出 Auto-Decide Next、Auto-Ask Owner、Auto-Loop 或 Stop-Handoff，并写清下一阶段输入。
 - 角色分工结论：只写当前任务涉及角色的主责、不替代项和下一步；通用职责以 `2. 角色边界` 为唯一权威来源。
@@ -50,7 +50,7 @@
 - Wind / Nobe 项目编码指导和 CR 规则由 `wind-project-coding-conventions` 执行；它只提供项目约规和模板样例，架构裁决、测试策略、源码级 Review 和生产风险仍回 `资深架构师`。
 - 代码阅读理解、设计-代码对齐和外部理解工具准入读 `code-understanding-tools.md`；工具输出只是只读证据，不替代源码锚点、测试、CR 或 owner 判断。
 - 产品图和工程图分别回 `产品架构专家` / `资深架构师` 的 `diagram-output.md`；复杂图形渲染、Architecture Diagram Generator 或 `$fireworks-tech-graph` 只在语义 brief 已确认后作为可选生成后端。
-- 外部框架或工具只按当前角色节点补强：Superpowers / SDD / Harness 补工程纪律和独立验证，GStack 补角色链审查，Grilling 补轻量问询，Ponytail 补最小正确实现，Open Code Review 补外部 Checker，Gemini / AgentRC / WorkBuddy 补只读理解或本地执行准入；来源与边界读 `superpowers-skill-library.md`、`code-understanding-tools.md`、`source-map.md`。
+- 外部框架或工具只按当前角色节点补强：Superpowers / SDD / Harness 补工程纪律和独立验证，GStack 补角色链审查，`grilling` 补轻量问询，Ponytail 补最小正确实现，Open Code Review 补外部 Checker，Gemini / AgentRC / WorkBuddy 补只读理解或本地执行准入；来源与边界读 `superpowers-skill-library.md`、`code-understanding-tools.md`、`source-map.md`。
 - PRD / 系分合议预审、多角色挑战、ACCEPT/REJECT/PENDING 决策日志读 `prd-system-design-review.md`。
 - OpenSpec、Harness、权限边界、事实边界和多 Agent 治理读 `agentic-engineering-governance.md`。
 - 实际编码 Loop、状态载体、Maker / Checker、自动化心跳、Worktrees、理解债和停止条件读 `agent-loop-engineering.md`。
@@ -95,7 +95,9 @@
 
 问询推进只处理一个主 blocker。每次问询都写清：问题、建议答案、依据、影响和默认暂停点；用户接受建议或说“按你建议推进”时，先把当前 blocker 关闭并写入下一阶段输入，再挑下一最高价值 blocker，不重新摊开全局方案。
 
-Loop 推进中适时进入 Grill-Me：当阶段交接依赖的关键分叉未定、用户回答含糊 / 半答、同一方向连续返工、或下一阶段会改变公共契约 / 状态机 / 验收样例 / 发布风险时，先暂停执行，沿一个决策树分支深挖；每次只问一个问题并给推荐答案，能从代码库、文档、测试或日志自答的问题先自答。盘问结束只输出结构化决策摘要，写回产品上下文卡、工程交接卡、任务树 / 计划切片或下一阶段输入；不把过程写进正式 PRD / 系分，不替代产品 owner、架构 owner 或发布 owner。
+Loop 推进中自动按需触发 `grilling` 只看四类信号：关键分叉未决、回答含糊 / 半答、连续返工、下一阶段会改变公共契约 / 状态机 / 验收样例 / 写入范围 / 发布风险。显式提到 `grilling` 触发不稳定时，先审计这四类信号，再决定是否升级。
+
+Loop 推进中适时进入 `grilling`：命中上述信号时，先暂停执行，沿一个决策树分支深挖；首轮只输出一张 `grilling` 盘问卡，包含触发原因、当前分支、`question_id`、一个问题、推荐答案、依据和默认暂停点，不列第二个待答问题、完整方案或执行清单；每次只问一个问题并给推荐答案，等待 owner 反馈，或用代码库、文档、测试、日志证据自答并让 owner 确认后再进入下一问。下一问前先检查已问问题和答案状态；候选问题若和已问问题同义，只能关闭当前 blocker、只追问缺失项或 push back 模糊点，不得重问原问题。盘问结束只输出结构化决策摘要，写回产品上下文卡、工程交接卡、任务树 / 计划切片或下一阶段输入；不把过程写进正式 PRD / 系分，不替代产品 owner、架构 owner 或发布 owner。
 
 每个阶段的小闭环完成后，先自问再问人：Loop 先从现有事实、源码、测试、约规和交接物中自我问询并自我回答；证据足够、风险低且仍在授权内时，自动把结论写入下一阶段输入；缺少 owner 责任判断时，只问 1-3 个聚焦问题；证据仍在收敛且预算允许时继续同阶段一轮；越权、无进展或无法验证时停止交接。
 
@@ -153,7 +155,7 @@ Loop 推进中适时进入 Grill-Me：当阶段交接依赖的关键分叉未定
 
 | Loop 节点 | 主责角色 | 主 Skill | 可选工具 / 框架 | 交接物 | 不替代 |
 | --- | --- | --- | --- | --- | --- |
-| 意图 / 需求澄清 | 产品 owner / 产品专家 | `产品架构专家` | Grilling / Grill-Me、GStack `/office-hours`、Wisdom Lens | 产品上下文卡、问题定义、验收种子 | 不替代产品取舍或 owner 决策 |
+| 意图 / 需求澄清 | 产品 owner / 产品专家 | `产品架构专家` | `grilling`、GStack `/office-hours`、Wisdom Lens | 产品上下文卡、问题定义、验收种子 | 不替代产品取舍或 owner 决策 |
 | 产品 / 交互设计 | 产品专家 / UED | `产品架构专家` | Architecture Diagram Generator、`$fireworks-tech-graph`、产品图形 reference | PRD / 方案、流程图、用例图、页面状态 | 不替代系分、编码或测试 |
 | 设计评审 / 系分 | 架构 owner | `资深架构师` | GStack Eng Review、OpenSpec、渐进式 SDD / Harness | 系分、接口、模块、数据流、风险清单 | 不替代 owner 决策或公共契约确认 |
 | Java 基础服务和模型骨架生成 | 工程 owner | `java-service-code-generator` | Wind 约规、Nobe / Wind 模板经验 | DTO / Request / Query / Entity / Mapper / Converter / Service / ServiceImpl 候选代码 | 不替代业务设计、TDD 或源码级 CR |
@@ -177,7 +179,7 @@ Loop 推进中适时进入 Grill-Me：当阶段交接依赖的关键分叉未定
 
 | 上下文缺口 | 优先策略 | 可吸收能力 | 不允许 |
 | --- | --- | --- | --- |
-| 需求模糊、范围发散 | 产品优先 | Grilling / Grill-Me 的一次一个问题、GStack `/office-hours` forcing questions | 不把问询过程写进正式 PRD，不替代产品 owner |
+| 需求模糊、范围发散 | 产品优先 | `grilling` 的一次一个问题；GStack `/office-hours` forcing questions | 不把问询过程写进正式 PRD，不替代产品 owner |
 | 工程方案不稳、任务较大 | 架构优先 | Superpowers 方法纪律、GSD 上下文 / Spec / 状态、渐进式 SDD / Harness 规范化 | 不新增并列流程，不默认运行外部脚本 |
 | 同一方案需要多视角挑战 | 角色链审查 | GStack 角色链模板：CEO / Eng / Design / Review / QA / Ship | 命令名只作触发别名，不生成外部命令菜单 |
 | 已有结构化 Java 输入 | 代码生成链 | `java-service-code-generator` 生成骨架，Wind 约规审查，架构师 TDD / CR | 代码生成不替代业务设计、测试或源码级 CR |
@@ -304,7 +306,7 @@ AI Checker:
 合理推断:
 待确认:
 轻量问询 / 建议答案:
-Grill-Me 盘问结论:
+`grilling` 盘问结论: question_id / 已问问题 / 答案状态 / 缺失项 / 写回位置
 本阶段交接物:
 进入下一阶段的证据:
 小闭环结论: Auto-Decide Next / Auto-Ask Owner / Auto-Loop / Stop-Handoff
