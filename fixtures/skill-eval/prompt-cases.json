@@ -494,6 +494,43 @@
       }
     },
     {
+      "id": "ai-native-should-reconcile-grilling-snapshot-before-execution",
+      "skill": "ai-native-engineering-workflow",
+      "query": "AI Native 的 grilling 已经多轮问询：已确认只按 A 方案推进，被排除方案是 B，C 还待确认；问询中 owner 还提到“这是红线，不能碰”。现在准备执行时模型因为上下文漂移又推测要按 B 写计划，请修复这种问询结论和最终执行不一致的问题。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入 grilling 决策快照 / 执行前对账门禁；读取 intent-to-production-loop 和 verification-review-release，不新建并列流程；多轮 grilling 退出后必须形成决策快照，字段只保留已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；执行 / 写文件 / 生成计划前必须先对账，说明本轮执行依据哪条已确认选择，是否触碰被排除方案或待确认项；被排除方案不得复活，待确认项不得脑补；如果当前执行意图和决策快照不一致，必须停止并问 owner，不能靠上下文记忆、模型推测或新一轮自说自话覆盖已确认结论；问询交互中出现红线、底线、不能碰、不可、禁止、必须等高风险字眼时，要重点关注并记录到决策快照或待确认项。",
+      "behavior_contract": {
+        "pre_execution_gate": "执行 / 写文件 / 生成计划前必须先对账决策快照；不一致时停止并问 owner。",
+        "snapshot_must_include": [
+          "已确认选择",
+          "被排除方案",
+          "待确认项",
+          "下一阶段输入",
+          "写回位置"
+        ],
+        "must_not_do": [
+          "被排除方案不得复活",
+          "待确认项不得脑补",
+          "不能靠上下文记忆或模型推测覆盖已确认结论"
+        ],
+        "redline_terms": [
+          "红线",
+          "底线",
+          "不能碰",
+          "不可",
+          "禁止",
+          "必须"
+        ]
+      }
+    },
+    {
       "id": "ai-native-should-wisdom-lens-loop-scheduling",
       "skill": "ai-native-engineering-workflow",
       "query": "请用华夏经世智慧（老祖宗智慧别名）和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
