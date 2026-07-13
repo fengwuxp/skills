@@ -57,6 +57,12 @@ PY
 echo "==> trigger paths"
 python3 scripts/validate-trigger-paths.py
 
+echo "==> grill-me install validator"
+python3 scripts/validate-grill-me-install.py --self-test
+if [[ "${VALIDATE_GRILL_ME_INSTALL:-}" == "1" ]]; then
+  python3 scripts/validate-grill-me-install.py
+fi
+
 echo "==> python compile"
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
@@ -73,6 +79,7 @@ python3 -m py_compile scripts/audit-source-map.py
 python3 -m py_compile scripts/evaluate-skills.py
 python3 -m py_compile scripts/skillx_export_adapter.py
 python3 -m py_compile scripts/validate-trigger-paths.py
+python3 -m py_compile scripts/validate-grill-me-install.py
 
 echo "==> java-service-code-generator fixtures"
 java-service-code-generator/scripts/verify_fixtures.py

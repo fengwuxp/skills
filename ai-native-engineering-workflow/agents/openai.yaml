@@ -1,7 +1,7 @@
 interface:
   display_name: "AI Native Engineering Loop"
-  short_description: "以角色协作 Loop 编排产研交付、只读理解、生产交付审查、源码质量评审和知识回流，并按需支持角色 Loop 问询推进 / 问询修复、grilling 盘问门禁、业务专家蒸馏和可复用工作资产 Loop"
+  short_description: "以角色协作 Loop 编排产研交付、只读理解、生产交付审查、源码质量评审和知识回流，并按需支持角色 Loop 问询推进 / 问询修复、grill-me 盘问门禁、业务专家蒸馏和可复用工作资产 Loop"
   brand_color: "#7C3AED"
-  default_prompt: "Use $ai-native-engineering-workflow 按当前材料进入角色协作 Loop；可选短句：进入产研交付视图 / 进入只读理解视图 / 做生产交付审查 / 做源码质量评审 / 角色 Loop 问询推进 / 做问询修复 / 做 grilling 盘问门禁 / 蒸馏业务专家；只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件。"
+  default_prompt: "Use $ai-native-engineering-workflow 按当前材料进入角色协作 Loop；可选短句：进入产研交付视图 / 进入只读理解视图 / 做生产交付审查 / 做源码质量评审 / 角色 Loop 问询推进 / 做问询修复 / 做 grill-me 盘问门禁 / 蒸馏业务专家；只输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件。"
 policy:
   allow_implicit_invocation: true
