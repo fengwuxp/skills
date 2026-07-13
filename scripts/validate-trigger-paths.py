@@ -794,6 +794,7 @@ check(
             "Wind Rule Check Card",
             "未 opt-in 的普通 Java/Spring 项目，不强行套 Wind",
             "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
+            "幂等或唯一处理优先使用表内业务 UK 或联合 UK",
             "查询字段/方法",
             "内网 API",
             "字典国际化",
@@ -809,6 +810,7 @@ check(
             "模型归位",
             "Entity 不外露",
             "ServiceImpl",
+            "幂等/唯一键",
             "查询/API/字典",
             "AGENTS 初始化",
         ],
@@ -936,6 +938,9 @@ check(
             "`DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 不使用 Java primitive 或 Atomic 类型",
             "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举",
             "外部协议中的字符串币种只在 Adapter/Converter 边界转换",
+            "优先使用表内业务 UK 或联合 UK",
+            "`requestSn`、`traceId`、流水号只作为调用追踪、重试辅助或审计字段",
+            "不作为唯一业务身份或唯一幂等依据",
             "枚举命名和模板",
             "生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`",
             "公开枚举优先实现 `DescriptiveEnum`",
@@ -10797,6 +10802,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
     ),
     RouteFixture(
+        name="wind project idempotency unique key redline",
+        prompt="这个项目遵守 Wind 项目编码约规，检查幂等或唯一处理是否依赖外部 requestSn，而不是使用表内业务 UK 或联合 UK",
+        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+    ),
+    RouteFixture(
         name="wind project source observation conventions",
         prompt="阅读 wind-integration、nobe、capte-domain 代码库的项目结构、模块划分、包名划分、命名风格、编码习惯和 API 使用，完善 Wind 项目编码约规",
         routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
@@ -11774,7 +11784,7 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
         if contains_any(prompt, ["Java", "Spring"]):
             route.add("coding-standards.md")
-    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity", "浅服务", "单实现抽象", "套设计模式", "查询字段命名", "服务层查询方法", "服务查询方法", "XxxQuery", "内网 API", "/inc/basic", "/inc/secure", "系统字典", "国际化", "eventKey"]):
+    if contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "requestSn", "联合 UK", "业务 UK", "唯一键", "外部请求号", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity", "浅服务", "单实现抽象", "套设计模式", "查询字段命名", "服务层查询方法", "服务查询方法", "XxxQuery", "内网 API", "/inc/basic", "/inc/secure", "系统字典", "国际化", "eventKey"]):
         route.update({"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
         if contains_any(prompt, ["AGENTS", "AGENTS.md", "初始化", "改进", "模板", "项目约规入口", "AI Native"]):
             route.update({"wind-project-agents-template.md", "ai-native"})

@@ -1,6 +1,6 @@
 ---
 name: wind-project-coding-conventions
-description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 opt-in Wind 约规，或用户要求初始化/改进 Wind 项目 AGENTS.md；审查 face/impl、服务模型、Entity 不外露、查询字段/方法、内网 API、字典国际化和 TDD/CR 时触发。
+description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 opt-in Wind 约规，或用户要求初始化改进 Wind 项目 AGENTS；审查 face-impl、服务模型边界、Entity、幂等唯一键、查询 API 字典和 TDD CR 时触发。
 ---
 
 # Wind Project Coding Conventions
@@ -58,6 +58,7 @@ description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 o
 - 未 opt-in 的普通 Java/Spring 项目，不强行套 Wind face/impl、基础服务或模型包规则。
 - 对外接口、Controller、Facade、Adapter、跨模块接口和事件契约不得暴露 Entity、Mapper、Repository 或 MyBatis Page。
 - 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，不得用 String、业务私有枚举或魔法常量承载。
+- 幂等或唯一处理优先使用表内业务 UK 或联合 UK；`requestSn` 等外部请求号只作追踪、重试辅助或审计字段，不作为唯一业务身份或唯一幂等依据。
 - 服务查询方法和 `XxxQuery` 字段必须表达业务语义：`get/find/query` 不混用，默认等值查询不加后缀，范围/模糊/集合/空值后缀统一；不得把 `select/load/fetch`、SQL 词或 Repository 语义扩散到服务层契约。
 - 内网 API 路径必须显式安全等级：`/inc/basic/**` 只承载低风险内部查询，涉及用户数据、资金、权限或关键业务操作必须走 `/inc/secure/**` 并保留签名/鉴权边界；不得用 header/query 参数隐藏安全等级。
 - 系统字典、国际化和业务事件必须使用稳定 Key + params；业务逻辑只能依赖 code、enum 或 errorCode，不得依赖展示文案、中文描述或可变翻译。

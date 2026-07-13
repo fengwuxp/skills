@@ -103,6 +103,7 @@
 - QueryWrapper 构造逻辑优先沉淀到 helper 或基础服务，避免到处手写条件；源码样本中的标准链路是 `MybatisQueryHelper.from(options)` 或项目 helper 构造排序/分页，再用 `XxxNameRefs` 拼条件，最后通过 `MybatisQueryHelper.<Entity, DTO>query(queryWrapper).counter(mapper::selectCountByQuery).resultQueryFunc(mapper::selectListByQuery).converter(XxxConverter.INSTANCE::convertToXxxDTO).query(options)` 输出分页 DTO。排序入参优先使用项目统一的 `orderFields` / `orderTypes` 或 `WindQuery<? extends QueryOrderField>`，必须白名单校验字段和方向；复杂 SQL 说明索引、分页、排序、数据量和慢查询风险。
 - 空结果分支：关键词、权限、外部检索等前置条件查不到数据时，优先返回 `Pagination.empty()` / `CursorPagination.empty()` 这类统一空分页，不返回 null、不伪造一页空对象、不绕过总数语义。
 - 需要把字段更新为 null 时，必须显式指定更新列，说明业务语义，并处理 `gmt_modified`。
+- 幂等或唯一处理优先使用表内业务 UK 或联合 UK，由数据库唯一约束兜底，并在唯一冲突后做一致性回读或差异校验；`requestSn`、`traceId`、流水号只作为调用追踪、重试辅助或审计字段，不作为唯一业务身份或唯一幂等依据。确需外部幂等号参与唯一键时，必须先证明生成 owner、唯一范围、复用语义、过期策略和重复提交语义，并与内部业务 UK 组合使用。
 - 外部调用先定义端口再写适配器；回调和扩展点在 face 可用 `callback/spi` 表达端口，impl 的 `webhook`、`listener`、`handler`、`executor` 负责协议解析、签名校验、状态映射、幂等和投递。异步、Webhook、MQ、批处理和回调必须有超时、重试、幂等、补偿、告警、审计和时间边界三问。
 - 内网 API 路径表达安全等级：默认形态为 `/inc/{security-level}/{domain}/{resource}/{action}`。`/inc/basic/**` 只用于低风险内部查询和无敏感副作用能力；涉及用户数据、资金、权限、配置变更、关键业务状态或可被重放造成影响的操作，必须走 `/inc/secure/**`，并保留内部来源校验、appKey/timestamp/nonce/signature 或项目等价签名鉴权边界。安全等级不得藏在 header、query 参数或接口说明里；公共 `/api/**`、内网 `/inc/basic/**` 和安全内网 `/inc/secure/**` 不混用。
 - 生产实现：生产源码路径不得新增 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或进程内状态应用服务来承载真实业务能力。
