@@ -1496,6 +1496,47 @@ check(
 )
 
 check(
+    "ai-native workflow assetizes grilling taste injection handoff",
+    has_all(
+        ai_native_workflow_skill,
+        [
+            "人的 Taste / 偏好 / 红线 / 关键分叉",
+            "可执行决策和可交接资产",
+        ],
+    )
+    and has_all(
+        ai_native_intent_to_production,
+        [
+            "长链路、结果分叉多、返工成本高",
+            "人的 Taste / 偏好 / 红线会影响方案",
+            "Shared Context / Issue / PR / hand-off prompt",
+            "退出条件不是问完所有问题",
+        ],
+    )
+    and has_all(
+        ai_native_agent_loop_engineering,
+        [
+            "长链路、结果分叉多、返工成本高",
+            "人的 Taste / 偏好 / 红线会影响方案",
+            "Shared Context / Issue / PR / hand-off prompt",
+            "退出条件不是问完所有问题",
+        ],
+    )
+    and has_all(
+        ai_native_source_map,
+        [
+            "如何看待 grill-me（拷问我）这个 Skill？",
+            "LastWhisperDev",
+            "2026-07-10 15:50",
+            "Taste Injection",
+            "Shared Context",
+            "Issue / PR",
+            "Hand-off Prompt",
+        ],
+    ),
+)
+
+check(
     "ai-native workflow absorbs WorkBuddy as context asset practice not dependency",
     has_all(
         ai_native_workflow_skill,
@@ -12566,6 +12607,63 @@ behavior_contract_has(
         "不可",
         "禁止",
         "必须",
+    ),
+)
+
+expected_handling_has(
+    "ai-native-should-assetize-grilling-handoff",
+    (
+        "grilling 盘问门禁",
+        "知识回流视图",
+        "agent-loop-engineering",
+        "intent-to-production-loop",
+        "source-map",
+        "不新增并列流程",
+        "不安装外部 grill-me skill",
+        "长链路",
+        "结果分叉多",
+        "返工成本高",
+        "人的 Taste / 偏好 / 红线会影响方案",
+        "隐性判断显式化为可执行决策",
+        "每次只问一个问题",
+        "给推荐答案",
+        "能从代码库、文档、测试或日志自答的问题先自答",
+        "退出条件不是问完所有问题",
+        "决策快照",
+        "交接资产",
+        "写回位置",
+        "项目 Context / AGENTS / Spec / ADR / fixture / 脚本 / Issue / PR / hand-off prompt",
+        "不得只依赖聊天上下文、模型记忆或问询过程",
+        "不得把外部文章原文、作者口吻、工具宣传或未验证经验写入长期资产",
+    ),
+)
+
+behavior_contract_has(
+    "ai-native-should-assetize-grilling-handoff",
+    (
+        "trigger_gate",
+        "assetization_gate",
+        "writeback_targets",
+        "must_not_do",
+    ),
+    (
+        "长链路",
+        "结果分叉多",
+        "返工成本高",
+        "人的 Taste / 偏好 / 红线会影响方案",
+        "可写回的决策快照和交接资产",
+        "项目 Context",
+        "AGENTS",
+        "Spec",
+        "ADR",
+        "fixture",
+        "脚本",
+        "Issue",
+        "PR",
+        "hand-off prompt",
+        "不新增并列流程",
+        "不安装外部 grill-me skill",
+        "不得只依赖聊天上下文、模型记忆或问询过程",
     ),
 )
 
