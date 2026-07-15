@@ -1939,6 +1939,9 @@ check(
             "Product Context Card / 产品上下文交接卡",
             "Engineering Handoff Card / 工程执行交接卡",
             "生产交付卡 / 生产 Loop 交接卡",
+            "规范主题 / 产品文档路径:",
+            "规范主题 / 产品文档路径 / 目标系分文档路径:",
+            "同一能力从产品到系分必须保持规范主题和精确路径",
             "三卡都不是 Execution Grant",
             "三卡必须区分事实、推断、待确认和范围外不做",
         ],
@@ -4026,6 +4029,7 @@ check(
             "delivery-collab-should-gsd-goal-governance",
             "delivery-collab-should-delivery-execution-control",
             "delivery-collab-should-map-sdlc-without-renaming-main-flow",
+            "delivery-collab-should-default-lightweight-lifecycle-routing",
             "delivery-collab-should-loop-task-end-accountability",
             "delivery-collab-should-decision-gate-blocker-progression",
             "delivery-collab-should-review-ai-coding-process",
@@ -7015,6 +7019,13 @@ check(
         system_analysis_template,
         [
             "# 系统分析设计模板",
+            "## 文档标识与文件命名",
+            "`<主题>-系分设计.md`",
+            "消费 Product Context Card 或产品文档时必须复用其规范主题",
+            "将冲突列为待确认并询问 owner",
+            "只有用户明确授权项目约规治理时才修改",
+            "更新既有文档默认保持原路径",
+            "只有用户明确进入命名迁移任务时才改名",
             "## 使用时机",
             "## 不适用场景",
             "## 读取后必须产出",
@@ -7041,7 +7052,7 @@ check(
             "## 4. 数据设计模板",
             "## 5. 状态、流程与专项设计模板",
             "## 6. 非功能、研发计划与参考资料模板",
-            "# <需求/系统/模块名称> 系统分析设计文档",
+            "# <规范主题>系统分析设计",
         ],
     ),
 )
@@ -9471,6 +9482,13 @@ check(
         product_prd_template,
         [
             "反馈证据与问题地图",
+            "## 文档标识与文件命名",
+            "`<主题>-产品设计.md`",
+            "规范主题 + 产品文档精确路径",
+            "将冲突列为待确认并询问 owner",
+            "只有用户明确授权项目约规治理时才修改",
+            "更新既有文档默认保持原路径",
+            "只有用户明确进入命名迁移任务时才改名",
             "信息传递流程",
             "事实 -> 判断 -> 决策 -> 承诺 -> 验证",
             "描述可靠性必须可见",
@@ -12082,6 +12100,7 @@ for case_id in [
     "delivery-collab-should-gsd-goal-governance",
     "delivery-collab-should-delivery-execution-control",
     "delivery-collab-should-map-sdlc-without-renaming-main-flow",
+    "delivery-collab-should-default-lightweight-lifecycle-routing",
     "delivery-collab-should-agent-loop-maturity-diagnosis",
     "delivery-collab-should-design-engineering-loop-not-prompting",
     "delivery-collab-should-reusable-work-asset-loop",
@@ -12974,6 +12993,23 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "delivery-collab-should-default-lightweight-lifecycle-routing",
+    (
+        "轻量生命周期定位",
+        "当前只定位设计评审阶段",
+        "主责 owner",
+        "主 Skill",
+        "一个主 blocker",
+        "交接物",
+        "验证与停止条件",
+        "角色 Loop",
+        "不因用户未提 SDLC 或生命周期而跳过定位",
+        "不展开实现、发布、维护退役等无关阶段",
+        "不把轻量定位升级为完整 SDLC 覆盖审查",
+    ),
+)
+
+expected_handling_has(
     "delivery-collab-should-product-judgment-loop-admission",
     (
         "产品判断 Loop 准入路径",
@@ -13011,6 +13047,21 @@ expected_handling_has(
         "项目组合 / 路线图",
         "按业务域或模块分区",
         "不直接生成系统设计、TDD、编码任务或 Execution Grant",
+    ),
+)
+
+expected_handling_has(
+    "product-should-update-existing-prd-without-renaming",
+    (
+        "既有 PRD 更新路径",
+        "保持 docs/member-prd-v2.md 原路径",
+        "本次不是命名迁移",
+        "不得自动改名为 <主题>-产品设计.md",
+        "不得修改 AGENTS.md / README.md",
+        "将冲突列为待确认并询问 owner",
+        "只有用户明确授权项目约规治理时才修改项目约规",
+        "模板回退命名只用于新文档",
+        "只有用户明确进入命名迁移任务时才改名并同步所有引用",
     ),
 )
 
@@ -13106,6 +13157,21 @@ expected_handling_has(
         "验收种子",
         "下线 owner",
         "产品专家不能只加新名词",
+    ),
+)
+
+expected_handling_has(
+    "senior-should-update-existing-system-design-without-renaming",
+    (
+        "既有系分更新路径",
+        "保持 docs/member-system-design-v1.md 原路径",
+        "本次不是命名迁移",
+        "不得自动改名为 <主题>-系分设计.md",
+        "不得修改 AGENTS.md / README.md",
+        "将冲突列为待确认并询问 owner",
+        "只有用户明确授权项目约规治理时才修改项目约规",
+        "模板回退命名只用于新文档",
+        "只有用户明确进入命名迁移任务时才改名并同步所有引用",
     ),
 )
 

@@ -376,6 +376,7 @@ Goal 输入：
 
 ```text
 Product Context Card:
+规范主题 / 产品文档路径:
 业务目标 / 非目标:
 业务 owner / 验收 owner:
 事实证据:
@@ -393,6 +394,7 @@ Product Context Card:
 ```text
 Engineering Handoff Card:
 当前状态:
+规范主题 / 产品文档路径 / 目标系分文档路径:
 关联 Goal / Spec / AC:
 Wave / Task ID:
 写入范围 / 只读范围 / 禁止事项:
@@ -425,6 +427,7 @@ Maker / Checker 分工:
 
 - Product Context Card 不是 OpenSpec、Harness Plan、GSD Roadmap、CAD 候选、Execution Grant 或上线批准。
 - Engineering Handoff Card 不是产品事实来源；产品事实缺失时回产品专家，不由架构师猜测补齐。
+- 同一能力从产品到系分必须保持规范主题和精确路径；目标系分范围更窄时只追加子主题，不用同义改写制造新的事实源。
 - 生产交付卡不是自动授权；缺状态载体、独立验证、预算、停止条件、人工接管或发布/回滚时，只能停在 Loop Candidate。
 - 三卡都不是 Execution Grant、测试通过、CR 结论或上线审批。
 - 三卡必须区分事实、推断、待确认和范围外不做；证据不足的内容不能升格为任务、实现或授权。

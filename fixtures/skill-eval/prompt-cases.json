@@ -126,6 +126,21 @@
       "expected_handling": "进入产研协同体系评估；按默认最小输出给出结论、主能力域、协同域、当前阶段、owner、交接物、授权策略、验证与停止条件；本场景以交付编排为主能力域，以工程治理为协同域；明确产研协同体系是稳定主入口，交付编排、工程治理、知识演进是稳定能力域；SDLC 只作为构想、开发、运行支持、维护演进和退役的生命周期覆盖框架，安全、权限、风险、可追溯性和知识回流横贯各阶段；Loop 只是阶段内和跨阶段的反馈机制，规划、执行、评估只是受控执行机制；Agentic DevOps、GSD、CAD、Goal、Harness 和新行业概念只映射到能力域、阶段、owner、交接物、验证与停止条件，不新增并列流程、不再次改名。"
     },
     {
+      "id": "delivery-collab-should-default-lightweight-lifecycle-routing",
+      "skill": "delivery-collab",
+      "query": "产品、架构和测试要对现有 PRD 做一次设计评审；先确认当前阶段、主责和下一交接，不展开实现、发布或其他阶段。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研协同体系并默认执行轻量生命周期定位；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；当前只定位设计评审阶段，明确主责 owner、主 Skill、一个主 blocker、交接物、验证与停止条件，再按角色 Loop 串行交接；不因用户未提 SDLC 或生命周期而跳过定位，也不展开实现、发布、维护退役等无关阶段，不把轻量定位升级为完整 SDLC 覆盖审查。"
+    },
+    {
       "id": "delivery-collab-should-plan-to-goal-bridge-without-new-flow",
       "skill": "delivery-collab",
       "query": "进入 AI Native：先输出计划，我确认后创建 Goal，并按计划推进到验证完成；不要新增流程，只用现有 Loop / Goal / Plan Grant。",
@@ -1403,6 +1418,21 @@
       "expected_handling": "进入业务驱动验证到 TDD 映射路径，先把验收种子分为可代码化、可观测化和可评审化，再选择测试层级、第一批失败测试候选、断言事实、监控/数据验收和人工确认门禁。"
     },
     {
+      "id": "senior-should-update-existing-system-design-without-renaming",
+      "skill": "senior-software-architect",
+      "query": "请更新现有系分文档 docs/member-system-design-v1.md，补齐接口、数据、测试和发布风险；这个文件名不符合新模板，但本次不是命名迁移，也不要修改项目 AGENTS.md 或 README.md。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入资深架构师的既有系分更新路径；保持 docs/member-system-design-v1.md 原路径，补齐接口、数据、测试和发布风险；本次不是命名迁移，不得自动改名为 <主题>-系分设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
+    },
+    {
       "id": "senior-negative-prototype-to-prd",
       "skill": "senior-software-architect",
       "query": "根据这个运营后台页面截图反推一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准。",
@@ -1659,6 +1689,21 @@
         "variance_check"
       ],
       "expected_handling": "进入产品架构专家内部 product-deliberation-workflow 路径，先判断合议触发原因和当前阶段，再输出阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向；不新增独立产品大师 Skill，不把外部多 Agent 工具或长 prompt 直接搬入正文。"
+    },
+    {
+      "id": "product-should-update-existing-prd-without-renaming",
+      "skill": "product-architecture-expert",
+      "query": "请更新现有 PRD docs/member-prd-v2.md，补齐对象、流程、规则和验收；这个文件名不符合新模板，但本次不是命名迁移，也不要修改项目 AGENTS.md 或 README.md。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产品架构专家的既有 PRD 更新路径；保持 docs/member-prd-v2.md 原路径，补齐对象、流程、规则和验收；本次不是命名迁移，不得自动改名为 <主题>-产品设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
     },
     {
       "id": "product-negative-bug-diagnosis",
