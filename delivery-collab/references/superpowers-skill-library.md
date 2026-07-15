@@ -102,12 +102,14 @@
 ## 1A. Matt Pocock skills 审查状态
 
 - 来源仓库：`https://github.com/mattpocock/skills`
-- 审查日期：2026-06-28
-- 读取方式：GitHub API / raw 读取仓库目录、`package.json`、LICENSE 和目标 skill；`git clone` 与 zip 下载在当前网络环境下超时，未完成全量落盘。
+- 审查日期：2026-06-28；上游状态复核：2026-07-15。
+- 读取方式：首次审查通过 GitHub API / raw 读取仓库目录、`package.json`、LICENSE 和目标 skill；2026-07-15 再次通过 GitHub API / raw 读取 README、skills 目录、`grill-me`、`grilling`、`grill-with-docs`、`domain-modeling` 和 `main` 分支，复核提交为 `e9fcdf95b402d360f90f1db8d776d5dd450f9234`，当前树包含 40 个 `SKILL.md`，且存在插件、package 和脚本资源。
 - 许可证：MIT License。
 - 已审查最小目标：`skills/productivity/grill-me/SKILL.md` 为纯 Markdown Skill，无脚本、hooks 或依赖；`grill-me` 为唯一入口，废弃本地 `grilling`。
 - 安装状态：2026-07-13 按用户授权移除旧本地 `grill-me` 和 `grilling`，从 `mattpocock/skills` `v1.1.0` 安装并本地收敛为 `grill-me`；后续更新仍走官方 skill-installer 或用户显式授权路径，但完成条件是 `scripts/validate-grill-me-install.py` 通过，未通过不得宣称完成。
+- 当前上游差异：当前 `main` 的 `grill-me` 只调用 `/grilling`，`grill-with-docs` 同时调用 `/grilling` 与 `/domain-modeling`。这会重新引入本地已退役的双 Skill 结构；不把当前 `main` 静默覆盖本地 `v1.1.0`，迁移必须另做 Codex frontmatter、触发冲突、配对依赖和行为稳定性验证。
 - 可吸收方法：以 `grill-me` 为 canonical；复杂或模糊计划先沿设计树一次问一个问题；每问给建议答案并等待反馈；Facts 用代码库或材料自答，Decisions 才交给 owner；未达成 shared understanding 不进入执行；Loop 推进中遇到关键分叉、含糊回答、半答或连续返工时做阶段性盘问，必要时给半答案 strawman 让 owner 反驳；问询结论进入任务树、产品上下文卡、工程交接卡、验证矩阵或下一阶段输入。
+- 新增方法候选：只吸收 `domain-modeling` 的术语冲突即时澄清、具体场景压测、与代码交叉验证、owner 确认后即时回写和克制使用 ADR；纳入既有知识演进与业务专家蒸馏，只有满足 ADR 门禁时才路由 `资深架构师`，不安装 `domain-modeling` 或 `grill-with-docs`。
 - 不吸收项：不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis、hooks 或外部任务系统；不复制原文长提示；不采用 `dangerously-skip-permissions` 或任何跳过权限的默认模式。
 
 ## 2. 调度矩阵
@@ -129,6 +131,7 @@
 | `writing-skills` | Skill 维护 | 只吸收测试、评估和渐进加载思路；本仓库以 `skill-creator` 和 `AGENTS.md` 为准。 |
 | `using-superpowers` | 外部库导览 | 只用于理解 Superpowers skill system，不作为执行入口。 |
 | `grill-me` | 意图收集、自我挖掘、产品发现、设计评审、任务树前置、Loop 推进中关键分叉复核 | `grill-me` 是 canonical 入口；只吸收“一次一个问题 + 给建议答案 + 等待反馈 + Facts 自查 + Decisions 等 owner + shared understanding 确认 + 模糊回答 push back + 结构化决策摘要”；正式产品结论仍交给 `产品架构专家`，工程结论仍交给 `资深架构师`。 |
+| `domain-modeling` / `grill-with-docs` | 问询确认后的领域事实回流 | 只吸收术语冲突、代码交叉验证、即时回写和 ADR 克制门禁；回到 `domain-expert-distillation.md`，不安装上游 Skill，不创建第二套问询流程。 |
 
 ## 2A. AI 编码框架分层映射
 
@@ -152,7 +155,7 @@ GStack slash commands 在产研协同体系中只作为触发别名：`/office-h
 - 当前仓库 OpenSpec / Superpowers / Harness 生成的文档或计划默认使用中文，除非用户明确要求其他语言。
 - 涉及资金、合规、安全、生产数据、不可逆操作或外部规则变化时，Superpowers 只能作为方法参考，必须保留专业确认、dry-run、回滚和审计边界。
 - 如果需要安装官方 Superpowers 插件，应另开工具准入判断：核验当前 Codex 插件状态、用户授权、目标目录、联网需求、同步影响和回滚方式。
-- 如果需要安装 Matt Pocock skills，只安装已审查的最小 Markdown skill：`grill-me`，并通过 Codex 官方 installer 或用户明确授权的安全路径执行；安装失败或审批被拦截时，不绕过权限边界。
+- 如果需要安装 Matt Pocock skills，不安装全仓库；当前本地继续使用已审查并固定到 `v1.1.0` 的 `grill-me`。任何上游 `main` 迁移或新增单个 Skill 都必须固定 commit、审查相对引用和脚本、验证触发冲突，并通过 Codex 官方 installer 或用户明确授权的安全路径执行；安装失败或审批被拦截时，不绕过权限边界。
 - Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace` 会在运行时创建 `.superpowers/sdd/` 和 progress ledger；未获授权前不得在项目中创建目录、写 scratch 文件、运行脚本或把它们写成默认 Harness。
 
 ## 4. 调度输出模板

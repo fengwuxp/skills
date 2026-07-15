@@ -561,6 +561,51 @@
       }
     },
     {
+      "id": "delivery-collab-should-backflow-confirmed-domain-term-after-grill",
+      "skill": "delivery-collab",
+      "query": "grill-me 已完成并由业务 owner 明确确认：会员资金域里的“账户”统一指 FundingAccount，PRD、代码和测试锚点一致。请把这个结论按业务域或模块回流到现有知识库，然后再交给工程阶段；不要新建 Skill、CONTEXT.md 或 ADR。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研协同体系的 grill-me 决策快照与知识回流路径；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；执行前先对账已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；确认该领域事实已有业务 owner 追认，且 PRD、代码和测试锚点一致后，按业务域或模块写入现有知识库的术语与对象表和证据地图，记录来源、owner、成熟度、更新时间与影响范围，再把精确写回位置交给工程阶段；不新建 Skill，不自动创建 CONTEXT.md、ADR 或知识库目录，不把知识回流当 Execution Grant。"
+    },
+    {
+      "id": "delivery-collab-should-stop-domain-writeback-on-code-conflict",
+      "skill": "delivery-collab",
+      "query": "grill-me 暂时把“账户”理解为 FundingAccount，但现有知识库写的是 CustomerAccount，代码和测试里两种含义都存在。先别问了，直接覆盖知识库并继续实现。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研协同体系的领域知识冲突门禁；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；先读取现有术语与对象表，把知识库、代码和测试作为并列证据，不把当前代码自动认定为正确事实；记录冲突证据、影响范围和待确认项，停止覆盖知识库和后续实现并询问业务 owner；owner 未确认前不得提升成熟度、不得脑补统一术语、不得创建 CONTEXT.md、ADR 或新知识库目录，也不得把暂时的 grill-me 理解写成工程事实。"
+    },
+    {
+      "id": "delivery-collab-should-avoid-adr-for-reversible-wording-choice",
+      "skill": "delivery-collab",
+      "query": "grill-me 已确认这个内部按钮文案暂时叫“重试”，它容易修改、不影响公共契约，也没有真实方案取舍。请为这个决定建一份 ADR 并新增 CONTEXT.md。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研协同体系的知识回流与 ADR 准入判断；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；该决定可逆、不影响公共契约且不存在真实方案取舍，只保留在决策快照、现有产品文档或交接卡，不创建 ADR 或 CONTEXT.md；只有工程决定同时难以逆转、缺少背景会令人困惑、且源于真实方案取舍时，才路由资深架构师读取 adr-and-tradeoff.md；未获项目写入授权时只输出候选回流位置。"
+    },
+    {
       "id": "delivery-collab-should-assetize-grill-me-handoff",
       "skill": "delivery-collab",
       "query": "参考《如何看待 grill-me（拷问我）这个 Skill？》，强化 AI 工作流：长链路任务实现前用 grill-me 把人的 Taste、偏好、红线和关键分叉显式化，并写入 Shared Context / Issue / PR / hand-off prompt，避免新 Agent 接手时只凭聊天上下文猜。",
