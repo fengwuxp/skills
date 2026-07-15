@@ -1,6 +1,6 @@
 # 验证、CR、发布与复盘闭环
 
-本文定义 AI Native 研发编码流程的验证、代码 Review、发布和复盘闭环。它用于流程编排，不替代 `资深架构师` 的测试、CR、生产变更和安全专项 reference。
+本文定义产研协同体系研发编码流程的验证、代码 Review、发布和复盘闭环。它用于流程编排，不替代 `资深架构师` 的测试、CR、生产变更和安全专项 reference。
 
 ## 使用时机
 
@@ -42,10 +42,10 @@
 
 - 产品到工程生命周期读 `product-to-engineering-lifecycle.md`。
 - PRD / 系分合议预审、多视角评审、MAGI 三角色或 IPD 式互审读 `prd-system-design-review.md`。
-- AI 编码和 Harness 治理读 `agentic-engineering-governance.md`。
-- Goal 组合、GSD + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-composition.md`。
+- AI 编码和 Harness 治理读 `engineering-governance.md`。
+- Goal 组合、GSD + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-governance.md`。
 - Spec / SDD / OpenSpec 模板、AC 编号、测试映射、spec-lint、AC 覆盖、漂移检查和风险自查读 `spec-template-practices.md`。
-- AI Coding / SDD / Spec / Harness 最终代码交付闭环、独立验证、CR 减负、知识回流和指标读 `code-delivery-closed-loop.md`。
+- AI Coding / SDD / Spec / Harness 最终代码交付闭环、独立验证、CR 减负、知识回流和指标读 `code-delivery.md`。
 - Gemini CLI、AgentRC 或同类 AI 代码理解 / 上下文工程工具的安装、调用和设计-代码对齐准入读 `code-understanding-tools.md`。
 - 测试策略、TDD、补测试、测试实现和测试代码 CR 回到 `senior-software-architect/references/testing.md`，必要时再由架构师读取测试专项实践。
 - 详细代码 Review、生产变更和安全专项回到 `senior-software-architect` 对应 reference。
@@ -55,16 +55,16 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 设计验证矩阵 | `1. 验证矩阵`、`2. Eval 与测试关系` | 不展开发布复盘 |
-| 验证 GSD + Goal 完成度 | 先读 `goal-composition.md`，再读 `1. 验证矩阵`、`5. CR 顺序`、`7. 发布门禁` | 不把 Goal 状态当测试结果 |
+| 验证 GSD + Goal 完成度 | 先读 `goal-governance.md`，再读 `1. 验证矩阵`、`5. CR 顺序`、`7. 发布门禁` | 不把 Goal 状态当测试结果 |
 | Spec 模板进入验证 | 先读 `spec-template-practices.md`，再读 `1. 验证矩阵`、`5. CR 顺序` | 不把模板完整当验证通过 |
 | PRD / 系分预审后的验证 | 先读 `prd-system-design-review.md`，再读 `1. 验证矩阵`、`5. CR 顺序` | 不把预审通过当测试通过 |
 | 设计质量 / 测试门禁 | `3. 质量 / 测试门禁`、`5. CR 顺序` | 不替代架构师写测试策略或测试代码 |
 | 角色协作门禁 | `3A. 角色协作验证顺序`、`5. CR 顺序`、`7. 发布门禁` | 不把 GSD/CAD/Goal 当主流程 |
 | 设计 AI 代码 CR | `4. 代码库理解 / 影响可视化门禁`、`5. CR 顺序`、`6. AI 产物风险` | 不写普通风格检查清单 |
-| 源码质量评审 Loop | `4. 代码库理解 / 影响可视化门禁`、`5A. 源码质量评审 Loop`、`5. CR 顺序`，必要时读 `code-understanding-tools.md` 和 `wisdom-loop-lens.md` | 不把工具输出当最终裁决 |
-| AI bug report / AI patch 门禁 | `5B. AI bug / 补丁门禁`、`5A. 源码质量评审 Loop`，必要时读 `wisdom-loop-lens.md` | 不让 AI bug report 或 AI patch 自证完成 |
+| 源码质量评审 Loop | `4. 代码库理解 / 影响可视化门禁`、`5A. 源码质量评审 Loop`、`5. CR 顺序`，必要时读 `code-understanding-tools.md` 和 `decision-calibration.md` | 不把工具输出当最终裁决 |
+| AI bug report / AI patch 门禁 | `5B. AI bug / 补丁门禁`、`5A. 源码质量评审 Loop`，必要时读 `decision-calibration.md` | 不让 AI bug report 或 AI patch 自证完成 |
 | 接入 Open Code Review / OCR | 先读 `code-understanding-tools.md` 的 OCR 准入，再读 `5. CR 顺序` | 不把外部 Checker 输出当架构师 CR 结论 |
-| 评估最终代码交付能力 | 先读 `code-delivery-closed-loop.md`，再读 `1. 验证矩阵`、`5. CR 顺序`、`9. 复盘闭环` | 不只看 Agent 是否生成代码 |
+| 评估最终代码交付能力 | 先读 `code-delivery.md`，再读 `1. 验证矩阵`、`5. CR 顺序`、`9. 复盘闭环` | 不只看 Agent 是否生成代码 |
 | 工具辅助代码理解 | 先读 `code-understanding-tools.md`，再读 `4. 代码库理解 / 影响可视化门禁` | 不默认安装或联网 |
 | 发布前门禁 | `7. 发布门禁`、`8. 观测和回滚` | 不把测试通过当上线批准 |
 | 生产交付审查 / `/ship` 准出 | `7A. 生产交付审查标准`、`7. 发布门禁`、`8. 观测和回滚` | 不把测试通过、PR 数或 Agent 自述当上线批准 |
@@ -74,7 +74,7 @@
 
 ## 1. 验证矩阵
 
-AI Native 流程中的验证应覆盖四类证据：
+产研协同体系流程中的验证应覆盖四类证据：
 
 | 验证层 | 证明什么 | 常见证据 |
 | --- | --- | --- |
@@ -131,7 +131,7 @@ Eval 通过不代表代码可上线；测试通过也不代表产品方向正确
 
 ## 3. 质量 / 测试门禁
 
-质量 / 测试门禁不是独立测试专家 Skill，而是 AI Native 流程中的协作位：
+质量 / 测试门禁不是独立测试专家 Skill，而是产研协同体系流程中的协作位：
 
 - **OpenSpec 规定测什么业务事实**：目标、范围、非目标、业务规则、接口契约、数据约束和验收。
 - **产品专家提供验收种子**：正常、边界、异常、运营、数据和人工兜底样例。
@@ -153,7 +153,7 @@ CR 前置条件：
 
 ## 3A. 角色协作验证顺序
 
-AI Native 的默认验证顺序应服务角色协作 Loop，而不是服务某个机制名。GSD、CAD、Goal、Harness 只在对应阶段内部使用。
+产研协同体系的默认验证顺序应服务真实交付，而不是服务某个机制名。GSD、CAD、Goal、Harness 只在对应阶段内部使用。
 
 ```text
 设计评审
@@ -236,7 +236,7 @@ owner 复述：
 准入定界 -> 只读理解 -> 规则装载 / 红线 -> 三线评审 / 业务架构裁决 -> 代码坏味道细查 -> 工具补扫 -> 修复验证 -> 知识回流收口
 ```
 
-1. **准入定界**：明确 review 对象、业务目标、写入 / 只读范围、风险等级、期望验证和是否允许自动修复；没有 diff、目标或验证要求时，先走问决门禁。
+1. **准入定界**：明确 review 对象、业务目标、写入 / 只读范围、风险等级、期望验证和是否允许自动修复；没有 diff、目标或验证要求时，先走决策澄清门禁。
 2. **只读理解**：小 diff 用 Codex / `rg` / `git diff` 直接看；陌生代码库、多模块、接口迁移或 AI 多文件 diff，先产出代码库理解结论包。Gemini CLI、AgentRC、Understand Anything 只在已授权、只读、可回链源码锚点时作为辅助。
 3. **规则装载 / 红线**：先读项目 `AGENTS.md`、邻近代码风格和项目检查命令；Wind opt-in 时读取 `wind-project-coding-conventions`；源码级判断回 `资深架构师` 的 `coding-review-deep-dive.md`、`coding-standards.md`、`testing.md`。
 4. **三线评审 / 业务架构裁决**：先守质量底线，再看架构和维护性，最后处理风格噪音。P0/P1 是逻辑错误、安全漏洞、权限越界、数据一致性、公共契约、资金 / 合规 / 发布风险；P2 是架构设计、性能隐患、可维护性、复用质量和测试可信度；P3 是命名、格式和偏好，除非已写入项目规范或会造成误解，否则不阻塞。评审意见必须能回到业务语义、业务不变量、边界方向、契约完整性、失败路径和源码锚点。
@@ -500,7 +500,7 @@ AI 生成代码进入生产后，更需要观测：
 
 ## 10. 指标
 
-评估 AI Native 流程，不只看速度：
+评估产研协同体系流程，不只看速度：
 
 | 维度 | 应看指标 |
 | --- | --- |

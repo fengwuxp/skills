@@ -22,7 +22,7 @@
 
 - AI 协作总纲、OpenSpec、Superpowers、Harness 读 `ai-assisted-engineering.md`。
 - 中大型项目、长任务、上下文衰减或 Wave 编排读 `ai-large-project-orchestration.md`；CAD 只消费其中已满足门禁的单个任务包或阶段切片。
-- AI Native 端到端产品到研发流程、角色编排和 GSD/CAD 编排准入先由 `ai-native-engineering-workflow/references/gsd-cad-admission.md` 判断；本文件不判断端到端是否需要 GSD/CAD，不生成 AI Native 准入结论，只处理已选定原子任务的 CAD 门禁和授权。
+- AI Native 端到端产品到研发流程、角色编排和 GSD/CAD 编排准入先由 `delivery-collab/references/planning-execution-admission.md` 判断；本文件不判断端到端是否需要 GSD/CAD，不生成 AI Native 准入结论，只处理已选定原子任务的 CAD 门禁和授权。
 - 工程生命周期、验证命令和 Git 基础规约读 `workflow.md`。
 - 禁止行为、高风险操作和生产风险读 `negative-constraints.md`、`production-readiness.md`。
 
@@ -37,8 +37,8 @@
 | 从 Agent Loop 进入 CAD | 3、4、5、7、8 | 不消费整个 GSD Loop |
 | 判断是否必须停止 | 7、8、9 | 普通低风险流程 |
 | 任务完成或中断收口 | 6、7、9 | 模式介绍 |
-| 从 GSD-like 编排进入 CAD | 先确认 `gsd-cad-admission.md` 和 `ai-large-project-orchestration.md` 已选定单个任务包，再读 2、3、4、8 | 不消费整个 Roadmap |
-| 从 AI Native 产品上下文或 MVP harden 进入 CAD | 先消费 `ai-native-engineering-workflow/references/gsd-cad-admission.md` 或产品侧交接结论，再读 2、3、4、8 | 不把产品上下文包、Hardened Candidate 或业务 MVP 当授权 |
+| 从 GSD-like 编排进入 CAD | 先确认 `planning-execution-admission.md` 和 `ai-large-project-orchestration.md` 已选定单个任务包，再读 2、3、4、8 | 不消费整个 Roadmap |
+| 从 AI Native 产品上下文或 MVP harden 进入 CAD | 先消费 `delivery-collab/references/planning-execution-admission.md` 或产品侧交接结论，再读 2、3、4、8 | 不把产品上下文包、Hardened Candidate 或业务 MVP 当授权 |
 
 ## 1. 模式边界
 

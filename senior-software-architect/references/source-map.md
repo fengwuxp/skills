@@ -24,7 +24,7 @@
 | 核对业务用例驱动架构文章应用记录 | `微信公众号文章：软件架构别再瞎设计了`、`应用记录` | 不把宣导性原文当作完整架构方法论 |
 | 核对 Clean Architecture 整洁架构文章应用记录 | `微信公众号文章：Clean Architecture 整洁架构`、`应用记录` | 不把四层图、比喻或原文表格复制为固定模板 |
 | 核对架构设计三原则文章应用记录 | `微信公众号文章：架构设计三原则`、`应用记录` | 不复制文章案例、代码示例或宣导表达 |
-| 核对架构设计真功夫文章应用记录 | `微信公众号文章：认知跃迁16-如何练成架构设计真功夫`、`https://mp.weixin.qq.com/s/6EFJZpH39ryWA3u_Wlxuzw`、作者：`李文强`、2026-06-03 15:54:27、`拆分与合并的 V 字判断`、长期交付成本、小闭环问决门禁 | 不能替代功能归类、边界划分、颗粒度和长期交付成本判断 |
+| 核对架构设计真功夫文章应用记录 | `微信公众号文章：认知跃迁16-如何练成架构设计真功夫`、`https://mp.weixin.qq.com/s/6EFJZpH39ryWA3u_Wlxuzw`、作者：`李文强`、2026-06-03 15:54:27、`拆分与合并的 V 字判断`、长期交付成本、小闭环决策澄清门禁 | 不能替代功能归类、边界划分、颗粒度和长期交付成本判断 |
 | 核对架构师底层思维文章应用记录 | `微信公众号文章：架构师底层思维能力要求`、`应用记录` | 不复制原文图片、书籍推荐或鸡汤式表达 |
 | 核对通信复杂度文章应用记录 | `微信公众号文章：软件复杂性的本质是通信复杂性`、`应用记录` | 不把通信复杂度绝对化为唯一复杂度来源 |
 | 核对软件设计哲学读书笔记应用记录 | `微信公众号文章：《软件设计的哲学》读书笔记组`、`应用记录` | 不把读书笔记写成官方标准或吞异常依据 |
@@ -73,7 +73,7 @@
 | `architecture.md` | 增加 `5.3.2 深模块与信息隐藏`，把深模块 / 浅模块、信息隐藏、按任务职责分解、设计两次、多文件小改动信号和“长度不是坏味本身，复杂性才是”纳入架构评审。 |
 | `coding-standards.md` | 补充复杂度可控、错误处理低层屏蔽 / 高层聚合、谨慎使用“定义错误不存在”、注释先行、命名面向读者和 TDD 后设计质量回看。 |
 | `coding-review-deep-dive.md` | 增加复杂性投资检查，识别浅模块堆叠、直通包装、信息泄露、多文件小改动、战术 AI 代码和 Classitis。 |
-| `ai-native-engineering-workflow/SKILL.md`、`references/agent-loop-engineering.md` | 在角色协作 Loop 中增加复杂度投资门禁，要求 AI 生成代码不能只追求测试变绿、PR 变多或代码更短，必须检查理解成本和维护成本。 |
+| `delivery-collab/SKILL.md`、`references/delivery-execution-control.md` | 在产研协同 中增加复杂度投资门禁，要求 AI 生成代码不能只追求测试变绿、PR 变多或代码更短，必须检查理解成本和维护成本。 |
 | `README.md`、`scripts/validate-trigger-paths.py` | 补充公开来源记录和防漂移断言。 |
 未吸收内容：
 - 不复制文章原文、书籍内容、案例、标题传播话术、作者表达或可能受版权保护的材料。
@@ -264,7 +264,7 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 | --- | --- |
 | `diagram-output.md` | 新增 AI 辅助可编辑图治理，要求先给出图形 brief，按业务上下文、容器/应用、组件、运行时交互、部署、数据/消息和观测分层拆解；保留 SVG、draw.io XML、Mermaid 或生成脚本等可编辑源；检查敏感信息、版权边界、远程资源、错误连线、异常路径、颜色语义和文本溢出。 |
 | `diagram-output.md` | 新增陌生代码库图形化理解包，要求只读提取组件、入口、启动顺序、认证权限、外部系统、数据/消息/状态流、源码锚点和未确认连接，再判断能否进入实现或 CR。 |
-| `ai-native-engineering-workflow/references/agentic-engineering-governance.md` | 补充 AI Native Harness 对图形化理解 brief 的调度要求，避免陌生代码库或多模块变更只靠文字总结进入实现。 |
+| `delivery-collab/references/engineering-governance.md` | 补充 AI Native Harness 对图形化理解 brief 的调度要求，避免陌生代码库或多模块变更只靠文字总结进入实现。 |
 | `skill-tree-platform-leadership-ai.md` | 在技术表达与图文能力中补充 AI 辅助画图只是可编辑草案，架构师仍需校验视图层级、节点责任、箭头语义、敏感信息、版权边界和工程验证闭环。 |
 | `README.md` | 新增公开参考来源记录，说明只吸收 AI + draw.io、C4、arc42、draw.io 官方文档中的通用方法和治理边界。 |
 | `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI 辅助可编辑图治理、来源记录和图形能力入口漂移。 |

@@ -1,5 +1,5 @@
 interface:
   display_name: "Wind 项目编码约规"
-  short_description: "Wind/Nobe Java 项目 opt-in 后的 AGENTS 初始化、face/impl、服务分层、模型归位、幂等/唯一键、查询/API/字典、Entity 不外露与 TDD/CR 约规"
+  short_description: "Wind/Nobe Java 项目 opt-in 后的 AGENTS 初始化、face/impl、服务分层、模型归位、幂等/唯一键、并发/锁边界、查询/API/字典、Entity 不外露与 TDD/CR 约规"
   brand_color: "#0369A1"
-  default_prompt: "Use $wind-project-coding-conventions 初始化或审查已在 AGENTS.md opt-in 的 Wind/Nobe Java 项目：对齐项目 AGENTS、face/impl、服务分层、DTO/Request/Query/Command、幂等/唯一键、查询字段/方法、内网 API、字典国际化、Entity 不外露、MyBatis Flex、ServiceImpl 和测试边界。"
+  default_prompt: "Use $wind-project-coding-conventions 初始化或审查已在 AGENTS.md opt-in 的 Wind/Nobe Java 项目：对齐项目 AGENTS、face/impl、服务分层、DTO/Request/Query/Command、幂等/唯一键、基础服务并发/锁边界、查询字段/方法、内网 API、字典国际化、Entity 不外露、MyBatis Flex、ServiceImpl 和测试边界。"

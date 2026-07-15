@@ -20,14 +20,14 @@ from typing import Any, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIRS = [
-    "ai-native-engineering-workflow",
+    "delivery-collab",
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
     "wind-project-coding-conventions",
 ]
 SCRIPTLESS_VALIDATED_SKILLS = {
-    "ai-native-engineering-workflow",
+    "delivery-collab",
     "wind-project-coding-conventions",
 }
 REQUIRED_VALIDATE_HOOKS = [
@@ -396,7 +396,7 @@ def score_trigger(skill_name: str, trigger_text: str) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 80
     expected_terms = {
-        "ai-native-engineering-workflow": ["ai-native workflow", "GSD/CAD", "验证矩阵"],
+        "delivery-collab": ["product engineering collaboration", "GSD/CAD", "验证矩阵"],
         "java-service-code-generator": ["java service generator", "structured input", "codegen"],
         "product-architecture-expert": ["payment product", "product diagram", "airwallex"],
         "senior-software-architect": ["architecture diagram", "bug diagnosis", "write tests"],

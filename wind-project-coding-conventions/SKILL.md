@@ -1,13 +1,13 @@
 ---
 name: wind-project-coding-conventions
-description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 opt-in Wind 约规，或用户要求初始化改进 Wind 项目 AGENTS；审查 face-impl、服务模型边界、Entity、幂等唯一键、查询 API 字典和 TDD CR 时触发。
+description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 opt-in Wind 约规，或用户要求初始化改进 Wind 项目 AGENTS；审查 face-impl、服务模型边界、Entity、幂等唯一键、基础服务并发/锁边界、查询 API 字典和 TDD CR 时触发。
 ---
 
 # Wind Project Coding Conventions
 
 ## 定位
 
-你是 Wind/Nobe Java 项目编码约规的权威规则包，负责在项目明确 opt-in 后提供 face/impl、服务分层、模型归位、Entity 不外露、MyBatis Flex、ServiceImpl、查询字段/方法、内网 API、字典国际化和测试边界的判断标准。
+你是 Wind/Nobe Java 项目编码约规的权威规则包，负责在项目明确 opt-in 后提供 face/impl、服务分层、模型归位、Entity 不外露、MyBatis Flex、ServiceImpl、基础服务并发/锁边界、查询字段/方法、内网 API、字典国际化和测试边界的判断标准。
 
 本 Skill 只回答“这个项目是否应该按 Wind 约规做、具体约规是什么、当前设计或代码是否偏离约规”。源码级架构设计、TDD、Bug 修复、代码 CR 和生产风险判断继续交给 `资深架构师`；结构化 Java Service 生成继续交给 `java-service-code-generator`。
 
@@ -16,10 +16,10 @@ description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 o
 - 项目 `AGENTS.md`、任务说明或用户明确写明“遵守 Wind 项目编码约规”。
 - 用户要求检查 Wind/Nobe 风格项目的 `face` / `impl` 模块边界、接口放置、模型归属、分包规则或 ServiceImpl 实现方式。
 - 用户要求判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、Converter、callback/spi、listener、webhook、core、infrastructure 应放在哪个模块或包。
-- 用户要求基于 Wind 约规做服务层、基础服务、方法签名、服务命名、模型命名、枚举命名、ApplicationService、Entity 不外露、MyBatis Flex 查询或 TDD/CR 的正反例判断。
+- 用户要求基于 Wind 约规做服务层、基础服务、并发与锁边界、方法签名、服务命名、模型命名、枚举命名、ApplicationService、Entity 不外露、MyBatis Flex 查询或 TDD/CR 的正反例判断。
 - 用户要求检查服务查询方法 `get/find/query/exists/count/stats/summary`、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 内网 API、安全等级、系统字典、国际化 Key 或业务事件 `eventKey`。
 - 用户要求判断 ServiceImpl 是否应移除 Mapper 直连、是否应补强实体基础服务，或组合、生命周期、应用层服务应依赖哪个服务契约。
-- 用户要求为遵循 Wind 约规的项目初始化或改进项目本地 `AGENTS.md`，让 AI Native Engineering Loop 能按项目约规调度产品、架构、Wind 规则和代码生成能力。
+- 用户要求为遵循 Wind 约规的项目初始化或改进项目本地 `AGENTS.md`，让 产研协同体系能按项目约规调度产品、架构、Wind 规则和代码生成能力。
 - 用户要求把 Wind 约规接入 Open Code Review / OCR、`.opencodereview/rule.json` 或外部代码评审工具时，只提供规则摘要和边界判断。
 
 ## 工作流程
@@ -58,7 +58,8 @@ description: Wind/Nobe Java 项目编码约规 Skill。项目 AGENTS.md 明确 o
 - 未 opt-in 的普通 Java/Spring 项目，不强行套 Wind face/impl、基础服务或模型包规则。
 - 对外接口、Controller、Facade、Adapter、跨模块接口和事件契约不得暴露 Entity、Mapper、Repository 或 MyBatis Page。
 - 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，不得用 String、业务私有枚举或魔法常量承载。
-- 幂等或唯一处理优先使用表内业务 UK 或联合 UK；`requestSn` 等外部请求号只作追踪、重试辅助或审计字段，不作为唯一业务身份或唯一幂等依据。
+- 业务唯一性和请求重放幂等分层处理：业务身份与业务不变量优先由表内业务 UK、联合 UK、状态条件或版本约束保护；外部 `Idempotency-Key` / `requestSn` 可以用于请求重放去重，但不得冒充业务身份，必须定义作用域、参数摘要、有效期、冲突和结果回放语义。
+- 基础服务必须识别并发下的业务不变量，但不得仅因“未来可能并发”预埋本地锁、分布式锁或锁 Wrapper；按唯一性、状态流转和一般读改写分别优先使用表内业务 UK 或联合 UK、带前置状态的原子条件更新和乐观锁。事务只保证本地操作的原子提交和回滚，普通 `SELECT -> Java 校验 -> UPDATE` 即使使用 `@Transactional` 也不能单独防止丢失更新；只有上述机制不足且有可复核证据时才引入已验证安全语义的锁原语。
 - 服务查询方法和 `XxxQuery` 字段必须表达业务语义：`get/find/query` 不混用，默认等值查询不加后缀，范围/模糊/集合/空值后缀统一；不得把 `select/load/fetch`、SQL 词或 Repository 语义扩散到服务层契约。
 - 内网 API 路径必须显式安全等级：`/inc/basic/**` 只承载低风险内部查询，涉及用户数据、资金、权限或关键业务操作必须走 `/inc/secure/**` 并保留签名/鉴权边界；不得用 header/query 参数隐藏安全等级。
 - 系统字典、国际化和业务事件必须使用稳定 Key + params；业务逻辑只能依赖 code、enum 或 errorCode，不得依赖展示文案、中文描述或可变翻译。

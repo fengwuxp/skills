@@ -20,8 +20,8 @@
   },
   "cases": [
     {
-      "id": "ai-native-should-product-judgment-loop-admission",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-product-judgment-loop-admission",
+      "skill": "delivery-collab",
       "query": "AI Native 进入产品判断 Loop：我们有访谈、工单、竞品、路线图、PRD 和发布复盘，先调用产品专家按产品判断动作链判断做什么、为什么做、先不做什么，再决定是否进入系分、TDD 和编码。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -32,11 +32,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入产品判断 Loop 准入路径，AI Native 只判断交接成熟度、owner、授权策略、验证与停止条件；先路由产品架构专家读取 product-judgment-action-chain，输出已知事实 / 证据、判断动作、取舍结论、不做项、下一产物、产品 owner、验收 / 停止条件和工程交接结论；不足时回产品专家补产品判断动作链，不直接进入系分、TDD、编码或 Execution Grant，也不安装或照搬外部 pm-skills。"
+      "expected_handling": "进入产品判断 Loop 准入路径，产研协同体系只判断交接成熟度、owner、授权策略、验证与停止条件；先路由产品架构专家读取 product-judgment-action-chain，输出已知事实 / 证据、判断动作、取舍结论、不做项、下一产物、产品 owner、验收 / 停止条件和工程交接结论；不足时回产品专家补产品判断动作链，不直接进入系分、TDD、编码或 Execution Grant，也不安装或照搬外部 pm-skills。"
     },
     {
-      "id": "ai-native-should-route-business-architecture-planning",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-route-business-architecture-planning",
+      "skill": "delivery-collab",
       "query": "AI Native 帮我编排业务架构规划到工程交接：先让产品专家梳理业务能力地图、战略到项目组合、能力-项目-系统映射和知识库回流计划，再判断 owner、验证和停止条件。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -47,11 +47,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入业务架构规划到工程交接准入路径；AI Native 只判断交接成熟度、owner、授权策略、知识库回流落点、验证与停止条件；先路由产品架构专家读取 business-architecture-planning，输出业务架构准入卡、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划；不足时回产品专家补业务架构规划，不直接生成系统设计、TDD、编码任务或 Execution Grant。"
+      "expected_handling": "进入业务架构规划到工程交接准入路径；产研协同体系只判断交接成熟度、owner、授权策略、知识库回流落点、验证与停止条件；先路由产品架构专家读取 business-architecture-planning，输出业务架构准入卡、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划；不足时回产品专家补业务架构规划，不直接生成系统设计、TDD、编码任务或 Execution Grant。"
     },
     {
-      "id": "ai-native-should-end-to-end-product-engineering-workflow",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-end-to-end-product-engineering-workflow",
+      "skill": "delivery-collab",
       "query": "我们已经有 AI 原型/eval 和业务 dogfooding 反馈，想设计从 PRD-Lite 到 OpenSpec、Harness、GSD/CAD、验证矩阵、代码 CR 和发布复盘的流程，说明产品专家、架构师和 AI Agent 的职责边界。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -63,11 +63,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先判断当前阶段、输入成熟度和交接缺口，再输出 Goal、State、Plan、AI Maker/Checker、验证矩阵，并路由产品专家与架构师分工；GSD/CAD/Goal 作为内部层，不要求用户手动选择多个模式。"
+      "expected_handling": "进入产研协同体系的产研交付视图；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先判断当前阶段、输入成熟度和交接缺口，再输出 Goal、State、Plan、AI Maker/Checker、验证矩阵，并路由产品专家与架构师分工；GSD/CAD/Goal 作为内部层，不要求用户手动选择多个模式。"
     },
     {
-      "id": "ai-native-should-gsd-cad-handoff",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-gsd-cad-handoff",
+      "skill": "delivery-collab",
       "query": "目前是中大型项目，产品上下文包已有目标、对象、规则和验收种子，请评估如何把 GSD Wave 和 CAD 原子任务结合，输出 Harness 摘要、Execution Grant 缺口和停止条件。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -78,11 +78,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；把 GSD Wave 作为计划层、CAD 原子任务作为执行子循环，区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
+      "expected_handling": "进入产研协同体系的产研交付视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；把 GSD Wave 作为计划层、CAD 原子任务作为执行子循环，区分 GSD Wave 建议、Harness 摘要、CAD 候选缺口和 Execution Grant，不把 CAD 候选直接写成执行授权，也不替代架构师生成完整 Harness Plan。"
     },
     {
-      "id": "ai-native-should-gsd-product-engineering-collaboration",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-gsd-delivery-collab",
+      "skill": "delivery-collab",
       "query": "进入产研交付视图：目标是交付生产可用能力，不是让 AI 随机推进模拟模块、内存版业务 Service 或看上去可用的样子货；产品专家先做需求分析、产品设计和确认，架构师再做系分设计、编码、TDD、CR 和验证。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -93,12 +93,12 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图；目标层、计划层、原子执行层、执行契约和授权边界只作为内部层归位。按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
+      "expected_handling": "进入产研协同体系的产研交付视图；目标层、计划层、原子执行层、执行契约和授权边界只作为内部层归位。按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先强调目标是交付生产可用能力，禁止把随机模拟模块、mock 流程、内存版业务 Service、无业务入口 demo 或样子货当成进展；再编排产品专家完成需求分析、产品设计、方案确认和验收种子，编排资深架构师完成系分设计、编码、TDD、CR、验证发布。"
     },
     {
-      "id": "ai-native-should-compress-gsd-cad-goal-into-loop",
-      "skill": "ai-native-engineering-workflow",
-      "query": "现在 AI 流程里目标、计划、原子执行、执行契约和授权边界太多了，请统一压缩成角色协作 Loop，同时保留大项目分波、原子任务执行和授权门禁。",
+      "id": "delivery-collab-should-compress-gsd-cad-goal-into-loop",
+      "skill": "delivery-collab",
+      "query": "现在 AI 流程里目标、计划、原子执行、执行契约和授权边界太多了，请统一压缩成产研协同，同时保留大项目分波、原子任务执行和授权门禁。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -108,11 +108,26 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native Engineering Loop 重构路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确对外只推荐角色协作 Loop，一个主流程下再选择只读理解、产研交付、验证发布、知识回流四类场景视图；目标、计划、原子执行、执行契约和授权边界只作为内部层归位，不再要求用户手动选择多个模式。"
+      "expected_handling": "进入 产研协同体系重构路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确对外只推荐产研协同，一个主流程下再选择只读理解、产研交付、验证发布、知识回流四类场景视图；目标、计划、原子执行、执行契约和授权边界只作为内部层归位，不再要求用户手动选择多个模式。"
     },
     {
-      "id": "ai-native-should-plan-to-goal-bridge-without-new-flow",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-map-sdlc-without-renaming-main-flow",
+      "skill": "delivery-collab",
+      "query": "参考 Agentic SDLC、Agentic DevOps 和 Loop Engineering 评估现有 AI 工作流；确认 SDLC 是什么，是否应该用 SDLC 替换 Loop，并避免以后每出现一个行业概念就重命名流程。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入产研协同体系评估；按默认最小输出给出结论、主能力域、协同域、当前阶段、owner、交接物、授权策略、验证与停止条件；本场景以交付编排为主能力域，以工程治理为协同域；明确产研协同体系是稳定主入口，交付编排、工程治理、知识演进是稳定能力域；SDLC 只作为构想、开发、运行支持、维护演进和退役的生命周期覆盖框架，安全、权限、风险、可追溯性和知识回流横贯各阶段；Loop 只是阶段内和跨阶段的反馈机制，规划、执行、评估只是受控执行机制；Agentic DevOps、GSD、CAD、Goal、Harness 和新行业概念只映射到能力域、阶段、owner、交接物、验证与停止条件，不新增并列流程、不再次改名。"
+    },
+    {
+      "id": "delivery-collab-should-plan-to-goal-bridge-without-new-flow",
+      "skill": "delivery-collab",
       "query": "进入 AI Native：先输出计划，我确认后创建 Goal，并按计划推进到验证完成；不要新增流程，只用现有 Loop / Goal / Plan Grant。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -123,11 +138,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图 Plan-to-Goal 桥接路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确 Plan-to-Goal 不是新增场景视图或独立流程，而是把计划成熟度、成功标准、假设、执行步骤、验证证据和阻塞项桥接到 Goal / Plan Grant；用户要求确认后创建 Goal 时，先只输出可确认计划，确认后再创建运行时 Goal 或 Goal 卡；只有 Plan Grant 字段齐备且低风险本地范围明确时才按计划推进；关闭时必须用验证证据对照成功标准，不把步骤执行完等同于 Goal Verified / Closed。"
+      "expected_handling": "进入产研协同体系的产研交付视图 Plan-to-Goal 桥接路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确 Plan-to-Goal 不是新增场景视图或独立流程，而是把计划成熟度、成功标准、假设、执行步骤、验证证据和阻塞项桥接到 Goal / Plan Grant；用户要求确认后创建 Goal 时，先只输出可确认计划，确认后再创建运行时 Goal 或 Goal 卡；只有 Plan Grant 字段齐备且低风险本地范围明确时才按计划推进；关闭时必须用验证证据对照成功标准，不把步骤执行完等同于 Goal Verified / Closed。"
     },
     {
-      "id": "ai-native-should-demand-analysis-collaboration-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-demand-analysis-collaboration-gate",
+      "skill": "delivery-collab",
       "query": "AI Native 研发流程进入需求分析协同门禁：这批用户原始诉求里混了功能解法，请先输出需求分析结论卡，明确根源需求、产品定义、产品边界、稳定点/变化点、边界坐标和上下游分工，再判断能否进入 PRD / 系分预审或 GSD Round 0。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -141,8 +156,8 @@
       "expected_handling": "进入需求分析协同门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；输出需求分析结论卡，覆盖原始诉求、根源需求、产品定义、产品边界、稳定点/变化点、边界坐标、上下游分工和待确认项；产品专家负责补根源需求、产品定义、边界和验收种子，资深架构师负责把已确认边界映射到模块、接口、数据、测试和发布风险；边界不清时回退 Round 0，不进入 OpenSpec、GSD Wave 或 CAD 候选。"
     },
     {
-      "id": "ai-native-should-development-standards-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-development-standards-gate",
+      "skill": "delivery-collab",
       "query": "AI Native 研发流程补需求 / 设计 / 编码标准门禁：系统需求或产品需求未确认时，不进入 SDD、测试、代码或 CAD；请输出需求基线稳定性、需求条目质量、HLR/LLR 设计追踪、编码规则原因/示例/验证方式和防御式编程检查。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -156,8 +171,8 @@
       "expected_handling": "进入开发标准门禁模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先判断需求基线稳定性，系统需求、产品需求或外部规则未确认时，不进入 SDD、测试、代码或 CAD；再输出需求条目质量、需求标准、设计标准、编码标准、HLR/LLR 设计追踪、强制/推荐规则分级、规则原因/示例/验证方式、防御式编程、需求驱动测试和回退 owner。"
     },
     {
-      "id": "ai-native-should-product-system-dna-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-product-system-dna-gate",
+      "skill": "delivery-collab",
       "query": "进入 GSD 前先做产品 / 系统 DNA 门禁：这个需求现在只有功能清单和页面草图，请检查核心对象、业务不变量、状态流转、责任边界、演化规则和验证方式，避免功能先行、规则后补。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -171,8 +186,8 @@
       "expected_handling": "进入产品 / 系统 DNA 门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先区分产品 DNA 和系统 DNA，检查核心对象、业务不变量、生命周期/状态、责任边界、演化规则、验证方式和待确认 owner；缺少 DNA 时回退产品架构专家补产品上下文、回退资深架构师补系分系统 DNA，不进入 OpenSpec、GSD Wave、CAD 候选或 AI 编码。"
     },
     {
-      "id": "ai-native-should-intent-to-production-role-loop",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-intent-to-production-role-loop",
+      "skill": "delivery-collab",
       "query": "参考 Loop Engineering，把 AI 工作流从意图 / 需求收集做到生产交付闭环，区分业务 owner、产品专家、UED、架构师、AI Maker、AI Checker、质量 / 测试门禁和发布 owner 在每个阶段的分工、交接物、验证门禁和停止条件；默认按设计、设计评审、TDD、编码、编码评审、可用性安全性评估、验证发布分角色推进，GSD/CAD/Goal 只作为内部层。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -183,11 +198,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 intent-to-production-loop 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；目标、计划、原子执行、执行契约和授权边界只作内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
+      "expected_handling": "进入产研协同 / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；目标、计划、原子执行、执行契约和授权边界只作内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
     },
     {
-      "id": "ai-native-should-three-layer-feedback-loop-cadence",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-three-layer-feedback-loop-cadence",
+      "skill": "delivery-collab",
       "query": "参考吴恩达对 Loop Engineering 的理解，优化 AI Native 分角色 Loop：区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop 三个时间尺度，并结合老祖宗智慧校准内层 AI 自测、中层 Spec 修正、外层真实用户/市场反馈的关系。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -198,12 +213,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 三层反馈节奏校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 intent-to-production-loop 的三层反馈节奏和 wisdom-loop-lens；区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop：内层 AI Maker 按 Spec / Evals / 失败测试执行和验证，只能证明实现更接近当前 Spec；中层产品 / 架构 owner 把上下文、Vision、范围和交互判断翻译成 Spec；外层业务 / 产品 / 发布 owner 用真实用户、市场、A/B、工单、监控或复盘慢反馈修正 Vision；用五德终始问时序、一张一弛问节奏、循名责实问证据；不得让 AI 自测、开发者品味或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权。"
+      "expected_handling": "进入产研协同体系三层反馈节奏校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-lifecycle 的三层反馈节奏和 decision-calibration；区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop：内层 AI Maker 按 Spec / Evals / 失败测试执行和验证，只能证明实现更接近当前 Spec；中层产品 / 架构 owner 把上下文、Vision、范围和交互判断翻译成 Spec；外层业务 / 产品 / 发布 owner 用真实用户、市场、A/B、工单、监控或复盘慢反馈修正 Vision；用五德终始问时序、一张一弛问节奏、循名责实问证据；不得让 AI 自测、开发者品味或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权。"
     },
     {
-      "id": "ai-native-should-autonomous-discovery-to-delivery-loop",
-      "skill": "ai-native-engineering-workflow",
-      "query": "进入 AI Native 角色协作 Loop：让 AI 可以自我挖掘需求和代码上下文，确认边界，设计并 CR 需求，然后执行 TDD、编码、代码 CR、验证实际可行，最后判断完成、继续 Loop、停止或需要人工确认；请给自主交付控制卡和人工确认边界。",
+      "id": "delivery-collab-should-autonomous-discovery-to-delivery-loop",
+      "skill": "delivery-collab",
+      "query": "进入 AI Native 产研协同：让 AI 可以自我挖掘需求和代码上下文，确认边界，设计并 CR 需求，然后执行 TDD、编码、代码 CR、验证实际可行，最后判断完成、继续 Loop、停止或需要人工确认；请给自主交付控制卡和人工确认边界。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -213,11 +228,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入自主挖掘到交付的角色协作 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 intent-to-production-loop、agent-loop-engineering、code-delivery-closed-loop 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、代码 CR、安全可靠和发布风险回到资深架构师；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认。"
+      "expected_handling": "进入自主挖掘到交付的产研协同，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle、delivery-execution-control、code-delivery 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、代码 CR、安全可靠和发布风险回到资深架构师；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认。"
     },
     {
-      "id": "ai-native-should-prd-system-design-deliberation-review",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-prd-system-design-deliberation-review",
+      "skill": "delivery-collab",
       "query": "对这份 AI 生成的 PRD 和系分设计做 MAGI 三角色合议预审，按 review_task、evaluation_task、reporting_task 输出 ACCEPT/REJECT/PENDING 决策日志、风险清单、owner、验证方式和下一步路由，不要直接改正文。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -228,12 +243,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 的 PRD / 系分合议预审模式，读取 prd-system-design-review，先输出评审对象、三角色分工、锚点化问题、ACCEPT/REJECT/PENDING 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由；预审不能替代产品专家 PRD 正文、架构师系分正文、正式评审或 Execution Grant。"
+      "expected_handling": "进入产研协同体系的 PRD / 系分合议预审模式，读取 prd-system-design-review，先输出评审对象、三角色分工、锚点化问题、ACCEPT/REJECT/PENDING 决策日志、接受项、分歧项、风险清单、owner、验证方式和下一步路由；预审不能替代产品专家 PRD 正文、架构师系分正文、正式评审或 Execution Grant。"
     },
     {
-      "id": "ai-native-should-role-collaboration-loop-main-flow",
-      "skill": "ai-native-engineering-workflow",
-      "query": "进入角色协作 Loop：这个 AI 工作流要按设计、设计评审、TDD、编码、编码评审、可用性安全性评估、验证发布分角色推进，形成团队协作效果；每个阶段都要回到产品专家、架构师或代码生成器的能力和约规，不能自由发挥；GSD/CAD/Goal/Harness 只作为内部处理层，不要再作为对外主流程。",
+      "id": "delivery-collab-should-role-collaboration-loop-main-flow",
+      "skill": "delivery-collab",
+      "query": "进入产研协同：这个 AI 工作流要按设计、设计评审、TDD、编码、编码评审、可用性安全性评估、验证发布分角色推进，形成团队协作效果；每个阶段都要回到产品专家、架构师或代码生成器的能力和约规，不能自由发挥；GSD/CAD/Goal/Harness 只作为内部处理层，不要再作为对外主流程。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -243,11 +258,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 角色协作 Loop 主流程，读取 intent-to-production-loop 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确目标、计划、原子执行、执行契约和授权边界只作内部层，不替代角色协作、测试通过、CR 结论或发布审批。"
+      "expected_handling": "进入产研协同体系主流程，读取 delivery-lifecycle 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确目标、计划、原子执行、执行契约和授权边界只作内部层，不替代角色协作、测试通过、CR 结论或发布审批。"
     },
     {
-      "id": "ai-native-should-coordinate-specialized-skills",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-coordinate-specialized-skills",
+      "skill": "delivery-collab",
       "query": "继续完善 AI 工作流分角色流程，用于控制不同 skills 完成任务：java-service-code-generator 负责 Java 基础服务、DTO、Request、Query 和模型生成；资深架构师负责架构设计、系分设计、代码设计、编码、TDD 和 CR；wind-project-coding-conventions 负责 Wind 项目编码指导并配合架构师 CR；产品专家负责需求分析、产品设计、目标对齐和产品验收；代码阅读理解、架构图、流程图等作为辅助能力接入。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -258,11 +273,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 分角色 Skill 调度路径，读取 intent-to-production-loop 的角色协作判断矩阵 / 专项 Skill 控制矩阵，并按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出 Loop 节点、主责角色、主 Skill、可选工具 / 框架、输入、交接物、不替代项和下一 owner；产品需求、目标对齐、产品设计和验收种子回到产品架构专家；架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险回到资深架构师；结构化 Java Service 基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service、ServiceImpl 骨架生成回到 java-service-code-generator；Wind/Nobe 项目编码指导、包名模块模型服务 API 规则和 CR 约束回到 wind-project-coding-conventions，并由资深架构师做源码级裁决；代码阅读理解、设计-代码对齐和外部理解工具准入读取 code-understanding-tools；架构图、流程图、时序图、状态机和代码库结构图回到产品/架构 diagram-output，复杂渲染再接 Architecture Diagram Generator 或 fireworks-tech-graph；AI Native 只做编排、门禁和交接，不直接代写专项产物，不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批。"
+      "expected_handling": "进入产研协同体系的分角色 Skill 调度路径，读取 delivery-lifecycle 的角色协作判断矩阵 / 专项 Skill 控制矩阵，并按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出 Loop 节点、主责角色、主 Skill、可选工具 / 框架、输入、交接物、不替代项和下一 owner；产品需求、目标对齐、产品设计和验收种子回到产品架构专家；架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险回到资深架构师；结构化 Java Service 基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service、ServiceImpl 骨架生成回到 java-service-code-generator；Wind/Nobe 项目编码指导、包名模块模型服务 API 规则和 CR 约束回到 wind-project-coding-conventions，并由资深架构师做源码级裁决；代码阅读理解、设计-代码对齐和外部理解工具准入读取 code-understanding-tools；架构图、流程图、时序图、状态机和代码库结构图回到产品/架构 diagram-output，复杂渲染再接 Architecture Diagram Generator 或 fireworks-tech-graph；产研协同体系只做编排、门禁和交接，不直接代写专项产物，不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批。"
     },
     {
-      "id": "ai-native-should-prd-ai-prescan-review",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-prd-ai-prescan-review",
+      "skill": "delivery-collab",
       "query": "做 PRD 评审会前 AI 预扫描：先让产品专家按完整性、一致性、可测试性、二义性找疑似问题和追问点，再接入 MAGI 预审的 review_task、evaluation_task、reporting_task，输出 ACCEPT/REJECT/PENDING 和 owner。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -276,8 +291,8 @@
       "expected_handling": "进入 PRD AI 预扫描 + 合议预审模式，先路由产品架构专家读取 product-prd-quality-gates 的 AI 预扫描四维度，按完整性、一致性、可测试性、二义性输出带锚点的疑似问题和建议追问；再由 ai-native 的 prd-system-design-review 接入 review_task、evaluation_task、reporting_task，把每条疑似问题标为 ACCEPT/REJECT/PENDING，写清 owner、验证方式和下一步路由；AI 预扫描不能替代正式需求评审、QA 测试设计或产品 owner 决策。"
     },
     {
-      "id": "ai-native-should-final-deliverable-document-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-final-deliverable-document-gate",
+      "skill": "delivery-collab",
       "query": "整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、Goal Ledger 或任务计划，只保留当前有效结论和验收。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -291,8 +306,8 @@
       "expected_handling": "进入最终文档准出模式，区分正式 PRD/系分/Spec 正文与过程资产；正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接；讨论过程、迭代草稿、AI 推理轨迹、被拒方案、MAGI 争论和完整 Goal Ledger 流水外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划，并按需要路由产品专家或资深架构师修正文档。"
     },
     {
-      "id": "ai-native-should-gsd-cad-admission-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-planning-execution-admission-gate",
+      "skill": "delivery-collab",
       "query": "做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -303,11 +318,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图 GSD/CAD 内部层准入，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
+      "expected_handling": "进入产研协同体系的产研交付视图 GSD/CAD 内部层准入，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；输出 GSD Round 0 缺口、Wave/Atomic Task 候选、CAD 候选缺口、Execution Grant 缺口、质量/测试门禁，并路由资深架构师继续生成工程 Harness Plan 与 CAD 门禁，不自动执行 CAD。"
     },
     {
-      "id": "ai-native-should-gsd-cad-default-authorization",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-gsd-cad-default-authorization",
+      "skill": "delivery-collab",
       "query": "优化 AI Native GSD 流程：我不希望每个任务都单独审批，GSD/CAD 模式下希望默认授权或自动推进；如果 Codex 有替我审批模式，也希望在低风险任务里自动通过。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -318,11 +333,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图授权策略层，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；把授权分成只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant 和显式确认，说明 Codex 替我审批只适用于当前 Grant 范围内低风险、本地、可回滚动作；Git、联网、依赖安装、读取密钥、生产数据、部署、数据库迁移、真实支付/资金、不可逆操作和高风险权限/租户/审计/合规变更必须显式确认。"
+      "expected_handling": "进入产研协同体系的产研交付视图授权策略层，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；把授权分成只读、计划内低风险执行、Plan Grant、Wave Grant、CAD Grant 和显式确认，说明 Codex 替我审批只适用于当前 Grant 范围内低风险、本地、可回滚动作；Git、联网、依赖安装、读取密钥、生产数据、部署、数据库迁移、真实支付/资金、不可逆操作和高风险权限/租户/审计/合规变更必须显式确认。"
     },
     {
-      "id": "ai-native-should-gsd-goal-composition",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-gsd-goal-governance",
+      "skill": "delivery-collab",
       "query": "做 GSD + Goal 组合：这个中大型项目需要持续推进，请把业务目标、生产可用能力、成功标准、GSD Wave、CAD 候选、验证证据、预算 / 时间盒、停止条件、Goal 状态和交接节奏串起来；不要把 Goal 当 Execution Grant。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -333,11 +348,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的产研交付视图 Goal 目标层，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 goal-composition 和 gsd-cad-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
+      "expected_handling": "进入产研协同体系的产研交付视图 Goal 目标层，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 goal-governance 和 planning-execution-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、CAD 候选关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
     },
     {
-      "id": "ai-native-should-agent-loop-engineering",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-delivery-execution-control",
+      "skill": "delivery-collab",
       "query": "参考 Loop Engineering：用 /goal 或 /loop 持续推进 GSD + Goal，并梳理 Loop / GSD / CAD 协同状态机、Engineering Handoff Card、Plan Grant + Loop 预算绑定和失败回写；必须有状态载体、反馈源、自我验证、最大轮次、无进展检测、预算上限、停止条件和交接物，不能把 auto mode 当无条件授权。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -348,11 +363,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering、goal-composition、gsd-cad-admission 和 code-delivery-closed-loop，输出 Loop 准入结论、内部层映射、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 GSD/CAD/Goal 是 Loop 内部层，/goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
+      "expected_handling": "进入 Agent Loop Engineering，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control、goal-governance、planning-execution-admission 和 code-delivery，输出 Loop 准入结论、内部层映射、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 GSD/CAD/Goal 是 Loop 内部层，/goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
     },
     {
-      "id": "ai-native-should-agent-loop-maturity-diagnosis",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-agent-loop-maturity-diagnosis",
+      "skill": "delivery-collab",
       "query": "这个 Agent Demo 里表现很好，但上线后总是把客户信息和政策搞混，还反复用废弃 API；请不要先改 Prompt 或直接上 Loop，先按 Prompt / Context / Harness / Loop 四层嵌套判断当前瓶颈、最小修复和是否允许 L4 试点。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -363,11 +378,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering / L1-L4 工程成熟度诊断，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering，输出 L1-L4 诊断结论、当前瓶颈层、证据、不先做、最小修复、是否允许 L4 试点、预算 / 停止条件和下一 owner；区分 L1 Prompt、L2 Context、L3 Harness、L4 Loop；先定位层级再开药方；生产不稳先加固 L3，不把 L2 问题误修成 Prompt，不跳过 L3 直接上 L4；L4 试点需低风险高频任务、automation、worktree、Maker / Checker、state、预算和停止条件，并检查理解债 / 认知投降。"
+      "expected_handling": "进入 Agent Loop Engineering / L1-L4 工程成熟度诊断，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，输出 L1-L4 诊断结论、当前瓶颈层、证据、不先做、最小修复、是否允许 L4 试点、预算 / 停止条件和下一 owner；区分 L1 Prompt、L2 Context、L3 Harness、L4 Loop；先定位层级再开药方；生产不稳先加固 L3，不把 L2 问题误修成 Prompt，不跳过 L3 直接上 L4；L4 试点需低风险高频任务、automation、worktree、Maker / Checker、state、预算和停止条件，并检查理解债 / 认知投降。"
     },
     {
-      "id": "ai-native-should-design-engineering-loop-not-prompting",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-design-engineering-loop-not-prompting",
+      "skill": "delivery-collab",
       "query": "不要继续堆 Prompt 让 AI 一轮轮改了，帮我设计一个工程 Loop：人设计循环，Loop 调用 Agent、检查结果、决定下一步、保存记忆并在边界处停止；要有 Automations、Worktrees、Skills、Connectors、Sub-agents、Memory、状态载体、反馈源、验证者、价值指标和人类理解检查。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -378,11 +393,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering / 设计工程 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering，强调不是继续堆 Prompt，而是设计可运行、可验证、可停止、可接管的工程循环；输出 Automations、Worktrees / 隔离工作区、Skills、Plugins / Connectors、Sub-agents / Maker-Checker、Memory / 状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、失败回写、人类理解检查和知识回流位置；价值指标不看 PR 数、执行轮数或 Agent 数量，而看合并率、返工率、缺陷率、回滚率、Review 成本、用户价值和团队理解程度；明确不能让人类只剩点同意，关键结果必须有人类 owner 能解释目标、状态、关键变更、证据、残余风险和停止理由。"
+      "expected_handling": "进入 Agent Loop Engineering / 设计工程 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，强调不是继续堆 Prompt，而是设计可运行、可验证、可停止、可接管的工程循环；输出 Automations、Worktrees / 隔离工作区、Skills、Plugins / Connectors、Sub-agents / Maker-Checker、Memory / 状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、失败回写、人类理解检查和知识回流位置；价值指标不看 PR 数、执行轮数或 Agent 数量，而看合并率、返工率、缺陷率、回滚率、Review 成本、用户价值和团队理解程度；明确不能让人类只剩点同意，关键结果必须有人类 owner 能解释目标、状态、关键变更、证据、残余风险和停止理由。"
     },
     {
-      "id": "ai-native-should-reusable-work-asset-loop",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-reusable-work-asset-loop",
+      "skill": "delivery-collab",
       "query": "参考给产品经理的 loop engineering，不要再给我一堆 Prompt。把 PRD 评审规则、客户访谈总结器、发布检查清单和每周产品信号做成可复用工作资产 Loop，要求有触发器、输入、动作、质量证据、记忆保存位置、回流方式、停止条件、人工决策点和可复测样例。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -393,11 +408,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering / 可复用工作资产 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering 和 source-map；输出工作资产 Loop 卡，覆盖流程名称、触发器、输入、动作、质量证据 / 评测样例、记忆 / 保存位置、回流方式、停止条件、人工决策点、可复测样例和不得吸收；从高频、低风险、有证据的工作资产开始；输出变差时修规则、样例、证据或状态载体，不临时加长 Prompt；记忆位置必须版本化或可复核，例如 Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库；不得把一次性偏好、未核验业务知识、外部文章表达、工具宣传、战略取舍、客户承诺、路线图改动或上线审批交给 Loop 自行决定。"
+      "expected_handling": "进入 Agent Loop Engineering / 可复用工作资产 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control 和 source-map；输出工作资产 Loop 卡，覆盖流程名称、触发器、输入、动作、质量证据 / 评测样例、记忆 / 保存位置、回流方式、停止条件、人工决策点、可复测样例和不得吸收；从高频、低风险、有证据的工作资产开始；输出变差时修规则、样例、证据或状态载体，不临时加长 Prompt；记忆位置必须版本化或可复核，例如 Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库；不得把一次性偏好、未核验业务知识、外部文章表达、工具宣传、战略取舍、客户承诺、路线图改动或上线审批交给 Loop 自行决定。"
     },
     {
-      "id": "ai-native-should-cdd-capability-discovery-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-cdd-capability-discovery-gate",
+      "skill": "delivery-collab",
       "query": "参考 CDD：先找能力，再写代码，强化 AI Native 落地执行能力。非 T0 的代码、文件、报告或外部写入任务，先做 Capability Discovery，查已有 Skill、Tool、Workflow、脚本和自动化，再判断缺口是否需要新实现。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -408,12 +423,12 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入 CDD / 能力发现门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、code-delivery-closed-loop 和 source-map；非 T0 且会产生代码、文件、报告、草稿、外部写入或长期规则的任务，实现前先做 Capability Discovery，查已有 Skill / Tool / Workflow / 脚本 / 自动化及其验收证据；能力必须说明触发条件、输入、动作、边界和验收证据，验收证据包括 artifact、validator、readback 或用户确认；缺口明确后才新增实现或沉淀新能力；不把工具名当能力，不绕过既有 QC、readback、权限边界、失败处理、测试、CR、owner 确认或 Git/上线授权；代码落地仍路由资深架构师，结构化生成仍路由 java-service-code-generator。"
+      "expected_handling": "进入 CDD / 能力发现门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control、code-delivery 和 source-map；非 T0 且会产生代码、文件、报告、草稿、外部写入或长期规则的任务，实现前先做 Capability Discovery，查已有 Skill / Tool / Workflow / 脚本 / 自动化及其验收证据；能力必须说明触发条件、输入、动作、边界和验收证据，验收证据包括 artifact、validator、readback 或用户确认；缺口明确后才新增实现或沉淀新能力；不把工具名当能力，不绕过既有 QC、readback、权限边界、失败处理、测试、CR、owner 确认或 Git/上线授权；代码落地仍路由资深架构师，结构化生成仍路由 java-service-code-generator。"
     },
     {
-      "id": "ai-native-should-loop-task-end-accountability",
-      "skill": "ai-native-engineering-workflow",
-      "query": "进入 AI Native 角色协作 Loop：每一次任务结束都要先对交付内容负责，做自我审查和问决门禁，再基于当前任务判断是修复、交接、停止，还是开启下一次任务的计划问询或最小计划草案。",
+      "id": "delivery-collab-should-loop-task-end-accountability",
+      "skill": "delivery-collab",
+      "query": "进入 AI Native 产研协同：每一次任务结束都要先对交付内容负责，做自我审查和决策澄清门禁，再基于当前任务判断是修复、交接、停止，还是开启下一次任务的计划问询或最小计划草案。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -423,12 +438,12 @@
         "efficiency_metrics",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering / 任务结束责任闭环，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering 和 verification-review-release，先做交付责任自检，覆盖交付内容、目标/验收映射、验证证据、未完成项、残余风险、是否改变用户目标或写入范围；再给出问决门禁结论：自决推进、询问 owner、继续收敛或停止交接；如果继续推进，只输出下一任务计划问询或最小计划草案，不把续作写成已授权，也不把 Agent 自述完成当证据。"
+      "expected_handling": "进入 Agent Loop Engineering / 任务结束责任闭环，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control 和 verification-review-release，先做交付责任自检，覆盖交付内容、目标/验收映射、验证证据、未完成项、残余风险、是否改变用户目标或写入范围；再给出决策澄清门禁结论：自决推进、询问 owner、继续收敛或停止交接；如果继续推进，只输出下一任务计划问询或最小计划草案，不把续作写成已授权，也不把 Agent 自述完成当证据。"
     },
     {
-      "id": "ai-native-should-decision-gate-blocker-progression",
-      "skill": "ai-native-engineering-workflow",
-      "query": "进入 AI Native 角色协作 Loop 问询推进：我接受你对当前 blocker 的建议，按你的建议推进下一步；不要重新展开全局规划，只关闭当前 blocker、写入下一阶段输入，再挑下一最高价值 blocker。",
+      "id": "delivery-collab-should-decision-gate-blocker-progression",
+      "skill": "delivery-collab",
+      "query": "进入 AI Native 产研协同 问询推进：我接受你对当前 blocker 的建议，按你的建议推进下一步；不要重新展开全局规划，只关闭当前 blocker、写入下一阶段输入，再挑下一最高价值 blocker。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -437,12 +452,12 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的小闭环问决门禁问询推进路径；先对当前交付内容和新增证据做自我问询 / 自我回答，只处理一个主 blocker；用户接受建议或说按你建议推进时，先关闭当前 blocker，写入下一阶段输入，再挑下一最高价值 blocker；每次问询给出问题、建议答案、依据、影响和默认暂停点；不重新摊开全局方案，不同时展开多个 blocker，不把续作写成已授权。"
+      "expected_handling": "进入产研协同体系的小闭环决策澄清门禁问询推进路径；先对当前交付内容和新增证据做自我问询 / 自我回答，只处理一个主 blocker；用户接受建议或说按你建议推进时，先关闭当前 blocker，写入下一阶段输入，再挑下一最高价值 blocker；每次问询给出问题、建议答案、依据、影响和默认暂停点；不重新摊开全局方案，不同时展开多个 blocker，不把续作写成已授权。"
     },
     {
-      "id": "ai-native-should-questioning-repair",
-      "skill": "ai-native-engineering-workflow",
-      "query": "$ai-native-engineering-workflow 做一轮问询修复吧",
+      "id": "delivery-collab-should-questioning-repair",
+      "skill": "delivery-collab",
+      "query": "$delivery-collab 做一轮问询修复吧",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -451,11 +466,11 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的问询修复路径；读取 agent-loop-engineering、intent-to-production-loop 和 verification-review-release；先定位当前问询触发、主 blocker、已自答证据和需 owner 判断项；只修复问询推进，不重开全局方案，不新增并列流程；问决门禁是小闭环总门禁，`grill-me` 是命中升级条件后的升级盘问；每次只处理一个主 blocker，给出建议答案、依据、影响和默认暂停点；用户接受建议时关闭当前 blocker，写入下一阶段输入，再挑下一最高价值 blocker；命中关键分叉未决、回答含糊、半答或连续返工时再升级 grill-me；`grill-me` 是唯一入口，不写成并列流程。"
+      "expected_handling": "进入产研协同体系的问询修复路径；读取 delivery-execution-control、delivery-lifecycle 和 verification-review-release；先定位当前问询触发、主 blocker、已自答证据和需 owner 判断项；只修复问询推进，不重开全局方案，不新增并列流程；决策澄清门禁是小闭环总门禁，`grill-me` 是命中升级条件后的升级盘问；每次只处理一个主 blocker，给出建议答案、依据、影响和默认暂停点；用户接受建议时关闭当前 blocker，写入下一阶段输入，再挑下一最高价值 blocker；命中关键分叉未决、回答含糊、半答或连续返工时再升级 grill-me；`grill-me` 是唯一入口，不写成并列流程。"
     },
     {
-      "id": "ai-native-should-grill-me-loop-progression",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-grill-me-loop-progression",
+      "skill": "delivery-collab",
       "query": "AI 工作流中 grill-me 流程触发不稳定，请优化角色 Loop 中自动按需触发：如果关键分叉未决、用户回答含糊或连续返工，适时进入 grill-me 盘问，一次只问一个问题、给推荐答案、能查先查，并把决策摘要写回下一阶段输入。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -465,7 +480,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入小闭环问决门禁路径，并在命中升级条件时进入 grill-me 盘问门禁；问决门禁是小闭环总门禁，`grill-me` 是命中升级条件后的升级盘问；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、intent-to-production-loop、superpowers-skill-library 和 source-map；显式提到 grill-me 触发不稳定或角色 Loop 自动触发时，先审计四类信号；`grill-me` 是唯一入口，废弃本地 `grilling`，不新增并列流程；仅在 Loop 推进中出现关键分叉未决、回答含糊、半答、连续返工，或下一阶段会改变公共契约、状态机、验收样例、写入范围、发布风险时进入 grill-me；沿一个决策树分支深度优先推进，一次只问一个问题，每问记录 question_id、已问问题和答案状态，并给推荐答案和依据；先区分 Facts / Decisions，Facts 用代码库、文档、测试或日志自答，Decisions 才等待 owner 反馈；下一问前检查已问问题，命中同义重复问题时只追问缺失项、关闭当前 blocker 或 push back 模糊点，不重问原问题；对模糊回答 push back，必要时给半答案 strawman 让 owner 反驳；退出时输出已确认选择、被排除方案、待确认项和下一阶段输入，并写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入；未达成 shared understanding 不进入执行；不把 grill-me 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批。",
+      "expected_handling": "进入小闭环决策澄清门禁路径，并在命中升级条件时进入 grill-me 盘问门禁；决策澄清门禁是小闭环总门禁，`grill-me` 是命中升级条件后的升级盘问；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control、delivery-lifecycle、superpowers-skill-library 和 source-map；显式提到 grill-me 触发不稳定或角色 Loop 自动触发时，先审计四类信号；`grill-me` 是唯一入口，废弃本地 `grilling`，不新增并列流程；仅在 Loop 推进中出现关键分叉未决、回答含糊、半答、连续返工，或下一阶段会改变公共契约、状态机、验收样例、写入范围、发布风险时进入 grill-me；沿一个决策树分支深度优先推进，一次只问一个问题，每问记录 question_id、已问问题和答案状态，并给推荐答案和依据；先区分 Facts / Decisions，Facts 用代码库、文档、测试或日志自答，Decisions 才等待 owner 反馈；下一问前检查已问问题，命中同义重复问题时只追问缺失项、关闭当前 blocker 或 push back 模糊点，不重问原问题；对模糊回答 push back，必要时给半答案 strawman 让 owner 反驳；退出时输出已确认选择、被排除方案、待确认项和下一阶段输入，并写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入；未达成 shared understanding 不进入执行；不把 grill-me 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批。",
       "behavior_contract": {
         "first_response_must_include": [
           "触发原因",
@@ -494,8 +509,8 @@
       }
     },
     {
-      "id": "ai-native-should-reconcile-grill-me-snapshot-before-execution",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-reconcile-grill-me-snapshot-before-execution",
+      "skill": "delivery-collab",
       "query": "AI Native 的 grill-me 已经多轮问询：已确认只按 A 方案推进，被排除方案是 B，C 还待确认；问询中 owner 还提到“这是红线，不能碰”。现在准备执行时模型因为上下文漂移又推测要按 B 写计划，请修复这种问询结论和最终执行不一致的问题。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -505,7 +520,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入 grill-me 决策快照 / 执行前对账门禁；读取 intent-to-production-loop 和 verification-review-release，不新建并列流程；多轮 grill-me 退出后必须形成决策快照，字段只保留已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；执行 / 写文件 / 生成计划前必须先对账，说明本轮执行依据哪条已确认选择，是否触碰被排除方案或待确认项；被排除方案不得复活，待确认项不得脑补；如果当前执行意图和决策快照不一致，必须停止并问 owner，不能靠上下文记忆、模型推测或新一轮自说自话覆盖已确认结论；问询交互中出现红线、底线、不能碰、不可、禁止、必须等高风险字眼时，要重点关注并记录到决策快照或待确认项。",
+      "expected_handling": "进入 grill-me 决策快照 / 执行前对账门禁；读取 delivery-lifecycle 和 verification-review-release，不新建并列流程；多轮 grill-me 退出后必须形成决策快照，字段只保留已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；执行 / 写文件 / 生成计划前必须先对账，说明本轮执行依据哪条已确认选择，是否触碰被排除方案或待确认项；被排除方案不得复活，待确认项不得脑补；如果当前执行意图和决策快照不一致，必须停止并问 owner，不能靠上下文记忆、模型推测或新一轮自说自话覆盖已确认结论；问询交互中出现红线、底线、不能碰、不可、禁止、必须等高风险字眼时，要重点关注并记录到决策快照或待确认项。",
       "behavior_contract": {
         "pre_execution_gate": "执行 / 写文件 / 生成计划前必须先对账决策快照；不一致时停止并问 owner。",
         "snapshot_must_include": [
@@ -531,8 +546,8 @@
       }
     },
     {
-      "id": "ai-native-should-assetize-grill-me-handoff",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-assetize-grill-me-handoff",
+      "skill": "delivery-collab",
       "query": "参考《如何看待 grill-me（拷问我）这个 Skill？》，强化 AI 工作流：长链路任务实现前用 grill-me 把人的 Taste、偏好、红线和关键分叉显式化，并写入 Shared Context / Issue / PR / hand-off prompt，避免新 Agent 接手时只凭聊天上下文猜。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -542,7 +557,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入 AI Native 的 grill-me 盘问门禁和知识回流视图；读取 agent-loop-engineering、intent-to-production-loop 和 source-map；不新增并列流程，不默认安装外部 grill-me skill，用户显式授权时只安装并保留 grill-me；长链路、结果分叉多、返工成本高、人的 Taste / 偏好 / 红线会影响方案时，先用 grill-me 把隐性判断显式化为可执行决策；每次只问一个问题，给推荐答案；Facts 用代码库、文档、测试或日志自答，Decisions 才问 owner；未达成 shared understanding 不进入执行；退出条件不是问完所有问题，而是形成可写回的决策快照和交接资产；决策快照必须包含已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；写回位置优先是项目 Context / AGENTS / Spec / ADR / fixture / 脚本 / Issue / PR / hand-off prompt；不得只依赖聊天上下文、模型记忆或问询过程；不得把外部文章原文、作者口吻、工具宣传或未验证经验写入长期资产。",
+      "expected_handling": "进入产研协同体系的 grill-me 盘问门禁和知识回流视图；读取 delivery-execution-control、delivery-lifecycle 和 source-map；不新增并列流程，不默认安装外部 grill-me skill，用户显式授权时只安装并保留 grill-me；长链路、结果分叉多、返工成本高、人的 Taste / 偏好 / 红线会影响方案时，先用 grill-me 把隐性判断显式化为可执行决策；每次只问一个问题，给推荐答案；Facts 用代码库、文档、测试或日志自答，Decisions 才问 owner；未达成 shared understanding 不进入执行；退出条件不是问完所有问题，而是形成可写回的决策快照和交接资产；决策快照必须包含已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；写回位置优先是项目 Context / AGENTS / Spec / ADR / fixture / 脚本 / Issue / PR / hand-off prompt；不得只依赖聊天上下文、模型记忆或问询过程；不得把外部文章原文、作者口吻、工具宣传或未验证经验写入长期资产。",
       "behavior_contract": {
         "trigger_gate": "长链路、结果分叉多、返工成本高、人的 Taste / 偏好 / 红线会影响方案时，先进入 grill-me。",
         "assetization_gate": "退出 grill-me 前必须形成可写回的决策快照和交接资产。",
@@ -566,9 +581,9 @@
       }
     },
     {
-      "id": "ai-native-should-install-mattpocock-grill-me-v1-1",
-      "skill": "ai-native-engineering-workflow",
-      "query": "$ai-native-engineering-workflow 把本地旧 grill-me 和 grilling 移除，从 Mattpocock 最新版本重新安装 grill-me，并调整受影响的 AI Native 路由、source-map、fixture 和 validator。",
+      "id": "delivery-collab-should-install-mattpocock-grill-me-v1-1",
+      "skill": "delivery-collab",
+      "query": "$delivery-collab 把本地旧 grill-me 和 grilling 移除，从 Mattpocock 最新版本重新安装 grill-me，并调整受影响的 AI Native 路由、source-map、fixture 和 validator。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -577,11 +592,11 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入 Matt Pocock skills 安装与 AI Native 知识回流路径；读取 superpowers-skill-library 和 source-map，并按 skill-installer 边界执行；核验 GitHub tags 最新发布为 v1.1.0，移除旧本地 `grill-me`，移除旧本地 `grilling` 后只安装 `grill-me`，`grill-me` 是唯一入口，废弃本地 `grilling`；复装或更新后运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh` 或 `scripts/validate-grill-me-install.py` 做安装层校验，未通过不得宣称完成；不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis 或 hooks；同步把可吸收方法更新为 Facts / Decisions 分流、Facts 自查、Decisions 等 owner、未达成 shared understanding 不执行；更新 source-map、superpowers-skill-library、fixture 和 validator，保持 `grill-me` 不变成 AI Native 的并列流程。"
+      "expected_handling": "进入 Matt Pocock skills 安装与产研协同体系知识回流路径；读取 superpowers-skill-library 和 source-map，并按 skill-installer 边界执行；核验 GitHub tags 最新发布为 v1.1.0，移除旧本地 `grill-me`，移除旧本地 `grilling` 后只安装 `grill-me`，`grill-me` 是唯一入口，废弃本地 `grilling`；复装或更新后运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh` 或 `scripts/validate-grill-me-install.py` 做安装层校验，未通过不得宣称完成；不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis 或 hooks；同步把可吸收方法更新为 Facts / Decisions 分流、Facts 自查、Decisions 等 owner、未达成 shared understanding 不执行；更新 source-map、superpowers-skill-library、fixture 和 validator，保持 `grill-me` 不变成产研协同体系的并列流程。"
     },
     {
-      "id": "ai-native-should-wisdom-lens-loop-scheduling",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-wisdom-lens-loop-scheduling",
+      "skill": "delivery-collab",
       "query": "请用华夏经世智慧（老祖宗智慧别名）和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -592,11 +607,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 wisdom-loop-lens，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确华夏经世智慧是正式名，老祖宗智慧是触发别名；它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
+      "expected_handling": "进入华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 decision-calibration，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确华夏经世智慧是正式名，老祖宗智慧是触发别名；它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
     },
     {
-      "id": "ai-native-should-unify-ai-workflows-with-yinyang-principle",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-unify-ai-workflows-with-yinyang-principle",
+      "skill": "delivery-collab",
       "query": "AI Native skill 中各式各样的 AI 工作流，做一轮混一，知其要者，一言而终，本于阴阳，神用无方。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -607,11 +622,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 混一总纲 / Wisdom Lens 取舍校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 agent-loop-engineering、wisdom-loop-lens、code-delivery-closed-loop、verification-review-release 和 source-map；华夏经世智慧作为正式命名，老祖宗智慧作为触发别名；一言以蔽之：以真实交付为体，以证据闭环为用；阴定边界，阳促推进，随事取最小可验证路径；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；体不清则不动，用无证则不收，阴不足则停，阳不足则问；神用无方是按上下文取最小有效组合；不把阴阳、神用无方、华夏经世智慧 / 老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入产研协同体系混一总纲 / Wisdom Lens 取舍校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control、decision-calibration、code-delivery、verification-review-release 和 source-map；华夏经世智慧作为正式命名，老祖宗智慧作为触发别名；一言以蔽之：以真实交付为体，以证据闭环为用；阴定边界，阳促推进，随事取最小可验证路径；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；体不清则不动，用无证则不收，阴不足则停，阳不足则问；神用无方是按上下文取最小有效组合；不把阴阳、神用无方、华夏经世智慧 / 老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
     },
     {
-      "id": "ai-native-should-classic-wisdom-lens-supplement",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-classic-wisdom-lens-supplement",
+      "skill": "delivery-collab",
       "query": "结合周易、道德经、庄子、论语、中医、阴阳五德始终论等老祖宗智慧，对 huaxia-wisdom 和 AI Native Wisdom Lens 做补足：只沉淀工程取舍问题，不做玄学、医学建议或经典考据。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -622,11 +637,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 的经典源补足路径，读取 wisdom-loop-lens 和 source-map；把周易映射为变与不变、太极点和可逆实验，道德经映射为最小干预和少做一步，庄子映射为顺着业务 / 代码 / 组织纹理拆解，论语映射为正名、owner、分寸和复盘，中医 / 黄帝内经映射为症 / 证 / 病机、治未病、阴平阳秘和回归防线，五德终始 / 阴阳五德始终映射为阶段迁移、旧规则退场和新能力接替证据；只输出命中的 1-3 个反偏问题，回写到 Loop Contract、验证矩阵、CR 发现、退场计划或知识回流；不得把传统智慧写成事实证据、医学建议、占卜、宿命、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
+      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 的经典源补足路径，读取 decision-calibration 和 source-map；把周易映射为变与不变、太极点和可逆实验，道德经映射为最小干预和少做一步，庄子映射为顺着业务 / 代码 / 组织纹理拆解，论语映射为正名、owner、分寸和复盘，中医 / 黄帝内经映射为症 / 证 / 病机、治未病、阴平阳秘和回归防线，五德终始 / 阴阳五德始终映射为阶段迁移、旧规则退场和新能力接替证据；只输出命中的 1-3 个反偏问题，回写到 Loop Contract、验证矩阵、CR 发现、退场计划或知识回流；不得把传统智慧写成事实证据、医学建议、占卜、宿命、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
     },
     {
-      "id": "ai-native-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
+      "skill": "delivery-collab",
       "query": "AI 找到一个 bug 并给了补丁，参考 Linus 对 AI bug report 和创可贴式修复的提醒，结合老祖宗的循名责实、庖丁解牛、治未病做门禁：先判断是否有复现证据、根因、同类影响、最小修复、独立验证和下一 owner，不要让 AI patch 自证可合并。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -637,11 +652,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI bug / 补丁门禁，读取 verification-review-release 和 wisdom-loop-lens，必要时读取 source-map；先把 AI bug report 归为待确认、继续根因分析或可进入 CR；要求复现 / 触发条件、源码锚点、根因假设、同类影响范围、最小修复、验证命令 / 结果、残余风险和下一 owner；用循名责实检查 bug 名实，用庖丁解牛检查是否修到根因和同类调用点，用治未病检查回归测试、规则、fixture 或静态检查，用先为不可胜检查失败回退，用无为而治删除无价值补丁；不得把模型自述、工具告警、局部 guard、放宽断言或 AI patch 写成测试通过、CR 结论、合并判断或上线审批。"
+      "expected_handling": "进入 AI bug / 补丁门禁，读取 verification-review-release 和 decision-calibration，必要时读取 source-map；先把 AI bug report 归为待确认、继续根因分析或可进入 CR；要求复现 / 触发条件、源码锚点、根因假设、同类影响范围、最小修复、验证命令 / 结果、残余风险和下一 owner；用循名责实检查 bug 名实，用庖丁解牛检查是否修到根因和同类调用点，用治未病检查回归测试、规则、fixture 或静态检查，用先为不可胜检查失败回退，用无为而治删除无价值补丁；不得把模型自述、工具告警、局部 guard、放宽断言或 AI patch 写成测试通过、CR 结论、合并判断或上线审批。"
     },
     {
-      "id": "ai-native-should-review-ai-coding-process",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-review-ai-coding-process",
+      "skill": "delivery-collab",
       "query": "评审我们现在的 AI 编码流程，看看是不是有 OpenSpec、Superpowers、Harness、权限边界、验证矩阵、CR、发布监控和复盘闭环，给出可落地改造顺序。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -655,8 +670,8 @@
       "expected_handling": "进入流程治理评审路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；按可用性、易用性、完整性和原则一致性给出缺口、风险、改造顺序和验证方式。"
     },
     {
-      "id": "ai-native-should-code-delivery-closed-loop",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-code-delivery",
+      "skill": "delivery-collab",
       "query": "我们落地了 SDD / Spec / Harness，AI 编码确实更快，但 CR、测试、对齐、返工和上线质量没有明显改善。请做 AI 代码交付闭环评审，输出瓶颈、Spec 强度、Harness 独立验证、CR 减负、知识回流、一次通过率/返工率/缺陷密度指标和下一步 owner。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -668,11 +683,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI 代码交付闭环模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 code-delivery-closed-loop，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
+      "expected_handling": "进入 AI 代码交付闭环模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 code-delivery，先判断瓶颈在需求、上下文、Spec 层数、Harness、CR、测试、发布还是知识回流，再输出最小 Spec 强度、Harness 三层闭环、独立验证证据、CR 减负、知识回流和指标；具体测试、代码和源码级 CR 继续分派给资深架构师。"
     },
     {
-      "id": "ai-native-should-progressive-sdd-lattice-harness",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-progressive-sdd-lattice-harness",
+      "skill": "delivery-collab",
       "query": "参考渐进式 Spec Coding / PrismSpec 和 Lattice Harness，重构精简 AI 工作流：不要新增并列流程，按低风险轻量、中风险可评审、高风险 Harness、高不确定 TDD 分级，并用 Context、Verification、Evidence、Drift Check、Loop Learn 证明交付真的做对了。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -683,11 +698,11 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入渐进式 SDD / Lattice Harness 规范化路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 spec-template-practices、code-delivery-closed-loop、agentic-engineering-governance 和 source-map；不新增并列流程，不复制外部命令或目录；按风险输出低风险轻量任务卡、中风险可评审 Spec、高风险 Harness/GSD Spec、高不确定 TDD 优先；用 Intent -> Context -> Spec -> Orchestrator -> Verification -> Evidence / Eval -> Drift Check -> Loop / Learn 收口；强调 Spec 是约束不是文档，生成者可以修复但不能自己宣布通过，准出必须来自测试、静态检查、验收覆盖、漂移检查、只读 Checker 或人工 owner；缺上下文补 Context，缺裁判补 Verification，缺追踪补 Evidence，缺漂移补 drift-check，缺学习补 Loop / Learn。"
+      "expected_handling": "进入渐进式 SDD / Lattice Harness 规范化路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 spec-template-practices、code-delivery、engineering-governance 和 source-map；不新增并列流程，不复制外部命令或目录；按风险输出低风险轻量任务卡、中风险可评审 Spec、高风险 Harness/GSD Spec、高不确定 TDD 优先；用 Intent -> Context -> Spec -> Orchestrator -> Verification -> Evidence / Eval -> Drift Check -> Loop / Learn 收口；强调 Spec 是约束不是文档，生成者可以修复但不能自己宣布通过，准出必须来自测试、静态检查、验收覆盖、漂移检查、只读 Checker 或人工 owner；缺上下文补 Context，缺裁判补 Verification，缺追踪补 Evidence，缺漂移补 drift-check，缺学习补 Loop / Learn。"
     },
     {
-      "id": "ai-native-should-context-system-knowledge-base-governance",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-context-system-knowledge-base-governance",
+      "skill": "delivery-collab",
       "query": "结合渐进式 SDD、Lattice Harness 和老祖宗智慧，给项目落地 context / 知识库治理：先梳理 AGENTS.md、CONTEXT.md、ADR、模块 reference、source-map、测试资产和 update-context，不要一上来就建设外部知识库。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -698,11 +713,11 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入上下文治理视图 / 知识回流视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 code-delivery-closed-loop、wisdom-loop-lens、code-understanding-tools 和 source-map；先落 Context System，再评估知识库工具；按 L0 项目级上下文、L1 模块级上下文、L2 任务级上下文归位，输出 update-context 门禁、权威落点、owner、证据锚点、不得回写内容和停止条件；用名实、阴阳、纹理、知行做取舍校准；外部知识库、向量库、代码图谱或 Understand Anything 只能作为加速器，不替代源码、测试、CR、owner 确认或项目约规。"
+      "expected_handling": "进入上下文治理视图 / 知识回流视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 code-delivery、decision-calibration、code-understanding-tools 和 source-map；先落 Context System，再评估知识库工具；按 L0 项目级上下文、L1 模块级上下文、L2 任务级上下文归位，输出 update-context 门禁、权威落点、owner、证据锚点、不得回写内容和停止条件；用名实、阴阳、纹理、知行做取舍校准；外部知识库、向量库、代码图谱或 Understand Anything 只能作为加速器，不替代源码、测试、CR、owner 确认或项目约规。"
     },
     {
-      "id": "ai-native-should-domain-expert-distillation",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-domain-expert-distillation",
+      "skill": "delivery-collab",
       "query": "AI Native 阅读这些 PRD / 系分 / 产品设计文档，把支付账务域蒸馏成可追溯业务专家和领域专家 Skill Pack，要求规划学习方式和学习路径，整理学习资料，提前学习内容，按业务域或模块分开保存学习结果，输出学习结果知识库规划、owner 追认和 test-prompts 压力测试。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -713,11 +728,11 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release、wisdom-loop-lens 和 source-map；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；按预习定域 -> 逐篇精读 -> 横向建模 -> 三重验证 -> owner 追认 -> 结果归档规划学习路径；输出学习结果知识库规划，先按业务域或模块分区，再在分区内把阅读状态写入逐篇学习台账，正式来源和 owner 追认写入证据地图，术语对象写入术语与对象表，规则和开放问题写入领域知识卡，流程状态写入流程状态与判断规则，接口事件和数据事实写入接口事件与数据，追认问题和 test-prompts 写入待确认与压测；跨域共识、跨域流程和冲突规则放 cross-domain 或根索引；关键结论按 claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file 保存；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；用循名责实、格物致知、知行合一和阴平阳秘校准，不把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
+      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release、decision-calibration 和 source-map；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；按预习定域 -> 逐篇精读 -> 横向建模 -> 三重验证 -> owner 追认 -> 结果归档规划学习路径；输出学习结果知识库规划，先按业务域或模块分区，再在分区内把阅读状态写入逐篇学习台账，正式来源和 owner 追认写入证据地图，术语对象写入术语与对象表，规则和开放问题写入领域知识卡，流程状态写入流程状态与判断规则，接口事件和数据事实写入接口事件与数据，追认问题和 test-prompts 写入待确认与压测；跨域共识、跨域流程和冲突规则放 cross-domain 或根索引；关键结论按 claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file 保存；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；用循名责实、格物致知、知行合一和阴平阳秘校准，不把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
     },
     {
-      "id": "ai-native-should-skill-split-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-skill-split-gate",
+      "skill": "delivery-collab",
       "query": "AI Native 参考 Harness Engineering 和架构真功夫，评估项目下的 skill 是否应该多拆分几个更专项的 skill，再由 AI 流程统一调用；请判断哪些只更新 reference、哪些补 fixture / validator、哪些未来才新建顶层 Skill。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -728,11 +743,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing 和 source-map；先用 V 字判断确认向下职责是否单纯、向上是否可合并复用，再按只更新 reference、补 fixture / validator、补脚本、未来新建顶层 Skill 分级；AI Native 保持编排主入口，产品专家、架构师和代码生成器保持专项 owner，不把流程阶段、工具名、外部文章案例或单次组织实践拆成新 Skill。"
+      "expected_handling": "进入 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing 和 source-map；先用 V 字判断确认向下职责是否单纯、向上是否可合并复用，再按只更新 reference、补 fixture / validator、补脚本、未来新建顶层 Skill 分级；产研协同体系保持编排主入口，产品专家、架构师和代码生成器保持专项 owner，不把流程阶段、工具名、外部文章案例或单次组织实践拆成新 Skill。"
     },
     {
-      "id": "ai-native-should-harness-skill-best-practices-review",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-harness-skill-best-practices-review",
+      "skill": "delivery-collab",
       "query": "参考《Harness 工程之道：Skill 原理与最佳实践》，对项目下的 Skill 做反向验证和最小重构：检查 SKILL.md 是否只是路由器、description 是否触发准确、references/scripts/fixtures 是否按需加载和可验证，并提炼最佳实践原则；不要照搬外部权限字段、运行钩子、用户偏好持久化或自动推送机制。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -743,11 +758,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 的 Skill 工程化反向验证路径，读取 skill-type-owner-routing、source-map 和 verification-review-release；先核对文章已读取正文和不吸收边界，再按触发验证、路由验证、资源验证、交付验证检查每个 Skill；只做最小重构，优先补 source-map、fixture、validator 或 evaluate-skills.py，不把外部权限字段、运行钩子、用户偏好持久化、日志埋点、自动推送或 skill-creator 操作流程写成本仓库默认能力。"
+      "expected_handling": "进入产研协同体系的 Skill 工程化反向验证路径，读取 skill-type-owner-routing、source-map 和 verification-review-release；先核对文章已读取正文和不吸收边界，再按触发验证、路由验证、资源验证、交付验证检查每个 Skill；只做最小重构，优先补 source-map、fixture、validator 或 evaluate-skills.py，不把外部权限字段、运行钩子、用户偏好持久化、日志埋点、自动推送或 skill-creator 操作流程写成本仓库默认能力。"
     },
     {
-      "id": "ai-native-should-official-skill-methodology-with-wisdom-lens",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-official-skill-methodology-with-wisdom-lens",
+      "skill": "delivery-collab",
       "query": "参考 Anthropic 官方 Lessons from building Claude Code: How we use skills 和 Perplexity Agent Skills 文章，结合老祖宗的循名责实、庖丁解牛、治未病，推进项目下 Skill 治理：description 做路由、gotchas 优先、重复动作脚本化、先补正负触发 fixture，再决定是否拆 Skill。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -758,11 +773,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI Native 的 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing、wisdom-loop-lens、source-map 和 verification-review-release；先核对官方 Anthropic 是否已读正文、Perplexity 是否已读正文或仅为待核验线索；用循名责实检查 name / description / SKILL.md / reference 是否名实相符，用庖丁解牛检查内容是否放在 SKILL.md、references、scripts 或 fixtures 的最小正确层级，用治未病检查是否已有正向触发、邻近 Skill 负例和不吸收边界；只补最小 reference、fixture、validator 或 source-map，不把未读取正文的来源、Claude hooks、marketplace、持久 memory、外部工具或组织实践写成本仓库默认能力。"
+      "expected_handling": "进入产研协同体系的 Skill 类型与 owner 路由评估，读取 skill-type-owner-routing、decision-calibration、source-map 和 verification-review-release；先核对官方 Anthropic 是否已读正文、Perplexity 是否已读正文或仅为待核验线索；用循名责实检查 name / description / SKILL.md / reference 是否名实相符，用庖丁解牛检查内容是否放在 SKILL.md、references、scripts 或 fixtures 的最小正确层级，用治未病检查是否已有正向触发、邻近 Skill 负例和不吸收边界；只补最小 reference、fixture、validator 或 source-map，不把未读取正文的来源、Claude hooks、marketplace、持久 memory、外部工具或组织实践写成本仓库默认能力。"
     },
     {
-      "id": "ai-native-should-spec-template-practices",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-spec-template-practices",
+      "skill": "delivery-collab",
       "query": "落地 Spec 模板最佳实践：我们要把产品上下文和系分交给 AI 编码，请先区分 PRD / SDD / 实现 Spec 三层是否齐备，再输出 Spec 强度、Delta Spec、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖、漂移检查、风险自查和轻重切换，不要复制外部 ASD/SSD Harness 目录或脚本。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -776,8 +791,8 @@
       "expected_handling": "进入 Spec 模板模式，读取 spec-template-practices，先区分 PRD / SDD / 实现 Spec 三层边界，说明已具备、缺失和不可让 AI 猜的层；输出轻量任务卡/可评审 Spec/Harness-GSD Spec/CAD 候选 Spec/人工主导的强度建议、Delta Spec 的 ADDED / MODIFIED / REMOVED 影响、五段式骨架、AC 编号与 Given-When-Then、测试映射、spec-lint、AC 覆盖、漂移检查、风险自查、知识回流和停止条件；把实现 Spec 作为实现和 CR 检查清单，偏差先判断是代码偏离、Spec 缺失还是需求变化，再决定修代码、更新 Spec 或走影响识别；不复制外部 ASD/SSD Harness 目录、命令或脚本。"
     },
     {
-      "id": "ai-native-should-production-sdd-source-of-truth",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-production-sdd-source-of-truth",
+      "skill": "delivery-collab",
       "query": "规范驱动开发 SDD：我们要让 AI 写生产级代码，请先检查 Spec 是否能作为事实来源，是否有结构化契约、正反例、边界/错误处理、测试计划和安全/测试/代码质量/性能/发布就绪五支柱验证；失败时要回写 Spec 再重试。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -788,11 +803,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 SDD 生产代码模式，读取 spec-template-practices、code-delivery-closed-loop 和 verification-review-release；先检查 Spec 是否清晰、完整、上下文化、具体、可测试，并能作为事实来源；补结构化契约、输入输出示例、正反例、边界/错误处理、测试计划和五支柱验证；AI 生成失败时按复现失败、检查 Spec 清晰度、分类 AI 错误模式、回写失败场景到 Spec/AC/测试、重新生成或实现、独立验证推进，设置重试上限并升级人工 owner。"
+      "expected_handling": "进入 SDD 生产代码模式，读取 spec-template-practices、code-delivery 和 verification-review-release；先检查 Spec 是否清晰、完整、上下文化、具体、可测试，并能作为事实来源；补结构化契约、输入输出示例、正反例、边界/错误处理、测试计划和五支柱验证；AI 生成失败时按复现失败、检查 Spec 清晰度、分类 AI 错误模式、回写失败场景到 Spec/AC/测试、重新生成或实现、独立验证推进，设置重试上限并升级人工 owner。"
     },
     {
-      "id": "ai-native-should-knowledge-expression-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-knowledge-expression-gate",
+      "skill": "delivery-collab",
       "query": "进入知识表达门禁：这个需求现在只有老板一句话、几篇文章和一个 AI 草稿，请判断是否足以让 AI 执行，输出目标、对象、规则、约束、验收样例、反馈源和缺口 owner；不要直接进 GSD/CAD/Loop。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -806,8 +821,8 @@
       "expected_handling": "进入知识表达 / 意图可执行门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；输出 Knowledge-to-Execution Card，覆盖原始输入、业务目标、业务对象、状态/生命周期、规则/策略、约束/非目标、验收样例、反馈源、需要保留的领域知识、待确认缺口和下一 owner；缺少对象、规则、验收样例或反馈源时，不进入执行 Loop、代码修改或执行授权。"
     },
     {
-      "id": "ai-native-should-nonstandard-problem-mode",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-nonstandard-problem-mode",
+      "skill": "delivery-collab",
       "query": "进入非标问题模式：客户和运营都说这个能力必须做，但没人能说清标准答案，请先定义问题主体、影响面、已知事实、关键不确定性、研究路径、候选方案、最小可逆实验、决策标准和停止条件。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -821,8 +836,8 @@
       "expected_handling": "进入非标问题模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；输出非标问题处理包，覆盖问题主体、影响面、已知事实、关键不确定性、现有替代方案/绕行方式、研究/证据路径、候选方案、最小可逆实验、决策标准、owner/下一步和停止条件；产品侧缺口路由产品架构专家，工程侧缺口路由资深架构师，不能把无标准答案问题拆成机械执行清单。"
     },
     {
-      "id": "ai-native-should-practical-coding-loop",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-practical-coding-loop",
+      "skill": "delivery-collab",
       "query": "进入实际项目编码 Loop：这个 GSD Wave 里有一个明确 Task ID，需要在真实代码库持续推进，请给 Coding Loop Contract，包含写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -833,11 +848,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入实际项目编码 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
+      "expected_handling": "进入实际项目编码 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
     },
     {
-      "id": "ai-native-should-feedback-loop-verification-cluster",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-feedback-loop-verification-cluster",
+      "skill": "delivery-collab",
       "query": "AI Coding 已经能快速生成和修复代码，但测试通过和覆盖率提升并不能证明系统没有变坏。请给 AI Native Loop 增加反馈闭环成熟度门禁，围绕支付幂等高风险业务不变量建立验证簇，说明 L2/L3/L4/L5、生产证据、独立 Checker、预算和停止条件。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -849,11 +864,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入反馈闭环成熟度 / 验证簇准入模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering、verification-review-release 和架构师 testing.md，先判断当前是 L2/L3/L4/L5 候选，强调测试通过、覆盖率、bug 下降只是证据不是事实；输出 Verification Cluster Gate，覆盖高风险业务不变量、验证簇 ID、场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度、来源、独立 Checker、预算/分层执行、状态回写和停止条件；L5 只能标为目标架构，不能写成当前已具备能力。"
+      "expected_handling": "进入反馈闭环成熟度 / 验证簇准入模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control、verification-review-release 和架构师 testing.md，先判断当前是 L2/L3/L4/L5 候选，强调测试通过、覆盖率、bug 下降只是证据不是事实；输出 Verification Cluster Gate，覆盖高风险业务不变量、验证簇 ID、场景测试、属性/变形测试、历史回归、生产重放样本、有限变异/对抗检查、置信度、来源、独立 Checker、预算/分层执行、状态回写和停止条件；L5 只能标为目标架构，不能写成当前已具备能力。"
     },
     {
-      "id": "ai-native-should-architecture-entropy-loop",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-architecture-entropy-loop",
+      "skill": "delivery-collab",
       "query": "进入架构排熵 Loop：系统长期只加不删，出现承重 bug、废弃 API、循环依赖、概念膨胀、治理规则失效和局部性丧失。请设计持续巡检、状态回写、低风险修复、Maker/Checker、人工 triage、守卫自检和停止条件，不要把能扫描当成能自动删除。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -864,11 +879,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入架构排熵 Loop / 腐朽门禁模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 agent-loop-engineering，输出 Architecture Entropy Card，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、可执行约束 / 可追溯理由链、时间边界三问、复杂度棘轮、熵增仪表、理由保鲜、扫描输入、状态回写位置、低风险动作、Maker / Checker、人工 triage、架构师路由和停止条件；强调排熵 Loop 只能自动化发现、低风险收敛和证据回写，不把能自动扫描当成可以自动删除、迁移、重写或上线。"
+      "expected_handling": "进入架构排熵 Loop / 腐朽门禁模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，输出 Architecture Entropy Card，覆盖可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、可执行约束 / 可追溯理由链、时间边界三问、复杂度棘轮、熵增仪表、理由保鲜、扫描输入、状态回写位置、低风险动作、Maker / Checker、人工 triage、架构师路由和停止条件；强调排熵 Loop 只能自动化发现、低风险收敛和证据回写，不把能自动扫描当成可以自动删除、迁移、重写或上线。"
     },
     {
-      "id": "ai-native-should-quality-test-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-quality-test-gate",
+      "skill": "delivery-collab",
       "query": "做质量门禁：输出测试矩阵、验证顺序、CR 前置条件、失败回退和架构师 testing.md 调用点。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -882,8 +897,8 @@
       "expected_handling": "进入质量门禁模式，只编排测试矩阵、验证顺序、CR 前置条件、失败回退、残余风险交接和架构师 testing.md 调用点，不新增独立测试专家 Skill。"
     },
     {
-      "id": "ai-native-should-change-understanding-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-change-understanding-gate",
+      "skill": "delivery-collab",
       "query": "做理解门禁：把这次 diff / 重构计划整理成入口路径、影响模块、调用关系、源码锚点、验证证据和 CR 交接条件。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -897,8 +912,8 @@
       "expected_handling": "进入理解门禁模式，只编排业务意图、入口路径、影响模块、关键调用关系、边界变化、源码锚点、可视化辅助、验证证据、owner 复述、残余风险和资深架构师源码级 CR 交接条件，不默认引入外部可视化工具。"
     },
     {
-      "id": "ai-native-should-codebase-understanding-brief",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-codebase-understanding-brief",
+      "skill": "delivery-collab",
       "query": "最近 Google Gemini CLI 和 Microsoft AgentRC 这类工具能快速阅读代码库、生成上下文和总结结论，帮我把它们抽象进 AI Native 研发流程，设计代码库理解结论包和进入架构师 CR 的门禁，但不要默认安装工具。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -912,8 +927,8 @@
       "expected_handling": "进入代码库理解门禁模式，把 AI 快速阅读和上下文工程工具抽象为可选辅助，只编排入口路径、关键模块、源码锚点、事实/推断、置信度、验证证据、上下文漂移检查和架构师 CR 交接条件，不默认安装或依赖外部工具。"
     },
     {
-      "id": "ai-native-should-tool-install-admission",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-tool-install-admission",
+      "skill": "delivery-collab",
       "query": "评估 Gemini CLI / AgentRC：列来源、安装/认证/联网/写入边界、只读范围、隐私风险、人工替代路径和 CR 条件。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -927,8 +942,8 @@
       "expected_handling": "进入工具准入模式，先核对官方来源、安装方式、认证/联网/写入边界、只读范围、隐私风险、人工替代路径和工具输出交接格式；不得直接安装、登录、联网、写配置或把工具结论当源码事实。"
     },
     {
-      "id": "ai-native-should-superpowers-skills-library",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-superpowers-skills-library",
+      "skill": "delivery-collab",
       "query": "下载 superpowers skills，并加入到 AI Native 的调度流程，说明哪些外部 skill 可参考、是否安装插件、是否运行脚本、Git/worktree/subagent 边界和验证门禁。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -939,12 +954,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Superpowers 调度模式，先审查来源、许可证、下载范围和供应链边界，再把 brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting/receiving-code-review、systematic-debugging、verification-before-completion 等外部 skill 映射到 AI Native 阶段；不得默认安装插件、运行脚本、使用 hooks、创建 worktree、执行 Git 推送或启动 subagent，必须列出只读/写入/Git/联网/subagent 边界、验证门禁和不采用的外部默认流程。"
+      "expected_handling": "进入 Superpowers 调度模式，先审查来源、许可证、下载范围和供应链边界，再把 brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting/receiving-code-review、systematic-debugging、verification-before-completion 等外部 skill 映射到产研协同体系阶段；不得默认安装插件、运行脚本、使用 hooks、创建 worktree、执行 Git 推送或启动 subagent，必须列出只读/写入/Git/联网/subagent 边界、验证门禁和不采用的外部默认流程。"
     },
     {
-      "id": "ai-native-should-layer-ai-coding-frameworks",
-      "skill": "ai-native-engineering-workflow",
-      "query": "参考 Superpowers、GSD、GStack、Trellis 这类 AI 编码框架，帮我判断应该怎么纳入 AI Native Engineering Loop，不要新增一堆流程或默认安装工具。",
+      "id": "delivery-collab-should-layer-ai-coding-frameworks",
+      "skill": "delivery-collab",
+      "query": "参考 Superpowers、GSD、GStack、Trellis 这类 AI 编码框架，帮我判断应该怎么纳入 产研协同体系，不要新增一堆流程或默认安装工具。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -954,12 +969,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI 编码框架分层映射路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 superpowers-skill-library、agent-loop-engineering、code-delivery-closed-loop 和 source-map；把 Superpowers 归为方法纪律层，GSD 归为上下文 / Spec / 状态层，GStack 归为角色链审查层，Trellis 归为仓库级记忆 / 任务树层；由 AI Native 作为编排者，不新增并列流程、不要求用户在工具间选择；GStack 的 CEO / Design / Eng / Review / QA / Security / Ship 只映射到产品专家、UED、架构师、源码质量评审、质量门禁、安全发布 owner 等既有角色视角；Trellis 只吸收仓库级状态载体和 Finish 回流思想，不默认创建 .trellis、不安装 npm、不运行脚本、不写入 Git、不替代专项 Skill、测试、CR、发布审批或授权。"
+      "expected_handling": "进入 AI 编码框架分层映射路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 superpowers-skill-library、delivery-execution-control、code-delivery 和 source-map；把 Superpowers 归为方法纪律层，GSD 归为上下文 / Spec / 状态层，GStack 归为角色链审查层，Trellis 归为仓库级记忆 / 任务树层；由产研协同体系作为编排者，不新增并列流程、不要求用户在工具间选择；GStack 的 CEO / Design / Eng / Review / QA / Security / Ship 只映射到产品专家、UED、架构师、源码质量评审、质量门禁、安全发布 owner 等既有角色视角；Trellis 只吸收仓库级状态载体和 Finish 回流思想，不默认创建 .trellis、不安装 npm、不运行脚本、不写入 Git、不替代专项 Skill、测试、CR、发布审批或授权。"
     },
     {
-      "id": "ai-native-should-map-gstack-role-chain-template",
-      "skill": "ai-native-engineering-workflow",
-      "query": "参考 GStack 模板流程优化 AI Native：/office-hours 先做产品思考，/plan-ceo-review 收敛 MVP，/plan-eng-review 做工程评审，/plan-design-review 做 UI 设计评审，然后开发、/review、/qa、/ship，要求映射到角色协作 Loop，不新增外部命令菜单。",
+      "id": "delivery-collab-should-map-gstack-role-chain-template",
+      "skill": "delivery-collab",
+      "query": "参考 GStack 模板流程优化 AI Native：/office-hours 先做产品思考，/plan-ceo-review 收敛 MVP，/plan-eng-review 做工程评审，/plan-design-review 做 UI 设计评审，然后开发、/review、/qa、/ship，要求映射到产研协同，不新增外部命令菜单。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -969,11 +984,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 GStack 角色链模板映射路径，读取 intent-to-production-loop、product-to-engineering-lifecycle、prd-system-design-review、superpowers-skill-library、verification-review-release 和 source-map；把 /office-hours 映射为产品思考，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 编码实现，把 /review 映射为源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为发布准出；命令名只作触发别名，不作为外部工具、默认命令菜单或新流程；产品思考回产品架构专家，工程评审、TDD、编码和源码 CR 回资深架构师，QA 由 AI Native 质量门禁编排并路由架构师 testing 能力，发布准出保留发布 owner；Git、PR、merge、部署和生产操作必须显式授权。"
+      "expected_handling": "进入 GStack 角色链模板映射路径，读取 delivery-lifecycle、product-to-engineering-lifecycle、prd-system-design-review、superpowers-skill-library、verification-review-release 和 source-map；把 /office-hours 映射为产品思考，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 编码实现，把 /review 映射为源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为发布准出；命令名只作触发别名，不作为外部工具、默认命令菜单或新流程；产品思考回产品架构专家，工程评审、TDD、编码和源码 CR 回资深架构师，QA 由产研协同体系质量门禁编排并路由架构师 testing 能力，发布准出保留发布 owner；Git、PR、merge、部署和生产操作必须显式授权。"
     },
     {
-      "id": "ai-native-should-gstack-production-delivery-review",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-gstack-production-delivery-review",
+      "skill": "delivery-collab",
       "query": "结合 GStack 流程：/office-hours 六个 forcing questions、/plan-ceo-review 收敛 MVP、/plan-eng-review、/plan-design-review、开发、/review、/qa、/ship，完善 AI Native 流程，并整理生产交付审查标准。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -984,11 +999,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 GStack 角色链 + 生产交付审查路径，读取 intent-to-production-loop、verification-review-release、code-delivery-closed-loop、superpowers-skill-library 和 source-map；把 /office-hours 映射为产品思考 forcing questions，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 最小实现，把 /review 映射为独立源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为生产交付审查 / 发布准出；输出生产交付审查卡，覆盖产品价值、范围收敛、工程设计、交互可用、实现证据、独立 CR、QA 验证、发布观测、回滚 / 人工接管、残余风险和下一 owner；不新增命令菜单，不把测试通过、PR 数、Agent 自述、Git/PR/merge/部署或上线审批写成自动准出。"
+      "expected_handling": "进入 GStack 角色链 + 生产交付审查路径，读取 delivery-lifecycle、verification-review-release、code-delivery、superpowers-skill-library 和 source-map；把 /office-hours 映射为产品思考 forcing questions，把 /plan-ceo-review 映射为范围收敛，把 /plan-eng-review 映射为工程评审，把 /plan-design-review 映射为交互评审，把开发映射为 TDD / 最小实现，把 /review 映射为独立源码 CR，把 /qa 映射为 QA 验证，把 /ship 映射为生产交付审查 / 发布准出；输出生产交付审查卡，覆盖产品价值、范围收敛、工程设计、交互可用、实现证据、独立 CR、QA 验证、发布观测、回滚 / 人工接管、残余风险和下一 owner；不新增命令菜单，不把测试通过、PR 数、Agent 自述、Git/PR/merge/部署或上线审批写成自动准出。"
     },
     {
-      "id": "ai-native-should-production-effectiveness-gate",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-production-effectiveness-gate",
+      "skill": "delivery-collab",
       "query": "参考代码写完了谁负责确认写对了、预发环境是否 OK 这篇文章，增强角色 Loop 的生产交付验证：代码变更要做版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认和工单回写；实际业务场景可通过 owner 问询、项目材料、公开资料、业内共识或行业标准规范确认，避免只是测试通过或页面看似可用。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -999,11 +1014,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入验证发布视图 / 生产生效验证门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；停止条件包括缺少版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认、工单 / Goal 回写或高风险 owner 确认。读取 intent-to-production-loop、verification-review-release、code-delivery-closed-loop 和 source-map；区分代码变更、配置 / 开关 / prompt 变更、文档 / Skill-only 变更和高风险变更；代码变更按版本回读 -> 配置回读 -> 冒烟验证 -> 业务场景模拟验收 -> 观测确认 -> 工单 / Goal 回写形成生产生效验证卡；业务场景优先来自 PRD、验收种子、客户反馈、工单、历史事故、owner 问询和项目材料，公开资料、业内共识或行业标准规范只能作为补偿场景来源并标注来源、读取日期和适用边界；配置变更可跳过部署但不能跳过配置回读、冒烟、业务场景模拟验收和观测；文档或 Skill-only 变更用仓库校验、diff check、安装态同步或人工审查作为生效证据；资金、权限、安全、公共契约或生产数据变更必须有 owner 人工确认；不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入验证发布视图 / 生产生效验证门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；停止条件包括缺少版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认、工单 / Goal 回写或高风险 owner 确认。读取 delivery-lifecycle、verification-review-release、code-delivery 和 source-map；区分代码变更、配置 / 开关 / prompt 变更、文档 / Skill-only 变更和高风险变更；代码变更按版本回读 -> 配置回读 -> 冒烟验证 -> 业务场景模拟验收 -> 观测确认 -> 工单 / Goal 回写形成生产生效验证卡；业务场景优先来自 PRD、验收种子、客户反馈、工单、历史事故、owner 问询和项目材料，公开资料、业内共识或行业标准规范只能作为补偿场景来源并标注来源、读取日期和适用边界；配置变更可跳过部署但不能跳过配置回读、冒烟、业务场景模拟验收和观测；文档或 Skill-only 变更用仓库校验、diff check、安装态同步或人工审查作为生效证据；资金、权限、安全、公共契约或生产数据变更必须有 owner 人工确认；不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批。"
     },
     {
-      "id": "ai-native-should-unify-production-ready-workflow-with-wisdom-lens",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-unify-production-ready-workflow-with-wisdom-lens",
+      "skill": "delivery-collab",
       "query": "如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、Goal、Harness 和工具链收成一个入口、一个契约、一个准出。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -1014,11 +1029,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery-closed-loop、wisdom-loop-lens、intent-to-production-loop、agent-loop-engineering、verification-review-release 和 source-map；把多套模式收敛为一个入口、一个契约、一个准出：角色协作 Loop 作为入口，Engineering Loop Contract 承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；用华夏经世智慧校准取舍，用阴阳平衡校准推进与边界，用体用合一校准目标与工具，用循名责实校准完成名实；不新增流程名、命令菜单、外部工具依赖，不把华夏经世智慧 / 老祖宗智慧替代事实、测试、CR、授权或上线审批。"
+      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery、decision-calibration、delivery-lifecycle、delivery-execution-control、verification-review-release 和 source-map；把多套模式收敛为一个入口、一个契约、一个准出：产研协同体系作为入口，交付契约承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；用华夏经世智慧校准取舍，用阴阳平衡校准推进与边界，用体用合一校准目标与工具，用循名责实校准完成名实；不新增流程名、命令菜单、外部工具依赖，不把华夏经世智慧 / 老祖宗智慧替代事实、测试、CR、授权或上线审批。"
     },
     {
-      "id": "ai-native-should-design-code-alignment",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-design-code-alignment",
+      "skill": "delivery-collab",
       "query": "做设计-代码对齐：对齐 OpenSpec / 系分设计与当前代码，输出设计条款、代码入口、实现状态、偏差和测试证据。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -1032,8 +1047,8 @@
       "expected_handling": "进入设计-代码对齐入口，输出设计条款到源码入口、实现状态、偏差、测试证据、事实/推断和下一步 owner；AI 代码阅读工具只作为可选辅助，源码判断和 CR 继续交给资深架构师。"
     },
     {
-      "id": "ai-native-should-fact-boundary-check",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-fact-boundary-check",
+      "skill": "delivery-collab",
       "query": "做事实边界检查：这份 AI 生成的 GSD/CAD 流程里有不少推测和额外实现建议，请区分事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补或超出用户目标的实现扩张。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -1044,11 +1059,11 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入角色协作 Loop 的只读理解视图事实边界检查路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
+      "expected_handling": "进入产研协同体系的只读理解视图事实边界检查路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；把内容拆成事实、推断、待确认和范围外不做，禁止无根据猜测、模型脑补、外部文章观点、工具总结或超出用户目标的实现扩张进入 GSD Wave、Atomic Task、CAD 候选、实现建议或授权缺口。"
     },
     {
-      "id": "ai-native-should-route-prd-work",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-route-prd-work",
+      "skill": "delivery-collab",
       "query": "用 AI Native 研发流程编排先判断这批客户访谈和运营后台截图能否进入 PRD，输出成熟度、owner、交接物和停止条件，再分派给产品架构专家写正文。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -1061,8 +1076,8 @@
       "expected_handling": "进入流程入口分派路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；只判断产品输入成熟度和产品侧交接物，再把 PRD 正文分派给产品架构专家。"
     },
     {
-      "id": "ai-native-should-route-cr-work",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-route-cr-work",
+      "skill": "delivery-collab",
       "query": "用 AI Native 研发流程编排先判断这次 Spring Boot Service 代码 CR 是否需要 OpenSpec、Harness、验证矩阵和发布闭环，再交给资深架构师执行 CR。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -1075,8 +1090,8 @@
       "expected_handling": "进入工程流程分派路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；只判断工程输入、验证矩阵、CR/发布闭环和 AI 工具边界，再把具体代码 CR 分派给资深架构师。"
     },
     {
-      "id": "ai-native-should-route-codegen-work",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-route-codegen-work",
+      "skill": "delivery-collab",
       "query": "用 AI Native 研发流程编排先评估这段 CREATE TABLE 是否具备生成 Java Service 配套代码的结构化输入、写入范围和覆盖风险，再分派给 java-service-code-generator。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -1088,8 +1103,8 @@
       "expected_handling": "进入代码生成前置编排路径，只判断结构化输入、写入范围、覆盖风险和人工确认点，再把实际生成分派给 java-service-code-generator。"
     },
     {
-      "id": "ai-native-should-admit-open-code-review",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-admit-open-code-review",
+      "skill": "delivery-collab",
       "query": "用 AI Native 评估并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，同时和架构师编码约规、Wind 项目约规协作，不要替代 TDD、源码级 CR 或自动修复授权。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -1102,8 +1117,8 @@
       "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Wind opt-in 项目把 Wind 约规作为 .opencodereview/rule.json 或 --background 规则输入；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
     },
     {
-      "id": "ai-native-should-source-quality-review-loop",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-should-source-quality-review-loop",
+      "skill": "delivery-collab",
       "query": "参考 Code Review 与技术债治理文章，用 AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程，并把好的 CR 结论和业务知识回流到项目上下文。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -1113,12 +1128,12 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools、wisdom-loop-lens 和 source-map；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Wind opt-in 项目读取 wind-project-coding-conventions；源码级裁决回资深架构师的 coding-review-deep-dive.md、coding-standards.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
+      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools、decision-calibration 和 source-map；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Wind opt-in 项目读取 wind-project-coding-conventions；源码级裁决回资深架构师的 coding-review-deep-dive.md、coding-standards.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
     },
     {
-      "id": "ai-native-should-route-wind-agents-init",
-      "skill": "ai-native-engineering-workflow",
-      "query": "用 AI Native Engineering Loop 给一个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续产品专家、资深架构师、Wind 约规和代码生成器按项目规则协作。",
+      "id": "delivery-collab-should-route-wind-agents-init",
+      "skill": "delivery-collab",
+      "query": "用 产研协同体系给一个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续产品专家、资深架构师、Wind 约规和代码生成器按项目规则协作。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1127,11 +1142,11 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入项目约规入口编排路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；AI Native 只判断项目事实待确认项、owner、授权边界和协作路由，再分派 wind-project-coding-conventions 读取 wind-project-agents-template.md 输出项目 AGENTS.md 草案；源码级设计、TDD、CR 和验证继续交给资深架构师，不猜测构建命令、生产流程、模块事实或 Git 授权。"
+      "expected_handling": "进入项目约规入口编排路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；产研协同体系只判断项目事实待确认项、owner、授权边界和协作路由，再分派 wind-project-coding-conventions 读取 wind-project-agents-template.md 输出项目 AGENTS.md 草案；源码级设计、TDD、CR 和验证继续交给资深架构师，不猜测构建命令、生产流程、模块事实或 Git 授权。"
     },
     {
-      "id": "ai-native-negative-prd-from-prototype",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-negative-prd-from-prototype",
+      "skill": "delivery-collab",
       "query": "根据这批客户访谈、运营后台截图和交互稿写一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准。",
       "should_trigger": false,
       "preferred_skill": "product-architecture-expert",
@@ -1143,8 +1158,8 @@
       "negative_reason": "目标产物是 PRD 和产品语义，不是产品到研发编码流程编排，应交给产品架构专家。"
     },
     {
-      "id": "ai-native-negative-code-review",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-negative-code-review",
+      "skill": "delivery-collab",
       "query": "做一轮代码 CR：这个 Spring Boot Service 改了事务边界、缓存一致性和异常处理，帮我按严重级别列问题并补测试建议。",
       "should_trigger": false,
       "preferred_skill": "senior-software-architect",
@@ -1156,8 +1171,8 @@
       "negative_reason": "目标是具体代码评审和测试建议，应交给资深架构师，而不是流程编排 Skill。"
     },
     {
-      "id": "ai-native-negative-read-single-code-file",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-negative-read-single-code-file",
+      "skill": "delivery-collab",
       "query": "阅读并分析这个 Service 类的实现逻辑，指出潜在 Bug 并补测试。",
       "should_trigger": false,
       "preferred_skill": "senior-software-architect",
@@ -1166,11 +1181,11 @@
       "dimensions": [
         "trigger_accuracy"
       ],
-      "negative_reason": "目标是具体源码阅读、Bug 分析和补测试，应交给资深架构师；除非用户要求代码库级理解或工具准入，否则不触发 AI Native 和 Gemini/AgentRC。"
+      "negative_reason": "目标是具体源码阅读、Bug 分析和补测试，应交给资深架构师；除非用户要求代码库级理解或工具准入，否则不触发产研协同体系和 Gemini/AgentRC。"
     },
     {
-      "id": "ai-native-negative-structured-codegen",
-      "skill": "ai-native-engineering-workflow",
+      "id": "delivery-collab-negative-structured-codegen",
+      "skill": "delivery-collab",
       "query": "根据这段 CREATE TABLE 生成 Wind/Nobe 风格 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl，先输出到评审目录。",
       "should_trigger": false,
       "preferred_skill": "java-service-code-generator",
@@ -1180,6 +1195,50 @@
         "trigger_accuracy"
       ],
       "negative_reason": "这是结构化输入到 Java Service 脚手架生成任务，应交给 java-service-code-generator。"
+    },
+    {
+      "id": "delivery-collab-negative-business-architecture-only",
+      "skill": "delivery-collab",
+      "query": "只做跨境支付业务架构规划：输出价值流、业务能力地图、核心对象、能力到项目和系统的映射，不需要跨角色交付编排。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是业务架构正文，不需要跨角色协同，应直接交给产品架构专家。"
+    },
+    {
+      "id": "delivery-collab-negative-system-design-only",
+      "skill": "delivery-collab",
+      "query": "为订单服务写一份系统分析设计，包含模块边界、接口、状态机、事务、异常、测试策略和发布风险，不需要流程编排。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是具体系统设计，应直接交给资深架构师。"
+    },
+    {
+      "id": "delivery-collab-negative-write-tests-only",
+      "skill": "delivery-collab",
+      "query": "给这个资金 Service 补单元测试和集成测试，覆盖幂等、事务回滚、并发冲突和异常分支，不需要规划协作流程。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是测试设计和实现，应直接交给资深架构师。"
+    },
+    {
+      "id": "delivery-collab-negative-production-incident-only",
+      "skill": "delivery-collab",
+      "query": "线上支付回调大量超时，请根据日志和调用链定位根因，给出止血、修复、回归测试和生产变更方案，不需要跨角色流程设计。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "目标是生产故障诊断和修复，应直接交给资深架构师。"
     },
     {
       "id": "senior-should-code-review-service-transaction",
@@ -1539,7 +1598,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入产品判断动作链路径，读取 product-judgment-action-chain；输出产品判断动作链卡，覆盖原始输入、当前阶段、已知事实 / 证据、合理推断、待确认项、范围外不做、判断动作、取舍结论、不做项 / 延后项、下一产物、owner、验收 / 停止条件和交接路由；按缺口再转产品洞察、Backlog、PRD、合议评审或 AI Native 前置门禁；不安装、复制或照搬外部 pm-skills，不把路线图愿望清单当产品判断。"
+      "expected_handling": "进入产品判断动作链路径，读取 product-judgment-action-chain；输出产品判断动作链卡，覆盖原始输入、当前阶段、已知事实 / 证据、合理推断、待确认项、范围外不做、判断动作、取舍结论、不做项 / 延后项、下一产物、owner、验收 / 停止条件和交接路由；按缺口再转产品洞察、Backlog、PRD、合议评审或产研协同体系前置门禁；不安装、复制或照搬外部 pm-skills，不把路线图愿望清单当产品判断。"
     },
     {
       "id": "product-should-nonstandard-problem-solution",
@@ -1554,7 +1613,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入非标产品问题与解决方案责任路径，读取 product-architecture-methodology 的非标问题小节，输出非标产品问题卡，覆盖原始诉求、真实问题、影响面、失败成本、当前替代方式、目标用户/被影响主体、业务约束、解决方案假设、验收种子、需要 UED 重点验证的交互/状态、待确认项、下一步验证动作和进入 PRD/Backlog/AI Native/非目标结论；产品专家提供解决方案假设和验收，不把老板/销售/客户/运营诉求原样转发给研发。"
+      "expected_handling": "进入非标产品问题与解决方案责任路径，读取 product-architecture-methodology 的非标问题小节，输出非标产品问题卡，覆盖原始诉求、真实问题、影响面、失败成本、当前替代方式、目标用户/被影响主体、业务约束、解决方案假设、验收种子、需要 UED 重点验证的交互/状态、待确认项、下一步验证动作和进入 PRD/Backlog/产研协同体系/非目标结论；产品专家提供解决方案假设和验收，不把老板/销售/客户/运营诉求原样转发给研发。"
     },
     {
       "id": "product-should-concept-lifecycle-retirement",
@@ -1667,9 +1726,35 @@
       "expected_handling": "进入项目编码约规归位检查；确认本地 AGENTS.md opt-in 后读取 Wind 主规则和必要示例，输出模型、接口、事件、Web 展示模型、core 与 infrastructure 的归位判断，并标明需要架构师源码级 CR 的部分。"
     },
     {
+      "id": "wind-project-coding-conventions-should-reject-speculative-locking",
+      "skill": "wind-project-coding-conventions",
+      "query": "这个项目已 opt-in Wind 项目编码约规。新的基础服务现在只是普通单表写入，但为了未来可能出现的并发，准备先加本地锁、分布式锁和 LocksWrapper，请评审。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "进入 Wind 基础服务并发与锁边界检查；先按业务不变量区分唯一性、带前置状态的状态流转和一般读改写，分别优先使用表内业务 UK 或联合 UK、原子条件更新和乐观锁；事务只保证本地操作的原子提交和回滚，普通 SELECT -> Java 校验 -> UPDATE 即使使用 @Transactional 也不能单独防止丢失更新；不得仅因未来可能并发预埋本地锁、分布式锁或锁 Wrapper；只有存在明确并发入口和冲突资源，上述机制不足以保护已确认业务不变量，并有失败场景、测试或生产证据时才引入锁；确需分布式锁时只使用已验证持有者身份、安全释放、租约续期或有界执行语义的平台原语，并说明超时、失锁和 fencing/version 防护；没有这些证据时删除预埋锁，不复制固定租约的通用代码模板。"
+    },
+    {
+      "id": "wind-project-coding-conventions-should-separate-business-uniqueness-from-request-idempotency",
+      "skill": "wind-project-coding-conventions",
+      "query": "这个项目已 opt-in Wind 项目编码约规。创建接口使用调用方传入的 Idempotency-Key 防止网络重试重复执行，同时业务对象本身有内部联合 UK；请评审 requestSn、请求幂等和业务唯一性应该怎样分工。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "进入 Wind 幂等与业务唯一性分层检查；业务唯一性和业务身份由表内业务 UK、联合 UK、状态条件或版本约束保护；外部 Idempotency-Key/requestSn 可以用于请求重放去重，但不得冒充业务身份，必须定义租户或调用方与接口作用域、参数摘要、有效期、并发冲突、结果回放和过期后重用语义；有自然业务唯一约束时独立保留数据库兜底，没有自然业务 UK 时不得为了形式完整虚构联合 UK；不能笼统地把外部请求号降为只允许追踪，也不能机械要求所有请求幂等键与业务 UK 合并。"
+    },
+    {
       "id": "wind-project-coding-conventions-should-trigger-agents-template",
       "skill": "wind-project-coding-conventions",
-      "query": "用 AI Native Engineering Loop 给这个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续 AI 能按产品专家、资深架构师、Wind 约规和代码生成器分工推进。",
+      "query": "用 产研协同体系给这个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续 AI 能按产品专家、资深架构师、Wind 约规和代码生成器分工推进。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1678,7 +1763,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入 Wind 项目 AGENTS 初始化；由 AI Native Engineering Loop 做项目约规入口编排，wind-project-coding-conventions 读取 wind-project-agents-template.md 输出可放入项目根目录的 AGENTS.md 草案；必须标出项目事实待确认项、授权边界、验收标准和验证方式，不猜测构建命令、生产流程、模块事实或 Git 授权。"
+      "expected_handling": "进入 Wind 项目 AGENTS 初始化；由 产研协同体系做项目约规入口编排，wind-project-coding-conventions 读取 wind-project-agents-template.md 输出可放入项目根目录的 AGENTS.md 草案；必须标出项目事实待确认项、授权边界、验收标准和验证方式，不猜测构建命令、生产流程、模块事实或 Git 授权。"
     },
     {
       "id": "wind-project-coding-conventions-negative-generic-java-review",
@@ -1692,6 +1777,19 @@
         "trigger_accuracy"
       ],
       "negative_reason": "没有 Wind 约规 opt-in，且任务是源码级代码 Review，应交给资深架构师，不强套 Wind 项目编码约规。"
+    },
+    {
+      "id": "wind-project-coding-conventions-negative-generic-lock-review",
+      "skill": "wind-project-coding-conventions",
+      "query": "这个普通 Spring Boot 项目没有任何项目级编码约规，请做代码 CR：基础服务为了未来并发准备增加本地锁、分布式锁和 LocksWrapper。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "没有 Wind 约规 opt-in；并发与锁的源码级 CR 应交给资深架构师，不能仅因出现基础服务或 LocksWrapper 就触发 Wind 约规。"
     },
     {
       "id": "wind-project-coding-conventions-negative-structured-codegen",

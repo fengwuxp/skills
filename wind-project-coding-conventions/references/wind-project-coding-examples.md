@@ -80,62 +80,10 @@
 
 ### 9. 横切控制 wrapper 隔离锁和事务
 
-- 反例：业务 `ServiceImpl` 一个方法里同时做参数校验、加分布式锁、注册事务同步释放、遍历批量对象、访问 Mapper、改状态和执行业务规则；或者为了单行转发新增没有职责的 wrapper。
-- 正例：真实业务 `XxxServiceImpl` 仍实现 `XxxService`，只保留业务规则、状态流转、声明式事务和持久化协调；`XxxServiceLocksWrapper` 同样实现 `XxxService`，用 `@Primary` 做默认入口，只承接分布式锁这类横切控制逻辑，并委托 `@Qualifier("xxxServiceImpl") XxxService delegate`。
-- 模板：
-
-```java
-@Service
-@Primary
-public class XxxServiceLocksWrapper implements XxxService {
-
-    private static final long LOCK_WAIT_MILLIS = 5000;
-
-    private static final long LOCK_LEASE_MILLIS = 30000;
-
-    private final XxxService delegate;
-
-    private final LockFactory lockFactory;
-
-    public XxxServiceLocksWrapper(
-            @Qualifier("xxxServiceImpl") XxxService delegate,
-            LockFactory lockFactory) {
-        this.delegate = delegate;
-        this.lockFactory = lockFactory;
-    }
-
-    @Override
-    public XxxResult executeXxx(ExecuteXxxRequest request) {
-        AssertUtils.notNull(request, "请求不能为空");
-        AssertUtils.hasText(request.getTenantId(), "租户不能为空");
-        AssertUtils.hasText(request.getResourceSn(), "资源流水不能为空");
-        return lockWrapper(lockName(request.getTenantId(), request.getResourceSn()),
-                () -> delegate.executeXxx(request));
-    }
-
-    private <T> T lockWrapper(String lockName, Supplier<T> func) {
-        WindLock lock = lockFactory.apply(lockName);
-        try {
-            AssertUtils.isTrue(lock.tryLock(LOCK_WAIT_MILLIS, LOCK_LEASE_MILLIS, TimeUnit.MILLISECONDS),
-                    "业务资源锁获取超时");
-        } catch (InterruptedException exception) {
-            Thread.currentThread().interrupt();
-            throw BaseException.friendly("业务资源锁等待被中断");
-        }
-        try {
-            return func.get();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private String lockName(String tenantId, String resourceSn) {
-        return "domain:xxx:" + tenantId + ":" + resourceSn;
-    }
-}
-```
-
-- 验证点：锁粒度绑定单个真实冲突资源，例如 `tenantId + resourceSn`，不要对用户列表、对象列表做批量锁；无明确配置 owner 时等待和租约先用常量；wrapper 不直接访问 Mapper、不做业务判断、不注册事务同步回调、不用冗余 `boolean locked` 表达锁状态。
+- 反例：为了“未来可能并发”直接给普通单表基础服务增加本地锁、分布式锁或 LocksWrapper；或者业务 `ServiceImpl` 一个方法里同时做参数校验、加锁、注册事务同步释放、遍历批量对象、访问 Mapper、改状态和执行业务规则。
+- 正例：先证明锁的准入条件，并按不变量选择数据库保护：唯一性用业务 UK，状态流转用带旧状态的条件更新，一般读改写用版本号；普通事务不能单独防止无条件读后写的丢失更新。只有这些机制不足且有并发入口、冲突资源和失败证据时，才让 `XxxServiceLocksWrapper` 承接锁控制并委托真实业务实现；使用的平台锁必须明确持有者身份、安全释放、续期或有界执行、失锁处理以及 fencing/version 防护。
+- 不提供可直接复制的固定租约锁模板；等待时间、租约和续期策略必须来自平台契约、业务执行时长证据和故障模型，不能从示例常量推导生产配置。
+- 验证点：锁粒度绑定单个稳定冲突资源，不锁用户列表或对象集合；wrapper 不直接访问 Mapper、不做业务判断、不注册事务同步回调；测试覆盖并发进入、获取超时、执行超时、租约失效、安全释放和重复副作用防护。
 
 ### 10. 源码样本只提炼稳定共性
 
@@ -161,11 +109,11 @@ public class XxxServiceLocksWrapper implements XxxService {
 - 正例：默认等值不加后缀，例如 `status`；模糊用 `nameContains`；时间和金额范围用 `createdAtMin` / `createdAtMax`、`amountMin` / `amountMax`；集合用 `statusIn`；空值用 `deletedAtIsNull`。服务方法按 `get/find/query/exists/count/stats/summary` 表达存在性、条件查询和统计。
 - 验证点：`XxxQuery` 字段是否只表达业务条件；Service 是否避免 `select/load/fetch`；历史 `queryXxxById` 是否只是附近代码兼容，新代码能否改成 `get/find`。
 
-### 14. 内网 API 路径即安全语义
+### 14. 内网 API 路径表达分类但不替代鉴权
 
 - 反例：所有内部接口都放 `/inc/order/query`，再靠 header、备注或调用方约定区分是否需要签名；涉及资金、权限或用户数据的写操作仍走低风险路径。
-- 正例：低风险内部查询走 `/inc/basic/{domain}/{resource}/{action}`；涉及用户数据、资金、权限、关键配置或业务状态变化的接口走 `/inc/secure/{domain}/{resource}/{action}`，并由网关或拦截器验证内部来源、appKey、timestamp、nonce 和 signature。
-- 验证点：路径能否一眼看出安全等级；`basic` 是否只承载低风险能力；`secure` 是否有签名/鉴权、重放防护、审计和测试。
+- 正例：低风险内部查询走 `/inc/basic/{domain}/{resource}/{action}`；涉及用户数据、资金、权限、关键配置或业务状态变化的接口走 `/inc/secure/{domain}/{resource}/{action}`。路径只表达分类，网关或拦截器仍应默认拒绝并逐请求鉴权；`secure` 额外验证内部来源、appKey、timestamp、nonce 和 signature。
+- 验证点：`basic` 是否只承载低风险能力；所有内网请求是否默认拒绝并逐请求鉴权；`secure` 是否有签名、重放防护、审计和契约测试。
 
 ### 15. 字典国际化不驱动业务逻辑
 

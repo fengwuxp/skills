@@ -38,7 +38,7 @@
 - 产品判断动作链、路线图取舍和交给 AI Native 的产品 owner 结论继续读 `product-judgment-action-chain.md`。
 - 业务架构规划需要图形化表达、可评审能力地图、价值流、能力-项目-系统映射图、路线图、上下文图或状态机时，继续读 `diagram-output.md`。
 - 支付、资金、账户、账本、清结算、VCC、收单或合规场景继续读 `payment-scenario-routing.md` 和 `regulatory-baseline.md`。
-- AI Native 端到端编排、工程交接、知识回流和停止条件交给 `ai-native-engineering-workflow`。
+- AI Native 端到端编排、工程交接、知识回流和停止条件交给 `delivery-collab`。
 
 ## 按任务读取索引
 

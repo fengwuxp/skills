@@ -1,6 +1,6 @@
 # Spec 模板最佳实践
 
-本文定义 AI Native 研发流程中 Spec / SDD / OpenSpec / Harness 输入的模板落地方式。它用于把意图压缩成可审、可执行、可验证的约束，不替代 `产品架构专家` 的 PRD，也不替代 `资深架构师` 的系统设计、测试和源码级 CR。
+本文定义产研协同体系研发流程中 Spec / SDD / OpenSpec / Harness 输入的模板落地方式。它用于把意图压缩成可审、可执行、可验证的约束，不替代 `产品架构专家` 的 PRD，也不替代 `资深架构师` 的系统设计、测试和源码级 CR。
 
 ## 使用时机
 
@@ -34,9 +34,9 @@
 ## 需要继续读取的 reference
 
 - 产品上下文、PRD-Lite 和工程交接读 `product-to-engineering-lifecycle.md`。
-- OpenSpec、Superpowers、Harness、GSD、CAD 和权限边界读 `agentic-engineering-governance.md`。
-- Goal 组合、GSD + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-composition.md`。
-- AI 代码交付闭环、独立验证、CR 减负和指标读 `code-delivery-closed-loop.md`。
+- OpenSpec、Superpowers、Harness、GSD、CAD 和权限边界读 `engineering-governance.md`。
+- Goal 组合、GSD + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-governance.md`。
+- AI 代码交付闭环、独立验证、CR 减负和指标读 `code-delivery.md`。
 - 验证矩阵、CR、发布和复盘读 `verification-review-release.md`。
 - 具体系统设计、测试策略、TDD、补测试和源码级 CR 回到 `senior-software-architect`。
 
@@ -46,7 +46,7 @@
 | --- | --- | --- |
 | 设计 Spec 模板 | `1. 模板原则`、`3. 默认骨架`、`4. AC 与测试映射` | 不复制外部模板 |
 | 区分 PRD / SDD / 实现 Spec | `1.1 PRD / SDD / 实现 Spec 三层边界`、`3. 默认骨架` | 不让 AI 补猜缺失层 |
-| 把 Goal 接入 Spec | 先读 `goal-composition.md`，再读 `3. 默认骨架`、`4. AC 与测试映射` | 不把 Goal 当执行授权 |
+| 把 Goal 接入 Spec | 先读 `goal-governance.md`，再读 `3. 默认骨架`、`4. AC 与测试映射` | 不把 Goal 当执行授权 |
 | 规范驱动生产代码 | `1.3 规范事实源与可生成性门禁`、`5. 闸门管道`，再读 `verification-review-release.md` | 不把模糊 Spec 交给 AI 反复生成 |
 | 评审 Spec 是否可执行 | `2. 强度选择`、`5. 闸门管道`、`6. 风险自查` | 不只看格式完整 |
 | 降低 CR 负担 | `3. 默认骨架`、`4. AC 与测试映射`、`7. Reviewer 视角` | 不把 Review 写成长文总结 |
@@ -225,7 +225,7 @@ owner:
 
 - 摘要先给当前能否继续、卡在哪个证据层、下一步 owner 是谁。
 - 文档层级必须说明当前是 PRD、SDD、实现 Spec 还是混合交接包；混合交接包也要把三层内容分段呈现。
-- 关联 Goal 只写 Goal ID、成功标准和停止条件摘要；详细状态和 Ledger 回 `goal-composition.md`，不要在 Spec 里复制一套目标流水账。
+- 关联 Goal 只写 Goal ID、成功标准和停止条件摘要；详细状态和 Ledger 回 `goal-governance.md`，不要在 Spec 里复制一套目标流水账。
 - 系统设计优先用图、流程、时序、边界和取舍，不用长段落堆叠。
 - 涉及多对象、多状态、多团队、生产链路或 GSD/CAD 的 Spec，必须写系统 DNA；轻量任务可说明不适用原因，但不能让 AI 从功能清单直接推断不变量、状态和边界。
 - 方案取舍只写真实分歧和不可逆判断；显而易见的技术选择一句话带过。
@@ -364,7 +364,7 @@ Spec 也是实现和 CR 的检查清单：
 
 ## 8. 交接和回流
 
-交给 `资深架构师` 前，AI Native 输出应包含：
+交给 `资深架构师` 前，产研协同体系输出应包含：
 
 ```text
 Spec 强度:

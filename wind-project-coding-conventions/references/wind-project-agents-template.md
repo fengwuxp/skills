@@ -1,12 +1,12 @@
 # Wind 项目 AGENTS.md 模板
 
-本文是 `wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 项目编码约规、AI Native 角色协作 Loop、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 项目编码约规、AI Native 产研协同、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
 
 ## 使用时机
 
 - 新 Wind/Nobe Java 项目需要初始化 `AGENTS.md`，明确 opt-in Wind 项目编码约规。
 - 既有项目已有 `AGENTS.md`，需要补齐 AI 协作入口、Wind opt-in、模块边界、测试/CR 红线或验证命令。
-- AI Native Engineering Loop 需要为某个遵循 Wind 约规的项目生成或改进项目级 Agent 运行契约。
+- 产研协同体系需要为某个遵循 Wind 约规的项目生成或改进项目级 Agent 运行契约。
 
 ## 不适用场景
 
@@ -24,7 +24,7 @@
 
 - Wind 主规则读 `wind-project-coding-conventions.md`。
 - 正反例读 `wind-project-coding-examples.md`。
-- 跨产品、架构、AI Maker/Checker 和验证发布的流程编排读 `ai-native-engineering-workflow`。
+- 跨产品、架构、AI Maker/Checker 和验证发布的流程编排读 `delivery-collab`。
 - 源码级设计、TDD、CR 和生产风险交给 `资深架构师`。
 
 ## 按任务读取索引
@@ -70,7 +70,7 @@
 
 - 普通 PRD、产品方案、Backlog 或验收种子：使用产品专家。
 - 架构设计、系统分析、源码修改、TDD、Bug 修复、代码 CR、生产风险：使用资深架构师。
-- 跨产品、架构、AI Maker/Checker、质量门禁、发布复盘的端到端协作：进入 AI Native Engineering Loop，只输出当前阶段、owner、交接物、授权策略、验证与停止条件。
+- 跨产品、架构、AI Maker/Checker、质量门禁、发布复盘的端到端协作：进入 产研协同体系，只输出当前阶段、owner、交接物、授权策略、验证与停止条件。
 - Wind face/impl、模型归位、Entity 不外露、ServiceImpl、MyBatis Flex 和测试边界规则判断：使用 `wind-project-coding-conventions`。
 - 结构化 Java Service 脚手架生成：使用 `java-service-code-generator`；必须有 DDL/schema/Java 类/字段表格，不从纯自然语言生成生产代码。
 
@@ -128,11 +128,11 @@
 
 ## Skill 路由
 
-AI Native Engineering Loop 是项目端到端协作入口，只负责阶段、owner、交接物、授权策略、验证与停止条件；不能替代专项 Skill、测试通过、CR 结论、Git 授权或上线审批。Wind 约规判断只使用 `wind-project-coding-conventions`；真实源码修改、测试和验证继续由 `资深架构师` 执行。
+产研协同体系是项目端到端协作入口，只负责阶段、owner、交接物、授权策略、验证与停止条件；不能替代专项 Skill、测试通过、CR 结论、Git 授权或上线审批。Wind 约规判断只使用 `wind-project-coding-conventions`；真实源码修改、测试和验证继续由 `资深架构师` 执行。
 
 | 场景 | 必用 Skill | 产物边界 |
 | --- | --- | --- |
-| 端到端角色协作、Goal/Loop/GSD/CAD 编排、owner/交接物/授权/验证/停止条件 | `ai-native-engineering-workflow` | 只做流程准入、角色协作和交接闭环；不替代产品、架构、代码、测试和 Git 授权。 |
+| 端到端角色协作、Goal/Loop/GSD/CAD 编排、owner/交接物/授权/验证/停止条件 | `delivery-collab` | 只做流程准入、角色协作和交接闭环；不替代产品、架构、代码、测试和 Git 授权。 |
 | 编码、编码设计、架构设计、系统分析、技术方案、代码评审、重构评估、测试设计、工程治理 | `资深架构师` | 工程边界、模块设计、接口契约、代码修改、测试策略、验证命令、Review 结论和交付说明。 |
 | Wind/Nobe 编码约规判断、face/impl、模型归位、基础服务、Entity 不外露、MyBatis Flex、ServiceImpl 和 TDD/CR 约规 | `wind-project-coding-conventions`，源码执行配合 `资深架构师` | 判断是否偏离 Wind 约规、给最小整改建议；真实源码修改和验证由架构师闭环。 |
 | 产品架构、PRD、业务建模、能力地图、业务流程、状态机、规则矩阵、产品验收 | `产品架构专家` | 产品目标、角色、对象、流程、状态、规则、权限、指标、异常路径、产品验收和风险清单。 |

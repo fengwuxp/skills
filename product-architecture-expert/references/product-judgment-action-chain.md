@@ -30,7 +30,7 @@
 - 机会清单、优先级、路线图、User Story 或 AC 决策时，读 `po-backlog-manager.md`。
 - 需要正式 PRD / 产品方案时，读 `product-prd-template.md` 和 `product-design-and-prd.md`。
 - 需要多角色产品评审或 PRD 预扫描时，读 `product-deliberation-workflow.md` 和 `product-prd-quality-gates.md`。
-- 需要交给 AI Native 或架构师时，读 `ai-native-product-context.md`，端到端编排交给 `ai-native-engineering-workflow`。
+- 需要交给 AI Native 或架构师时，读 `ai-native-product-context.md`，端到端编排交给 `delivery-collab`。
 
 ## 按任务读取索引
 
@@ -39,7 +39,7 @@
 | 产品判断动作链初判 | `1. 判断框架`、`2. 七步动作链`、`5. 输出卡` | 不展开完整 PRD 模板 |
 | 访谈 / 工单 / 竞品到机会 | `2. 七步动作链`，再读 `product-insight-analyst.md` | 不把摘要直接当需求 |
 | 机会 / 路线图 / Backlog 取舍 | `2. 七步动作链`、`4. 取舍规则`，再读 `po-backlog-manager.md` | 不把路线图写成愿望清单 |
-| PRD / Product Context Card 准入 | `3. AI Native 前置门禁`、`5. 输出卡` | 不把 PRD 文档完整等同于可工程化 |
+| PRD / Product Context Card 准入 | `3. 产研协同体系前置门禁`、`5. 输出卡` | 不把 PRD 文档完整等同于可工程化 |
 | 发布复盘 / 增长实验回流 | `2. 七步动作链`、`6. 回流规则` | 不把活动数据直接当产品结论 |
 
 ## 1. 判断框架
@@ -64,7 +64,7 @@
 | PRD / 上下文 | 已选 Backlog | 补对象、流程、状态、规则、验收种子和待确认项 | PRD / Product Context Card | 产品专家 |
 | 发布与回流 | 上线结果、数据、客服、运营、事故、复盘 | 判断是否达成目标、是否继续、收缩、废弃或进入下一轮 | 发布复盘 / 增长实验结论 | 业务 owner / AI Native |
 
-## 3. AI Native 前置门禁
+## 3. 产研协同体系前置门禁
 
 进入 AI Native 工程交接前，产品专家只回答产品侧是否足够：
 

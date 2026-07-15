@@ -137,7 +137,7 @@
 - 【强制】不得单纯为了“看起来复用”而提取公有方法或工具类；提取前必须确认复用的是稳定业务语义、算法规则、协议转换或基础能力，而不只是重复的几行代码形状。
 - 【强制】编码前执行最小正确实现门禁：先查当前代码库是否已有 helper、类型、模式或调用路径可复用；再查 JDK、Spring、数据库、浏览器/平台原生能力或项目已安装依赖是否已经覆盖；只有这些都不满足时，才新增最小代码。
 - 【强制】字符串、集合、数组、对象等基础判空和判文本工具，不得手写 `hasText`、`isBlank`、`isEmpty` 等同义工具；优先使用 Spring Framework 或 Apache Commons 已提供的成熟工具，例如 `org.springframework.util.StringUtils`、`org.springframework.util.CollectionUtils`、`org.apache.commons.lang3.StringUtils`、`org.apache.commons.lang3.ObjectUtils`、`org.apache.commons.lang3.ArrayUtils`。只有项目已有统一工具层或需要承载明确业务语义时，才允许包装，并必须说明差异语义、依赖取舍和测试覆盖。
-- 【强制】公有方法参数不得超过 5 个；编码或重构时如果确实需要超过 5 个参数，必须先和用户确认原因、调用方数量、兼容影响和替代方案。
+- 【推荐】公有方法参数超过 5 个是 Review 信号，不是机械门禁；先看参数是否属于同一稳定业务概念、调用方是否反复成组传递、参数对象能否减少误用，再决定保持显式参数或引入已有业务类型，不为降低数量制造一次性参数对象。
 - 【强制】不得为单实现接口、单调用工厂、没人配置的配置项、未来可能才需要的扩展点或无 owner 依赖新增复杂度；真实变化轴、owner、验收方式和测试边界不清时，先保持显式代码。
 - 【强制】不得为了套设计模式而新增接口、策略、工厂、状态对象、规则层或配置项；只有业务规则、状态行为、外部依赖、平台差异或技术选型已经形成真实变化轴，并能说明 owner、验收方式和测试边界时，才允许封装变化。
 - 【强制】不得以“少写代码”为理由删除输入校验、错误处理、防御式编程、安全/权限/资金兜底、审计、可访问性、持久化意图、幂等或必要测试。
@@ -257,11 +257,10 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 ## 11. 数据库与 MySQL 规约
 
-- 【强制】表名、字段名使用小写字母、数字和下划线，禁止数字开头。
-- 【强制】表必须包含 `id`、`gmt_create`、`gmt_modified`。
-- 【强制】禁止数据库外键和级联删除，外键关系在应用层维护。
+- 【强制】表名、字段名和审计字段先遵循项目数据库规范；没有项目规范时只把小写下划线、主键和创建/修改时间作为候选，不假定所有表都必须使用固定字段名。
+- 【强制】数据库外键、审计字段和必填字段默认值属于项目数据治理决策，不得作为所有 Java 项目的通用强制规则；应按数据所有权、写入路径、分库分表、迁移成本和一致性责任选择数据库约束或应用层维护，并记录取舍。
 - 【强制】业务唯一约束必须使用数据库唯一键保证。
-- 【强制】新增必填字段必须有默认值，否则字段应允许为空并配合兼容逻辑。
+- 【强制】新增必填字段必须给兼容迁移方案；默认值、分阶段回填或暂时允许为空按真实业务语义和数据库变更能力选择，不得为了通过 DDL 虚构业务默认值。
 - 【强制】删除字段、改字段名、改字段类型必须先做兼容发布，再执行 DDL。
 - 【推荐】可选通用字段包括 `creator`、`modifier`、`order_index`，以项目数据库规范为准。
 - 【推荐】表达是与否概念的字段使用 `is_xxx` 命名，具体类型以项目数据库规范为准。
@@ -310,7 +309,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 【强制】Controller / Web API / face/api 对外契约禁止直接接收或返回 Entity；ApplicationService、DomainQueryService 对外返回 DTO/VO/Result，不把 Entity 泄露到模块边界外。
 - 【强制】Controller、Web API、MQ Listener、Webhook handler、回调函数和定时任务入口不得承载核心业务规则；这些入口只做协议解析、权限/签名校验、幂等入口、模型转换和转交，业务决策回到 Service、ApplicationService、Domain Service 或领域模型边界。
 - 【强制】接口、Service、ApplicationService、Facade、Adapter 的拆分必须承载真实业务职责、业务抽象或稳定契约，例如用例编排、事务边界、权限/审计、状态转换、跨资源协调、异常聚合或对外协议隔离；不得新增只透传调用、只改名转发、一行包装或似是而非的抽象。没有新增业务职责时，优先直接复用现有服务或保持局部实现。
-- 【强制】DTO、VO、Request、Response、Query、Command、Event 等数据传输对象的成员变量不得使用 `boolean`、`byte`、`short`、`int`、`long`、`float`、`double`、`char` 等 Java 原生基本类型，也不得使用 `AtomicInteger`、`AtomicLong`、`AtomicBoolean`、`AtomicReference`、`LongAdder`、`DoubleAdder` 等并发原子类型。数据传输对象是序列化契约和数据快照，应使用包装类型、枚举、值对象或明确的业务类型表达可缺省、默认值、精度和序列化语义；并发计数、CAS 状态变更和累加逻辑应在领域服务、聚合或基础设施层完成，再映射为普通契约字段。
+- 【强制】DTO、VO、Request、Response、Query、Command、Event 的 primitive 或包装类型必须按契约语义选择：缺省与零值需要区分时使用包装类型并声明校验，字段必填且零值语义明确时可以使用 primitive，不机械装箱。并发 Atomic 类型不得进入 DTO、VO、Request、Response、Query、Command、Event；并发计数、CAS 状态变更和累加逻辑留在领域服务、聚合或基础设施层，再映射为普通契约字段。
 - 【强制】业务代码不得用内存版 Service 冒充生产实现。除缓存能力、测试替身/fixture、沙盒模拟或明确 demo 外，生产源码路径不得新增 `InMemoryXxxService`、`FakeXxxService`、`MockXxxService`、Map/List 存储型业务实现或只在进程内保留状态的应用服务来承载真实业务能力；需要临时验证时必须放在测试源码、fixture、demo 边界或受控沙盒中，并在交付中说明不能代表生产能力。
 - 【推荐】模块内部基础服务可以使用 Entity，但跨层、跨模块、跨系统传递时必须通过 Converter 转为 DTO、Request、Query、Command 或 Event。
 

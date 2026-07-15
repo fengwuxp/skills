@@ -1,6 +1,6 @@
 # PRD 与系分合议预审
 
-本文定义 AI Native 流程中的 PRD / 系分预审门禁。它吸收 MAGI 三角色与多视角虚拟评审的可迁移方法，但不要求真实启动多个 Agent，也不替代正式产品评审、架构评审、代码 CR 或专业审批。
+本文定义产研协同体系流程中的 PRD / 系分预审门禁。它吸收 MAGI 三角色与多视角虚拟评审的可迁移方法，但不要求真实启动多个 Agent，也不替代正式产品评审、架构评审、代码 CR 或专业审批。
 
 ## 使用时机
 
@@ -31,7 +31,7 @@
 ## 需要继续读取的 reference
 
 - 产品到工程成熟度、PRD-Lite 和交接包读 `product-to-engineering-lifecycle.md`。
-- OpenSpec、Harness、GSD/CAD 和 Agent 权限边界读 `agentic-engineering-governance.md`。
+- OpenSpec、Harness、GSD/CAD 和 Agent 权限边界读 `engineering-governance.md`。
 - 验证矩阵、CR、发布和复盘读 `verification-review-release.md`。
 - PRD 正文、产品合议细节和产品质量门禁回到 `product-architecture-expert`；评审会前 AI 预扫描读取其 `product-prd-quality-gates.md` 的“AI 预扫描四维度”。
 - 系统设计正文、架构质量、测试和生产风险回到 `senior-software-architect`。
@@ -190,7 +190,7 @@ owner：
 | --- | --- | --- |
 | 可进入 PRD 修订 | PRD 问题可由产品专家补齐。 | 路由 `产品架构专家`。 |
 | 可进入 OpenSpec / 系分 | 产品上下文足以让架构师承接。 | 路由 `资深架构师`。 |
-| 可进入 Harness/GSD 候选 | 系分和验证证据足以拆任务，但仍需 Harness 细化。 | 读取 `agentic-engineering-governance.md` 与 `gsd-cad-admission.md`。 |
+| 可进入 Harness/GSD 候选 | 系分和验证证据足以拆任务，但仍需 Harness 细化。 | 读取 `engineering-governance.md` 与 `planning-execution-admission.md`。 |
 | 仅 CAD 候选缺口 | 原子任务边界可能成立，但缺 Execution Grant、写入范围或验证命令。 | 只列缺口，不执行。 |
 | 必须回退 Round 0 | 缺目标、证据、owner、边界、验收、风险或专业确认。 | 补材料后再评审。 |
 

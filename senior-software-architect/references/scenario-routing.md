@@ -50,7 +50,7 @@
 | --- | --- | --- |
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
 | 非标工程问题 / 无标准答案 / 跨模块跨团队 / 复杂遗留问题 / AI 编码失控 | `architecture.md`、`adr-and-tradeoff.md`、`workflow.md`；涉及测试或编码时加读 `testing.md`，涉及生产时加读 `production-readiness.md` | 先输出非标工程问题卡：问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、决策标准和停止条件；不直接进入大范围改造。 |
-| PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构 | `product-design.md`、`architecture.md`、`system-analysis-design.md`；AI Native 端到端产品到研发流程先由 `ai-native-engineering-workflow` 编排，产品侧缺口回 `产品架构专家` 的 `ai-native-product-context.md`；涉及验收种子、TDD 或测试计划时加读 `testing.md` | 先校准产品目标、核心业务用例、对象状态、规则矩阵、验收场景和风险 owner；架构师只消费已确认的 Hardened Candidate 或 AI Native 交接结论，再把业务 driver 转成服务/模块边界、质量属性场景、接口、数据、测试、监控、发布和取舍；需要 TDD 时输出业务驱动验证到测试资产映射。 |
+| PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构 | `product-design.md`、`architecture.md`、`system-analysis-design.md`；AI Native 端到端产品到研发流程先由 `delivery-collab` 编排，产品侧缺口回 `产品架构专家` 的 `ai-native-product-context.md`；涉及验收种子、TDD 或测试计划时加读 `testing.md` | 先校准产品目标、核心业务用例、对象状态、规则矩阵、验收场景和风险 owner；架构师只消费已确认的 Hardened Candidate 或 AI Native 交接结论，再把业务 driver 转成服务/模块边界、质量属性场景、接口、数据、测试、监控、发布和取舍；需要 TDD 时输出业务驱动验证到测试资产映射。 |
 | 架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物 | `diagram-output.md`，按场景再读 `architecture.md`、`system-analysis-design.md`、`production-readiness.md` 或专项 reference | 图形目标、图形类型、工程落点、默认 SVG 输出、验证动作和剩余风险；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出。 |
 | 陌生代码库接手 / 项目现状分析 / 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先做项目清单、技术指纹、入口路径、目录语义、配置、测试、数据和运行链路侦察，再迁移通用原则，不强套 Java/Spring 规则。 |
 | Java/Spring 设计或 Review | `coding-standards.md`、`coding-review-deep-dive.md`、`workflow.md` | Java 约规、空值契约、Lombok/MapStruct、测试与验证；涉及模块/服务/API/DB 综合治理时再读 `project-governance-standards.md`。 |
@@ -71,7 +71,7 @@
 | 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中 CAD Mode、Plan Grant / Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程先由 `ai-native-engineering-workflow` 编排 | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论；GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片，并必须额外确认授权、Git 策略、人工中断和停止条件。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中 CAD Mode、Plan Grant / Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程先由 `delivery-collab` 编排 | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论；GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片，并必须额外确认授权、Git 策略、人工中断和停止条件。 |
 | AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 

@@ -1,0 +1,7 @@
+interface:
+  display_name: "产研协同体系"
+  short_description: "编排跨角色交付、工程治理和知识演进，按需处理决策澄清、验证准出、业务专家蒸馏与经验回流"
+  brand_color: "#7C3AED"
+  default_prompt: "Use $delivery-collab 按当前材料进入产研协同体系；先选择一个主能力域，必要时标注一个协同域，再输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件。"
+policy:
+  allow_implicit_invocation: true

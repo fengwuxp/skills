@@ -21,17 +21,17 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 
 SKILLS = {
-    "ai-native-engineering-workflow",
+    "delivery-collab",
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
     "wind-project-coding-conventions",
 }
 SKILL_MENTIONS = {
-    "ai-native-engineering-workflow": [
+    "delivery-collab": [
         "AI Native 研发流程",
         "AI Native 研发流程编排",
-        "ai-native-engineering-workflow",
+        "delivery-collab",
         "进入 GSD",
         "GSD + Goal",
         "Agent Loop",
