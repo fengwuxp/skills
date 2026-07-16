@@ -1,0 +1,5 @@
+interface:
+  display_name: "Java/Wind 编码约规"
+  short_description: "Java 通用编码约规，并按依赖和上下文启用 Wind/Nobe 专项规则"
+  brand_color: "#0369A1"
+  default_prompt: "Use $wind-coding-conventions 检查这个 Java 项目的通用编码约规，并根据依赖、包名和源码上下文判断是否叠加 Wind/Nobe 专项规则。"

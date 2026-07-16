@@ -24,7 +24,7 @@
 ## 需要继续读取的 reference
 
 - 生产发布和 Runbook 读 `production-readiness.md`。
-- Java/Spring 编码落地读 `coding-standards.md`。
+- Java/Spring 编码落地读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - 生产现象和安全事故诊断读 `debugging-diagnosis.md`。
 
 ## 按任务读取索引

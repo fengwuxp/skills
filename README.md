@@ -25,7 +25,20 @@ Codex 会根据 `SKILL.md` 的 `name` 和 `description` 自动触发技能，也
 - `做 grill-me 盘问：盘一下这个方案，只问一个主 blocker。`
 - `进入知识回流视图：把这轮 CR 结论沉淀到项目约规。`
 - `做生产交付审查：只判断能不能发布，列证据和停止条件。`
-- `初始化/更新项目 AGENTS.md：只做最小 opt-in patch。`
+- `初始化/更新项目 AGENTS.md：只做最小项目约规 patch。`
+
+### 编写文档的友好指令
+
+不需要记模板文件名，直接说明材料、目标路径和是否允许写入。产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，跨模块或迁移型重构用 `refactoring-design-template.md`；同目录的 `product-design-and-prd.md` 与 `system-analysis-design.md` 是写作约规，不是旧模板。
+
+- `基于 <需求或材料路径> 编写一份可评审的产品设计文档，保存到 <目标路径>；区分事实、推断和待确认，按需求复杂度裁剪模板，完成后自检。`
+- `基于 <产品文档路径> 和 <源码/接口/DDL 路径> 编写系分设计，保存到 <目标路径>；复用产品主题，补齐边界、流程、规则、接口、数据、测试、发布与回滚证据。`
+- `基于 <当前源码或现状证据> 和 <目标系分路径> 判断是否需要独立重构设计；需要时输出可验证、可暂停、可回退的 MIG 切片，不需要时只给任务卡和测试保护。`
+- `只评审 <文档路径>，不要改文件；列出必改项、待确认项、证据缺口和能否进入下一阶段。`
+- `更新 <既有文档路径>，保持文件名和已确认结论；只补本轮变化，删除被新结论取代的旧正文，不保留讨论过程。`
+- `把 <权威 Markdown 路径> 整理成 <DOCX/PDF>；不改变产品或工程语义，完成后检查目录、分页、表格、图片和中文字体。`
+
+已有正式文档默认原路径更新，不因模板升级另建“新版”“最终版”或日期副本；历史讨论、被拒方案和完整修订过程放到评审报告、Decision Log、ADR 或任务记录。
 
 ### 2. 按交付物选入口
 
@@ -33,17 +46,19 @@ Codex 会根据 `SKILL.md` 的 `name` 和 `description` 自动触发技能，也
 | --- | --- | --- |
 | 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | `产品架构专家` | 目标、用户/主体、范围/非目标、材料、验收、待确认项 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | `资深架构师` | 路径、现象/目标、环境、约束、验证命令、是否允许修改 |
+| 正式报告、制度、手册、研究说明、材料合并、文档审校、DOCX/PDF | `document-authoring` | 读者、用途、文档类型、事实源、载体、验收方 |
+| 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体考据 | `hanzi-philology` | 研究对象、时代与文本范围、已读材料、所需结论等级 |
 | 跨角色交付编排、工程治理、目标计划、质量门禁、生产交付审查、知识演进 | `产研协同体系` / `$delivery-collab` | 材料成熟度、owner、读写边界、授权、验证、停止条件 |
 | DDL/schema/Java 类/字段表格到 Java Service 脚手架 | `java-service-code-generator` | 结构化输入、表名、模块、输出目录、覆盖授权 |
-| Wind/Nobe 项目约规判断或项目 `AGENTS.md` Wind opt-in | `wind-project-coding-conventions` | opt-in 证据、检查路径、规则问题、是否只做 CR |
+| Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项 | `wind-coding-conventions` | Java 技术栈、依赖/包名/类型证据、规则问题、是否仅检查规则 |
 
-图形化交付按语义归属选入口：产品语义图用产品专家，工程架构图用架构师。复杂可编辑架构图、代码库结构转图或架构描述转图先由架构师判断准入，再按需使用 `$fireworks-tech-graph`；正式图形默认 SVG，PNG 仅在明确要求时导出。
+图形化交付按语义归属选入口：产品业务流程、业务状态和验收视图用产品专家，系统模块、接口时序、实现状态和部署视图用架构师。只说“画状态机/流程图”且没有产品语义或工程落点时，先澄清一次，不让两个 Skill 同时抢占；复杂可编辑架构图、代码库结构转图或架构描述转图先由架构师判断准入，再按需使用 `$fireworks-tech-graph`。正式图形默认 SVG，PNG 仅在明确要求时导出。
 
 外部 Skill、工具、联网、安装、写配置或同步到 Codex，必须先完成供应链安全审查和授权确认。
 
 ### 3. 产研协同体系
 
-`产研协同体系` 包含三个稳定能力域：交付编排、工程治理、知识演进。它只回答“现在由谁做、交接什么、怎么验证、什么时候停”：产品正文回 `产品架构专家`，工程实现、TDD、源码级 CR 和发布风险回 `资深架构师`，结构化 Java Service 生成回 `java-service-code-generator`，Wind 约规回 `wind-project-coding-conventions`。
+`产研协同体系` 包含三个稳定能力域：交付编排、工程治理、知识演进。它只回答“现在由谁做、交接什么、怎么验证、什么时候停”：产品正文回 `产品架构专家`，工程实现、TDD、源码级 CR 和发布风险回 `资深架构师`，结构化 Java Service 生成回 `java-service-code-generator`，Java/Wind 编码约规回 `wind-coding-conventions`。
 
 默认先做轻量生命周期定位，只判断当前阶段和下一交接；跨阶段、生产、维护退役或高风险任务才展开完整 SDLC 覆盖审查。SDLC 用于防遗漏，角色 Loop 用于定角色和交接；二者都不替代专项 Skill、owner、验证或授权。
 
@@ -83,7 +98,7 @@ Codex 会根据 `SKILL.md` 的 `name` 和 `description` 自动触发技能，也
 | `做 grill-me 盘问` / `grill 一下这个方案` | 每轮只盘一个决策分支，未形成 shared understanding 不执行 |
 | `蒸馏业务专家` | 生成可追溯 Skill Pack 草案、证据地图、成熟度和压力测试 |
 | `进入知识回流视图` | 把已验证经验归位到权威载体 |
-| `初始化/更新项目 AGENTS.md` | 只做最小项目约规 patch；Wind 项目只做最小 opt-in patch |
+| `初始化/更新项目 AGENTS.md` | 只做最小项目约规 patch；Wind 项目按实际依赖和上下文补专项入口 |
 
 ### 5. 不要这样用
 
@@ -117,11 +132,24 @@ Codex 会根据 `SKILL.md` 的 `name` 和 `description` 自动触发技能，也
 - 适合：架构设计、系统分析设计、技术方案、ADR、代码 Review、Bug 修复、测试/TDD、生产变更、工程图、遗留系统改造和架构排熵。
 - 边界：不替代产品专家定义复杂业务语义、PRD 和金融产品规则。
 
-### Wind 项目编码约规
+### 专业文档撰写
 
-- 路径：[wind-project-coding-conventions](./wind-project-coding-conventions)。
-- 适合：已 opt-in Wind 约规的项目，或初始化项目 `AGENTS.md` Wind 规则入口。
-- 边界：只做规则判断和偏差说明；未 opt-in 的普通 Java/Spring 项目不强套 Wind 约规；源码实现和 CR 仍交给架构师。
+- 路径：[document-authoring](./document-authoring)；显式调用：`$document-authoring`。
+- 适合：把已提供或已核验材料整理、合并、审校和收口为正式报告、制度、手册、研究说明、DOCX 或 PDF。
+- 边界：不替代产品、工程、法律、合规或领域专家判断事实；PRD、系分和训诂考据先回对应专项 Skill。
+
+### 汉字学与训诂专家
+
+- 路径：[hanzi-philology](./hanzi-philology)；显式调用：`$hanzi-philology`。
+- 适合：分析汉字形音义、字源、本义、甲骨文、金文、小篆、通假、假借、古今字、异体及具体文句训诂。
+- 边界：出土材料、传世文献、传统训释、音韵与现代研究相互校正；《说文解字》只作参考材料之一，不单独证明本义或古文字形。
+
+### Java/Wind 编码约规
+
+- 路径：[wind-coding-conventions](./wind-coding-conventions)。
+- 适合：所有 Java 项目的通用编码约规检查；检测到 Wind/Nobe 依赖、包名、类型、模块结构或明确上下文时叠加 Wind 专项，也可初始化项目 `AGENTS.md` 规则入口。
+- 边界：只做规则判断和偏差说明；没有 Wind/Nobe 高置信度信号时不加载 Wind face/impl、API 或模型专项；源码设计、CR、TDD、修复和验证只由架构师主责并消费相应规则。
+- 友好指令：`只检查这个 Java 项目应启用哪些约规，不做源码 CR`；需要执行时改用：`由资深架构师 CR 这段 Java 源码，统一加载通用 Java 约规；有 Wind/Nobe 证据时再加载专项`。
 
 ### java-service-code-generator
 
@@ -134,6 +162,7 @@ Codex 会根据 `SKILL.md` 的 `name` 和 `description` 自动触发技能，也
 - 从 AI 原型到工程化：产研协同体系定义阶段、owner 和门禁；产品专家补产品上下文包；架构师补系统设计、TDD、源码 CR 和发布风险。
 - 从战略到项目组合：产品专家做业务架构规划；产研协同体系只判断交接成熟度、owner、验证和停止条件。
 - 从 PRD 到代码生成：先确认对象、状态、字段、索引和金额精度，再把结构化输入交给代码生成器。
+- 从训诂考据到正式报告：`hanzi-philology` 先交付训诂证据卡，`document-authoring` 再成稿和生成载体，不改变证据等级。
 - 从普通图到复杂图：先由产品专家或架构师稳定语义，再评估 `$fireworks-tech-graph`。
 
 ## 5 分钟上手
@@ -143,6 +172,7 @@ git clone https://github.com/fengwuxp/skills.git
 cd skills
 ./sync-skills.sh --dry-run all
 ./sync-skills.sh all
+scripts/validate-installed-skills.sh
 ```
 
 同步单个 Skill 使用 `./sync-skills.sh senior-software-architect`。非默认目录使用 `CODEX_HOME=/path/to/codex-home`；同步后重启 Codex 或开启新会话，再通过 `$` 调用技能。
@@ -157,7 +187,11 @@ git diff --check
 ./sync-skills.sh --dry-run all
 ```
 
-`sync-skills.sh` 使用 `rsync --delete` 保持安装目录与仓库一致，正式同步前必须确认 `CODEX_HOME` 和目标 Skill；已有目标会备份到 `$CODEX_HOME/skills/.backups/`。不要在安装目录保存额外文件。
+正式同步后运行 `scripts/validate-installed-skills.sh` 回读仓库管理的 Skill，确认文件一致且退役 Skill 已移除；也可使用 `VALIDATE_INSTALLED_SKILLS=1 ./scripts/validate.sh` 把真实安装态检查并入完整验证。该检查只读，不修改安装目录。
+
+`scripts/evaluate-skills.py` 只做离线静态预检，不执行真实 Agent；评分用于发现结构、触发样例和验证资产缺口，不能替代 Codex 行为 smoke、领域事实复核或人工 CR。
+
+`sync-skills.sh` 使用 `rsync --delete` 保持安装目录与仓库一致，正式同步前必须确认 `CODEX_HOME` 和目标 Skill；已有目标会备份到 `$CODEX_HOME/skills/.backups/`。`--dry-run` 不写入目标目录。不要在安装目录保存额外文件，也不要在 Skill 的任何子目录保留名为 `SKILL.md` 的外部参考，以免被 Codex 误识别为独立 Skill；离线上游入口统一改名为 `upstream-skill.md`。
 
 维护者复装或更新外部 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh` 或 `scripts/validate-grill-me-install.py`；普通使用 `grill-me` 不需要运行这些命令。
 

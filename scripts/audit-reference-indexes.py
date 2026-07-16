@@ -17,6 +17,7 @@ REFERENCE_ROOTS = [
     ROOT / "senior-software-architect" / "references",
     ROOT / "product-architecture-expert" / "references",
     ROOT / "java-service-code-generator" / "references",
+    ROOT / "wind-coding-conventions" / "references",
 ]
 WARN_LINE_THRESHOLD = 500
 REQUIRED_INDEX_THRESHOLD = 350
@@ -30,7 +31,6 @@ REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/cad-mode.md",
     "senior-software-architect/references/clean-code.md",
     "senior-software-architect/references/coding-review-deep-dive.md",
-    "senior-software-architect/references/coding-standards.md",
     "senior-software-architect/references/debugging-diagnosis.md",
     "senior-software-architect/references/diagram-output.md",
     "senior-software-architect/references/knowledge-graph.md",
@@ -42,6 +42,7 @@ REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/project-governance-delivery-and-platform.md",
     "senior-software-architect/references/project-governance-service-api-modeling.md",
     "senior-software-architect/references/project-governance-standards.md",
+    "senior-software-architect/references/refactoring-design-template.md",
     "senior-software-architect/references/review-and-output-templates.md",
     "senior-software-architect/references/scenario-routing.md",
     "senior-software-architect/references/security-architecture.md",
@@ -60,8 +61,9 @@ REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/testing-practices-java-web.md",
     "senior-software-architect/references/testing-practices-non-java-and-selection.md",
     "senior-software-architect/references/testing-practices.md",
-    "senior-software-architect/references/wind-projects-patterns.md",
     "senior-software-architect/references/workflow.md",
+    "wind-coding-conventions/references/java-coding-conventions.md",
+    "wind-coding-conventions/references/wind-architecture-patterns.md",
     "product-architecture-expert/references/card-network-and-card-rails.md",
     "product-architecture-expert/references/clearing-settlement.md",
     "product-architecture-expert/references/diagram-output.md",

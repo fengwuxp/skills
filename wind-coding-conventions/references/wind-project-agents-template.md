@@ -1,16 +1,16 @@
 # Wind 项目 AGENTS.md 模板
 
-本文是 `wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 项目编码约规、AI Native 产研协同、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 编码约规、AI Native 产研协同、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
 
 ## 使用时机
 
-- 新 Wind/Nobe Java 项目需要初始化 `AGENTS.md`，明确 opt-in Wind 项目编码约规。
-- 既有项目已有 `AGENTS.md`，需要补齐 AI 协作入口、Wind opt-in、模块边界、测试/CR 红线或验证命令。
+- 新 Wind/Nobe Java 项目需要初始化 `AGENTS.md`，明确声明 Wind 编码约规。
+- 既有项目已有 Wind/Nobe 依赖或源码上下文，需要在 `AGENTS.md` 补齐 AI 协作入口、Wind 专项入口、模块边界、测试/CR 红线或验证命令。
 - 产研协同体系需要为某个遵循 Wind 约规的项目生成或改进项目级 Agent 运行契约。
 
 ## 不适用场景
 
-- 未 opt-in Wind 约规的普通 Java/Spring 项目；只可参考通用工程原则，不强套 face/impl、模型包位或基础服务规则。
+- 没有 Wind/Nobe 声明、依赖、包名、类型或模块上下文的普通 Java/Spring 项目；应读取通用 Java 约规，不使用本模板强套 face/impl、模型包位或基础服务规则。
 - 已有项目 `AGENTS.md`、OpenSpec、ADR、CI 或团队规范更具体时，不覆盖本地规则，只做缺口建议。
 - 不替代源码级架构设计、TDD、Bug 修复、代码 CR、发布审批或 Git 授权。
 
@@ -22,8 +22,8 @@
 
 ## 需要继续读取的 reference
 
-- Wind 主规则读 `wind-project-coding-conventions.md`。
-- 正反例读 `wind-project-coding-examples.md`。
+- Wind 主规则读 `wind-coding-conventions.md`。
+- 正反例读 `wind-coding-examples.md`。
 - 跨产品、架构、AI Maker/Checker 和验证发布的流程编排读 `delivery-collab`。
 - 源码级设计、TDD、CR 和生产风险交给 `资深架构师`。
 
@@ -42,10 +42,10 @@
 # AGENTS.md
 
 > 本文件是 `<项目名>` 的常驻项目契约，只保留每次会话都应知道且在项目中重复出现的项目定位、模块边界、验证命令和 Skill 路由。
-> 通用 Java 编码、测试、Review、AI Native Loop 和 Wind/Nobe 约规不在本文件重复展开；按 Skill 路由读取。
+> 具体编码先服从本项目规则；Wind/Nobe Java/Spring 细则读 `wind-coding-conventions`，测试、源码级 Review 和产研协同按 Skill 路由读取，不在本文件重复展开。
 > 每次修改代码前必须阅读并遵守本文件。
 
-本项目遵守 Wind 项目编码约规。任何 AI Agent、脚本化改动或人工协作都必须先读本文件，再读任务相关源码、测试、OpenSpec/ADR 和附近代码风格。
+本项目遵守 Wind 编码约规。任何 AI Agent、脚本化改动或人工协作都必须先读本文件，再读任务相关源码、测试、OpenSpec/ADR 和附近代码风格。
 
 ## 项目身份
 
@@ -64,19 +64,19 @@
 - 从第一性原理看原始需求和问题本质，不从惯例、模板或历史实现出发；如果目标清晰但路径不是最短，直接说明更短路径。
 - 遇到问题追根因，不打补丁；每个关键决策都要能回答“为什么”。
 - 输出说重点，砍掉不改变决策的信息；事实、推断、待确认和范围外不做必须分层表达。
-- 项目统一编码规范和附近代码风格优先；没有更具体规则时，再按 Wind 项目编码约规收敛。
+- 项目统一编码规范和附近代码风格优先；没有更具体规则时，再按 Wind 编码约规收敛。
 
 ## AI 协作入口
 
 - 普通 PRD、产品方案、Backlog 或验收种子：使用产品专家。
 - 架构设计、系统分析、源码修改、TDD、Bug 修复、代码 CR、生产风险：使用资深架构师。
 - 跨产品、架构、AI Maker/Checker、质量门禁、发布复盘的端到端协作：进入 产研协同体系，只输出当前阶段、owner、交接物、授权策略、验证与停止条件。
-- Wind face/impl、模型归位、Entity 不外露、ServiceImpl、MyBatis Flex 和测试边界规则判断：使用 `wind-project-coding-conventions`。
+- Wind face/impl、模型归位、Entity 不外露、ServiceImpl、MyBatis Flex 和测试边界规则判断：使用 `wind-coding-conventions`。
 - 结构化 Java Service 脚手架生成：使用 `java-service-code-generator`；必须有 DDL/schema/Java 类/字段表格，不从纯自然语言生成生产代码。
 
 ## 项目约规入口
 
-- Wind 规则权威只读 `wind-project-coding-conventions`；本文件不复制完整规则，避免与 Skill 主规则漂移。
+- Wind 规则权威只读 `wind-coding-conventions`；本文件不复制完整规则，避免与 Skill 主规则漂移。
 - 每次涉及 face/impl、模型归位、Entity 不外露、ServiceImpl、MyBatis Flex、币种枚举、TDD/CR 或代码生成后审查，先回 Wind Skill 判断规则，再由架构师闭环源码设计、测试和验证。
 - 本项目额外模块边界：<仅填写本项目独有模块、包名兼容点或历史例外；没有则写待确认>
 - 本项目验证命令：<仅填写已验证可运行命令；未知则写待确认>
@@ -128,13 +128,13 @@
 
 ## Skill 路由
 
-产研协同体系是项目端到端协作入口，只负责阶段、owner、交接物、授权策略、验证与停止条件；不能替代专项 Skill、测试通过、CR 结论、Git 授权或上线审批。Wind 约规判断只使用 `wind-project-coding-conventions`；真实源码修改、测试和验证继续由 `资深架构师` 执行。
+产研协同体系是项目端到端协作入口，只负责阶段、owner、交接物、授权策略、验证与停止条件；不能替代专项 Skill、测试通过、CR 结论、Git 授权或上线审批。Wind 约规判断只使用 `wind-coding-conventions`；真实源码修改、测试和验证继续由 `资深架构师` 执行。
 
 | 场景 | 必用 Skill | 产物边界 |
 | --- | --- | --- |
 | 端到端角色协作、Goal/Loop/GSD/CAD 编排、owner/交接物/授权/验证/停止条件 | `delivery-collab` | 只做流程准入、角色协作和交接闭环；不替代产品、架构、代码、测试和 Git 授权。 |
 | 编码、编码设计、架构设计、系统分析、技术方案、代码评审、重构评估、测试设计、工程治理 | `资深架构师` | 工程边界、模块设计、接口契约、代码修改、测试策略、验证命令、Review 结论和交付说明。 |
-| Wind/Nobe 编码约规判断、face/impl、模型归位、基础服务、Entity 不外露、MyBatis Flex、ServiceImpl 和 TDD/CR 约规 | `wind-project-coding-conventions`，源码执行配合 `资深架构师` | 判断是否偏离 Wind 约规、给最小整改建议；真实源码修改和验证由架构师闭环。 |
+| Wind/Nobe 编码约规判断、face/impl、模型归位、基础服务、Entity 不外露、MyBatis Flex、ServiceImpl 和 TDD/CR 约规 | `wind-coding-conventions`，源码执行配合 `资深架构师` | 判断是否偏离 Wind 约规、给最小整改建议；真实源码修改和验证由架构师闭环。 |
 | 产品架构、PRD、业务建模、能力地图、业务流程、状态机、规则矩阵、产品验收 | `产品架构专家` | 产品目标、角色、对象、流程、状态、规则、权限、指标、异常路径、产品验收和风险清单。 |
 
 ## 交付格式
@@ -152,7 +152,7 @@
 
 ## 改进规则
 
-- 已有 `AGENTS.md` 有同义规则时，不新增近义条款；只补缺失的 Wind opt-in、AI 路由、验证命令或项目特有模块。
+- 已有 `AGENTS.md` 有同义规则时，不新增近义条款；只补缺失的 Wind 专项声明、AI 路由、验证命令或项目特有模块。
 - `AGENTS.md` 只保留每次会话都应知道且在项目中重复出现的稳定项目契约；技术栈清单、Git 常规权限、长期学习声明、通用交付格式等能由全局规则或工具约束覆盖的内容，不默认写入项目模板。
 - 新增项目规则必须来自重复踩坑、CR 结论、验证失败、团队确认或本地源码事实；不得把单次对话、个人偏好、一次性探索、未验证外部文章或 AI 推理轨迹写入项目 `AGENTS.md`。
 - 旧术语只在 Skill 路由中作为触发别名出现；正文优先使用 `AI Native Loop`，不新增独立 CAD/Loop 权限章节。

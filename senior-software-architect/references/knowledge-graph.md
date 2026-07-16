@@ -22,7 +22,7 @@
 
 ## 需要继续读取的 reference
 
-- 编码读 `coding-standards.md`，Review 读 `coding-review-deep-dive.md`。
+- Java 编码读项目本地规范和 `wind-coding-conventions` 通用层，Review 读 `coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文启用。
 - 测试读 `testing.md` 和 `testing-practices.md`。
 - 系分读 `system-analysis-design.md`，完整模板读 `system-analysis-template.md`。
 - 生产、发布和回滚读 `production-readiness.md` 与 `workflow.md`。
@@ -36,7 +36,7 @@
 | 定位知识域或 reference | 本文的知识域路由、归档规则 | 各领域专项细则 |
 | 产品语义到工程映射 | `product-design.md`, `system-analysis-design.md` | 基础设施和 K8s 细节 |
 | 架构设计、质量属性、取舍 | `architecture.md`, `adr-and-tradeoff.md`, `diagram-output.md` | Java 编码细则 |
-| Java/Spring/Wind 设计或 Review | `coding-standards.md`, `wind-projects-patterns.md`, `project-governance-standards.md` | 通用能力解释 |
+| Java/Spring/Wind 设计或 Review | 项目本地规范、`wind-coding-conventions` 通用层、`coding-review-deep-dive.md`、`project-governance-standards.md`；Wind/Nobe 专项按依赖或上下文启用 | 通用能力解释 |
 | 测试、TDD、验收验证 | `testing.md`, `testing-practices.md` | 平台治理细节 |
 | 生产排障、安全、可观测性 | `debugging-diagnosis.md`, `production-readiness.md`, `security-architecture.md` | 产品语义细节 |
 | AI 协作、上下文衰减或 CAD Mode | `ai-assisted-engineering.md`, `ai-large-project-orchestration.md`, `cad-mode.md`, `workflow.md` | 语言运行时细节 |
@@ -64,7 +64,7 @@
 | 业务与产品语义 | 目标、非目标、参与方、对象状态、验收种子 | `product-design.md`，复杂 PRD 交给 `产品架构专家` | 产品语义到工程资产追踪 |
 | 架构设计与取舍 | 边界、抽象、依赖方向、质量属性、服务拆分、通信复杂度 | `architecture.md`, `adr-and-tradeoff.md`, `distributed-consistency.md`, `diagram-output.md` | 方案、取舍、ADR、质量属性场景、关键节点和通信边 |
 | 系统分析与设计表达 | 系分、详细设计、视图、模板、评审门禁 | `system-analysis-design.md`, `system-analysis-template.md`, `diagram-output.md` | 可评审系分和图形 brief |
-| 编码质量与 Java/Spring/Wind | 命名、异常、日志、契约、MapStruct、MyBatis Flex | `coding-standards.md`, `coding-review-deep-dive.md`, `wind-projects-patterns.md` | Review 结论、整改建议、验证命令 |
+| 编码质量与 Java/Spring/Wind | 命名、异常、日志、契约、MapStruct、MyBatis Flex | 项目本地规范、`wind-coding-conventions` 通用层、`coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文启用 | Review 结论、整改建议、验证命令 |
 | 测试驱动设计与验证 | TDD、测试层级、失败测试、验收资产 | `testing.md`, `testing-practices.md` | 测试计划、失败测试候选、验证矩阵 |
 | 调试诊断与生产韧性 | Bug、线上现象、根因、回滚、Runbook | `debugging-diagnosis.md`, `production-readiness.md`, `workflow.md` | 证据链、最小修复、回归验证 |
 | 安全、数据与合规边界 | 认证授权、租户隔离、审计、敏感数据 | `security-architecture.md`, `negative-constraints.md` | 风险清单、控制点、确认方 |
@@ -76,7 +76,7 @@
 | 问题信号 | 先判断 | 再读取 |
 | --- | --- | --- |
 | “这个方案怎么设计” | 业务目标、边界、质量属性、验收是否清楚 | `product-design.md` -> `architecture.md` -> `system-analysis-design.md` |
-| “代码这样写对不对” | 是否违反契约、边界、异常日志、测试红线 | `coding-review-deep-dive.md` -> `coding-standards.md` |
+| “代码这样写对不对” | 是否违反项目规范、契约、边界、异常日志、测试红线 | Java 项目：本地规范 -> `wind-coding-conventions` 通用层 -> `coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文追加 |
 | “补测试 / TDD 推进” | 保护的业务事实、测试层级、第一批失败反馈 | `testing.md` -> 对应 `testing-practices-*` |
 | “线上异常 / 测试失败” | 是否有可重复反馈环和证据链 | `debugging-diagnosis.md` -> `production-readiness.md` |
 | “要不要拆服务/上中台/引入 MQ” | 业务边界、团队能力、运维成本和验证方式 | `architecture.md` -> `adr-and-tradeoff.md` |
@@ -92,7 +92,8 @@
 | --- | --- |
 | 架构原则、质量属性、服务边界 | `architecture.md` |
 | 系分写法、模板、评审门禁 | `system-analysis-design.md` 或 `system-analysis-template.md` |
-| Java/Spring/Wind 编码规则 | `coding-standards.md` 或 `wind-projects-patterns.md` |
+| 通用编码评审原则 | `coding-review-deep-dive.md` 或 `clean-code.md` |
+| Wind/Nobe 编码规则 | `wind-coding-conventions` |
 | 测试策略和具体测试实践 | `testing.md` 或 `testing-practices.md` |
 | 生产变更、发布、回滚、Runbook | `production-readiness.md` 或 `workflow.md` |
 | 项目级治理细则 | `project-governance-standards.md` 及其专题文件 |

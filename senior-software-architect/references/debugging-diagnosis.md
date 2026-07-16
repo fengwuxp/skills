@@ -24,7 +24,7 @@
 
 ## 需要继续读取的 reference
 
-- 回归测试形态读 `testing.md`；Java/Spring 修复读 `coding-standards.md`。
+- 回归测试形态读 `testing.md`；Java/Spring 修复读项目本地规范和 `wind-coding-conventions` 通用层，Wind/Nobe 专项按依赖或上下文启用。
 - 生产现象、数据修复或上线风险读 `production-readiness.md` 和 `negative-constraints.md`。
 - AI 参与修复读 `ai-assisted-engineering.md`。
 

@@ -21,6 +21,17 @@ check_required_files() {
   done < <(find . -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 }
 
+check_no_nested_skills() {
+  local matches
+  matches="$(find . -mindepth 3 -type f -name SKILL.md \
+    -not -path './.git/*' \
+    -not -path './.serena/*' | sort)"
+  if [[ -n "${matches}" ]]; then
+    warn "skill subdirectories must not contain nested SKILL.md files because Codex may auto-discover them:"
+    echo "${matches}" >&2
+  fi
+}
+
 check_learning_data_not_in_repo() {
   local matches
   matches="$(find . \
@@ -104,6 +115,7 @@ check_external_urls() {
 }
 
 check_required_files
+check_no_nested_skills
 check_learning_data_not_in_repo
 check_script_patterns
 check_external_urls

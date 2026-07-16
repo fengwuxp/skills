@@ -1,6 +1,6 @@
 # Java Service 代码生成规程
 
-本文承接 `SKILL.md` 中的代码生成细则。只有在需要实际生成、调整、审查 Wind/Nobe 风格 Java Service 配套代码时读取；普通技能识别和路由不需要加载本文。本生成器输出的基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service 和 ServiceImpl 是 Wind 项目编码约规的标准模板实现面；规则权威来源是 `wind-project-coding-conventions` Skill。
+本文承接 `SKILL.md` 中的代码生成细则。只有在需要实际生成、调整、审查 Wind/Nobe 风格 Java Service 配套代码时读取；普通技能识别和路由不需要加载本文。本生成器输出的基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service 和 ServiceImpl 是 Wind 编码约规的标准模板实现面；规则权威来源是 `wind-coding-conventions` Skill。
 
 ## 使用时机
 
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- Wind/Nobe 模块风格读 `nobe-patterns.md`；具体代码红线、Entity 不外露和服务接口职责规则审查交给 `wind-project-coding-conventions`，源码级 Review 交给 `资深架构师`。
+- Wind/Nobe 模块风格读 `nobe-patterns.md`；具体代码红线、Entity 不外露和服务接口职责规则审查交给 `wind-coding-conventions`，源码级 Review 交给 `资深架构师`。
 
 ## 按任务读取索引
 
@@ -224,6 +224,6 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - Java 类或字段表格输入如果生成了 DDL 草案，必须提示用户该 DDL 是推断结果，需要 DBA/架构师确认。
 - 检查 Entity 注解、字段类型、字段注释、`@Schema`、`@Column`、逻辑删除、租户、版本字段是否正确。
 - 检查 Request 校验是否符合创建/更新语义。
-- 检查 Service/ServiceImpl 是否符合 `资深架构师` 编码约规：不超过 5 个公有参数、不做伪复用、不出现无意义一行方法抽取、空指针处理一致、Lombok/MapStruct 使用边界清晰。
+- 先按 `wind-coding-conventions` 检查通用 Java 约规，并根据项目证据叠加 Wind/Nobe 专项；再交给 `资深架构师` 做源码级 CR：检查公有参数、伪复用、无意义一行方法抽取、空指针处理以及 Lombok/MapStruct 使用边界。
 - 如果写入真实项目模块，条件允许时运行受影响模块的定向 Maven 编译或测试。
 - 最终向用户报告生成/修改的文件、关键假设和剩余风险；本仓库 Git 操作默认由用户执行。

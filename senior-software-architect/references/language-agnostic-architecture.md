@@ -10,7 +10,7 @@
 
 ## 不适用场景
 
-- 已明确为 Java/Spring/Wind 编码或 Review 时，继续读取 `coding-standards.md` 与项目治理 reference。
+- 已明确为 Java/Spring 编码或 Review 时，继续读取项目本地规范、`wind-coding-conventions` 通用层与项目治理 reference；Wind/Nobe 专项按依赖或上下文启用。
 - 用户要求完整产品语义或 PRD 时，优先交给 `产品架构专家`。
 - 外部 API/SDK/云产品版本问题必须先过 `workflow.md` 的外部知识时效性门禁。
 

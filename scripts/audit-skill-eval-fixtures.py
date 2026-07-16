@@ -22,10 +22,12 @@ FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 
 SKILLS = {
     "delivery-collab",
+    "document-authoring",
+    "hanzi-philology",
     "java-service-code-generator",
     "product-architecture-expert",
     "senior-software-architect",
-    "wind-project-coding-conventions",
+    "wind-coding-conventions",
 }
 SKILL_MENTIONS = {
     "delivery-collab": [
@@ -48,10 +50,12 @@ SKILL_MENTIONS = {
         "Gemini CLI",
         "AgentRC",
     ],
+    "document-authoring": ["document-authoring", "专业文档撰写"],
+    "hanzi-philology": ["hanzi-philology", "汉字学与训诂专家"],
     "java-service-code-generator": ["java-service-code-generator"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
     "senior-software-architect": ["资深架构师", "senior-software-architect"],
-    "wind-project-coding-conventions": ["wind-project-coding-conventions", "Wind 项目编码约规"],
+    "wind-coding-conventions": ["wind-coding-conventions", "Wind 编码约规"],
 }
 REQUIRED_DIMENSIONS = {
     "trigger_accuracy",

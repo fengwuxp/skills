@@ -34,7 +34,7 @@
 
 ## 需要继续读取的 reference
 
-- PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 加读 `product-prd-financial-appendix.md`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。
+- PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 加读 `product-prd-financial-appendix.md`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后可交给 `document-authoring` 处理同一权威版本的表达和载体，编辑后回本技能重新校验。
 - AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD/CAD 准入、Harness/Agent 编排由 `delivery-collab` 处理。
 - 复杂 PRD、AI 生成方案、原型候选、多方争议、PM / Reviewer / 产品大师 / MAGI 多视角评审读 `product-deliberation-workflow.md`；它只提供产品合议评审流程，不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
 - 通用产品架构读 `product-architecture-methodology.md`。

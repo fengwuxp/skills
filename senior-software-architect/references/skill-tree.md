@@ -9,7 +9,7 @@
 
 ## 不适用场景
 
-- 需要具体编码规则时，直接读取 `coding-standards.md`。
+- 需要具体 Java 编码规则时，先读取项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - 需要系统设计模板时，直接读取 `system-analysis-design.md`。
 
 ## 读取后必须产出
@@ -19,7 +19,7 @@
 ## 需要继续读取的 reference
 
 - 架构设计读 `architecture.md`、`system-analysis-design.md`。
-- 代码质量读 `coding-standards.md`、`coding-review-deep-dive.md`。
+- 代码质量读项目本地规范、`coding-review-deep-dive.md` 和 `clean-code.md`。
 - AI 协作读 `ai-assisted-engineering.md`。
 
 ## 按任务读取索引
@@ -31,7 +31,7 @@
 | 模块边界、接口、数据、状态设计 | `skill-tree-architecture-design.md` | 技术领导力 |
 | 代码 Review、调试诊断、测试能力 | `skill-tree-engineering-quality.md` | 产品和 K8s 细节 |
 | 生产治理、可观测性、安全、K8s | `skill-tree-engineering-quality.md`、`skill-tree-platform-leadership-ai.md` | 代码命名细节 |
-| Java/Spring/Wind 专项 | `skill-tree-engineering-quality.md`，并按需读 `coding-standards.md` | 通用能力地图重复解释 |
+| Java/Spring 工程专项 | `skill-tree-engineering-quality.md`、项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用 | 通用能力地图重复解释 |
 
 ## 提炼依据
 

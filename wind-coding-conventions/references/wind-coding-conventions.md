@@ -1,10 +1,11 @@
-# Wind 项目编码约规
+# Wind 编码约规
 
-本文是 `wind-project-coding-conventions` Skill 的主规则，用于项目本地 `AGENTS.md` 明确标明“遵守 Wind 项目编码约规”时，约束 Java/Spring/Wind/Nobe 风格项目的设计、编码、TDD 和 CR；项目本地规则、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-coding-conventions` Skill 的 Wind 专项规则。只有入口 Skill 根据项目 `AGENTS.md`、任务说明、依赖坐标、包名/import、Wind 类型或模块上下文判定命中 Wind/Nobe 后才读取；项目本地规则、OpenSpec/ADR、CI 与附近代码风格优先。
 
 ## 使用时机
 
-- 项目本地 `AGENTS.md` 明确标明、任务说明或用户要求遵守 Wind 项目编码约规。
+- 项目本地 `AGENTS.md`、任务说明或用户明确要求遵守 Wind 编码约规。
+- Maven/Gradle 依赖、包名/import、Wind 类型或模块上下文提供 Wind/Nobe 高置信度信号。
 - 评审 face/impl 模块边界、接口放置、基础服务、方法签名、服务/模型/枚举命名、应用层服务、DTO/Request/Query/Entity、查询字段命名、内网 API、安全等级、系统字典/国际化、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
 - 初始化或改进遵循 Wind 约规项目的本地 `AGENTS.md`，让 产研协同体系能按项目规则调度产品、架构、Wind 规则和代码生成能力。
 
@@ -15,25 +16,27 @@
 
 ## 读取后必须产出
 
-- 当前项目是否 opt-in；命中的模块、接口、服务、模型、DAL、外部调用和测试规则；违反项的最小整改建议与验证方式。
+- 当前项目命中的 Wind/Nobe 上下文证据；命中的模块、接口、服务、模型、DAL、外部调用和测试规则；违反项的最小整改建议与验证方式。
 
 ## 需要继续读取的 reference
 
-- Java/Spring/Wind 强制规则读架构师 `references/coding-standards.md`；Service/API/DTO/Query 的通用设计读架构师 `references/project-governance-service-api-modeling.md`；测试/TDD 读架构师 `references/testing.md` 和 `references/testing-practices.md`；模块依赖读架构师 `references/project-governance-codebase-and-modules.md`；深度 CR 读架构师 `references/coding-review-deep-dive.md`；需要最佳实践正反例时读本 Skill 的 `wind-project-coding-examples.md`。
+- Java/Spring 编码细则读本 Skill 的 `java-coding-conventions.md`；Wind 项目族端口、Starter、Trace、安全和企业集成模式读 `wind-architecture-patterns.md`；Service/API/DTO/Query 的通用设计、测试/TDD、模块依赖和深度源码 CR 仍交 `资深架构师`；需要最佳实践正反例时读 `wind-coding-examples.md`。
 
-重复规则归位：通用 Java 命名、异常、技术日志、敏感信息、数据库 DDL、依赖治理、Spring/Lombok/MapStruct 使用和测试方法论归 `资深架构师`；Wind opt-in 后的 face/impl、模型包位、基础服务模板、查询方法语义、`XxxQuery` 后缀、内网 API 路径安全等级、系统字典/国际化和业务事件 Key 归本 Skill。两边有冲突时，项目本地 `AGENTS.md` / OpenSpec / ADR 优先；其次 Wind 项目特化规则优先；源码实现、TDD、CR 和风险判断仍回架构师。
+重复规则归位：所有 Java 项目的通用编码细则归 `java-coding-conventions.md`；命中 Wind/Nobe 后的 face/impl、模型包位、基础服务模板、查询方法语义、`XxxQuery` 后缀、内网 API 路径安全等级、系统字典/国际化和业务事件 Key 归本文件；通用架构、源码级 CR、调试、测试策略和生产风险归 `资深架构师`。有冲突时，项目本地 `AGENTS.md` / OpenSpec / ADR 优先，其次才是已命中的 Wind 项目特化规则。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| opt-in / 项目 AGENTS 初始化或改进 | `wind-project-agents-template.md`，再按本地项目事实填充 | 不猜测构建命令、生产流程、模块事实或团队授权 |
+| Wind 声明 / 项目 AGENTS 初始化或改进 | `wind-project-agents-template.md`，再按本地项目事实填充 | 不猜测构建命令、生产流程、模块事实或团队授权 |
 | 模块 / 分包 / 接口放置 / 模型包归位 / Service / 基础服务模板 / 方法签名 / 查询命名 / 内网 API / 字典国际化 / DAL / 外部集成 / TDD-CR | 下方 `规则清单`，再按需读相关 reference | 不猜测所有 Java 项目都适用；不复制通用 Java/测试大全 |
-| 最佳实践 / 示例 / 正反例参照 | `wind-project-coding-examples.md` | 不把示例当完整模板或代码生成规则 |
+| 最佳实践 / 示例 / 正反例参照 | `wind-coding-examples.md` | 不把示例当完整模板或代码生成规则 |
+| Java/Spring 编码、契约、异常日志、数据库和安全 | `java-coding-conventions.md` | 不把通用项目本地规则改写成 Wind 默认 |
+| Wind 项目族端口、Starter、Trace、安全和企业集成模式 | `wind-architecture-patterns.md` | 不把公开项目样本当当前项目事实 |
 
 ## 1. 启用、模块与分包
 
-- 启用：项目本地 `AGENTS.md` 写明即可，例如“本项目遵守 Wind 项目编码约规”；启用后仍按项目 `AGENTS.md`、OpenSpec、ADR、CI、附近代码、本规约的顺序取舍。
+- 启用：项目本地 `AGENTS.md` 明确声明是最强信号；明确的 Wind/Nobe 依赖坐标、包名/import、Wind 类型或项目族上下文也可启用。启用后仍按项目 `AGENTS.md`、OpenSpec、ADR、CI、附近代码、本规约的顺序取舍。
 
 - 源码观察边界：本规约已抽样对照 `wind-integration / nobe / capte-domain 源码观察`，提炼的是稳定共性，不把某个仓库的历史包名、业务模块名或临时实现照搬成强制规则；具体项目仍以本地 `AGENTS.md`、附近代码和 CI 为准。
 
@@ -100,6 +103,20 @@
 
 ## 4. DAL 与外部集成
 
+- Wind 数据表强制包含 `id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime`；`creator`、`modifier`、`order_index int(11)` 按需使用，前两者类型遵循项目约规。新增字段如果为必填，必须有默认值；没有真实业务默认值时字段必须可空。
+- 业务如果有唯一约束，必须使用数据库唯一键约束，以保证可靠性；没有自然业务唯一约束时不得虚构联合唯一键。
+
+通用表字段：
+
+| 字段名称 | 数据库类型 | 字段说明 | 要求 |
+| --- | --- | --- | --- |
+| `id` | `bigint(20)` | 主键 | 强制 |
+| `gmt_create` | `datetime` | 创建时间 | 强制 |
+| `gmt_modified` | `datetime` | 最后更新时间 | 强制 |
+| `creator` | 项目约规类型 | 创建人 | 可选 |
+| `modifier` | 项目约规类型 | 修改人 | 可选 |
+| `order_index` | `int(11)` | 排序 | 可选 |
+
 - MyBatis Flex 使用 `XxxRefs` 和统一 helper 构造 `QueryWrapper`；禁止新增 `LambdaQueryWrapper` 或裸字符串字段名；分页有上限，排序白名单，写库默认 selective。
 - QueryWrapper 构造逻辑优先沉淀到 helper 或基础服务，避免到处手写条件；源码样本中的标准链路是 `MybatisQueryHelper.from(options)` 或项目 helper 构造排序/分页，再用 `XxxNameRefs` 拼条件，最后通过 `MybatisQueryHelper.<Entity, DTO>query(queryWrapper).counter(mapper::selectCountByQuery).resultQueryFunc(mapper::selectListByQuery).converter(XxxConverter.INSTANCE::convertToXxxDTO).query(options)` 输出分页 DTO。排序入参优先使用项目统一的 `orderFields` / `orderTypes` 或 `WindQuery<? extends QueryOrderField>`，必须白名单校验字段和方向；复杂 SQL 说明索引、分页、排序、数据量和慢查询风险。
 - 空结果分支：关键词、权限、外部检索等前置条件查不到数据时，优先返回 `Pagination.empty()` / `CursorPagination.empty()` 这类统一空分页，不返回 null、不伪造一页空对象、不绕过总数语义。
@@ -120,6 +137,6 @@
 - Bug 修复先补能复现失败的回归测试；新增资金、权限、审计、状态机、幂等或并发逻辑时补对应红线断言。
 - 测试说明放在测试方法名、Javadoc 或方法级注释中，表达场景、输入、行为、输出和红线；测试结构优先 Given/When/Then 或 Arrange/Act/Assert。
 - 完成 TDD 或 AI 生成实现后做设计质量回看：是否新增浅服务、透传接口、无主依赖、过度抽象、内部链路 mock、AI 注释噪声或只为过测试的战术实现。
-- CR 检查 opt-in、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全分类与鉴权、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
-- Wind opt-in 项目可先运行 `wind-project-coding-conventions/scripts/check_wind_conventions.py --root <project>` 做启发式预检；当前脚本只检查 String 币种字段、部分 face 导入/单行签名泄漏、`queryXxxById` 命名、部分非 selective 更新和生产内存 Service，不承诺识别多行 Java 语法、依赖方向、多实现装配或锁语义。需要确定性约束时优先在目标项目使用 ArchUnit、PMD、编译或契约测试；脚本和静态检查都不替代架构师源码级 CR。
+- CR 检查 Wind/Nobe 启用证据、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全分类与鉴权、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
+- Wind 专项已启用的项目可先运行 `wind-coding-conventions/scripts/check_wind_conventions.py --root <project>` 做启发式预检；当前脚本只检查 String 币种字段、部分 face 导入/单行签名泄漏、`queryXxxById` 命名、部分非 selective 更新和生产内存 Service，不承诺识别多行 Java 语法、依赖方向、多实现装配或锁语义。需要确定性约束时优先在目标项目使用 ArchUnit、PMD、编译或契约测试；脚本和静态检查都不替代架构师源码级 CR。
 - 接入 Open Code Review / OCR 时，Wind 约规可作为项目 `.opencodereview/rule.json` 或 `ocr review --background` 的规则输入，重点覆盖 face/impl、模型归位、Entity 不外露、基础服务、查询命名、内网 API、字典/国际化、MyBatis Flex、币种枚举、测试黑盒和内存服务红线；但 OCR 不是 Wind 规则权威，工具输出必须由 `资深架构师` 按源码事实、项目 `AGENTS.md`、测试结果和本 Skill 重新判读。

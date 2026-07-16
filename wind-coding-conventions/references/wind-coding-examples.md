@@ -1,15 +1,15 @@
 # Wind 项目编码最佳实践示例
 
-本文是 `wind-project-coding-conventions` Skill 的示例参考，只在已读取 `wind-project-coding-conventions.md` 后使用，用少量正反例帮助判断服务分层、模型归属、DAL 和测试边界；它不是代码生成模板。
+本文是 `wind-coding-conventions` Skill 的示例参考，只在已读取 `wind-coding-conventions.md` 后使用，用少量正反例帮助判断服务分层、模型归属、DAL 和测试边界；它不是代码生成模板。
 
 ## 使用时机
 
-- 用户要求 Wind 项目编码约规的最佳实践、示例、正反例或落地参照。
+- 用户要求 Wind 编码约规的最佳实践、示例、正反例或落地参照。
 - AI Maker / Checker 对 ApplicationService、基础服务、DTO/Entity、MyBatis Flex 或测试替身边界拿不准。
 
 ## 不适用场景
 
-- 项目未在本地 `AGENTS.md`、任务说明或用户要求中 opt-in Wind 项目编码约规。
+- 项目没有 Wind/Nobe 声明、依赖、包名、类型或模块上下文等高置信度信号。
 - 需要生成完整 Java Service 脚手架时，交给 `java-service-code-generator`；本文件只辅助判断，不替代项目附近代码风格。
 
 ## 读取后必须产出
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- 规则原文读本 Skill 的 `wind-project-coding-conventions.md`；Java 强规约读架构师 `references/coding-standards.md`；Service/API/DTO 细节读架构师 `references/project-governance-service-api-modeling.md`；测试落地读架构师 `references/testing.md`。
+- 规则原文读本 Skill 的 `wind-coding-conventions.md`，Java/Spring 细则读 `java-coding-conventions.md`；Service/API/DTO 通用设计和测试落地仍交 `资深架构师`。
 
 ## 按任务读取索引
 

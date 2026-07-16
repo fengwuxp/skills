@@ -24,6 +24,7 @@ class RequiredGroup(NamedTuple):
 CHECKS: dict[str, list[RequiredGroup]] = {
     "prd": [
         RequiredGroup("goal_and_scope", ["目标", "非目标", "范围", "不做范围", "成功指标"], 3),
+        RequiredGroup("definition_and_boundary", ["核心名相", "定义", "不是什么", "归属主体", "产品边界"], 2),
         RequiredGroup("actors_and_roles", ["用户", "主体", "角色", "验收方", "责任边界"], 2),
         RequiredGroup("objects_and_states", ["对象", "状态", "字段", "生命周期", "不变量", "状态机图", "对象关系图"], 2),
         RequiredGroup("flows", ["主流程", "逆向流程", "异常流程", "人工处理", "业务流程", "用例图", "流程图", "泳道图"], 2),
@@ -58,10 +59,12 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("verification", ["验证方式", "验收", "检查", "下一步", "去向"], 2),
     ],
 }
+PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "prd": (
         "目标：提升运营效率；非目标：不改结算规则；范围：后台审核。"
+        "核心名相：审核任务；定义：等待运营判断的申请；不是什么：交易订单；归属主体：平台。"
         "用户：运营；主体：平台；角色：审核员；验收方：产品和运营。"
         "对象：申请单；状态：待审、通过、驳回；字段：amount；生命周期：创建到关闭。"
         "主流程：提交、审核、通知；异常流程：重复提交；人工处理：补录；流程图：审核路径。"
@@ -109,6 +112,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+    if PLACEHOLDER_FIELD.search(text):
+        missing.append("placeholder_fields")
     return missing
 
 
@@ -129,6 +134,9 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    placeholder_text = SELF_TESTS["prd"][0] + "owner：〈待填写〉"
+    if "placeholder_fields" not in missing_groups("prd", placeholder_text):
+        failures.append("prd: placeholder fixture unexpectedly passed")
     if failures:
         print("FAIL product deliverable self-test", file=sys.stderr)
         for failure in failures:

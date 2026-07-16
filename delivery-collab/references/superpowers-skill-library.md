@@ -1,6 +1,6 @@
 # Superpowers Skill Library 外部参考
 
-本文记录 `obra/superpowers` 和 Matt Pocock skills 的审查结果、供应链边界和产研协同体系调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。
+本文记录 `obra/superpowers` 和 Matt Pocock skills 的审查结果、供应链边界和产研协同体系调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。上游原始 Skill 统一保存为 `upstream-skill.md`，避免被 Codex 自动发现为独立 Skill。
 
 ## 使用时机
 
@@ -48,14 +48,14 @@
 | 升级 SDD / Superpowers 6.x 套件 | `1B. Superpowers v6.x / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不默认运行 helper、不默认启用 `.superpowers/sdd/` |
 | 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
 | 复杂 / 模糊需求轻量问询或 Loop 推进中关键分叉未决 | `grill-me` 方法摘要，再回 `delivery-lifecycle.md` 和产品专家 | 不连续抛出多问题，不把问询过程写进正式 PRD |
-| 需求澄清 / Spec 前置 | `external-superpowers/brainstorming/SKILL.md`，再回 `product-to-engineering-lifecycle.md` | 不强制保存 `docs/superpowers/specs` |
-| 写实施计划 | `external-superpowers/writing-plans/SKILL.md`，再回 `spec-template-practices.md` | 不复制默认 plan 路径和提交步骤 |
-| 执行计划 / 多 Agent | `external-superpowers/executing-plans/SKILL.md`、`external-superpowers/subagent-driven-development/SKILL.md`、`external-superpowers/dispatching-parallel-agents/SKILL.md`，再回 `planning-execution-admission.md` | 不默认启动 subagent、worktree 或并行写入 |
-| TDD / 测试纪律 | `external-superpowers/test-driven-development/SKILL.md`，再回 `senior-software-architect/references/testing.md` | 不用外部规则替代项目测试策略 |
-| Debug / 修复验证 | `external-superpowers/systematic-debugging/SKILL.md`、`external-superpowers/verification-before-completion/SKILL.md`，再回 `verification-review-release.md` | 不把一次命令输出当完整验收 |
-| 代码评审 | `external-superpowers/requesting-code-review/SKILL.md`、`external-superpowers/receiving-code-review/SKILL.md`，再回 `verification-review-release.md` 和 `资深架构师` | 不替代源码级 CR |
-| 分支收尾 | `external-superpowers/finishing-a-development-branch/SKILL.md`、`external-superpowers/using-git-worktrees/SKILL.md` | 不默认 push、merge、PR 或清理 worktree |
-| Skill 维护 | `external-superpowers/writing-skills/SKILL.md`，再回仓库 `AGENTS.md` 和 `skill-creator` | 不覆盖本仓库三级加载规则 |
+| 需求澄清 / Spec 前置 | `external-superpowers/brainstorming/upstream-skill.md`，再回 `product-to-engineering-lifecycle.md` | 不强制保存 `docs/superpowers/specs` |
+| 写实施计划 | `external-superpowers/writing-plans/upstream-skill.md`，再回 `spec-template-practices.md` | 不复制默认 plan 路径和提交步骤 |
+| 执行计划 / 多 Agent | `external-superpowers/executing-plans/upstream-skill.md`、`external-superpowers/subagent-driven-development/upstream-skill.md`、`external-superpowers/dispatching-parallel-agents/upstream-skill.md`，再回 `planning-execution-admission.md` | 不默认启动 subagent、worktree 或并行写入 |
+| TDD / 测试纪律 | `external-superpowers/test-driven-development/upstream-skill.md`，再回 `senior-software-architect/references/testing.md` | 不用外部规则替代项目测试策略 |
+| Debug / 修复验证 | `external-superpowers/systematic-debugging/upstream-skill.md`、`external-superpowers/verification-before-completion/upstream-skill.md`，再回 `verification-review-release.md` | 不把一次命令输出当完整验收 |
+| 代码评审 | `external-superpowers/requesting-code-review/upstream-skill.md`、`external-superpowers/receiving-code-review/upstream-skill.md`，再回 `verification-review-release.md` 和 `资深架构师` | 不替代源码级 CR |
+| 分支收尾 | `external-superpowers/finishing-a-development-branch/upstream-skill.md`、`external-superpowers/using-git-worktrees/upstream-skill.md` | 不默认 push、merge、PR 或清理 worktree |
+| Skill 维护 | `external-superpowers/writing-skills/upstream-skill.md`，再回仓库 `AGENTS.md` 和 `skill-creator` | 不覆盖本仓库三级加载规则 |
 
 ## 1. 来源和下载状态
 
@@ -65,10 +65,10 @@
 - main commit：`6fd4507659784c351abbd2bc264c7162cfd386dc`
 - zip SHA256：`ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3`
 - 许可证：MIT License，已保存 `external-superpowers/LICENSE`。
-- 本仓库复制范围：初始导入仅复制 `skills/` 下 Markdown 资源和 LICENSE；2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级，并纳入 `task-reviewer-prompt.md`、`implementer-prompt.md` 和三个本地 helper。
+- 本仓库复制范围：初始导入仅复制 `skills/` 下 Markdown 资源和 LICENSE；上游入口文件改名为 `upstream-skill.md`，只作离线参考，不作为可安装 Skill；2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级，并纳入 `task-reviewer-prompt.md`、`implementer-prompt.md` 和三个本地 helper。
 - 排除范围：除上述本地 helper 外，不复制或运行 hooks、插件 manifest、package 脚本、shell/js/ts 其他可执行文件、图片资产和安装流程；helper 只在明确进入 SDD 执行并获得用户授权时运行。
 
-已下载的 14 个外部 skill：
+保留离线快照的 14 个外部 skill：
 
 - `brainstorming`
 - `dispatching-parallel-agents`
@@ -85,19 +85,12 @@
 - `writing-plans`
 - `writing-skills`
 
-## 1B. Superpowers v6.x / SDD 套件升级结论
+## 1B. Superpowers / SDD 本地审查基线
 
-- 本地 SDD 核心版本：2026-06-30 本仓库对 `external-superpowers/subagent-driven-development` 做 v6.0.3 替换覆盖式升级；`v6.0.3` 发布时间为 2026-06-18，tag commit 为 `896224c4b1879920ab573417e68fd51d2ccc9072`。
-- 本地审查包：`v6.0.3` GitHub archive zip SHA256 为 `45e79c9525328a9dd6653c2d01d49895eaf083cf321a4902ea71d7ba5705bbf0`。
-- 上游最新核验：2026-07-01 通过 GitHub Releases API 核验 `obra/superpowers` latest release 为 `v6.1.0`，发布于 `2026-06-30T18:42:18Z`，tag commit 为 `f268f7c953744036f0fa7e9d4b73535c04e57cb8`。
-- v6.1.0 取舍结论：本轮只记录上游状态，不覆盖本地 vendored SDD 核心。该版本主要压缩 `using-superpowers` bootstrap 与 harness reference、补 Codex marketplace manifest、移除 Codex SessionStart hook，并因 Gemini CLI 于 2026-06-18 EOL 而移除 Gemini CLI 支持。
-- v6 关键变化：`subagent-driven-development` 把 `spec-reviewer-prompt.md` 与 `code-quality-reviewer-prompt.md` 合并为 `task-reviewer-prompt.md`，按一次 diff 读取同时给出 spec-compliance 和 quality 两类结论。
-- v6 关键变化：任务交接从会话粘贴改为文件化，核心脚本包括 `task-brief`、`review-package` 和 `sdd-workspace`；`v6.0.3` 把 task brief、implementer report、review diff 和 progress ledger 放到工作区 `.superpowers/sdd/`。
-- v6 关键变化：执行前增加 pre-flight plan review，先检查计划内部冲突、会被 reviewer 判为缺陷的要求和跨任务接口不一致。
-- v6 关键变化：每次 dispatch 必须声明 model，并按任务风险选择合适成本层；最终再做一次 whole-branch broad review。
-- 升级结论：本仓库已 vendored v6.0.3 的 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace`；其他 Superpowers skill 保持原基线，不复制 hooks、插件 manifest、package 脚本、server 或安装流程。上游 v6.1.0 暂不覆盖本地 SDD helper。
-- 产研协同体系映射：pre-flight plan review 进入 Harness v3 准入；`task-reviewer-prompt.md` 映射为单一 Task Reviewer 角色；文件化 handoff 映射为本仓库任务文档 / review package / 验证证据；progress ledger 映射为 Goal Ledger、Harness Plan、任务文档或当前项目允许的状态文件；`task-brief`、`review-package`、`sdd-workspace` 只作为授权后的本地 helper，不等于默认安装外部 Harness。
-- 停止条件：`task-brief`、`review-package` 和 `sdd-workspace` 只允许在当前任务明确进入 SDD 执行且用户授权写入本地工作区时运行；缺授权时只能使用方法规则，不创建 `.superpowers/sdd/`，不声明已启用外部 SDD 执行套件。
+- 本地审查基线：2026-06-30 对 `external-superpowers/subagent-driven-development` 做 v6.0.3 覆盖式审查，保留 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace` 作为离线参考。
+- 不在稳定流程文档中声明上游 latest。需要比较、升级或安装时，必须重新核验官方 release、许可证、Skill 内容、脚本、hooks、权限和当前 Codex 插件状态。
+- 可迁移方法仅包括 pre-flight plan review、文件化 handoff、Task Reviewer、progress ledger 和 whole-branch review；它们分别映射到 Harness 准入、任务文档、验证证据和最终 CR，不形成并列工作流。
+- `task-brief`、`review-package` 和 `sdd-workspace` 只允许在当前任务明确进入 SDD 执行且用户授权写入本地工作区时运行；缺授权时只能使用方法规则，不创建 `.superpowers/sdd/`。
 
 ## 1A. Matt Pocock skills 审查状态
 

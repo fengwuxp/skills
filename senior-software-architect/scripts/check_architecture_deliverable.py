@@ -34,13 +34,24 @@ CHECKS: dict[str, list[RequiredGroup]] = {
     ],
     "system-design": [
         RequiredGroup("requirements", ["需求背景", "背景", "问题", "不做的风险"], 2),
+        RequiredGroup("product_semantics", ["产品语义输入", "核心名相", "规则ID", "验收种子", "质量属性种子"], 2),
         RequiredGroup("goal_boundary", ["目标", "非目标", "系统边界", "数据边界", "安全边界"], 3),
         RequiredGroup("overview_design", ["概要设计", "核心方案", "关键依赖", "同步", "异步"], 2),
         RequiredGroup("detail_design", ["详细设计", "模块", "类设计", "接口设计", "数据设计"], 3),
-        RequiredGroup("state_or_flow", ["状态机", "主流程", "异常流程", "补偿流程", "人工介入"], 2),
+        RequiredGroup("runtime_and_rules", ["运行时场景", "业务入口", "状态机", "状态与工程规则", "守卫条件", "失败处理"], 3),
+        RequiredGroup("rule_landing", ["规则落地表", "业务表达", "工程承接", "验证证据"], 3),
         RequiredGroup("quality", ["非功能", "性能", "容量", "可用性", "兼容性", "生产就绪"], 2),
-        RequiredGroup("testing", ["测试设计", "单元测试", "集成测试", "契约测试", "回归测试"], 2),
-        RequiredGroup("plan", ["研发计划", "负责人", "里程碑", "验收方式"], 2),
+        RequiredGroup("testing", ["测试设计", "第一批失败测试", "单元测试", "集成测试", "契约测试", "回归测试"], 2),
+        RequiredGroup("implementation_handoff", ["实施", "第一实施切片", "Engineering Handoff", "写入范围", "验证命令", "停止条件"], 3),
+    ],
+    "refactoring-design": [
+        RequiredGroup("admission", ["重构准入", "独立重构设计", "为什么局部修改", "行为变化", "非目标"], 2),
+        RequiredGroup("current_evidence", ["当前问题与证据", "当前结构", "调用链", "缺陷", "事故", "运行指标"], 2),
+        RequiredGroup("behavior_boundaries", ["目标结构", "行为不变量", "公共契约不变量", "保留范围", "替换范围", "删除范围"], 3),
+        RequiredGroup("migration_rules", ["主写方", "双写", "回填", "影子读", "灰度切流", "回滚", "共存", "下线条件"], 4),
+        RequiredGroup("migration_slices", ["MIG 切片", "前置条件", "写入范围", "验证证据", "暂停", "回退"], 3),
+        RequiredGroup("verification", ["特征测试", "契约测试", "回归测试", "数据校验", "监控", "告警"], 3),
+        RequiredGroup("handoff", ["Engineering Handoff", "第一实施切片", "停止条件", "执行 owner", "验证 owner"], 2),
     ],
     "code-review": [
         RequiredGroup("findings", ["发现", "P0", "P1", "P2", "P3"], 2),
@@ -68,6 +79,22 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("output_format", ["SVG", "输出格式", "正式图形化交付"], 1),
     ],
 }
+PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
+TABLE_DESIGN_MARKERS = ("表名", "字段清单")
+TABLE_DESIGN_CHECKS = [
+    RequiredGroup("table_identity", ["表名：", "业务用途：", "数据归属："], 3),
+    RequiredGroup("table_fields", ["字段名称", "字段类型", "是否必填", "默认值", "字段说明", "业务约束"], 6),
+    RequiredGroup("table_uniqueness", ["业务唯一性", "唯一索引", "业务规则"], 3),
+    RequiredGroup("table_access_path", ["普通索引", "索引字段", "查询/排序场景"], 3),
+    RequiredGroup("table_compatibility", ["数据约束与兼容", "历史数据迁移", "兼容", "回滚", "删除与归档"], 3),
+]
+WIND_TABLE_MARKERS = ("Wind 编码约规", "wind-coding-conventions", "Wind/Nobe")
+WIND_SOURCE_NEGATIONS = ("不是", "不属于", "不适用", "未命中", "不使用", "未使用", "不遵循", "未明确", "待确认")
+WIND_REQUIRED_FIELDS = {"id", "gmt_create", "gmt_modified"}
+REQUIRED_VALUES = {"是", "[x]", "yes", "required", "not null", "强制"}
+EMPTY_DEFAULT_VALUES = {"", "-", "无", "null", "none", "不适用"}
+REQUEST_ID_TERMS = ("requestsn", "idempotency-key", "traceid")
+REQUEST_ID_NEGATIONS = ("不使用", "不得", "不作为", "不能作为", "不是", "仅用于", "只用于")
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "architecture-plan": (
@@ -82,13 +109,25 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
     ),
     "system-design": (
         "需求背景：解决回调超时问题；背景：订单处理慢；问题：积压；不做的风险：生产延迟。"
+        "产品语义输入：核心名相为回调任务；规则ID R-001；验收种子 AC-001。"
         "目标：降低 RT；非目标：不迁移数据库；系统边界、数据边界和安全边界明确。"
         "概要设计：核心方案、关键依赖、同步和异步关系。"
         "详细设计：模块、类设计、接口设计和数据设计。"
-        "状态机：待处理到完成；主流程、异常流程、补偿流程和人工介入。"
-        "非功能：性能和容量。测试设计：单元测试、集成测试和回归测试。"
-        "研发计划：负责人、里程碑和验收方式。",
+        "运行时场景：业务入口为订单完成事件；状态机和守卫条件明确，失败处理可恢复。"
+        "规则落地表：业务表达映射到工程承接和验证证据。"
+        "非功能：性能和容量。测试设计：第一批失败测试、集成测试和回归测试。"
+        "实施：第一实施切片写入范围明确；Engineering Handoff 包含验证命令和停止条件。",
         "需求背景：解决回调超时问题。",
+    ),
+    "refactoring-design": (
+        "重构准入：跨模块核心链路替换需要独立重构设计；非目标是不改变结算行为。"
+        "当前问题与证据：当前结构调用链过长，事故和运行指标证明风险。"
+        "目标结构：行为不变量、公共契约不变量、保留范围和替换范围明确。"
+        "迁移规则：主写方明确；双写失败可恢复；先回填和影子读，再灰度切流；支持回滚并限定共存期限和下线条件。"
+        "MIG 切片：前置条件、写入范围、验证证据、暂停和回退方式齐全。"
+        "验证：特征测试、契约测试、回归测试、数据校验、监控和告警。"
+        "Engineering Handoff：第一实施切片、执行 owner、验证 owner 和停止条件明确。",
+        "重构目标：整理代码。",
     ),
     "code-review": (
         "发现：[P1] service.java:10 事务内吞异常。风险：会造成业务、数据和稳定性后果。"
@@ -117,13 +156,96 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+def labeled_value(line: str, label: str) -> str | None:
+    match = re.match(
+        rf"^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*(?:\*\*|__|`)?\s*[：:]\s*(.*)$",
+        line,
+        re.IGNORECASE,
+    )
+    return match.group(1).strip() if match else None
+
+
+def uses_wind_table_rules(text: str) -> bool:
+    for line in text.splitlines():
+        source = labeled_value(line, "数据库约规来源")
+        if source is None:
+            continue
+        normalized_source = normalize(source)
+        if any(marker.casefold() in normalized_source for marker in WIND_TABLE_MARKERS) and not any(
+            term in normalized_source for term in WIND_SOURCE_NEGATIONS
+        ):
+            return True
+    return False
+
+
+def parse_field_tables(text: str) -> list[tuple[set[str], list[dict[str, str]]]]:
+    lines = text.splitlines()
+    tables: list[tuple[set[str], list[dict[str, str]]]] = []
+    for index, line in enumerate(lines):
+        if not line.strip().startswith("|"):
+            continue
+        headers = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if "字段名称" not in headers:
+            continue
+        rows: list[dict[str, str]] = []
+        for row_line in lines[index + 1 :]:
+            if not row_line.strip().startswith("|"):
+                break
+            cells = [cell.strip().strip("`") for cell in row_line.strip().strip("|").split("|")]
+            if cells and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+                continue
+            if len(cells) == len(headers):
+                rows.append(dict(zip(headers, cells)))
+        tables.append((set(headers), rows))
+    return tables
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
-    for group in CHECKS[kind]:
+    groups = CHECKS[kind]
+    if kind == "system-design" and all(marker.casefold() in normalized for marker in TABLE_DESIGN_MARKERS):
+        groups = [*groups, *TABLE_DESIGN_CHECKS]
+    for group in groups:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+    if (
+        kind == "system-design"
+        and all(marker.casefold() in normalized for marker in TABLE_DESIGN_MARKERS)
+        and uses_wind_table_rules(text)
+    ):
+        field_tables = parse_field_tables(text)
+        if not field_tables or any(
+            not WIND_REQUIRED_FIELDS.issubset({row.get("字段名称", "").casefold() for row in rows})
+            for _, rows in field_tables
+        ):
+            missing.append("wind_required_fields")
+        default_columns = {"是否必填", "默认值", "变更类型"}
+        invalid_required_default = not field_tables or any(
+            not default_columns.issubset(headers)
+            or any(
+                "新增" in row.get("变更类型", "")
+                and row.get("是否必填", "").strip().casefold() in REQUIRED_VALUES
+                and row.get("默认值", "").strip().casefold() in EMPTY_DEFAULT_VALUES
+                for row in rows
+            )
+            for headers, rows in field_tables
+        )
+        if invalid_required_default:
+            missing.append("wind_required_field_defaults")
+        for line in text.splitlines():
+            uniqueness = labeled_value(line, "业务唯一性")
+            if uniqueness is None:
+                continue
+            normalized_uniqueness = normalize(uniqueness)
+            if any(term in normalized_uniqueness for term in REQUEST_ID_TERMS) and not any(
+                term in normalized_uniqueness for term in REQUEST_ID_NEGATIONS
+            ):
+                missing.append("wind_request_id_as_business_key")
+                break
+    if PLACEHOLDER_FIELD.search(text):
+        missing.append("placeholder_fields")
     return missing
 
 
@@ -144,6 +266,84 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    for kind in ("system-design", "refactoring-design"):
+        placeholder_text = SELF_TESTS[kind][0] + "owner：〈待填写〉"
+        if "placeholder_fields" not in missing_groups(kind, placeholder_text):
+            failures.append(f"{kind}: placeholder fixture unexpectedly passed")
+    incomplete_table = SELF_TESTS["system-design"][0] + "表名：callback_task；字段清单：id。"
+    expected_table_missing = {
+        "table_identity",
+        "table_fields",
+        "table_uniqueness",
+        "table_access_path",
+        "table_compatibility",
+    }
+    actual_table_missing = set(missing_groups("system-design", incomplete_table))
+    if not expected_table_missing.issubset(actual_table_missing):
+        failures.append("system-design: incomplete table fixture unexpectedly passed")
+    complete_table = (
+        SELF_TESTS["system-design"][0]
+        + "表名：callback_task；业务用途：记录回调；数据归属：订单。"
+        "字段清单：字段名称、字段类型、是否必填、默认值、字段说明、业务约束。"
+        "业务唯一性由数据库唯一索引保护并回指业务规则。"
+        "普通索引列明索引字段和查询/排序场景。"
+        "数据约束与兼容覆盖历史数据迁移、回滚和删除与归档。"
+    )
+    if expected_table_missing.intersection(missing_groups("system-design", complete_table)):
+        failures.append("system-design: complete table fixture unexpectedly failed")
+    invalid_wind_table = (
+        complete_table
+        + "\n数据库约规来源：Wind 编码约规。\n"
+        "| 字段名称 | 字段类型 | 是否必填 | 默认值 | 变更类型 | 字段说明 | 业务约束 |\n"
+        "| --- | --- | --- | --- | --- | --- | --- |\n"
+        "| biz_key | varchar(50) | 是 | 无 | 新增字段 | 业务键 | 普通字段 |\n"
+    )
+    expected_wind_missing = {"wind_required_fields", "wind_required_field_defaults"}
+    actual_wind_missing = set(missing_groups("system-design", invalid_wind_table))
+    if not expected_wind_missing.issubset(actual_wind_missing):
+        failures.append("system-design: invalid Wind table fixture unexpectedly passed")
+    valid_wind_table = (
+        complete_table
+        + "\n数据库约规来源：Wind 编码约规。\n"
+        "| 字段名称 | 字段类型 | 是否必填 | 默认值 | 变更类型 | 字段说明 | 业务约束 |\n"
+        "| --- | --- | --- | --- | --- | --- | --- |\n"
+        "| id | bigint(20) | 是 | 主键生成策略 | 新表字段 | 主键 | 强制 |\n"
+        "| gmt_create | datetime | 是 | CURRENT_TIMESTAMP | 新表字段 | 创建时间 | 强制 |\n"
+        "| gmt_modified | datetime | 是 | CURRENT_TIMESTAMP | 新表字段 | 最后更新时间 | 强制 |\n"
+        "| biz_key | varchar(50) | 是 | '' | 新增字段 | 业务键 | 业务唯一 |\n"
+    )
+    if expected_wind_missing.intersection(missing_groups("system-design", valid_wind_table)):
+        failures.append("system-design: valid Wind table fixture unexpectedly failed")
+    invalid_second_wind_table = (
+        valid_wind_table
+        + "\n表名：callback_attempt；业务用途：记录尝试；数据归属：回调任务。\n"
+        "字段清单：\n"
+        "| 字段名称 | 字段类型 | 是否必填 | 默认值 | 变更类型 | 字段说明 | 业务约束 |\n"
+        "| --- | --- | --- | --- | --- | --- | --- |\n"
+        "| attempt_no | int(11) | 是 | 0 | 新增字段 | 尝试次数 | 普通字段 |\n"
+    )
+    if "wind_required_fields" not in missing_groups("system-design", invalid_second_wind_table):
+        failures.append("system-design: invalid second Wind table fixture unexpectedly passed")
+    invalid_request_uniqueness = valid_wind_table.replace(
+        "业务唯一性由数据库唯一索引保护并回指业务规则。",
+        "\n业务唯一性：使用外部 requestSn 作为业务身份；唯一索引对应业务规则。\n",
+    )
+    if "wind_request_id_as_business_key" not in missing_groups("system-design", invalid_request_uniqueness):
+        failures.append("system-design: request id business key fixture unexpectedly passed")
+    formatted_request_uniqueness = valid_wind_table.replace(
+        "业务唯一性由数据库唯一索引保护并回指业务规则。",
+        "\n- **业务唯一性**：使用外部 requestSn 作为业务身份；唯一索引对应业务规则。\n",
+    )
+    if "wind_request_id_as_business_key" not in missing_groups("system-design", formatted_request_uniqueness):
+        failures.append("system-design: formatted request id business key fixture unexpectedly passed")
+    explicit_non_wind_table = invalid_wind_table.replace(
+        "数据库约规来源：Wind 编码约规。",
+        "数据库约规来源：本项目明确不是 Wind/Nobe。",
+    )
+    if {"wind_required_fields", "wind_required_field_defaults"}.intersection(
+        missing_groups("system-design", explicit_non_wind_table)
+    ):
+        failures.append("system-design: explicit non-Wind table unexpectedly enabled Wind rules")
     if failures:
         print("FAIL architecture deliverable self-test", file=sys.stderr)
         for failure in failures:

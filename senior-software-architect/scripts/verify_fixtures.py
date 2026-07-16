@@ -14,6 +14,7 @@ FIXTURES = ROOT / "fixtures"
 VALID_CASES = [
     ("architecture-plan", FIXTURES / "architecture-plan-valid.md"),
     ("system-design", FIXTURES / "system-design-valid.md"),
+    ("refactoring-design", FIXTURES / "refactoring-design-valid.md"),
     ("code-review", FIXTURES / "code-review-valid.md"),
     ("production-change", FIXTURES / "production-change-valid.md"),
     ("diagram-brief", FIXTURES / "diagram-brief-valid.md"),

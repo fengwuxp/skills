@@ -16,6 +16,7 @@ Notes:
   - Source skills are discovered from skill directories next to this script.
   - Installed skills are synced to "$CODEX_HOME/skills/<skill-dir>".
   - Existing installed skills are backed up before sync.
+  - Known replaced skills are moved to the backup directory after their replacement syncs.
 USAGE
 }
 
@@ -53,6 +54,18 @@ CODEX_HOME_DIR="${CODEX_HOME:-${HOME}/.codex}"
 TARGET_ROOT="${CODEX_HOME_DIR}/skills"
 BACKUP_ROOT="${TARGET_ROOT}/.backups"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
+DRY_RUN_STAGE=""
+
+cleanup_dry_run_stage() {
+  if [[ -n "${DRY_RUN_STAGE}" ]]; then
+    rmdir "${DRY_RUN_STAGE}" 2>/dev/null || true
+  fi
+}
+
+if [[ "${DRY_RUN}" == "true" ]]; then
+  DRY_RUN_STAGE="$(mktemp -d)"
+  trap cleanup_dry_run_stage EXIT
+fi
 
 skill_dirs=()
 skill_names=()
@@ -173,8 +186,8 @@ echo "Codex home:      ${CODEX_HOME_DIR}"
 echo "Dry run:         ${DRY_RUN}"
 echo
 
-mkdir -p "${TARGET_ROOT}"
 if [[ "${DRY_RUN}" == "false" ]]; then
+  mkdir -p "${TARGET_ROOT}"
   mkdir -p "${BACKUP_ROOT}"
 fi
 
@@ -183,6 +196,7 @@ sync_one() {
   local source_dir="${SKILLS_DIR}/${key}"
   local target_dir="${TARGET_ROOT}/${key}"
   local backup_dir="${BACKUP_ROOT}/${key}-${TIMESTAMP}"
+  local rsync_target="${target_dir}"
 
   if [[ ! -f "${source_dir}/SKILL.md" ]]; then
     echo "Source skill is invalid, missing SKILL.md: ${source_dir}" >&2
@@ -204,18 +218,21 @@ sync_one() {
   rsync_args=(-av --delete --exclude '.DS_Store' --exclude '.idea' --exclude '__pycache__' --exclude '*.pyc')
   if [[ "${DRY_RUN}" == "true" ]]; then
     rsync_args+=(--dry-run)
+    if [[ ! -d "${target_dir}" ]]; then
+      rsync_target="${DRY_RUN_STAGE}"
+    fi
   else
     mkdir -p "${target_dir}"
   fi
 
-  rsync "${rsync_args[@]}" "${source_dir}/" "${target_dir}/"
+  rsync "${rsync_args[@]}" "${source_dir}/" "${rsync_target}/"
 
   if [[ "${DRY_RUN}" == "false" ]]; then
     test -f "${target_dir}/SKILL.md"
     test -d "${target_dir}/references" || true
     local source_count target_count
-    source_count="$(find "${source_dir}" -type f ! -name '.DS_Store' ! -path '*/.idea/*' | wc -l | tr -d ' ')"
-    target_count="$(find "${target_dir}" -type f ! -name '.DS_Store' ! -path '*/.idea/*' | wc -l | tr -d ' ')"
+    source_count="$(find "${source_dir}" -type f ! -name '.DS_Store' ! -name '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
+    target_count="$(find "${target_dir}" -type f ! -name '.DS_Store' ! -name '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
     echo "    files: source=${source_count}, target=${target_count}"
     if [[ "${source_count}" != "${target_count}" ]]; then
       echo "    warning: source and target file counts differ; inspect rsync output" >&2
@@ -223,9 +240,47 @@ sync_one() {
   fi
 }
 
+retire_replaced_skill() {
+  local retired="$1"
+  local replacement="$2"
+  local key replacement_selected=false
+  for key in "${selected[@]}"; do
+    if [[ "${key}" == "${replacement}" ]]; then
+      replacement_selected=true
+      break
+    fi
+  done
+  if [[ "${replacement_selected}" == "false" ]]; then
+    return 0
+  fi
+
+  local target_dir="${TARGET_ROOT}/${retired}"
+  local backup_dir="${BACKUP_ROOT}/${retired}-${TIMESTAMP}"
+  if [[ ! -d "${target_dir}" ]]; then
+    return 0
+  fi
+
+  echo "==> retire ${retired}"
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    echo "    would move: ${target_dir}"
+    echo "    to backup: ${backup_dir}"
+    return 0
+  fi
+  if [[ -e "${backup_dir}" ]]; then
+    echo "Retirement backup already exists: ${backup_dir}" >&2
+    exit 1
+  fi
+  mv "${target_dir}" "${backup_dir}"
+  test ! -e "${target_dir}"
+  test -f "${backup_dir}/SKILL.md"
+  echo "    backup: ${backup_dir}"
+}
+
 for key in "${selected[@]}"; do
   sync_one "${key}"
   echo
 done
+
+retire_replaced_skill "wind-project-coding-conventions" "wind-coding-conventions"
 
 echo "Done. Restart Codex or open a new session if skill metadata does not refresh immediately."

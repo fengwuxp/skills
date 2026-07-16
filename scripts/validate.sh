@@ -13,6 +13,7 @@ trap cleanup EXIT
 echo "==> bash syntax"
 bash -n sync-skills.sh
 bash -n scripts/audit-skills.sh
+bash -n scripts/validate-installed-skills.sh
 
 echo "==> skill audit"
 scripts/audit-skills.sh
@@ -64,13 +65,16 @@ if [[ "${VALIDATE_GRILL_ME_INSTALL:-}" == "1" ]]; then
 fi
 
 echo "==> python compile"
+python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
+python3 -m py_compile document-authoring/scripts/check_document_style.py
+python3 -m py_compile hanzi-philology/scripts/check_philology_evidence.py
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
-python3 -m py_compile wind-project-coding-conventions/scripts/check_wind_conventions.py
+python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py
@@ -90,13 +94,20 @@ product-architecture-expert/scripts/check_external_rules.py --self-test
 echo "==> product deliverable checker"
 product-architecture-expert/scripts/check_product_deliverable.py --self-test
 
+echo "==> document deliverable checker"
+document-authoring/scripts/check_document_deliverable.py --self-test
+document-authoring/scripts/check_document_style.py --self-test
+
+echo "==> hanzi philology evidence checker"
+hanzi-philology/scripts/check_philology_evidence.py --self-test
+
 echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py
 
 echo "==> wind convention guard"
-wind-project-coding-conventions/scripts/check_wind_conventions.py --self-test
+wind-coding-conventions/scripts/check_wind_conventions.py --self-test
 
 echo "==> reference index audit"
 scripts/audit-reference-indexes.py
@@ -122,7 +133,42 @@ echo "==> SkillX export adapter"
 python3 scripts/skillx_export_adapter.py --self-test
 
 echo "==> sync dry-run"
-CODEX_HOME="${tmp_dir}/codex-home" ./sync-skills.sh --dry-run all
+dry_run_home="${tmp_dir}/dry-run-home"
+CODEX_HOME="${dry_run_home}" ./sync-skills.sh --dry-run all
+if [[ -e "${dry_run_home}" ]]; then
+  echo "FAIL sync dry-run wrote to CODEX_HOME" >&2
+  exit 1
+fi
+
+echo "==> installed skill parity self-test"
+parity_home="${tmp_dir}/parity-home"
+CODEX_HOME="${parity_home}" ./sync-skills.sh all >/dev/null
+CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh
+mode_probe="${parity_home}/skills/document-authoring/scripts/check_document_deliverable.py"
+chmod -x "${mode_probe}"
+if CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh >/dev/null 2>&1; then
+  echo "FAIL installed skill parity ignored executable-bit drift" >&2
+  exit 1
+fi
+CODEX_HOME="${parity_home}" ./sync-skills.sh document-authoring >/dev/null
+CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh
+if [[ "${VALIDATE_INSTALLED_SKILLS:-}" == "1" ]]; then
+  scripts/validate-installed-skills.sh
+fi
+
+echo "==> retired skill sync"
+retirement_home="${tmp_dir}/retirement-home"
+mkdir -p "${retirement_home}/skills/wind-project-coding-conventions"
+printf '%s\n' 'legacy skill' > "${retirement_home}/skills/wind-project-coding-conventions/SKILL.md"
+CODEX_HOME="${retirement_home}" ./sync-skills.sh wind-coding-conventions >/dev/null
+if [[ -e "${retirement_home}/skills/wind-project-coding-conventions" ]]; then
+  echo "FAIL retired Wind skill remains installed" >&2
+  exit 1
+fi
+if ! find "${retirement_home}/skills/.backups" -path '*/wind-project-coding-conventions-*/SKILL.md' -type f | grep -q .; then
+  echo "FAIL retired Wind skill backup missing" >&2
+  exit 1
+fi
 
 echo "==> diff whitespace"
 git diff --check

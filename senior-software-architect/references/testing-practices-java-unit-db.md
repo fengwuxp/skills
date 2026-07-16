@@ -18,7 +18,7 @@
 ## 需要继续读取的 reference
 
 - 测试总纲读 `testing.md`。
-- Java 编码约规读 `coding-standards.md`。
+- Java 编码约规读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 
 ## 按任务读取索引
 

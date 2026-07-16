@@ -1,6 +1,6 @@
 # 代码整洁原则与评审启发
 
-本文档用于沉淀 Clean Code 的核心判断原则，帮助架构师在阅读、实现、重构和评审代码时保持一致的审美与尺度。它不替代项目级强制规范；具体目录、框架、测试、日志和数据库细则以 `project-governance-standards.md`、`coding-standards.md` 为准。
+本文档用于沉淀 Clean Code 的核心判断原则，帮助架构师在阅读、实现、重构和评审代码时保持一致的审美与尺度。它不替代项目级强制规范；Java 目录、框架、测试、日志和数据库细则以项目本地规范、`wind-coding-conventions` 通用层与 `project-governance-standards.md` 为准，Wind/Nobe 专项按依赖或上下文启用。
 
 ## 使用时机
 
@@ -10,7 +10,7 @@
 
 ## 不适用场景
 
-- Java/Spring/Wind 强制编码规则、JSpecify、DTO 字段、MapStruct、查询和持久化约规优先读 `coding-standards.md`。
+- Java/Spring 强制编码规则、空值契约、DTO 字段、MapStruct、查询和持久化约规优先读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - 架构坏味、问题定级和 Review 输出优先读 `coding-review-deep-dive.md`。
 - 生产风险、安全、测试专项或外部依赖变更先回到对应专项 reference。
 
@@ -22,7 +22,7 @@
 
 ## 需要继续读取的 reference
 
-- 编码强规约读 `coding-standards.md`。
+- Java 编码强规约读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - 深度 Review 和问题定级读 `coding-review-deep-dive.md`。
 - 测试资产治理读 `testing.md`；架构原则读 `architecture.md`。
 

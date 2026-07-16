@@ -10,7 +10,7 @@
 ## 不适用场景
 
 - 只需要判断测试类型或测试层次时，优先停留在 `testing.md`。
-- 代码实现细则读 `coding-standards.md`。
+- Java 代码实现细则读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 
 ## 读取后必须产出
 
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- Java 编码约规读 `coding-standards.md`。
+- Java 编码约规读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - Bug 修复读 `debugging-diagnosis.md`。
 
 ## 按任务读取索引

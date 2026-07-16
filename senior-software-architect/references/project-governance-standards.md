@@ -9,7 +9,7 @@
 ## 不适用场景
 
 - 单点代码 Review 优先读 `coding-review-deep-dive.md`。
-- 具体 Java 编码规约优先读 `coding-standards.md`。
+- 具体 Java 编码规约优先读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - 测试实践优先读 `testing.md` 和 `testing-practices.md`。
 - AI 编码协作优先读 `ai-assisted-engineering.md`。
 
@@ -20,10 +20,10 @@
 ## 需要继续读取的 reference
 
 - 代码库、模块和依赖读 `project-governance-codebase-and-modules.md`。
-- API、DTO、Query 和服务建模读 `project-governance-service-api-modeling.md`。
-- 数据、安全、日志和质量治理读 `project-governance-data-security-quality.md`。
+- 服务职责、API 契约和模型边界读 `project-governance-service-api-modeling.md`。
+- 数据责任、安全边界和质量验证读 `project-governance-data-security-quality.md`。
 - Git、发布、平台和长期演进读 `project-governance-delivery-and-platform.md`。
-- 项目 `AGENTS.md` 明确 opt-in Wind 项目编码约规时，读 `wind-project-coding-conventions.md`。
+- Java 项目先读 `wind-coding-conventions` 通用层；项目声明、依赖、包名、类型或模块上下文命中 Wind/Nobe 时再读其专项规则。
 
 ## 按任务读取索引
 
@@ -31,18 +31,18 @@
 | --- | --- | --- |
 | 判断代码库类型和治理强度 | `project-governance-codebase-and-modules.md` 的 0-2，必要时读 `project-governance-delivery-and-platform.md` 的 20 | 前端、Kubernetes、SOFAStack 细节 |
 | 模块划分、依赖方向、服务边界 | `project-governance-codebase-and-modules.md` | Git、前端、Kubernetes |
-| API、DTO、Query、方法命名 | `project-governance-service-api-modeling.md` | 容器化和前端协作 |
-| Wind 项目编码约规 opt-in | `wind-project-coding-conventions.md` | 不把 Wind 规则强套到未声明项目 |
-| 数据库、日志、安全、测试治理 | `project-governance-data-security-quality.md` | SOFAStack 和 Git 细节 |
+| 服务职责、API 契约、模型边界 | `project-governance-service-api-modeling.md` | 具体方法命名和框架细则 |
+| Wind/Nobe 专项信号 | `wind-coding-conventions` Skill | 没有声明、依赖或源码上下文证据时不加载 Wind 专项 |
+| 数据责任、安全边界、质量验证 | `project-governance-data-security-quality.md` | 数据库字段、日志格式和测试命名细则 |
 | 前端、Git、Kubernetes、演进治理 | `project-governance-delivery-and-platform.md` | Java 服务层细则 |
 | 系分或长期演进评审 | `project-governance-delivery-and-platform.md` 的 16、17、20、21 | 只读当前任务无关专题 |
 
 ## 专题 reference 路由
 
 - `project-governance-codebase-and-modules.md`：规范目标、设计原则、代码库类型、工程模块、依赖管理。
-- `project-governance-service-api-modeling.md`：Service 划分、方法命名、Query/DTO、API 设计和编码原则。
-- `wind-project-coding-conventions.md`：项目 opt-in 后的 Wind 项目编码约规、face/impl 边界、服务分层、模型归属、分包、DAL、外部集成和 CR 清单。
-- `project-governance-data-security-quality.md`：数据访问、数据库、日志、安全和测试治理。
+- `project-governance-service-api-modeling.md`：服务职责、API 契约、模型边界和规则结果裁决。
+- `wind-coding-conventions` Skill：所有 Java 项目的通用约规入口；命中 Wind/Nobe 后补充 face/impl 边界、服务分层、模型归属、分包、DAL、外部集成和 CR 清单。
+- `project-governance-data-security-quality.md`：数据责任、安全边界、质量策略和验证证据裁决。
 - `project-governance-delivery-and-platform.md`：前端协作、Git/PR、评审、重构演进、Kubernetes、SOFAStack、最小门禁和系分门禁。
 
 ## 后续维护规则

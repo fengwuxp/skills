@@ -28,7 +28,7 @@
 
 - Java/Spring 具体实践、复杂业务、资金域或非 Java 适配细节读 `testing-practices.md`。
 - Bug 修复先读 `debugging-diagnosis.md` 建立反馈环。
-- 代码约规读 `coding-standards.md`；交付验证读 `workflow.md`。
+- Java 代码约规读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用；交付验证读 `workflow.md`。
 
 ## 按任务读取索引
 

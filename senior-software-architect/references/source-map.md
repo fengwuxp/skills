@@ -56,7 +56,7 @@
 ## 已参考的公开来源：软件本质与非标工程问题
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/rIyajlYyWD38ppLJ9bBSbg`；标题：`回到本质：软件到底应该怎么造？`；作者字段：`建国`；页面 `ct` 字段：`1777106205`；读取日期：2026-06-15。已通过移动端微信 UA 公开 HTML 读取标题、作者、meta 描述和正文。应用到 `architecture.md` 的知识表达与工程验证边界，强调架构师要把业务知识落到对象、规则、约束、接口、测试、监控和反馈，不把代码生成速度当成工程质量。
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/j1NQJDM7wpOOI9sIi2SLPA`；标题：`高水平工程师都擅长解决“非标问题”`；作者字段：`杨光西`；页面 `ct` 字段：`1781356080`；读取日期：2026-06-15。已通过移动端微信 UA 公开 HTML 读取标题、作者、meta 描述和正文。应用到 `architecture.md` 和 `scenario-routing.md` 的非标工程问题入口，要求先输出问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令和停止条件，再进入 TDD、实现、重构或 GSD/CAD。
-- 来源/读取/应用：`https://mp.weixin.qq.com/s/TNz_MRfuAM0tAVlWBOk3yA`；标题：`屎山代码的本质`；作者字段：`井文严`；账号字段：`c++工程应用经验`；页面 `ct` 字段换算为 2026-06-06 09:50:47 Asia/Shanghai；读取日期：2026-07-02。`web.open` 未取得正文，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、账号、页面时间字段和正文。应用到 `SKILL.md` 和 `coding-standards.md` 的体用不混 / 业务与控制分离原则，要求先定业务不变量、状态、规则和决策，再把遍历、查找、异步、回调、线程、IO、协议解析等控制机制收进 helper、适配层、状态机或基础设施。
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/TNz_MRfuAM0tAVlWBOk3yA`；标题：`屎山代码的本质`；作者字段：`井文严`；账号字段：`c++工程应用经验`；页面 `ct` 字段换算为 2026-06-06 09:50:47 Asia/Shanghai；读取日期：2026-07-02。`web.open` 未取得正文，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、账号、页面时间字段和正文。应用到 `SKILL.md` 和 `wind-coding-conventions/references/java-coding-conventions.md` 的体用不混 / 业务与控制分离原则，要求先定业务不变量、状态、规则和决策，再把遍历、查找、异步、回调、线程、IO、协议解析等控制机制收进 helper、适配层、状态机或基础设施。
 - 未吸收内容：不复制原文、故事、图片、作者表达、代码示例或标题传播话术；不把外部文章观点写成组织制度、岗位评价、项目事实、执行授权、测试通过、CR 结论或生产审批；不把“回到本质”解释为跳过产品确认、系分、OpenSpec、Harness、测试、发布和回滚；不把业务与控制分离写成固定分层模板、框架选择结论或一律新增抽象，只有控制机制影响业务主线理解或形成稳定复用时才收口。
 ## 已参考的公开来源：AI Coding 反馈闭环与验证簇
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/FwCCJUdAZ2T4RGZMDo_5Fw`；标题：`AI Coding 的反馈闭环：从测试、生产证据到自举验证系统`；作者字段：`证明与计算`；页面 `ct` 字段：`1778945451`；读取日期：2026-06-15。已通过移动端微信 UA 公开 HTML 读取标题、作者、页面时间字段和正文。应用到 `testing.md` 的不变量支撑验证簇，要求把支付、账务、权限、幂等和状态机等高风险事实落到场景测试、属性 / 变形测试、历史回归入口、生产重放样本、有限变异 / 对抗检查、置信度、来源和 CI 分层。
@@ -71,7 +71,7 @@
 | --- | --- |
 | `SKILL.md` | 补充深模块与信息隐藏原则，要求用简单接口封装复杂度，警惕浅模块、直通方法、直通变量和公共知识泄露。 |
 | `architecture.md` | 增加 `5.3.2 深模块与信息隐藏`，把深模块 / 浅模块、信息隐藏、按任务职责分解、设计两次、多文件小改动信号和“长度不是坏味本身，复杂性才是”纳入架构评审。 |
-| `coding-standards.md` | 补充复杂度可控、错误处理低层屏蔽 / 高层聚合、谨慎使用“定义错误不存在”、注释先行、命名面向读者和 TDD 后设计质量回看。 |
+| `wind-coding-conventions/references/java-coding-conventions.md` | 补充复杂度可控、错误处理低层屏蔽 / 高层聚合、谨慎使用“定义错误不存在”、注释先行、命名面向读者和 TDD 后设计质量回看。 |
 | `coding-review-deep-dive.md` | 增加复杂性投资检查，识别浅模块堆叠、直通包装、信息泄露、多文件小改动、战术 AI 代码和 Classitis。 |
 | `delivery-collab/SKILL.md`、`references/delivery-execution-control.md` | 在产研协同 中增加复杂度投资门禁，要求 AI 生成代码不能只追求测试变绿、PR 变多或代码更短，必须检查理解成本和维护成本。 |
 | `README.md`、`scripts/validate-trigger-paths.py` | 补充公开来源记录和防漂移断言。 |
@@ -83,7 +83,7 @@
 - 不把 AI 生成代码默认判为错误；只把浅模块、直通包装、重复公共知识、AI 注释噪声和只为过测试的实现作为需要设计 / CR 复核的信号。
 ## 已参考的公开来源：Ponytail 最小正确实现
 Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-23 通过 Codex marketplace 安装 `ponytail@ponytail` 4.7.0，已读取 manifest、两个 skill 和 lifecycle hooks；manifest 标注 MIT，能力为 Instructions 和 Lifecycle hooks。
-应用到 `SKILL.md`、`coding-standards.md`、`coding-review-deep-dive.md` 和 `evolutionary-architecture.md`：只吸收最小正确实现、复用已有代码 / 标准库 / 平台原生 / 已安装依赖、过度设计专项 CR 和可删除复杂度候选；不复制插件内容、命令或 hook，不把 lifecycle hook 写成默认行为，也不把“少写”写成删除必要校验、错误处理、安全/权限/资金兜底、可访问性、持久化意图、幂等、审计或测试的理由。
+应用到 `SKILL.md`、`wind-coding-conventions/references/java-coding-conventions.md`、`coding-review-deep-dive.md` 和 `evolutionary-architecture.md`：只吸收最小正确实现、复用已有代码 / 标准库 / 平台原生 / 已安装依赖、过度设计专项 CR 和可删除复杂度候选；不复制插件内容、命令或 hook，不把 lifecycle hook 写成默认行为，也不把“少写”写成删除必要校验、错误处理、安全/权限/资金兜底、可访问性、持久化意图、幂等、审计或测试的理由。
 ## 已参考的公开来源：工程实践仓库
 ### google/eng-practices
 - 来源：`https://github.com/google/eng-practices`
@@ -313,8 +313,8 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 ### 微信公众号文章：架构30：架构思维：需求分析
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/B8Rap_MmAKmVN3f7eAnvCw`；标题：`架构30：架构思维：需求分析`；作者字段：`开心就好TF`；页面时间字段：2026-06-07 09:34:00 Asia/Shanghai；读取日期：2026-06-09。`web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文（发布时间取页面时间字段）；用于 `product-design.md` 的需求澄清门禁、`system-analysis-design.md` 的系分前需求分析门禁，以及 AI Native / 产品专家的需求分析结论卡；不复制原文、案例、作者表达、标题传播话术或时间投入比例，不把单篇文章观点写成组织制度、项目事实、执行授权或架构师必须越过产品 owner 的理由。
 ### 微信公众号文章：标准与需求基线
-- 来源/读取/应用：`https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw`；标题：`[013] 标准不是摆设——需求标准、设计标准、编码标准怎么写`。`https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q`；标题：`[014] 85%返工都是需求的锅——为啥说需求是软件的根本`。作者/账号字段为 `AIIIIlIIII`；页面时间字段分别为 2026-05-23 07:24:00 与 2026-05-26 06:21:00 Asia/Shanghai；读取日期：2026-06-09。首篇 `web.open` 未取得正文，随后两篇均通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。应用到 `system-analysis-design.md` 的需求基线和高层/详细设计分工、`coding-standards.md` 的规则原因/示例/验证方式与防御式编程、`testing.md` 的需求驱动测试门禁，并由 AI Native / 产品专家维护需求 / 设计 / 编码标准门禁。不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文；不把单篇文章写成通用合规结论、项目制度或 Execution Grant。
-- 微信公众号文章《编写高质量代码注释与可读性重构指南》：`https://mp.weixin.qq.com/s/oDZRKB4rNlIrgbuP-qDbDA`。作者字段为 `techfightyang`，账号字段为 `秋之筠的技术哲思`，页面 `ct` 字段转换为 2026-06-13 21:14:40 Asia/Shanghai；2026-06-16 `web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。公开内容用于参考 `coding-standards.md` 的注释规约和 `coding-review-deep-dive.md` 的注释与可读性重构 CR 门禁，要求先用命名、方法抽取、常量/枚举、强类型/值对象和测试表达意图，注释只补充业务约束、设计取舍、外部规则、历史坑点和 Why not；不得用注释掩盖弱命名、长方法、魔法值、弱类型、隐式契约或缺测试。不复制原文、代码示例、表格、排版、作者表达或标题传播话术；不把注释写成替代产品语义、架构设计、测试、源码阅读、CR 结论或验证证据的手段；不擅自删除承载历史决策、兼容说明、迁移参考或用户明确要求保留的注释。
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw`；标题：`[013] 标准不是摆设——需求标准、设计标准、编码标准怎么写`。`https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q`；标题：`[014] 85%返工都是需求的锅——为啥说需求是软件的根本`。作者/账号字段为 `AIIIIlIIII`；页面时间字段分别为 2026-05-23 07:24:00 与 2026-05-26 06:21:00 Asia/Shanghai；读取日期：2026-06-09。首篇 `web.open` 未取得正文，随后两篇均通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。应用到 `system-analysis-design.md` 的需求基线和高层/详细设计分工、`wind-coding-conventions/references/java-coding-conventions.md` 的规则原因/示例/验证方式与防御式编程、`testing.md` 的需求驱动测试门禁，并由 `delivery-collab` / 产品专家维护需求 / 设计 / 编码标准门禁。不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文；不把单篇文章写成通用合规结论、项目制度或 Execution Grant。
+- 微信公众号文章《编写高质量代码注释与可读性重构指南》：`https://mp.weixin.qq.com/s/oDZRKB4rNlIrgbuP-qDbDA`。作者字段为 `techfightyang`，账号字段为 `秋之筠的技术哲思`，页面 `ct` 字段转换为 2026-06-13 21:14:40 Asia/Shanghai；2026-06-16 `web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。公开内容用于参考 `wind-coding-conventions/references/java-coding-conventions.md` 的注释规约和 `coding-review-deep-dive.md` 的注释与可读性重构 CR 门禁，要求先用命名、方法抽取、常量/枚举、强类型/值对象和测试表达意图，注释只补充业务约束、设计取舍、外部规则、历史坑点和 Why not；不得用注释掩盖弱命名、长方法、魔法值、弱类型、隐式契约或缺测试。不复制原文、代码示例、表格、排版、作者表达或标题传播话术；不把注释写成替代产品语义、架构设计、测试、源码阅读、CR 结论或验证证据的手段；不擅自删除承载历史决策、兼容说明、迁移参考或用户明确要求保留的注释。
 ### 微信公众号文章：需求分析和设计活动关键要点总结
 - 来源/读取：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`；标题：`需求分析和设计活动关键要点总结`；公众号：`软件需求分析和设计`；作者：`常识`；发布时间：2026-05-26 10:29:23；读取日期：2026-06-01。已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间和正文；随后使用本机 Chrome headless 作为 Playwright 等价浏览器读取到标题、作者、发布时间和正文；未见明确复用许可证。
 - 应用记录：`system-analysis-design.md` 补充功能不是头脑风暴功能点，而是对象对外提供的可见、有价值交互行为、正向分解和逆向追溯，以及需求分析外部视角和设计内部视角；`skill-tree-architecture-design.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 同步功能分配追溯、需求/设计分工与防漂移断言。

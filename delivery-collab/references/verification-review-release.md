@@ -238,7 +238,7 @@ owner 复述：
 
 1. **准入定界**：明确 review 对象、业务目标、写入 / 只读范围、风险等级、期望验证和是否允许自动修复；没有 diff、目标或验证要求时，先走决策澄清门禁。
 2. **只读理解**：小 diff 用 Codex / `rg` / `git diff` 直接看；陌生代码库、多模块、接口迁移或 AI 多文件 diff，先产出代码库理解结论包。Gemini CLI、AgentRC、Understand Anything 只在已授权、只读、可回链源码锚点时作为辅助。
-3. **规则装载 / 红线**：先读项目 `AGENTS.md`、邻近代码风格和项目检查命令；Wind opt-in 时读取 `wind-project-coding-conventions`；源码级判断回 `资深架构师` 的 `coding-review-deep-dive.md`、`coding-standards.md`、`testing.md`。
+3. **规则装载 / 红线**：先读项目 `AGENTS.md`、邻近代码风格和项目检查命令；Java 项目读取 `wind-coding-conventions` 的通用层，Wind/Nobe 专项按依赖或上下文启用；源码级判断回 `资深架构师` 的 `coding-review-deep-dive.md` 和 `testing.md`。
 4. **三线评审 / 业务架构裁决**：先守质量底线，再看架构和维护性，最后处理风格噪音。P0/P1 是逻辑错误、安全漏洞、权限越界、数据一致性、公共契约、资金 / 合规 / 发布风险；P2 是架构设计、性能隐患、可维护性、复用质量和测试可信度；P3 是命名、格式和偏好，除非已写入项目规范或会造成误解，否则不阻塞。评审意见必须能回到业务语义、业务不变量、边界方向、契约完整性、失败路径和源码锚点。
 5. **代码坏味道细查**：重点看规则错层、贫血用例、浅模块堆叠、直通包装、隐藏副作用、模糊契约、AI 注释噪声、只为测试变绿的实现和无业务语义的抽象；只给当前目标内可验证整改。
 6. **工具补扫**：Open Code Review / OCR 用于覆盖 diff 和行级候选问题，先跑 preview / LLM 连通 / background；Ponytail 只做过度设计和最小正确实现专项 pass；工具输出都是证据源，不是最终 CR。
@@ -327,7 +327,7 @@ AI 代码 Review 优先顺序：
 11. 是否泄露敏感信息、吞异常、隐藏外部调用或扩大依赖。
 12. 是否通过可用性 / 安全性 / 可靠性相关评估，或列出未覆盖范围和人工 owner。
 13. 是否有发布、监控、回滚和人工处理边界。
-14. 是否需要外部 Checker 作为补充证据：Open Code Review / OCR 只能在 CLI 可用、`ocr review --preview` 的 Will review / Excluded 覆盖清单已确认、LLM provider 已通过 `ocr llm test`、读取范围和模型外发边界获授权、并且 Review 背景包含业务目标 / Spec / 项目约规时调用；其输出必须回到架构师按项目编码规范、Wind opt-in 规则、测试证据和源码事实判读。
+14. 是否需要外部 Checker 作为补充证据：Open Code Review / OCR 只能在 CLI 可用、`ocr review --preview` 的 Will review / Excluded 覆盖清单已确认、LLM provider 已通过 `ocr llm test`、读取范围和模型外发边界获授权、并且 Review 背景包含业务目标 / Spec / 项目约规时调用；其输出必须回到架构师按项目编码规范、通用 Java 约规、已命中的 Wind/Nobe 专项、测试证据和源码事实判读。
 15. CR 高频问题是否已经沉淀为测试、lint、静态检查、fixture、模板、`.opencodereview/rule.json` 或知识回流计划，而不是继续靠人肉提醒。
 
 AI 生成代码和人工代码使用同一合并标准；不得因为“是 AI 生成”降低 Spec 符合性、测试、性能、安全、发布和可维护性要求。

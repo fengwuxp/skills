@@ -1,6 +1,6 @@
-# Wind 项目族架构与 API 提炼
+# Wind 架构与 API 模式
 
-本文从以下仓库提炼资深架构师在 Java/Spring/Wind 项目中的项目级实践样本：
+本文从以下仓库提炼 Java/Spring/Wind 项目的可迁移实践样本：
 
 - wind-middleware：https://github.com/fengwuxp/wind-middleware
 - wind-integration：https://github.com/fengwuxp/wind-integration
@@ -14,8 +14,8 @@
 
 ## 不适用场景
 
-- 非 Java/Wind 项目先读 `language-agnostic-architecture.md`。
-- 具体编码强规约优先读 `coding-standards.md`，项目级治理优先读 `project-governance-standards.md`。
+- 非 Java/Wind 项目交给 `资深架构师`，不得加载本文件。
+- 具体编码强规约优先读 `java-coding-conventions.md`，模块、服务和模型规则优先读 `wind-coding-conventions.md`。
 - 不把公开项目样本当成当前项目必须照抄的架构；仍以当前仓库事实和用户目标为准。
 
 ## 读取后必须产出
@@ -26,9 +26,7 @@
 
 ## 需要继续读取的 reference
 
-- Java/Spring/Wind 强制约规读 `coding-standards.md`。
-- 项目治理综合规范读 `project-governance-standards.md`。
-- Review 输出读 `coding-review-deep-dive.md`；生产和安全读对应专项 reference。
+- Java/Spring 编码细则读 `java-coding-conventions.md`，Wind 模块与服务规则读 `wind-coding-conventions.md`；源码级 Review、项目治理、生产和安全判断交给 `资深架构师`。
 
 ## 按任务读取索引
 
@@ -36,9 +34,9 @@
 | --- | --- | --- |
 | Wind 项目族能力识别 | `1. 总体架构定位`、`5. 模块治理提炼` | 不把模块地图当作当前项目真实依赖 |
 | API 和契约风格 | `2. API 设计风格` | 不绕过统一响应、traceId、错误码和空值契约 |
-| 编码风格和公共模型 | `3. 编码风格提炼` | 不替代 `coding-standards.md` |
+| 编码风格和公共模型 | `3. 编码风格提炼` | 不替代 `java-coding-conventions.md` |
 | 端口适配和 Starter 模式 | `4. 架构模式提炼` | 不让业务代码直接依赖厂商 SDK |
-| Java/Wind 落地 Review | `6. 对资深架构师 Skill 的 Java/Wind 落地要求`、`7. 可复用检查清单` | 不重复造已有基础能力 |
+| Java/Wind 落地 Review | `6. Wind 落地要求`、`7. 可复用检查清单` | 不重复造已有基础能力 |
 
 ## 1. 总体架构定位
 
@@ -147,7 +145,7 @@
 - `wind-security` 侧重认证、授权、JWT、验证码、MFA、Token 状态和请求权限管理。
 - 模块地图只用于能力定位；当前项目的真实模块、依赖、包名和验证命令仍以本地仓库为准。
 
-## 6. 对资深架构师 Skill 的 Java/Wind 落地要求
+## 6. Wind 落地要求
 
 在处理使用 Wind 项目族的 Java 项目时，应优先遵循以下规则：
 

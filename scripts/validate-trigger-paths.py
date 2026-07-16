@@ -116,6 +116,16 @@ def expected_handling_has(case_id: str, required_terms: tuple[str, ...]) -> None
     check(f"prompt fixture expected handling outlines {case_id}{detail}", case is not None and not missing)
 
 
+def negative_reason_has(case_id: str, required_terms: tuple[str, ...]) -> None:
+    """Check why a hard-negative fixture must not trigger; this does not execute an Agent."""
+    cases = json.loads(read(skill_eval_prompt_fixture))["cases"]
+    case = next((item for item in cases if item.get("id") == case_id), None)
+    reason = "" if case is None else case.get("negative_reason", "")
+    missing = [term for term in required_terms if term not in reason]
+    detail = f" missing={missing}" if missing else ""
+    check(f"prompt fixture negative reason outlines {case_id}{detail}", case is not None and not missing)
+
+
 def behavior_contract_has(case_id: str, required_keys: tuple[str, ...], required_terms: tuple[str, ...]) -> None:
     cases = json.loads(read(skill_eval_prompt_fixture))["cases"]
     case = next((item for item in cases if item.get("id") == case_id), None)
@@ -138,11 +148,13 @@ def behavior_contract_has(case_id: str, required_keys: tuple[str, ...], required
 senior_skill = "senior-software-architect/SKILL.md"
 senior_agent = "senior-software-architect/agents/openai.yaml"
 senior_routing = "senior-software-architect/references/scenario-routing.md"
-wind_skill = "wind-project-coding-conventions/SKILL.md"
-wind_skill_agent = "wind-project-coding-conventions/agents/openai.yaml"
-wind_skill_conventions = "wind-project-coding-conventions/references/wind-project-coding-conventions.md"
-wind_skill_agents_template = "wind-project-coding-conventions/references/wind-project-agents-template.md"
-wind_skill_examples = "wind-project-coding-conventions/references/wind-project-coding-examples.md"
+wind_skill = "wind-coding-conventions/SKILL.md"
+wind_skill_agent = "wind-coding-conventions/agents/openai.yaml"
+wind_skill_conventions = "wind-coding-conventions/references/wind-coding-conventions.md"
+wind_skill_agents_template = "wind-coding-conventions/references/wind-project-agents-template.md"
+wind_skill_examples = "wind-coding-conventions/references/wind-coding-examples.md"
+wind_skill_java = "wind-coding-conventions/references/java-coding-conventions.md"
+wind_skill_architecture = "wind-coding-conventions/references/wind-architecture-patterns.md"
 senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
 ai_engineering = "senior-software-architect/references/ai-assisted-engineering.md"
@@ -152,9 +164,7 @@ cad_mode = "senior-software-architect/references/cad-mode.md"
 negative_constraints = "senior-software-architect/references/negative-constraints.md"
 architecture = "senior-software-architect/references/architecture.md"
 testing = "senior-software-architect/references/testing.md"
-coding = "senior-software-architect/references/coding-standards.md"
-wind_coding = "senior-software-architect/references/wind-project-coding-conventions.md"
-wind_coding_examples = "senior-software-architect/references/wind-project-coding-examples.md"
+coding = wind_skill_java
 knowledge_graph = "senior-software-architect/references/knowledge-graph.md"
 review = "senior-software-architect/references/coding-review-deep-dive.md"
 debugging = "senior-software-architect/references/debugging-diagnosis.md"
@@ -162,6 +172,7 @@ adr_tradeoff = "senior-software-architect/references/adr-and-tradeoff.md"
 language_agnostic = "senior-software-architect/references/language-agnostic-architecture.md"
 security = "senior-software-architect/references/security-architecture.md"
 system_analysis_template = "senior-software-architect/references/system-analysis-template.md"
+refactoring_design_template = "senior-software-architect/references/refactoring-design-template.md"
 senior_source_map = "senior-software-architect/references/source-map.md"
 architecture_deliverable_checker = "senior-software-architect/scripts/check_architecture_deliverable.py"
 harness_plan_checker = "senior-software-architect/scripts/check_harness_plan.py"
@@ -234,6 +245,16 @@ product_rule_checker = "product-architecture-expert/scripts/check_external_rules
 product_deliverable_checker = "product-architecture-expert/scripts/check_product_deliverable.py"
 
 codegen_skill = "java-service-code-generator/SKILL.md"
+document_skill = "document-authoring/SKILL.md"
+document_agent = "document-authoring/agents/openai.yaml"
+document_checker = "document-authoring/scripts/check_document_deliverable.py"
+document_style_checker = "document-authoring/scripts/check_document_style.py"
+document_routing = "document-authoring/references/scenario-routing.md"
+hanzi_skill = "hanzi-philology/SKILL.md"
+hanzi_agent = "hanzi-philology/agents/openai.yaml"
+hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
+hanzi_evidence_method = "hanzi-philology/references/evidence-method.md"
+hanzi_source_map = "hanzi-philology/references/source-map.md"
 collaboration_skill = "delivery-collab/SKILL.md"
 collaboration_agent = "delivery-collab/agents/openai.yaml"
 collaboration_delivery_lifecycle = "delivery-collab/references/delivery-lifecycle.md"
@@ -777,27 +798,100 @@ reference_headers = [
     collaboration_superpowers_library,
     collaboration_skill_type_owner_routing,
     collaboration_source_map,
-] + project_governance_refs + [wind_coding, wind_coding_examples, wind_skill_conventions, wind_skill_agents_template, wind_skill_examples] + testing_practice_refs + skill_tree_refs
+] + project_governance_refs + [wind_skill_java, wind_skill_architecture, wind_skill_conventions, wind_skill_agents_template, wind_skill_examples] + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
 
 check(
-    "Wind project coding conventions split into dedicated opt-in skill",
+    "specialized skills use delivery-collab as the internal orchestration owner",
+    has_none(
+        senior_skill,
+        [
+            "优先交给 AI Native",
+            "当 AI Native 交来",
+            "被 AI Native 分派",
+            "退回产品专家或 AI Native",
+            "AI Native 交来轻量问询结论",
+            "端到端流程准入先由 AI Native 编排",
+            "AI Native 交接消费",
+        ],
+    )
+    and has_none(
+        product_skill,
+        [
+            "被 AI Native 或架构师调用",
+            "不替代 AI Native 的跨角色准入",
+            "AI Native 交来轻量问询结论",
+            "交给 AI Native / 架构师",
+            "AI Native 前置门禁",
+        ],
+    )
+    and has_none(codegen_skill, ["被 AI Native 分派", "交回 AI Native / 架构师"])
+    and has_none(wind_skill, ["AI Native 项目约规入口"]),
+)
+
+expected_handling_has(
+    "wind-coding-conventions-should-trigger-generic-java",
+    ("通用 Java 约规", "不加载 Wind 专项约规"),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-apply-alibaba-manual-selectively",
+    (
+        "通用 Java 约规的阿里手册选择性采纳检查",
+        "不创建独立 Skill",
+        "Maven / Gradle 依赖治理",
+        "dependency:tree",
+        "Objects.equals",
+        "serialVersionUID",
+        "禁止 finally 返回",
+        "禁止 SELECT *",
+        "不采用机械作者日期、固定测试命名、统一覆盖率百分比",
+    ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-trigger-wind-dependency",
+    ("依赖或源码上下文", "叠加 Wind 专项约规"),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-trigger-generic-java-agents",
+    ("普通 Java 项目 AGENTS.md", "不读取 Wind 项目模板"),
+)
+expected_handling_has(
+    "senior-should-code-review-service-transaction",
+    ("java-coding-conventions.md", "不加载 Wind 专项", "不把 wind-coding-conventions 作为第二 owner"),
+)
+negative_reason_has(
+    "senior-negative-pure-java-conventions",
+    ("纯约规检查", "wind-coding-conventions 主责", "不应触发资深架构师"),
+)
+negative_reason_has(
+    "wind-coding-conventions-negative-wind-source-review",
+    ("源码级 CR", "资深架构师主责", "不是第二个执行 owner"),
+)
+
+check(
+    "Java coding conventions load universally and gate Wind rules by evidence without a legacy alias",
     has_all(
         wind_skill,
         [
-            "name: wind-project-coding-conventions",
-            "Wind/Nobe Java 项目编码约规",
-            "项目 AGENTS.md 明确 opt-in",
-            "references/wind-project-coding-conventions.md",
+            "name: wind-coding-conventions",
+            "Java 项目编码约规 Skill",
+            "所有 Java 项目先使用通用 Java 约规",
+            "Maven/Gradle 坐标、包名或 import",
+            "只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind",
+            "references/wind-coding-conventions.md",
+            "references/java-coding-conventions.md",
+            "references/wind-architecture-patterns.md",
             "references/wind-project-agents-template.md",
-            "references/wind-project-coding-examples.md",
+            "references/wind-coding-examples.md",
             "资深架构师",
             "java-service-code-generator",
-            "Wind Rule Check Card",
-            "未 opt-in 的普通 Java/Spring 项目，不强行套 Wind",
-            "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
+            "Java Rule Check Card",
+            "普通 Java 项目初始化或改进 `AGENTS.md`",
+            "不读取 Wind 项目模板",
+            "没有 Wind/Nobe 高置信度信号时，不加载 Wind",
+            "币种字段才统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
             "业务唯一性和请求重放幂等分层处理",
             "不得仅因“未来可能并发”预埋本地锁、分布式锁或锁 Wrapper",
             "查询字段/方法",
@@ -809,47 +903,59 @@ check(
     and has_all(
         wind_skill_agent,
         [
-            "Wind 项目编码约规",
-            "face/impl",
-            "服务分层",
-            "模型归位",
-            "Entity 不外露",
-            "ServiceImpl",
-            "幂等/唯一键",
-            "并发/锁边界",
-            "查询/API/字典",
-            "AGENTS 初始化",
+            "Java/Wind 编码约规",
+            "Java 通用编码约规",
+            "按依赖和上下文启用 Wind/Nobe 专项规则",
+            "$wind-coding-conventions",
         ],
     )
     and has_all(
         senior_skill,
         [
-            "references/wind-project-coding-conventions.md",
-            "Wind 项目编码约规的兼容索引",
-            "`wind-project-coding-conventions` Skill",
-            "项目 `AGENTS.md` 明确 opt-in",
+            "`wind-coding-conventions`",
+            "Java 项目在本地规范之后读取 `wind-coding-conventions` 的通用层",
             "架构师负责源码级设计、TDD、CR 和验证",
         ],
     )
     and has_all(
-        wind_coding,
+        wind_skill_java,
         [
-            "重复规则归位",
-            "服务查询方法",
-            "内网 API `/inc/basic` / `/inc/secure`",
-            "系统字典/国际化",
-            "架构师负责源码事实、测试和风险闭环，Wind Skill 负责项目特化规则",
+            "Java/Spring 通用编码约规",
+            "所有 Java 项目的通用编码行为",
+            "不得为了套规约新增依赖",
+            "项目本地 `AGENTS.md`",
+            "源码级设计、Review、测试与生产风险仍交 `资深架构师`",
+        ],
+    )
+    and has_all(
+        wind_skill_architecture,
+        [
+            "Wind 架构与 API 模式",
+            "具体编码强规约优先读 `java-coding-conventions.md`",
+            "Wind 落地要求",
         ],
     )
     and has_all(
         senior_routing,
         [
-            "Wind 项目编码约规",
-            "项目 AGENTS.md opt-in",
-            "`wind-project-coding-conventions` Skill",
-            "源码级设计、TDD、CR",
-            "不把 Wind 规则强套到所有 Java 项目",
-            "不为了套分层新增浅服务、透传接口或内存版业务实现",
+            "Java 通用约规 + Wind 条件专项",
+            "纯 Java/Wind 约规检查不触发本 Skill",
+            "普通 Java 源码任务",
+            "Wind/Nobe 高置信度信号",
+            "规则 Skill 不成为第二 owner",
+            "只有孤立的 face、impl、ServiceImpl 或普通 MyBatis 用法时，不启用 Wind 专项",
+        ],
+    )
+    and not (ROOT / ("wind-project-" + "coding-conventions")).exists()
+    and not (ROOT / ("senior-software-architect/references/" + "coding-standards.md")).exists()
+    and not (ROOT / "senior-software-architect/references/wind-projects-patterns.md").exists()
+    and has_none(
+        senior_skill,
+        [
+            "references/java-coding-conventions.md",
+            "references/" + "coding-standards.md",
+            "references/wind-projects-patterns.md",
+            "Wind 编码约规的兼容索引",
         ],
     )
     and has_reference_header(wind_skill_conventions)
@@ -857,8 +963,8 @@ check(
     and has_all(
         wind_skill_conventions,
         [
-            "`wind-project-coding-conventions` Skill 的主规则",
-            "项目本地 `AGENTS.md` 明确标明",
+            "`wind-coding-conventions` Skill 的 Wind 专项规则",
+            "依赖坐标、包名/import、Wind 类型或模块上下文",
             "wind-integration / nobe / capte-domain 源码观察",
             "face/impl 模块边界",
             "接口放置",
@@ -954,6 +1060,9 @@ check(
             "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举",
             "外部协议中的字符串币种只在 Adapter/Converter 边界转换",
             "业务唯一性和请求重放幂等分层处理",
+            "Wind 数据表强制包含 `id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime`",
+            "新增字段如果为必填，必须有默认值",
+            "通用表字段",
             "外部 `Idempotency-Key` / `requestSn` 可以用于请求重放去重",
             "不得冒充业务身份",
             "参数摘要、有效期、并发冲突、结果回放和过期后重用语义",
@@ -983,10 +1092,10 @@ check(
             "`XxxQuery` 字段后缀",
             "字典/国际化 Key",
             "core/infrastructure 是否变成公共垃圾桶",
-            "项目本地 `AGENTS.md` 写明即可",
+            "项目本地 `AGENTS.md` 明确声明是最强信号",
             "wind-project-agents-template.md",
             "产研协同体系能按项目规则调度产品、架构、Wind 规则和代码生成能力",
-            "需要最佳实践正反例时读本 Skill 的 `wind-project-coding-examples.md`",
+            "需要最佳实践正反例时读 `wind-coding-examples.md`",
         ],
     )
     and has_reference_header(wind_skill_agents_template)
@@ -994,7 +1103,7 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "`wind-project-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板",
+            "`wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板",
             "wind-integration / nobe / capte-domain",
             "产研协同体系",
             "Karpathy-style 工程纪律",
@@ -1004,11 +1113,11 @@ check(
             "给验收标准、验证结果和停止条件",
             "从第一性原理看原始需求和问题本质",
             "每一行修改都要能回到用户目标、验收标准、源码事实或失败测试",
-            "本项目遵守 Wind 项目编码约规",
+            "本项目遵守 Wind 编码约规",
             "项目身份",
             "AI 协作入口",
             "项目约规入口",
-            "Wind 规则权威只读 `wind-project-coding-conventions`",
+            "Wind 规则权威只读 `wind-coding-conventions`",
             "本文件不复制完整规则",
             "项目级红线",
             "交付格式",
@@ -1026,7 +1135,7 @@ check(
     and has_all(
         wind_skill_examples,
         [
-            "`wind-project-coding-conventions` Skill 的示例参考",
+            "`wind-coding-conventions` Skill 的示例参考",
             "Wind 项目编码最佳实践示例",
             "不是代码生成模板",
             "ApplicationService 不是透传层",
@@ -1085,12 +1194,130 @@ check(
     and has_all(
         "README.md",
         [
-            "Wind/Nobe 项目约规判断或项目 `AGENTS.md` Wind opt-in",
-            "`wind-project-coding-conventions`",
-            "Wind 项目只做最小 opt-in patch",
-            "路径：[wind-project-coding-conventions](./wind-project-coding-conventions)",
+            "Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项",
+            "`wind-coding-conventions`",
+            "Wind 项目按实际依赖和上下文补专项入口",
+            "路径：[wind-coding-conventions](./wind-coding-conventions)",
             "只做规则判断和偏差说明",
-            "未 opt-in 的普通 Java/Spring 项目不强套 Wind 约规",
+            "没有 Wind/Nobe 高置信度信号时不加载 Wind face/impl、API 或模型专项",
+        ],
+    ),
+)
+
+check(
+    "Java rule authority and source execution keep single owners",
+    has_all(
+        wind_skill,
+        [
+            "纯约规检查由本 Skill 主责",
+            "源码设计、代码 CR、Bug 修复、TDD 和验证不触发本 Skill 主责",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取",
+            "只消费规则结论，不复制 Java/Wind 约规正文",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "纯 Java/Wind 约规检查不触发本 Skill",
+            "普通 Java 源码任务",
+            "Wind/Nobe 高置信度信号",
+        ],
+    )
+    and has_all(
+        collaboration_skill,
+        [
+            "纯约规检查只由 `wind-coding-conventions` 主责",
+            "Java 源码设计、TDD、CR、修复和验证只由 `资深架构师` 主责",
+        ],
+    )
+    and all(
+        has_none(
+            path,
+            [
+                "LambdaQueryWrapper",
+                "insertSelective",
+                "gmt_create",
+                "测试类以 `Tests`",
+                "测试方法以 `test`",
+                "DescriptiveEnum",
+                "JSpecify",
+                "MapStruct 只做",
+                "Lombok 服务",
+            ],
+        )
+        for path in [
+            "senior-software-architect/references/project-governance-codebase-and-modules.md",
+            "senior-software-architect/references/project-governance-service-api-modeling.md",
+            "senior-software-architect/references/project-governance-data-security-quality.md",
+            "senior-software-architect/references/coding-review-deep-dive.md",
+        ]
+    ),
+)
+
+check(
+    "generic Java conventions avoid team-only mandatory documentation and test naming",
+    has_none(
+        wind_skill_java,
+        [
+            "【强制】公共接口、公有方法、DTO/Request/Query、配置属性、扩展点必须有 Javadoc",
+            "【强制】测试类以被测类名开头、`Tests` 结尾；测试方法以 `test` 开头",
+        ],
+    )
+    and has_all(
+        wind_skill_java,
+        [
+            "公共契约、扩展点和配置属性",
+            "简单 DTO/Request/Query",
+            "测试类和测试方法命名优先服从项目既有约定",
+        ],
+    ),
+)
+
+check(
+    "Alibaba Java manual is selectively absorbed into the generic Java authority",
+    has_all(
+        wind_skill_java,
+        [
+            "Maven / Gradle 依赖治理",
+            "SNAPSHOT",
+            "dependencyManagement",
+            "dependency:tree",
+            "Objects.equals",
+            "serialVersionUID",
+            "finally",
+            "SELECT *",
+            "隐式类型转换",
+            "不设置统一覆盖率百分比",
+            "服务器运行参数",
+        ],
+    )
+    and has_none(
+        wind_skill_java,
+        [
+            "所有的类都必须添加创建者和创建日期",
+            "语句覆盖率达到70%",
+            "Xms和Xmx设置一样",
+            "调小TCP协议的time_wait",
+        ],
+    )
+    and has_all(
+        repo_source_map,
+        [
+            "https://www.yuque.com/iv8gga/qgf69v",
+            "1.3.1",
+            "23 篇",
+            "2017-11-30",
+            "2026-07-16",
+            "依赖治理",
+            "不吸收",
+            "time_wait",
+            "Xms/Xmx",
+            "固定覆盖率",
         ],
     ),
 )
@@ -1171,9 +1398,9 @@ check(
             "产研交付视图",
             "产品到工程 / 角色主流程",
             "项目约规入口",
-            "Wind/Nobe 风格项目初始化或改进项目 `AGENTS.md`",
-            "`wind-project-coding-conventions` 读取 `wind-project-agents-template.md`",
-            "模板和规则权威交给 `wind-project-coding-conventions`",
+            "Java 项目 `AGENTS.md` 初始化或改进",
+            "通用 Java 规则与按上下文启用的 Wind/Nobe 专项交给 `wind-coding-conventions`",
+            "依赖或上下文命中 Wind/Nobe 时",
             "目标计划 / 大项目编排",
             "评审规格 / 代码交付",
             "理解工具 / 源码质量评审 / 质量发布",
@@ -1544,7 +1771,7 @@ check(
         product_skill,
         [
             "轻量问询不写进正式 PRD",
-            "AI Native 交来轻量问询结论、`grill-me` 结论或任务树节点",
+            "`delivery-collab` 交来轻量问询结论、`grill-me` 结论或任务树节点",
             "产品上下文交接卡",
         ],
     )
@@ -1552,7 +1779,7 @@ check(
         senior_skill,
         [
             "轻量问询只收敛工程分叉",
-            "AI Native 交来轻量问询结论、`grill-me` 结论或任务树节点",
+            "`delivery-collab` 交来轻量问询结论、`grill-me` 结论或任务树节点",
             "问询过程不进入正式系分、ADR 或代码注释",
         ],
     )
@@ -1666,7 +1893,8 @@ check(
             "WorkBuddy / 本地执行型 Coding Agent",
             "读项目上下文 -> 对齐项目 / 架构 / Wind 约规 -> 明确写入范围 -> 生成候选 diff",
             "依赖 / 配置冲突决策澄清门禁",
-            "项目明确 opt-in Wind 时，以 `wind-project-coding-conventions` 为项目约规权威",
+            "Java 项目以 `wind-coding-conventions` 的通用层为规则来源",
+            "Wind/Nobe 专项按声明、依赖、包名、类型或模块上下文启用",
             "系统设计、TDD、源码级 CR、安全可靠性、生产风险和受控工程执行仍回 `资深架构师`",
             "不把 WorkBuddy 类工具输出当成项目编码约规",
         ],
@@ -1992,7 +2220,7 @@ check(
             "不判定 GSD/CAD 准入",
             "不生成 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线审批",
             "产品合议只评产品内容",
-            "不替代 AI Native 的跨角色准入、工程分派、发布门禁",
+            "不替代 `delivery-collab` 的跨角色准入、工程分派、发布门禁",
             "也不判定系分或代码可执行性",
         ],
     )
@@ -2258,9 +2486,9 @@ check(
             "model / cost policy",
             "execution state gate",
             "authorized workspace policy",
-            "`external-superpowers/subagent-driven-development` 已替换为 Superpowers v6.0.3 vendored skill；上游 latest 已到 v6.1.0",
+            "`external-superpowers/subagent-driven-development/upstream-skill.md` 只保存 Superpowers v6.0.3 的本地审查基线",
             "`task-brief`、`review-package`、`sdd-workspace` 只在明确进入 SDD 执行且用户授权写入工作区时运行",
-            "v6.1.0 的 Codex marketplace、bootstrap 压缩、SessionStart hook 移除和 Gemini CLI 支持移除",
+            "外部 release、marketplace、bootstrap、hook 和工具支持变化只作为带日期的 source-map 事实",
             "交付执行契约版本: v1 / v2 / v3",
             "SDD 套件版本: 无 / SDD v6 方法契约 / 外部工具已授权",
             "执行状态: Ready / Running / Review / Fix / Verified / Blocked / Handoff",
@@ -2565,8 +2793,8 @@ check(
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
             "references/external-superpowers/",
             "superpowers-skill-library.md",
-            "2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级并纳入本地 helper",
-            "除此之外不复制或运行 hooks、插件 manifest、package 脚本",
+            "2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 覆盖式审查并纳入本地 helper",
+            "不复制或运行 hooks、插件 manifest、package 脚本",
         ],
     ),
 )
@@ -2686,7 +2914,8 @@ check(
             "角色协作判断矩阵",
             "判断角色、Skill、工具、框架如何协作",
             "结构化 Java Service 基础服务、DTO / Request / Query / 模型骨架生成由 `java-service-code-generator` 执行",
-            "Wind / Nobe 项目编码约规由 `wind-project-coding-conventions` 作为项目 opt-in 规则来源",
+            "Java 项目编码约规由 `wind-coding-conventions` 提供通用层",
+            "Wind/Nobe 专项根据项目声明、依赖、包名、类型或模块上下文启用",
             "代码阅读和画图只作为辅助能力接入",
         ],
     )
@@ -2700,7 +2929,7 @@ check(
             "主 Skill",
             "可选工具 / 框架",
             "`java-service-code-generator`",
-            "`wind-project-coding-conventions`",
+            "`wind-coding-conventions`",
             "`code-understanding-tools.md`",
             "`diagram-output.md`",
             "产研协同体系只负责调度和门禁",
@@ -3000,12 +3229,9 @@ check(
             "2026-06-07",
             "6fd4507659784c351abbd2bc264c7162cfd386dc",
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
-            "Superpowers v6.x / SDD 套件升级结论",
-            "896224c4b1879920ab573417e68fd51d2ccc9072",
-            "f268f7c953744036f0fa7e9d4b73535c04e57cb8",
-            "45e79c9525328a9dd6653c2d01d49895eaf083cf321a4902ea71d7ba5705bbf0",
-            "v6.1.0 取舍结论",
-            "Gemini CLI 于 2026-06-18 EOL",
+            "Superpowers / SDD 本地审查基线",
+            "上游原始 Skill 统一保存为 `upstream-skill.md`",
+            "不在稳定流程文档中声明上游 latest",
             "task-reviewer-prompt.md",
             "task-brief",
             "review-package",
@@ -3013,9 +3239,9 @@ check(
             ".superpowers/sdd/",
             "pre-flight plan review",
             "progress ledger",
-            "已 vendored v6.0.3 的 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace`",
-            "上游 v6.1.0 暂不覆盖本地 SDD helper",
-            "不创建 `.superpowers/sdd/`，不声明已启用外部 SDD 执行套件",
+            "本地审查基线",
+            "需要比较、升级或安装时，必须重新核验官方 release",
+            "缺授权时只能使用方法规则，不创建 `.superpowers/sdd/`",
             "AI 编码框架分层映射",
             "GStack",
             "角色链审查",
@@ -3794,7 +4020,7 @@ check(
             "替换覆盖式升级",
             "task-reviewer-prompt.md",
             "本地 helper",
-            "上游 latest 已到 v6.1.0",
+            "该记录不代表当前上游 latest",
             "不把外部 Harness 写成当前会话默认依赖或执行授权",
             "不把文章中的比例和团队经验写成通用事实或项目当前指标",
         ],
@@ -4106,7 +4332,7 @@ check(
         skill_evaluator,
         [
             "\"delivery-collab\"",
-            "\"product engineering collaboration\"",
+            "\"产研协同\"",
             "\"GSD/CAD\"",
             "\"验证矩阵\"",
         ],
@@ -4134,7 +4360,7 @@ check(
             "跨角色交付编排、工程治理、目标计划、质量门禁、生产交付审查、知识演进",
             "$delivery-collab",
             "DDL/schema/Java 类/字段表格到 Java Service 脚手架",
-            "Wind/Nobe 项目约规判断或项目 `AGENTS.md` Wind opt-in",
+            "Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
             "正式图形默认 SVG，PNG 仅在明确要求时导出",
             "### 3. 产研协同体系",
@@ -4142,7 +4368,7 @@ check(
             "产品正文回 `产品架构专家`",
             "工程实现、TDD、源码级 CR 和发布风险回 `资深架构师`",
             "结构化 Java Service 生成回 `java-service-code-generator`",
-            "Wind 约规回 `wind-project-coding-conventions`",
+            "Java/Wind 编码约规回 `wind-coding-conventions`",
             "默认最小输出只保留",
             "结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
             "只读理解视图",
@@ -4213,6 +4439,22 @@ check(
             "### 提示词公式",
             "用 <Skill 名称> + <任务类型> + <输入材料> + <目标产物> + <边界/风险> + <验证要求>",
             "输出当前阶段、角色视角、能力来源、自我问询/回答、owner、交接物、Loop Contract、验证门禁、停止条件和下一步分派",
+        ],
+    ),
+)
+check(
+    "README exposes friendly canonical document authoring prompts",
+    has_all(
+        "README.md",
+        [
+            "### 编写文档的友好指令",
+            "产品、系分、重构三类正式设计文档各有一个权威模板入口",
+            "产品设计用 `product-prd-template.md`",
+            "系分设计用 `system-analysis-template.md`",
+            "迁移型重构用 `refactoring-design-template.md`",
+            "只评审 <文档路径>，不要改文件",
+            "已有正式文档默认原路径更新",
+            "不因模板升级另建“新版”“最终版”或日期副本",
         ],
     ),
 )
@@ -4340,8 +4582,21 @@ check(
     "senior metadata triggers diagram output",
     all(
         term in frontmatter(senior_skill)
-        for term in ["架构图", "时序图", "状态机", "ADR", "生产变更", "陌生代码库"]
+        for term in ["架构", "系统分析设计", "系分", "工程图", "代码评审", "测试/TDD", "生产变更", "接手代码库"]
     ),
+)
+check(
+    "product and senior metadata disambiguate diagram semantics",
+    all(term in frontmatter(product_skill) for term in ["产品语义图", "系统实现", "工程图"])
+    and all(term in frontmatter(senior_skill) for term in ["工程图", "产品业务语义"]),
+)
+negative_reason_has(
+    "product-negative-ambiguous-state-machine",
+    ("不能仅凭“状态机”", "先澄清", "业务状态与验收", "系统实现与工程落点"),
+)
+negative_reason_has(
+    "senior-negative-ambiguous-state-machine",
+    ("不能仅凭“状态机”", "先澄清", "业务状态与验收", "系统实现与工程落点"),
 )
 check(
     "senior openai yaml mentions visual output",
@@ -4460,7 +4715,7 @@ check(
     "product metadata triggers diagram output",
     all(
         term in frontmatter(product_skill)
-        for term in ["PRD", "需求说明", "原型/页面截图/交互稿反推需求", "用例图", "产品架构图", "流程图", "状态机", "外卡收单", "Mastercard", "工程实现"]
+        for term in ["复杂业务需求", "原型或页面材料", "PRD", "产品架构", "业务架构规划", "产品语义图", "支付资金产品", "外卡收单", "Mastercard", "系统实现", "代码评审"]
     ),
 )
 check(
@@ -4469,7 +4724,7 @@ check(
 )
 check(
     "product openai yaml mentions acquiring specialty",
-    has_all(product_agent, ["支付资金专项"]),
+    has_all(product_agent, ["支付资金", "外卡收单"]),
 )
 check(
     "codegen metadata triggers only structured generation",
@@ -4480,7 +4735,7 @@ check(
             "schema 文件",
             "字段表格",
             "有结构化输入",
-            "被 AI Native 分派时，先消费 Engineering Handoff Card、授权策略和写入范围",
+            "被 `delivery-collab` 分派时，先消费 Engineering Handoff Card、授权策略和写入范围",
             "生成后交接卡至少包含",
             "生成 / 修改文件、写入目录和是否覆盖既有文件",
             "输入来源、结构化字段、脚本参数和推断假设",
@@ -4499,6 +4754,13 @@ check(
             "文件清单、关键假设、验证结果和交接风险",
         ],
     ),
+)
+check(
+    "codegen hands convention checks to wind and source review to senior",
+    has_all(codegen_skill, ["`wind-coding-conventions`", "通用 Java 约规", "Wind/Nobe 专项", "源码级 CR"])
+    and has_all(codegen_rules, ["`wind-coding-conventions`", "通用 Java 约规", "Wind/Nobe 专项", "源码级 CR"])
+    and has_none(codegen_skill, ["`资深架构师` 的代码约规"])
+    and has_none(codegen_rules, ["`资深架构师` 编码约规"]),
 )
 check(
     "large references expose task-level reading indexes",
@@ -4520,7 +4782,7 @@ check(
             "senior-software-architect/references/review-and-output-templates.md",
             "senior-software-architect/references/security-architecture.md",
             "senior-software-architect/references/source-map.md",
-            "senior-software-architect/references/wind-projects-patterns.md",
+            wind_skill_architecture,
             "senior-software-architect/references/system-analysis-design.md",
             "senior-software-architect/references/system-analysis-template.md",
             "senior-software-architect/references/scenario-routing.md",
@@ -4531,7 +4793,7 @@ check(
             "senior-software-architect/references/debugging-diagnosis.md",
             "senior-software-architect/references/diagram-output.md",
             "senior-software-architect/references/knowledge-graph.md",
-            "senior-software-architect/references/coding-standards.md",
+            wind_skill_java,
             "product-architecture-expert/references/product-prd-template.md",
             "product-architecture-expert/references/product-prd-quality-gates.md",
             "product-architecture-expert/references/product-prd-financial-appendix.md",
@@ -4730,7 +4992,8 @@ check(
         [
             "Evaluate local Codex skills with deterministic structure and prompt metrics",
             "offline and read-only",
-            "does not grade domain truth",
+            "does not execute an Agent or grade domain truth",
+            "ROOT.glob(\"*/SKILL.md\")",
             "metadata_trigger",
             "progressive_loading",
             "reference_quality",
@@ -4997,7 +5260,7 @@ check(
             "跨角色交付编排、工程治理、目标计划、质量门禁、生产交付审查、知识演进",
             "系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图",
             "DDL/schema/Java 类/字段表格到 Java Service 脚手架",
-            "Wind/Nobe 项目约规判断或项目 `AGENTS.md` Wind opt-in",
+            "Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
             "PNG 仅在明确要求时导出",
             "### 3. 产研协同体系",
@@ -5051,18 +5314,18 @@ check(
         [
             "obra/superpowers",
             "外部 skills library",
-            "brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development",
+            "用于澄清、计划、TDD、评审、调试和完成前验证",
             "2026-06-07",
             "6fd4507659784c351abbd2bc264c7162cfd386dc",
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
             "MIT",
             "delivery-collab/references/external-superpowers/",
             "superpowers-skill-library.md",
-            "2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级并纳入本地 helper",
-            "2026-07-01 核验上游 latest 已到 v6.1.0",
-            "移除 Gemini CLI 支持",
+            "离线快照保存在 `delivery-collab/references/external-superpowers/`",
+            "入口统一命名为 `upstream-skill.md`",
+            "实际比较、升级或安装时必须重新核验官方 release 和当前插件状态",
             "除此之外不复制或运行 hooks、插件 manifest、package 脚本",
-            "不把外部默认文档路径、自动提交、Git 推送、worktree、subagent 连续执行要求写成本仓库默认行为",
+            "不参与 Codex Skill 自动发现",
         ],
     ),
 )
@@ -5874,9 +6137,10 @@ check(
     and has_all(
         "senior-software-architect/references/project-governance-codebase-and-modules.md",
         [
-            "Clean Architecture 在 Wind 模块中的落点是依赖规则，不是机械四层模板",
+            "Clean Architecture 的落点是依赖规则，不是机械四层模板",
             "层数可变，依赖方向不可逆",
-            "`core/biz` 定义 port 和业务契约，`infrastructure` 提供 adapter",
+            "核心业务规则与用例定义稳定契约和端口",
+            "外层实现数据库、Web、消息、缓存与第三方适配",
         ],
     )
     and has_all(
@@ -6359,9 +6623,8 @@ check(
             "过度设计专项 CR",
             "最小正确实现 / 过度设计专项 CR",
             "不替代正确性、安全、性能和业务语义 Review",
-            "是否无需新增、是否已有 helper / type / pattern 可复用",
-            "JDK / Spring / 数据库 / 平台原生能力是否覆盖",
-            "单实现接口、单调用工厂、没人设置的配置项",
+            "是否已经先复用现有代码、标准库、平台原生能力和已安装依赖",
+            "可删除抽象、无主配置、单实现接口或无证扩展点",
             "输出每条建议时保持四要素：位置、可删内容、替代方案、不可删边界",
             "替代方案优先级为：不做、复用仓库已有能力、标准库、平台原生能力、已安装依赖、最小显式实现",
             "不得把过度设计专项 CR 当成正确性、安全、性能或发布准出结论",
@@ -6457,16 +6720,13 @@ check(
         "senior-software-architect/references/product-design.md",
         [
             "### 3.3 业务驱动验证到 TDD 映射",
-            "业务驱动验证到 TDD 映射矩阵",
             "AC-xxx",
             "QA-xxx",
-            "追踪ID",
-            "业务目标/验收种子/质量属性",
             "可代码化",
             "可观测化",
             "可评审化",
             "第一批失败反馈候选",
-            "人工确认门禁",
+            "系统分析模板中的追踪矩阵和验证章节",
         ],
     ),
 )
@@ -7055,8 +7315,10 @@ check(
         system_analysis_template,
         [
             "# 系统分析设计模板",
+            "模板占位符统一使用 `〈...〉`",
+            "正式文档不得保留未替换占位符",
             "## 文档标识与文件命名",
-            "`<主题>-系分设计.md`",
+            "`〈主题〉-系分设计.md`",
             "消费 Product Context Card 或产品文档时必须复用其规范主题",
             "将冲突列为待确认并询问 owner",
             "只有用户明确授权项目约规治理时才修改",
@@ -7086,9 +7348,24 @@ check(
             "## 2. 概要设计模板",
             "## 3. 模块与接口设计模板",
             "## 4. 数据设计模板",
+            "数据库约规来源",
+            "字段类型与精度",
+            "变更类型",
+            "业务唯一性",
+            "不得为了通过 DDL 虚构业务默认值",
+            "命中 Wind/Nobe 专项的项目将以下字段并入字段清单",
+            "`id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime` 为强制",
+            "新增字段如果为必填，必须有默认值",
+            "查询/排序场景",
+            "数据校验与回滚",
             "## 5. 状态、流程与专项设计模板",
-            "## 6. 非功能、研发计划与参考资料模板",
-            "# <规范主题>系统分析设计",
+            "### 4.5 运行时场景与流程/时序设计",
+            "### 4.5A 状态与工程规则",
+            "第一批失败测试",
+            "### 4.11 规则落地表",
+            "## 6. 非功能、实施验证与交接模板",
+            "## 六、实施、验证与 Engineering Handoff",
+            "# 〈规范主题〉系统分析设计",
         ],
     ),
 )
@@ -7103,6 +7380,111 @@ check(
             "不得把旧版本方案、历史讨论和多轮草稿与当前设计结论混写",
         ],
     ),
+)
+check(
+    "design documents bridge semantics rules engineering and evidence",
+    has_all(
+        product_prd_template,
+        [
+            "核心名相",
+            "场景与流程",
+            "状态与业务规则",
+            "Product Context Card",
+        ],
+    )
+    and has_all(
+        system_analysis_template,
+        [
+            "运行时场景",
+            "状态与工程规则",
+            "规则落地表",
+            "第一批失败测试",
+            "Engineering Handoff",
+        ],
+    )
+    and has_all(
+        collaboration_product_to_engineering,
+        [
+            "名 -> 事 ->（图）-> 法 -> 器 -> 验",
+            "规则是产品事实与工程实现之间的承接点",
+            "规则落地表",
+            "局部、行为保持且可测试的重构不创建正式重构设计文档",
+        ],
+    ),
+)
+check(
+    "design flow uses diagrams as an optional modeling gate",
+    has_all(
+        collaboration_product_to_engineering,
+        [
+            "名 -> 事 ->（图）-> 法 -> 器 -> 验",
+            "图是按需建模门禁",
+            "不创建独立图形阶段文档",
+            "轻量任务可明确不需要单独画图",
+        ],
+    )
+    and has_all(
+        product_prd_template,
+        [
+            "名 -> 事 ->（图）-> 法 -> 器 -> 验",
+            "最小关键图",
+            "图不是新的产品事实源",
+        ],
+    )
+    and has_all(
+        system_analysis_template,
+        [
+            "名 -> 事 ->（图）-> 法 -> 器 -> 验",
+            "设计视图清单",
+            "无需单独画图",
+            "图不能替代规则落地表或验证证据",
+        ],
+    ),
+)
+check(
+    "design templates use an optional reference and evidence index",
+    has_all(
+        product_prd_template,
+        ["参考资料与证据索引（按需）", "链接或路径", "引用标识为可选"],
+    )
+    and has_all(
+        system_analysis_template,
+        ["## 七、参考资料与证据索引", "链接或路径", "引用标识为可选"],
+    )
+    and has_all(
+        refactoring_design_template,
+        ["## 八、参考资料与证据索引（按需）", "链接或路径", "引用标识为可选"],
+    ),
+)
+check(
+    "standalone refactoring design is gated and verifiable",
+    (ROOT / refactoring_design_template).exists()
+    and has_reference_header(refactoring_design_template)
+    and has_task_reading_index(refactoring_design_template)
+    and has_all(
+        refactoring_design_template,
+        [
+            "行为不变量",
+            "模板占位符统一使用 `〈...〉`",
+            "正式文档不得保留未替换占位符",
+            "MIG 切片",
+            "双写",
+            "回填",
+            "灰度切流",
+            "特征测试",
+            "契约测试",
+            "旧能力下线条件",
+            "回滚",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "`references/refactoring-design-template.md`",
+            "局部、行为保持且可测试的重构不创建独立设计文档",
+        ],
+    )
+    and contains(architecture_deliverable_checker, '"refactoring-design"'),
 )
 check(
     "AI Native spec templates keep final specs separate from process assets",
@@ -7305,20 +7687,15 @@ check(
     has_all(
         coding,
         [
-            "内部 Java 契约优先使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked`",
-            "已由 JSpecify 标注为非空的参数、返回值和字段，不再额外添加无业务语义的 `AssertUtils.notNull`",
+            "项目已依赖 JSpecify 时，内部 Java 契约使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked`",
+            "已由空值注解标为非空的参数、返回值和字段，不再额外添加无业务语义的重复空判断",
         ],
     ),
 )
 check(
-    "JSpecify nullability rule is encoded in review guidance",
-    has_all(
-        review,
-        [
-            "内部契约使用 `org.jspecify.annotations` 表达 nullability",
-            "已由 JSpecify 标注为非空的普通参数、返回值和字段，不再重复写无业务语义的空判断",
-        ],
-    ),
+    "review consumes Java rules without copying nullability details",
+    has_all(review, ["## 规则结果消费", "规则 Skill 只提供适用层级和偏差", "规则发现不得直接决定严重级别"])
+    and has_none(review, ["org.jspecify.annotations", "JSpecify"]),
 )
 check(
     "Java common utility reuse rule is encoded in coding standards",
@@ -7333,14 +7710,9 @@ check(
     ),
 )
 check(
-    "Java common utility reuse rule is encoded in review guidance",
-    has_all(
-        review,
-        [
-            "检查是否手写 `hasText`、`isBlank`、`isEmpty` 等基础工具",
-            "优先使用 Spring Framework 或 Apache Commons 成熟工具",
-        ],
-    ),
+    "review does not copy Java utility rules",
+    has_none(review, ["`hasText`", "`isBlank`", "`isEmpty`"])
+    and has_all(review, ["项目本地规范和 `wind-coding-conventions` 的通用 Java 层"]),
 )
 check(
     "Java coding style follows project conventions first",
@@ -7366,18 +7738,6 @@ check(
 check(
     "Java reserved identifiers are banned from coding names",
     has_all(
-        senior_skill,
-        [
-            "Java 标识符不得使用关键字、保留字或受限标识符",
-            "`record`",
-            "`var`",
-            "`yield`",
-            "变量、方法参数",
-            "@Column",
-            "@JsonProperty",
-        ],
-    )
-    and has_all(
         coding,
         [
             "Java 标识符不得使用 Java 关键字、保留字或受限标识符",
@@ -7387,16 +7747,6 @@ check(
             "字段、局部变量、方法参数、模型属性",
             "@Column",
             "@JsonProperty",
-        ],
-    )
-    and has_all(
-        review,
-        [
-            "关键字命名污染",
-            "`record`",
-            "`var`",
-            "`yield`",
-            "变量、方法参数、模型属性",
         ],
     )
     and has_all(
@@ -7468,9 +7818,9 @@ check(
     and has_all(
         review,
         [
-            "无业务语义的单行透传方法必须作为可删除复杂度处理",
-            "公有或私有方法只原样转调、原样传参、改名包装或返回下游结果时，应删除并内联",
+            "直通包装",
             "单行透传方法无论公有或私有，都应优先删除并内联",
+            "业务语义、边界保护、错误聚合、观测或测试隔离",
         ],
     ),
 )
@@ -7486,15 +7836,9 @@ check(
     ),
 )
 check(
-    "Java DTO field type review avoids blanket boxing",
-    has_all(
-        review,
-        [
-            "primitive 或包装类型按缺省、零值、精度和序列化语义选择",
-            "不机械装箱",
-            "契约污染",
-        ],
-    ),
+    "review delegates Java DTO type details to rule authority",
+    has_all(review, ["契约完整性", "规则结果消费", "规则发现不得直接决定严重级别"])
+    and has_none(review, ["primitive 或包装类型", "并发 Atomic 类型"]),
 )
 
 check(
@@ -7510,8 +7854,9 @@ check(
     and has_all(
         senior_skill,
         [
-            "具体 ORM、Mapper、Query API 和写库方式按项目约规选择",
-            "opt-in Wind/Nobe 项目",
+            "Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取",
+            "只有存在 Wind/Nobe 高置信度信号时才叠加专项",
+            "只消费规则结论，不复制 Java/Wind 约规正文",
         ],
     ),
 )
@@ -7549,16 +7894,6 @@ check(
             "Map/List 存储型业务实现",
             "生产源码路径",
             "不能代表生产能力",
-        ],
-    )
-    and has_all(
-        review,
-        [
-            "生产实现与内存服务",
-            "业务代码不得用内存版 Service 冒充生产实现",
-            "Map/List 存储型业务实现",
-            "缺少持久化、一致性、并发、审计、恢复、发布回滚和真实验证能力",
-            "缓存、测试替身、fixture、沙盒模拟或明确 demo 必须隔离在对应边界内",
         ],
     )
     and has_all(
@@ -7856,13 +8191,6 @@ check(
         ],
     )
     and has_all(
-        product_agent,
-        [
-            "产品洞察",
-            "机会雷达",
-        ],
-    )
-    and has_all(
         product_architecture,
         [
             "产品洞察与机会雷达",
@@ -7899,15 +8227,6 @@ check(
             "需求优先级",
             "User Story/AC",
             "po-backlog-manager.md",
-        ],
-    )
-    and has_all(
-        product_agent,
-        [
-            "Backlog决策",
-            "机会清单",
-            "User Story",
-            "AC",
         ],
     )
     and has_all(
@@ -9338,7 +9657,7 @@ check(
     has_all(
         product_architecture,
         [
-            "### 5.2 验收种子到测试驱动设计",
+            "### 6.2 验收种子到测试驱动设计",
             "验收种子交接矩阵",
             "需求ID",
             "质量属性ID",
@@ -9519,7 +9838,7 @@ check(
         [
             "反馈证据与问题地图",
             "## 文档标识与文件命名",
-            "`<主题>-产品设计.md`",
+            "`〈主题〉-产品设计.md`",
             "规范主题 + 产品文档精确路径",
             "将冲突列为待确认并询问 owner",
             "只有用户明确授权项目约规治理时才修改",
@@ -9552,12 +9871,13 @@ check(
             "需求概览",
             "背景、问题与证据",
             "目标、范围与非目标",
-            "用户、主体与角色/场景",
-            "场景、能力与功能",
+            "核心名相、用户、主体与角色/对象",
+            "场景与流程、能力与功能",
             "需求链卡片",
-            "对象、流程、图形视图与规则",
-            "数据、权限、风险与待确认",
+            "状态与业务规则、产品 DNA 和图形视图",
+            "产品能力、数据、权限、风险与待确认",
             "验收与产品到架构交接",
+            "Product Context Card",
             "附录按需展开",
             "精简输出规则",
             "来源/问题ID",
@@ -9565,6 +9885,10 @@ check(
             "验收种子ID",
             "质量属性ID",
             "验收种子交接矩阵",
+            "验收标准：〈可复核的通过条件〉",
+            "边界路径：〈临界值、空值、重复、权限或状态边界〉",
+            "异常路径：〈失败、超时、中断、外部不可用或人工兜底〉",
+            "模板占位符使用 `〈...〉`",
             "每个 P0/P1 需求必须能回到问题、目标、场景、规则和验收",
             "每个进入开发候选的需求必须能关联场景、能力或功能、关键规则和验收种子",
             "正式 PRD 以最终标准版本为主",
@@ -9611,7 +9935,7 @@ check(
     has_all(
         product_prd_template,
         [
-            "核心概念、业务抽象、对象、流程、图形视图与规则",
+            "核心概念、业务抽象、关键图形视图、完整状态机、生命周期、字段口径和规则矩阵",
             "按需启用条件",
             "业务术语、运营口径、系统命名或既有文档存在冲突",
             "核心概念卡 C-001",
@@ -10759,6 +11083,7 @@ check(
             '"diagram-brief":',
             '"product-review":',
             "goal_and_scope",
+            "definition_and_boundary",
             "risk_and_confirmation",
             "状态机图",
             "用例图",
@@ -10769,6 +11094,9 @@ check(
             "disagreement",
             "pending_confirmation",
             "verification",
+            "PLACEHOLDER_FIELD",
+            "placeholder_fields",
+            "placeholder fixture unexpectedly passed",
         ],
     ),
 )
@@ -10778,7 +11106,7 @@ check(
         senior_skill,
         [
             "scripts/check_architecture_deliverable.py",
-            "架构方案、系统分析设计、代码 Review、生产变更和图形 brief",
+            "架构方案、系统分析设计、重构设计、代码 Review、生产变更和图形 brief",
             "正式、完整、可评审、提交前、CR 或触发验证场景",
             "不写文件、不访问网络、不上传文件、不读取密钥",
             "不判断架构质量",
@@ -10799,7 +11127,7 @@ check(
         "senior-software-architect/references/system-analysis-design.md",
         [
             "scripts/check_architecture_deliverable.py --kind system-design",
-            "背景目标、边界、概要设计、详细设计、流程状态、非功能、测试和研发计划",
+            "产品语义输入、背景目标、边界、运行时场景、工程规则、详细设计、规则落地、非功能、测试和实施交接",
             "必须运行",
             "不替代架构评审或工程验证",
         ],
@@ -10820,12 +11148,32 @@ check(
             "SELF_TESTS",
             '"architecture-plan"',
             '"system-design"',
+            '"refactoring-design"',
             '"code-review"',
             '"production-change"',
             '"diagram-brief"',
             "background_and_goal",
             "release_and_risk",
             "engineering_anchor",
+            "PLACEHOLDER_FIELD",
+            "placeholder_fields",
+            "placeholder fixture unexpectedly passed",
+            "TABLE_DESIGN_CHECKS",
+            "table_identity",
+            "table_fields",
+            "table_uniqueness",
+            "table_access_path",
+            "table_compatibility",
+            "incomplete table fixture unexpectedly passed",
+            "complete table fixture unexpectedly failed",
+            "WIND_REQUIRED_FIELDS",
+            "wind_required_fields",
+            "wind_required_field_defaults",
+            "wind_request_id_as_business_key",
+            "invalid Wind table fixture unexpectedly passed",
+            "valid Wind table fixture unexpectedly failed",
+            "invalid second Wind table fixture unexpectedly passed",
+            "request id business key fixture unexpectedly passed",
         ],
     ),
 )
@@ -10836,6 +11184,7 @@ check(
         [
             "architecture-plan-valid.md",
             "system-design-valid.md",
+            "refactoring-design-valid.md",
             "code-review-valid.md",
             "production-change-valid.md",
             "diagram-brief-valid.md",
@@ -10875,9 +11224,9 @@ check(
     has_all(
         codegen_skill,
         [
-            "基础服务、DTO、Request、Query、Entity、Mapper、MapStruct、Service、ServiceImpl 模板是 Wind 项目编码约规的标准生成面",
-            "权威规则以 `wind-project-coding-conventions` Skill 为准",
-            "生成后规则审查回到 `wind-project-coding-conventions`",
+            "基础服务、DTO、Request、Query、Entity、Mapper、MapStruct、Service、ServiceImpl 模板是 Wind 编码约规的标准生成面",
+            "权威规则以 `wind-coding-conventions` Skill 为准",
+            "生成后规则审查回到 `wind-coding-conventions`",
             "源码级 CR / TDD 回到 `资深架构师`",
             "Entity 不外露",
         ],
@@ -10885,8 +11234,8 @@ check(
     and has_all(
         codegen_rules,
         [
-            "Wind 项目编码约规的标准模板实现面",
-            "规则权威来源是 `wind-project-coding-conventions` Skill",
+            "Wind 编码约规的标准模板实现面",
+            "规则权威来源是 `wind-coding-conventions` Skill",
             "face 模块生成的 Service 契约只暴露 DTO/Request/Query/WindQuery/分页结果",
             "不暴露 Entity、Mapper、Repository 或 MyBatis `Page`",
         ],
@@ -10894,8 +11243,8 @@ check(
     and has_all(
         codegen_nobe_patterns,
         [
-            "Wind 项目编码约规的标准实现样本",
-            "以 `wind-project-coding-conventions` 和项目本地 `AGENTS.md` 为准",
+            "Wind 编码约规的标准实现样本",
+            "以 `wind-coding-conventions` 和项目本地 `AGENTS.md` 为准",
             "DTO / Request / Query / Service 是 face 对外契约",
             "Entity 只在 ServiceImpl、DAL、Mapper 和 Converter 内部流转",
         ],
@@ -10956,72 +11305,97 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="architecture smell scan",
         prompt="这批 Java 代码帮我做一次深度质量扫描，看看有没有架构坏味、上帝类和循环依赖",
-        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md", "coding-standards.md"},
+        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"},
     ),
     RouteFixture(
         name="service layer architecture smell",
         prompt="这个 Spring Service 有跨层调用、事务边界混乱和公共模块垃圾桶问题，帮我做架构坏味 CR",
-        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md", "coding-standards.md"},
+        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"},
     ),
     RouteFixture(
         name="in memory business service review",
         prompt="做一轮代码 CR：这个 Spring Boot 业务模块新增了 InMemoryOrderService 和 Map 存储实现，Controller 直接调用它，判断是否能作为生产实现交付",
-        routes={"senior", "coding-review-deep-dive.md", "negative-constraints.md", "coding-standards.md"},
+        routes={"senior", "coding-review-deep-dive.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
+        name="generic java coding conventions",
+        prompt="这是一个普通 Maven Java 21 项目，没有 Wind/Nobe 依赖。请按通用 Java 约规检查命名、空值契约、异常日志、金额时间处理和测试代码，不要套 face/impl 或 Wind API 规则。",
+        routes={"wind", "java-coding-conventions.md"},
+    ),
+    RouteFixture(
+        name="ordinary Java source CR loads generic conventions",
+        prompt="请对这个普通 Maven Java 21 项目的 OrderService 做源码 CR，检查事务边界、异常契约和测试缺口；项目没有 Wind/Nobe 依赖。",
+        routes={"senior", "java-coding-conventions.md", "coding-review-deep-dive.md"},
+    ),
+    RouteFixture(
+        name="Wind source CR loads conditional conventions",
+        prompt="请对这个明确使用 Wind/Nobe 依赖的 ServiceImpl 做源码 CR，按 Wind 编码约规检查模块边界、事务和测试缺口。",
+        routes={"senior", "java-coding-conventions.md", "wind-coding-conventions.md", "coding-review-deep-dive.md"},
+    ),
+    RouteFixture(
+        name="wind dependency enables specialized conventions",
+        prompt="这个 Java 项目的 AGENTS.md 没写 Wind opt-in，但 pom.xml 依赖 Wind/Nobe 组件，源码 import 了 WindPagination、WindQuery 和 com.wind.transaction.core.enums.CurrencyIsoCode，请判断应启用哪些编码约规。",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md"},
+    ),
+    RouteFixture(
+        name="generic java agents conventions init",
+        prompt="给这个普通 Gradle Java 21 项目初始化 AGENTS.md 编码约规入口；项目没有 Wind/Nobe 依赖，不要加入 face/impl 或 Wind API 规则。",
+        routes={"wind", "java-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project coding conventions opt in review",
-        prompt="这个 capte-domain 项目的 AGENTS.md 标明遵守 Wind 项目编码约规，帮我 CR face/impl 模块、基础服务、ApplicationService、DTO/Entity 分层和 MyBatis Flex 查询",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"},
+        prompt="这个 capte-domain 项目的 AGENTS.md 标明遵守 Wind 编码约规，帮我 CR face/impl 模块、基础服务、ApplicationService、DTO/Entity 分层和 MyBatis Flex 查询",
+        routes={"senior", "java-coding-conventions.md", "project-governance-service-api-modeling.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project entity exposure review",
-        prompt="这个项目遵守 Wind 项目编码约规，帮我检查服务层和接口设计有没有 Entity 暴露到 face Service、ApplicationService、Controller、Facade、Adapter 或跨模块接口",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+        prompt="这个项目遵守 Wind 编码约规，帮我做源码 CR，检查服务层和接口设计有没有 Entity 暴露到 face Service、ApplicationService、Controller、Facade、Adapter 或跨模块接口",
+        routes={"senior", "java-coding-conventions.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project model package ownership review",
-        prompt="结合 capte-domain 的包名划分，补充 Wind 项目编码约规里包、接口、模型应该放哪个模块：DTO、Request、Query、Command 优先放 *.model.dto、*.model.request、*.model.query、*.model.command 还是兼容 *.dto、*.request、*.query、*.command；Event、VO、Entity、Mapper、MapStruct、application、domain、converter、callback/spi、listener、webhook、core、infrastructure 分别怎么归位",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+        prompt="结合 capte-domain 的包名划分，补充 Wind 编码约规里包、接口、模型应该放哪个模块：DTO、Request、Query、Command 优先放 *.model.dto、*.model.request、*.model.query、*.model.command 还是兼容 *.dto、*.request、*.query、*.command；Event、VO、Entity、Mapper、MapStruct、application、domain、converter、callback/spi、listener、webhook、core、infrastructure 分别怎么归位",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md", "wind-coding-examples.md"},
     ),
     RouteFixture(
         name="wind project currency enum redline",
-        prompt="这个项目遵守 Wind 项目编码约规，检查 DTO、Request、Entity 和事件里的币种字段是否统一使用 com.wind.transaction.core.enums.CurrencyIsoCode 枚举，不要用 String currency",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+        prompt="这个项目遵守 Wind 编码约规，检查 DTO、Request、Entity 和事件里的币种字段是否统一使用 com.wind.transaction.core.enums.CurrencyIsoCode 枚举，不要用 String currency",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project idempotency unique key redline",
-        prompt="这个项目遵守 Wind 项目编码约规，检查幂等或唯一处理是否依赖外部 requestSn，而不是使用表内业务 UK 或联合 UK",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+        prompt="这个项目遵守 Wind 编码约规，检查幂等或唯一处理是否依赖外部 requestSn，而不是使用表内业务 UK 或联合 UK",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project speculative locking redline",
-        prompt="这个项目已 opt-in Wind 项目编码约规，基础服务为了未来可能并发准备先加本地锁、分布式锁和 LocksWrapper，请评审",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "coding-review-deep-dive.md", "wind-project-coding-conventions.md"},
+        prompt="这个项目已 opt-in Wind 编码约规，基础服务为了未来可能并发准备先加本地锁、分布式锁和 LocksWrapper，请评审",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project source observation conventions",
-        prompt="阅读 wind-integration、nobe、capte-domain 代码库的项目结构、模块划分、包名划分、命名风格、编码习惯和 API 使用，完善 Wind 项目编码约规",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+        prompt="阅读 wind-integration、nobe、capte-domain 代码库的项目结构、模块划分、包名划分、命名风格、编码习惯和 API 使用，完善 Wind 编码约规",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md", "wind-coding-examples.md"},
     ),
     RouteFixture(
         name="wind project platform service enum template",
-        prompt="阅读 capte-domain platform 目录下的 system、alert、iam 相关模块，完善 Wind 项目编码约规：基础服务通用模板、方法签名、服务命名、DTO/Request/Query 放置位置、枚举命名和枚举类模板",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+        prompt="阅读 capte-domain platform 目录下的 system、alert、iam 相关模块，完善 Wind 编码约规：基础服务通用模板、方法签名、服务命名、DTO/Request/Query 放置位置、枚举命名和枚举类模板",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md", "wind-coding-examples.md"},
     ),
     RouteFixture(
         name="wind project query api dictionary conventions",
-        prompt="这个项目已 opt-in Wind 项目编码约规，参考查询字段命名、服务层查询方法命名、内网 API 命名及安全、系统字典配置与国际化规范做规则检查，并判断和架构师编码约规是否重复",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"},
+        prompt="这个项目已 opt-in Wind 编码约规，参考查询字段命名、服务层查询方法命名、内网 API 命名及安全、系统字典配置与国际化规范做规则检查，并确认架构师 reference 不再复制这些细则",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project coding conventions opt in tdd",
-        prompt="这个 wind 项目 AGENTS.md 已标明遵守 Wind 项目编码约规，帮我按 TDD 给 ServiceImpl 和基础服务补测试，重点看真实内部链路、QueryWrapper、Mapper 语义和外部端口替身边界",
-        routes={"wind", "senior", "coding-standards.md", "testing.md", "wind-project-coding-conventions.md"},
+        prompt="这个 wind 项目 AGENTS.md 已标明遵守 Wind 编码约规，帮我按 TDD 给 ServiceImpl 和基础服务补测试，重点看真实内部链路、QueryWrapper、Mapper 语义和外部端口替身边界",
+        routes={"senior", "java-coding-conventions.md", "testing.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="wind project coding examples",
-        prompt="这个项目已 opt-in Wind 项目编码约规，给 AI Maker 一些服务层、基础服务、DTO/Entity、MyBatis Flex 和 TDD 的最佳实践正反例参考",
-        routes={"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "wind-project-coding-examples.md"},
+        prompt="这个项目已 opt-in Wind 编码约规，给 AI Maker 一些服务层、基础服务、DTO/Entity、MyBatis Flex 和 TDD 的最佳实践正反例参考",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md", "wind-coding-examples.md"},
     ),
     RouteFixture(
         name="architecture decay entropy review",
@@ -11051,12 +11425,12 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="write tests",
         prompt="给这个 Application Service 补一组 TDD 测试，先写失败测试",
-        routes={"senior", "testing.md", "coding-standards.md", "workflow.md"},
+        routes={"senior", "testing.md", "workflow.md"},
     ),
     RouteFixture(
         name="business-driven validation to tdd",
         prompt="会员权益方案已有验收样例和质量属性种子，把业务驱动验证映射成 TDD 测试计划，区分失败测试、监控指标和人工确认门禁",
-        routes={"senior", "testing.md", "coding-standards.md", "workflow.md"},
+        routes={"senior", "testing.md", "workflow.md"},
     ),
     RouteFixture(
         name="bug diagnosis",
@@ -11121,7 +11495,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native real variation axis design review",
         prompt="参考设计模式的本质是找到变化、封装变化，进入 AI Native 设计评审：让产品专家先标出稳定业务事实和真实变化轴，架构师再检查接口、策略、工厂、状态机、规则层和配置化是否有 owner、验收方式和测试边界；Wind 项目不要为了套设计模式新增浅服务或单实现抽象",
-        routes={"collaboration", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "engineering-governance.md", "source-map.md", "product", "product-scenario-routing.md", "senior", "coding-standards.md", "wind"},
+        routes={"collaboration", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "engineering-governance.md", "source-map.md", "product", "product-scenario-routing.md", "senior", "java-coding-conventions.md", "wind"},
     ),
     RouteFixture(
         name="AI Native product system DNA gate",
@@ -11260,12 +11634,12 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native coordinates specialized skill roles",
-        prompt="AI Native 继续完善分角色流程，用于控制不同 skills 完成任务：产品专家做需求分析、产品设计和验收；资深架构师做架构设计、系分设计、代码设计、TDD、编码和 CR；Wind 项目编码约规配合架构师做编码指导和 CR；代码阅读理解、架构图、流程图作为辅助能力接入。",
-        routes={"collaboration", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "code-understanding-tools.md", "verification-review-release.md", "product", "senior", "wind", "diagram-output.md"},
+        prompt="AI Native 继续完善分角色流程，用于控制不同 skills 完成任务：产品专家做需求分析、产品设计和验收；资深架构师做架构设计、系分设计、代码设计、TDD、编码和 CR；Wind 编码约规作为架构师按需消费的唯一规则来源；代码阅读理解、架构图、流程图作为辅助能力接入。",
+        routes={"collaboration", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "code-understanding-tools.md", "verification-review-release.md", "product", "senior", "diagram-output.md"},
     ),
     RouteFixture(
         name="AI Native role skill tool framework collaboration matrix",
-        prompt="AI Native 出一个分角色 Loop、Skill、工具、框架的协作判断矩阵，覆盖产品专家、架构师、Wind 项目编码约规 / wind-project-coding-conventions、画图能力、Superpowers/GStack 等辅助框架，说明每个节点谁主责、调用哪个 Skill、哪些工具只是辅助、交接物和不替代项。",
+        prompt="AI Native 出一个分角色 Loop、Skill、工具、框架的协作判断矩阵，覆盖产品专家、架构师、Wind 编码约规 / wind-coding-conventions、画图能力、Superpowers/GStack 等辅助框架，说明每个节点谁主责、调用哪个 Skill、哪些工具只是辅助、交接物和不替代项。",
         routes={"collaboration", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "superpowers-skill-library.md", "code-understanding-tools.md", "verification-review-release.md", "product", "senior", "wind", "diagram-output.md"},
     ),
     RouteFixture(
@@ -11300,8 +11674,8 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native checks Superpowers 6.x latest boundary",
-        prompt="AI Native 确认 Superpowers 6.x 是否已经升级到最新 v6.1.0，区分本地 vendored SDD helper、上游 latest、Codex marketplace、Gemini CLI 支持移除和不默认运行外部脚本",
-        routes={"collaboration", "engineering-governance.md", "superpowers-skill-library.md", "code-delivery.md", "source-map.md", "verification-review-release.md"},
+        prompt="AI Native 确认 Superpowers 6.x 当前官方版本和本地审查基线，区分离线 upstream-skill 参考、Codex 插件、权限边界和不默认运行外部脚本",
+        routes={"collaboration", "engineering-governance.md", "superpowers-skill-library.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native routes Matt Pocock grill-me skills",
@@ -11421,22 +11795,22 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native Ponytail minimal implementation admission",
         prompt="用 产研协同体系评估 Ponytail 是否适合加入编码 Loop：要求编码前做最小正确实现检查，CR 时做过度设计专项检查，但不要默认启用 hook 或替代 TDD、安全和架构师源码级 Review",
-        routes={"collaboration", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md"},
+        routes={"collaboration", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md"},
     ),
     RouteFixture(
         name="AI Native Open Code Review checker admission",
-        prompt="安装并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，结合架构师编码约规和 Wind 项目约规做 CR，但不要替代 TDD、源码级 CR、Git 授权或自动修复审批",
-        routes={"collaboration", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "wind", "wind-project-coding-conventions.md"},
+        prompt="安装并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，消费 Java/Wind 项目约规后交给架构师做源码 CR，但不要替代 TDD、Git 授权或自动修复审批",
+        routes={"collaboration", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="AI Native source quality review loop",
         prompt="参考 Code Review 与技术债治理文章，AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程，并把好的 CR 结论和业务知识回流到项目上下文",
-        routes={"collaboration", "verification-review-release.md", "code-understanding-tools.md", "decision-calibration.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md", "wind", "wind-project-coding-conventions.md"},
+        routes={"collaboration", "verification-review-release.md", "code-understanding-tools.md", "decision-calibration.md", "source-map.md", "senior", "coding-review-deep-dive.md", "java-coding-conventions.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="AI Native Karpathy coding hygiene admission",
         prompt="参考 Andrej Karpathy / karpathy-guidelines 优化 AI 编码 Loop：要求先暴露假设和分歧、简单优先、外科手术式变更、把任务转成可验证目标，但不要新增流程或替代 TDD、架构师 CR 和项目编码规范",
-        routes={"collaboration", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md", "coding-standards.md"},
+        routes={"collaboration", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md"},
     ),
     RouteFixture(
         name="AI Native skill self-improvement and knowledge flow",
@@ -11445,7 +11819,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native skill self-improvement from repeated chat feedback",
-        prompt="结合这几轮聊天交互，对 AI Native / Wind 项目编码约规做 Skill 自我改进外循环：把反复 CR 出来的职责归位、基础服务、Mapper default、同步已安装 Skill 和验证门禁沉淀到正确 Skill，不要把订单优惠券业务细节写进 AI Native",
+        prompt="结合这几轮聊天交互，对 AI Native / Wind 编码约规做 Skill 自我改进外循环：把反复 CR 出来的职责归位、基础服务、Mapper default、同步已安装 Skill 和验证门禁沉淀到正确 Skill，不要把订单优惠券业务细节写进 AI Native",
         routes={"collaboration", "code-delivery.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -11455,8 +11829,8 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native WorkBuddy local coding agent admission",
-        prompt="参考 WorkBuddy 的本地 IDE 和文件系统执行方式，增强 AI Native 的本地执行型 Coding Agent 准入：先读项目上下文、明确写入范围、生成候选 diff、跑验证、依赖和配置冲突决策澄清门禁，再交给架构师 CR；不要和 Wind 项目编码约规或架构师编码约规冲突",
-        routes={"collaboration", "code-understanding-tools.md", "code-delivery.md", "verification-review-release.md", "source-map.md", "senior", "coding-standards.md", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md", "wind", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md", "coding-review-deep-dive.md"},
+        prompt="参考 WorkBuddy 的本地 IDE 和文件系统执行方式，增强 AI Native 的本地执行型 Coding Agent 准入：先读项目上下文、明确写入范围、生成候选代码 diff、跑验证、依赖和配置冲突决策澄清门禁，再消费通用 Java 约规和按需 Wind 编码约规并交给架构师 CR；不要制造第二套编码约规",
+        routes={"collaboration", "code-understanding-tools.md", "code-delivery.md", "verification-review-release.md", "source-map.md", "senior", "workflow.md", "ai-assisted-engineering.md", "negative-constraints.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="AI Native visual understanding for unfamiliar codebase",
@@ -11697,9 +12071,29 @@ scenario_fixtures: list[RouteFixture] = [
 
 negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="extra senior owner on pure Java convention check",
+        prompt="这是普通 Maven Java 21 项目，只检查通用 Java 编码约规并给规则清单，不做源码设计、代码 CR、修复或 TDD。",
+        routes={"senior"},
+    ),
+    RouteFixture(
+        name="extra wind owner on ordinary Java source CR",
+        prompt="请对这个普通 Maven Java 21 项目的 OrderService 做源码 CR，检查事务边界、异常契约和测试缺口；项目没有 Wind/Nobe 依赖。",
+        routes={"wind", "wind-coding-conventions.md"},
+    ),
+    RouteFixture(
+        name="extra wind owner on Wind source CR",
+        prompt="请对这个明确使用 Wind/Nobe 依赖的 ServiceImpl 做源码 CR，按 Wind 编码约规检查模块边界、事务和测试缺口。",
+        routes={"wind"},
+    ),
+    RouteFixture(
+        name="wind specialization on isolated face impl convention",
+        prompt="这个仓库的 AGENTS.md 已写明采用统一 face/impl 项目编码约规，请判断 DTO、Request、Query、Command、Event、VO、Entity 和 Mapper 的模块归位。",
+        routes={"wind-coding-conventions.md"},
+    ),
+    RouteFixture(
         name="wind on generic spring locking without opt in",
         prompt="这个普通 Spring Boot 项目没有任何项目级编码约规，请做代码 CR：基础服务为了未来并发准备增加本地锁、分布式锁和 LocksWrapper",
-        routes={"wind", "wind-project-coding-conventions.md"},
+        routes={"wind", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="codegen on java service review or tests",
@@ -11797,6 +12191,74 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
+    java_conventions_requested = contains_any(
+        prompt,
+        [
+            "通用 Java 约规",
+            "Java 编码约规",
+            "Java 编码规范",
+            "检查编码约规",
+            "检查编码规范",
+            "判断应启用哪些编码约规",
+            "AGENTS.md 编码约规入口",
+            "Java 项目约规入口",
+        ],
+    )
+    java_context = contains_any(
+        prompt,
+        ["Java", "JVM", "Spring", "Maven", "Gradle", "JUnit", "MyBatis", "DTO", "Mapper", "ServiceImpl", "Wind", "Nobe"],
+    )
+    pure_convention_only = contains_any(
+        prompt,
+        [
+            "只检查通用 Java 编码约规",
+            "只做编码约规检查",
+            "只做规则检查",
+            "判断应启用哪些编码约规",
+            "完善 Wind 编码约规",
+            "规则清单",
+            "规则检查",
+            "最佳实践正反例",
+            "编码约规入口",
+            "初始化 AGENTS",
+        ],
+    )
+    java_source_artifact = contains_any(
+        prompt,
+        ["代码", "源码", "Java 类", "类文件", "方法", "Service", "Controller", "DTO", "Entity", "Mapper", "模块", "事务", "异常"],
+    )
+    java_source_action = contains_any(
+        prompt,
+        ["CR", "Review", "review", "评审", "设计", "TDD", "写测试", "补测试", "Bug", "修复", "修改", "实现", "重构"],
+    )
+    java_source_task = java_context and java_source_artifact and java_source_action and not pure_convention_only
+    java_source_review = java_source_task and contains_any(prompt, ["CR", "Review", "review", "评审"])
+    pure_java_convention_task = java_context and java_conventions_requested and not java_source_task
+
+    wind_explicitly_absent = contains_any(
+        prompt,
+        ["没有 Wind/Nobe", "无 Wind/Nobe", "不使用 Wind/Nobe", "不要套 face/impl", "不要加入 face/impl"],
+    )
+    wind_evidence = not wind_explicitly_absent and contains_any(
+        prompt,
+        [
+            "Wind 项目",
+            "Wind/Nobe",
+            "Nobe 项目",
+            "Wind 编码约规",
+            "wind-coding-conventions",
+            "遵守 Wind",
+            "遵循 Wind",
+            "opt-in Wind",
+            "com.wind.",
+            "WindPagination",
+            "WindQuery",
+            "CurrencyIsoCode",
+            "capte-domain",
+            "wind-integration",
+        ],
+    )
+
     if contains_any(
         prompt,
         [
@@ -11920,7 +12382,7 @@ def route_fixture(prompt: str) -> set[str]:
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.0", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grill-me", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
-            if contains_any(prompt, ["升级", "版本", "上游 latest", "latest release", "v6.1.0", "helper", "不默认运行外部脚本", "Harness", "Gemini CLI 支持移除"]):
+            if contains_any(prompt, ["升级", "版本", "上游 latest", "latest release", "v6.1.0", "helper", "不默认运行外部脚本", "Harness"]):
                 route.add("verification-review-release.md")
         if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Claude Code Skills", "Lessons from building Claude Code", "Perplexity Agent Skills", "agent skills at Perplexity", "Skill 治理三问", "Skill Tax", "eval-first", "description 路由", "Gotchas flywheel", "Harness Engineering", "Skill 原理", "Skill 最佳实践", "SKILL.md 路由器", "资源加载契约", "触发测试", "功能走查", "反向验证", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
             route.add("skill-type-owner-routing.md")
@@ -12003,7 +12465,7 @@ def route_fixture(prompt: str) -> set[str]:
             "问题机制",
             "最小可逆实验",
         ],
-    ):
+    ) and not pure_java_convention_task:
         route.add("senior")
     if contains_any(prompt, ["非标工程问题", "无标准答案", "没有现成 SOP", "问题机制", "关键不确定性", "最小可逆实验", "写入边界"]):
         route.update({"architecture.md", "adr-and-tradeoff.md", "workflow.md"})
@@ -12013,19 +12475,25 @@ def route_fixture(prompt: str) -> set[str]:
         route.update({"language-agnostic-architecture.md", "workflow.md"})
     if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶", "InMemory", "内存版业务 Service", "Map 存储实现"]):
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
-        if contains_any(prompt, ["Java", "Spring"]):
-            route.add("coding-standards.md")
-    wind_opted_in = contains_any(
-        prompt,
-        ["Wind 项目", "遵守 Wind", "遵循 Wind", "opt-in Wind", "采用统一 face/impl 项目编码约规"],
-    )
-    if wind_opted_in and contains_any(prompt, ["Wind 项目编码约规", "Wind 项目约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "requestSn", "联合 UK", "业务 UK", "唯一键", "外部请求号", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity", "浅服务", "单实现抽象", "套设计模式", "查询字段命名", "服务层查询方法", "服务查询方法", "XxxQuery", "内网 API", "/inc/basic", "/inc/secure", "系统字典", "国际化", "eventKey"]):
-        route.update({"wind", "senior", "coding-standards.md", "project-governance-service-api-modeling.md", "wind-project-coding-conventions.md"})
+    if java_source_task:
+        route.update({"senior", "java-coding-conventions.md"})
+        if java_source_review:
+            route.add("coding-review-deep-dive.md")
+    elif java_context and java_conventions_requested:
+        route.update({"wind", "java-coding-conventions.md"})
+    if wind_evidence and contains_any(prompt, ["Wind 编码约规", "wind-coding-conventions", "Wind 项目约规", "编码约规", "项目编码约规", "Wind 项目 AGENTS", "项目 AGENTS 初始化", "初始化 AGENTS", "改进 AGENTS", "AGENTS.md 模板", "AI Native 项目约规入口", "face/impl", "ApplicationService", "基础服务", "DTO/Entity", "DTO 模型", "DOT 模型", "模型包归位", "模型归位", "包名划分", "模块规则", "分包规则", "MyBatis Flex", "CurrencyIsoCode", "币种字段", "String currency", "requestSn", "联合 UK", "业务 UK", "唯一键", "外部请求号", "Entity 暴露", "实体对外暴露", "服务层暴露实体", "接口暴露实体", "对外暴露 Entity", "浅服务", "单实现抽象", "套设计模式", "查询字段命名", "服务层查询方法", "服务查询方法", "XxxQuery", "内网 API", "/inc/basic", "/inc/secure", "系统字典", "国际化", "eventKey"]):
+        route.update({"java-coding-conventions.md", "wind-coding-conventions.md"})
+        if java_source_task:
+            route.add("senior")
+            if contains_any(prompt, ["接口设计", "服务边界", "模块边界", "Entity 暴露", "face/impl"]):
+                route.add("project-governance-service-api-modeling.md")
+        else:
+            route.add("wind")
         if contains_any(prompt, ["AGENTS", "AGENTS.md", "初始化", "改进", "模板", "项目约规入口", "AI Native"]):
             route.update({"wind-project-agents-template.md", "collaboration"})
         if contains_any(prompt, ["最佳实践", "示例", "正反例", "参考", "AI Maker", "模板", "方法签名", "服务命名", "模型命名", "枚举命名", "模型包归位", "模型归位", "包名划分", "源码观察", "代码库", "API 使用", "编码习惯"]):
-            route.add("wind-project-coding-examples.md")
-        if contains_any(prompt, ["CR", "Review", "review", "检查", "审查", "评审", "暴露", "泄漏"]):
+            route.add("wind-coding-examples.md")
+        if java_source_review:
             route.add("coding-review-deep-dive.md")
     if contains_any(prompt, ["架构腐朽", "架构排熵", "可删除性", "不敢删", "承重 bug", "承重行为", "废弃 API", "dead path", "final 版本", "治理规则失效", "治理自腐", "守卫自检", "最小排熵"]):
         route.update({"senior", "evolutionary-architecture.md", "coding-review-deep-dive.md", "adr-and-tradeoff.md", "production-readiness.md"})
@@ -12038,11 +12506,11 @@ def route_fixture(prompt: str) -> set[str]:
         if contains_any(prompt, ["参考", "文章", "外部", "来源", "公开"]):
             route.add("source-map.md")
     if contains_any(prompt, ["测试", "TDD", "失败测试", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "覆盖率"]):
-        route.update({"testing.md", "coding-standards.md", "workflow.md"})
+        route.update({"testing.md", "workflow.md"})
     if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
         route.update({"senior", "testing.md", "workflow.md"})
     if contains_any(prompt, ["Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "外部 Checker", "独立 Checker", "Karpathy", "Andrej", "karpathy-guidelines", "最小正确实现", "外科手术式变更", "外科手术式改动", "过度设计 CR", "过度设计专项", "源码级 Review", "设计模式", "找到变化", "封装变化", "真实变化轴", "接口", "策略", "工厂", "状态机", "规则层", "配置化"]):
-        route.update({"senior", "coding-review-deep-dive.md", "coding-standards.md"})
+        route.update({"senior", "coding-review-deep-dive.md"})
     if contains_any(prompt, ["NullPointerException", "根因", "线上"]):
         route.update({"debugging-diagnosis.md", "testing.md", "workflow.md"})
     if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "AI 编码", "编码约规", "流程能力", "Agent", "CAD"]):
@@ -12079,9 +12547,9 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("code-understanding-tools.md")
             route.add("verification-review-release.md")
             route.add("coding-review-deep-dive.md")
-            if contains_any(prompt, ["Wind", "Wind 项目约规", "Wind 项目编码约规", "项目约规"]):
+            if contains_any(prompt, ["Wind", "Wind 项目约规", "Wind 编码约规", "项目约规"]):
                 route.add("wind")
-                route.add("wind-project-coding-conventions.md")
+                route.add("wind-coding-conventions.md")
     if contains_any(prompt, ["产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链"]):
         route.add("product-insight-analyst.md")
     if contains_any(prompt, ["产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "Reviewer", "AI 生成的", "AI 生成方案"]):
@@ -12314,7 +12782,7 @@ expected_handling_has(
         "owner",
         "授权边界",
         "协作路由",
-        "wind-project-coding-conventions",
+        "wind-coding-conventions",
         "wind-project-agents-template.md",
         "项目 AGENTS.md 草案",
         "源码级设计、TDD、CR 和验证继续交给资深架构师",
@@ -12329,24 +12797,14 @@ expected_handling_has(
         "delivery-lifecycle",
         "角色协作判断矩阵",
         "专项 Skill 控制矩阵",
-        "Loop 节点",
-        "主责角色",
-        "主 Skill",
-        "可选工具 / 框架",
-        "输入",
-        "交接物",
-        "不替代项",
-        "下一 owner",
         "产品需求、目标对齐、产品设计和验收种子回到产品架构专家",
-        "架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险回到资深架构师",
-        "结构化 Java Service 基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service、ServiceImpl 骨架生成回到 java-service-code-generator",
-        "Wind/Nobe 项目编码指导、包名模块模型服务 API 规则和 CR 约束回到 wind-project-coding-conventions",
-        "资深架构师做源码级裁决",
-        "代码阅读理解、设计-代码对齐和外部理解工具准入读取 code-understanding-tools",
-        "架构图、流程图、时序图、状态机和代码库结构图回到产品/架构 diagram-output",
-        "Architecture Diagram Generator 或 fireworks-tech-graph",
+        "架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险只由资深架构师主责",
+        "结构化 Java Service 骨架生成回到 java-service-code-generator",
+        "纯 Java/Wind 约规检查回到 wind-coding-conventions",
+        "源码任务只把通用 Java 与按需 Wind 规则作为架构师输入，不设置第二 owner",
+        "代码阅读理解和设计-代码对齐读取 code-understanding-tools",
+        "图形语义回到产品或架构 diagram-output",
         "产研协同体系只做编排、门禁和交接",
-        "不直接代写专项产物",
         "不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批",
     ),
 )
@@ -13147,7 +13605,7 @@ expected_handling_has(
         "既有 PRD 更新路径",
         "保持 docs/member-prd-v2.md 原路径",
         "本次不是命名迁移",
-        "不得自动改名为 <主题>-产品设计.md",
+        "不得自动改名为 〈主题〉-产品设计.md",
         "不得修改 AGENTS.md / README.md",
         "将冲突列为待确认并询问 owner",
         "只有用户明确授权项目约规治理时才修改项目约规",
@@ -13257,7 +13715,7 @@ expected_handling_has(
         "既有系分更新路径",
         "保持 docs/member-system-design-v1.md 原路径",
         "本次不是命名迁移",
-        "不得自动改名为 <主题>-系分设计.md",
+        "不得自动改名为 〈主题〉-系分设计.md",
         "不得修改 AGENTS.md / README.md",
         "将冲突列为待确认并询问 owner",
         "只有用户明确授权项目约规治理时才修改项目约规",
@@ -13666,10 +14124,9 @@ expected_handling_has(
         "AgentRC",
         "Understand Anything",
         "证据源，不是最终 CR",
-        "Wind opt-in",
-        "wind-project-coding-conventions",
+        "Wind/Nobe 专项",
+        "wind-coding-conventions",
         "coding-review-deep-dive.md",
-        "coding-standards.md",
         "testing.md",
         "Wisdom Lens",
         "阴阳平衡",
@@ -13682,24 +14139,27 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "wind-project-coding-conventions-should-trigger-opt-in",
+    "wind-coding-conventions-should-trigger-opt-in",
     (
-        "Wind 项目编码约规规则检查",
-        "项目已 opt-in",
-        "wind-project-coding-conventions 主规则",
+        "Java/Wind 编码约规规则检查",
+        "项目已声明 Wind 约规作为高置信度信号",
+        "wind-coding-conventions.md 专项规则",
         "查询字段命名",
         "get/find/query 服务查询方法",
         "/inc/basic 与 /inc/secure 内网 API",
         "系统字典/国际化",
-        "适用性",
+        "适用层级",
+        "上下文证据",
         "触发约规",
-        "通用 Java/日志/异常/数据库/测试方法论",
-        "源码级设计、TDD、CR、生产风险继续交给资深架构师",
+        "java-coding-conventions.md",
+        "wind-architecture-patterns.md",
+        "先读取 java-coding-conventions.md 通用层",
+        "源码级设计、TDD、CR、调试、测试策略和生产风险继续交给资深架构师",
     ),
 )
 
 expected_handling_has(
-    "wind-project-coding-conventions-should-trigger-agents-template",
+    "wind-coding-conventions-should-trigger-agents-template",
     (
         "Wind 项目 AGENTS 初始化",
         "产研协同体系做项目约规入口编排",
@@ -13713,7 +14173,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "wind-project-coding-conventions-should-reject-speculative-locking",
+    "wind-coding-conventions-should-reject-speculative-locking",
     (
         "Wind 基础服务并发与锁边界检查",
         "区分唯一性、带前置状态的状态流转和一般读改写",
@@ -13731,7 +14191,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "wind-project-coding-conventions-should-separate-business-uniqueness-from-request-idempotency",
+    "wind-coding-conventions-should-separate-business-uniqueness-from-request-idempotency",
     (
         "Wind 幂等与业务唯一性分层检查",
         "表内业务 UK、联合 UK、状态条件或版本约束",
@@ -13741,6 +14201,282 @@ expected_handling_has(
         "没有自然业务 UK 时不得为了形式完整虚构联合 UK",
         "不能机械要求所有请求幂等键与业务 UK 合并",
     ),
+)
+
+expected_handling_has(
+    "delivery-collab-should-route-practical-design-documents",
+    (
+        "核心名相",
+        "场景与流程",
+        "状态与业务规则",
+        "规则落地表",
+        "工程承接",
+        "验证证据",
+        "Engineering Handoff Card",
+        "名 -> 事 ->（图）-> 法 -> 器 -> 验",
+        "最小关键图",
+        "轻量任务可明确不需要单独画图",
+        "图不是新的事实源",
+        "局部、行为保持且可测试的重构不创建正式重构设计文档",
+    ),
+)
+
+expected_handling_has(
+    "delivery-collab-should-use-optional-reference-index",
+    (
+        "参考资料与证据索引",
+        "链接或路径",
+        "Markdown 链接",
+        "引用标识为可选",
+        "轻量文档可不单独展开",
+        "不把 AI 推理、讨论草稿和被拒方案列为正式参考资料",
+    ),
+)
+
+expected_handling_has(
+    "senior-should-standalone-refactoring-design-for-migration",
+    (
+        "独立重构设计",
+        "行为不变量",
+        "MIG 切片",
+        "双写",
+        "回填",
+        "灰度切流",
+        "旧能力下线条件",
+        "特征测试",
+        "契约测试",
+        "回滚",
+    ),
+)
+
+expected_handling_has(
+    "senior-should-skip-refactoring-document-for-local-change",
+    (
+        "不创建正式重构设计文档",
+        "实现任务卡",
+        "行为不变量",
+        "验证命令",
+        "最小修改",
+        "不新增抽象层",
+    ),
+)
+
+check(
+    "document authoring has scoped routes and deterministic validation",
+    (ROOT / document_skill).exists()
+    and (ROOT / document_agent).exists()
+    and has_all(
+        document_skill,
+        [
+            "正式报告、制度、手册、研究说明、总结",
+            "由 `产品架构专家` 主责",
+            "由 `资深架构师` 主责",
+            "交给 `hanzi-philology`",
+            "scripts/check_document_deliverable.py",
+            "所有正式文档都遵守无背景色",
+            "scripts/check_document_style.py",
+            "不判断事实正确",
+        ],
+    )
+    and has_all(document_routing, ["复合任务", "载体转换不得改变领域结论"])
+    and has_all(
+        "document-authoring/references/format-and-rendering.md",
+        [
+            "页图出现方框、缺字或字体替换时",
+            "即使 PDF 文本可提取也判定失败",
+            "回退 Markdown",
+            "不添加背景色、底纹、色块、渐变或荧光笔效果",
+            "默认只用加粗",
+            "表头不加底色，不使用斑马纹",
+            "标题层级、留白、短段落和对齐",
+            "不使用装饰性文本框、卡片或横幅",
+            "所有正式文档均读取",
+            "scripts/check_document_style.py --file <path>",
+        ],
+    )
+    and (ROOT / document_style_checker).exists()
+    and has_all(
+        document_style_checker,
+        ["TEXT_SUFFIXES", "docx_style_violations", "background_style", "docx_shading", "run_self_test"],
+    )
+    and has_all(
+        document_checker,
+        [
+            "SELF_TESTS",
+            '"report"',
+            '"policy"',
+            '"manual"',
+            '"research-note"',
+            "invalid-placeholder-report.md",
+            "placeholder_required_fields",
+            "common placeholder variant unexpectedly passed",
+        ],
+    ),
+)
+
+check(
+    "hanzi philology enforces multi-source evidence and Shuowen boundary",
+    (ROOT / hanzi_skill).exists()
+    and (ROOT / hanzi_agent).exists()
+    and has_all(
+        hanzi_skill,
+        [
+            "不设单一权威书",
+            "《说文解字》只作为汉代字书和传统解释材料之一",
+            "形、音、义、辞例和时代必须互证",
+            "材料可证、传统训释、现代通说、争议或待考",
+            "scripts/check_philology_evidence.py",
+            "交给 `document-authoring`",
+        ],
+    )
+    and has_all(hanzi_evidence_method, ["出土材料", "传世文献", "传统训释", "音韵材料", "现代研究"])
+    and has_all(
+        hanzi_source_map,
+        [
+            "2026-07-16",
+            "https://xiaoxue.iis.sinica.edu.tw/guide/",
+            "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/",
+            "https://ctext.org/introduction/zh",
+            "不批量下载",
+        ],
+    )
+    and has_all(
+        hanzi_checker,
+        [
+            "SELF_TESTS",
+            "invalid-placeholder-character-form.md",
+            "invalid-negated-shuowen-overclaim.md",
+            "placeholder_required_fields",
+            "shuowen_single_source_overreach",
+            "common placeholder variant unexpectedly passed",
+            "negated Shuowen overclaim was rejected",
+            "contrastive negation bypassed Shuowen overclaim guard",
+            "negated evidence bypassed Shuowen overclaim guard",
+        ],
+    ),
+)
+
+check(
+    "delivery collaboration routes document and philology owners",
+    has_all(
+        collaboration_skill,
+        [
+            "`document-authoring`",
+            "`hanzi-philology`",
+            "训诂证据卡",
+            "《说文解字》",
+        ],
+    )
+    and has_all(
+        collaboration_skill_type_owner_routing,
+        [
+            "专业文档撰写",
+            "汉字学与训诂",
+            "训诂证据卡",
+            "不设单一权威书",
+        ],
+    ),
+)
+
+check(
+    "product and architecture documents preserve domain ownership across authoring",
+    has_all(
+        product_skill,
+        [
+            "结论稳定后可协同 `document-authoring`",
+            "重新运行产品交付物检查",
+            "`hanzi-philology` 只在命名确有古文、字源或训诂证据问题时按需参与",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "结论稳定后可协同 `document-authoring`",
+            "重新运行架构交付物检查",
+            "不得改动接口、字段、状态、规则编号或验证语义",
+        ],
+    )
+    and has_all(
+        document_routing,
+        [
+            "同一权威版本",
+            "重新运行领域 Skill 的交付物检查",
+            "只对实际派生载体执行渲染检查",
+        ],
+    ),
+)
+
+check(
+    "philology is optional evidence for product terms and excluded from engineering naming",
+    has_all(
+        hanzi_skill,
+        [
+            "业务名相确有古文、字源或训诂证据问题",
+            "只提供命名证据",
+            "不得替代产品判断",
+            "API、类名、方法名、字段名和数据库命名",
+        ],
+    )
+    and has_all(
+        collaboration_skill_type_owner_routing,
+        [
+            "可选证据协作者",
+            "领域统一语言",
+            "重新运行产品或架构交付物检查",
+        ],
+    ),
+)
+
+expected_handling_has(
+    "document-authoring-should-formalize-report",
+    (
+        "文档契约",
+        "目标读者",
+        "事实源",
+        "事实、推断、待确认",
+        "owner",
+        "所有正式文档",
+        "不添加背景色或底纹",
+        "只对重要描述或概念名词加粗",
+        "结构检查通过",
+    ),
+)
+expected_handling_has(
+    "document-authoring-should-review-and-deliver-docx",
+    (
+        "权威版本",
+        "冲突",
+        "DOCX",
+        "不添加背景色或底纹",
+        "只对重要描述或概念名词加粗",
+        "逐页检查",
+        "文本截断",
+        "视觉验收",
+    ),
+)
+expected_handling_has(
+    "product-should-collaborate-with-document-authoring",
+    ("产品架构专家保持产品语义和正文主责", "同一权威版本", "不得改变产品结论", "重新运行产品交付物检查", "文档结构、渲染检查"),
+)
+expected_handling_has(
+    "senior-should-collaborate-with-document-authoring",
+    ("资深架构师保持系分和工程结论主责", "同一权威版本", "不得改动接口、字段、状态、规则编号或验证语义", "重新运行架构交付物检查", "文档结构、渲染检查"),
+)
+expected_handling_has(
+    "hanzi-philology-should-analyze-character-forms",
+    ("合集号", "器号", "隶定", "音韵", "反证", "待考"),
+)
+expected_handling_has(
+    "hanzi-philology-should-exegesis-with-multiple-sources",
+    ("底本", "异文", "《尔雅》", "《说文解字》", "音韵", "不设单一权威书"),
+)
+expected_handling_has(
+    "hanzi-philology-should-block-shuowen-overclaim",
+    ("拒绝单一证据越权", "合集号或器号", "传统训释", "争议或待考"),
+)
+expected_handling_has(
+    "hanzi-philology-should-support-product-term-evidence",
+    ("可选命名证据协作者", "训诂证据卡中的命名证据", "产品架构专家", "领域统一语言", "训诂不得替代产品判断"),
 )
 
 failed = [name for name, ok in checks if not ok]

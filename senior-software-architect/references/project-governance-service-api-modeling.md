@@ -1,138 +1,73 @@
 # 项目治理：服务、API 与模型
 
-本文从 `project-governance-standards.md` 拆出，承载服务分层、方法命名、Query/DTO 和 API 设计评审入口。通用 Java 编码细则以 `coding-standards.md` 为准。
+本文只承载服务职责、接口契约、模型边界和兼容性的架构建模与裁决，不复制 Java/Wind 方法命名、框架注解、模块放置或查询 API 细则。
 
 ## 使用时机
 
-- 需要评审 Service 调用链、Entity 暴露边界、API/DTO/Query 或方法命名。
-- 需要检查模型命名、Lombok/MapStruct、空值、异常、时间和金额约束。
-- 项目本地 `AGENTS.md` 明确 opt-in Wind 项目编码约规时，先读 `wind-project-coding-conventions.md` 再回到本文做通用建模对照。
+- 需要评审服务职责、用例编排、事务边界、接口契约或模型泄露。
+- 需要判断某个接口、模型或服务拆分是否有真实业务责任。
 
 ## 不适用场景
 
-- 数据库、日志、安全、测试治理读 `project-governance-data-security-quality.md`。
-- 单文件 Java 编码细则优先读 `coding-standards.md`。
-- Wind/Nobe 风格项目的 face/impl、Processor/Executor、基础服务和分包约规优先读 `wind-project-coding-conventions.md`，不要机械套本文四类服务。
+- 纯 Java/Wind 约规检查交给 `wind-coding-conventions`。
+- 单文件语言或框架用法先读项目本地规范与规则 Skill。
 
 ## 读取后必须产出
 
-- 服务边界、接口契约、模型命名、兼容性风险和验证建议。
+- 服务职责、接口契约、模型边界、兼容性风险、源码锚点和验证建议。
 
 ## 需要继续读取的 reference
 
-- 深度编码规范读 `coding-standards.md`。
 - 代码 Review 定级读 `coding-review-deep-dive.md`。
-- Wind 项目编码约规 opt-in 时读 `wind-project-coding-conventions.md`。
+- 数据与安全边界读 `project-governance-data-security-quality.md`。
+- Java/Wind 具体条目读取 `wind-coding-conventions` 的通用层与按证据启用的专项层。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| Service 分层和调用链 | 5；Wind opt-in 时先读 `wind-project-coding-conventions.md` | API 和编码细则 |
-| 方法命名、Query/DTO | 6、7 | 服务层背景 |
-| API 设计 | 8 | 命名细节 |
-| 编码原则和模型规范 | 9 | API 细节 |
+| 服务职责和调用关系 | `服务职责裁决` | 方法命名与框架注解 |
+| API 和模型边界 | `契约与模型裁决` | 具体查询字段后缀 |
+| 规则冲突或例外 | `规则结果消费` | 复制规则原文 |
 
-## 5. 服务层划分与调用关系
+## 服务职责裁决
 
-通用服务层建议优先归入以下四类；项目已有更具体的 face/impl、Processor/Executor、support 或应用层约规时，以项目规则为准，Wind opt-in 项目先读 `wind-project-coding-conventions.md`，不得为了套四类服务新增浅层透传。
+服务和接口是否成立，先看它是否承担至少一项真实责任：用例编排、业务规则、事务或一致性边界、权限审计、状态迁移、跨资源协调、外部适配或稳定公共契约。
 
-| 类型 | 命名 | 职责 |
-| --- | --- | --- |
-| 基础服务 | `{实体}Service` | 数据访问协调、基础 CRUD、简单查询 |
-| 领域写服务 | `{实体}DomainService` | 聚合规则、状态变更、领域事件 |
-| 领域读服务 | `{实体}DomainQueryService` | 查询模型、列表、分页、统计 |
-| 场景服务 | `{业务场景}ApplicationService` | 用例编排、事务边界、跨领域流程 |
+评审时回答：
 
-调用链：
+1. 该职责由哪个业务用例或不变量驱动，谁对结果负责。
+2. 调用链中谁拥有事务、失败恢复和外部副作用。
+3. 新增层次是否隐藏复杂度，还是只改名转发并增加跳转。
+4. 读写职责、状态变化和数据所有权是否清楚。
+5. 依赖方向是否让核心规则脱离外层实现独立验证。
 
-```text
-Controller / Adapter
-   ↓
-ApplicationService
-   ↓
-DomainService       DomainQueryService
-   ↓                     ↓
-{实体}Service        {实体}Service
-   ↓
-Repository / Mapper
-```
+## 契约与模型裁决
 
-强制规则：
+接口契约必须让调用方能够判断输入、输出、失败、权限、幂等、分页、兼容和版本语义。模型是否可以跨边界，不按类型名机械判断，而按业务所有权、稳定性、序列化契约和持久化耦合判断。
 
-- `DomainService` 不得调用 `DomainQueryService`。
-- `DomainQueryService` 不得调用 `DomainService`。
-- 除 `{实体}Service` 外，其他 Service 不得直接访问 Repository/Mapper。
-- ApplicationService 负责编排，不沉淀细粒度领域规则。
-- DomainService 负责对象如何变化，不处理列表/分页查询。
-- DomainQueryService 只读，不修改状态。
+重点检查：
 
-Entity 可以在内部领域边界流动，不能出现在 Web/API/face 对外契约、ApplicationService 对外返回或 DomainQueryService 返回模型中。
+- 对外契约是否泄露数据库、ORM、消息中间件或第三方 SDK 的实现细节。
+- 同一业务概念是否在接口、模型、状态和错误中保持一致命名。
+- 破坏性变化是否有兼容窗口、迁移路径、调用方清单和退役条件。
+- 转换、默认值、空值和错误映射是否改变业务语义。
+- 接口是否有契约测试、集成验证或可复核样例。
 
-## 6. 服务方法命名
+## 规则结果消费
 
-查询动词：
+项目本地规范和 `wind-coding-conventions` 输出的规则结论只作为输入。架构师不复制规则正文，只做三项裁决：
 
-| 动词 | 语义 | 返回规则 |
-| --- | --- | --- |
-| `getXxx` | 必然存在 | 查不到抛业务异常 |
-| `findXxx` | 可能不存在 | 推荐 `Optional` 或项目约定可空语义 |
-| `queryXxx` | 条件查询/列表/分页 | 参数使用 `XxxQuery` |
-| `existsXxx` | 是否存在 | 返回 boolean |
-| `countXxx` | 数量统计 | 返回数量 |
-| `statsXxx` / `summaryXxx` | 统计或汇总 | 返回统计 DTO |
+1. 规则是否适用于当前技术栈和上下文证据。
+2. 偏差是否破坏业务不变量、边界、兼容、可测试性或生产恢复能力。
+3. 修复应落在当前源码、项目约规还是规则 Skill，并由谁验证。
 
-写操作必须表达业务意图，例如 `submit`、`approve`、`reject`、`freeze`、`unfreeze`、`pay`、`refund`、`settle`。不要用 `handle`、`process`、`doXxx` 掩盖业务语义。
+规则与项目事实冲突时，不静默选边；记录冲突、风险、owner 和裁决依据，必要时进入 ADR 或项目约规修订。
 
-命中下列两条及以上，优先归为场景服务：跨实体/跨聚合、返回 DTO/Result、方法名是业务场景动词、流程包含权限/事务/外部调用/消息/多个领域对象编排。
+## 评审清单
 
-## 7. Query DTO 与查询字段命名
-
-查询字段命名使用 `<field><OperatorSuffix>`；默认等值查询不加后缀。
-
-| 类型 | 后缀示例 |
-| --- | --- |
-| 集合 | `In`, `NotIn` |
-| 文本匹配 | `Contains`, `StartsWith`, `EndsWith`, `Like` |
-| 数值比较 | `Gt`, `Gte`, `Lt`, `Lte`, `Min`, `Max` |
-| 空值 | `IsNull`, `IsNotNull` |
-| 区间 | `Between` |
-
-强制规则：
-
-- 查询对象统一命名为 `XxxQuery`。
-- 分页大小必须有最大值限制。
-- 排序字段使用枚举或字段常量白名单，禁止前端直接传数据库字段名。
-- 时间和数值范围统一使用 `Min/Max`，禁止同一项目混用 `Start/End`、`Begin/End`、`From/To`。
-- 深分页优先使用游标分页。
-
-## 8. API 设计规范
-
-- Controller 只做协议适配、参数校验、权限入口和响应转换。
-- Controller 不写业务规则，不访问 Repository/Mapper。
-- 对外 API 入参使用 Request/Query，出参使用 DTO/VO，不暴露 Entity。
-- 错误码、错误消息、HTTP 状态码或 RPC 错误契约必须统一。
-- 内网 API 要显式区分低风险和高风险入口；用户数据、资金、权限、关键业务操作必须有签名、认证或等价保护。
-- 外部集成 API 通过端口接口隔离厂商 SDK，并考虑超时、重试、限流、幂等、降级、告警和审计。
-
-## 9. 编码原则和模型规范
-
-本节只保留服务/API 建模相关原则，完整编码规则读 `coding-standards.md`。
-
-- 类、方法、字段命名必须表达业务意图，同一业务概念只用一个术语。
-- 枚举必须实现 `DescriptiveEnum` 或项目等价描述接口。
-- DTO/Request/Query、配置属性、扩展点必须有 Javadoc，说明业务语义、空值、默认值、枚举和兼容语义。
-- MapStruct 只做模型转换，不做业务校验、数据库查询、远程调用、权限判断、状态流转和审计写入。
-- Lombok 服务可读性，不应用 `@Data` 或全量 setter 破坏领域不变量。
-- 内部契约使用 JSpecify 表达 nullability；API 层模型使用 Bean Validation 表达入参约束。
-- 返回集合时返回空集合，不返回 null。
-- 金额必须明确币种、精度和舍入规则；时间必须明确格式、时区和精度。
-
-## 10. 评审清单
-
-- Service 类型是否归类正确，调用链是否越界。
-- Entity 是否泄露到 API、face、ApplicationService 返回或 DomainQueryService 返回。
-- 方法名是否表达业务意图，是否误用 `get/find/query`。
-- Query 后缀、分页、排序和深分页是否符合项目约定。
-- 外部集成是否通过端口隔离，是否有超时、重试、幂等、降级和告警。
-- DTO/Request/Query、枚举、扩展点和公共 API 是否有 Javadoc 与契约测试或示例。
+- 服务和接口是否有真实职责，而非透传包装。
+- 数据、事务、权限、状态和失败责任是否归属清楚。
+- 对外契约是否稳定、可判定、可兼容、可验证。
+- 模型是否泄露外层实现或制造跨模块耦合。
+- 规则偏差是否已映射到源码风险、最小修复和验证证据。

@@ -2,7 +2,7 @@
 
 参考模块：`https://github.com/fengwuxp/wind-middleware/tree/main/tools/mybatis-flex-codegen`
 
-该模块使用 Freemarker 模板生成 DTO、Request、Query、Mapper、MapStruct、Service、ServiceImpl 等代码。本技能不直接复刻全部实现，但应吸收以下稳定规程。这些生成模板视为 Wind 项目编码约规的标准实现样本；若模板规则和项目约规冲突，以 `wind-project-coding-conventions` 和项目本地 `AGENTS.md` 为准。
+该模块使用 Freemarker 模板生成 DTO、Request、Query、Mapper、MapStruct、Service、ServiceImpl 等代码。本技能不直接复刻全部实现，但应吸收以下稳定规程。这些生成模板视为 Wind 编码约规的标准实现样本；若模板规则和项目约规冲突，以 `wind-coding-conventions` 和项目本地 `AGENTS.md` 为准。
 
 ## 使用时机
 
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- 生成规程和验证读 `code-generation-rules.md`；Wind 规则审查交给 `wind-project-coding-conventions`，源码级 Review 交给 `资深架构师`。
+- 生成规程和验证读 `code-generation-rules.md`；Wind 规则审查交给 `wind-coding-conventions`，源码级 Review 交给 `资深架构师`。
 
 ## 按任务读取索引
 

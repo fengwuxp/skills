@@ -32,7 +32,7 @@
 - 端到端 AI Native 产品到研发流程、角色编排和 GSD/CAD 准入判断先由 `delivery-collab/references/planning-execution-admission.md` 编排；本文件只消费已确认的 GSD/CAD 编排准入结论，并在已经进入工程侧大项目编排后细化任务包、上下文账本、Wave 和验证矩阵。产品侧上下文缺口回到 `product-architecture-expert/references/ai-native-product-context.md`。
 - 生命周期、验证命令和 Git 边界读 `workflow.md`。
 - CAD Mode、Execution Grant、自动分轮推进和自动提交边界读 `cad-mode.md`。
-- 代码修改读 `coding-standards.md`、`coding-review-deep-dive.md`；测试读 `testing.md`。
+- Java 代码修改读项目本地规范、`wind-coding-conventions` 通用层和 `coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文启用；测试读 `testing.md`。
 - 生产、数据、安全或外部依赖读 `production-readiness.md`、`negative-constraints.md` 和对应专项 reference。
 
 ## 按任务读取索引

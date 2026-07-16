@@ -17,7 +17,7 @@
 
 ## 需要继续读取的 reference
 
-- 编码规范读 `coding-standards.md`。
+- Java 编码规范读项目本地规范和 `wind-coding-conventions` 通用层；Wind/Nobe 专项按依赖或上下文启用。
 - 测试读 `testing.md`、`testing-practices.md`。
 - 生产风险读 `production-readiness.md`。
 

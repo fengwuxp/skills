@@ -278,7 +278,7 @@
     {
       "id": "delivery-collab-should-coordinate-specialized-skills",
       "skill": "delivery-collab",
-      "query": "继续完善 AI 工作流分角色流程，用于控制不同 skills 完成任务：java-service-code-generator 负责 Java 基础服务、DTO、Request、Query 和模型生成；资深架构师负责架构设计、系分设计、代码设计、编码、TDD 和 CR；wind-project-coding-conventions 负责 Wind 项目编码指导并配合架构师 CR；产品专家负责需求分析、产品设计、目标对齐和产品验收；代码阅读理解、架构图、流程图等作为辅助能力接入。",
+      "query": "继续完善 AI 工作流分角色流程，用于控制不同 skills 完成任务：java-service-code-generator 负责 Java 基础服务、DTO、Request、Query 和模型生成；资深架构师负责架构设计、系分设计、代码设计、编码、TDD 和 CR；wind-coding-conventions 是 Java/Wind 约规唯一来源，源码任务由架构师按需消费规则；产品专家负责需求分析、产品设计、目标对齐和产品验收；代码阅读理解、架构图、流程图等作为辅助能力接入。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -288,7 +288,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入产研协同体系的分角色 Skill 调度路径，读取 delivery-lifecycle 的角色协作判断矩阵 / 专项 Skill 控制矩阵，并按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出 Loop 节点、主责角色、主 Skill、可选工具 / 框架、输入、交接物、不替代项和下一 owner；产品需求、目标对齐、产品设计和验收种子回到产品架构专家；架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险回到资深架构师；结构化 Java Service 基础服务、DTO、Request、Query、Entity、Mapper、Converter、Service、ServiceImpl 骨架生成回到 java-service-code-generator；Wind/Nobe 项目编码指导、包名模块模型服务 API 规则和 CR 约束回到 wind-project-coding-conventions，并由资深架构师做源码级裁决；代码阅读理解、设计-代码对齐和外部理解工具准入读取 code-understanding-tools；架构图、流程图、时序图、状态机和代码库结构图回到产品/架构 diagram-output，复杂渲染再接 Architecture Diagram Generator 或 fireworks-tech-graph；产研协同体系只做编排、门禁和交接，不直接代写专项产物，不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批。"
+      "expected_handling": "进入产研协同体系的分角色 Skill 调度路径，读取 delivery-lifecycle 的角色协作判断矩阵 / 专项 Skill 控制矩阵，并按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；产品需求、目标对齐、产品设计和验收种子回到产品架构专家；架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险只由资深架构师主责；结构化 Java Service 骨架生成回到 java-service-code-generator；纯 Java/Wind 约规检查回到 wind-coding-conventions，源码任务只把通用 Java 与按需 Wind 规则作为架构师输入，不设置第二 owner；代码阅读理解和设计-代码对齐读取 code-understanding-tools；图形语义回到产品或架构 diagram-output；产研协同体系只做编排、门禁和交接，不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批。"
     },
     {
       "id": "delivery-collab-should-prd-ai-prescan-review",
@@ -1165,7 +1165,7 @@
     {
       "id": "delivery-collab-should-admit-open-code-review",
       "skill": "delivery-collab",
-      "query": "用 AI Native 评估并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，同时和架构师编码约规、Wind 项目约规协作，不要替代 TDD、源码级 CR 或自动修复授权。",
+      "query": "用 AI Native 评估并接入 alibaba/open-code-review：希望它作为编码评审阶段的独立 Checker，消费 Java/Wind 约规并交给架构师做源码级裁决，不要替代 TDD、源码级 CR 或自动修复授权。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1174,7 +1174,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Wind opt-in 项目把 Wind 约规作为 .opencodereview/rule.json 或 --background 规则输入；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
+      "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Java 项目把通用约规作为规则输入，命中 Wind/Nobe 声明、依赖或源码上下文时再加入 Wind 专项；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Java/Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
     },
     {
       "id": "delivery-collab-should-source-quality-review-loop",
@@ -1188,12 +1188,12 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools、decision-calibration 和 source-map；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Wind opt-in 项目读取 wind-project-coding-conventions；源码级裁决回资深架构师的 coding-review-deep-dive.md、coding-standards.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
+      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools、decision-calibration 和 source-map；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Java 项目读取 wind-coding-conventions 通用层，命中依赖或上下文时叠加 Wind/Nobe 专项；源码级裁决回资深架构师的 coding-review-deep-dive.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
     },
     {
       "id": "delivery-collab-should-route-wind-agents-init",
       "skill": "delivery-collab",
-      "query": "用 产研协同体系给一个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续产品专家、资深架构师、Wind 约规和代码生成器按项目规则协作。",
+      "query": "用 产研协同体系给一个遵循 Wind 编码约规的新项目初始化 AGENTS.md，让后续产品专家、资深架构师、Wind 约规和代码生成器按项目规则协作。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1202,7 +1202,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入项目约规入口编排路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；产研协同体系只判断项目事实待确认项、owner、授权边界和协作路由，再分派 wind-project-coding-conventions 读取 wind-project-agents-template.md 输出项目 AGENTS.md 草案；源码级设计、TDD、CR 和验证继续交给资深架构师，不猜测构建命令、生产流程、模块事实或 Git 授权。"
+      "expected_handling": "进入项目约规入口编排路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；产研协同体系只判断项目事实待确认项、owner、授权边界和协作路由，再分派 wind-coding-conventions 读取 wind-project-agents-template.md 输出项目 AGENTS.md 草案；源码级设计、TDD、CR 和验证继续交给资深架构师，不猜测构建命令、生产流程、模块事实或 Git 授权。"
     },
     {
       "id": "delivery-collab-negative-prd-from-prototype",
@@ -1311,7 +1311,20 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "进入代码评审路径，给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
+      "expected_handling": "进入资深架构师代码评审路径；Java 源码任务统一读取 java-coding-conventions.md 的通用 Java 约规，当前没有 Wind/Nobe 高置信度信号，不加载 Wind 专项，也不把 wind-coding-conventions 作为第二 owner；给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
+    },
+    {
+      "id": "senior-negative-pure-java-conventions",
+      "skill": "senior-software-architect",
+      "query": "这是普通 Maven Java 21 项目，只检查通用 Java 编码约规并给规则清单，不做源码设计、代码 CR、修复或 TDD。",
+      "should_trigger": false,
+      "preferred_skill": "wind-coding-conventions",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "这是纯约规检查，只由 wind-coding-conventions 主责；没有源码设计、CR、TDD、修复或验证任务，不应触发资深架构师。"
     },
     {
       "id": "senior-should-review-in-memory-business-service",
@@ -1325,7 +1338,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入资深架构师代码 CR 路径，读取 coding-review-deep-dive、coding-standards 和 negative-constraints，识别内存版业务 Service 冒充生产实现；除缓存、测试替身、fixture、沙盒模拟或明确 demo 外，生产源码路径不得用 InMemory/Fake/Mock Service、Map/List 存储或进程内状态承载真实业务能力，并要求真实持久化/端口适配、测试和发布回滚验证。"
+      "expected_handling": "进入资深架构师代码 CR 路径，读取 coding-review-deep-dive、java-coding-conventions 和 negative-constraints；由通用 Java 规则提供偏差输入，架构师结合真实业务入口、持久化、一致性、审计、恢复、测试和发布回滚证据判断内存版业务 Service 是否冒充生产实现。"
     },
     {
       "id": "senior-should-production-incident-postmortem",
@@ -1475,7 +1488,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入资深架构师的既有系分更新路径；保持 docs/member-system-design-v1.md 原路径，补齐接口、数据、测试和发布风险；本次不是命名迁移，不得自动改名为 <主题>-系分设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
+      "expected_handling": "进入资深架构师的既有系分更新路径；保持 docs/member-system-design-v1.md 原路径，补齐接口、数据、测试和发布风险；本次不是命名迁移，不得自动改名为 〈主题〉-系分设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
     },
     {
       "id": "senior-negative-prototype-to-prd",
@@ -1748,7 +1761,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入产品架构专家的既有 PRD 更新路径；保持 docs/member-prd-v2.md 原路径，补齐对象、流程、规则和验收；本次不是命名迁移，不得自动改名为 <主题>-产品设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
+      "expected_handling": "进入产品架构专家的既有 PRD 更新路径；保持 docs/member-prd-v2.md 原路径，补齐对象、流程、规则和验收；本次不是命名迁移，不得自动改名为 〈主题〉-产品设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
     },
     {
       "id": "product-negative-bug-diagnosis",
@@ -1790,9 +1803,91 @@
       "negative_reason": "这是工程架构和发布风险评审，不是产品语义、PRD 或支付产品方案。"
     },
     {
-      "id": "wind-project-coding-conventions-should-trigger-opt-in",
-      "skill": "wind-project-coding-conventions",
-      "query": "这个项目 AGENTS.md 已标明遵守 Wind 项目编码约规，请按 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、查询字段和服务查询方法、内网 API、安全等级、字典国际化、Entity 不外露和 MyBatis Flex 查询做一轮规则检查。",
+      "id": "product-negative-ambiguous-state-machine",
+      "skill": "product-architecture-expert",
+      "query": "画一张订单状态机，但我还没说明是产品业务状态、用户验收，还是系统实现状态、持久化与异常恢复。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "缺少产品语义或工程实现目标，不能仅凭“状态机”抢占主责；应先澄清是业务状态与验收，还是系统实现与工程落点。"
+    },
+    {
+      "id": "senior-negative-ambiguous-state-machine",
+      "skill": "senior-software-architect",
+      "query": "画一张订单状态机，但我还没说明是产品业务状态、用户验收，还是系统实现状态、持久化与异常恢复。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "缺少产品语义或工程实现目标，不能仅凭“状态机”抢占主责；应先澄清是业务状态与验收，还是系统实现与工程落点。"
+    },
+    {
+      "id": "wind-coding-conventions-should-trigger-generic-java",
+      "skill": "wind-coding-conventions",
+      "query": "这是一个普通 Maven Java 21 项目，没有 Wind/Nobe 依赖。请按通用 Java 约规检查命名、空值契约、异常日志、金额时间处理和测试代码，不要套 face/impl 或 Wind API 规则。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入通用 Java 约规检查；读取 java-coding-conventions.md，并按项目实际 JDK、构建配置和依赖启用对应章节；没有 Wind/Nobe 依赖、包名、类型、模块结构或明确上下文，因此不加载 Wind 专项约规，不要求 face/impl、WindPagination、WindQuery、CurrencyIsoCode 或 Wind 内网 API；输出适用层级、上下文证据、触发约规、当前偏差、最小改法、后续 owner 和验证方式；源码级 CR、TDD 和生产风险仍交给资深架构师。"
+    },
+    {
+      "id": "wind-coding-conventions-should-apply-alibaba-manual-selectively",
+      "skill": "wind-coding-conventions",
+      "query": "这是普通 Maven Java 21 项目，没有 Wind/Nobe 依赖。请参考阿里巴巴 Java 开发手册检查二方库升级、对象比较、序列化兼容、finally、SQL 投影和索引类型转换，但不要创建独立 Skill，也不要强制作者日期、固定覆盖率或服务器参数。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入通用 Java 约规的阿里手册选择性采纳检查；把语雀 1.3.1 手册作为 java-coding-conventions.md 的外部基础来源，不创建独立 Skill；检查 Maven / Gradle 依赖治理、SNAPSHOT、dependencyManagement 或平台约束、dependency:tree 或 dependencyInsight、Objects.equals、包装类型 equals、serialVersionUID、禁止 finally 返回、禁止 SELECT * 和索引隐式类型转换；项目没有 Wind/Nobe 高置信度信号，不加载 Wind 专项；不采用机械作者日期、固定测试命名、统一覆盖率百分比、time_wait、Xms/Xmx 或文件句柄等旧版和运行环境规则。"
+    },
+    {
+      "id": "wind-coding-conventions-should-trigger-generic-java-agents",
+      "skill": "wind-coding-conventions",
+      "query": "给这个普通 Gradle Java 21 项目初始化 AGENTS.md 编码约规入口；项目没有 Wind/Nobe 依赖，不要加入 face/impl 或 Wind API 规则。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入普通 Java 项目 AGENTS.md 初始化；读取 java-coding-conventions.md，只根据项目事实输出最小 patch，包含 JDK/构建工具、项目本地规范优先级、实际依赖对应章节、构建/测试/静态检查命令和验证边界；没有 Wind/Nobe 高置信度信号，因此不读取 Wind 项目模板，不加入 face/impl、Wind API、Wind 类型或 Wind 模块规则。"
+    },
+    {
+      "id": "wind-coding-conventions-should-trigger-wind-dependency",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Java 项目的 AGENTS.md 没写 Wind opt-in，但 pom.xml 依赖 Wind/Nobe 组件，源码 import 了 WindPagination、WindQuery 和 com.wind.transaction.core.enums.CurrencyIsoCode，请判断应启用哪些编码约规。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "先读取通用 Java 约规，再根据依赖或源码上下文识别 Wind/Nobe 高置信度信号并叠加 Wind 专项约规；读取 wind-coding-conventions.md，并按任务需要读取 wind-architecture-patterns.md 或示例；输出实际命中的依赖、import、类型和模块证据，不因 AGENTS.md 未显式 opt-in 而忽略已有 Wind 技术事实，也不把孤立的 ServiceImpl、face、impl 或普通 MyBatis 用法误判为 Wind。"
+    },
+    {
+      "id": "wind-coding-conventions-should-trigger-opt-in",
+      "skill": "wind-coding-conventions",
+      "query": "这个项目 AGENTS.md 已标明遵守 Wind 编码约规，请按 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、查询字段和服务查询方法、内网 API、安全等级、字典国际化、Entity 不外露和 MyBatis Flex 查询做一轮规则检查。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1800,12 +1895,12 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "进入 Wind 项目编码约规规则检查；先确认项目已 opt-in，再读取 wind-project-coding-conventions 主规则，覆盖 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、查询字段命名、get/find/query 服务查询方法、/inc/basic 与 /inc/secure 内网 API、安全等级、系统字典/国际化、Entity 不外露和 MyBatis Flex；输出适用性、触发约规、当前偏差、建议改法、后续 owner 和验证方式；规则判断由 wind-project-coding-conventions 承担，通用 Java/日志/异常/数据库/测试方法论和源码级设计、TDD、CR、生产风险继续交给资深架构师。"
+      "expected_handling": "进入 Java/Wind 编码约规规则检查；先读取 java-coding-conventions.md 通用层，把项目已声明 Wind 约规作为高置信度信号，再读取 wind-coding-conventions.md 专项规则；命中 Wind 项目族端口、Starter、Trace、安全或企业集成模式时读取 wind-architecture-patterns.md；覆盖 face/impl、基础服务、ApplicationService、DTO/Request/Query/Command、查询字段命名、get/find/query 服务查询方法、/inc/basic 与 /inc/secure 内网 API、安全等级、系统字典/国际化、Entity 不外露和 MyBatis Flex；输出适用层级、上下文证据、触发约规、当前偏差、建议改法、后续 owner 和验证方式；源码级设计、TDD、CR、调试、测试策略和生产风险继续交给资深架构师。"
     },
     {
-      "id": "wind-project-coding-conventions-should-trigger-package-ownership",
-      "skill": "wind-project-coding-conventions",
-      "query": "这个仓库的 AGENTS.md 已写明采用统一 face/impl 项目编码约规，请判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、callback/spi、listener、webhook、core、infrastructure 的模块和包归位。",
+      "id": "wind-coding-conventions-should-trigger-package-ownership",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind/Nobe 仓库的 AGENTS.md 已写明采用统一 face/impl 项目编码约规，请判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、callback/spi、listener、webhook、core、infrastructure 的模块和包归位。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1813,12 +1908,12 @@
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "expected_handling": "进入项目编码约规归位检查；确认本地 AGENTS.md opt-in 后读取 Wind 主规则和必要示例，输出模型、接口、事件、Web 展示模型、core 与 infrastructure 的归位判断，并标明需要架构师源码级 CR 的部分。"
+      "expected_handling": "进入项目编码约规归位检查；把明确的 Wind/Nobe 项目声明作为高置信度信号，先读通用 Java 约规，再读取 Wind 专项主规则和必要示例；输出模型、接口、事件、Web 展示模型、core 与 infrastructure 的归位判断，并标明需要架构师源码级 CR 的部分。"
     },
     {
-      "id": "wind-project-coding-conventions-should-reject-speculative-locking",
-      "skill": "wind-project-coding-conventions",
-      "query": "这个项目已 opt-in Wind 项目编码约规。新的基础服务现在只是普通单表写入，但为了未来可能出现的并发，准备先加本地锁、分布式锁和 LocksWrapper，请评审。",
+      "id": "wind-coding-conventions-should-reject-speculative-locking",
+      "skill": "wind-coding-conventions",
+      "query": "这个项目已 opt-in Wind 编码约规。新的基础服务现在只是普通单表写入，但为了未来可能出现的并发，准备先加本地锁、分布式锁和 LocksWrapper，请评审。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1829,9 +1924,9 @@
       "expected_handling": "进入 Wind 基础服务并发与锁边界检查；先按业务不变量区分唯一性、带前置状态的状态流转和一般读改写，分别优先使用表内业务 UK 或联合 UK、原子条件更新和乐观锁；事务只保证本地操作的原子提交和回滚，普通 SELECT -> Java 校验 -> UPDATE 即使使用 @Transactional 也不能单独防止丢失更新；不得仅因未来可能并发预埋本地锁、分布式锁或锁 Wrapper；只有存在明确并发入口和冲突资源，上述机制不足以保护已确认业务不变量，并有失败场景、测试或生产证据时才引入锁；确需分布式锁时只使用已验证持有者身份、安全释放、租约续期或有界执行语义的平台原语，并说明超时、失锁和 fencing/version 防护；没有这些证据时删除预埋锁，不复制固定租约的通用代码模板。"
     },
     {
-      "id": "wind-project-coding-conventions-should-separate-business-uniqueness-from-request-idempotency",
-      "skill": "wind-project-coding-conventions",
-      "query": "这个项目已 opt-in Wind 项目编码约规。创建接口使用调用方传入的 Idempotency-Key 防止网络重试重复执行，同时业务对象本身有内部联合 UK；请评审 requestSn、请求幂等和业务唯一性应该怎样分工。",
+      "id": "wind-coding-conventions-should-separate-business-uniqueness-from-request-idempotency",
+      "skill": "wind-coding-conventions",
+      "query": "这个项目已 opt-in Wind 编码约规。创建接口使用调用方传入的 Idempotency-Key 防止网络重试重复执行，同时业务对象本身有内部联合 UK；请评审 requestSn、请求幂等和业务唯一性应该怎样分工。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1842,9 +1937,9 @@
       "expected_handling": "进入 Wind 幂等与业务唯一性分层检查；业务唯一性和业务身份由表内业务 UK、联合 UK、状态条件或版本约束保护；外部 Idempotency-Key/requestSn 可以用于请求重放去重，但不得冒充业务身份，必须定义租户或调用方与接口作用域、参数摘要、有效期、并发冲突、结果回放和过期后重用语义；有自然业务唯一约束时独立保留数据库兜底，没有自然业务 UK 时不得为了形式完整虚构联合 UK；不能笼统地把外部请求号降为只允许追踪，也不能机械要求所有请求幂等键与业务 UK 合并。"
     },
     {
-      "id": "wind-project-coding-conventions-should-trigger-agents-template",
-      "skill": "wind-project-coding-conventions",
-      "query": "用 产研协同体系给这个遵循 Wind 项目编码约规的新项目初始化 AGENTS.md，让后续 AI 能按产品专家、资深架构师、Wind 约规和代码生成器分工推进。",
+      "id": "wind-coding-conventions-should-trigger-agents-template",
+      "skill": "wind-coding-conventions",
+      "query": "用 产研协同体系给这个遵循 Wind 编码约规的新项目初始化 AGENTS.md，让后续 AI 能按产品专家、资深架构师、Wind 约规和代码生成器分工推进。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1853,11 +1948,11 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入 Wind 项目 AGENTS 初始化；由 产研协同体系做项目约规入口编排，wind-project-coding-conventions 读取 wind-project-agents-template.md 输出可放入项目根目录的 AGENTS.md 草案；必须标出项目事实待确认项、授权边界、验收标准和验证方式，不猜测构建命令、生产流程、模块事实或 Git 授权。"
+      "expected_handling": "进入 Wind 项目 AGENTS 初始化；由 产研协同体系做项目约规入口编排，wind-coding-conventions 读取 wind-project-agents-template.md 输出可放入项目根目录的 AGENTS.md 草案；必须标出项目事实待确认项、授权边界、验收标准和验证方式，不猜测构建命令、生产流程、模块事实或 Git 授权。"
     },
     {
-      "id": "wind-project-coding-conventions-negative-generic-java-review",
-      "skill": "wind-project-coding-conventions",
+      "id": "wind-coding-conventions-negative-generic-java-review",
+      "skill": "wind-coding-conventions",
       "query": "这个普通 Spring Boot 项目没有本地编码约规 opt-in，帮我 CR Service 层事务边界、实体暴露、循环依赖和测试缺口。",
       "should_trigger": false,
       "preferred_skill": "senior-software-architect",
@@ -1866,11 +1961,24 @@
       "dimensions": [
         "trigger_accuracy"
       ],
-      "negative_reason": "没有 Wind 约规 opt-in，且任务是源码级代码 Review，应交给资深架构师，不强套 Wind 项目编码约规。"
+      "negative_reason": "任务目标是源码级代码 Review，应由资深架构师主导；是否存在 Wind opt-in 不再决定通用 Java 约规准入，只有用户要求规则判断时才由 wind-coding-conventions 提供通用规则来源。"
     },
     {
-      "id": "wind-project-coding-conventions-negative-generic-lock-review",
-      "skill": "wind-project-coding-conventions",
+      "id": "wind-coding-conventions-negative-wind-source-review",
+      "skill": "wind-coding-conventions",
+      "query": "请对这个明确使用 Wind/Nobe 依赖的 ServiceImpl 做源码 CR，按 Wind 编码约规检查模块边界、事务和测试缺口。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "即使需要消费 Wind 专项规则，源码级 CR 仍只由资深架构师主责；wind-coding-conventions 是规则来源，不是第二个执行 owner。"
+    },
+    {
+      "id": "wind-coding-conventions-negative-generic-lock-review",
+      "skill": "wind-coding-conventions",
       "query": "这个普通 Spring Boot 项目没有任何项目级编码约规，请做代码 CR：基础服务为了未来并发准备增加本地锁、分布式锁和 LocksWrapper。",
       "should_trigger": false,
       "preferred_skill": "senior-software-architect",
@@ -1879,11 +1987,11 @@
       "dimensions": [
         "trigger_accuracy"
       ],
-      "negative_reason": "没有 Wind 约规 opt-in；并发与锁的源码级 CR 应交给资深架构师，不能仅因出现基础服务或 LocksWrapper 就触发 Wind 约规。"
+      "negative_reason": "任务目标是并发与锁的源码级 CR，应由资深架构师主导；普通 Spring、基础服务或 LocksWrapper 不构成 Wind/Nobe 专项信号，也不因缺少 opt-in 排除通用 Java 约规。"
     },
     {
-      "id": "wind-project-coding-conventions-negative-structured-codegen",
-      "skill": "wind-project-coding-conventions",
+      "id": "wind-coding-conventions-negative-structured-codegen",
+      "skill": "wind-coding-conventions",
       "query": "根据这段 CREATE TABLE 生成 Wind/Nobe Java Service 配套代码，包括 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl。",
       "should_trigger": false,
       "preferred_skill": "java-service-code-generator",
@@ -1893,6 +2001,248 @@
         "trigger_accuracy"
       ],
       "negative_reason": "用户要求结构化代码生成，应交给 java-service-code-generator；Wind 约规只作为生成后规则审查来源。"
+    },
+    {
+      "id": "delivery-collab-should-route-practical-design-documents",
+      "skill": "delivery-collab",
+      "query": "请把产品设计、系分设计和代码重构设计串成可落地的协作方式：先定名相，再写场景流程；多角色、多对象、多状态或跨系统时用一张最小关键图暴露关系和冲突，简单需求可以不画；随后确认规则并落到模块、接口、数据、测试和发布，同时避免局部内部重构也生成厚文档。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入产研协同体系的设计到执行交接路径，按名 -> 事 ->（图）-> 法 -> 器 -> 验推进；产品架构专家确定核心名相和场景与流程，多角色、多对象、多状态、跨团队或跨系统时选择一张最小关键图暴露关系、状态、边界和冲突，轻量任务可明确不需要单独画图；图不是新的事实源，不替代规则、验收和待确认项；随后确认状态与业务规则和验收，资深架构师用系分设计把规则落到模块、接口、事件、数据、测试、监控和发布，并用规则落地表连接业务表达、对象/状态、工程承接、验证证据和 owner；产研协同体系只形成 Engineering Handoff Card，不复制产品或系分正文；只有跨模块、公共契约、数据迁移、核心链路替换、双轨切流或退役任务才进入独立重构设计，局部、行为保持且可测试的重构不创建正式重构设计文档。"
+    },
+    {
+      "id": "delivery-collab-should-use-optional-reference-index",
+      "skill": "delivery-collab",
+      "query": "产品设计、系分和重构设计都需要列参考资料，其中有外部文档链接；请统一格式，但不要强制每条资料生成 REF ID。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "统一使用参考资料与证据索引；默认直接记录类型、资料名称、链接或路径、版本或日期、用途与核验状态，外部文档使用可读 Markdown 链接；引用标识为可选，只有正文多次引用、规则与验收需要反向追踪、资料容易混淆或存在审计要求时才增加；轻量文档可不单独展开，不把 AI 推理、讨论草稿和被拒方案列为正式参考资料。"
+    },
+    {
+      "id": "senior-should-standalone-refactoring-design-for-migration",
+      "skill": "senior-software-architect",
+      "query": "旧订单核心链路要迁移到新模块，期间需要双写、历史数据回填、灰度切流和旧接口下线，请先输出一份可执行、可回退的重构设计。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入独立重构设计路径；先确认产品行为变化和对应产品设计/目标系分，再定义行为不变量、目标边界和 MIG 切片；迁移方案覆盖双写、主写方、回填、数据校验、灰度切流、暂停条件、旧能力下线条件和 owner；验证覆盖特征测试、契约测试、回归、监控和回滚，不能用重构隐藏产品变化，也不能把设计文档当成执行授权。"
+    },
+    {
+      "id": "senior-should-skip-refactoring-document-for-local-change",
+      "skill": "senior-software-architect",
+      "query": "把这个类里的重复私有方法抽出来，外部行为不变，已有单测能覆盖；不要扩大范围，也不要为了这点改动写一份重构方案。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "进入局部行为保持重构路径，不创建正式重构设计文档；用实现任务卡锁定目标、写入范围、行为不变量和验证命令，在现有测试保护下做最小修改；不新增抽象层、迁移计划、兼容层、配置项或无关重构。"
+    },
+    {
+      "id": "document-authoring-should-formalize-report",
+      "skill": "document-authoring",
+      "query": "请把会议记录、调研结论和验证数据整理成一份给管理层评审的正式报告，保留事实来源、待确认负责人和下一步行动，不要补造背景。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入专业文档撰写路径；先建立文档契约，确认目标读者、用途、范围、事实源、文档状态、输出载体、owner 和验收；区分事实、推断、待确认和范围外不做，按管理层阅读顺序组织结论、依据、行动、风险和验证；所有正式文档都不添加背景色或底纹，只对重要描述或概念名词加粗；待确认项必须带 owner 和影响，不补造背景，不把结构检查通过写成事实正确或正式批准。"
+    },
+    {
+      "id": "document-authoring-should-review-and-deliver-docx",
+      "skill": "document-authoring",
+      "query": "使用 $document-authoring 合并两份制度草案，先指出冲突并形成最终版，再输出 DOCX；需要保留引用和版本信息，并逐页检查表格、分页和文本截断。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入合并和最终版收口路径；先选择权威版本，列出冲突、影响和确认 owner，未经确认不静默覆盖；保留来源、版本和关键结论追踪，正文只保留最终规则、例外、流程、记录和复审要求；调用环境可用的文档能力生成 DOCX，不添加背景色或底纹，只对重要描述或概念名词加粗；逐页检查文件可打开、目录、分页、表格溢出、字体和文本截断，无法渲染时明确未完成视觉验收。"
+    },
+    {
+      "id": "document-authoring-should-route-prd",
+      "skill": "document-authoring",
+      "query": "帮我从一张运营后台截图直接写完整 PRD，顺便定义业务对象、状态机、权限规则和验收标准。",
+      "should_trigger": false,
+      "difficulty": "edge",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "product-architecture-expert",
+      "negative_reason": "任务需要从截图反推产品语义、对象、状态、权限和验收，应由产品架构专家主导；专业文档撰写只能在产品事实稳定后处理表达和载体。"
+    },
+    {
+      "id": "product-should-collaborate-with-document-authoring",
+      "skill": "product-architecture-expert",
+      "query": "使用产品架构专家主导这份产品设计，业务对象、流程、规则和验收确认后，再配合 document-authoring 整理正式正文并输出 DOCX。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "产品架构专家保持产品语义和正文主责，先确定业务对象、流程、规则、风险和验收；结论稳定后由 document-authoring 在同一权威版本上处理结构、表达、引用和 DOCX 载体，不得改变产品结论；文档编辑后重新运行产品交付物检查和文档结构、渲染检查，再交 owner 验收。"
+    },
+    {
+      "id": "senior-should-collaborate-with-document-authoring",
+      "skill": "senior-software-architect",
+      "query": "由资深架构师完成这份系分的边界、契约、数据、异常和验证设计，再让 document-authoring 做正式成稿和 PDF 排版。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "资深架构师保持系分和工程结论主责，先稳定系统边界、运行时流程、接口数据、工程规则、风险和验证；document-authoring 只处理同一权威版本的结构、表达、引用和 PDF 载体，不得改动接口、字段、状态、规则编号或验证语义；编辑后重新运行架构交付物检查和文档结构、渲染检查。"
+    },
+    {
+      "id": "document-authoring-should-skip-one-line-polish",
+      "skill": "document-authoring",
+      "query": "只把这句话改得更简洁：我们希望通过本次优化进一步有效提升整体协作效率。不要生成报告，也不要扩写上下文。",
+      "should_trigger": false,
+      "difficulty": "edge",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "preferred_skill": "none",
+      "negative_reason": "一句话润色可直接完成，不应加载正式文档契约、评审和渲染工作流。"
+    },
+    {
+      "id": "hanzi-philology-should-analyze-character-forms",
+      "skill": "hanzi-philology",
+      "query": "请分析“德”字在甲骨文、金文和小篆中的字形与辞例变化，区分可回查材料、学者释读和仍有争议的部分，不要凭现代楷书拆字。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入字形与书体证据路径；先确认研究对象、所问层次和时代范围，记录甲骨合集号、金文器号或图版、释文来源和辞例语境，区分原件、拓片、摹本、字形图、隶定和现代字头；再结合音韵、传统训释和具名现代研究列支持、反证和不同释读，按材料可证、现代通说、争议或待考分级，不凭现代楷书补造字形故事。"
+    },
+    {
+      "id": "hanzi-philology-should-exegesis-with-multiple-sources",
+      "skill": "hanzi-philology",
+      "query": "使用 $hanzi-philology 解释《国语》这句话中的关键词，并结合《尔雅》《说文解字》、上下文、异文、音韵和同时代用例说明哪部分可证、哪部分待考。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入文句训诂路径；记录《国语》篇章、最小必要上下文、底本、版本和异文，先判断语法位置与篇章语境，再比较同时代和平行用例；《尔雅》用于观察释词和名物训释，《说文解字》只作为汉代字书与传统解释材料，并结合音韵、注疏和现代研究互证；输出材料可证、传统训释、现代通说、争议和待考，不设单一权威书。"
+    },
+    {
+      "id": "hanzi-philology-should-block-shuowen-overclaim",
+      "skill": "hanzi-philology",
+      "query": "《说文解字》已经这样解释了，所以请直接证明这个字的本义和甲骨文原形就是这个意思，不必再查器物编号、辞例或其他研究。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "拒绝单一证据越权；明确《说文解字》只作为汉代字书和传统解释材料之一，不能单独证明甲骨文、金文、本义或上古词义；要求补出土材料、合集号或器号、辞例语境、音韵、其他传统训释和具名现代研究，并把结论降为传统训释、争议或待考。"
+    },
+    {
+      "id": "hanzi-philology-should-reject-name-divination",
+      "skill": "hanzi-philology",
+      "query": "请根据孩子姓名里的两个字做甲骨文测字，判断未来财运和性格吉凶，再推荐一个能转运的名字。",
+      "should_trigger": false,
+      "difficulty": "edge",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "none",
+      "negative_reason": "测字、姓名吉凶、财运和转运不属于汉字学、古文字学或训诂学证据分析，不应包装为学术结论。"
+    },
+    {
+      "id": "hanzi-philology-should-support-product-term-evidence",
+      "skill": "hanzi-philology",
+      "query": "产品团队想用古代典籍中的“经世”作为业务能力名称，请先核验原文语境、历代训释和现代含义边界，给产品架构专家作为命名决策证据。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "仅作为可选命名证据协作者，核验典籍原文、版本、篇章语境、传统训释、现代用法和争议，输出训诂证据卡中的命名证据与不得扩写项；产品架构专家仍负责结合业务事实、用户理解、领域统一语言和 owner 决策确定最终名称，训诂不得替代产品判断。"
+    },
+    {
+      "id": "hanzi-philology-should-not-name-api-or-class",
+      "skill": "hanzi-philology",
+      "query": "给这个退款接口、Java 类和数据库字段统一起名，要求符合现有代码仓库和领域模型，不需要古文、字源或训诂分析。",
+      "should_trigger": false,
+      "difficulty": "edge",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "senior-software-architect",
+      "negative_reason": "API、类名和字段名应服从代码库事实、领域统一语言和项目编码规范；没有字源、古文或训诂证据诉求时不得触发 hanzi-philology。"
+    },
+    {
+      "id": "hanzi-philology-should-not-own-document-polish",
+      "skill": "hanzi-philology",
+      "query": "这份季度总结没有任何字源或古文问题，只需要重组章节、压缩套话并输出正式 PDF，请不要展开汉字考据。",
+      "should_trigger": false,
+      "difficulty": "edge",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "preferred_skill": "document-authoring",
+      "negative_reason": "任务是专业文档结构、表达和 PDF 交付，应由 document-authoring 处理；没有汉字学或训诂问题。"
     },
     {
       "id": "codegen-should-ddl-to-service",

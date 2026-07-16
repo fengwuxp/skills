@@ -223,7 +223,7 @@ Harness v3 状态:
 - 任务级通过后仍需 final broad review，检查跨任务契约、公共 API、错误码、状态机、数据迁移、测试覆盖、风险边界和知识回流。
 - Harness v3 要求任务状态只能在 `Ready / Running / Review / Fix / Verified / Blocked / Handoff` 间流转；缺少 owner、写入范围、验证命令、恢复入口或状态回写时，不进入 AI Maker 执行。
 
-文件化交接建议使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue。`task-brief`、`review-package` 和 `sdd-workspace` 已随 vendored SDD v6.0.3 skill 提供；上游 v6.1.0 不改变本仓库这一执行基线。只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/` 或运行这些 helper。缺少授权时，只采用方法契约，不声明外部 SDD 执行套件已启用。
+文件化交接建议使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue。`task-brief`、`review-package` 和 `sdd-workspace` 随 SDD v6.0.3 本地审查基线保留；上游后续版本不自动改变本仓库执行边界。只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/` 或运行这些 helper。缺少授权时，只采用方法契约，不声明外部 SDD 执行套件已启用。
 
 ## 4. 机器验证与独立证据
 

@@ -4,8 +4,8 @@
 The script is offline and read-only. It inspects Skill metadata, SKILL.md body
 size, direct reference links, bundled resources, scripts, fixtures, and
 repo-level validation hooks. It also inspects realistic positive and hard
-negative prompt fixtures. It does not grade domain truth; it highlights
-maintainability and trigger-readiness signals that should trend over time.
+negative prompt fixtures. It does not execute an Agent or grade domain truth;
+it highlights static maintainability and trigger-readiness signals.
 """
 
 from __future__ import annotations
@@ -19,16 +19,10 @@ from typing import Any, Sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL_DIRS = [
-    "delivery-collab",
-    "java-service-code-generator",
-    "product-architecture-expert",
-    "senior-software-architect",
-    "wind-project-coding-conventions",
-]
+SKILL_DIRS = sorted(path.parent.name for path in ROOT.glob("*/SKILL.md"))
 SCRIPTLESS_VALIDATED_SKILLS = {
     "delivery-collab",
-    "wind-project-coding-conventions",
+    "wind-coding-conventions",
 }
 REQUIRED_VALIDATE_HOOKS = [
     "scripts/validate-trigger-paths.py",
@@ -37,6 +31,7 @@ REQUIRED_VALIDATE_HOOKS = [
     "scripts/audit-skill-eval-fixtures.py --self-test",
     "scripts/archive-source-evidence.py --self-test",
     "scripts/skillx_export_adapter.py --self-test",
+    "scripts/validate-installed-skills.sh",
     "./sync-skills.sh --dry-run all",
 ]
 SKILL_EVAL_PROMPT_FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
@@ -392,16 +387,23 @@ def score_deterministic(
     return max(min(score, 100), 0), warnings
 
 
-def score_trigger(skill_name: str, trigger_text: str) -> tuple[int, list[str]]:
+def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 80
     expected_terms = {
-        "delivery-collab": ["product engineering collaboration", "GSD/CAD", "验证矩阵"],
-        "java-service-code-generator": ["java service generator", "structured input", "codegen"],
-        "product-architecture-expert": ["payment product", "product diagram", "airwallex"],
-        "senior-software-architect": ["architecture diagram", "bug diagnosis", "write tests"],
-        "wind-project-coding-conventions": ["wind project coding conventions", "wind project entity exposure", "wind project coding examples"],
+        "delivery-collab": ["产研协同", "GSD/CAD", "验证矩阵"],
+        "document-authoring": ["document-authoring", "正式报告", "DOCX"],
+        "hanzi-philology": ["hanzi-philology", "甲骨文", "《说文解字》"],
+        "java-service-code-generator": ["CREATE TABLE", "字段表格", "Java Entity"],
+        "product-architecture-expert": ["PRD", "业务能力地图", "验收种子"],
+        "senior-software-architect": ["CR", "架构", "TDD"],
+        "wind-coding-conventions": ["Wind 编码约规", "Entity 不外露", "AGENTS.md"],
     }
+    trigger_text = "\n".join(
+        case.get("query", "")
+        for case in prompt_fixture.get("cases", [])
+        if case.get("skill") == skill_name and case.get("should_trigger") is True
+    )
     terms = expected_terms.get(skill_name, [])
     hits = sum(1 for term in terms if term.casefold() in trigger_text.casefold())
     score += score_ratio(hits, len(terms) or 1, 20)
@@ -492,7 +494,7 @@ class SkillEvaluation:
     warnings: list[str]
 
 
-def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> SkillEvaluation:
+def evaluate_skill(skill_dir: Path, validate_text: str) -> SkillEvaluation:
     skill_md = skill_dir / "SKILL.md"
     text = read(skill_md)
     frontmatter, _ = extract_frontmatter(text)
@@ -541,7 +543,7 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
         has_self_test_signal,
         prompt_stats,
     )
-    trigger_score, trigger_warnings = score_trigger(skill_dir.name, trigger_text)
+    trigger_score, trigger_warnings = score_trigger(skill_dir.name, prompt_fixture)
     prompt_score, prompt_warnings = score_prompt_fixtures(skill_dir.name, prompt_stats, prompt_fixture)
 
     dimensions = {
@@ -629,10 +631,9 @@ def evaluate_skill(skill_dir: Path, trigger_text: str, validate_text: str) -> Sk
 
 
 def evaluate_all() -> dict[str, Any]:
-    trigger_text = read(ROOT / "scripts" / "validate-trigger-paths.py")
     validate_text = read(ROOT / "scripts" / "validate.sh")
     evaluations = [
-        evaluate_skill(ROOT / skill_dir, trigger_text, validate_text)
+        evaluate_skill(ROOT / skill_dir, validate_text)
         for skill_dir in SKILL_DIRS
     ]
     overall = round(sum(item.score for item in evaluations) / len(evaluations))
@@ -672,12 +673,18 @@ def print_text(report: dict[str, Any]) -> None:
 
 def run_self_test() -> None:
     report = evaluate_all()
+    legacy_wind_skill = "wind-project-" + "coding-conventions"
+    if legacy_wind_skill in SKILL_DIRS or "wind-coding-conventions" not in SKILL_DIRS:
+        raise SystemExit("Wind coding conventions skill ID migration is incomplete")
     if report["overall_score"] < 85:
         raise SystemExit(f"overall score too low: {report['overall_score']}")
     expected = set(SKILL_DIRS)
     found = {item["name"] for item in report["skills"]}
     if found != expected:
         raise SystemExit(f"unexpected skill set: {sorted(found)}")
+    hanzi = next(item for item in report["skills"] if item["name"] == "hanzi-philology")
+    if any("甲骨文" in warning for warning in hanzi["warnings"]):
+        raise SystemExit("hanzi-philology: trigger scoring ignored prompt fixture query text")
     for item in report["skills"]:
         metrics = item["metrics"]
         if not metrics["openai_yaml"]:
@@ -692,7 +699,7 @@ def run_self_test() -> None:
                 f"{item['dimensions']['realistic_prompt_fixtures']}"
             )
         if (
-            item["name"] == "wind-project-coding-conventions"
+            item["name"] == "wind-coding-conventions"
             and item["metrics"]["fixture_files"] < 2
         ):
             raise SystemExit(f"{item['name']}: missing runnable fixture files")
