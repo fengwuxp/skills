@@ -216,6 +216,18 @@ if ! find "${retirement_home}/skills/.backups" -path '*/delivery-collab-*/SKILL.
   exit 1
 fi
 
+mkdir -p "${retirement_home}/skills/huaxia-wisdom"
+printf '%s\n' 'legacy skill' > "${retirement_home}/skills/huaxia-wisdom/SKILL.md"
+CODEX_HOME="${retirement_home}" ./sync-skills.sh huaxia-practical-wisdom >/dev/null
+if [[ -e "${retirement_home}/skills/huaxia-wisdom" ]]; then
+  echo "FAIL retired huaxia-wisdom skill remains installed" >&2
+  exit 1
+fi
+if ! find "${retirement_home}/skills/.backups" -path '*/huaxia-wisdom-*/SKILL.md' -type f | grep -q .; then
+  echo "FAIL retired huaxia-wisdom skill backup missing" >&2
+  exit 1
+fi
+
 echo "==> diff whitespace"
 git diff --check
 

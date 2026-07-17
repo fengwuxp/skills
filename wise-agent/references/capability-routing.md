@@ -63,6 +63,7 @@
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | `document-authoring` | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
 | 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 正式报告按需用 `document-authoring`；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
+| 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段任务由 `wise-agent` 持有目标；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
 | DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成后消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
 | 决策压力测试 | 当前主能力 + `grill-me` | 只在关键分叉、含糊回答或连续返工时升级 | 决策快照与执行前对账 |

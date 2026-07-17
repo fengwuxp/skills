@@ -274,6 +274,12 @@ hanzi_agent = "hanzi-philology/agents/openai.yaml"
 hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
 hanzi_evidence_method = "hanzi-philology/references/evidence-method.md"
 hanzi_source_map = "hanzi-philology/references/source-map.md"
+huaxia_skill = "huaxia-practical-wisdom/SKILL.md"
+huaxia_agent = "huaxia-practical-wisdom/agents/openai.yaml"
+huaxia_classical_lenses = "huaxia-practical-wisdom/references/classical-lenses.md"
+huaxia_decision_practice = "huaxia-practical-wisdom/references/decision-practice.md"
+huaxia_evidence_boundaries = "huaxia-practical-wisdom/references/evidence-boundaries.md"
+huaxia_source_map = "huaxia-practical-wisdom/references/source-map.md"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
 wise_agent_cognition_model = "wise-agent/references/cognition-and-capability-model.md"
@@ -288,7 +294,6 @@ wise_agent_spec_template_practices = "wise-agent/references/spec-template-practi
 wise_agent_code_delivery = "wise-agent/references/code-delivery.md"
 wise_agent_goal_governance = "wise-agent/references/goal-governance.md"
 wise_agent_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
-wise_agent_decision_calibration = "wise-agent/references/decision-calibration.md"
 wise_agent_verification_release = "wise-agent/references/verification-review-release.md"
 wise_agent_superpowers_library = "wise-agent/references/superpowers-skill-library.md"
 wise_agent_skill_type_owner_routing = "wise-agent/references/capability-routing.md"
@@ -435,7 +440,7 @@ wise_agent_terms = [
     "Wisdom Lens",
     "华夏经世智慧",
     "经世致用",
-    "huaxia-wisdom",
+    "huaxia-practical-wisdom",
     "东方智慧",
     "老祖宗",
     "老祖宗视角",
@@ -700,7 +705,7 @@ wisdom_lens_terms = [
     "Wisdom Lens",
     "华夏经世智慧",
     "经世致用",
-    "huaxia-wisdom",
+    "huaxia-practical-wisdom",
     "东方智慧",
     "老祖宗",
     "老祖宗视角",
@@ -729,6 +734,44 @@ wisdom_lens_terms = [
     "每日三省",
     "知行合一",
     "一张一弛",
+]
+huaxia_explicit_terms = [
+    "$huaxia-practical-wisdom",
+    "huaxia-practical-wisdom",
+    "华夏经世智慧",
+    "经世致用",
+    "老祖宗智慧",
+]
+huaxia_implicit_terms = [
+    "变与不变",
+    "名实是否相符",
+    "名实相符",
+    "当前时序",
+    "时势与变化",
+    "最坏失败",
+    "可逆的小步",
+    "可逆试点",
+]
+huaxia_decision_terms = [
+    "现实决策",
+    "决策校准",
+    "长期合作决定",
+    "组织协作",
+    "行动取舍",
+    "止损",
+    "何时停止",
+]
+huaxia_negative_terms = [
+    "不需要传统文化",
+    "只做源码 CR",
+    "只做文献与训诂证据",
+    "底本、章句、异文",
+    "替代医院检查",
+    "治疗方案",
+    "医学诊断",
+    "占卜",
+    "测字",
+    "命理",
 ]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "能力-项目-系统映射", "知识库回流", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
 product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
@@ -813,11 +856,14 @@ reference_headers = [
     wise_agent_code_delivery,
     wise_agent_goal_governance,
     wise_agent_delivery_execution_control,
-    wise_agent_decision_calibration,
     wise_agent_verification_release,
     wise_agent_superpowers_library,
     wise_agent_skill_type_owner_routing,
     wise_agent_source_map,
+    huaxia_classical_lenses,
+    huaxia_decision_practice,
+    huaxia_evidence_boundaries,
+    huaxia_source_map,
 ] + project_governance_refs + [wind_skill_java, wind_skill_architecture, wind_skill_conventions, wind_skill_agents_template, wind_skill_examples, wind_skill_source_map] + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
@@ -1657,14 +1703,6 @@ check(
             "知识库工具判断",
             "工具摘要不得替代源码、测试、CR 或 owner 结论",
         ],
-    )
-    and has_all(
-        wise_agent_decision_calibration,
-        [
-            "Context / 知识库治理",
-            "知识库工具当事实来源",
-            "格物致知",
-        ],
     ),
 )
 
@@ -2032,121 +2070,141 @@ check(
 )
 
 check(
-    "wise agent exposes wisdom lens for Loop judgment",
-    has_reference_header(wise_agent_decision_calibration)
-    and has_task_reading_index(wise_agent_decision_calibration)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
+    "huaxia practical wisdom is an independent routed capability",
+    frontmatter(huaxia_skill).strip().startswith("name: huaxia-practical-wisdom")
     and has_all(
-        wise_agent_decision_calibration,
+        huaxia_skill,
         [
-            "华夏经世智慧",
-            "经世致用",
-            "huaxia-wisdom",
-            "老祖宗智慧",
-            "正式名称",
-            "Wisdom Lens Card",
-            "准入前",
-            "拆解时",
-            "执行中",
-            "复盘后",
-            "生产可用混一校准",
-            "体用",
-            "阴阳",
-            "名实",
-            "用不能替代体",
-            "完成、通过、可发布之名",
-            "Loop Contract、Grant、Verification 和 Stop/Handoff",
-            "不把传统智慧框架当作项目事实、合规结论、架构批准、Execution Grant、测试通过或生产审批",
-            "不替代事实、证据、测试、代码 Review、授权或上线审批",
-            "经典源补足索引",
-            "周易问变",
-            "道德经问少",
-            "庄子问纹理",
-            "论语问名分",
-            "中医问病机",
-            "五德终始问时序",
-            "不把中医类比写成医学建议",
-            "不把周易 / 五德终始写成占卜、宿命、历史证明、组织合法性或必然趋势判断",
+            "# 华夏经世智慧",
+            "现实决策与行动校准",
+            "察实",
+            "正名",
+            "审时",
+            "权衡",
+            "行验",
+            "化",
+            "经世决策卡",
         ],
     )
     and has_all(
-        repo_source_map,
+        huaxia_agent,
         [
-            "Wisdom Lens",
-            "华夏经世智慧",
-            "内部路由",
-            "Gitee 仓库 [aiami/huaxia-wisdom]",
+            'display_name: "华夏经世智慧"',
+            "$huaxia-practical-wisdom",
+            "allow_implicit_invocation: true",
         ],
     )
+    and "老祖宗智慧" in frontmatter(huaxia_skill)
     and has_all(
+        wise_agent_skill,
+        [
+            "按需装载独立能力 `huaxia-practical-wisdom`",
+            "不复制其框架和方法",
+        ],
+    )
+    and has_none(
+        wise_agent_skill,
+        [
+            "阴阳互根",
+            "庖丁解牛",
+            "无为而治",
+            "先为不可胜",
+            "知行合一",
+            "治未病与一张一弛",
+        ],
+    )
+    and has_none(
         wise_agent_source_map,
+        ["Gitee 仓库 `aiami/huaxia-wisdom`"],
+    )
+    and has_none(
+        wise_agent_verification_release,
         [
-            "Gitee 仓库 `aiami/huaxia-wisdom`",
-            "正式展示名在本仓库统一为“华夏经世智慧”",
-            "老祖宗智慧保留为口语触发别名",
-            "eef49d54e6266b1afc568ef591a6a2d4abd5ad8e",
-            "Wisdom Lens",
-            "不复制原文、示例、口吻或经典表达",
-            "周易 / 易传、道德经 / 老子、庄子、论语、中医 / 黄帝内经、五德终始 / 阴阳五德始终",
-            "不把传统智慧框架写成事实证据、项目制度、医学建议、占卜、宿命、Execution Grant、测试通过、CR 结论、Git 授权或上线审批",
+            "Wisdom Lens 只参与工程取舍：阴阳平衡",
+            "Wisdom Lens 只做反偏：循名责实",
+        ],
+    )
+    and has_none(
+        wise_agent_domain_expert_distillation,
+        ["## 8. 老祖宗反偏问题"],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "现实决策、组织协作、长期成长、时势与行动取舍",
+            "`huaxia-practical-wisdom`",
+            "事实回读、决策卡、可逆行动、止损与反馈验证",
         ],
     ),
 )
 check(
-    "ai-native wisdom lens supplements classic sources as engineering questions",
-    has_all(
-        wise_agent_decision_calibration,
+    "huaxia practical wisdom keeps classic lenses practical and bounded",
+    has_reference_header(huaxia_classical_lenses)
+    and has_task_reading_index(huaxia_classical_lenses)
+    and has_all(
+        huaxia_classical_lenses,
         [
-            "经典源补足索引",
-            "周易问变",
-            "目标、对象、边界、风险里，哪些正在变，哪些不能变",
-            "道德经问少",
-            "能不能少写、少管、少审批、少依赖",
-            "庄子问纹理",
-            "业务主路径、代码边界、组织 owner 和验证命令的自然缝隙在哪里",
-            "论语问名分",
-            "名不正则言不顺",
-            "中医问病机",
-            "当前是表面症状、结构证据还是根因机制",
-            "五德终始问时序",
-            "旧规则、旧接口、旧流程是否已过承载期",
-            "只保留命中的 1-3 个问题",
-            "不做经学、医学、玄学或历史考据展开",
+            "周易与阴阳",
+            "道德经与庄子",
+            "儒家与法家",
+            "兵家",
+            "中医系统观",
+            "阴阳五行与五德终始",
+            "最多选三个镜片",
+            "不得用卦象、爻辞或五行生克预测具体结果",
+            "不得据此判断疾病或给出治疗方案",
+            "不用于预测王朝、组织命运、个人吉凶或证明任何权力合法性",
         ],
     )
     and has_all(
-        wise_agent_source_map,
+        huaxia_decision_practice,
         [
-            "周易 / 易传、道德经 / 老子、庄子、论语、中医 / 黄帝内经、五德终始 / 阴阳五德始终",
-            "工程化判断映射",
-            "医学建议、占卜、宿命",
+            "已知事实、合理推断、待确认项、范围外不做",
+            "最小可逆动作",
+            "最坏失败",
+            "经世决策卡",
+            "不追求“古今思想统一”",
+        ],
+    ),
+)
+check(
+    "huaxia practical wisdom preserves evidence and source boundaries",
+    has_reference_header(huaxia_evidence_boundaries)
+    and has_reference_header(huaxia_source_map)
+    and has_all(
+        huaxia_evidence_boundaries,
+        [
+            "现实事实",
+            "经典原文",
+            "现代解释",
+            "现实类比",
+            "未核对不得加引号或写“原话”",
+            "不诊断、不处方、不替代就医",
+            "`hanzi-philology`",
+        ],
+    )
+    and has_all(
+        huaxia_source_map,
+        [
+            "aiami/huaxia-wisdom",
+            "eef49d54e6266b1afc568ef591a6a2d4abd5ad8e",
+            "只参考其 24 个框架的场景分类和行动工具思路",
+            "不复制正文、示例、固定输出、古风人格、宽泛自动触发",
+            "外部 Skill 不是本 Skill 的运行依赖",
         ],
     )
     and has_all(
         repo_source_map,
         [
-            "周易、道德经、庄子、论语、中医、五德终始",
-            "工程化判断映射",
-            "医学建议、占卜、宿命",
+            "作为项目自有 `huaxia-practical-wisdom` 的内容参考来源",
+            "不复制原文、示例、固定输出、宽泛自动触发、古风人格或“全家桶”结构",
         ],
     ),
 )
 check(
     "wise agent gates AI bug reports and patches with wisdom lens",
     has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
-        wise_agent_decision_calibration,
-        [
-            "AI bug / 补丁取舍",
-            "循名责实",
-            "庖丁解牛",
-            "治未病",
-            "先为不可胜",
-            "无为而治",
-            "复现用例、根因说明、同类影响扫描、最小修复 diff、独立验证和下一 owner",
-            "不写成可合并",
-        ],
-    )
+    and has_all(huaxia_skill, ["表象反复、预防不足", "中医系统观", "不输出工程准出结论"])
     and has_all(
         wise_agent_verification_release,
         [
@@ -2340,6 +2398,25 @@ check(
             "先定目标、权限、完成证据和停止条件",
             "装载最小专业能力",
             "独立证据验证",
+        ],
+    ),
+)
+check(
+    "wise agent defaults to Chinese while preserving requested and literal language",
+    has_all(
+        wise_agent_skill,
+        [
+            "默认使用中文与用户交流、说明判断并交付结果",
+            "用户明确要求其他语言时遵从用户要求",
+            "代码、命令、协议字段、专有名词和原文引用保持原样",
+        ],
+    )
+    and has_all(
+        wise_agent_agent,
+        [
+            "默认使用中文响应",
+            "用户明确要求其他语言时除外",
+            "代码、命令、协议字段、专有名词和原文引用保持原样",
         ],
     ),
 )
@@ -2912,17 +2989,6 @@ check(
             "内层如何执行和验证",
             "不让内层 AI 自测替代产品判断或真实用户反馈",
             "越外层越慢、越决定方向",
-        ],
-    )
-    and has_all(
-        wise_agent_decision_calibration,
-        [
-            "三层反馈节奏校准",
-            "Agentic Coding",
-            "Developer Feedback",
-            "External Feedback",
-            "内层是否只证明",
-            "外层是否已有真实反馈入口",
         ],
     )
     and has_all(
@@ -3985,10 +4051,8 @@ check(
             "V2 可回答新问题",
             "V3 领域特异性",
             "owner 追认",
-            "循名责实",
-            "格物致知",
-            "知行合一",
-            "阴平阳秘",
+            "按需装载 `huaxia-practical-wisdom`",
+            "不复制经典镜片",
             "不把业务专家写成自由发挥角色",
         ],
     )
@@ -5306,13 +5370,12 @@ check(
         repo_source_map,
         [
             "aiami/huaxia-wisdom",
-            "华夏经世智慧",
-            "Loop 取舍校准 / Wisdom Lens",
-            "Loop 准入、GSD 拆解、执行核验、授权纠偏和复盘回流",
+            "项目自有 `huaxia-practical-wisdom`",
+            "现实决策校准",
             "2026-06-16",
             "eef49d54e6266b1afc568ef591a6a2d4abd5ad8e",
-            "不复制原文、示例、口吻或经典表达",
-            "不把传统智慧框架写成事实证据、项目制度、Execution Grant、测试通过、CR 结论、Git 授权或上线审批",
+            "不复制原文、示例、固定输出、宽泛自动触发、古风人格或“全家桶”结构",
+            "不把传统智慧框架写成事实证据、医学建议、占卜命理、项目制度、Execution Grant、测试通过、CR 结论、Git 授权或上线审批",
         ],
     ),
 )
@@ -11621,7 +11684,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native three layer feedback loop cadence",
         prompt="参考吴恩达对 Loop Engineering 的理解，优化 AI Native 分角色 Loop：区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop 三个时间尺度，说明外层真实用户/市场反馈如何修正 Vision，中层开发者如何改 Spec，内层 AI 如何按 Spec/Evals 执行验证，并结合老祖宗智慧校准快慢节奏。",
-        routes={"wise-agent", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "delivery-execution-control.md", "code-delivery.md", "verification-review-release.md", "decision-calibration.md", "source-map.md"},
+        routes={"wise-agent", "delivery-lifecycle.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "delivery-execution-control.md", "code-delivery.md", "verification-review-release.md", "huaxia-practical-wisdom", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native autonomous discovery to delivery loop",
@@ -11705,18 +11768,18 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native wisdom lens for loop scheduling",
-        prompt="请用华夏经世智慧（老祖宗智慧别名）和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、计划拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批",
-        routes={"wise-agent", "decision-calibration.md", "delivery-execution-control.md", "planning-execution-admission.md", "verification-review-release.md", "source-map.md"},
+        prompt="请用独立的华夏经世智慧能力和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、计划拆解、执行核验、授权纠偏和复盘回流中，借用阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批",
+        routes={"wise-agent", "huaxia-practical-wisdom", "delivery-execution-control.md", "planning-execution-admission.md", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native classic wisdom lens supplement",
-        prompt="结合周易、道德经、庄子、论语、中医、阴阳五德始终论等老祖宗智慧，对 huaxia-wisdom 和 AI Native Wisdom Lens 做补足：只沉淀工程取舍问题，不做玄学、医学建议或经典考据",
-        routes={"wise-agent", "decision-calibration.md", "source-map.md"},
+        prompt="结合周易、道德经、庄子、论语、中医、阴阳五德始终论等经典来源，补足独立的华夏经世智慧能力：只沉淀现实取舍问题，不做玄学、医学建议或经典考据",
+        routes={"wise-agent", "huaxia-practical-wisdom", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native AI bug patch gate with wisdom lens",
         prompt="AI 找到一个 bug 并给了补丁，参考 Linus 对 AI bug report 和创可贴式修复的提醒，结合老祖宗的循名责实、庖丁解牛、治未病做门禁：先判断是否有复现证据、根因、同类影响、最小修复、独立验证和下一 owner，不要让 AI patch 自证可合并",
-        routes={"wise-agent", "verification-review-release.md", "decision-calibration.md", "source-map.md"},
+        routes={"wise-agent", "verification-review-release.md", "huaxia-practical-wisdom", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native three card handoff protocol",
@@ -11776,7 +11839,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native unifies production ready workflow with wisdom lens",
         prompt="如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、Goal、Harness 和工具链收成一个入口、一个契约、一个准出。",
-        routes={"wise-agent", "delivery-lifecycle.md", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "superpowers-skill-library.md", "code-delivery.md", "decision-calibration.md", "verification-review-release.md", "source-map.md"},
+        routes={"wise-agent", "delivery-lifecycle.md", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "superpowers-skill-library.md", "code-delivery.md", "huaxia-practical-wisdom", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native reusable work asset loop",
@@ -11836,7 +11899,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native official skill methodology with wisdom lens",
         prompt="AI Native 参考 Anthropic 官方 Lessons from building Claude Code: How we use skills 和 Perplexity Agent Skills 文章，结合老祖宗的循名责实、庖丁解牛、治未病，推进 Skill 治理：description 做路由、gotchas 优先、重复动作脚本化、先补正负触发 fixture，再决定是否拆 Skill",
-        routes={"wise-agent", "capability-routing.md", "decision-calibration.md", "source-map.md", "verification-review-release.md"},
+        routes={"wise-agent", "capability-routing.md", "huaxia-practical-wisdom", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI coding workflow CR",
@@ -11861,17 +11924,17 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native context system knowledge base governance",
         prompt="结合渐进式 SDD、Lattice Harness 和老祖宗智慧，给项目落地 context / 知识库治理：先梳理 AGENTS.md、CONTEXT.md、ADR、模块 reference、source-map、测试资产和 update-context，不要一上来就建设外部知识库。",
-        routes={"wise-agent", "code-delivery.md", "decision-calibration.md", "code-understanding-tools.md", "source-map.md"},
+        routes={"wise-agent", "code-delivery.md", "huaxia-practical-wisdom", "code-understanding-tools.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native workflow yinyang unification",
         prompt="AI Native skill 中各式各样的 AI 工作流，做一轮混一，知其要者，一言而终，本于阴阳，神用无方",
-        routes={"wise-agent", "delivery-execution-control.md", "code-delivery.md", "decision-calibration.md", "verification-review-release.md", "source-map.md"},
+        routes={"wise-agent", "delivery-execution-control.md", "code-delivery.md", "huaxia-practical-wisdom", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native domain expert distillation",
         prompt="AI Native 阅读这些 PRD / 系分 / 产品设计文档，把支付账务域蒸馏成可追溯业务专家和领域专家 Skill Pack，要求规划学习方式和学习路径，整理学习资料，提前学习内容，按业务域或模块分开保存学习结果，输出学习结果知识库规划、owner 追认和 test-prompts 压力测试。",
-        routes={"wise-agent", "domain-expert-distillation.md", "product-to-engineering-lifecycle.md", "verification-review-release.md", "decision-calibration.md", "source-map.md", "product", "senior"},
+        routes={"wise-agent", "domain-expert-distillation.md", "product-to-engineering-lifecycle.md", "verification-review-release.md", "source-map.md", "product", "senior"},
     ),
     RouteFixture(
         name="AI Native spec template practices",
@@ -11936,7 +11999,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native source quality review loop",
         prompt="参考 Code Review 与技术债治理文章，AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程，并把好的 CR 结论和业务知识回流到项目上下文",
-        routes={"wise-agent", "verification-review-release.md", "code-understanding-tools.md", "decision-calibration.md", "source-map.md", "senior", "coding-review-deep-dive.md", "java-coding-conventions.md", "wind-coding-conventions.md"},
+        routes={"wise-agent", "verification-review-release.md", "code-understanding-tools.md", "huaxia-practical-wisdom", "source-map.md", "senior", "coding-review-deep-dive.md", "java-coding-conventions.md", "wind-coding-conventions.md"},
     ),
     RouteFixture(
         name="AI Native Karpathy coding hygiene admission",
@@ -12198,6 +12261,21 @@ scenario_fixtures: list[RouteFixture] = [
         prompt="根据 DDL 生成 Wind/Nobe Service，但已有文件会覆盖且有多个 face/impl 模块对",
         routes=codegen_safety_route,
     ),
+    RouteFixture(
+        name="huaxia practical wisdom explicit decision calibration",
+        prompt="使用 $huaxia-practical-wisdom 分析这次跨部门合作是否现在启动：给出取舍、止损、最小行动和验证，不要只讲古语。",
+        routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
+    RouteFixture(
+        name="huaxia practical wisdom implicit decision calibration",
+        prompt="校准这个长期合作决定：从变与不变、名实是否相符、当前时序和最坏失败入手，找一个可逆的小步并说明何时停止。",
+        routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
+    RouteFixture(
+        name="huaxia practical wisdom old ancestor alias",
+        prompt="请结合老祖宗智慧校准这个合作方案：责任还不清楚，但可以先做可回退试点。",
+        routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
 ]
 
 negative_route_fixtures: list[RouteFixture] = [
@@ -12321,6 +12399,21 @@ negative_route_fixtures: list[RouteFixture] = [
         prompt="Codex 已支持官方 Superpowers 插件：安装并加入知止者调度，验证真实协同后删除 external-superpowers 快照",
         routes={"product", "senior", "wind"},
     ),
+    RouteFixture(
+        name="huaxia practical wisdom on ordinary code review",
+        prompt="这个 Java 事务方法很复杂，请只做源码 CR，检查事务边界、幂等、异常处理和回归测试，不需要传统文化或决策框架。",
+        routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
+    RouteFixture(
+        name="huaxia practical wisdom on classical exegesis",
+        prompt="请考证《周易》中这句话的底本、章句、异文和历代训释，只做文献与训诂证据，不要把它类比成现代管理建议。",
+        routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
+    RouteFixture(
+        name="huaxia practical wisdom on medical diagnosis",
+        prompt="请用阴阳五行和黄帝内经直接判断我反复胸痛是什么病，并给出可以替代医院检查的治疗方案。",
+        routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
 ]
 
 
@@ -12336,6 +12429,20 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
+    huaxia_blocked = contains_any(prompt, huaxia_negative_terms)
+    huaxia_requested = contains_any(prompt, huaxia_explicit_terms) or (
+        contains_any(prompt, huaxia_implicit_terms)
+        and contains_any(prompt, huaxia_decision_terms)
+    )
+    if huaxia_requested and not huaxia_blocked:
+        route.update(
+            {
+                "huaxia-practical-wisdom",
+                "classical-lenses.md",
+                "decision-practice.md",
+                "evidence-boundaries.md",
+            }
+        )
     superpowers_context = contains_any(
         prompt,
         ["Superpowers 已安装", "Superpowers 插件", "superpowers@openai-api-curated"],
@@ -12506,7 +12613,7 @@ def route_fixture(prompt: str) -> set[str]:
                     "delivery-lifecycle.md",
                     "delivery-execution-control.md",
                     "code-delivery.md",
-                    "decision-calibration.md",
+                    "huaxia-practical-wisdom",
                     "verification-review-release.md",
                     "source-map.md",
                 }
@@ -12518,7 +12625,7 @@ def route_fixture(prompt: str) -> set[str]:
                     "product-to-engineering-lifecycle.md",
                     "delivery-execution-control.md",
                     "verification-review-release.md",
-                    "decision-calibration.md",
+                    "huaxia-practical-wisdom",
                     "source-map.md",
                 }
             )
@@ -12550,8 +12657,8 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("delivery-lifecycle.md")
             route.add("delivery-execution-control.md")
             route.add("verification-review-release.md")
-        if contains_any(prompt, wisdom_lens_terms):
-            route.add("decision-calibration.md")
+        if contains_any(prompt, wisdom_lens_terms) and not huaxia_blocked:
+            route.add("huaxia-practical-wisdom")
             route.add("delivery-execution-control.md")
             route.add("verification-review-release.md")
             route.add("source-map.md")
@@ -12567,7 +12674,6 @@ def route_fixture(prompt: str) -> set[str]:
                     "domain-expert-distillation.md",
                     "product-to-engineering-lifecycle.md",
                     "verification-review-release.md",
-                    "decision-calibration.md",
                     "source-map.md",
                     "product",
                     "senior",
@@ -12904,7 +13010,7 @@ expected_handling_has(
     (
         "上下文治理视图 / 知识回流视图",
         "code-delivery",
-        "decision-calibration",
+        "huaxia-practical-wisdom",
         "code-understanding-tools",
         "source-map",
         "先落 Context System，再评估知识库工具",
@@ -12917,10 +13023,7 @@ expected_handling_has(
         "证据锚点",
         "不得回写内容",
         "停止条件",
-        "名实",
-        "阴阳",
-        "纹理",
-        "知行",
+        "需要经典取舍视角时按需装载",
         "外部知识库、向量库、代码图谱或 Understand Anything 只能作为加速器",
         "不替代源码、测试、CR、owner 确认或项目约规",
     ),
@@ -12933,7 +13036,7 @@ expected_handling_has(
         "domain-expert-distillation",
         "product-to-engineering-lifecycle",
         "verification-review-release",
-        "decision-calibration",
+        "huaxia-practical-wisdom",
         "source-map",
         "准入结论",
         "资料范围",
@@ -12963,11 +13066,7 @@ expected_handling_has(
         "V2 可回答新问题",
         "V3 领域特异性",
         "事实 / 推断 / 待确认 / 范围外不做",
-        "循名责实",
-        "格物致知",
-        "知行合一",
-        "阴平阳秘",
-        "不把业务专家写成自由发挥角色",
+        "经典镜片不能把业务专家写成自由发挥角色",
         "产品 owner 替代",
         "架构 owner 替代",
         "默认安装 Skill",
@@ -13079,16 +13178,13 @@ expected_handling_has(
     (
         "能力接入与 Skill 治理评估",
         "capability-routing",
-        "decision-calibration",
+        "huaxia-practical-wisdom",
         "source-map",
         "verification-review-release",
         "官方 Anthropic 是否已读正文",
         "Perplexity 是否已读正文或仅为待核验线索",
-        "循名责实",
         "名实相符",
-        "庖丁解牛",
         "最小正确层级",
-        "治未病",
         "正向触发",
         "邻近 Skill 负例",
         "不吸收边界",
@@ -13270,9 +13366,8 @@ expected_handling_has(
     "wise-agent-should-unify-production-ready-workflow-with-wisdom-lens",
     (
         "生产可用混一模型路径",
-        "华夏经世智慧",
+        "huaxia-practical-wisdom",
         "code-delivery",
-        "decision-calibration",
         "delivery-lifecycle",
         "delivery-execution-control",
         "verification-review-release",
@@ -13287,11 +13382,9 @@ expected_handling_has(
         "独立 CR",
         "发布观测",
         "回滚 / 人工接管",
-        "阴阳平衡",
-        "体用合一",
-        "循名责实",
+        "经典镜片只校准取舍、推进与边界、目标与工具、完成名实",
         "不新增流程名、命令菜单、外部工具依赖",
-        "不把华夏经世智慧 / 老祖宗智慧替代事实、测试、CR、授权或上线审批",
+        "不把华夏经世智慧替代事实、测试、CR、授权或上线审批",
     ),
 )
 
@@ -13331,7 +13424,7 @@ expected_handling_has(
     (
         "知止者三层反馈节奏校准路径",
         "delivery-lifecycle",
-        "decision-calibration",
+        "huaxia-practical-wisdom",
         "Agentic Coding Loop",
         "Developer Feedback Loop",
         "External Feedback Loop",
@@ -13341,10 +13434,8 @@ expected_handling_has(
         "产品 / 架构 owner",
         "Vision、范围和交互判断翻译成 Spec",
         "真实用户、市场、A/B、工单、监控或复盘慢反馈修正 Vision",
-        "五德终始问时序",
-        "一张一弛问节奏",
-        "循名责实问证据",
-        "不得让 AI 自测、开发者品味或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权",
+        "经典镜片只校准时序、节奏和名实",
+        "不得让 AI 自测、开发者品味、经典类比或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权",
     ),
 )
 
@@ -14232,83 +14323,58 @@ expected_handling_has(
 expected_handling_has(
     "wise-agent-should-wisdom-lens-loop-scheduling",
     (
-        "华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式",
-        "decision-calibration",
-        "Wisdom Lens Card",
-        "触发原因",
-        "Loop 阶段",
-        "推荐框架",
-        "反偏问题",
-        "底线问题",
-        "证据要求",
-        "回写位置",
-        "不替代项",
-        "完整 CR 模式",
-        "CR 结论",
-        "[P级] 位置：问题；证据：；修复优先级",
-        "没有证据的只写待确认，不写成问题",
-        "完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级",
-        "准入前用阴阳平衡和先为不可胜",
-        "拆解时用庖丁解牛和中庸之道",
-        "执行中用循名责实和无为而治",
-        "复盘后用每日三省、知行合一和一张一弛",
-        "明确华夏经世智慧是正式名，老祖宗智慧是触发别名",
-        "不能替代事实、测试、CR、Execution Grant、上线审批或专业确认",
+        "按需装载 huaxia-practical-wisdom",
+        "事实、推断和待确认",
+        "工程主能力完成源码级 CR",
+        "严重级别、文件/行号、验证证据、残余风险和修复优先级",
+        "没有证据的只写待确认",
+        "名实、时势、风险和行动反偏",
+        "不替代事实、测试、CR、Execution Grant、上线审批或专业确认",
     ),
 )
 
 expected_handling_has(
     "wise-agent-should-unify-ai-workflows-with-yinyang-principle",
     (
-        "知止者混一总纲 / Wisdom Lens 取舍校准路径",
-        "华夏经世智慧",
+        "知止者混一总纲",
+        "huaxia-practical-wisdom",
         "delivery-execution-control",
-        "decision-calibration",
         "code-delivery",
         "verification-review-release",
         "source-map",
         "以真实交付为体，以证据闭环为用",
-        "阴定边界，阳促推进",
-        "随事取最小可验证路径",
+        "经典镜片只校准边界、推进、名实和最小有效组合",
         "GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位",
         "不作为并列工作流外显",
-        "体不清则不动",
-        "用无证则不收",
-        "阴不足则停",
-        "阳不足则问",
-        "神用无方是按上下文取最小有效组合",
-        "不把阴阳、神用无方、华夏经世智慧 / 老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批",
+        "不把阴阳、神用无方、华夏经世智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批",
     ),
 )
 
 expected_handling_has(
     "wise-agent-should-classic-wisdom-lens-supplement",
     (
-        "Loop 取舍校准 / Wisdom Lens 的经典源补足路径",
-        "decision-calibration",
+        "huaxia-practical-wisdom 的经典镜片补足路径",
+        "classical-lenses",
+        "evidence-boundaries",
         "source-map",
         "周易",
         "变与不变",
-        "太极点",
+        "时位",
         "可逆实验",
         "道德经",
-        "最小干预",
-        "少做一步",
         "庄子",
-        "业务 / 代码 / 组织纹理",
-        "论语",
+        "少干预和顺纹理",
+        "儒家与法家",
         "正名",
-        "owner",
-        "中医 / 黄帝内经",
-        "症 / 证 / 病机",
+        "兵家",
+        "不可胜与止损",
+        "中医系统观",
+        "表象、结构、机制",
         "治未病",
-        "阴平阳秘",
-        "五德终始 / 阴阳五德始终",
-        "阶段迁移",
-        "旧规则退场",
-        "新能力接替证据",
-        "只输出命中的 1-3 个反偏问题",
-        "不得把传统智慧写成事实证据、医学建议、占卜、宿命、工程验证、Execution Grant、测试通过、CR 结论或上线审批",
+        "五德终始",
+        "阶段承接与退场",
+        "只选择命中的 1-3 个镜片",
+        "不得把传统智慧写成事实证据、医学建议、占卜命理、工程验证、Execution Grant、测试通过、CR 结论或上线审批",
     ),
 )
 
@@ -14317,8 +14383,7 @@ expected_handling_has(
     (
         "AI bug / 补丁门禁",
         "verification-review-release",
-        "decision-calibration",
-        "source-map",
+        "huaxia-practical-wisdom",
         "待确认、继续根因分析或可进入 CR",
         "复现 / 触发条件",
         "源码锚点",
@@ -14327,12 +14392,7 @@ expected_handling_has(
         "最小修复",
         "验证命令 / 结果",
         "下一 owner",
-        "循名责实",
-        "庖丁解牛",
-        "治未病",
-        "回归测试、规则、fixture 或静态检查",
-        "先为不可胜",
-        "无为而治",
+        "名实、根因、预防、失败回退和过度修复",
         "不得把模型自述、工具告警、局部 guard、放宽断言或 AI patch 写成测试通过、CR 结论、合并判断或上线审批",
     ),
 )
@@ -14455,7 +14515,7 @@ expected_handling_has(
         "源码质量评审 Loop",
         "verification-review-release",
         "code-understanding-tools",
-        "decision-calibration",
+        "huaxia-practical-wisdom",
         "准入定界",
         "只读理解",
         "规则装载",
@@ -14484,11 +14544,8 @@ expected_handling_has(
         "wind-coding-conventions",
         "coding-review-deep-dive.md",
         "testing.md",
-        "Wisdom Lens",
-        "阴阳平衡",
-        "先为不可胜",
-        "庖丁解牛",
-        "循名责实",
+        "经典镜片只补工程取舍问题",
+        "不参与最终源码裁决",
         "未采纳工具建议",
         "残余风险",
     ),
@@ -14841,6 +14898,30 @@ expected_handling_has(
 expected_handling_has(
     "hanzi-philology-should-support-product-term-evidence",
     ("可选命名证据协作者", "训诂证据卡中的命名证据", "产品架构专家", "领域统一语言", "训诂不得替代产品判断"),
+)
+expected_handling_has(
+    "huaxia-practical-wisdom-should-calibrate-real-world-decision",
+    ("现实决策校准路径", "事实、推断和待确认", "察实、正名、审时、权衡、行验、化", "经世决策卡", "最少必要框架", "行动、止损与验证", "经典原文、现代解释和现实类比分层"),
+)
+expected_handling_has(
+    "huaxia-practical-wisdom-should-calibrate-without-explicit-name",
+    ("现实决策与行动校准", "事实、名相、时势、取舍、行动、止损和验证", "没有可靠经典出处时不写成原文", "明确待确认"),
+)
+expected_handling_has(
+    "huaxia-practical-wisdom-should-trigger-old-ancestor-alias",
+    ("自然语言别名", "事实和待确认", "最小可逆行动、止损和验证", "不只讲古语"),
+)
+negative_reason_has(
+    "huaxia-practical-wisdom-negative-ordinary-code-review",
+    ("普通工程词不能触发", "senior-software-architect", "工程证据"),
+)
+negative_reason_has(
+    "huaxia-practical-wisdom-negative-classical-exegesis",
+    ("古籍文本、异文和训诂考据", "hanzi-philology", "不得越权解释文本"),
+)
+negative_reason_has(
+    "huaxia-practical-wisdom-negative-medical-diagnosis",
+    ("不提供医学诊断或治疗", "高风险症状", "合格医疗专业人员"),
 )
 expected_handling_has(
     "wise-agent-should-direct-lightweight-local-edit",

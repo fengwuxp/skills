@@ -1,0 +1,6 @@
+interface:
+  display_name: "华夏经世智慧"
+  short_description: "用华夏经典智慧校准现实决策、行动取舍、止损边界与验证方式"
+  default_prompt: "使用 $huaxia-practical-wisdom 读取现实事实，校准当前决策的名相、时势、取舍、行动、止损和验证。"
+policy:
+  allow_implicit_invocation: true

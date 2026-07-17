@@ -242,7 +242,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者三层反馈节奏校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-lifecycle 的三层反馈节奏和 decision-calibration；区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop：内层 AI Maker 按 Spec / Evals / 失败测试执行和验证，只能证明实现更接近当前 Spec；中层产品 / 架构 owner 把上下文、Vision、范围和交互判断翻译成 Spec；外层业务 / 产品 / 发布 owner 用真实用户、市场、A/B、工单、监控或复盘慢反馈修正 Vision；用五德终始问时序、一张一弛问节奏、循名责实问证据；不得让 AI 自测、开发者品味或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权。"
+      "expected_handling": "进入知止者三层反馈节奏校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-lifecycle 的三层反馈节奏并按需装载 huaxia-practical-wisdom；区分 Agentic Coding Loop、Developer Feedback Loop、External Feedback Loop：内层 AI Maker 按 Spec / Evals / 失败测试执行和验证，只能证明实现更接近当前 Spec；中层产品 / 架构 owner 把上下文、Vision、范围和交互判断翻译成 Spec；外层业务 / 产品 / 发布 owner 用真实用户、市场、A/B、工单、监控或复盘慢反馈修正 Vision；经典镜片只校准时序、节奏和名实，不得让 AI 自测、开发者品味、经典类比或工具输出替代产品判断、真实用户反馈、测试通过、CR 结论、发布审批或执行授权。"
     },
     {
       "id": "wise-agent-should-autonomous-discovery-to-delivery-loop",
@@ -702,7 +702,7 @@
     {
       "id": "wise-agent-should-wisdom-lens-loop-scheduling",
       "skill": "wise-agent",
-      "query": "请用华夏经世智慧（老祖宗智慧别名）和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用 huaxia-wisdom 的阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
+      "query": "请用独立的华夏经世智慧能力和 Loop 取舍校准增强 AI Native Loop，并对当前 AI 工作流做一轮完整 CR：在准入前、GSD 拆解、执行核验、授权纠偏和复盘回流中，借用阴阳平衡、先为不可胜、庖丁解牛、中庸之道、循名责实、无为而治、每日三省、知行合一和一张一弛做取舍、止损、节奏、停止判断和评审发现；不要替代事实、测试、CR、授权或上线审批。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -712,7 +712,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 decision-calibration，输出 Wisdom Lens Card，覆盖触发原因、Loop 阶段、推荐框架、反偏问题、底线问题、证据要求、回写位置、不替代项和下一 owner；命中完整 CR 模式时补 CR 结论，发现按 [P级] 位置：问题；证据：；修复优先级 输出，没有证据的只写待确认，不写成问题；完整 CR 必须给出严重级别、文件/行号、验证证据、残余风险和修复优先级；准入前用阴阳平衡和先为不可胜，拆解时用庖丁解牛和中庸之道，执行中用循名责实和无为而治，复盘后用每日三省、知行合一和一张一弛；明确华夏经世智慧是正式名，老祖宗智慧是触发别名；它只做取舍、止损、拆解、节奏和反偏判断，不能替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
+      "expected_handling": "知止者按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件，并按需装载 huaxia-practical-wisdom，用经典镜片校准当前 Loop 的取舍、止损、节奏和停止条件；先区分事实、推断和待确认，再由工程主能力完成源码级 CR，发现必须包含严重级别、文件/行号、验证证据、残余风险和修复优先级，没有证据的只写待确认；华夏经世智慧只提供名实、时势、风险和行动反偏，不替代事实、测试、CR、Execution Grant、上线审批或专业确认。"
     },
     {
       "id": "wise-agent-should-unify-ai-workflows-with-yinyang-principle",
@@ -727,12 +727,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者混一总纲 / Wisdom Lens 取舍校准路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control、decision-calibration、code-delivery、verification-review-release 和 source-map；华夏经世智慧作为正式命名，老祖宗智慧作为触发别名；一言以蔽之：以真实交付为体，以证据闭环为用；阴定边界，阳促推进，随事取最小可验证路径；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；体不清则不动，用无证则不收，阴不足则停，阳不足则问；神用无方是按上下文取最小有效组合；不把阴阳、神用无方、华夏经世智慧 / 老祖宗智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入知止者混一总纲并按需装载 huaxia-practical-wisdom；读取 delivery-execution-control、code-delivery、verification-review-release 和 source-map，把多套模式收敛为一个入口、一个契约、一个准出；以真实交付为体，以证据闭环为用，经典镜片只校准边界、推进、名实和最小有效组合；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；不把阴阳、神用无方、华夏经世智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
     },
     {
       "id": "wise-agent-should-classic-wisdom-lens-supplement",
       "skill": "wise-agent",
-      "query": "结合周易、道德经、庄子、论语、中医、阴阳五德始终论等老祖宗智慧，对 huaxia-wisdom 和 AI Native Wisdom Lens 做补足：只沉淀工程取舍问题，不做玄学、医学建议或经典考据。",
+      "query": "结合周易、道德经、庄子、论语、中医、阴阳五德始终论等经典来源，补足独立的华夏经世智慧能力：只沉淀现实取舍问题，不做玄学、医学建议或经典考据。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -742,7 +742,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Loop 取舍校准 / Wisdom Lens 的经典源补足路径，读取 decision-calibration 和 source-map；把周易映射为变与不变、太极点和可逆实验，道德经映射为最小干预和少做一步，庄子映射为顺着业务 / 代码 / 组织纹理拆解，论语映射为正名、owner、分寸和复盘，中医 / 黄帝内经映射为症 / 证 / 病机、治未病、阴平阳秘和回归防线，五德终始 / 阴阳五德始终映射为阶段迁移、旧规则退场和新能力接替证据；只输出命中的 1-3 个反偏问题，回写到 Loop Contract、验证矩阵、CR 发现、退场计划或知识回流；不得把传统智慧写成事实证据、医学建议、占卜、宿命、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
+      "expected_handling": "进入 huaxia-practical-wisdom 的经典镜片补足路径，读取 classical-lenses、evidence-boundaries 和 source-map；把周易用于变与不变、时位和可逆实验，道德经与庄子用于少干预和顺纹理，儒家与法家用于正名、责任和名实，兵家用于不可胜与止损，中医系统观用于表象、结构、机制和治未病，五德终始用于阶段承接与退场；只选择命中的 1-3 个镜片并落到事实、取舍、行动和验证；不得把传统智慧写成事实证据、医学建议、占卜命理、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
     },
     {
       "id": "wise-agent-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
@@ -757,7 +757,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 AI bug / 补丁门禁，读取 verification-review-release 和 decision-calibration，必要时读取 source-map；先把 AI bug report 归为待确认、继续根因分析或可进入 CR；要求复现 / 触发条件、源码锚点、根因假设、同类影响范围、最小修复、验证命令 / 结果、残余风险和下一 owner；用循名责实检查 bug 名实，用庖丁解牛检查是否修到根因和同类调用点，用治未病检查回归测试、规则、fixture 或静态检查，用先为不可胜检查失败回退，用无为而治删除无价值补丁；不得把模型自述、工具告警、局部 guard、放宽断言或 AI patch 写成测试通过、CR 结论、合并判断或上线审批。"
+      "expected_handling": "进入 AI bug / 补丁门禁，读取 verification-review-release，并在用户要求经典视角时按需装载 huaxia-practical-wisdom；先把 AI bug report 归为待确认、继续根因分析或可进入 CR；要求复现 / 触发条件、源码锚点、根因假设、同类影响范围、最小修复、验证命令 / 结果、残余风险和下一 owner；经典镜片只帮助检查名实、根因、预防、失败回退和过度修复，不得把模型自述、工具告警、局部 guard、放宽断言或 AI patch 写成测试通过、CR 结论、合并判断或上线审批。"
     },
     {
       "id": "wise-agent-should-review-ai-coding-process",
@@ -818,7 +818,7 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入上下文治理视图 / 知识回流视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 code-delivery、decision-calibration、code-understanding-tools 和 source-map；先落 Context System，再评估知识库工具；按 L0 项目级上下文、L1 模块级上下文、L2 任务级上下文归位，输出 update-context 门禁、权威落点、owner、证据锚点、不得回写内容和停止条件；用名实、阴阳、纹理、知行做取舍校准；外部知识库、向量库、代码图谱或 Understand Anything 只能作为加速器，不替代源码、测试、CR、owner 确认或项目约规。"
+      "expected_handling": "进入上下文治理视图 / 知识回流视图，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 code-delivery、code-understanding-tools 和 source-map，需要经典取舍视角时按需装载 huaxia-practical-wisdom；先落 Context System，再评估知识库工具；按 L0 项目级上下文、L1 模块级上下文、L2 任务级上下文归位，输出 update-context 门禁、权威落点、owner、证据锚点、不得回写内容和停止条件；外部知识库、向量库、代码图谱或 Understand Anything 只能作为加速器，不替代源码、测试、CR、owner 确认或项目约规。"
     },
     {
       "id": "wise-agent-should-domain-expert-distillation",
@@ -833,7 +833,7 @@
         "efficiency_metrics",
         "baseline_comparison"
       ],
-      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release、decision-calibration 和 source-map；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；按预习定域 -> 逐篇精读 -> 横向建模 -> 三重验证 -> owner 追认 -> 结果归档规划学习路径；输出学习结果知识库规划，先按业务域或模块分区，再在分区内把阅读状态写入逐篇学习台账，正式来源和 owner 追认写入证据地图，术语对象写入术语与对象表，规则和开放问题写入领域知识卡，流程状态写入流程状态与判断规则，接口事件和数据事实写入接口事件与数据，追认问题和 test-prompts 写入待确认与压测；跨域共识、跨域流程和冲突规则放 cross-domain 或根索引；关键结论按 claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file 保存；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；用循名责实、格物致知、知行合一和阴平阳秘校准，不把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
+      "expected_handling": "进入业务专家蒸馏 / 领域知识回流路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 domain-expert-distillation、product-to-engineering-lifecycle、verification-review-release 和 source-map，需要经典取舍视角时按需装载 huaxia-practical-wisdom；先做准入结论，确认资料范围、目标业务域、证据成熟度、owner、写入范围和敏感边界；按预习定域 -> 逐篇精读 -> 横向建模 -> 三重验证 -> owner 追认 -> 结果归档规划学习路径；输出学习结果知识库规划，先按业务域或模块分区，再在分区内把阅读状态写入逐篇学习台账，正式来源和 owner 追认写入证据地图，术语对象写入术语与对象表，规则和开放问题写入领域知识卡，流程状态写入流程状态与判断规则，接口事件和数据事实写入接口事件与数据，追认问题和 test-prompts 写入待确认与压测；跨域共识、跨域流程和冲突规则放 cross-domain 或根索引；关键结论按 claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file 保存；输出业务证据地图、领域专家 Skill Pack 草案、三重验证、答题协议和压力测试清单；三重验证包括 V1 证据交叉、V2 可回答新问题、V3 领域特异性；答题协议必须区分事实 / 推断 / 待确认 / 范围外不做；经典镜片不能把业务专家写成自由发挥角色、产品 owner 替代、架构 owner 替代或默认安装 Skill。"
     },
     {
       "id": "wise-agent-should-skill-split-gate",
@@ -878,7 +878,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者的能力接入与 Skill 治理评估，读取 capability-routing、decision-calibration、source-map 和 verification-review-release；先核对官方 Anthropic 是否已读正文、Perplexity 是否已读正文或仅为待核验线索；用循名责实检查 name / description / SKILL.md / reference 是否名实相符，用庖丁解牛检查内容是否放在 SKILL.md、references、scripts 或 fixtures 的最小正确层级，用治未病检查是否已有正向触发、邻近 Skill 负例和不吸收边界；只补最小 reference、fixture、validator 或 source-map，不把未读取正文的来源、Claude hooks、marketplace、持久 memory、外部工具或组织实践写成本仓库默认能力。"
+      "expected_handling": "进入知止者的能力接入与 Skill 治理评估，读取 capability-routing、source-map 和 verification-review-release，需要经典取舍视角时按需装载 huaxia-practical-wisdom；先核对官方 Anthropic 是否已读正文、Perplexity 是否已读正文或仅为待核验线索；检查 name / description / SKILL.md / reference 是否名实相符，内容是否放在 SKILL.md、references、scripts 或 fixtures 的最小正确层级，以及是否已有正向触发、邻近 Skill 负例和不吸收边界；只补最小 reference、fixture、validator 或 source-map，不把未读取正文的来源、Claude hooks、marketplace、持久 memory、外部工具或组织实践写成本仓库默认能力。"
     },
     {
       "id": "wise-agent-should-spec-template-practices",
@@ -1193,7 +1193,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery、decision-calibration、delivery-lifecycle、delivery-execution-control、verification-review-release 和 source-map；把多套模式收敛为一个入口、一个契约、一个准出：知止者作为入口，交付契约承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；用华夏经世智慧校准取舍，用阴阳平衡校准推进与边界，用体用合一校准目标与工具，用循名责实校准完成名实；不新增流程名、命令菜单、外部工具依赖，不把华夏经世智慧 / 老祖宗智慧替代事实、测试、CR、授权或上线审批。"
+      "expected_handling": "进入生产可用混一模型路径，读取 code-delivery、delivery-lifecycle、delivery-execution-control、verification-review-release 和 source-map，并按需装载 huaxia-practical-wisdom；把多套模式收敛为一个入口、一个契约、一个准出：知止者作为入口，交付契约承接目标、事实、写入范围、验证命令、Checker 和状态回写，生产可用准出卡只看真实业务入口、owner、事实来源、Spec / Contract、TDD / 验证、独立 CR、发布观测、回滚 / 人工接管和知识回流；经典镜片只校准取舍、推进与边界、目标与工具、完成名实；不新增流程名、命令菜单、外部工具依赖，不把华夏经世智慧替代事实、测试、CR、授权或上线审批。"
     },
     {
       "id": "wise-agent-should-design-code-alignment",
@@ -1292,7 +1292,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools、decision-calibration 和 source-map；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Java 项目读取 wind-coding-conventions 通用层，命中依赖或上下文时叠加 Wind/Nobe 专项；源码级裁决回资深架构师的 coding-review-deep-dive.md 和 testing.md；Wisdom Lens 只保留阴阳平衡、先为不可胜、庖丁解牛、循名责实等工程取舍问题；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
+      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools 和 source-map，用户明确要求经典视角时再装载 huaxia-practical-wisdom；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Java 项目读取 wind-coding-conventions 通用层，命中依赖或上下文时叠加 Wind/Nobe 专项；源码级裁决回资深架构师的 coding-review-deep-dive.md 和 testing.md；经典镜片只补工程取舍问题，不参与最终源码裁决；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
     },
     {
       "id": "wise-agent-should-route-wind-agents-init",
@@ -2581,6 +2581,91 @@
       ],
       "preferred_skill": "document-authoring",
       "negative_reason": "任务是专业文档结构、表达和 PDF 交付，应由 document-authoring 处理；没有汉字学或训诂问题。"
+    },
+    {
+      "id": "huaxia-practical-wisdom-should-calibrate-real-world-decision",
+      "skill": "huaxia-practical-wisdom",
+      "query": "使用 $huaxia-practical-wisdom 分析这次跨部门合作是否现在启动：双方目标一致但责任不清、资源不足、试点可以回退。请给出取舍、止损、行动和验证，不要只讲古语。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入华夏经世智慧的现实决策校准路径；先区分事实、推断和待确认，再按察实、正名、审时、权衡、行验、化给出经世决策卡；从变与不变、名实、时位、最坏失败和可逆试点选择最少必要框架，输出行动、止损与验证；经典原文、现代解释和现实类比分层，不用古语替代双方 owner、资源和试点证据。"
+    },
+    {
+      "id": "huaxia-practical-wisdom-should-calibrate-without-explicit-name",
+      "skill": "huaxia-practical-wisdom",
+      "query": "我需要校准一个长期合作决定：请从变与不变、名实是否相符、当前时序、双方责任和最坏失败入手，找出一个可逆的小步行动以及何时停止。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "识别为现实决策与行动校准，而不是普通利弊清单；只选能缩小错误空间的经典镜片，形成事实、名相、时势、取舍、行动、止损和验证七项经世决策卡；没有可靠经典出处时不写成原文，没有现实证据时明确待确认。"
+    },
+    {
+      "id": "huaxia-practical-wisdom-should-trigger-old-ancestor-alias",
+      "skill": "huaxia-practical-wisdom",
+      "query": "请结合老祖宗智慧校准这个合作方案：责任还不清楚，但可以先做可回退试点。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "识别老祖宗智慧为 huaxia-practical-wisdom 的自然语言别名；先区分事实和待确认，再给出最小可逆行动、止损和验证，不只讲古语。"
+    },
+    {
+      "id": "huaxia-practical-wisdom-negative-ordinary-code-review",
+      "skill": "huaxia-practical-wisdom",
+      "query": "这个 Java 事务方法很复杂，请只做源码 CR，检查事务边界、幂等、异常处理和回归测试，不需要传统文化或决策框架。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "preferred_skill": "senior-software-architect",
+      "negative_reason": "复杂、权衡等普通工程词不能触发华夏经世智慧；任务已有明确源码交付物，应由 senior-software-architect 读取代码并给出工程证据。"
+    },
+    {
+      "id": "huaxia-practical-wisdom-negative-classical-exegesis",
+      "skill": "huaxia-practical-wisdom",
+      "query": "请考证《周易》中这句话的底本、章句、异文和历代训释，只做文献与训诂证据，不要把它类比成现代管理建议。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "hanzi-philology",
+      "negative_reason": "任务要求古籍文本、异文和训诂考据，不是现实决策校准；应由 hanzi-philology 处理证据，华夏经世智慧不得越权解释文本。"
+    },
+    {
+      "id": "huaxia-practical-wisdom-negative-medical-diagnosis",
+      "skill": "huaxia-practical-wisdom",
+      "query": "请用阴阳五行和黄帝内经直接判断我反复胸痛是什么病，并给出可以替代医院检查的治疗方案。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "preferred_skill": "none",
+      "negative_reason": "华夏经世智慧只借治未病和病机作系统思考类比，不提供医学诊断或治疗；胸痛属于高风险症状，应建议及时寻求合格医疗专业人员评估。"
     },
     {
       "id": "codegen-should-ddl-to-service",

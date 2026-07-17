@@ -29,6 +29,7 @@
 | 产品设计 | `根据 <访谈/需求/原型> 写一版可评审 PRD，区分事实、推断、待确认和范围外不做。` |
 | 工程交付 | `基于 <PRD/系分/源码> 完成 <Bug/TDD/重构/代码>，写入范围是 <路径>，验证命令是 <命令>。` |
 | 决策盘问 | `做 grill-me 盘问：盘一下这个方案，一次只问一个主 blocker。` |
+| 经世决策 | `使用 $huaxia-practical-wisdom：基于这些事实校准当前取舍，给出最小行动、止损和验证，不要只讲古语。` |
 | 知识回流 | `进入知识回流视图：把这轮 CR 结论沉淀到项目约规，并说明权威落点和证据。` |
 | 发布准入 | `做生产交付审查：只判断能不能发布，列证据、回退、人工确认点和停止条件。` |
 | 项目约规 | `初始化/更新项目 AGENTS.md：只做最小项目约规 patch。` |
@@ -46,6 +47,7 @@
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、现象/目标、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 正式报告、制度、手册、研究说明、材料合并、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不替代产品、工程、法律、合规或领域事实判断 |
 | 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体考据 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只作证据之一，不单独证明本义 |
+| 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | 华夏经世智慧，ID：`huaxia-practical-wisdom`，路径：[huaxia-practical-wisdom](./huaxia-practical-wisdom) | 现实事实、目标、约束、主体、时限、最坏损失 | 不作古籍训诂、医学诊疗、占卜命理，不替代专业结论 |
 | DDL/schema/Java 类/字段表格到 Java Service 脚手架 | `java-service-code-generator`，路径：[java-service-code-generator](./java-service-code-generator) | 结构化输入、表名、模块、输出目录、覆盖授权 | 不从纯自然语言直接生成生产代码 |
 | Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项 | `wind-coding-conventions`，路径：[wind-coding-conventions](./wind-coding-conventions) | Java 源码证据、依赖/包名、规则问题 | 只做规则判断和偏差说明；源码设计、CR、TDD、修复和验证由架构师主责 |
 

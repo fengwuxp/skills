@@ -70,7 +70,7 @@
 | 做 Goal 驱动交付闭环 | 先读 `goal-governance.md`，再读 `1. 交付闭环判断`、`3. Harness 三层闭环`、`7. 指标闭环` | 不把 Goal 状态写成准出证据 |
 | 做 Agent Loop 交付闭环 | 先读 `delivery-execution-control.md`，再读 `4. 机器验证与独立证据`、`4A. Spec 回写与重试闭环`、`7. 指标闭环` | 不把 Loop 轮数当交付证据 |
 | 做自主交付完成判断 | `4B. Agent Loop 反馈闭环`、`4C. 自主交付完成判断`，再读 `delivery-execution-control.md` | 不把 Agent 自述完成当证据 |
-| 混一 AI 工作流为生产可用口径 | `1A. 生产可用混一模型`、`4D. 生产可用准出卡`、`7. 指标闭环`，再读 `decision-calibration.md` | 不新增模式名，不把外部框架写成并列流程 |
+| 混一 AI 工作流为生产可用口径 | `1A. 生产可用混一模型`、`4D. 生产可用准出卡`、`7. 指标闭环`；需要经典视角时装载 `huaxia-practical-wisdom` | 不新增模式名，不把经典框架写成并列流程或准出证据 |
 | 做生产可用 Loop 准出 | 先读 `delivery-execution-control.md` 的生产可用门禁，再读 `4B. Agent Loop 反馈闭环` 和 `5. CR 减负与可理解交接` | 不把能自动跑当能上线 |
 | 做生产生效验证 | 先读 `verification-review-release.md` 的生产生效验证门禁，再读 `4D. 生产可用准出卡` | 不把已部署、已推配置、测试通过或页面能打开当预发 OK |
 | 设计 Spec / SDD 强度 | `2. 最小 Spec 强度`、`8. 轻重切换和停止`，模板细节读 `spec-template-practices.md` | 不复制外部 Harness |
