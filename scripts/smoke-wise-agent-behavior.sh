@@ -61,14 +61,14 @@ scripts/validate-installed-skills.sh
 mkdir -p "${OUTPUT_DIR}"
 
 if [[ "${MODE}" == "all" || "${MODE}" == "product" ]]; then
-  codex exec --ephemeral --sandbox read-only --output-last-message "${OUTPUT_DIR}/product.txt" \
-    '根据这段访谈摘要写一版可评审的会员权益 PRD：用户希望按等级获得不同权益，运营需要可配置并能追溯规则版本。只输出最终结论，不写文件。'
+  codex exec -c 'model_reasoning_effort="low"' --ephemeral --sandbox read-only --output-last-message "${OUTPUT_DIR}/product.txt" \
+    '只读判断以下摘要是否足以进入 PRD：用户希望按等级获得不同权益，运营需要可配置并能追溯规则版本。请在 300 字内按事实、推断、待确认、验收四项答复；不写文件，不运行额外校验。'
   assert_product "${OUTPUT_DIR}/product.txt" || { echo "FAIL product behavior smoke: ${OUTPUT_DIR}/product.txt" >&2; exit 1; }
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "engineering" ]]; then
-  codex exec --ephemeral --sandbox read-only --output-last-message "${OUTPUT_DIR}/engineering.txt" \
-    '只读 CR：一个 Spring Service 在事务提交前先删除缓存，异常被 catch 后只记录日志并返回成功。请按严重级别给出问题、证据、测试建议和残余风险，不写文件。'
+  codex exec -c 'model_reasoning_effort="low"' --ephemeral --sandbox read-only --output-last-message "${OUTPUT_DIR}/engineering.txt" \
+    '只读 CR：一个 Spring Service 在事务提交前先删除缓存，异常被 catch 后只记录日志并返回成功。请在 300 字内按严重级别、证据、测试、残余风险四项答复；不写文件，不运行额外校验。'
   assert_engineering "${OUTPUT_DIR}/engineering.txt" || { echo "FAIL engineering behavior smoke: ${OUTPUT_DIR}/engineering.txt" >&2; exit 1; }
 fi
 
