@@ -21,7 +21,6 @@ from typing import Any, Sequence
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIRS = sorted(path.parent.name for path in ROOT.glob("*/SKILL.md"))
 SCRIPTLESS_VALIDATED_SKILLS = {
-    "wise-agent",
     "wind-coding-conventions",
 }
 REQUIRED_VALIDATE_HOOKS = [

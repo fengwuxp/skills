@@ -1,0 +1,40 @@
+{
+  "goal_id": "G-17",
+  "status": "Active",
+  "objective": "修复知止者的长任务恢复能力",
+  "success_criteria": [
+    "从允许的状态载体恢复",
+    "排除项和待确认项不进入执行"
+  ],
+  "non_goals": [
+    "不创建新的状态管理服务"
+  ],
+  "confirmed_decisions": [
+    "D-1"
+  ],
+  "excluded_options": [
+    "B"
+  ],
+  "pending_items": [
+    "C"
+  ],
+  "execution_basis": [
+    "D-1"
+  ],
+  "next_action": "只按 D-1 运行状态契约验证",
+  "write_scope": [
+    "wise-agent",
+    "scripts"
+  ],
+  "state_carrier": "docs/goal-ledger.md",
+  "verification_evidence": [],
+  "checker": "check_state_contract.py",
+  "stop_conditions": [
+    "执行依据与确认决策不一致",
+    "连续两轮无新增证据"
+  ],
+  "recovery_entry": "docs/goal-ledger.md#G-17",
+  "residual_risk_owner": "repository maintainer",
+  "max_iterations": 6,
+  "no_progress_limit": 2
+}

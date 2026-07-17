@@ -8,11 +8,17 @@
 
 ### 1. 30 秒上手
 
-仓库把 `知止者` / `$wise-agent` 设计为默认智能行动主体。Codex 会根据各 Skill 的精确 description 隐式匹配当前任务所需能力，也可在同一 Agent 中加载多个 Skill；多 Skill 只是增加专业上下文，不产生第二人格或重复 Owner。日常不需要选角色或背 Skill 名称，直接说明目标、材料、边界、授权和验证即可；需要强制某项能力时再显式调用。
+仓库把知止者设计为默认交互与责任模型，`$wise-agent` 是显式协同入口，不表示每个任务都必须加载它。日常不需要选角色或背 Skill 名称，直接说清交付物、事实源、范围、授权和完成证据即可。单一领域且边界清楚的任务可直接加载对应专业 Skill；跨专业、跨阶段、跨轮，或需要 Goal、Loop、Worker、Checker、状态恢复和知识回流时，再加载 `$wise-agent`。多 Skill 只为同一 Agent 补充专业上下文，不产生第二人格或重复 Owner。
+
+通用任务模板：
 
 ```text
-我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>；已有 <材料或路径>；边界是 <不做什么 / 是否允许写入 / 风险>；验证要求是 <检查命令 / 证据 / 残余风险说明>。
+我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>；请读取 <材料或路径>；只处理 <范围>，不做 <非目标>；允许 <只读 / 写入路径 / 其他授权>；用 <检查命令 / 评审证据 / 验收标准> 证明完成。信息足够就直接推进，只在关键决策或高风险授权处问我。
 ```
+
+不确定流程、角色或 Skill 时，不要先替 Agent 设计接力顺序，直接使用上面的模板。任务明显跨专业、跨阶段、跨轮，或你想强制知止者持有目标和状态时，再在前面加 `$wise-agent：`；只想强制一个专业能力时，直接调用该 Skill。
+
+一次完整交付至少应让你看到：实际产物或明确结论、采用的关键事实与决策、验证证据，以及尚未消除的风险或待确认项；不要求用户阅读内部能力清单和推理轨迹。
 
 常见任务可以直接这样说：
 
@@ -31,13 +37,13 @@
 
 ### 2. 任务与专业能力
 
-下表用于理解边界，不是使用前必须选择的菜单。所有专业 Skill 都允许依靠精确 description 隐式匹配；显式调用只表示强制或优先使用。
+下表用于查边界，不是使用前必须选择的菜单。不知道选谁时回到第 1 节，直接描述任务；显式调用某个专业 Skill 只表示强制或优先使用。
 
 | 你要交付 | 专业能力与路径 | 最小输入 | 边界 |
 | --- | --- | --- | --- |
 | 跨领域真实工作、目标控制、能力组合、验证和知识演进 | `知止者`，路径：[wise-agent](./wise-agent) | 目标、事实源、范围、授权、完成证据 | 不限于产研；不获得无限自治或高风险授权 |
-| 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | `产品架构专家`，路径：[product-architecture-expert](./product-architecture-expert) | 用户/主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
-| 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | `资深架构师`，路径：[senior-software-architect](./senior-software-architect) | 路径、现象/目标、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
+| 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | 产品架构专家，ID：`product-architecture-expert`，路径：[product-architecture-expert](./product-architecture-expert) | 用户/主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
+| 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、现象/目标、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 正式报告、制度、手册、研究说明、材料合并、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不替代产品、工程、法律、合规或领域事实判断 |
 | 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体考据 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只作证据之一，不单独证明本义 |
 | DDL/schema/Java 类/字段表格到 Java Service 脚手架 | `java-service-code-generator`，路径：[java-service-code-generator](./java-service-code-generator) | 结构化输入、表名、模块、输出目录、覆盖授权 | 不从纯自然语言直接生成生产代码 |
@@ -56,16 +62,29 @@
 
 ### 3. 知止者如何工作
 
-知止者不是流程路由器，而是持续读取事实、作出取舍并完成工作的统一行动主体。它按“察 -> 辨 -> 谋 -> 行 -> 验 -> 化”推进：先读事实，再辨问题，选择最小能力，完成实际工作，独立验证并回写结果。它不是不行动，而是让行动有方向、有分寸、有收口。
+加载 `$wise-agent` 时，知止者不是流程路由器，而是持续读取事实、作出取舍并完成工作的统一行动主体。它按“察 -> 辨 -> 谋 -> 行 -> 验 -> 化”推进：先读事实，再辨问题，选择最小能力，完成实际工作，独立验证并回写结果。它不是不行动，而是让行动有方向、有分寸、有收口。
 
-简单任务直接完成；复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker。专业能力按需渐进加载；产品、架构、文档、考据、生成和约规不是平级角色。人类责任 Owner、知止者、专业能力和独立 Checker 分开，无论内部用了多少能力，对用户只形成一个综合结论。
+简单任务直接完成；复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker。判断顺序是：先看能否本轮直接完成；跨交付阶段才展开 SDLC；跨轮持续推进才建立 Goal；同一目标需要反复执行才进入 Loop；存在可冻结且不冲突的子任务才派 Worker；风险或证据要求足够高才增加 Checker。
 
-| 视图 | 适用任务 | 默认边界 |
-| --- | --- | --- |
-| 只读理解视图 | 代码库理解、设计-代码对齐、事实边界检查 | 默认不写文件、不联网、不安装 |
-| 交付推进视图 | 产品、设计、TDD、编码、CR、验证发布和复盘回流 | 保持一个目标与行动主体，按阶段加载能力 |
-| 验证发布视图 | 质量门禁、生产交付审查、失败回退 | 输出 Ready / Not Ready / Human Approval Required，不替代上线审批 |
-| 知识回流视图 | 将已验证经验归位到约规、上下文、ADR、reference、fixture 或脚本 | 上下文治理、知识库、技术早报、培训、代码库教程、调研沉淀可说 `进入知识生产`，形成可维护的上下文资产 |
+专业能力按需渐进加载；产品、架构、文档、考据、生成和约规不是平级角色。人类责任 Owner、知止者、专业能力和独立 Checker 分开，无论内部用了多少能力，对用户只形成一个综合结论。
+
+### 3.1 什么时候启用 SDLC、Goal、Loop、Worker、Checker
+
+日常只需描述任务，不需要主动选择机制；知止者默认直接完成，再按下面的证据升级。需要强制某种控制时，可使用最后一列的友好指令。
+
+| 机制 | 什么时候自动启用 | 不该启用 | 你可以这样说 |
+| --- | --- | --- | --- |
+| SDLC | 任务跨产品、设计、工程、验证、发布或运行阶段，需要交接和阶段门禁 | 单阶段、单文件或一步任务 | `按完整 SDLC 覆盖这个需求到发布，但只展开当前需要的阶段。` |
+| Goal | 任务跨会话、跨 Wave 或要持续推进，需要成功标准、状态、预算和停止线 | 当前会话能完成；未明确要求时不创建运行时 Goal | `为这项工作建立 Goal 并持续推进，成功标准是 <...>，停止条件是 <...>。` |
+| Loop | 同一 Goal 下要反复读取状态、执行、观察和验证，且有状态载体、反馈源和轮次边界 | 一次执行即可完成，或没有反馈与停止条件 | `允许进入 Loop，最多 <N> 轮；状态写到 <位置>，连续 <N> 轮无进展就停止。` |
+| Worker | 存在输入可冻结、写入不重叠、低耦合的独立子任务，并行明显更快 | 同一文件、强耦合调用链或连续判断 | `这些子任务互不依赖，可并行时再派 Worker；共享文件必须串行。` |
+| Checker | 高风险、公共契约、重要交付、发布准出或需要独立 CR | 低风险任务已有回读、测试或 validator | `增加独立 Checker，直接读取原始产物和证据，不只审 Maker 摘要。` |
+
+五者不是一套固定流水线：SDLC 是阶段地图，Goal 保存完成线，Loop 管反复运行，Worker 管执行分工，Checker 管独立证明。可以只有 Checker 没有 Worker，也可以只用 Goal 而不进入 Loop。
+
+“视图”只是强调任务边界的可选短句，不是前置流程：只读理解视图用于只读事实核验，默认不写文件、不联网、不安装；交付推进视图用于完成真实产物；验证发布视图用于给出 Ready / Not Ready / Human Approval Required；知识回流视图用于把已验证经验归位到约规、上下文、ADR、reference、fixture 或脚本。涉及上下文治理、知识库、技术早报、培训、代码库教程、调研沉淀时，也可说 `进入知识生产`，形成可维护的上下文资产。
+
+### 3.2 什么时候会停下来问你
 
 决策澄清门禁只处理真正未决的 Decisions；Facts 先从材料、源码、测试或日志自答，Decisions 才问 owner。复杂或模糊任务一次只问一个主 blocker。结果只能是：`自决推进 / 询问 owner / 继续收敛 / 停止交接`。
 
@@ -76,11 +95,11 @@
 - 退出：确认 shared understanding 并形成决策快照，未确认前不执行。
 - 红线：红线、底线、不能碰、不可、禁止、必须等字眼必须进入决策快照或待确认项。
 
-常用短句：`进入知止者`、`自己判断并推进`、`进入只读理解视图`、`做质量门禁`、`做源码质量评审`、`做生产交付审查`、`进入知识回流视图`。
+常用短句只用于强调边界：`进入知止者`、`进入只读理解视图`、`做质量门禁`、`做源码质量评审`、`做生产交付审查`、`进入知识回流视图`。
 
 ### 4. 编写文档的友好指令
 
-不需要记模板文件名，直接说明材料、目标路径和是否允许写入。产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，迁移型重构用 `refactoring-design-template.md`。
+不需要记模板文件名，先说材料、文档类型、读者、目标路径、写入授权和验收要求。产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，迁移型重构用 `refactoring-design-template.md`。
 
 - `基于 <需求或材料路径> 编写可评审产品设计，保存到 <目标路径>；区分事实、推断和待确认，按复杂度裁剪模板。`
 - `基于 <产品文档> 和 <源码/接口/DDL> 编写系分，保存到 <目标路径>；补齐边界、流程、规则、接口、数据、测试、发布和回滚证据。`
@@ -122,13 +141,15 @@ git diff --check
 
 正式同步后运行 `scripts/validate-installed-skills.sh`，确认仓库管理的 Skill 文件一致且退役 Skill 已移除。`sync-skills.sh` 使用 `rsync --delete`，已有目标会备份到 `$CODEX_HOME/skills/.backups/`；`--dry-run` 不写入安装目录。
 
-`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。完成正式同步后，可运行行为 smoke；它会先检查安装一致性，再通过配置的 Codex provider 发起两个只读请求，并把结果写到指定目录：
+`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。完成正式同步后，可运行行为 smoke；它会先检查安装一致性，再通过配置的 Codex provider 发起只读请求，并把结果写到指定目录。`all` 覆盖通用产品、工程、三类 Superpowers 协同、轻量任务和跨轮状态恢复；只验证 Superpowers 时使用 `superpowers`，只验证控制机制时使用 `governance`：
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke
+scripts/smoke-wise-agent-behavior.sh --mode superpowers --output-dir /tmp/wise-agent-superpowers-smoke
+scripts/smoke-wise-agent-behavior.sh --mode governance --output-dir /tmp/wise-agent-governance-smoke
 ```
 
-该 smoke 只证明样例行为满足契约，不能单独证明所有任务的路由稳定性。维护者复装或更新外部 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；普通使用 `grill-me` 不需要运行这些命令。
+该 smoke 只证明样例行为满足契约，不能单独证明所有任务的路由稳定性。跨轮任务需要审计状态一致性时，可把已有 Goal Ledger、Issue 或任务状态投影为 JSON 后运行 `python3 wise-agent/scripts/check_state_contract.py <contract.json>`；普通任务不需要手写状态契约。维护者复装或更新外部 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；安装或更新官方 Superpowers 插件后，运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
 
 ## 维护者与高级扩展
 

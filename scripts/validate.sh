@@ -15,6 +15,7 @@ bash -n sync-skills.sh
 bash -n scripts/audit-skills.sh
 bash -n scripts/validate-installed-skills.sh
 bash -n scripts/smoke-wise-agent-behavior.sh
+bash -n scripts/validate-superpowers-install.sh
 
 echo "==> skill audit"
 scripts/audit-skills.sh
@@ -31,9 +32,28 @@ Dir.glob("*/SKILL.md").sort.each do |skill_md|
   %w[name description].each do |key|
     abort("#{skill_md}: missing #{key}") if data[key].to_s.strip.empty?
   end
+  skill_dir = File.basename(File.dirname(skill_md))
+  skill_name = data["name"].to_s.strip
+  unless skill_name.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+    abort("#{skill_md}: invalid skill id #{skill_name.inspect}; use lowercase letters, digits, and hyphens")
+  end
+  abort("#{skill_md}: name #{skill_name.inspect} must match directory #{skill_dir.inspect}") unless skill_name == skill_dir
   agent = File.join(File.dirname(skill_md), "agents", "openai.yaml")
-  YAML.load_file(agent) if File.exist?(agent)
+  if File.exist?(agent)
+    agent_data = YAML.load_file(agent) || {}
+    default_prompt = agent_data.dig("interface", "default_prompt").to_s
+    abort("#{agent}: default_prompt must invoke $#{skill_name}") unless default_prompt.include?("$#{skill_name}")
+  end
   puts "OK #{skill_md}"
+end
+
+route_files = Dir.glob("*/SKILL.md") + ["wise-agent/references/capability-routing.md"]
+forbidden_display_ids = ["`产品架构专家`", "`资深架构师`", "$产品架构专家", "$资深架构师"]
+route_files.uniq.each do |path|
+  text = File.read(path, encoding: "UTF-8")
+  forbidden_display_ids.each do |term|
+    abort("#{path}: use stable Skill ID instead of display name #{term.inspect}") if text.include?(term)
+  end
 end
 RB
 
@@ -65,8 +85,17 @@ if [[ "${VALIDATE_GRILL_ME_INSTALL:-}" == "1" ]]; then
   python3 scripts/validate-grill-me-install.py
 fi
 
+echo "==> Superpowers install validator"
+scripts/validate-superpowers-install.sh --self-test
+if [[ "${VALIDATE_SUPERPOWERS_INSTALL:-}" == "1" ]]; then
+  scripts/validate-superpowers-install.sh
+fi
+
 echo "==> wise-agent behavior smoke parser"
 scripts/smoke-wise-agent-behavior.sh --self-test
+
+echo "==> wise-agent state contract"
+python3 wise-agent/scripts/check_state_contract.py --self-test
 
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
@@ -79,6 +108,7 @@ python3 -m py_compile senior-software-architect/scripts/check_architecture_deliv
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
+python3 -m py_compile wise-agent/scripts/check_state_contract.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py

@@ -1,176 +1,124 @@
-# Superpowers Skill Library 外部参考
+# Superpowers Skill Library 能力调度
 
-本文记录 `obra/superpowers` 和 Matt Pocock skills 的审查结果、供应链边界和知止者调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。上游原始 Skill 统一保存为 `upstream-skill.md`，避免被 Codex 自动发现为独立 Skill。
+本文定义官方 Superpowers 插件和其他外部 Skill 如何成为知止者可按需使用的能力。它不是第二套主流程，也不是新的行动主体；外部能力只能补方法，不得扩大授权或替代专业判断。
 
 ## 使用时机
 
-- 用户点名 Superpowers、Superpowers skills、brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting-code-review、verification-before-completion 等外部技能。
-- 用户点名 Matt Pocock skills、`grill-me`、Trellis、轻量问询、盘问式澄清、Loop 推进中进入 `grill-me` 或一次一个问题的需求 / 设计收敛。
-- 用户点名 GStack、Trellis 或“四大 AI 编码框架”，要求判断 Superpowers / GSD / GStack / Trellis 如何纳入知止者，而不是新增一堆流程。
-- 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入知止者研发流程编排。
-- 需要评估或升级 SDD / Superpowers 6.x 套件、`subagent-driven-development`、任务评审、文件化交接或 Harness 版本。
-- 需要把模糊意图先收敛为关键分叉、建议答案、验收标准和任务树真相源，再交给产品专家、架构师或 AI Maker。
-- 需要判断某个 AI 编码任务应参考哪类工程纪律：澄清、计划、TDD、并行 Agent、代码评审、调试、完成前验证或分支收尾。
-- 需要审查外部 skill 包是否可作为方法来源、是否可复制、是否可安装或是否会引入脚本 / hooks / Git 操作风险。
+- 用户点名 Superpowers、brainstorming、writing-plans、executing-plans、subagent-driven-development、TDD、systematic-debugging、code review 或 verification-before-completion。
+- 知止者需要为产品澄清、工程计划、实现、调试、CR、验证或分支收尾选择最小方法能力。
+- 需要安装、升级、审查或退役外部 Skill / 插件，或判断脚本、联网、Git、worktree、subagent 和写入边界。
+- 用户比较 Superpowers、GSD、GStack、Trellis、Matt Pocock skills 等框架，希望纳入现有能力体系。
 
 ## 不适用场景
 
-- 不直接安装 Superpowers 插件，不注册 marketplace，不运行外部 hooks，不执行外部脚本。
-- 不直接安装 Matt Pocock skills 全仓库、不运行 npm/package 脚本、不接入 Claude plugin 或 hooks；只在用户授权后考虑安装已审查的最小 Markdown skill。
-- 不把 Superpowers 的英文默认文档路径、自动提交、Git 推送、worktree 或 subagent 流程写成本仓库默认行为。
-- 不把 GStack、Trellis、`grill-me` 或任一外部 skill 写成默认依赖、默认联网、默认任务系统、默认执行授权或默认安装结果。
-- 不用外部 skill 的硬门禁覆盖用户授权、仓库 `AGENTS.md`、Codex 当前工具能力、项目验证命令或 `资深架构师` 的工程判断。
-- 不把外部 skill 原文当作当前项目事实、测试通过、CR 结论、Execution Grant、发布批准或合规结论。
+- 简单问答、翻译或无需材料和行动的一步回答。
+- 只做纯 Java / Wind 规则清单且不涉及源码设计、实现、CR、TDD 或修复。
+- 用外部 Skill 名称替代用户目标、项目事实、专业 owner、验证证据或执行授权。
+- 因插件已安装而默认启动脚本、本地服务、worktree、subagent、Git、联网或项目目录写入。
 
 ## 读取后必须产出
 
-- 调度结论：当前任务应参考哪些 Superpowers skill，或为什么不应参考。
-- 边界结论：哪些只是方法来源，哪些需要项目本地规则、人类 owner 或架构师继续确认。
-- 安全结论：是否涉及安装、脚本、联网、hooks、Git 推送、worktree、subagent 或写入范围扩大；如涉及，必须列为待授权或停止条件。
-- 知止者映射：Superpowers skill 对应 OpenSpec、Harness、GSD/CAD、Spec 模板、TDD、CR 或验证发布的哪一段。
-- 轻量问询映射：`grill-me` 对应知止者的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
-- 框架分层映射：Superpowers、GSD、GStack、Trellis 分别对应方法纪律、上下文状态、角色链审查和仓库级记忆的哪一层；当前任务只选最小缺口层。
+- 当前主责：知止者、产品架构专家、资深架构师或其他专业 Skill。
+- 方法选择：当前需要哪个 Superpowers Skill，以及不需要哪些。
+- 权限边界：只读、写入、脚本、联网、Git、worktree、subagent 和不可逆动作。
+- 验证结论：静态路由、真实行为、新鲜命令输出和残余风险。
+- 停止条件：方法冲突、授权不足、事实不足、验证失败或插件状态不明。
 
 ## 需要继续读取的 reference
 
-- OpenSpec、Superpowers、Harness、GSD、CAD 和权限边界读 `engineering-governance.md`。
-- Spec / SDD / OpenSpec 模板、AC 编号和测试映射读 `spec-template-practices.md`。
-- AI 代码交付闭环、独立验证、CR 减负和知识回流读 `code-delivery.md`。
-- 验证矩阵、CR、发布和复盘读 `verification-review-release.md`。
-- 来源、许可证、下载状态和不吸收边界读 `source-map.md`。
+- 能力 owner、Maker / Checker 和多 Skill 协作读 `capability-routing.md`。
+- 产品到工程角色链读 `delivery-lifecycle.md`。
+- OpenSpec、Harness、SDD 和权限读 `engineering-governance.md`。
+- GSD / CAD / Grant 准入读 `planning-execution-admission.md`。
+- CR、验证、发布和知识回流读 `verification-review-release.md` 与 `code-delivery.md`。
+- 来源、版本和历史审查事实读 `source-map.md`。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 判断 Superpowers 如何接入知止者 | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
-| 判断 AI 编码框架如何分层 | `2A. AI 编码框架分层映射`、`3. 安全边界`，再读 `delivery-execution-control.md` | 不新增并列流程、不默认安装 GStack / Trellis |
-| 升级 SDD / Superpowers 6.x 套件 | `1B. Superpowers v6.x / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不默认运行 helper、不默认启用 `.superpowers/sdd/` |
-| 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
-| 复杂 / 模糊需求轻量问询或 Loop 推进中关键分叉未决 | `grill-me` 方法摘要，再回 `delivery-lifecycle.md` 和产品专家 | 不连续抛出多问题，不把问询过程写进正式 PRD |
-| 需求澄清 / Spec 前置 | `external-superpowers/brainstorming/upstream-skill.md`，再回 `product-to-engineering-lifecycle.md` | 不强制保存 `docs/superpowers/specs` |
-| 写实施计划 | `external-superpowers/writing-plans/upstream-skill.md`，再回 `spec-template-practices.md` | 不复制默认 plan 路径和提交步骤 |
-| 执行计划 / 多 Agent | `external-superpowers/executing-plans/upstream-skill.md`、`external-superpowers/subagent-driven-development/upstream-skill.md`、`external-superpowers/dispatching-parallel-agents/upstream-skill.md`，再回 `planning-execution-admission.md` | 不默认启动 subagent、worktree 或并行写入 |
-| TDD / 测试纪律 | `external-superpowers/test-driven-development/upstream-skill.md`，再回 `senior-software-architect/references/testing.md` | 不用外部规则替代项目测试策略 |
-| Debug / 修复验证 | `external-superpowers/systematic-debugging/upstream-skill.md`、`external-superpowers/verification-before-completion/upstream-skill.md`，再回 `verification-review-release.md` | 不把一次命令输出当完整验收 |
-| 代码评审 | `external-superpowers/requesting-code-review/upstream-skill.md`、`external-superpowers/receiving-code-review/upstream-skill.md`，再回 `verification-review-release.md` 和 `资深架构师` | 不替代源码级 CR |
-| 分支收尾 | `external-superpowers/finishing-a-development-branch/upstream-skill.md`、`external-superpowers/using-git-worktrees/upstream-skill.md` | 不默认 push、merge、PR 或清理 worktree |
-| Skill 维护 | `external-superpowers/writing-skills/upstream-skill.md`，再回仓库 `AGENTS.md` 和 `skill-creator` | 不覆盖本仓库三级加载规则 |
+| 判断 Superpowers 如何参与当前任务 | 1、2、3 | 不展开全部 Skill |
+| 产品发现与范围澄清 | 2 的 brainstorming，再回产品专家 | 不直接写工程计划 |
+| 工程计划、实现、调试、CR、验证 | 2 的对应能力，再回架构师 | 不产生第二 Owner |
+| Git、worktree、subagent 或脚本 | 3 | 无授权不执行 |
+| 安装、升级或退役 | 1、4，再读 source-map | 不凭缓存推断已启用 |
+| 比较外部 AI 编码框架 | 5 | 不新增并列主流程 |
+| Matt Pocock / grill-me | 6 | 不复制全仓库 |
 
-## 1. 来源和下载状态
+## 1. 官方插件状态与供应链边界
 
-- 来源仓库：`https://github.com/obra/superpowers`
-- 下载日期：2026-06-07
-- 读取方式：GitHub API 读取 skills 目录和 README，下载 `main.zip` 到临时目录后解压审查。
-- main commit：`6fd4507659784c351abbd2bc264c7162cfd386dc`
-- zip SHA256：`ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3`
-- 许可证：MIT License，已保存 `external-superpowers/LICENSE`。
-- 本仓库复制范围：初始导入仅复制 `skills/` 下 Markdown 资源和 LICENSE；上游入口文件改名为 `upstream-skill.md`，只作离线参考，不作为可安装 Skill；2026-06-30 仅对 `subagent-driven-development` 做 v6.0.3 替换覆盖式升级，并纳入 `task-reviewer-prompt.md`、`implementer-prompt.md` 和三个本地 helper。
-- 排除范围：除上述本地 helper 外，不复制或运行 hooks、插件 manifest、package 脚本、shell/js/ts 其他可执行文件、图片资产和安装流程；helper 只在明确进入 SDD 执行并获得用户授权时运行。
+- 官方来源：`obra/superpowers`，MIT License；Codex 通过官方市场项 `superpowers@openai-api-curated` 提供插件。
+- 2026-07-17 本机核验：`codex plugin list` 返回 `installed, enabled`，安装标识为 `11c74d6b`；插件 manifest 版本为 `5.1.3`。这只是带日期的本机事实，不代表其他机器或未来会话状态。
+- 同日上游 GitHub 页面显示 release `v6.1.1`；上游 release、Codex 市场标识和 manifest 版本不是同一版本轴，升级判断必须分别核验。
+- 已审查 14 个 Skill 的 `SKILL.md`、references 和脚本。脚本包含本地 brainstorming 服务、临时或 `.superpowers/brainstorm/` 文件、测试污染定位和图形渲染；未发现默认读取密钥或向外部服务上传项目内容，但运行脚本仍需当前任务明确需要和授权。
+- 本仓库不再复制上游 Skill，不保留可执行 helper，也不把插件缓存当仓库真相源。验证完成后删除 `external-superpowers/`；只保留来源、版本、调度矩阵和安全边界。
 
-保留离线快照的 14 个外部 skill：
+插件是否可用，以当前会话实际 Skill 列表或新会话行为冒烟为准；只看到缓存目录不能宣称已启用。
 
-- `brainstorming`
-- `dispatching-parallel-agents`
-- `executing-plans`
-- `finishing-a-development-branch`
-- `receiving-code-review`
-- `requesting-code-review`
-- `subagent-driven-development`
-- `systematic-debugging`
-- `test-driven-development`
-- `using-git-worktrees`
-- `using-superpowers`
-- `verification-before-completion`
-- `writing-plans`
-- `writing-skills`
+## 2. 知止者调度矩阵
 
-## 1B. Superpowers / SDD 本地审查基线
+优先级固定为：**用户授权 / 项目 `AGENTS.md` > 知止者 > 专业 Skill > Superpowers**。
 
-- 本地审查基线：2026-06-30 对 `external-superpowers/subagent-driven-development` 做 v6.0.3 覆盖式审查，保留 `task-reviewer-prompt.md`、`implementer-prompt.md`、`task-brief`、`review-package` 和 `sdd-workspace` 作为离线参考。
-- 不在稳定流程文档中声明上游 latest。需要比较、升级或安装时，必须重新核验官方 release、许可证、Skill 内容、脚本、hooks、权限和当前 Codex 插件状态。
-- 可迁移方法仅包括 pre-flight plan review、文件化 handoff、Task Reviewer、progress ledger 和 whole-branch review；它们分别映射到 Harness 准入、任务文档、验证证据和最终 CR，不形成并列工作流。
-- `task-brief`、`review-package` 和 `sdd-workspace` 只允许在当前任务明确进入 SDD 执行且用户授权写入本地工作区时运行；缺授权时只能使用方法规则，不创建 `.superpowers/sdd/`。
+Superpowers 不成为第二 Owner。知止者保持统一行动主体，专业 Skill 对领域结论负责，Superpowers 只提供方法纪律：
 
-## 1A. Matt Pocock skills 审查状态
-
-- 来源仓库：`https://github.com/mattpocock/skills`
-- 审查日期：2026-06-28；上游状态复核：2026-07-15。
-- 读取方式：首次审查通过 GitHub API / raw 读取仓库目录、`package.json`、LICENSE 和目标 skill；2026-07-15 再次通过 GitHub API / raw 读取 README、skills 目录、`grill-me`、`grilling`、`grill-with-docs`、`domain-modeling` 和 `main` 分支，复核提交为 `e9fcdf95b402d360f90f1db8d776d5dd450f9234`，当前树包含 40 个 `SKILL.md`，且存在插件、package 和脚本资源。
-- 许可证：MIT License。
-- 已审查最小目标：`skills/productivity/grill-me/SKILL.md` 为纯 Markdown Skill，无脚本、hooks 或依赖；`grill-me` 为唯一入口，废弃本地 `grilling`。
-- 安装状态：2026-07-13 按用户授权移除旧本地 `grill-me` 和 `grilling`，从 `mattpocock/skills` `v1.1.0` 安装并本地收敛为 `grill-me`；后续更新仍走官方 skill-installer 或用户显式授权路径，但完成条件是 `scripts/validate-grill-me-install.py` 通过，未通过不得宣称完成。
-- 当前上游差异：当前 `main` 的 `grill-me` 只调用 `/grilling`，`grill-with-docs` 同时调用 `/grilling` 与 `/domain-modeling`。这会重新引入本地已退役的双 Skill 结构；不把当前 `main` 静默覆盖本地 `v1.1.0`，迁移必须另做 Codex frontmatter、触发冲突、配对依赖和行为稳定性验证。
-- 可吸收方法：以 `grill-me` 为 canonical；复杂或模糊计划先沿设计树一次问一个问题；每问给建议答案并等待反馈；Facts 用代码库或材料自答，Decisions 才交给 owner；未达成 shared understanding 不进入执行；Loop 推进中遇到关键分叉、含糊回答、半答或连续返工时做阶段性盘问，必要时给半答案 strawman 让 owner 反驳；问询结论进入任务树、产品上下文卡、工程交接卡、验证矩阵或下一阶段输入。
-- 新增方法候选：只吸收 `domain-modeling` 的术语冲突即时澄清、具体场景压测、与代码交叉验证、owner 确认后即时回写和克制使用 ADR；纳入既有知识演进与业务专家蒸馏，只有满足 ADR 门禁时才路由 `资深架构师`，不安装 `domain-modeling` 或 `grill-with-docs`。
-- 不吸收项：不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis、hooks 或外部任务系统；不复制原文长提示；不采用 `dangerously-skip-permissions` 或任何跳过权限的默认模式。
-
-## 2. 调度矩阵
-
-| Superpowers skill | 知止者位置 | 调度方式 |
+| Superpowers Skill | 适用缺口 | 主责与边界 |
 | --- | --- | --- |
-| `brainstorming` | Round 0、PRD-Lite、OpenSpec 前置澄清 | 吸收“先澄清目标、约束、成功标准，再进设计”的方法；产品语义仍交给 `产品架构专家`。 |
-| `writing-plans` | OpenSpec / Harness / GSD 任务拆解 | 吸收小步任务、明确文件、验证命令和 TDD 步骤；完整工程计划仍交给 `资深架构师`。 |
-| `executing-plans` | GSD Wave 执行节奏 | 作为批次执行和检查点参考；不替代 Execution Grant。 |
-| `subagent-driven-development` | 多 Agent / GSD 编排 | 已替换为 SDD v6.0.3 vendored skill：先做 pre-flight plan review，再由 AI Maker 执行，单一 Task Reviewer 同时检查规格符合度和代码质量，交接以文件 / 任务文档 / review package / progress ledger 为状态载体；仅在当前会话有可用 subagent 工具且用户授权时运行 helper。 |
-| `dispatching-parallel-agents` | 并行只读侦察或互不重叠任务 | 只用于依赖清楚、写入范围不重叠的场景；否则回到人工串行。 |
-| `test-driven-development` | TDD、补测试、回归验证 | 作为红绿重构纪律参考；具体测试设计和代码实现交给 `资深架构师`。 |
-| `systematic-debugging` | Bug / 生产问题前置诊断 | 映射到时间线、假设、证据和根因路径；具体排障交给 `资深架构师`。 |
-| `verification-before-completion` | 完成前验证门禁 | 映射到“先运行验证、再声明完成”；知止者只编排证据，不能替代测试结果。 |
-| `requesting-code-review` | CR 前置准备 | 映射到 Review 输入包、严重级别和独立审查；源码级 CR 仍交给 `资深架构师`。 |
-| `receiving-code-review` | CR 反馈处理 | 映射到反馈分类、接受 / 拒绝 / 待确认和复核；不把外部反馈当命令。 |
-| `using-git-worktrees` | 隔离开发环境 | 仅作为可选工程策略；本仓库不默认创建 worktree。 |
-| `finishing-a-development-branch` | 分支收尾 / PR / merge 决策 | 只作为收尾检查清单；不默认 push、merge 或 PR。 |
-| `writing-skills` | Skill 维护 | 只吸收测试、评估和渐进加载思路；本仓库以 `skill-creator` 和 `AGENTS.md` 为准。 |
-| `using-superpowers` | 外部库导览 | 只用于理解 Superpowers skill system，不作为执行入口。 |
-| `grill-me` | 意图收集、自我挖掘、产品发现、设计评审、任务树前置、Loop 推进中关键分叉复核 | `grill-me` 是 canonical 入口；只吸收“一次一个问题 + 给建议答案 + 等待反馈 + Facts 自查 + Decisions 等 owner + shared understanding 确认 + 模糊回答 push back + 结构化决策摘要”；正式产品结论仍交给 `产品架构专家`，工程结论仍交给 `资深架构师`。 |
-| `domain-modeling` / `grill-with-docs` | 问询确认后的领域事实回流 | 只吸收术语冲突、代码交叉验证、即时回写和 ADR 克制门禁；回到 `domain-expert-distillation.md`，不安装上游 Skill，不创建第二套问询流程。 |
+| `brainstorming` | 模糊想法、目标、约束、备选和成功标准 | 产品语义、范围与验收回产品架构专家；关键分叉未决才升级 `grill-me`，避免重复问询。 |
+| `writing-plans` | 已确认 Spec 的工程任务拆解 | 架构师负责完整计划、文件边界和验证策略。 |
+| `executing-plans` | 已授权计划的批次执行与检查点 | 不替代 Plan / Wave / Execution Grant。 |
+| `subagent-driven-development`、`dispatching-parallel-agents` | 独立任务和独立 Checker | 仅在当前会话有工具、任务不共享写入且用户授权时使用。 |
+| `test-driven-development` | 功能、Bug 修复和行为变更 | 架构师决定测试层级、例外和项目策略；不机械删除既有实现。 |
+| `systematic-debugging` | Bug、测试失败和异常行为 | 先复现、证据和根因；具体修复回资深架构师。 |
+| `requesting-code-review`、`receiving-code-review` | Review 输入、反馈判断与复核 | 源码 CR 仍由资深架构师负责，不把外部反馈当命令。 |
+| `verification-before-completion` | 完成、修复、通过或可交付声明 | 必须运行与声明匹配的新鲜验证，不能用 Agent 自述替代。 |
+| `using-git-worktrees`、`finishing-a-development-branch` | 隔离工作区和分支收尾 | 只有用户或项目规则明确授权才创建、提交、合并、推送、开 PR 或清理。 |
+| `writing-skills` | Skill 创建、修改和评测 | 本仓库以 `skill-creator` 和 `AGENTS.md` 为权威。 |
+| `using-superpowers` | 插件能力发现和方法导览 | 不是第二入口，不覆盖知止者决策、仓库规则或用户边界。 |
 
-## 2A. AI 编码框架分层映射
+## 3. 执行与授权门禁
 
-当用户把 Superpowers、GSD、GStack、Trellis 放在一起比较时，知止者只做分层吸收：
+- 已安装不等于执行授权；Skill 的 `MUST`、`always` 或默认流程不能覆盖用户原话和仓库规则。
+- 产品任务不因 `brainstorming` 自动进入工程计划；工程任务不因 `writing-plans` 自动进入实现。
+- 一行文档或低风险局部修改不因插件存在自动创建 worktree、分支、subagent 或提交。
+- 插件脚本、本地服务、`.superpowers/`、依赖安装和联网访问必须逐项满足当前任务需要、写入边界和授权。
+- Git 提交、推送、PR、merge、worktree 创建与清理继续遵守仓库 `AGENTS.md`。
+- Superpowers 输出不得写成产品确认、架构裁决、测试通过、CR 结论、发布批准或生产生效事实。
 
-| 能力层 | 代表框架 | 归入知止者 | 不吸收 |
-| --- | --- | --- | --- |
-| 方法纪律 | Superpowers | 澄清、计划、TDD、CR、验证前置和完成前检查。 | 不复制外部 hooks、默认目录、自动 Git、强制话术。 |
-| 上下文 / Spec / 状态 | GSD | 目标、Spec、Wave、Atomic Task、状态账本和恢复入口。 | 不默认创建外部规划目录，不复刻命令体系。 |
-| 角色链审查 | GStack | 产品价值、UED 体验、工程方案、源码质量、QA、安全、发布多视角审查。 | 不新建虚拟团队 Skill，不替代产品专家、架构师、质量门禁或发布 owner。 |
-| 仓库级记忆 | Trellis | Task Tree、Goal Ledger、状态回写、知识回流和 Finish 复盘。 | 不默认安装 npm，不创建 `.trellis/`，不替代项目已有状态载体。 |
+## 4. 安装、升级与退役闭环
 
-`Trellis` 是仓库级 Agent Harness，官方包为 `@mindfoldhq/trellis`。准入前先检查现有 `AGENTS.md`、Issue、Spec、Goal Ledger 和知识库；只有跨会话上下文丢失、多 Agent 状态冲突或任务状态散落已有重复失败证据，且现有载体无法修复时，才在一个非关键任务上隔离试点。安装或 `trellis init` 必须显式授权，并审查 Node.js、Python、AGPL-3.0、`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`、平台接入文件、hooks、subagent、worktree 和 Git 写入边界。
+1. 通过 `codex plugin list` 核验官方市场项和当前状态。
+2. 安装前审查 manifest、Skill、references、scripts、许可证和权限。
+3. 安装后记录市场标识、实际启用状态和版本轴，不把上游 latest 当本机版本。
+4. 更新知止者调度矩阵、source-map、fixture 和 validator。
+5. 执行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`，并用 `scripts/smoke-wise-agent-behavior.sh --mode superpowers` 在新会话做产品澄清、调试修复和禁止隐式 Git 三类行为冒烟。
+6. 只有行为证据通过后，删除重复离线快照和本地 helper；失败则保留回退点并停止退役。
 
-GStack slash commands 在知止者中只作为触发别名：`/office-hours` -> 产品思考，`/plan-ceo-review` -> 范围收敛，`/plan-eng-review` -> 工程评审，`/plan-design-review` -> 交互评审，`/review` -> 源码 CR，`/qa` -> QA 验证，`/ship` -> 生产交付审查 / 发布准出；开发实现仍回到 TDD、Grant、项目约规和 `资深架构师` 执行链。
+## 5. 外部框架归位
 
-结论格式保持一句话：当前任务缺哪一层、由知止者读哪个 reference、回到哪个专项 Skill、哪些外部默认行为不采用。
+| 能力层 | 代表 | 归位 |
+| --- | --- | --- |
+| 方法纪律 | Superpowers | 澄清、计划、TDD、调试、CR 和验证。 |
+| 上下文 / Spec / 状态 | GSD | Goal、Spec、Wave、任务状态和恢复入口。 |
+| 角色链审查 | GStack | 产品、设计、工程、QA、安全和发布视角。 |
+| 仓库级记忆 | Trellis | 仅在现有状态载体反复失效且有证据时试点。 |
 
-## 3. 安全边界
+它们都不是知止者之外的新主流程，也不自动成为依赖、任务系统或授权来源。
 
-- 外部 skill 原文里出现的 Git 提交、Git 推送、worktree、subagent、插件安装、默认目录和持续执行要求，只是来源语境，不是本仓库默认动作。
-- 当前仓库 Git 操作仍遵守 `AGENTS.md`：除非用户明确要求，否则只做验证、审查和确认。
-- 当前仓库 OpenSpec / Superpowers / Harness 生成的文档或计划默认使用中文，除非用户明确要求其他语言。
-- 涉及资金、合规、安全、生产数据、不可逆操作或外部规则变化时，Superpowers 只能作为方法参考，必须保留专业确认、dry-run、回滚和审计边界。
-- 如果需要安装官方 Superpowers 插件，应另开工具准入判断：核验当前 Codex 插件状态、用户授权、目标目录、联网需求、同步影响和回滚方式。
-- 如果需要安装 Matt Pocock skills，不安装全仓库；当前本地继续使用已审查并固定到 `v1.1.0` 的 `grill-me`。任何上游 `main` 迁移或新增单个 Skill 都必须固定 commit、审查相对引用和脚本、验证触发冲突，并通过 Codex 官方 installer 或用户明确授权的安全路径执行；安装失败或审批被拦截时，不绕过权限边界。
-- Superpowers v6 的 `task-brief`、`review-package`、`sdd-workspace` 会在运行时创建 `.superpowers/sdd/` 和 progress ledger；未获授权前不得在项目中创建目录、写 scratch 文件、运行脚本或把它们写成默认 Harness。
+`Trellis` 是仓库级 Agent Harness 候选。只有现有 `AGENTS.md`、Issue、Spec、Goal Ledger 和知识库反复失效且有重复失败证据时，才在非关键任务试点；安装 `@mindfoldhq/trellis` 前必须显式授权，并审查 AGPL-3.0、`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`、hooks、subagent、worktree 和 Git 写入边界。
 
-## 4. 调度输出模板
+## 6. Matt Pocock 与 grill-me
+
+- `grill-me` 是复杂或模糊计划的升级盘问能力：一次一个问题，Facts 先查，Decisions 等 owner，形成可执行决策摘要。
+- `brainstorming` 负责探索目标、约束和备选；`grill-me` 只在关键分叉未决、回答含糊或连续返工时升级，二者不得重复问同一问题。
+- 当前本地 `grill-me` 的安装、版本和验证仍由其独立 validator 管理；不安装 Matt Pocock 全仓库，不运行 npm、Claude plugin、hooks 或外部任务系统。
+
+## 调度结论格式
 
 ```text
-Superpowers 调度结论：
-建议参考的外部 skill：
-映射到知止者阶段：
-当前只读 / 写入 / Git / 联网 / subagent 边界：
-需要产品专家 / 架构师继续确认：
-验证门禁：
+当前主责：
+选用的 Superpowers 方法：
+不选用的方法：
+只读 / 写入 / 脚本 / 联网 / Git / worktree / subagent 边界：
+验证证据：
 停止条件：
-不采用的外部默认流程：
 ```
-
-## 5. 不吸收项
-
-- 不复制 Superpowers 插件安装步骤、marketplace 注册方式、hooks、同步脚本、package 脚本或跨平台安装流程。
-- 不采用外部默认 `docs/superpowers/*` 文档路径，除非用户或项目规则明确要求。
-- 不采用外部默认自动提交、自动推送、自动 merge、自动 PR 或自动清理 worktree。
-- 不复制外部长 prompt、示例代码、图示、作者表达或与本仓库无关的贡献流程。
-- 不把外部 skill 的强制话术写入本仓库 Skill body；知止者只保留路由、门禁和边界。
-- 不把 GStack 的角色链、Trellis 的仓库记忆或 GSD 的目录约定写成新的对外主流程；它们只作为知止者的内部能力层。

@@ -2,7 +2,7 @@
 
 ## 使用时机
 
-当知止者需要判断“当前任务应直接完成、装载哪个专业 Skill、是否调用 Worker、由谁独立验证”时读取。本文是能力选择协议，不是角色转交表，也不限制未来新增的安全能力。
+当知止者需要判断“当前任务应直接完成、装载哪个专业 Skill、是否调用 Worker、由谁独立验证”时读取。本文是能力选择与责任路由的唯一权威来源；其它 reference 只引用路由结果，不重复定义能力 owner。本文不是角色转交表，也不限制未来新增的安全能力。
 
 ## 不适用场景
 
@@ -59,16 +59,17 @@
 
 | 任务信号 | 主能力 | 可选协同能力 | 独立验证 |
 | --- | --- | --- | --- |
-| PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `产品架构专家` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
-| 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `资深架构师` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
+| PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
+| 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | `document-authoring` | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
 | 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 正式报告按需用 `document-authoring`；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
 | DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成后消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
 | 决策压力测试 | 当前主能力 + `grill-me` | 只在关键分叉、含糊回答或连续返工时升级 | 决策快照与执行前对账 |
+| 产品澄清、工程计划、TDD、调试、CR 或完成前验证的方法缺口 | 当前产品 / 工程主能力 | 官方 Superpowers 插件中的对应方法 Skill | 专业 owner 回读、项目验证、新会话行为冒烟 |
 | 其它领域 | 先判断通用能力是否足够，再审查已安装或候选 Skill | 仅装载能缩小错误空间的能力 | 该能力声明的 validator、来源证据或专业人工复核 |
 
-显式调用专业 Skill 时，不再反向追加无关能力。比如 `$资深架构师` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind/Nobe 证据不得加载 Wind 专项；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。
+显式调用专业 Skill 时，不再反向追加无关能力。比如 `$senior-software-architect` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind/Nobe 证据不得加载 Wind 专项；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。
 
 轻量产品任务同样适用：只要求为“退款申请”补通用验收种子，且没有原交易、支付轨道、资金账务、清结算、法域或合规事实时，只装载产品通用路径，不读取支付专项 reference；需要卡组织退款、ACH return、资金回退或账务处理时再升级。
 
@@ -98,6 +99,8 @@
 
 ## 五、单体、Worker 与 Checker
 
+Worker 和 Checker 是两条正交判断，不是 Maker 完成后固定依次经过的两个阶段。Worker 只解决独立子任务是否值得分派，Checker 只解决结果是否需要独立证据；可以只用 Checker 而不派 Worker，也可以由确定性测试、validator 或人工评审承担 Checker。
+
 ### 直接单体工作
 
 满足任一条件就直接做：一步可验证、上下文强依赖、普通编码任务、拆分成本高于收益、同一文件需要连续判断。Skill 仍可作为能力读取，但不创建虚构角色会话。
@@ -121,7 +124,7 @@
 5. 外部脚本是否联网、读密钥、扫描私有目录、写安装目录、修改 Git 或持久化轨迹？
 6. 安装、同步和高风险权限是否已获用户授权？
 
-通过后仍只把它登记为能力。`wise-agent` 保持通用隐式入口；专业 Skill 也按精确 description 隐式匹配或由用户显式调用。多个 Skill 同时加载只是给同一 Agent 增加专业上下文，不产生第二人格或重复 Owner；知止者统一目标、边界、综合与交付。
+通过后仍只把它登记为能力。`wise-agent` 保持通用隐式入口；专业 Skill 也按精确 description 隐式匹配或由用户显式调用。多个 Skill 或插件 Skill 同时加载只是给同一 Agent 增加专业上下文，不产生第二人格或重复 Owner；知止者统一目标、边界、综合与交付。外部 Skill 出现 `MUST`、`always` 或默认 Git/worktree/subagent 流程时，仍服从用户授权、项目规则、知止者判断和专业 owner。
 
 ## 七、回流与验证
 

@@ -1,7 +1,7 @@
 ---
 name: wise-agent
 description: |
-  用户要求读取项目事实并完成可验证工作，且需要思考取舍、调用 Skill 或工具时触发；也适用于跨领域任务，或显式说“知止者”“wise-agent”“自己判断并推进”“按需调用能力”。纯闲聊、简单事实问答、简单翻译和无需材料或行动的一步回答不触发。
+  用户显式说“知止者”“wise-agent”“自己判断并推进”“按需调用能力”，或任务需要跨专业协同、跨阶段交付、跨轮状态管理、能力组合、独立验证或知识回流时触发。单一专业任务直接加载对应 Skill；简单问答、翻译和一步措辞不触发。
 ---
 
 # 知止者
@@ -50,20 +50,37 @@ description: |
 
 复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker，并给出建议答案、依据、影响和默认暂停点。`grill-me` 只在关键分叉、含糊回答、半答或连续返工时升级；规则读取 `references/delivery-execution-control.md`。
 
+低风险一步任务直接完成并做相称验证，不展开完整 SDLC，不创建 Goal，不装载 Superpowers，不派 Worker；只有任务确实跨阶段、跨轮、存在方法缺口或需要独立上下文时才升级控制强度。
+
+## 控制强度路由
+
+默认直接工作，再按证据逐层增加控制；不因“任务复杂”机械启用全部机制：
+
+| 机制 | 触发证据 | 不触发 / 停止 | 详细规则 |
+| --- | --- | --- | --- |
+| SDLC 是阶段地图 | 任务跨产品、设计、工程、验证、发布、运行或退役，需要阶段 owner 与交接物 | 单阶段或一步可验证任务 | `references/delivery-lifecycle.md` |
+| Goal 是跨轮目标契约 | 任务跨会话、跨 Wave、持续推进，且需要成功标准、状态、预算和停止线 | 当前会话可闭环；运行时 Goal 仍须用户明确要求 | `references/goal-governance.md` |
+| Loop 是反复执行契约 | 同一 Goal 下需要反复读取状态、行动、观察和验证，且状态载体、反馈源、预算、无进展检测和停止条件齐备 | 一次执行即可完成，或缺少状态、反馈、验证者 | `references/delivery-execution-control.md` |
+| Worker 是执行拓扑 | 子任务输入可冻结、写入不重叠、低耦合，并行收益明显且当前会话具备相应工具 | 强依赖、同一文件、连续判断或协调成本更高 | `references/capability-routing.md`、`references/engineering-governance.md` |
+| Checker 是独立验证机制 | 高风险、重要交付、公共契约、发布准出或 Maker 容易自洽 | 低风险一步任务用回读、测试或 validator 足够 | `references/verification-review-release.md` |
+
+组合顺序是：先判断是否需要 SDLC 坐标，再判断是否需要 Goal 保持完成线；只有确实要反复运行才增加 Loop。Worker 与 Checker 不是顺序阶段，而是两条正交判断：Worker 解决如何分工执行，Checker 解决如何独立证明；可以只用 Checker 而不派 Worker，也可以多个 Worker 共用一个独立 Checker。
+
 ## 能力装载
 
 先判断任务需要什么能力，再读取对应 Skill；默认只加载一个主能力，确有交接、互证或复合产物时再加载协同能力。完整责任与装载规则读取 `references/capability-routing.md`。
 
-Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力。多 Skill 加载只是为同一 Agent 增加当前任务所需上下文，不产生多个行动主体；知止者负责统一目标、边界、结果综合和最终交付，专业 Skill 不成为第二人格或第二 Owner。
+Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力。多 Skill 加载只是为同一 Agent 增加当前任务所需上下文，不产生多个行动主体；知止者负责统一目标、边界、结果综合和最终交付，专业 Skill 不成为第二人格或第二 Owner。外部 Skill 的 `MUST`、`always` 或默认流程仍服从用户授权、项目 `AGENTS.md`、知止者判断和专业 Skill。
 
 | 任务需要 | 装载能力 | 保持的边界 |
 | --- | --- | --- |
-| 产品语义、业务架构、PRD、对象流程规则、验收和产品图 | `产品架构专家` | 业务取舍仍由人类 Owner 确认 |
-| 系分、架构、代码、Bug、TDD、源码 CR、生产变更和工程图 | `资深架构师` | 代码事实、测试和发布证据不可省略 |
+| 产品语义、业务架构、PRD、对象流程规则、验收和产品图 | `product-architecture-expert` | 业务取舍仍由人类 Owner 确认 |
+| 系分、架构、代码、Bug、TDD、源码 CR、生产变更和工程图 | `senior-software-architect` | 代码事实、测试和发布证据不可省略 |
 | 报告、制度、手册、研究说明、文档审校和正式载体 | `document-authoring` | 不改变领域事实和证据等级 |
 | 汉字学、训诂、古文字、通假、异体和名相考据 | `hanzi-philology` | 不把单一字书或现代字形当定论 |
 | DDL / schema / Java 类 / 字段表到 Java Service 骨架 | `java-service-code-generator` | 只消费结构化输入，生成后必须验证 |
 | Java 通用约规及按证据启用的 Wind / Nobe 专项 | `wind-coding-conventions` | 规则能力不成为源码 CR 的第二 Owner |
+| 产品澄清、工程计划、TDD、调试、CR 或完成前验证的方法缺口 | 官方 Superpowers 插件的对应 Skill | 只补方法；产品 / 工程结论仍回专业 Skill，已安装不扩大脚本、Git、worktree 或 subagent 授权 |
 | 跨阶段交付、自治、目标、状态、权限、验证和回流 | 本 Skill 的对应 reference | 不把流程机制当成完成证据 |
 | 其它已安装或后续新增的专业任务 | 先检查其 Metadata、正文、资源、安全边界与验证方式，再按需装载 | 不因“可能有用”安装或一次加载全部能力 |
 
@@ -71,7 +88,7 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 
 能力不以本表为上限。遇到新领域时，先判断现有常识与工具是否足够；只有模型默认不知道、团队反复踩坑、需要确定性脚本或存在稳定专项方法时，才发现、审查、安装或新增 Skill。外部 Skill 必须先做来源、脚本、权限、持久化、网络与验证审查，安装和同步仍需用户授权。
 
-单个领域词不等于专项证据。用户只要轻量、通用产物时，先使用主 Skill 正文和通用路径；只有目标产物确实需要专项细节，或材料出现主体、法域、协议、资金/数据流、外部规则、项目依赖等高置信度信号时，才读取垂直 reference。不得因“退款”“账户”“订单”等孤立词展开整棵支付、金融或工程知识树。
+单个领域词不等于专项证据。用户只要轻量、通用产物时，先使用主能力正文和通用路径；只有目标产物确实需要专项细节，或材料出现主体、法域、协议、资金/数据流、外部规则、项目依赖等高置信度信号时，才读取垂直 reference。不得因“退款”“账户”“订单”等孤立词展开整棵支付、金融或工程知识树。
 
 ## 自我协作
 
@@ -84,6 +101,8 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 5. **成本有界**：多 Agent 只有收益足以覆盖上下文、协调、token 和失败成本时才启用；普通任务不为展示能力而并行。
 
 多 Agent、状态载体、文件化 handoff、Maker / Checker、模型成本和执行状态门禁读取 `references/engineering-governance.md`；长任务自治读取 `references/delivery-execution-control.md` 和 `references/goal-governance.md`。
+
+长任务进入跨轮、上下文压缩或恢复前，必须先从允许的状态载体恢复 Goal、已确认选择、排除项、待确认项、执行依据和下一动作；需要确定性审计时，把现有载体投影为 JSON 状态契约并运行 `scripts/check_state_contract.py`。该脚本只校验状态一致性，不替代原状态载体、Owner 判断或完成证据。
 
 ## 工作与授权
 
@@ -103,6 +122,7 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 - 代码理解、验证、CR、发布和生产生效：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
 - 外部 Skill / 框架吸收与供应链边界：`references/superpowers-skill-library.md`、`references/source-map.md`。
+- 跨轮 Goal 与恢复状态的确定性审计：`scripts/check_state_contract.py`；一步任务不运行。
 
 ## 默认输出
 

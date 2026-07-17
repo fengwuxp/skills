@@ -1,6 +1,6 @@
 # 代码交付
 
-本文定义知止者中从意图、Spec、Harness、Agent 执行到最终可交付代码的闭环。它用于流程编排和门禁设计，不替代 `资深架构师` 的具体编码、测试、代码 Review 或生产变更 reference。
+本文定义知止者中从意图、Spec、Harness、Agent 执行到最终可交付代码的实现闭环。能力 owner 读取 `capability-routing.md`，Loop 状态读取 `delivery-execution-control.md`，验证准出读取 `verification-review-release.md`；本文不重复定义三者，也不替代 `资深架构师` 的具体编码、测试、代码 Review 或生产变更 reference。
 
 ## 使用时机
 
@@ -78,7 +78,7 @@
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `4. 机器验证与独立证据` | 不把模板写成外部 ASD/SSD 目录 |
 | 处理 AI 生成失败或反复返工 | `4A. Spec 回写与重试闭环`，再读 `verification-review-release.md` | 不只换提示词或放宽测试 |
 | 设计 Harness 闸门 | `3. Harness 三层闭环`、`4. 机器验证与独立证据` | 不替代架构师测试实现 |
-| 接入 SDD v6 任务闭环 | `3A. SDD v6 任务闭环`，再读 `engineering-governance.md` 和 `superpowers-skill-library.md` | helper 已 vendored；未获授权不运行 `task-brief`、`review-package`、`sdd-workspace` 或创建 `.superpowers/sdd/` |
+| 接入 SDD v6 任务闭环 | `3A. SDD v6 任务闭环`，再读 `engineering-governance.md` 和 `superpowers-skill-library.md` | 本仓库不保留 helper；未获授权不运行插件脚本或创建 `.superpowers/` |
 | 判断 AI 编码框架分层 | 先读 `superpowers-skill-library.md`，再读 `delivery-execution-control.md` 和 `1. 交付闭环判断` | 不默认安装 GStack / Trellis / GSD / Superpowers |
 | 降低 CR 认知负荷 | `5. CR 减负与可理解交接` | 不做源码级 CR |
 | 做 Context / 知识库治理 | `5B. Context System 与知识库治理门禁`、`6. 知识回流`、`6B. 知识生产` | 不默认建设外部知识库，不把图谱摘要当事实 |
@@ -223,7 +223,7 @@ Harness v3 状态:
 - 任务级通过后仍需 final broad review，检查跨任务契约、公共 API、错误码、状态机、数据迁移、测试覆盖、风险边界和知识回流。
 - Harness v3 要求任务状态只能在 `Ready / Running / Review / Fix / Verified / Blocked / Handoff` 间流转；缺少 owner、写入范围、验证命令、恢复入口或状态回写时，不进入 AI Maker 执行。
 
-文件化交接建议使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue。`task-brief`、`review-package` 和 `sdd-workspace` 随 SDD v6.0.3 本地审查基线保留；上游后续版本不自动改变本仓库执行边界。只有用户或项目规则明确授权时，才可创建 `.superpowers/sdd/` 或运行这些 helper。缺少授权时，只采用方法契约，不声明外部 SDD 执行套件已启用。
+文件化交接使用当前项目允许的状态载体：任务文档、review package、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue。本仓库不再保留 Superpowers 的 `task-brief`、`review-package`、`sdd-workspace` helper；外部插件或后续版本不自动改变内部执行边界。只有用户或项目规则明确授权时，才可运行插件脚本或创建 `.superpowers/`；缺少授权时只采用方法纪律，不声明外部 SDD 执行套件已启用。
 
 ## 4. 机器验证与独立证据
 

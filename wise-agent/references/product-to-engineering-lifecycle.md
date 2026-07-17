@@ -1,6 +1,6 @@
 # 产品到工程生命周期
 
-本文定义从产品发现、AI 原型、eval、PRD-Lite 到工程交接的流程。它用于流程编排，不替代 `产品架构专家` 的产品建模、PRD 和 Backlog 专项 reference。
+本文只定义从产品发现、AI 原型、eval、PRD-Lite 到工程交接的阶段语义与交接物。能力 owner 以 `capability-routing.md` 为准，跨轮状态以 `delivery-execution-control.md` 为准，验证准出以 `verification-review-release.md` 为准；本文不重复三者，也不替代 `产品架构专家` 的产品建模、PRD 和 Backlog 专项 reference。
 
 ## 使用时机
 

@@ -1,0 +1,38 @@
+{
+  "goal_id": "G-18",
+  "status": "Active",
+  "objective": "错误地恢复长任务",
+  "success_criteria": [
+    "恢复任务"
+  ],
+  "non_goals": [
+    "不扩大范围"
+  ],
+  "confirmed_decisions": [
+    "D-1"
+  ],
+  "excluded_options": [
+    "B"
+  ],
+  "pending_items": [
+    "C"
+  ],
+  "execution_basis": [
+    "B",
+    "C"
+  ],
+  "next_action": "按 B 和 C 继续",
+  "write_scope": [
+    "wise-agent"
+  ],
+  "state_carrier": "docs/goal-ledger.md",
+  "verification_evidence": [],
+  "checker": "check_state_contract.py",
+  "stop_conditions": [
+    "验证失败"
+  ],
+  "recovery_entry": "",
+  "residual_risk_owner": "repository maintainer",
+  "max_iterations": 2,
+  "no_progress_limit": 3
+}
