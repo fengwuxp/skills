@@ -3,3 +3,5 @@ interface:
   short_description: "从 DDL/schema、Java 类或字段表格生成 Wind/Nobe Service 脚手架"
   brand_color: "#2563EB"
   default_prompt: "使用 $java-service-code-generator 根据 DDL/schema、Java 类、字段表格、表名和业务模块自动分析参数，生成 Wind/Nobe Service 脚手架，并输出文件清单、关键假设、验证结果和交接风险。"
+policy:
+  allow_implicit_invocation: true

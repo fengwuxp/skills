@@ -14,6 +14,7 @@ echo "==> bash syntax"
 bash -n sync-skills.sh
 bash -n scripts/audit-skills.sh
 bash -n scripts/validate-installed-skills.sh
+bash -n scripts/smoke-wise-agent-behavior.sh
 
 echo "==> skill audit"
 scripts/audit-skills.sh
@@ -63,6 +64,9 @@ python3 scripts/validate-grill-me-install.py --self-test
 if [[ "${VALIDATE_GRILL_ME_INSTALL:-}" == "1" ]]; then
   python3 scripts/validate-grill-me-install.py
 fi
+
+echo "==> wise-agent behavior smoke parser"
+scripts/smoke-wise-agent-behavior.sh --self-test
 
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
@@ -167,6 +171,18 @@ if [[ -e "${retirement_home}/skills/wind-project-coding-conventions" ]]; then
 fi
 if ! find "${retirement_home}/skills/.backups" -path '*/wind-project-coding-conventions-*/SKILL.md' -type f | grep -q .; then
   echo "FAIL retired Wind skill backup missing" >&2
+  exit 1
+fi
+
+mkdir -p "${retirement_home}/skills/delivery-collab"
+printf '%s\n' 'legacy skill' > "${retirement_home}/skills/delivery-collab/SKILL.md"
+CODEX_HOME="${retirement_home}" ./sync-skills.sh wise-agent >/dev/null
+if [[ -e "${retirement_home}/skills/delivery-collab" ]]; then
+  echo "FAIL retired delivery-collab skill remains installed" >&2
+  exit 1
+fi
+if ! find "${retirement_home}/skills/.backups" -path '*/delivery-collab-*/SKILL.md' -type f | grep -q .; then
+  echo "FAIL retired delivery-collab skill backup missing" >&2
   exit 1
 fi
 

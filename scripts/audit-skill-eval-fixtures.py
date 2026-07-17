@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 
 SKILLS = {
-    "delivery-collab",
+    "wise-agent",
     "document-authoring",
     "hanzi-philology",
     "java-service-code-generator",
@@ -30,25 +30,11 @@ SKILLS = {
     "wind-coding-conventions",
 }
 SKILL_MENTIONS = {
-    "delivery-collab": [
-        "AI Native 研发流程",
-        "AI Native 研发流程编排",
-        "delivery-collab",
-        "进入 GSD",
-        "GSD + Goal",
-        "Agent Loop",
-        "Loop Engineering",
-        "/goal",
-        "/loop",
-        "auto mode",
-        "产研协同研发流程",
-        "GSD/CAD 准入",
-        "质量门禁",
-        "理解门禁",
-        "代码库理解",
-        "设计-代码对齐",
-        "Gemini CLI",
-        "AgentRC",
+    "wise-agent": [
+        "wise-agent",
+        "知止者",
+        "自己判断并推进",
+        "按需调用能力",
     ],
     "document-authoring": ["document-authoring", "专业文档撰写"],
     "hanzi-philology": ["hanzi-philology", "汉字学与训诂专家"],
@@ -215,6 +201,11 @@ def run_self_test() -> None:
     failures = audit_current()
     if failures:
         raise SystemExit("\n".join(failures))
+
+    if not has_skill_mention("wise-agent", "进入知止者，自己判断并推进"):
+        raise SystemExit("self-test failed: wise-agent explicit aliases were not detected")
+    if has_skill_mention("wise-agent", "请做普通代码 CR，并给出源码证据"):
+        raise SystemExit("self-test failed: ordinary task intent was treated as an explicit alias")
 
     valid = load_fixture()
     invalid = deepcopy(valid)

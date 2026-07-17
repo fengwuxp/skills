@@ -1,6 +1,6 @@
 # AI 代码理解工具入口
 
-本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 外部代码评审工具 / 本地执行型 Coding Agent 工具在产研协同体系研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁、提供外部 Review 证据或生成候选 diff；不把任何工具写成默认依赖，也不替代 Context System、源码阅读、测试、CR、项目编码约规或用户授权。
+本文定义 Gemini CLI、AgentRC、Understand Anything、Ponytail、Open Code Review、WorkBuddy 或同类 AI 原生代码理解 / 上下文工程 / 知识图谱 / 最小正确实现工具 / 外部代码评审工具 / 本地执行型 Coding Agent 工具在知止者研发流程中的触发入口、安装准入、调用边界和交接要求。它只用于判断何时可引入工具辅助阅读代码、对齐设计和代码、生成上下文结论、做过度设计门禁、提供外部 Review 证据或生成候选 diff；不把任何工具写成默认依赖，也不替代 Context System、源码阅读、测试、CR、项目编码约规或用户授权。
 
 ## 使用时机
 

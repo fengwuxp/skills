@@ -282,5 +282,6 @@ for key in "${selected[@]}"; do
 done
 
 retire_replaced_skill "wind-project-coding-conventions" "wind-coding-conventions"
+retire_replaced_skill "delivery-collab" "wise-agent"
 
 echo "Done. Restart Codex or open a new session if skill metadata does not refresh immediately."

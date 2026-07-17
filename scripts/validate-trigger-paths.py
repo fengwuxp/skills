@@ -44,6 +44,24 @@ DECISION_GRILL_BOUNDARY_TERMS = (
     "`grill-me` 是命中升级条件后的升级盘问",
 )
 
+WISE_AGENT_CORE_TERMS = [
+    "统一智能行动主体",
+    "知止而后有定",
+    "知止不是不行",
+    "你不是流程编排器",
+    "专业能力来源",
+    "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
+    "默认只加载一个主能力",
+    "能力不以本表为上限",
+    "专业能力完成后仍由知止者综合结果",
+    "单体工作优先",
+    "Checker 独立",
+    "决策澄清门禁",
+    "完成必须同时具备",
+    "联网、安装、Git、密钥、部署、生产、删除、不可逆操作",
+    "单个领域词不等于专项证据",
+]
+
 
 def contains_any(text: str, needles: list[str]) -> bool:
     folded_text = text.casefold()
@@ -155,6 +173,7 @@ wind_skill_agents_template = "wind-coding-conventions/references/wind-project-ag
 wind_skill_examples = "wind-coding-conventions/references/wind-coding-examples.md"
 wind_skill_java = "wind-coding-conventions/references/java-coding-conventions.md"
 wind_skill_architecture = "wind-coding-conventions/references/wind-architecture-patterns.md"
+wind_skill_source_map = "wind-coding-conventions/references/source-map.md"
 senior_diagram = "senior-software-architect/references/diagram-output.md"
 workflow = "senior-software-architect/references/workflow.md"
 ai_engineering = "senior-software-architect/references/ai-assisted-engineering.md"
@@ -255,24 +274,25 @@ hanzi_agent = "hanzi-philology/agents/openai.yaml"
 hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
 hanzi_evidence_method = "hanzi-philology/references/evidence-method.md"
 hanzi_source_map = "hanzi-philology/references/source-map.md"
-collaboration_skill = "delivery-collab/SKILL.md"
-collaboration_agent = "delivery-collab/agents/openai.yaml"
-collaboration_delivery_lifecycle = "delivery-collab/references/delivery-lifecycle.md"
-collaboration_product_to_engineering = "delivery-collab/references/product-to-engineering-lifecycle.md"
-collaboration_prd_system_design_review = "delivery-collab/references/prd-system-design-review.md"
-collaboration_engineering_governance = "delivery-collab/references/engineering-governance.md"
-collaboration_planning_execution_admission = "delivery-collab/references/planning-execution-admission.md"
-collaboration_code_understanding_tools = "delivery-collab/references/code-understanding-tools.md"
-collaboration_domain_expert_distillation = "delivery-collab/references/domain-expert-distillation.md"
-collaboration_spec_template_practices = "delivery-collab/references/spec-template-practices.md"
-collaboration_code_delivery = "delivery-collab/references/code-delivery.md"
-collaboration_goal_governance = "delivery-collab/references/goal-governance.md"
-collaboration_delivery_execution_control = "delivery-collab/references/delivery-execution-control.md"
-collaboration_decision_calibration = "delivery-collab/references/decision-calibration.md"
-collaboration_verification_release = "delivery-collab/references/verification-review-release.md"
-collaboration_superpowers_library = "delivery-collab/references/superpowers-skill-library.md"
-collaboration_skill_type_owner_routing = "delivery-collab/references/skill-type-owner-routing.md"
-collaboration_source_map = "delivery-collab/references/source-map.md"
+collaboration_skill = "wise-agent/SKILL.md"
+collaboration_agent = "wise-agent/agents/openai.yaml"
+collaboration_cognition_model = "wise-agent/references/cognition-and-capability-model.md"
+collaboration_delivery_lifecycle = "wise-agent/references/delivery-lifecycle.md"
+collaboration_product_to_engineering = "wise-agent/references/product-to-engineering-lifecycle.md"
+collaboration_prd_system_design_review = "wise-agent/references/prd-system-design-review.md"
+collaboration_engineering_governance = "wise-agent/references/engineering-governance.md"
+collaboration_planning_execution_admission = "wise-agent/references/planning-execution-admission.md"
+collaboration_code_understanding_tools = "wise-agent/references/code-understanding-tools.md"
+collaboration_domain_expert_distillation = "wise-agent/references/domain-expert-distillation.md"
+collaboration_spec_template_practices = "wise-agent/references/spec-template-practices.md"
+collaboration_code_delivery = "wise-agent/references/code-delivery.md"
+collaboration_goal_governance = "wise-agent/references/goal-governance.md"
+collaboration_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
+collaboration_decision_calibration = "wise-agent/references/decision-calibration.md"
+collaboration_verification_release = "wise-agent/references/verification-review-release.md"
+collaboration_superpowers_library = "wise-agent/references/superpowers-skill-library.md"
+collaboration_skill_type_owner_routing = "wise-agent/references/capability-routing.md"
+collaboration_source_map = "wise-agent/references/source-map.md"
 codegen_route = {"codegen", "code-generation-rules.md", "nobe-patterns.md", "generate_scaffold.py"}
 codegen_safety_route = codegen_route | {"requires-confirmation"}
 codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", "字段表格", "字段说明", "Java 类", "表结构"]
@@ -281,7 +301,7 @@ codegen_target_terms = ["Wind/Nobe", "Service", "Mapper", "DTO", "Request", "Que
 codegen_safety_terms = ["覆盖", "overwrite", "已有文件", "模块对不唯一", "多个 face/impl", "多个模块", "基础包名不唯一"]
 collaboration_terms = [
     "AI Native",
-    "产研协同体系",
+    "知止者",
     "SDLC",
     "Agentic SDLC",
     "Agentic DevOps",
@@ -296,8 +316,8 @@ collaboration_terms = [
     "能力发现",
     "先找能力，再写代码",
     "AI 时代产品到研发编码流程",
-    "$delivery-collab",
-    "delivery-collab",
+    "$wise-agent",
+    "wise-agent",
     "角色 Loop",
     "角色loop",
     "产研协同",
@@ -798,13 +818,13 @@ reference_headers = [
     collaboration_superpowers_library,
     collaboration_skill_type_owner_routing,
     collaboration_source_map,
-] + project_governance_refs + [wind_skill_java, wind_skill_architecture, wind_skill_conventions, wind_skill_agents_template, wind_skill_examples] + testing_practice_refs + skill_tree_refs
+] + project_governance_refs + [wind_skill_java, wind_skill_architecture, wind_skill_conventions, wind_skill_agents_template, wind_skill_examples, wind_skill_source_map] + testing_practice_refs + skill_tree_refs
 
 for path in reference_headers:
     check(f"{path} has progressive-disclosure header", has_reference_header(path))
 
 check(
-    "specialized skills use delivery-collab as the internal orchestration owner",
+    "specialized skills use wise-agent as the internal orchestration owner",
     has_none(
         senior_skill,
         [
@@ -835,6 +855,10 @@ expected_handling_has(
     "wind-coding-conventions-should-trigger-generic-java",
     ("通用 Java 约规", "不加载 Wind 专项约规"),
 )
+negative_reason_has(
+    "wind-coding-conventions-negative-non-java-jvm-project",
+    ("不能单独证明项目包含 Java 源码", "不得加载 Java/Wind 编码约规", "资深架构师"),
+)
 expected_handling_has(
     "wind-coding-conventions-should-apply-alibaba-manual-selectively",
     (
@@ -846,12 +870,123 @@ expected_handling_has(
         "serialVersionUID",
         "禁止 finally 返回",
         "禁止 SELECT *",
-        "不采用机械作者日期、固定测试命名、统一覆盖率百分比",
+        "测试方法按团队通用规则强制使用 testXxx",
+        "不把该规则归因于阿里手册",
+        "不采用机械作者日期、统一覆盖率百分比",
     ),
+)
+
+check(
+    "wise-agent and precise specialist capabilities support implicit loading in one agent",
+    contains(collaboration_agent, "allow_implicit_invocation: true")
+    and all(
+        contains(path, "allow_implicit_invocation: true")
+        for path in [
+            product_agent,
+            senior_agent,
+            document_agent,
+            hanzi_agent,
+            "java-service-code-generator/agents/openai.yaml",
+            wind_skill_agent,
+        ]
+    )
+    and has_all(
+        collaboration_skill,
+        ["精确 description", "同一 Agent", "不产生多个行动主体"],
+    )
+    and has_all(
+        collaboration_skill_type_owner_routing,
+        ["专业 Skill 也按精确 description 隐式匹配", "同一 Agent", "不产生第二人格或重复 Owner"],
+    )
+    and has_all(product_skill, ["知止者按需装载", "显式调用本 Skill 只表示优先装载该能力"])
+    and has_all(senior_skill, ["知止者按需装载", "显式调用本 Skill 只表示优先装载工程能力"])
+    and has_all(document_skill, ["知止者按需装载", "显式调用只表示优先装载成文能力"])
+    and has_all(hanzi_skill, ["知止者按需装载", "显式调用只表示优先装载考据能力"])
+    and has_all(codegen_skill, ["知止者按需装载的确定性 Java Service 代码生成能力包"])
+    and has_all(wind_skill, ["知止者按需装载的 Java 项目分层约规能力包"]),
 )
 expected_handling_has(
     "wind-coding-conventions-should-trigger-wind-dependency",
     ("依赖或源码上下文", "叠加 Wind 专项约规"),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-gate-optional-dependencies",
+    (
+        "Wind 项目的币种字段无条件统一使用 CurrencyIsoCode",
+        "JSpecify、MapStruct、MyBatis Flex 只在对应依赖或源码上下文存在时启用",
+        "不要求项目为了套约规新增依赖",
+        "Wind MySQL 表约规",
+    ),
+)
+
+check(
+    "Java convention trigger requires Java source evidence",
+    has_all(
+        wind_skill,
+        [
+            "包含 Java 源码",
+            "Maven、Gradle 或 JVM 只能作为构建上下文",
+            "不能单独证明适用本 Skill",
+        ],
+    )
+    and has_none(
+        wind_skill,
+        [
+            "检查任意 Java/JVM/Spring/Maven/Gradle 项目",
+            "检查 Java/JVM/Spring 项目编码规范",
+        ],
+    ),
+)
+
+check(
+    "Wind conventions separate universal dependency and database profiles",
+    has_all(
+        wind_skill_conventions,
+        [
+            "Wind 通用专项",
+            "依赖专项",
+            "项目数据库专项",
+            "Wind 项目一旦出现币种字段",
+            "必须统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
+            "项目已依赖 JSpecify 时",
+            "项目已使用 MapStruct 时",
+            "项目实际使用 MyBatis Flex 时",
+            "项目已采用 Wind MySQL 表约规时",
+            "不得为了启用依赖专项新增依赖",
+        ],
+    ),
+)
+
+check(
+    "Wind skill packages its external source boundaries",
+    (ROOT / wind_skill_source_map).exists()
+    and contains(wind_skill, "references/source-map.md")
+    and has_all(
+        wind_skill_source_map,
+        [
+            "阿里 Java 开发手册",
+            "Wind 项目族公开样本",
+            "读取状态",
+            "采纳边界",
+            "不吸收",
+            "`testXxx` 是团队规则，不归因于该手册",
+        ],
+    ),
+)
+
+check(
+    "generic Java conventions cover equality money and untrusted execution boundaries",
+    has_all(
+        wind_skill_java,
+        [
+            "覆写 `equals` 时必须同时覆写 `hashCode`",
+            "实现 `Comparable` 时必须明确 `compareTo` 与相等语义是否一致",
+            "`BigDecimal` 数值大小比较使用 `compareTo`",
+            "参数化 API、白名单或安全解析器",
+            "任意类型实例化、SSRF 与路径穿越",
+            "--profile java",
+        ],
+    ),
 )
 expected_handling_has(
     "wind-coding-conventions-should-trigger-generic-java-agents",
@@ -877,7 +1012,7 @@ check(
         [
             "name: wind-coding-conventions",
             "Java 项目编码约规 Skill",
-            "所有 Java 项目先使用通用 Java 约规",
+            "所有包含 Java 源码的项目先使用通用 Java 约规",
             "Maven/Gradle 坐标、包名或 import",
             "只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind",
             "references/wind-coding-conventions.md",
@@ -904,8 +1039,8 @@ check(
         wind_skill_agent,
         [
             "Java/Wind 编码约规",
-            "Java 通用编码约规",
-            "按依赖和上下文启用 Wind/Nobe 专项规则",
+            "Java 源码项目通用约规",
+            "按上下文启用 Wind/Nobe 专项",
             "$wind-coding-conventions",
         ],
     )
@@ -1057,11 +1192,12 @@ check(
             "公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc",
             "primitive 或包装类型按缺省、零值和序列化语义选择",
             "并发 Atomic 类型不得进入数据传输契约",
-            "币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举",
+            "Wind 项目一旦出现币种字段，必须统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举",
             "外部协议中的字符串币种只在 Adapter/Converter 边界转换",
             "业务唯一性和请求重放幂等分层处理",
-            "Wind 数据表强制包含 `id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime`",
-            "新增字段如果为必填，必须有默认值",
+            "项目已采用 Wind MySQL 表约规时",
+            "数据表强制包含 `id bigint`、`gmt_create datetime`、`gmt_modified datetime`",
+            "新增必填字段必须有兼容迁移方案",
             "通用表字段",
             "外部 `Idempotency-Key` / `requestSn` 可以用于请求重放去重",
             "不得冒充业务身份",
@@ -1094,7 +1230,7 @@ check(
             "core/infrastructure 是否变成公共垃圾桶",
             "项目本地 `AGENTS.md` 明确声明是最强信号",
             "wind-project-agents-template.md",
-            "产研协同体系能按项目规则调度产品、架构、Wind 规则和代码生成能力",
+            "知止者能按项目规则调度产品、架构、Wind 规则和代码生成能力",
             "需要最佳实践正反例时读 `wind-coding-examples.md`",
         ],
     )
@@ -1105,7 +1241,7 @@ check(
         [
             "`wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板",
             "wind-integration / nobe / capte-domain",
-            "产研协同体系",
+            "知止者",
             "Karpathy-style 工程纪律",
             "不知道就问",
             "没要求的不写",
@@ -1228,13 +1364,7 @@ check(
             "Wind/Nobe 高置信度信号",
         ],
     )
-    and has_all(
-        collaboration_skill,
-        [
-            "纯约规检查只由 `wind-coding-conventions` 主责",
-            "Java 源码设计、TDD、CR、修复和验证只由 `资深架构师` 主责",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and all(
         has_none(
             path,
@@ -1260,12 +1390,17 @@ check(
 )
 
 check(
-    "generic Java conventions avoid team-only mandatory documentation and test naming",
+    "generic Java conventions keep documentation contextual and test naming explicit",
     has_none(
         wind_skill_java,
         [
             "【强制】公共接口、公有方法、DTO/Request/Query、配置属性、扩展点必须有 Javadoc",
             "【强制】测试类以被测类名开头、`Tests` 结尾；测试方法以 `test` 开头",
+            "测试类和测试方法命名优先服从项目既有约定",
+            "不强制使用 `test` 前缀",
+            "快速代码 CR 或编码红线",
+            "公有方法必须完整说明业务语义",
+            "超过 5 个参数按强制规则处理",
         ],
     )
     and has_all(
@@ -1273,7 +1408,31 @@ check(
         [
             "公共契约、扩展点和配置属性",
             "简单 DTO/Request/Query",
-            "测试类和测试方法命名优先服从项目既有约定",
+            "测试方法必须使用 `testXxx` 格式",
+            "测试类命名优先服从项目既有约定",
+            "不为统一形式批量重命名未触及的历史测试",
+            "快速约规核对或编码红线",
+            "无法从签名识别",
+            "公有方法参数超过 5 个是 Review 信号，不是机械门禁",
+        ],
+    ),
+)
+
+check(
+    "generic Java conventions split control mechanics only when they obscure business flow",
+    has_all(
+        wind_skill_java,
+        [
+            "已经掩盖业务主路径、状态变化或副作用",
+            "简单、内聚且可直接读懂的用例编排保留在同一方法",
+            "不为形式分离制造 helper、状态机或浅调用链",
+        ],
+    )
+    and has_none(
+        wind_skill_java,
+        [
+            "【强制】业务逻辑与控制逻辑不得混杂在同一方法中",
+            "一个方法不应同时负责取数、遍历、分支、状态修改、异步调度和业务决策",
         ],
     ),
 )
@@ -1318,6 +1477,8 @@ check(
             "time_wait",
             "Xms/Xmx",
             "固定覆盖率",
+            "测试方法统一使用 `testXxx` 是团队明确规则",
+            "不归因于该手册",
         ],
     ),
 )
@@ -1363,81 +1524,7 @@ check(
 
 check(
     "product engineering collaboration anchors product architect and senior architect collaboration",
-    has_all(
-        collaboration_skill,
-        [
-            "业务、产品、设计、工程、质量、发布和知识演进之间的协同编排门禁",
-            "选择稳定能力域",
-            "稳定能力域统一外显，行业概念只做映射",
-            "阶段名不是能力来源",
-            "本技能不得绕开专项 Skill 自由发挥",
-            "默认最小输出",
-            "决策澄清门禁",
-            "每个小闭环统一走决策澄清门禁",
-            "一次只问一个主 blocker",
-            "建议答案、依据、影响和默认暂停点",
-            "按你建议推进",
-            "不重开全局规划",
-            "任务结束责任闭环",
-            "交付责任自检",
-            "下一任务计划问询",
-            "需要时补证据边界和残余风险",
-            "只有用户要求完整方案、评审报告或模板时",
-            "产品 / 交互设计",
-            "设计评审",
-            "TDD / 测试设计",
-            "编码实现",
-            "编码评审",
-            "可用性 / 安全性 / 可靠性评估",
-            "产品语义、业务对象、机会雷达、产品判断动作链、Backlog、PRD、产品上下文包和 Product Context Card 由 `产品架构专家` 主导",
-            "系统设计、OpenSpec、完整执行契约、内部计划 / 原子执行策略、代码实现、测试、CR、生产风险和受控工程执行由 `资深架构师` 主导",
-            "本技能负责产研协同准入、能力域选择、owner、阶段顺序、角色视角、停止条件、授权策略和交接结论",
-            "Goal、GSD、CAD、Harness、Grant 等术语只作为内部实现映射",
-            "高频内部路由只按当前问题命中最小 reference",
-            "未命中的分组不读取、不展开、不输出菜单",
-            "产研交付视图",
-            "产品到工程 / 角色主流程",
-            "项目约规入口",
-            "Java 项目 `AGENTS.md` 初始化或改进",
-            "通用 Java 规则与按上下文启用的 Wind/Nobe 专项交给 `wind-coding-conventions`",
-            "依赖或上下文命中 Wind/Nobe 时",
-            "目标计划 / 大项目编排",
-            "评审规格 / 代码交付",
-            "理解工具 / 源码质量评审 / 质量发布",
-            "人必须能解释目标、当前状态、关键变更、证据链、残余风险和停止理由",
-            "实际项目编码 Loop",
-            "区分事实 / 推断 / 待确认 / 范围外不做",
-            "协同有效性 / 能力归属性",
-            "不能只写“产品 / 架构 / TDD / 编码”阶段名",
-            "内存版业务 Service",
-            "不做无根据的猜测、推导、补全、脑补式需求扩张或超出用户目标的实现",
-            "不把 PR 数、执行轮数、自动化次数、Agent 数量或“全程手机审批”当成工程价值",
-            "最小交付优先",
-            "不知道就问",
-            "没要求的不写",
-            "只改被要求的范围",
-            "验证与停止条件",
-            "外科手术式改动",
-            "每个改动行可追溯到用户目标、验收标准、源码事实或失败测试",
-            "不顺手重构、不改无关注释 / 格式 / 风格",
-            "最小变更可追溯性",
-            "Karpathy-style Guidelines",
-            "不把 Codex “替我审批”用于 Git、联网、依赖安装、密钥、生产、部署、不可逆操作或高风险业务变更的自动放行",
-            "references/product-to-engineering-lifecycle.md",
-            "references/engineering-governance.md",
-            "references/delivery-execution-control.md",
-            "references/planning-execution-admission.md",
-            "references/code-understanding-tools.md",
-            "references/spec-template-practices.md",
-            "references/code-delivery.md",
-            "references/goal-governance.md",
-            "references/verification-review-release.md",
-            "references/superpowers-skill-library.md",
-            "references/decision-calibration.md",
-            "references/skill-type-owner-routing.md",
-            "references/source-map.md",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_verification_release,
         [
@@ -1475,7 +1562,7 @@ check(
             "`update-context` 不是新增顶层 Skill",
             "每个阶段必须有输入输出契约",
             "生产可用混一模型",
-            "一个入口：产研协同体系",
+            "一个入口：知止者",
             "一个契约：交付契约",
             "一个准出：生产可用准出卡",
             "生产可用准出卡",
@@ -1511,14 +1598,7 @@ check(
 
 check(
     "product engineering collaboration normalizes progressive SDD and Lattice Harness without adding a parallel flow",
-    has_all(
-        collaboration_skill,
-        [
-            "渐进式强度，不靠厚文档取胜",
-            "渐进式 SDD / Harness 规范化",
-            "不默认运行外部脚本",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_spec_template_practices,
         [
@@ -1560,15 +1640,7 @@ check(
 
 check(
     "product engineering collaboration treats context and knowledge base as governed Context System",
-    has_all(
-        collaboration_skill,
-        [
-            "知识演进",
-            "先落 Context System，再评估知识库工具",
-            "进入上下文治理视图",
-            "不默认建设外部知识库",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_code_delivery,
         [
@@ -1621,22 +1693,7 @@ check(
 
 check(
     "product engineering collaboration records Matt Pocock lightweight questioning boundary",
-    has_all(
-        collaboration_skill,
-        [
-            "轻量问询先于长方案",
-            "Matt Pocock skills / `grill-me`",
-            "`grill-me` 盘问门禁",
-            "grill-me 触发不稳定",
-            "Facts / Decisions",
-            "shared understanding",
-            "决策澄清门禁",
-            *DECISION_GRILL_BOUNDARY_TERMS,
-            "一次只问一个主 blocker",
-            "完整 `grill-me` 盘问门禁、去重、决策快照和执行前对账协议统一读 `delivery-execution-control.md`",
-            "红线",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_none(
         collaboration_skill,
         [
@@ -1771,7 +1828,7 @@ check(
         product_skill,
         [
             "轻量问询不写进正式 PRD",
-            "`delivery-collab` 交来轻量问询结论、`grill-me` 结论或任务树节点",
+            "`wise-agent` 交来轻量问询结论、`grill-me` 结论或任务树节点",
             "产品上下文交接卡",
         ],
     )
@@ -1779,15 +1836,15 @@ check(
         senior_skill,
         [
             "轻量问询只收敛工程分叉",
-            "`delivery-collab` 交来轻量问询结论、`grill-me` 结论或任务树节点",
+            "`wise-agent` 交来轻量问询结论、`grill-me` 结论或任务树节点",
             "问询过程不进入正式系分、ADR 或代码注释",
         ],
     )
     and has_all(
         "README.md",
         [
-            "决策澄清门禁",
-            *DECISION_GRILL_BOUNDARY_TERMS,
+            "决策澄清门禁只处理真正未决的 Decisions",
+            "`grill-me` 是升级盘问，不是每个任务的必经流程",
             "复杂或模糊任务一次只问一个主 blocker",
             "Facts 先从材料、源码、测试或日志自答",
             "Decisions 才问 owner",
@@ -1822,14 +1879,7 @@ check(
 
 check(
     "product engineering collaboration absorbs WorkBuddy as context asset practice not dependency",
-    has_all(
-        collaboration_skill,
-        [
-            "上下文资产和知识生产流程",
-            "知识回流视图",
-            "可迁移方法",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_code_delivery,
         [
@@ -1879,14 +1929,7 @@ check(
 
 check(
     "product engineering collaboration gates WorkBuddy style local coding agent without replacing project standards",
-    has_all(
-        collaboration_skill,
-        [
-            "WorkBuddy 类本地执行型 Agent",
-            "本技能只做准入、权限、联网/认证/写入边界和交接格式判断",
-            "不把外部 Superpowers skill、Matt Pocock skills / `grill-me`、Ponytail、Open Code Review、WorkBuddy",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_code_understanding_tools,
         [
@@ -1921,16 +1964,7 @@ check(
             "只清理本次改动制造的 orphan",
         ],
     )
-    and has_all(
-        collaboration_skill,
-        [
-            "外科手术式改动",
-            "每个改动行可追溯到用户目标、验收标准、源码事实或失败测试",
-            "不顺手重构、不改无关注释 / 格式 / 风格",
-            "最小变更可追溯性",
-            "Karpathy-style Guidelines",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_source_map,
         [
@@ -2014,19 +2048,7 @@ check(
     "product engineering collaboration exposes wisdom lens for Loop judgment",
     has_reference_header(collaboration_decision_calibration)
     and has_task_reading_index(collaboration_decision_calibration)
-    and has_all(
-        collaboration_skill,
-        [
-            "references/decision-calibration.md",
-            "华夏经世智慧",
-            "huaxia-wisdom",
-            "老祖宗智慧",
-            "阴阳平衡",
-            "先为不可胜",
-            "庖丁解牛",
-            "循名责实",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_decision_calibration,
         [
@@ -2124,14 +2146,7 @@ check(
 )
 check(
     "product engineering collaboration gates AI bug reports and patches with wisdom lens",
-    has_all(
-        collaboration_skill,
-        [
-            "AI bug / 补丁门禁",
-            "复现证据、根因、同类影响、最小修复和独立验证",
-            "不让 AI bug report 或 AI patch 自证完成",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_decision_calibration,
         [
@@ -2176,15 +2191,7 @@ check(
 )
 check(
     "product engineering collaboration keeps three-card handoff protocol",
-    has_all(
-        collaboration_skill,
-        [
-            "三卡交接",
-            "Product Context Card",
-            "Engineering Handoff Card",
-            "生产交付卡",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -2208,7 +2215,7 @@ check(
             "Engineering Handoff Card",
             "生产交付卡",
             "缺失时回 `产品架构专家`",
-            "缺失时停在产研协同体系",
+            "缺失时停在知止者",
             "缺失时只标记 Loop Candidate",
         ],
     )
@@ -2220,7 +2227,7 @@ check(
             "不判定 GSD/CAD 准入",
             "不生成 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线审批",
             "产品合议只评产品内容",
-            "不替代 `delivery-collab` 的跨角色准入、工程分派、发布门禁",
+            "不替代 `wise-agent` 的跨角色准入、工程分派、发布门禁",
             "也不判定系分或代码可执行性",
         ],
     )
@@ -2280,56 +2287,32 @@ check(
     ),
 )
 check(
-    "product engineering collaboration keeps skill type owner routing boundary",
+    "wise agent keeps capability loading and responsibility boundary",
     has_reference_header(collaboration_skill_type_owner_routing)
     and has_task_reading_index(collaboration_skill_type_owner_routing)
-    and has_all(
-        collaboration_skill,
-        [
-            "references/skill-type-owner-routing.md",
-            "owner 路由",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_skill_type_owner_routing,
         [
-            "# Skill 类型与 Owner 路由",
-            "不新增顶层 Skill",
+            "# 能力装载与责任路由",
+            "人类责任 Owner",
+            "知止者",
+            "专业能力",
+            "独立 Checker",
+            "最小装载算法",
+            "一个主能力",
+            "不限制未来新增的安全能力",
             "product verification",
             "code quality and review",
             "CI/CD and deployment",
             "runbooks",
             "infrastructure operations",
-            "只更新 reference",
-            "补 fixture / validator",
-            "补脚本",
-            "新建顶层 Skill",
-            "专项 Skill 拆分先走 V 字判断",
-            "Skill 工程化反向验证",
-            "Skill 治理三问",
-            "循名责实",
-            "`description` 只写触发场景和用户会怎么说",
-            "庖丁解牛",
-            "重复、确定、容易写错的解析 / 生成 / 校验放 `scripts/`",
-            "治未病",
-            "至少覆盖一个正向触发、一个邻近 Skill 负例和一个不吸收边界",
-            "能少读什么、能少猜什么、能少做错什么",
-            "触发验证",
-            "路由验证",
-            "资源验证",
-            "交付验证",
-            "触发时机、资源位置和预期产出",
-            "向下拆清职责",
-            "向上合并复用",
-            "Harness 校验",
-            "运行一段再抽离",
-            "如果只是多一个提示词入口，就不拆",
-            "产品专家被产研协同体系调用",
-            "产品验证种子",
-            "架构师被产研协同体系调用",
-            "Runbook 与生产诊断",
-            "CI/CD 与发布门禁",
-            "基础设施操作",
+            "新能力接入门禁",
+            "模型默认不知道、团队反复踩坑或确定性脚本",
+            "与现有能力抢触发、复制规则或成为第二行动主体",
+            "安装、同步和高风险权限是否已获用户授权",
+            "普通一步任务不触发知止者重流程",
+            "跨能力任务只产生一个综合结论",
             "source-map.md",
         ],
     ),
@@ -2345,43 +2328,69 @@ check(
             "工具签名即文档",
             "事务边界",
             "独立 Reviewer",
-            "skill-type-owner-routing.md",
+            "capability-routing.md",
             "不把多 Agent、Sub-Agent、RPA、外部 Harness、自动开 PR、状态文件或任一工具能力写成当前会话默认可用",
         ],
     ),
 )
 check(
-    "product engineering collaboration metadata triggers orchestration not implementation",
-    "name: delivery-collab" in frontmatter(collaboration_skill)
+    "wise agent metadata triggers real work and excludes simple answers",
+    "name: wise-agent" in frontmatter(collaboration_skill)
     and all(
         term in frontmatter(collaboration_skill)
         for term in [
-            "编排跨业务、产品与工程等多角色长任务",
-            "明确交付编排、工程治理、知识演进的主责与边界",
-            "普通 PRD、单项代码或测试、单次 CR、单篇知识整理不触发",
+            "读取项目事实并完成可验证工作",
+            "需要思考取舍、调用 Skill 或工具",
+            "也适用于跨领域任务",
+            "纯闲聊、简单事实问答、简单翻译",
         ]
     )
     and has_all(
         collaboration_agent,
         [
-            "编排跨角色交付、工程治理和知识演进",
-            "按当前材料进入产研协同体系",
-            "先选择一个主能力域",
-            "必要时标注一个协同域",
-            "再输出结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
+            "理解事实，知所止而后行动",
+            "统一行动主体",
+            "先定目标、权限、完成证据和停止条件",
+            "装载最小专业能力",
+            "独立证据验证",
         ],
     ),
 )
 check(
-    "product engineering collaboration keeps stable canonical names",
+    "wise agent keeps stable canonical identity and capability model",
     has_all(
         collaboration_skill,
-        ["产研协同体系", "交付执行契约 v3", "本技能不绕过产品专家、架构师或代码生成器的专项约规"],
+        [
+            "# 知止者",
+            "“知止”不是消极停止",
+            "目标所止、权限所止、证据所止",
+            "知止而后有定",
+            "统一智能行动主体",
+            "能力不以本表为上限",
+            "专业能力完成后仍由知止者综合结果",
+        ],
+    )
+    and has_all(
+        collaboration_agent,
+        ['display_name: "知止者"', "知所止而后行动", "先定目标、权限、完成证据和停止条件"],
+    )
+    and has_all(
+        agents_rules,
+        ["`wise-agent`（知止者）", "它不是少做或不行动", "何时应停止或交还人类"],
+    )
+    and has_all(
+        "README.md",
+        ["### 3. 知止者如何工作", "它不是不行动", "有方向、有分寸、有收口"],
+    )
+    and has_all(
+        collaboration_cognition_model,
+        ["目标止于何处", "权限止于何处", "何种证据才算完成", "何时停止或交还人类"],
     )
     and has_none(
         collaboration_skill,
-        ["AI Native 不绕过", "AI Native Harness Contract"],
+        ["产研智人", "知行者", "智止者", "AI Native Harness Contract", "只负责调度和门禁"],
     )
+    and has_none("README.md", ["知行者", "智止者"])
     and has_none(
         collaboration_engineering_governance,
         ["AI Native Harness Contract"],
@@ -2389,20 +2398,7 @@ check(
 )
 check(
     "product engineering collaboration defines minimal default output",
-    has_all(
-        collaboration_skill,
-        [
-            "默认最小输出",
-            "结论：",
-            "当前阶段：",
-            "Owner：",
-            "交接物：",
-            "授权策略：",
-            "验证与停止条件：",
-            "需要时补证据边界和残余风险",
-            "只有用户要求完整方案、评审报告或模板时",
-        ],
-    ),
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS),
 )
 check(
     "product engineering collaboration avoids heavy default output template",
@@ -2448,7 +2444,7 @@ check(
             "PRD-Lite / OpenSpec 输入",
             "Hardened Candidate",
             "工程交接清单",
-            "产研协同体系交接结论",
+            "知止者交接结论",
             "AI 代码交付闭环",
             "code-delivery.md",
             "CAD 候选缺口",
@@ -2541,7 +2537,7 @@ check(
     and has_all(
         collaboration_planning_execution_admission,
         [
-            "产研协同体系的产研交付视图准入结论",
+            "知止者的产研交付视图准入结论",
             "是否需要 GSD Round 0",
             "Wave / Atomic Task 候选",
             "Superpowers 方法门禁",
@@ -2551,7 +2547,7 @@ check(
             "Codex 的“替我审批”模式",
             "Execution Grant 缺口",
             "下一步 owner",
-            "产研协同体系决定“是否进入产研交付视图、是否启用 GSD/CAD 内部层，以及下一步 owner”",
+            "知止者决定“是否进入产研交付视图、是否启用 GSD/CAD 内部层，以及下一步 owner”",
             "GSD-like 决定“哪些阶段和任务可以被执行”",
             "CAD Mode 决定“当前选中的原子任务是否可以自动执行”",
             "Execution Grant 决定“本轮实际允许做什么”",
@@ -2628,7 +2624,7 @@ check(
             "把 Superpowers skills 当成 GSD 的默认插件安装、默认外部脚本、默认 worktree、默认 subagent 或默认 Git 操作",
             "把计划内低风险执行写成无条件自动通过",
             "让 Codex 替我审批绕过工具权限、sandbox、项目规则和用户授权",
-            "在产研协同体系中复制 CAD 每轮 Pick / Red / Green / Review / Refactor / Verify / Record 细则",
+            "在知止者中复制 CAD 每轮 Pick / Red / Green / Review / Refactor / Verify / Record 细则",
         ],
     )
     and has_all(
@@ -2735,7 +2731,7 @@ check(
             "不把该链接作为已吸收来源",
             "第 3 篇：一个好的 Loop 到底由什么组成",
             "Seeek X",
-            "产研协同体系统一入口和 GSD/CAD/Goal 压缩重构",
+            "知止者统一入口和 GSD/CAD/Goal 压缩重构",
             "Loop Contract",
             "四类场景视图",
             "GSD/CAD/Goal 内部层映射",
@@ -2802,21 +2798,7 @@ check(
     "product engineering collaboration keeps intent to production lifecycle",
     has_reference_header(collaboration_delivery_lifecycle)
     and has_task_reading_index(collaboration_delivery_lifecycle)
-    and has_all(
-        collaboration_skill,
-        [
-            "产研协同",
-            "references/delivery-lifecycle.md",
-            "从意图 / 需求收集到生产交付",
-            "AI Maker / Checker",
-            "设计评审",
-            "编码评审",
-            "可用性 / 安全性 / 可靠性评估",
-            "生产交付审查",
-            "产研协同体系触发后默认执行轻量生命周期定位",
-            "仅在跨阶段、生产、维护退役或高风险任务中展开完整 SDLC 覆盖审查",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_lifecycle,
         [
@@ -2825,8 +2807,8 @@ check(
             "Intent-to-Production Role Loop Map",
             "生产生效验证结论",
             "阶段能力与约规来源 / 角色协作判断矩阵",
-            "阶段名只是编排坐标，不是能力来源",
-            "每个阶段必须回指主 Skill",
+            "阶段名只是工作坐标，不是能力来源",
+            "每个阶段必须回指实际装载的主能力",
             "意图 / 反馈 / 业务目标",
             "需求收集与事实分层",
             "产品 / 交互设计与验收种子",
@@ -2893,37 +2875,23 @@ check(
     and has_all(
         "README.md",
         [
-            "进入产研协同",
-            "产品正文回 `产品架构专家`",
-            "工程实现、TDD、源码级 CR 和发布风险回 `资深架构师`",
-            "结构化 Java Service 生成回 `java-service-code-generator`",
-            "按产品/交互、设计评审、TDD、编码、CR、质量评估、验证发布和复盘分角色推进",
-            "默认先做轻量生命周期定位",
-            "跨阶段、生产、维护退役或高风险任务才展开完整 SDLC 覆盖审查",
-            "角色 Loop 按“当前阶段 -> 主责角色 -> 主 Skill -> 交接物 -> 验证与停止条件”串行推进",
-            "一次只处理一个主 blocker",
+            "默认智能行动主体",
+            "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
+            "简单任务直接完成",
+            "复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker",
+            "专业能力按需渐进加载",
+            "无论内部用了多少能力，对用户只形成一个综合结论",
         ],
     ),
 )
 check(
     "product engineering collaboration coordinates specialized skills by role",
-    has_all(
-        collaboration_skill,
-        [
-            "工程治理与能力路由",
-            "角色协作判断矩阵",
-            "判断角色、Skill、工具、框架如何协作",
-            "结构化 Java Service 基础服务、DTO / Request / Query / 模型骨架生成由 `java-service-code-generator` 执行",
-            "Java 项目编码约规由 `wind-coding-conventions` 提供通用层",
-            "Wind/Nobe 专项根据项目声明、依赖、包名、类型或模块上下文启用",
-            "代码阅读和画图只作为辅助能力接入",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_lifecycle,
         [
             "角色协作判断矩阵",
-            "专项 Skill 控制矩阵",
+            "能力来源与协同矩阵",
             "Loop 节点",
             "主责角色",
             "主 Skill",
@@ -2932,7 +2900,8 @@ check(
             "`wind-coding-conventions`",
             "`code-understanding-tools.md`",
             "`diagram-output.md`",
-            "产研协同体系只负责调度和门禁",
+            "知止者在各阶段持续持有目标、上下文和最终交付",
+            "人类责任 Owner、主能力和独立 Checker",
             "工具和框架只能补一个缺口",
             "代码生成器只做结构化骨架",
             "图和工具只辅助理解与表达",
@@ -2982,17 +2951,7 @@ check(
 )
 check(
     "product engineering collaboration keeps gstack production delivery review",
-    has_all(
-        collaboration_skill,
-        [
-            "GStack 角色链模板",
-            "生产交付审查",
-            "生产交付审查卡",
-            "生产生效验证",
-            "业务场景模拟验收",
-            "不替代测试通过、Git/PR/merge/部署或上线审批",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_lifecycle,
         [
@@ -3036,17 +2995,7 @@ check(
 )
 check(
     "product engineering collaboration keeps autonomous discovery delivery loop",
-    has_all(
-        collaboration_skill,
-        [
-            "自主交付闭环",
-            "自我挖掘",
-            "自主交付控制卡",
-            "必须人工确认",
-            "不把“可继续推进”写成“已经授权”",
-            "决策澄清门禁",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_lifecycle,
         [
@@ -3110,14 +3059,7 @@ check(
 )
 check(
     "core problem diagnosis sources and routing stay wired",
-    has_all(
-        collaboration_skill,
-        [
-            "问题核心诊断",
-            "先抓核心，后开药方",
-            "references/product-to-engineering-lifecycle.md",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -3246,7 +3188,7 @@ check(
             "GStack",
             "角色链审查",
             "仓库级记忆",
-            "GStack slash commands 在产研协同体系中只作为触发别名",
+            "GStack slash commands 在知止者中只作为触发别名",
             "/office-hours",
             "/plan-ceo-review",
             "/plan-eng-review",
@@ -3269,21 +3211,60 @@ check(
     ),
 )
 check(
+    "plan generation waits for owner decisions",
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
+    and has_all(
+        collaboration_delivery_execution_control,
+        [
+            "计划生成准入先于计划审查",
+            "让 owner 审查 AI 假设",
+            "一个主 blocker",
+            "决策快照经 owner 确认后",
+        ],
+    ),
+)
+check(
+    "Trellis remains an evidence-gated optional carrier",
+    has_all(
+        collaboration_superpowers_library,
+        [
+            "`Trellis` 是仓库级 Agent Harness",
+            "`@mindfoldhq/trellis`",
+            "现有 `AGENTS.md`、Issue、Spec、Goal Ledger",
+            "重复失败证据",
+            "`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`",
+            "AGPL-3.0",
+            "非关键任务",
+            "显式授权",
+        ],
+    )
+    and has_all(
+        collaboration_source_map,
+        [
+            "Superpowers不再是最佳实践：2026下半年你该换个思路了",
+            "FF的客栈",
+            "2026年7月1日 08:15",
+            "计划生成准入先于计划审查",
+            "不吸收文中的效率比例、可提交质量比例",
+            "mindfold-ai/Trellis",
+            "@mindfoldhq/trellis",
+            ".trellis/spec",
+            ".trellis/tasks",
+            ".trellis/workspace",
+            "AGPL-3.0",
+        ],
+    ),
+)
+check(
     "product engineering collaboration keeps spec template practices gate",
     has_reference_header(collaboration_spec_template_practices)
     and has_task_reading_index(collaboration_spec_template_practices)
-    and has_all(
-        collaboration_skill,
-        [
-            "Spec / SDD / OpenSpec",
-            "references/spec-template-practices.md",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_spec_template_practices,
         [
             "# Spec 模板最佳实践",
-            "本文定义产研协同体系研发流程中 Spec / SDD / OpenSpec / Harness 输入的模板落地方式",
+            "本文定义知止者研发流程中 Spec / SDD / OpenSpec / Harness 输入的模板落地方式",
             "不把外部 Harness 写成默认依赖",
             "Spec 强度建议",
             "Spec 分层判断",
@@ -3407,7 +3388,7 @@ check(
         [
             "# 目标治理",
             "Goal 是显式目标管理和持续推进契约",
-            "对外统一归入产研协同体系",
+            "对外统一归入知止者",
             "Goal 是目标层",
             "GSD 是分波计划层",
             "CAD 是原子执行子循环",
@@ -3445,14 +3426,7 @@ check(
             "mock 已通",
         ],
     )
-    and has_all(
-        collaboration_skill,
-        [
-            "目标层 / 计划层 / 原子执行层 / 执行契约 / 授权边界",
-            "references/goal-governance.md",
-            "执行授权缺口",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -3502,9 +3476,9 @@ check(
         "README.md",
         [
             "生产可用能力",
-            "进入产研交付视图",
+            "交付推进视图",
             "做生产交付审查",
-            "授权策略",
+            "对应授权",
         ],
     ),
 )
@@ -3512,14 +3486,7 @@ check(
     "product engineering collaboration keeps delivery execution control gate",
     has_reference_header(collaboration_delivery_execution_control)
     and has_task_reading_index(collaboration_delivery_execution_control)
-    and has_all(
-        collaboration_skill,
-        [
-            "实际项目编码 Loop",
-            "references/delivery-execution-control.md",
-            "验证与停止条件",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_execution_control,
         [
@@ -3687,16 +3654,7 @@ check(
 )
 check(
     "product engineering collaboration keeps unified yinyang execution principle",
-    has_all(
-        collaboration_skill,
-        [
-            "混一总纲",
-            "以真实交付为体，以证据闭环为用",
-            "阴定边界，阳促推进",
-            "随事取最小可验证路径",
-            "不再作为并列工作流外显",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_execution_control,
         [
@@ -3715,14 +3673,7 @@ check(
 )
 check(
     "product engineering collaboration keeps CDD capability discovery gate",
-    has_all(
-        collaboration_skill,
-        [
-            "CDD / Capability-Driven Development",
-            "实现前能力发现",
-            "非 T0 写入 / 交付任务先查已有 Skill / Tool / Workflow / 脚本 / 自动化和验收证据",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_execution_control,
         [
@@ -3749,14 +3700,7 @@ check(
 )
 check(
     "product engineering collaboration keeps architecture entropy loop gate",
-    has_all(
-        collaboration_skill,
-        [
-            "架构排熵 Loop",
-            "references/delivery-execution-control.md",
-            "排熵与复杂度投资优先于战术生成",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_delivery_execution_control,
         [
@@ -3812,16 +3756,7 @@ check(
 )
 check(
     "product engineering collaboration keeps knowledge expression and nonstandard problem gates",
-    has_all(
-        collaboration_skill,
-        [
-            "知识表达",
-            "非标问题",
-            "实际项目编码 Loop",
-            "执行可靠性",
-            "references/product-to-engineering-lifecycle.md",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -3924,15 +3859,7 @@ check(
     "product engineering collaboration keeps code delivery gate",
     has_reference_header(collaboration_code_delivery)
     and has_task_reading_index(collaboration_code_delivery)
-    and has_all(
-        collaboration_skill,
-        [
-            "AI 代码交付闭环",
-            "Spec / SDD / OpenSpec",
-            "知识回流",
-            "references/code-delivery.md",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_code_delivery,
         [
@@ -4027,23 +3954,11 @@ check(
     )
 )
 check(
-    "product engineering collaboration supports evidence-backed business expert distillation",
+    "wise agent supports evidence-backed business expert distillation",
     has_reference_header(collaboration_domain_expert_distillation)
     and has_task_reading_index(collaboration_domain_expert_distillation)
-    and has_all(
-        collaboration_skill,
-        [
-            "业务专家蒸馏",
-            "domain-expert-distillation.md",
-            "PRD / 系分 / 产品设计文档",
-            "学习结果知识库规划",
-            "不把业务专家写成自由发挥角色",
-        ],
-    )
-    and has_all(
-        collaboration_agent,
-        ["业务专家蒸馏"],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
+    and contains(collaboration_skill, "业务专家蒸馏与知识演进")
     and has_all(
         collaboration_domain_expert_distillation,
         [
@@ -4112,7 +4027,7 @@ check(
             "Skill Improvement Card",
             "目标 Skill、触发样例、错误表现、反馈证据、最小修改位置、验证方式和不得吸收项",
             "目标 Skill / 真实失败模式 / 可复用规则 / 权威落点 / 验证方式",
-            "不把业务对象写进产研协同体系",
+            "不把业务对象写进知止者",
             "只更新对应 Skill 或 reference",
             "同步更新触发 fixture / validator",
             "已回流、建议回流、待人工确认、不得回流",
@@ -4186,14 +4101,7 @@ check(
 )
 check(
     "product engineering collaboration keeps PRD and system design deliberation review gate",
-    has_all(
-        collaboration_skill,
-        [
-            "PRD / 系分合议预审",
-            "MAGI",
-            "references/prd-system-design-review.md",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_reference_header(collaboration_prd_system_design_review)
     and has_task_reading_index(collaboration_prd_system_design_review)
     and has_all(
@@ -4275,154 +4183,134 @@ check(
     ),
 )
 check(
-    "product engineering collaboration has realistic prompt fixtures and evaluation coverage",
+    "wise agent has realistic prompt fixtures and evaluation coverage",
     has_all(
         skill_eval_prompt_fixture,
         [
-            "delivery-collab-should-end-to-end-product-engineering-workflow",
-            "delivery-collab-should-gsd-cad-handoff",
-            "delivery-collab-should-prd-system-design-deliberation-review",
-            "delivery-collab-should-final-deliverable-document-gate",
-            "delivery-collab-should-planning-execution-admission-gate",
-            "delivery-collab-should-gsd-cad-default-authorization",
-            "delivery-collab-should-gsd-goal-governance",
-            "delivery-collab-should-delivery-execution-control",
-            "delivery-collab-should-map-sdlc-without-renaming-main-flow",
-            "delivery-collab-should-default-lightweight-lifecycle-routing",
-            "delivery-collab-should-backflow-confirmed-domain-term-after-grill",
-            "delivery-collab-should-stop-domain-writeback-on-code-conflict",
-            "delivery-collab-should-avoid-adr-for-reversible-wording-choice",
-            "delivery-collab-should-loop-task-end-accountability",
-            "delivery-collab-should-decision-gate-blocker-progression",
-            "delivery-collab-should-review-ai-coding-process",
-            "delivery-collab-should-code-delivery",
-            "delivery-collab-should-production-sdd-source-of-truth",
-            "delivery-collab-should-knowledge-expression-gate",
-            "delivery-collab-should-nonstandard-problem-mode",
-            "delivery-collab-should-practical-coding-loop",
-            "delivery-collab-should-feedback-loop-verification-cluster",
-            "delivery-collab-should-spec-template-practices",
-            "delivery-collab-should-development-standards-gate",
-            "delivery-collab-should-product-system-dna-gate",
-            "delivery-collab-should-quality-test-gate",
-            "delivery-collab-should-change-understanding-gate",
-            "delivery-collab-should-codebase-understanding-brief",
-            "delivery-collab-should-tool-install-admission",
-            "delivery-collab-should-design-code-alignment",
-            "delivery-collab-should-fact-boundary-check",
-            "delivery-collab-should-route-prd-work",
-            "delivery-collab-should-route-cr-work",
-            "delivery-collab-should-route-codegen-work",
-            "delivery-collab-should-route-wind-agents-init",
-            "delivery-collab-negative-prd-from-prototype",
-            "delivery-collab-negative-code-review",
-            "delivery-collab-negative-read-single-code-file",
-            "delivery-collab-negative-structured-codegen",
-            "delivery-collab-negative-business-architecture-only",
-            "delivery-collab-negative-system-design-only",
-            "delivery-collab-negative-write-tests-only",
-            "delivery-collab-negative-production-incident-only",
+            "wise-agent-should-end-to-end-product-engineering-workflow",
+            "wise-agent-should-gsd-cad-handoff",
+            "wise-agent-should-prd-system-design-deliberation-review",
+            "wise-agent-should-final-deliverable-document-gate",
+            "wise-agent-should-planning-execution-admission-gate",
+            "wise-agent-should-gsd-cad-default-authorization",
+            "wise-agent-should-gsd-goal-governance",
+            "wise-agent-should-delivery-execution-control",
+            "wise-agent-should-map-sdlc-without-renaming-main-flow",
+            "wise-agent-should-default-lightweight-lifecycle-routing",
+            "wise-agent-should-backflow-confirmed-domain-term-after-grill",
+            "wise-agent-should-stop-domain-writeback-on-code-conflict",
+            "wise-agent-should-avoid-adr-for-reversible-wording-choice",
+            "wise-agent-should-loop-task-end-accountability",
+            "wise-agent-should-decision-gate-blocker-progression",
+            "wise-agent-should-review-ai-coding-process",
+            "wise-agent-should-code-delivery",
+            "wise-agent-should-production-sdd-source-of-truth",
+            "wise-agent-should-knowledge-expression-gate",
+            "wise-agent-should-nonstandard-problem-mode",
+            "wise-agent-should-practical-coding-loop",
+            "wise-agent-should-feedback-loop-verification-cluster",
+            "wise-agent-should-spec-template-practices",
+            "wise-agent-should-development-standards-gate",
+            "wise-agent-should-product-system-dna-gate",
+            "wise-agent-should-quality-test-gate",
+            "wise-agent-should-change-understanding-gate",
+            "wise-agent-should-codebase-understanding-brief",
+            "wise-agent-should-tool-install-admission",
+            "wise-agent-should-design-code-alignment",
+            "wise-agent-should-fact-boundary-check",
+            "wise-agent-should-route-prd-work",
+            "wise-agent-should-route-cr-work",
+            "wise-agent-should-route-codegen-work",
+            "wise-agent-should-route-wind-agents-init",
+            "wise-agent-should-deliver-prd-from-prototype",
+            "wise-agent-should-deliver-code-review",
+            "wise-agent-should-read-and-fix-single-code-file",
+            "wise-agent-should-deliver-structured-codegen",
+            "wise-agent-should-deliver-business-architecture",
+            "wise-agent-should-deliver-system-design",
+            "wise-agent-should-write-tests",
+            "wise-agent-should-handle-production-incident",
+            "wise-agent-negative-simple-translation",
+            "wise-agent-negative-simple-fact",
             "product-should-nonstandard-problem-solution",
             "senior-should-nonstandard-engineering-problem",
             "senior-should-invariant-verification-cluster",
-            "delivery-collab",
+            "wise-agent",
         ],
     )
     and has_all(
         skill_evaluator,
         [
-            "\"delivery-collab\"",
-            "\"产研协同\"",
-            "\"GSD/CAD\"",
-            "\"验证矩阵\"",
+            "\"wise-agent\"",
+            "\"知止者\"",
+            "\"自己判断并推进\"",
+            "\"只读 CR\"",
+            "\"补单元测试\"",
         ],
     ),
 )
 check(
-    "README routes product engineering collaboration skill",
+    "README exposes wise agent as the default action subject",
     has_all(
         "README.md",
         [
             "## 用户使用指南",
-            "Codex 会根据 `SKILL.md` 的 `name` 和 `description` 自动触发技能",
-            "使用时不用背 Skill 名称",
-            "先帮我选路",
-            "### 1. 一句话讲清目标",
+            "仓库把 `知止者` / `$wise-agent` 设计为默认智能行动主体",
+            "各 Skill 的精确 description 隐式匹配",
+            "同一 Agent 中加载多个 Skill",
+            "不产生第二人格或重复 Owner",
+            "日常不需要选角色或背 Skill 名称",
+            "### 1. 30 秒上手",
             "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
             "常见任务可以直接这样说",
-            "我有 PRD 和代码路径，只想做 CR，不改代码",
-            "先做轻量生命周期定位和角色路由",
+            "我有 PRD 和代码路径，只做只读 CR，不改代码",
+            "自己判断并推进",
             "把这轮 CR 结论沉淀到项目约规",
-            "### 2. 按交付物选入口",
-            "| 你要交付 | 默认入口 | 最小输入 |",
+            "### 2. 任务与专业能力",
+            "| 你要交付 | 专业能力与路径 | 最小输入 | 边界 |",
             "产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图",
             "系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图",
-            "跨角色交付编排、工程治理、目标计划、质量门禁、生产交付审查、知识演进",
-            "$delivery-collab",
             "DDL/schema/Java 类/字段表格到 Java Service 脚手架",
             "Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
             "正式图形默认 SVG，PNG 仅在明确要求时导出",
-            "### 3. 产研协同体系",
-            "`产研协同体系` 包含三个稳定能力域",
-            "产品正文回 `产品架构专家`",
-            "工程实现、TDD、源码级 CR 和发布风险回 `资深架构师`",
-            "结构化 Java Service 生成回 `java-service-code-generator`",
-            "Java/Wind 编码约规回 `wind-coding-conventions`",
-            "默认最小输出只保留",
-            "结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
+            "### 3. 知止者如何工作",
+            "不是流程路由器",
+            "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
+            "人类责任 Owner、知止者、专业能力和独立 Checker 分开",
+            "专业能力按需渐进加载",
             "只读理解视图",
-            "产研交付视图",
+            "交付推进视图",
             "验证发布视图",
             "知识回流视图",
             "决策澄清门禁",
             "复杂或模糊任务一次只问一个主 blocker",
             "Facts 先从材料、源码、测试或日志自答",
             "Decisions 才问 owner",
-            "`grill-me` 使用方式",
-            "你只需要回答：接受建议、改答案、补材料或停止",
-            "结束条件：确认 shared understanding",
+            "`grill-me` 是升级盘问",
+            "你只需要回答接受建议、改答案、补材料或停止",
+            "退出：确认 shared understanding",
             "红线、底线、不能碰、不可、禁止、必须",
             "按你建议推进",
             "自决推进",
             "询问 owner",
             "继续收敛",
             "停止交接",
-            "### 4. 常用短句",
-            "先帮我选路",
-            "进入产研协同体系",
-            "进入产研交付视图",
-            "进入只读理解视图",
-            "默认不写文件、不联网、不安装",
-            "做 grill-me 盘问",
-            "grill 一下这个方案",
-            "做生产交付审查",
+            "### 4. 编写文档的友好指令",
+            "### 5. 边界与授权",
             "Ready / Not Ready / Human Approval Required",
-            "做质量门禁",
-            "做业务架构规划",
-            "做源码质量评审",
-            "进入知识回流视图",
-            "初始化/更新项目 AGENTS.md",
-            "### 5. 不要这样用",
-            "只写普通 PRD、产品方案或 Backlog 决策",
-            "只做系统设计、代码 CR、Bug、测试或生产变更",
+            "不要先设计一套角色接力再描述任务",
+            "不要让多个专业 Skill 分别向用户作最终承诺",
             "内存版业务 Service",
-            "## 进阶能力索引",
-            "### 产研协同体系",
-            "路径：[delivery-collab](./delivery-collab)",
-            "跨业务、产品、UED、架构、AI Maker / Checker",
-            "目标计划",
-            "代码库理解、工具准入",
-            "设计-代码对齐",
-            "质量门禁",
-            "只负责成熟度、owner、交接物、停止条件、授权策略和工具边界",
-            "产品正文交给产品专家",
-            "工程实现、最小正确实现检查和过度设计 CR 交给架构师",
-            "结构化代码生成交给代码生成器",
+            "路径：[wise-agent](./wise-agent)",
+            "不限于产研",
+            "产品、架构、文档、考据、生成和约规不是平级角色",
+            "复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker",
             "从 AI 原型到工程化",
-            "## 5 分钟上手",
+            "## 安装",
             "## 验证与同步安全",
             "./scripts/validate.sh",
+            "scripts/smoke-wise-agent-behavior.sh",
             "普通使用 `grill-me` 不需要运行这些命令",
         ],
     ),
@@ -4447,7 +4335,7 @@ check(
     has_all(
         "README.md",
         [
-            "### 编写文档的友好指令",
+            "### 4. 编写文档的友好指令",
             "产品、系分、重构三类正式设计文档各有一个权威模板入口",
             "产品设计用 `product-prd-template.md`",
             "系分设计用 `system-analysis-template.md`",
@@ -4459,31 +4347,27 @@ check(
     ),
 )
 check(
-    "README explains product expert and product engineering collaboration usage",
+    "README explains specialist capabilities under wise agent",
     has_all(
         "README.md",
         [
-            "### 产品架构专家",
+            "### 2. 任务与专业能力",
             "路径：[product-architecture-expert](./product-architecture-expert)",
-            "PRD、产品方案、需求说明",
+            "产品语义",
             "业务架构规划",
-            "产品洞察",
-            "Backlog 决策",
-            "原型/HTML/页面截图/交互稿反推 PRD",
-            "能力地图、业务流程、状态机、规则矩阵",
+            "Backlog",
             "不负责工程实现、代码 Review 和生产排障",
-            "### 资深架构师",
             "路径：[senior-software-architect](./senior-software-architect)",
-            "架构设计、系统分析设计、技术方案、ADR、代码 Review、Bug 修复、测试/TDD、生产变更",
-            "架构排熵",
+            "系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图",
             "不替代产品专家定义复杂业务语义、PRD 和金融产品规则",
-            "### 产研协同体系",
-            "`产研协同体系` 包含三个稳定能力域",
-            "产品正文回 `产品架构专家`",
-            "工程实现、TDD、源码级 CR 和发布风险回 `资深架构师`",
-            "不允许交付模拟模块",
-            "内存版业务 Service",
-            "默认最小输出只保留：结论、当前阶段、owner、交接物、授权策略、验证与停止条件",
+            "路径：[document-authoring](./document-authoring)",
+            "路径：[hanzi-philology](./hanzi-philology)",
+            "路径：[java-service-code-generator](./java-service-code-generator)",
+            "路径：[wind-coding-conventions](./wind-coding-conventions)",
+            "产品、架构、文档、考据、生成和约规不是平级角色",
+            "简单任务直接完成",
+            "不限于产研",
+            "必须先完成安全审查并取得对应授权",
         ],
     ),
 )
@@ -4678,6 +4562,33 @@ check(
     ),
 )
 check(
+    "wise agent and product capability gate isolated domain words before vertical references",
+    has_all(
+        collaboration_skill,
+        [
+            "单个领域词不等于专项证据",
+            "高置信度信号",
+            "不得因“退款”“账户”“订单”等孤立词展开整棵支付、金融或工程知识树",
+        ],
+    )
+    and has_all(
+        collaboration_skill_type_owner_routing,
+        [
+            "目标产物未要求专项细节时停在通用路径",
+            "只要求为“退款申请”补通用验收种子",
+            "只装载产品通用路径",
+            "不读取支付专项 reference",
+        ],
+    )
+    and has_all(
+        product_skill,
+        [
+            "孤立领域词不触发专项树",
+            "不得因“退款”“账户”“订单”等单词展开整棵垂直知识树",
+        ],
+    ),
+)
+check(
     "product expert hands off domain naming to reduce comment debt",
     has_all(
         product_skill,
@@ -4735,7 +4646,7 @@ check(
             "schema 文件",
             "字段表格",
             "有结构化输入",
-            "被 `delivery-collab` 分派时，先消费 Engineering Handoff Card、授权策略和写入范围",
+            "被 `wise-agent` 分派时，先消费 Engineering Handoff Card、授权策略和写入范围",
             "生成后交接卡至少包含",
             "生成 / 修改文件、写入目录和是否覆盖既有文件",
             "输入来源、结构化字段、脚本参数和推断假设",
@@ -5250,58 +5161,56 @@ check(
         "README.md",
         [
             "## 用户使用指南",
-            "使用时不用背 Skill 名称",
-            "### 1. 一句话讲清目标",
+            "日常不需要选角色或背 Skill 名称",
+            "### 1. 30 秒上手",
             "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
-            "先帮我选路",
-            "### 2. 按交付物选入口",
-            "| 你要交付 | 默认入口 | 最小输入 |",
+            "自己判断并推进",
+            "### 2. 任务与专业能力",
+            "| 你要交付 | 专业能力与路径 | 最小输入 | 边界 |",
             "产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图",
-            "跨角色交付编排、工程治理、目标计划、质量门禁、生产交付审查、知识演进",
             "系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图",
             "DDL/schema/Java 类/字段表格到 Java Service 脚手架",
             "Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
             "PNG 仅在明确要求时导出",
-            "### 3. 产研协同体系",
-            "`产研协同体系` 包含三个稳定能力域",
-            "默认最小输出只保留",
+            "### 3. 知止者如何工作",
+            "不是流程路由器",
+            "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
+            "专业能力按需渐进加载",
             "只读理解视图",
-            "产研交付视图",
+            "交付推进视图",
             "验证发布视图",
             "生产交付审查",
             "知识回流视图",
-            "决策澄清门禁是小闭环总门禁",
-            "自决推进 / 询问 owner / 继续收敛 / 停止交接",
-            "### 4. 常用短句",
-            "先帮我选路",
-            "进入产研协同体系",
-            "进入产研交付视图",
+            "决策澄清门禁",
+            "自决推进",
+            "询问 owner",
+            "继续收敛",
+            "停止交接",
+            "常用短句",
+            "进入知止者",
             "进入只读理解视图",
             "默认不写文件、不联网、不安装",
             "做生产交付审查",
             "做质量门禁",
             "做源码质量评审",
+            "不要先设计一套角色接力再描述任务",
+            "不要让多个专业 Skill 分别向用户作最终承诺",
             "进入知识回流视图",
             "初始化/更新项目 AGENTS.md",
-            "### 5. 不要这样用",
-            "只写普通 PRD、产品方案或 Backlog 决策",
-            "只做系统设计、代码 CR、Bug、测试或生产变更",
+            "### 5. 边界与授权",
             "直接生成生产代码",
             "不要把工具、模板、目标、计划或授权机制名当主流程",
             "内存版业务 Service",
-            "## 进阶能力索引",
-            "日常使用优先看上面的快速指南",
-            "路径：[delivery-collab](./delivery-collab)",
+            "路径：[wise-agent](./wise-agent)",
             "路径：[senior-software-architect](./senior-software-architect)",
             "路径：[product-architecture-expert](./product-architecture-expert)",
             "路径：[java-service-code-generator](./java-service-code-generator)",
-            "原型/HTML/页面截图/交互稿反推 PRD",
-            "## 5 分钟上手",
+            "## 安装",
             "sync-skills.sh --dry-run all",
             "./scripts/validate.sh",
             "从 AI 原型到工程化",
-            "### 常见组合",
+            "常见组合",
             "从普通图到复杂图",
             "## 维护者与高级扩展",
         ],
@@ -5319,9 +5228,9 @@ check(
             "6fd4507659784c351abbd2bc264c7162cfd386dc",
             "ef1bc33f981e2eb2a3c53722eef3ee710d107beac783e97a0b280dd07e32dfa3",
             "MIT",
-            "delivery-collab/references/external-superpowers/",
+            "wise-agent/references/external-superpowers/",
             "superpowers-skill-library.md",
-            "离线快照保存在 `delivery-collab/references/external-superpowers/`",
+            "离线快照保存在 `wise-agent/references/external-superpowers/`",
             "入口统一命名为 `upstream-skill.md`",
             "实际比较、升级或安装时必须重新核验官方 release 和当前插件状态",
             "除此之外不复制或运行 hooks、插件 manifest、package 脚本",
@@ -6587,7 +6496,7 @@ check(
         coding,
         [
             "规则写法要求",
-            "每条强制 / 推荐规则必须说明原因、适用范围、反例或示例、验证方式",
+            "每个规则组必须能说明原因、适用范围、反例或示例和验证方式",
             "防御式编程规则覆盖输入校验、边界检查、类型转换、金额/精度、除零、异常传播、故障隔离和统一错误处理",
             "避免无上限递归、无界循环、共享全局状态、不可控随机/时间和有副作用表达式",
             "最小正确",
@@ -7209,13 +7118,14 @@ check(
     and has_all(
         ai_large_project,
         [
-            "AI Native 产品到工程的端到端链路由 `delivery-collab` 维护",
+            "AI Native 产品到工程的端到端链路由 `wise-agent` 维护",
             "AI Native 交接结论",
             "OpenSpec / context ledger / verification matrix",
             "GSD Stage / Wave / Atomic Task",
             "CAD 候选 / Execution Grant 缺口",
             "产品上下文包回答“这个产品候选是否值得工程化、工程化必须保留哪些业务事实”",
-            "`delivery-collab` 回答“端到端流程如何流转、是否进入 GSD/CAD 编排候选、谁负责、何时停止”",
+            "知止者持续持有端到端目标与状态",
+            "按需装载产品、工程和验证能力",
             "消费 AI Native 编排交接结论",
             "本文件只消费以下工程输入",
             "业务方能跑通 MVP，就直接让 CAD 改代码",
@@ -7226,7 +7136,7 @@ check(
         [
             "从 AI Native 产品上下文或 MVP harden 进入 CAD",
             "不把产品上下文包、Hardened Candidate 或业务 MVP 当授权",
-            "`delivery-collab/references/planning-execution-admission.md` 或产品侧交接结论",
+            "`wise-agent/references/planning-execution-admission.md` 或产品侧交接结论",
             "不得把业务 MVP、PRD、产品上下文包或 GSD Roadmap 直接当授权",
         ],
     )
@@ -7234,7 +7144,7 @@ check(
         senior_routing,
         [
             "PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构",
-            "AI Native 端到端产品到研发流程先由 `delivery-collab` 编排",
+            "AI Native 端到端产品到研发流程先由 `wise-agent` 编排",
             "架构师只消费已确认的 Hardened Candidate 或 AI Native 交接结论",
             "来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论",
         ],
@@ -7702,10 +7612,18 @@ check(
     has_all(
         coding,
         [
+            "优先使用 JDK 标准库",
+            "`String.isBlank()`",
+            "`Collection.isEmpty()`",
+            "项目已依赖 Spring Framework 或 Apache Commons 时",
+            "不得仅为使用这些工具新增依赖",
+        ],
+    )
+    and has_none(
+        coding,
+        [
             "不得手写 `hasText`、`isBlank`、`isEmpty` 等同义工具",
             "优先使用 Spring Framework 或 Apache Commons 已提供的成熟工具",
-            "`org.springframework.util.StringUtils`",
-            "`org.apache.commons.lang3.StringUtils`",
         ],
     ),
 )
@@ -8512,18 +8430,11 @@ check(
             "下一产物",
             "owner",
             "验收 / 停止条件",
-            "产研协同体系前置门禁",
+            "知止者前置门禁",
             "不安装 `phuryn/pm-skills`",
         ],
     )
-    and has_all(
-        collaboration_skill,
-        [
-            "产品判断 Loop 准入",
-            "product-judgment-action-chain.md",
-            "本技能只判断交接成熟度、owner 和停止条件",
-        ],
-    )
+    and has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -8559,8 +8470,8 @@ check(
         [
             "产品判断动作链",
             "pm-skills",
-            "产品专家补产品上下文包",
-            "产研协同体系只判断交接成熟度、owner、验证和停止条件",
+            "知止者装载产品判断动作链",
+            "形成产品上下文包并继续持有后续目标、验证和停止条件",
         ],
     ),
 )
@@ -8664,17 +8575,7 @@ check(
 )
 check(
     "AI Native routes business architecture planning to product expert",
-    has_all(
-        collaboration_skill,
-        [
-            "业务架构规划",
-            "业务能力地图",
-            "战略到项目组合",
-            "product-architecture-expert/references/business-architecture-planning.md",
-            "本技能只判断交接成熟度、owner 和停止条件",
-            "知识库回流落点",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -8684,7 +8585,7 @@ check(
             "项目组合治理",
             "能力-项目-系统映射",
             "business-architecture-planning.md",
-            "产研协同体系只做交接成熟度、owner、验证与停止条件",
+            "知止者只做交接成熟度、owner、验证与停止条件",
             "不把能力地图、项目组合或知识库回流计划当 Execution Grant",
         ],
     ),
@@ -8803,7 +8704,7 @@ check(
             "2026-05-25 18:00:00",
             "PRD 从静态翻译文档转为可运行证据、对象规则、验收种子和工程交接门禁的上下文包",
             "Product Builder、业务 owner + Agent、业务 dogfooding、MVP/原型 harden 和产品侧交接",
-            "端到端 GSD/CAD 准入与 AI 工具编排交给 `delivery-collab`",
+            "端到端 GSD/CAD 准入与 AI 工具编排交给 `wise-agent`",
             "不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收",
         ],
     )
@@ -9018,13 +8919,7 @@ check(
 )
 check(
     "source maps and references record system DNA and life-like architecture sources",
-    has_all(
-        collaboration_skill,
-        [
-            "产品 / 系统 DNA",
-            "product-to-engineering-lifecycle.md",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_product_to_engineering,
         [
@@ -9606,7 +9501,7 @@ check(
             "AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师",
             "Hardened Candidate 门禁",
             "产品侧交接条件",
-            "端到端流程和 GSD/CAD 准入交给 `delivery-collab`",
+            "端到端流程和 GSD/CAD 准入交给 `wise-agent`",
             "用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文",
         ],
     ),
@@ -9627,7 +9522,7 @@ check(
             "MVP / 原型 harden 门禁",
             "与 AI Native 编排和架构师的交接",
             "不得直接判定 GSD/CAD 准入或 Execution Grant",
-            "GSD/CAD 准入结论由 `delivery-collab` 编排",
+            "GSD/CAD 准入结论由 `wise-agent` 编排",
             "产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant",
             "不把“放下 PRD”写成跳过产品语义、评审、留痕、合规和验收",
         ],
@@ -11343,6 +11238,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"wind", "java-coding-conventions.md"},
     ),
     RouteFixture(
+        name="wind optional dependencies stay conditional",
+        prompt="这个 Java 项目已明确遵守 Wind 编码约规，包含币种字段，但没有 JSpecify、MapStruct 或 MyBatis Flex 依赖。请判断应启用哪些规则。",
+        routes={"wind", "java-coding-conventions.md", "wind-coding-conventions.md"},
+    ),
+    RouteFixture(
         name="wind project coding conventions opt in review",
         prompt="这个 capte-domain 项目的 AGENTS.md 标明遵守 Wind 编码约规，帮我 CR face/impl 模块、基础服务、ApplicationService、DTO/Entity 分层和 MyBatis Flex 查询",
         routes={"senior", "java-coding-conventions.md", "project-governance-service-api-modeling.md", "wind-coding-conventions.md"},
@@ -11534,7 +11434,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native questioning repair",
-        prompt="$delivery-collab 做一轮问询修复吧",
+        prompt="$wise-agent 做一轮问询修复吧",
         routes={"collaboration", "delivery-lifecycle.md", "delivery-execution-control.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -11614,7 +11514,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native target plan atomic handoff state machine",
-        prompt="进入产研协同体系的目标计划和原子执行协同流程，梳理 Round0 到 Wave Plan、Plan Grant Active、Loop Candidate、Atomic Candidate、Atomic Loop Active、Verified/Paused/Escalated/Closed 的状态机，并输出 Engineering Handoff Card、Plan Grant + Loop 预算绑定、失败回写和下一 owner",
+        prompt="进入知止者的目标计划和原子执行协同流程，梳理 Round0 到 Wave Plan、Plan Grant Active、Loop Candidate、Atomic Candidate、Atomic Loop Active、Verified/Paused/Escalated/Closed 的状态机，并输出 Engineering Handoff Card、Plan Grant + Loop 预算绑定、失败回写和下一 owner",
         routes={"collaboration", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "code-delivery.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -11624,7 +11524,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native layers AI coding frameworks",
-        prompt="参考 Superpowers、GSD、GStack、Trellis 这些 AI 编码框架，判断它们如何纳入 产研协同体系，不要新增流程或默认安装工具",
+        prompt="参考 Superpowers、GSD、GStack、Trellis 这些 AI 编码框架，判断它们如何纳入 知止者，不要新增流程或默认安装工具",
         routes={"collaboration", "engineering-governance.md", "delivery-execution-control.md", "superpowers-skill-library.md", "code-delivery.md", "source-map.md"},
     ),
     RouteFixture(
@@ -11690,22 +11590,22 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native skill type owner routing",
         prompt="参考 Anthropic 内部 Skills 经验，细化 AI 流程、产品专家和架构师能力，但 AI Native 仍作为主入口；判断产品验证、代码质量、Runbook、CI/CD、模板脚手架、数据分析和基础设施操作分别由谁负责、交接物和验证证据是什么",
-        routes={"collaboration", "skill-type-owner-routing.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "verification-review-release.md"},
+        routes={"collaboration", "capability-routing.md", "product-to-engineering-lifecycle.md", "engineering-governance.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native skill split gate",
         prompt="AI Native 参考 Harness Engineering 和架构真功夫，评估项目下的 skill 是否应该多拆分几个更专项的 skill，再由 AI 流程统一调用；请判断哪些只更新 reference、哪些补 fixture / validator、哪些未来才新建顶层 Skill",
-        routes={"collaboration", "skill-type-owner-routing.md", "source-map.md", "verification-review-release.md"},
+        routes={"collaboration", "capability-routing.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native Harness skill best practices reverse validation",
         prompt="AI Native 参考《Harness 工程之道：Skill 原理与最佳实践》，对项目下的 Skill 做反向验证和最小重构：检查 SKILL.md 是否只是路由器、description 是否触发准确、references/scripts/fixtures 是否按需加载和可验证，并提炼最佳实践原则；不要照搬外部权限字段、运行钩子、用户偏好持久化或自动推送机制",
-        routes={"collaboration", "skill-type-owner-routing.md", "source-map.md", "verification-review-release.md"},
+        routes={"collaboration", "capability-routing.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native official skill methodology with wisdom lens",
         prompt="AI Native 参考 Anthropic 官方 Lessons from building Claude Code: How we use skills 和 Perplexity Agent Skills 文章，结合老祖宗的循名责实、庖丁解牛、治未病，推进 Skill 治理：description 做路由、gotchas 优先、重复动作脚本化、先补正负触发 fixture，再决定是否拆 Skill",
-        routes={"collaboration", "skill-type-owner-routing.md", "decision-calibration.md", "source-map.md", "verification-review-release.md"},
+        routes={"collaboration", "capability-routing.md", "decision-calibration.md", "source-map.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI coding workflow CR",
@@ -11794,7 +11694,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native Ponytail minimal implementation admission",
-        prompt="用 产研协同体系评估 Ponytail 是否适合加入编码 Loop：要求编码前做最小正确实现检查，CR 时做过度设计专项检查，但不要默认启用 hook 或替代 TDD、安全和架构师源码级 Review",
+        prompt="用 知止者评估 Ponytail 是否适合加入编码 Loop：要求编码前做最小正确实现检查，CR 时做过度设计专项检查，但不要默认启用 hook 或替代 TDD、安全和架构师源码级 Review",
         routes={"collaboration", "code-understanding-tools.md", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md"},
     ),
     RouteFixture(
@@ -12071,6 +11971,11 @@ scenario_fixtures: list[RouteFixture] = [
 
 negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="java conventions on non Java JVM project",
+        prompt="这是一个只包含 Kotlin 源码的 Gradle JVM 项目，请检查编码约规；项目没有任何 Java 源码。",
+        routes={"wind", "java-coding-conventions.md"},
+    ),
+    RouteFixture(
         name="extra senior owner on pure Java convention check",
         prompt="这是普通 Maven Java 21 项目，只检查通用 Java 编码约规并给规则清单，不做源码设计、代码 CR、修复或 TDD。",
         routes={"senior"},
@@ -12204,9 +12109,13 @@ def route_fixture(prompt: str) -> set[str]:
             "Java 项目约规入口",
         ],
     )
-    java_context = contains_any(
+    java_explicitly_absent = contains_any(
         prompt,
-        ["Java", "JVM", "Spring", "Maven", "Gradle", "JUnit", "MyBatis", "DTO", "Mapper", "ServiceImpl", "Wind", "Nobe"],
+        ["没有任何 Java 源码", "没有 Java 源码", "无 Java 源码", "不包含 Java 源码", "只包含 Kotlin", "只包含 Scala"],
+    )
+    java_context = not java_explicitly_absent and contains_any(
+        prompt,
+        ["Java", "Spring", "JUnit", "MyBatis", "DTO", "Mapper", "ServiceImpl", "Wind", "Nobe"],
     )
     pure_convention_only = contains_any(
         prompt,
@@ -12385,7 +12294,7 @@ def route_fixture(prompt: str) -> set[str]:
             if contains_any(prompt, ["升级", "版本", "上游 latest", "latest release", "v6.1.0", "helper", "不默认运行外部脚本", "Harness"]):
                 route.add("verification-review-release.md")
         if contains_any(prompt, ["Skill 类型", "Skill 分类经验", "Anthropic 内部 Skills", "Anthropic内部Skills", "Claude Code Skills", "Lessons from building Claude Code", "Perplexity Agent Skills", "agent skills at Perplexity", "Skill 治理三问", "Skill Tax", "eval-first", "description 路由", "Gotchas flywheel", "Harness Engineering", "Skill 原理", "Skill 最佳实践", "SKILL.md 路由器", "资源加载契约", "触发测试", "功能走查", "反向验证", "架构真功夫", "专才 Agent", "专项 Skill", "拆分", "细化", "产品验证", "代码质量", "Runbook", "CI/CD", "模板脚手架", "团队自动化", "数据分析", "基础设施操作"]):
-            route.add("skill-type-owner-routing.md")
+            route.add("capability-routing.md")
             route.add("product-to-engineering-lifecycle.md")
             route.add("verification-review-release.md")
         if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡"]):
@@ -12583,51 +12492,49 @@ collaboration_outline_terms = (
 )
 
 for case_id in [
-    "delivery-collab-should-end-to-end-product-engineering-workflow",
-    "delivery-collab-should-gsd-cad-handoff",
-    "delivery-collab-should-compress-gsd-cad-goal-into-loop",
-    "delivery-collab-should-gsd-delivery-collab",
-    "delivery-collab-should-demand-analysis-collaboration-gate",
-    "delivery-collab-should-development-standards-gate",
-    "delivery-collab-should-intent-to-production-role-loop",
-    "delivery-collab-should-three-layer-feedback-loop-cadence",
-    "delivery-collab-should-autonomous-discovery-to-delivery-loop",
-    "delivery-collab-should-role-collaboration-loop-main-flow",
-    "delivery-collab-should-coordinate-specialized-skills",
-    "delivery-collab-should-knowledge-expression-gate",
-    "delivery-collab-should-nonstandard-problem-mode",
-    "delivery-collab-should-practical-coding-loop",
-    "delivery-collab-should-feedback-loop-verification-cluster",
-    "delivery-collab-should-architecture-entropy-loop",
-    "delivery-collab-should-plan-to-goal-bridge-without-new-flow",
-    "delivery-collab-should-planning-execution-admission-gate",
-    "delivery-collab-should-gsd-goal-governance",
-    "delivery-collab-should-delivery-execution-control",
-    "delivery-collab-should-map-sdlc-without-renaming-main-flow",
-    "delivery-collab-should-default-lightweight-lifecycle-routing",
-    "delivery-collab-should-backflow-confirmed-domain-term-after-grill",
-    "delivery-collab-should-stop-domain-writeback-on-code-conflict",
-    "delivery-collab-should-avoid-adr-for-reversible-wording-choice",
-    "delivery-collab-should-agent-loop-maturity-diagnosis",
-    "delivery-collab-should-design-engineering-loop-not-prompting",
-    "delivery-collab-should-reusable-work-asset-loop",
-    "delivery-collab-should-cdd-capability-discovery-gate",
-    "delivery-collab-should-wisdom-lens-loop-scheduling",
-    "delivery-collab-should-review-ai-coding-process",
-    "delivery-collab-should-code-delivery",
-    "delivery-collab-should-progressive-sdd-lattice-harness",
-    "delivery-collab-should-production-effectiveness-gate",
-    "delivery-collab-should-context-system-knowledge-base-governance",
-    "delivery-collab-should-domain-expert-distillation",
-    "delivery-collab-should-fact-boundary-check",
-    "delivery-collab-should-route-prd-work",
-    "delivery-collab-should-route-cr-work",
-    "delivery-collab-should-route-wind-agents-init",
+    "wise-agent-should-end-to-end-product-engineering-workflow",
+    "wise-agent-should-gsd-cad-handoff",
+    "wise-agent-should-compress-gsd-cad-goal-into-loop",
+    "wise-agent-should-gsd-wise-agent",
+    "wise-agent-should-demand-analysis-collaboration-gate",
+    "wise-agent-should-development-standards-gate",
+    "wise-agent-should-intent-to-production-role-loop",
+    "wise-agent-should-three-layer-feedback-loop-cadence",
+    "wise-agent-should-autonomous-discovery-to-delivery-loop",
+    "wise-agent-should-role-collaboration-loop-main-flow",
+    "wise-agent-should-knowledge-expression-gate",
+    "wise-agent-should-nonstandard-problem-mode",
+    "wise-agent-should-practical-coding-loop",
+    "wise-agent-should-feedback-loop-verification-cluster",
+    "wise-agent-should-architecture-entropy-loop",
+    "wise-agent-should-plan-to-goal-bridge-without-new-flow",
+    "wise-agent-should-planning-execution-admission-gate",
+    "wise-agent-should-gsd-goal-governance",
+    "wise-agent-should-delivery-execution-control",
+    "wise-agent-should-map-sdlc-without-renaming-main-flow",
+    "wise-agent-should-default-lightweight-lifecycle-routing",
+    "wise-agent-should-backflow-confirmed-domain-term-after-grill",
+    "wise-agent-should-stop-domain-writeback-on-code-conflict",
+    "wise-agent-should-avoid-adr-for-reversible-wording-choice",
+    "wise-agent-should-agent-loop-maturity-diagnosis",
+    "wise-agent-should-design-engineering-loop-not-prompting",
+    "wise-agent-should-reusable-work-asset-loop",
+    "wise-agent-should-cdd-capability-discovery-gate",
+    "wise-agent-should-wisdom-lens-loop-scheduling",
+    "wise-agent-should-review-ai-coding-process",
+    "wise-agent-should-code-delivery",
+    "wise-agent-should-progressive-sdd-lattice-harness",
+    "wise-agent-should-production-effectiveness-gate",
+    "wise-agent-should-context-system-knowledge-base-governance",
+    "wise-agent-should-domain-expert-distillation",
+    "wise-agent-should-fact-boundary-check",
+    "wise-agent-should-route-prd-work",
+    "wise-agent-should-route-cr-work",
 ]:
     expected_handling_has(case_id, collaboration_outline_terms)
 
 expected_handling_has(
-    "delivery-collab-should-reusable-work-asset-loop",
+    "wise-agent-should-reusable-work-asset-loop",
     (
         "可复用工作资产 Loop",
         "delivery-execution-control",
@@ -12656,7 +12563,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-cdd-capability-discovery-gate",
+    "wise-agent-should-cdd-capability-discovery-gate",
     (
         "CDD / 能力发现门禁",
         "delivery-execution-control",
@@ -12674,7 +12581,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-progressive-sdd-lattice-harness",
+    "wise-agent-should-progressive-sdd-lattice-harness",
     (
         "渐进式 SDD / Lattice Harness 规范化路径",
         "spec-template-practices",
@@ -12700,7 +12607,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-context-system-knowledge-base-governance",
+    "wise-agent-should-context-system-knowledge-base-governance",
     (
         "上下文治理视图 / 知识回流视图",
         "code-delivery",
@@ -12727,7 +12634,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-domain-expert-distillation",
+    "wise-agent-should-domain-expert-distillation",
     (
         "业务专家蒸馏 / 领域知识回流路径",
         "domain-expert-distillation",
@@ -12775,53 +12682,97 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-route-wind-agents-init",
+    "wise-agent-should-route-wind-agents-init",
     (
-        "项目约规入口编排路径",
-        "项目事实待确认项",
-        "owner",
-        "授权边界",
-        "协作路由",
+        "知止者读取项目事实",
+        "装载 wind-coding-conventions",
+        "Wind/Nobe 证据",
         "wind-coding-conventions",
         "wind-project-agents-template.md",
-        "项目 AGENTS.md 草案",
-        "源码级设计、TDD、CR 和验证继续交给资深架构师",
-        "不猜测构建命令、生产流程、模块事实或 Git 授权",
+        "最小项目 AGENTS.md",
+        "装载工程能力",
+        "不得猜测构建命令、生产流程、模块事实或 Git 授权",
     ),
 )
 
 expected_handling_has(
-    "delivery-collab-should-coordinate-specialized-skills",
+    "wise-agent-should-coordinate-specialized-skills",
     (
-        "产研协同体系的分角色 Skill 调度路径",
+        "知止者保持统一行动主体",
+        "capability-routing",
         "delivery-lifecycle",
-        "角色协作判断矩阵",
-        "专项 Skill 控制矩阵",
-        "产品需求、目标对齐、产品设计和验收种子回到产品架构专家",
-        "架构设计、系分设计、代码设计、TDD、编码、源码级 CR、安全可靠和发布风险只由资深架构师主责",
-        "结构化 Java Service 骨架生成回到 java-service-code-generator",
-        "纯 Java/Wind 约规检查回到 wind-coding-conventions",
-        "源码任务只把通用 Java 与按需 Wind 规则作为架构师输入，不设置第二 owner",
-        "代码阅读理解和设计-代码对齐读取 code-understanding-tools",
-        "图形语义回到产品或架构 diagram-output",
-        "产研协同体系只做编排、门禁和交接",
-        "不让代码生成、画图或工具摘要替代测试、CR、owner 确认、Git 授权或上线审批",
+        "装载最小能力",
+        "产品架构能力",
+        "工程能力",
+        "java-service-code-generator",
+        "Java/Wind 约规作为规则能力",
+        "不设置第二行动主体",
+        "代码理解和图形能力只补当前缺口",
+        "最终由知止者综合一个结果",
+        "工具摘要不得替代测试、CR、owner 确认、Git 授权或上线审批",
     ),
 )
 
 expected_handling_has(
-    "delivery-collab-should-harness-skill-best-practices-review",
+    "wise-agent-should-deliver-prd-from-prototype",
+    (
+        "精确 description",
+        "同时加载 wise-agent 与产品架构能力",
+        "同一 Agent",
+        "第二人格或第二 Owner",
+        "直接交付可评审 PRD",
+    ),
+)
+
+behavior_contract_has(
+    "wise-agent-should-deliver-prd-from-prototype",
+    (
+        "activation",
+        "action_subject",
+        "must_not",
+    ),
+    (
+        "不点名 Skill",
+        "精确 description",
+        "wise-agent",
+        "产品架构专家",
+        "同一 Agent",
+        "第二人格",
+        "重复 Owner",
+        "互相转交责任",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-autonomously-deliver-read-only-cr",
+    (
+        "统一行动主体",
+        "精确 description",
+        "同时加载工程能力",
+        "只读 CR",
+        "严重级别",
+        "文件行号",
+        "验证缺口",
+        "残余风险",
+        "不得修改文件",
+        "第二 Owner",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-harness-skill-best-practices-review",
     (
         "Skill 工程化反向验证路径",
-        "skill-type-owner-routing",
+        "capability-routing",
         "source-map",
         "verification-review-release",
         "文章已读取正文",
         "不吸收边界",
-        "触发验证",
-        "路由验证",
-        "资源验证",
-        "交付验证",
+        "Metadata 触发",
+        "能力输入输出",
+        "按需资源",
+        "确定性脚本",
+        "独立验证",
         "最小重构",
         "source-map",
         "fixture",
@@ -12832,10 +12783,10 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-official-skill-methodology-with-wisdom-lens",
+    "wise-agent-should-official-skill-methodology-with-wisdom-lens",
     (
-        "Skill 类型与 owner 路由评估",
-        "skill-type-owner-routing",
+        "能力接入与 Skill 治理评估",
+        "capability-routing",
         "decision-calibration",
         "source-map",
         "verification-review-release",
@@ -12857,7 +12808,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-layer-ai-coding-frameworks",
+    "wise-agent-should-layer-ai-coding-frameworks",
     (
         "AI 编码框架分层映射路径",
         "superpowers-skill-library",
@@ -12877,7 +12828,27 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-map-gstack-role-chain-template",
+    "wise-agent-should-admit-trellis-only-for-proven-context-loss",
+    (
+        "Trellis 可选载体准入判断",
+        "仓库级 Agent Harness / 记忆与任务状态载体",
+        "不是新的产研主流程",
+        "现有 AGENTS.md、Issue、Spec、Goal Ledger 和知识库",
+        "真实证据",
+        "不安装 Trellis",
+        "非关键任务做隔离试点",
+        "显式授权",
+        "@mindfoldhq/trellis",
+        "AGPL-3.0",
+        ".trellis/spec",
+        ".trellis/tasks",
+        ".trellis/workspace",
+        "平台接入文件",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-map-gstack-role-chain-template",
     (
         "GStack 角色链模板映射路径",
         "delivery-lifecycle",
@@ -12903,7 +12874,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-gstack-production-delivery-review",
+    "wise-agent-should-gstack-production-delivery-review",
     (
         "GStack 角色链 + 生产交付审查路径",
         "delivery-lifecycle",
@@ -12930,7 +12901,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-production-effectiveness-gate",
+    "wise-agent-should-production-effectiveness-gate",
     (
         "验证发布视图 / 生产生效验证门禁",
         "delivery-lifecycle",
@@ -12954,7 +12925,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-unify-production-ready-workflow-with-wisdom-lens",
+    "wise-agent-should-unify-production-ready-workflow-with-wisdom-lens",
     (
         "生产可用混一模型路径",
         "华夏经世智慧",
@@ -12967,7 +12938,7 @@ expected_handling_has(
         "一个入口",
         "一个契约",
         "一个准出",
-        "产研协同体系作为入口",
+        "知止者作为入口",
         "交付契约",
         "生产可用准出卡",
         "真实业务入口",
@@ -12983,7 +12954,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-intent-to-production-role-loop",
+    "wise-agent-should-intent-to-production-role-loop",
     (
         "产研协同",
         "意图到生产交付角色 Loop",
@@ -13014,9 +12985,9 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-three-layer-feedback-loop-cadence",
+    "wise-agent-should-three-layer-feedback-loop-cadence",
     (
-        "产研协同体系三层反馈节奏校准路径",
+        "知止者三层反馈节奏校准路径",
         "delivery-lifecycle",
         "decision-calibration",
         "Agentic Coding Loop",
@@ -13036,7 +13007,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-autonomous-discovery-to-delivery-loop",
+    "wise-agent-should-autonomous-discovery-to-delivery-loop",
     (
         "自主挖掘到交付",
         "产研协同",
@@ -13069,9 +13040,9 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-role-collaboration-loop-main-flow",
+    "wise-agent-should-role-collaboration-loop-main-flow",
     (
-        "产研协同体系主流程",
+        "知止者主流程",
         "delivery-lifecycle",
         "verification-review-release",
         "当前阶段",
@@ -13100,7 +13071,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-decision-gate-blocker-progression",
+    "wise-agent-should-decision-gate-blocker-progression",
     (
         "小闭环决策澄清门禁",
         "问询推进",
@@ -13119,7 +13090,51 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-questioning-repair",
+    "wise-agent-should-block-plan-before-owner-decisions",
+    (
+        "计划生成准入门禁",
+        "delivery-execution-control",
+        "Facts / Decisions",
+        "需 owner 判断的关键假设",
+        "禁止先生成长计划让 owner 审查 AI 假设",
+        "一个主 blocker",
+        "推荐答案",
+        "证据",
+        "默认暂停点",
+        "决策快照",
+        "owner 确认",
+        "最小计划",
+    ),
+)
+
+behavior_contract_has(
+    "wise-agent-should-block-plan-before-owner-decisions",
+    (
+        "plan_generation_gate",
+        "first_response_must_include",
+        "first_response_must_not_include",
+        "advance_gate",
+    ),
+    (
+        "未决 owner 判断",
+        "完整方案",
+        "长计划",
+        "Facts / Decisions",
+        "一个主 blocker",
+        "推荐答案",
+        "证据",
+        "影响",
+        "默认暂停点",
+        "多分支执行清单",
+        "已授权执行",
+        "决策快照",
+        "owner 确认",
+        "最小计划",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-questioning-repair",
     (
         "问询修复路径",
         "delivery-execution-control",
@@ -13146,7 +13161,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-grill-me-loop-progression",
+    "wise-agent-should-grill-me-loop-progression",
     (
         "grill-me 盘问门禁",
         *DECISION_GRILL_BOUNDARY_TERMS,
@@ -13179,7 +13194,7 @@ expected_handling_has(
 )
 
 behavior_contract_has(
-    "delivery-collab-should-grill-me-loop-progression",
+    "wise-agent-should-grill-me-loop-progression",
     (
         "first_response_must_include",
         "first_response_must_not_include",
@@ -13216,7 +13231,7 @@ behavior_contract_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-reconcile-grill-me-snapshot-before-execution",
+    "wise-agent-should-reconcile-grill-me-snapshot-before-execution",
     (
         "grill-me 决策快照",
         "执行前对账门禁",
@@ -13244,7 +13259,7 @@ expected_handling_has(
 )
 
 behavior_contract_has(
-    "delivery-collab-should-reconcile-grill-me-snapshot-before-execution",
+    "wise-agent-should-reconcile-grill-me-snapshot-before-execution",
     (
         "pre_execution_gate",
         "snapshot_must_include",
@@ -13273,7 +13288,7 @@ behavior_contract_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-backflow-confirmed-domain-term-after-grill",
+    "wise-agent-should-backflow-confirmed-domain-term-after-grill",
     (
         "grill-me 决策快照与知识回流路径",
         "执行前先对账",
@@ -13292,7 +13307,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-stop-domain-writeback-on-code-conflict",
+    "wise-agent-should-stop-domain-writeback-on-code-conflict",
     (
         "领域知识冲突门禁",
         "现有术语与对象表",
@@ -13309,7 +13324,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-avoid-adr-for-reversible-wording-choice",
+    "wise-agent-should-avoid-adr-for-reversible-wording-choice",
     (
         "知识回流与 ADR 准入判断",
         "可逆",
@@ -13325,7 +13340,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-assetize-grill-me-handoff",
+    "wise-agent-should-assetize-grill-me-handoff",
     (
         "grill-me 盘问门禁",
         "知识回流视图",
@@ -13355,7 +13370,7 @@ expected_handling_has(
 )
 
 behavior_contract_has(
-    "delivery-collab-should-assetize-grill-me-handoff",
+    "wise-agent-should-assetize-grill-me-handoff",
     (
         "trigger_gate",
         "assetization_gate",
@@ -13384,7 +13399,7 @@ behavior_contract_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-install-mattpocock-grill-me-v1-1",
+    "wise-agent-should-install-mattpocock-grill-me-v1-1",
     (
         "skill-installer",
         "Matt Pocock skills",
@@ -13407,7 +13422,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-knowledge-expression-gate",
+    "wise-agent-should-knowledge-expression-gate",
     (
         "知识表达 / 意图可执行门禁",
         "Knowledge-to-Execution Card",
@@ -13424,7 +13439,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-nonstandard-problem-mode",
+    "wise-agent-should-nonstandard-problem-mode",
     (
         "非标问题模式",
         "非标问题处理包",
@@ -13441,7 +13456,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-practical-coding-loop",
+    "wise-agent-should-practical-coding-loop",
     (
         "实际项目编码 Loop",
         "delivery-execution-control",
@@ -13461,7 +13476,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-feedback-loop-verification-cluster",
+    "wise-agent-should-feedback-loop-verification-cluster",
     (
         "反馈闭环成熟度 / 验证簇准入模式",
         "L2/L3/L4/L5",
@@ -13484,7 +13499,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-architecture-entropy-loop",
+    "wise-agent-should-architecture-entropy-loop",
     (
         "架构排熵 Loop / 腐朽门禁模式",
         "delivery-execution-control",
@@ -13507,7 +13522,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-plan-to-goal-bridge-without-new-flow",
+    "wise-agent-should-plan-to-goal-bridge-without-new-flow",
     (
         "Plan-to-Goal",
         "不是新增场景视图或独立流程",
@@ -13526,12 +13541,12 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-map-sdlc-without-renaming-main-flow",
+    "wise-agent-should-map-sdlc-without-renaming-main-flow",
     (
         "主能力域",
         "协同域",
         "以交付编排为主能力域，以工程治理为协同域",
-        "产研协同体系是稳定主入口",
+        "知止者是稳定主入口",
         "交付编排、工程治理、知识演进是稳定能力域",
         "SDLC 只作为构想、开发、运行支持、维护演进和退役的生命周期覆盖框架",
         "安全、权限、风险、可追溯性和知识回流横贯各阶段",
@@ -13542,7 +13557,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-default-lightweight-lifecycle-routing",
+    "wise-agent-should-default-lightweight-lifecycle-routing",
     (
         "轻量生命周期定位",
         "当前只定位设计评审阶段",
@@ -13559,32 +13574,31 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-product-judgment-loop-admission",
+    "wise-agent-should-product-judgment-loop-admission",
     (
-        "产品判断 Loop 准入路径",
-        "交接成熟度",
-        "owner",
-        "验证与停止条件",
+        "知止者装载产品架构能力",
         "product-judgment-action-chain",
+        "访谈、工单、竞品、路线图、PRD 和复盘材料",
+        "直接完成产品判断",
         "已知事实 / 证据",
         "判断动作",
         "取舍结论",
         "不做项",
         "下一产物",
+        "产品 owner",
         "工程交接结论",
-        "不直接进入系分、TDD、编码或 Execution Grant",
+        "不进入系分、TDD、编码或 Execution Grant",
         "不安装或照搬外部 pm-skills",
     ),
 )
 
 expected_handling_has(
-    "delivery-collab-should-route-business-architecture-planning",
+    "wise-agent-should-route-business-architecture-planning",
     (
-        "业务架构规划到工程交接准入路径",
-        "交接成熟度",
+        "知止者装载产品架构能力",
+        "直接交付业务架构准入卡",
         "owner",
-        "授权策略",
-        "知识库回流落点",
+        "授权",
         "验证与停止条件",
         "business-architecture-planning",
         "业务架构准入卡",
@@ -13595,7 +13609,7 @@ expected_handling_has(
         "差距 / 依赖 / 优先级",
         "项目组合 / 路线图",
         "按业务域或模块分区",
-        "不直接生成系统设计、TDD、编码任务或 Execution Grant",
+        "不直接脑补系统设计、TDD、编码任务或 Execution Grant",
     ),
 )
 
@@ -13631,7 +13645,7 @@ expected_handling_has(
         "owner",
         "验收 / 停止条件",
         "交接路由",
-        "产研协同体系前置门禁",
+        "知止者前置门禁",
         "不安装、复制或照搬外部 pm-skills",
     ),
 )
@@ -13789,7 +13803,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-delivery-execution-control",
+    "wise-agent-should-delivery-execution-control",
     (
         "Agent Loop Engineering",
         "delivery-execution-control",
@@ -13817,7 +13831,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-agent-loop-maturity-diagnosis",
+    "wise-agent-should-agent-loop-maturity-diagnosis",
     (
         "Agent Loop Engineering / L1-L4 工程成熟度诊断",
         "delivery-execution-control",
@@ -13841,7 +13855,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-design-engineering-loop-not-prompting",
+    "wise-agent-should-design-engineering-loop-not-prompting",
     (
         "Agent Loop Engineering / 设计工程 Loop",
         "delivery-execution-control",
@@ -13874,7 +13888,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-wisdom-lens-loop-scheduling",
+    "wise-agent-should-wisdom-lens-loop-scheduling",
     (
         "华夏经世智慧 / Loop 取舍校准 / Wisdom Lens 模式",
         "decision-calibration",
@@ -13902,9 +13916,9 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-unify-ai-workflows-with-yinyang-principle",
+    "wise-agent-should-unify-ai-workflows-with-yinyang-principle",
     (
-        "产研协同体系混一总纲 / Wisdom Lens 取舍校准路径",
+        "知止者混一总纲 / Wisdom Lens 取舍校准路径",
         "华夏经世智慧",
         "delivery-execution-control",
         "decision-calibration",
@@ -13926,7 +13940,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-classic-wisdom-lens-supplement",
+    "wise-agent-should-classic-wisdom-lens-supplement",
     (
         "Loop 取舍校准 / Wisdom Lens 的经典源补足路径",
         "decision-calibration",
@@ -13957,7 +13971,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
+    "wise-agent-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
     (
         "AI bug / 补丁门禁",
         "verification-review-release",
@@ -13982,7 +13996,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-development-standards-gate",
+    "wise-agent-should-development-standards-gate",
     (
         "开发标准门禁模式",
         "需求基线稳定性",
@@ -13999,7 +14013,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-prd-ai-prescan-review",
+    "wise-agent-should-prd-ai-prescan-review",
     (
         "PRD AI 预扫描 + 合议预审模式",
         "product-prd-quality-gates",
@@ -14017,7 +14031,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-final-deliverable-document-gate",
+    "wise-agent-should-final-deliverable-document-gate",
     (
         "最终文档准出模式",
         "正式 PRD/系分/Spec 正文与过程资产",
@@ -14027,7 +14041,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-spec-template-practices",
+    "wise-agent-should-spec-template-practices",
     (
         "PRD / SDD / 实现 Spec 三层边界",
         "不可让 AI 猜",
@@ -14037,7 +14051,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-production-sdd-source-of-truth",
+    "wise-agent-should-production-sdd-source-of-truth",
     (
         "SDD 生产代码模式",
         "spec-template-practices",
@@ -14055,7 +14069,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-fact-boundary-check",
+    "wise-agent-should-fact-boundary-check",
     (
         "事实",
         "推断",
@@ -14075,7 +14089,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-admit-open-code-review",
+    "wise-agent-should-admit-open-code-review",
     (
         "工具准入",
         "Open Code Review / OCR",
@@ -14094,7 +14108,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-source-quality-review-loop",
+    "wise-agent-should-source-quality-review-loop",
     (
         "源码质量评审 Loop",
         "verification-review-release",
@@ -14162,7 +14176,7 @@ expected_handling_has(
     "wind-coding-conventions-should-trigger-agents-template",
     (
         "Wind 项目 AGENTS 初始化",
-        "产研协同体系做项目约规入口编排",
+        "知止者做项目约规入口编排",
         "wind-project-agents-template.md",
         "AGENTS.md 草案",
         "项目事实待确认项",
@@ -14204,7 +14218,7 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-route-practical-design-documents",
+    "wise-agent-should-route-practical-design-documents",
     (
         "核心名相",
         "场景与流程",
@@ -14222,7 +14236,19 @@ expected_handling_has(
 )
 
 expected_handling_has(
-    "delivery-collab-should-use-optional-reference-index",
+    "wise-agent-should-keep-lightweight-refund-on-generic-product-path",
+    (
+        "知止者保持统一行动主体",
+        "产品通用能力",
+        "工程测试视角",
+        "单个退款词不等于支付专项证据",
+        "不读取 payment-scenario-routing",
+        "不展开整棵垂直知识树",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-use-optional-reference-index",
     (
         "参考资料与证据索引",
         "链接或路径",
@@ -14358,15 +14384,7 @@ check(
 
 check(
     "delivery collaboration routes document and philology owners",
-    has_all(
-        collaboration_skill,
-        [
-            "`document-authoring`",
-            "`hanzi-philology`",
-            "训诂证据卡",
-            "《说文解字》",
-        ],
-    )
+    has_all(collaboration_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         collaboration_skill_type_owner_routing,
         [
@@ -14427,6 +14445,10 @@ check(
     ),
 )
 
+expected_handling_has(
+    "wise-agent-should-explain-zhizhi-canonical-name",
+    ("目标止点", "权限边界", "完成证据", "停止 / 交还条件", "知止不是不行", "察 -> 辨 -> 谋 -> 行 -> 验 -> 化", "本义就是行走"),
+)
 expected_handling_has(
     "document-authoring-should-formalize-report",
     (

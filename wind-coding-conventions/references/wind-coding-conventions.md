@@ -7,7 +7,7 @@
 - 项目本地 `AGENTS.md`、任务说明或用户明确要求遵守 Wind 编码约规。
 - Maven/Gradle 依赖、包名/import、Wind 类型或模块上下文提供 Wind/Nobe 高置信度信号。
 - 评审 face/impl 模块边界、接口放置、基础服务、方法签名、服务/模型/枚举命名、应用层服务、DTO/Request/Query/Entity、查询字段命名、内网 API、安全等级、系统字典/国际化、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
-- 初始化或改进遵循 Wind 约规项目的本地 `AGENTS.md`，让 产研协同体系能按项目规则调度产品、架构、Wind 规则和代码生成能力。
+- 初始化或改进遵循 Wind 约规项目的本地 `AGENTS.md`，让 知止者能按项目规则调度产品、架构、Wind 规则和代码生成能力。
 
 ## 不适用场景
 
@@ -23,6 +23,16 @@
 - Java/Spring 编码细则读本 Skill 的 `java-coding-conventions.md`；Wind 项目族端口、Starter、Trace、安全和企业集成模式读 `wind-architecture-patterns.md`；Service/API/DTO/Query 的通用设计、测试/TDD、模块依赖和深度源码 CR 仍交 `资深架构师`；需要最佳实践正反例时读 `wind-coding-examples.md`。
 
 重复规则归位：所有 Java 项目的通用编码细则归 `java-coding-conventions.md`；命中 Wind/Nobe 后的 face/impl、模型包位、基础服务模板、查询方法语义、`XxxQuery` 后缀、内网 API 路径安全等级、系统字典/国际化和业务事件 Key 归本文件；通用架构、源码级 CR、调试、测试策略和生产风险归 `资深架构师`。有冲突时，项目本地 `AGENTS.md` / OpenSpec / ADR 优先，其次才是已命中的 Wind 项目特化规则。
+
+专项启用分三层：
+
+| 层级 | 启用条件 | 规则示例 |
+| --- | --- | --- |
+| Wind 通用专项 | 已命中 Wind/Nobe 高置信度信号 | face/impl、Entity 不外露、服务与模型边界；出现币种字段时无条件统一使用 `CurrencyIsoCode` |
+| 依赖专项 | 对应依赖、import 或源码上下文存在 | JSpecify、Bean Validation、Lombok、MapStruct、MyBatis Flex |
+| 项目数据库专项 | 项目 `AGENTS.md`、既有 schema 或数据库约规已采用对应 Wind MySQL 表约规 | `id`、`gmt_create`、`gmt_modified` 等字段与类型 |
+
+不得为了启用依赖专项新增依赖；但 `CurrencyIsoCode` 是 Wind 币种契约本身，当前模块不能引用时应修正模块依赖或契约归属，不得退回 `String`、整数或业务私有币种枚举。
 
 ## 按任务读取索引
 
@@ -92,32 +102,32 @@
 | 框架配置、通用技术适配、MyBatis Flex helper | `infrastructure` |
 
 - `DTO`、`Request`、`Query`、`Response`、`Command`、`Event` 的 primitive 或包装类型按缺省、零值和序列化语义选择，不机械装箱；并发 Atomic 类型不得进入数据传输契约。
-- 币种字段统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举，覆盖 DTO、Request、Query、Command、Entity、事件和内部模型；不得用 `String currency`、Integer、业务私有币种枚举或魔法常量承载。外部协议中的字符串币种只在 Adapter/Converter 边界转换，进入服务契约和领域处理前必须归一为 `CurrencyIsoCode`。
+- Wind 项目一旦出现币种字段，必须统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode` 枚举，覆盖 DTO、Request、Query、Command、Entity、事件和内部模型；不得用 `String currency`、Integer、业务私有币种枚举或魔法常量承载。外部协议中的字符串币种只在 Adapter/Converter 边界转换，进入服务契约和领域处理前必须归一为 `CurrencyIsoCode`。
 - 枚举命名和模板：生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`；对外枚举放 `*-face/enums` 或稳定公共 `core/enums`，只给 impl 使用的内部枚举留在 `*-impl`。公开枚举优先实现 `DescriptiveEnum`，使用 `@Getter`、`@AllArgsConstructor`、`private final String desc`，枚举值使用大写下划线；需要颜色、层级或前端展示时通过 DTO/Converter 输出，不把展示字段随意塞进业务枚举。
 - 系统字典、国际化和业务事件：Key 是稳定契约，展示文案可调整；业务逻辑、持久化判断和状态机只能依赖 code、enum、errorCode 或 eventKey，不依赖中文、英文文案或翻译结果。Key 按场景分命名空间，常用前缀为 `ui.`、`enum.`、`error.`、`event.`、`config.`；同一中文在不同业务场景也不要复用 Key。业务事件、审计展示和可回放消息存 `{eventKey, params}`，不存渲染后的中文句子；params 放业务 code 或变量值，不放“已支付”这类可变文案。Key 只能新增和废弃，语义改变必须新建 Key，历史 Key 不随意删除。
 - 公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc，说明职责、调用方、空值、异常、权限、幂等、事务和副作用；注释说明 Why / Why not，不翻译代码。
-- 内部 Java 空值契约用 JSpecify；API 入参用 Bean Validation；业务前置条件和状态条件用项目断言工具。已由 JSpecify 标为非空的值，不再加无业务语义的空判断。若 `ServiceImpl` 会为 Request 字段补默认值，该字段的 Bean Validation 必须允许缺省，默认值应在服务入口归一化后再参与幂等查询、唯一键判断、转换和落库；不得把基础服务内部默认值泄露给调用方或上层 ApplicationService。
+- 项目已依赖 JSpecify 时，内部 Java 空值契约使用 JSpecify；项目已使用 Bean Validation 时，API 入参沿用对应注解；业务前置条件和状态条件使用项目断言工具。已由 JSpecify 标为非空的值，不再加无业务语义的空判断。若 `ServiceImpl` 会为 Request 字段补默认值，该字段的 Bean Validation 必须允许缺省，默认值应在服务入口归一化后再参与幂等查询、唯一键判断、转换和落库；不得把基础服务内部默认值泄露给调用方或上层 ApplicationService。
 - 金额必须明确币种、精度和舍入规则；时间必须明确格式、时区和精度；ID 必须考虑唯一性、可追踪、并发和外部暴露风险。
 - Spring Bean 优先构造注入；Lombok 只减少样板代码，不隐藏业务不变量、状态变化、副作用或敏感字段。
-- MapStruct 放 `mapstruct`，命名 `XxxConverter`，方法 `convertToXxx`；只做转换和确定性派生值，不做业务校验、权限、远程调用、数据库查询、状态流转或审计。字段重命名、枚举、空值策略和默认值必须显式声明并补测试。
+- 项目已使用 MapStruct 时，Converter 放 `mapstruct`，命名 `XxxConverter`，方法 `convertToXxx`；只做转换和确定性派生值，不做业务校验、权限、远程调用、数据库查询、状态流转或审计。字段重命名、枚举、空值策略和默认值必须显式声明并补测试。
 
 ## 4. DAL 与外部集成
 
-- Wind 数据表强制包含 `id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime`；`creator`、`modifier`、`order_index int(11)` 按需使用，前两者类型遵循项目约规。新增字段如果为必填，必须有默认值；没有真实业务默认值时字段必须可空。
+- 项目已采用 Wind MySQL 表约规时，数据表强制包含 `id bigint`、`gmt_create datetime`、`gmt_modified datetime`；`creator`、`modifier`、`order_index int` 按需使用，前两者类型遵循项目约规。其他数据库或已有 schema 先服从项目本地数据约规，不机械迁移字段。新增必填字段必须有兼容迁移方案；没有真实业务默认值时不得虚构默认值。
 - 业务如果有唯一约束，必须使用数据库唯一键约束，以保证可靠性；没有自然业务唯一约束时不得虚构联合唯一键。
 
 通用表字段：
 
 | 字段名称 | 数据库类型 | 字段说明 | 要求 |
 | --- | --- | --- | --- |
-| `id` | `bigint(20)` | 主键 | 强制 |
+| `id` | `bigint` | 主键 | 强制 |
 | `gmt_create` | `datetime` | 创建时间 | 强制 |
 | `gmt_modified` | `datetime` | 最后更新时间 | 强制 |
 | `creator` | 项目约规类型 | 创建人 | 可选 |
 | `modifier` | 项目约规类型 | 修改人 | 可选 |
-| `order_index` | `int(11)` | 排序 | 可选 |
+| `order_index` | `int` | 排序 | 可选 |
 
-- MyBatis Flex 使用 `XxxRefs` 和统一 helper 构造 `QueryWrapper`；禁止新增 `LambdaQueryWrapper` 或裸字符串字段名；分页有上限，排序白名单，写库默认 selective。
+- 项目实际使用 MyBatis Flex 时，使用 `XxxRefs` 和统一 helper 构造 `QueryWrapper`；禁止新增 `LambdaQueryWrapper` 或裸字符串字段名；分页有上限，排序白名单，写库默认 selective。
 - QueryWrapper 构造逻辑优先沉淀到 helper 或基础服务，避免到处手写条件；源码样本中的标准链路是 `MybatisQueryHelper.from(options)` 或项目 helper 构造排序/分页，再用 `XxxNameRefs` 拼条件，最后通过 `MybatisQueryHelper.<Entity, DTO>query(queryWrapper).counter(mapper::selectCountByQuery).resultQueryFunc(mapper::selectListByQuery).converter(XxxConverter.INSTANCE::convertToXxxDTO).query(options)` 输出分页 DTO。排序入参优先使用项目统一的 `orderFields` / `orderTypes` 或 `WindQuery<? extends QueryOrderField>`，必须白名单校验字段和方向；复杂 SQL 说明索引、分页、排序、数据量和慢查询风险。
 - 空结果分支：关键词、权限、外部检索等前置条件查不到数据时，优先返回 `Pagination.empty()` / `CursorPagination.empty()` 这类统一空分页，不返回 null、不伪造一页空对象、不绕过总数语义。
 - 需要把字段更新为 null 时，必须显式指定更新列，说明业务语义，并处理 `gmt_modified`。
@@ -138,5 +148,5 @@
 - 测试说明放在测试方法名、Javadoc 或方法级注释中，表达场景、输入、行为、输出和红线；测试结构优先 Given/When/Then 或 Arrange/Act/Assert。
 - 完成 TDD 或 AI 生成实现后做设计质量回看：是否新增浅服务、透传接口、无主依赖、过度抽象、内部链路 mock、AI 注释噪声或只为过测试的战术实现。
 - CR 检查 Wind/Nobe 启用证据、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全分类与鉴权、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
-- Wind 专项已启用的项目可先运行 `wind-coding-conventions/scripts/check_wind_conventions.py --root <project>` 做启发式预检；当前脚本只检查 String 币种字段、部分 face 导入/单行签名泄漏、`queryXxxById` 命名、部分非 selective 更新和生产内存 Service，不承诺识别多行 Java 语法、依赖方向、多实现装配或锁语义。需要确定性约束时优先在目标项目使用 ArchUnit、PMD、编译或契约测试；脚本和静态检查都不替代架构师源码级 CR。
+- 普通 Java 项目可运行 `wind-coding-conventions/scripts/check_wind_conventions.py --profile java --root <project>` 检查 `testXxx`；Wind 项目使用默认的 `--profile wind` 叠加 String 币种字段、部分 face 导入/单行签名泄漏、`queryXxxById` 命名、部分非 selective 更新和生产内存 Service 预检。脚本不承诺识别完整 Java 语法、依赖方向、多实现装配或锁语义；需要确定性约束时优先在目标项目使用 Checkstyle、PMD、ArchUnit、编译或契约测试。
 - 接入 Open Code Review / OCR 时，Wind 约规可作为项目 `.opencodereview/rule.json` 或 `ocr review --background` 的规则输入，重点覆盖 face/impl、模型归位、Entity 不外露、基础服务、查询命名、内网 API、字典/国际化、MyBatis Flex、币种枚举、测试黑盒和内存服务红线；但 OCR 不是 Wind 规则权威，工具输出必须由 `资深架构师` 按源码事实、项目 `AGENTS.md`、测试结果和本 Skill 重新判读。

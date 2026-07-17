@@ -21,7 +21,7 @@ from typing import Any, Sequence
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIRS = sorted(path.parent.name for path in ROOT.glob("*/SKILL.md"))
 SCRIPTLESS_VALIDATED_SKILLS = {
-    "delivery-collab",
+    "wise-agent",
     "wind-coding-conventions",
 }
 REQUIRED_VALIDATE_HOOKS = [
@@ -391,7 +391,7 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
     warnings: list[str] = []
     score = 80
     expected_terms = {
-        "delivery-collab": ["产研协同", "GSD/CAD", "验证矩阵"],
+        "wise-agent": ["知止者", "自己判断并推进", "只读 CR", "补单元测试"],
         "document-authoring": ["document-authoring", "正式报告", "DOCX"],
         "hanzi-philology": ["hanzi-philology", "甲骨文", "《说文解字》"],
         "java-service-code-generator": ["CREATE TABLE", "字段表格", "Java Entity"],

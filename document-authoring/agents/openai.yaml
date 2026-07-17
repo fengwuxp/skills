@@ -2,3 +2,5 @@ interface:
   display_name: "专业文档撰写"
   short_description: "将分散材料整理为可评审、可修订并可交付的正式专业文档"
   default_prompt: "Use $document-authoring 将当前材料整理为面向目标读者的正式文档，并完成事实、引用、修订和交付检查。"
+policy:
+  allow_implicit_invocation: true

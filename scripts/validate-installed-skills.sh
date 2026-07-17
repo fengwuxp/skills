@@ -54,7 +54,7 @@ while IFS= read -r skill_md; do
   done < <(find "${source_dir}" -type f -print0)
 done < <(find "${ROOT_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 
-for retired in wind-project-coding-conventions; do
+for retired in wind-project-coding-conventions delivery-collab; do
   if [[ -e "${TARGET_ROOT}/${retired}" ]]; then
     fail "retired skill remains installed: ${TARGET_ROOT}/${retired}"
   fi

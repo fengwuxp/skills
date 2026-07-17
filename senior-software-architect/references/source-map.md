@@ -73,7 +73,7 @@
 | `architecture.md` | 增加 `5.3.2 深模块与信息隐藏`，把深模块 / 浅模块、信息隐藏、按任务职责分解、设计两次、多文件小改动信号和“长度不是坏味本身，复杂性才是”纳入架构评审。 |
 | `wind-coding-conventions/references/java-coding-conventions.md` | 补充复杂度可控、错误处理低层屏蔽 / 高层聚合、谨慎使用“定义错误不存在”、注释先行、命名面向读者和 TDD 后设计质量回看。 |
 | `coding-review-deep-dive.md` | 增加复杂性投资检查，识别浅模块堆叠、直通包装、信息泄露、多文件小改动、战术 AI 代码和 Classitis。 |
-| `delivery-collab/SKILL.md`、`references/delivery-execution-control.md` | 在产研协同 中增加复杂度投资门禁，要求 AI 生成代码不能只追求测试变绿、PR 变多或代码更短，必须检查理解成本和维护成本。 |
+| `wise-agent/SKILL.md`、`references/delivery-execution-control.md` | 在产研协同 中增加复杂度投资门禁，要求 AI 生成代码不能只追求测试变绿、PR 变多或代码更短，必须检查理解成本和维护成本。 |
 | `README.md`、`scripts/validate-trigger-paths.py` | 补充公开来源记录和防漂移断言。 |
 未吸收内容：
 - 不复制文章原文、书籍内容、案例、标题传播话术、作者表达或可能受版权保护的材料。
@@ -264,7 +264,7 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 | --- | --- |
 | `diagram-output.md` | 新增 AI 辅助可编辑图治理，要求先给出图形 brief，按业务上下文、容器/应用、组件、运行时交互、部署、数据/消息和观测分层拆解；保留 SVG、draw.io XML、Mermaid 或生成脚本等可编辑源；检查敏感信息、版权边界、远程资源、错误连线、异常路径、颜色语义和文本溢出。 |
 | `diagram-output.md` | 新增陌生代码库图形化理解包，要求只读提取组件、入口、启动顺序、认证权限、外部系统、数据/消息/状态流、源码锚点和未确认连接，再判断能否进入实现或 CR。 |
-| `delivery-collab/references/engineering-governance.md` | 补充 AI Native Harness 对图形化理解 brief 的调度要求，避免陌生代码库或多模块变更只靠文字总结进入实现。 |
+| `wise-agent/references/engineering-governance.md` | 补充 AI Native Harness 对图形化理解 brief 的调度要求，避免陌生代码库或多模块变更只靠文字总结进入实现。 |
 | `skill-tree-platform-leadership-ai.md` | 在技术表达与图文能力中补充 AI 辅助画图只是可编辑草案，架构师仍需校验视图层级、节点责任、箭头语义、敏感信息、版权边界和工程验证闭环。 |
 | `README.md` | 新增公开参考来源记录，说明只吸收 AI + draw.io、C4、arc42、draw.io 官方文档中的通用方法和治理边界。 |
 | `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI 辅助可编辑图治理、来源记录和图形能力入口漂移。 |
@@ -313,7 +313,7 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 ### 微信公众号文章：架构30：架构思维：需求分析
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/B8Rap_MmAKmVN3f7eAnvCw`；标题：`架构30：架构思维：需求分析`；作者字段：`开心就好TF`；页面时间字段：2026-06-07 09:34:00 Asia/Shanghai；读取日期：2026-06-09。`web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文（发布时间取页面时间字段）；用于 `product-design.md` 的需求澄清门禁、`system-analysis-design.md` 的系分前需求分析门禁，以及 AI Native / 产品专家的需求分析结论卡；不复制原文、案例、作者表达、标题传播话术或时间投入比例，不把单篇文章观点写成组织制度、项目事实、执行授权或架构师必须越过产品 owner 的理由。
 ### 微信公众号文章：标准与需求基线
-- 来源/读取/应用：`https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw`；标题：`[013] 标准不是摆设——需求标准、设计标准、编码标准怎么写`。`https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q`；标题：`[014] 85%返工都是需求的锅——为啥说需求是软件的根本`。作者/账号字段为 `AIIIIlIIII`；页面时间字段分别为 2026-05-23 07:24:00 与 2026-05-26 06:21:00 Asia/Shanghai；读取日期：2026-06-09。首篇 `web.open` 未取得正文，随后两篇均通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。应用到 `system-analysis-design.md` 的需求基线和高层/详细设计分工、`wind-coding-conventions/references/java-coding-conventions.md` 的规则原因/示例/验证方式与防御式编程、`testing.md` 的需求驱动测试门禁，并由 `delivery-collab` / 产品专家维护需求 / 设计 / 编码标准门禁。不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文；不把单篇文章写成通用合规结论、项目制度或 Execution Grant。
+- 来源/读取/应用：`https://mp.weixin.qq.com/s/W44YHT-9bUCrSjsrZIYItw`；标题：`[013] 标准不是摆设——需求标准、设计标准、编码标准怎么写`。`https://mp.weixin.qq.com/s/MO8EsLHm9QNauNLDQ1Z05Q`；标题：`[014] 85%返工都是需求的锅——为啥说需求是软件的根本`。作者/账号字段为 `AIIIIlIIII`；页面时间字段分别为 2026-05-23 07:24:00 与 2026-05-26 06:21:00 Asia/Shanghai；读取日期：2026-06-09。首篇 `web.open` 未取得正文，随后两篇均通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。应用到 `system-analysis-design.md` 的需求基线和高层/详细设计分工、`wind-coding-conventions/references/java-coding-conventions.md` 的规则原因/示例/验证方式与防御式编程、`testing.md` 的需求驱动测试门禁，并由 `wise-agent` / 产品专家维护需求 / 设计 / 编码标准门禁。不复制原文、适航/DO-178C 语境、标题比例、案例、作者表达或标准条文；不把单篇文章写成通用合规结论、项目制度或 Execution Grant。
 - 微信公众号文章《编写高质量代码注释与可读性重构指南》：`https://mp.weixin.qq.com/s/oDZRKB4rNlIrgbuP-qDbDA`。作者字段为 `techfightyang`，账号字段为 `秋之筠的技术哲思`，页面 `ct` 字段转换为 2026-06-13 21:14:40 Asia/Shanghai；2026-06-16 `web.open` 未取得正文，本轮未执行 Playwright 等价浏览器取证，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、发布时间和正文。公开内容用于参考 `wind-coding-conventions/references/java-coding-conventions.md` 的注释规约和 `coding-review-deep-dive.md` 的注释与可读性重构 CR 门禁，要求先用命名、方法抽取、常量/枚举、强类型/值对象和测试表达意图，注释只补充业务约束、设计取舍、外部规则、历史坑点和 Why not；不得用注释掩盖弱命名、长方法、魔法值、弱类型、隐式契约或缺测试。不复制原文、代码示例、表格、排版、作者表达或标题传播话术；不把注释写成替代产品语义、架构设计、测试、源码阅读、CR 结论或验证证据的手段；不擅自删除承载历史决策、兼容说明、迁移参考或用户明确要求保留的注释。
 ### 微信公众号文章：需求分析和设计活动关键要点总结
 - 来源/读取：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`；标题：`需求分析和设计活动关键要点总结`；公众号：`软件需求分析和设计`；作者：`常识`；发布时间：2026-05-26 10:29:23；读取日期：2026-06-01。已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间和正文；随后使用本机 Chrome headless 作为 Playwright 等价浏览器读取到标题、作者、发布时间和正文；未见明确复用许可证。

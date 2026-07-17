@@ -1,8 +1,8 @@
 # 目标治理
 
-本文定义产研协同体系的 Goal 目标层。Goal 是显式目标管理和持续推进契约，用来说明为什么持续推进、做到什么才算完成、预算 / 时间盒如何约束、何时停止、如何验证和交接；它不等于当前会话自动创建运行时 Goal，也不替代测试通过或发布批准。用户明确要求 `GSD + Goal 按任务计划推进` 时，Goal 可以挂接 Plan Grant，让范围内低风险本地任务按计划推进。
+本文定义知止者的 Goal 目标层。Goal 是显式目标管理和持续推进契约，用来说明为什么持续推进、做到什么才算完成、预算 / 时间盒如何约束、何时停止、如何验证和交接；它不等于当前会话自动创建运行时 Goal，也不替代测试通过或发布批准。用户明确要求 `GSD + Goal 按任务计划推进` 时，Goal 可以挂接 Plan Grant，让范围内低风险本地任务按计划推进。
 
-对外统一归入产研协同体系；Goal 是目标层，GSD 是分波计划层，CAD 是原子执行子循环。输出时不要要求用户在 `GSD + Goal`、`CAD + Goal`、`Spec + Goal` 和 `Loop` 间手动选择，而是说明当前任务使用了哪些内部层。
+对外统一归入知止者；Goal 是目标层，GSD 是分波计划层，CAD 是原子执行子循环。输出时不要要求用户在 `GSD + Goal`、`CAD + Goal`、`Spec + Goal` 和 `Loop` 间手动选择，而是说明当前任务使用了哪些内部层。
 
 ## 使用时机
 
@@ -48,7 +48,7 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `planning-execution-admission.md` | 输出为产研协同体系的产研交付视图，不展开 CAD 执行细则 |
+| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `planning-execution-admission.md` | 输出为知止者的产研交付视图，不展开 CAD 执行细则 |
 | 先计划再创建 Goal / 推进执行 | `Plan-to-Goal Bridge`、`1. Goal 边界`、`3A. Plan Grant` | 不新增场景视图，不把计划等同授权 |
 | 做 `GSD + Goal + Loop` | `1. Goal 边界`、`3B. GSD + Goal + Loop`，再读 `delivery-execution-control.md` | 不把 Loop 当授权或完成证据 |
 | 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `engineering-governance.md` | 输出为 CAD 原子子循环，不把 Goal 当 Execution Grant |
@@ -60,7 +60,7 @@
 
 ## Plan-to-Goal Bridge
 
-Plan-to-Goal Bridge 是进入 Goal / Plan Grant 前的桥接检查，不是新的场景视图、模式或独立 Skill。它用于把“先计划，再创建 Goal / 按计划推进 / 验证完成”这类诉求收敛进产研协同体系的产研交付视图。
+Plan-to-Goal Bridge 是进入 Goal / Plan Grant 前的桥接检查，不是新的场景视图、模式或独立 Skill。它用于把“先计划，再创建 Goal / 按计划推进 / 验证完成”这类诉求收敛进知止者的产研交付视图。
 
 最小结构：
 

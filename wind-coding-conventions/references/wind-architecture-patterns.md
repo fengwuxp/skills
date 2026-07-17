@@ -72,8 +72,8 @@
 
 ### 2.2 空值与参数约束
 
-- 内部 Java 契约用 JSpecify，API 数据契约用 Bean Validation，其他前置条件和状态条件用 `AssertUtils`。
-- 已由 JSpecify 标注为非空的普通参数、返回值和字段，不再重复写无业务语义的空判断。
+- 项目已引入 JSpecify 时，内部 Java 契约用 JSpecify；已引入 Bean Validation 时，API 数据契约用 Bean Validation；其他前置条件和状态条件使用项目既有 `AssertUtils` 或等价断言工具。
+- 已由项目启用的 JSpecify 标注为非空的普通参数、返回值和字段，不再重复写无业务语义的空判断。
 - 可空返回值必须通过注解或 Optional 明确表达。
 
 ## 3. 编码风格提炼

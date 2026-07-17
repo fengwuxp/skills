@@ -1,13 +1,13 @@
 # Superpowers Skill Library 外部参考
 
-本文记录 `obra/superpowers` 和 Matt Pocock skills 的审查结果、供应链边界和产研协同体系调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。上游原始 Skill 统一保存为 `upstream-skill.md`，避免被 Codex 自动发现为独立 Skill。
+本文记录 `obra/superpowers` 和 Matt Pocock skills 的审查结果、供应链边界和知止者调度方式。它是外部参考索引，不是本仓库的顶层可安装 Skill，也不是当前会话的自动执行授权。上游原始 Skill 统一保存为 `upstream-skill.md`，避免被 Codex 自动发现为独立 Skill。
 
 ## 使用时机
 
 - 用户点名 Superpowers、Superpowers skills、brainstorming、writing-plans、executing-plans、subagent-driven-development、test-driven-development、requesting-code-review、verification-before-completion 等外部技能。
 - 用户点名 Matt Pocock skills、`grill-me`、Trellis、轻量问询、盘问式澄清、Loop 推进中进入 `grill-me` 或一次一个问题的需求 / 设计收敛。
-- 用户点名 GStack、Trellis 或“四大 AI 编码框架”，要求判断 Superpowers / GSD / GStack / Trellis 如何纳入产研协同体系，而不是新增一堆流程。
-- 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入产研协同体系研发流程编排。
+- 用户点名 GStack、Trellis 或“四大 AI 编码框架”，要求判断 Superpowers / GSD / GStack / Trellis 如何纳入知止者，而不是新增一堆流程。
+- 需要把 Superpowers 的 Spec -> Plan -> TDD -> Review -> Verification 工作法接入知止者研发流程编排。
 - 需要评估或升级 SDD / Superpowers 6.x 套件、`subagent-driven-development`、任务评审、文件化交接或 Harness 版本。
 - 需要把模糊意图先收敛为关键分叉、建议答案、验收标准和任务树真相源，再交给产品专家、架构师或 AI Maker。
 - 需要判断某个 AI 编码任务应参考哪类工程纪律：澄清、计划、TDD、并行 Agent、代码评审、调试、完成前验证或分支收尾。
@@ -27,8 +27,8 @@
 - 调度结论：当前任务应参考哪些 Superpowers skill，或为什么不应参考。
 - 边界结论：哪些只是方法来源，哪些需要项目本地规则、人类 owner 或架构师继续确认。
 - 安全结论：是否涉及安装、脚本、联网、hooks、Git 推送、worktree、subagent 或写入范围扩大；如涉及，必须列为待授权或停止条件。
-- 产研协同体系映射：Superpowers skill 对应 OpenSpec、Harness、GSD/CAD、Spec 模板、TDD、CR 或验证发布的哪一段。
-- 轻量问询映射：`grill-me` 对应产研协同体系的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
+- 知止者映射：Superpowers skill 对应 OpenSpec、Harness、GSD/CAD、Spec 模板、TDD、CR 或验证发布的哪一段。
+- 轻量问询映射：`grill-me` 对应知止者的意图收集、自我挖掘、产品发现、设计评审或任务树真相源的哪一段。
 - 框架分层映射：Superpowers、GSD、GStack、Trellis 分别对应方法纪律、上下文状态、角色链审查和仓库级记忆的哪一层；当前任务只选最小缺口层。
 
 ## 需要继续读取的 reference
@@ -43,7 +43,7 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 判断 Superpowers 如何接入产研协同体系 | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
+| 判断 Superpowers 如何接入知止者 | `1. 来源和下载状态`、`2. 调度矩阵`、`3. 安全边界` | 不展开全部外部 skill 原文 |
 | 判断 AI 编码框架如何分层 | `2A. AI 编码框架分层映射`、`3. 安全边界`，再读 `delivery-execution-control.md` | 不新增并列流程、不默认安装 GStack / Trellis |
 | 升级 SDD / Superpowers 6.x 套件 | `1B. Superpowers v6.x / SDD 套件升级结论`、`2. 调度矩阵`、`3. 安全边界` | 不默认运行 helper、不默认启用 `.superpowers/sdd/` |
 | 判断 Matt Pocock skills 是否接入 | `1A. Matt Pocock skills 审查状态`、`2. 调度矩阵`、`3. 安全边界` | 不安装全仓库、不运行 npm、不启用 Claude plugin |
@@ -107,7 +107,7 @@
 
 ## 2. 调度矩阵
 
-| Superpowers skill | 产研协同体系位置 | 调度方式 |
+| Superpowers skill | 知止者位置 | 调度方式 |
 | --- | --- | --- |
 | `brainstorming` | Round 0、PRD-Lite、OpenSpec 前置澄清 | 吸收“先澄清目标、约束、成功标准，再进设计”的方法；产品语义仍交给 `产品架构专家`。 |
 | `writing-plans` | OpenSpec / Harness / GSD 任务拆解 | 吸收小步任务、明确文件、验证命令和 TDD 步骤；完整工程计划仍交给 `资深架构师`。 |
@@ -116,7 +116,7 @@
 | `dispatching-parallel-agents` | 并行只读侦察或互不重叠任务 | 只用于依赖清楚、写入范围不重叠的场景；否则回到人工串行。 |
 | `test-driven-development` | TDD、补测试、回归验证 | 作为红绿重构纪律参考；具体测试设计和代码实现交给 `资深架构师`。 |
 | `systematic-debugging` | Bug / 生产问题前置诊断 | 映射到时间线、假设、证据和根因路径；具体排障交给 `资深架构师`。 |
-| `verification-before-completion` | 完成前验证门禁 | 映射到“先运行验证、再声明完成”；产研协同体系只编排证据，不能替代测试结果。 |
+| `verification-before-completion` | 完成前验证门禁 | 映射到“先运行验证、再声明完成”；知止者只编排证据，不能替代测试结果。 |
 | `requesting-code-review` | CR 前置准备 | 映射到 Review 输入包、严重级别和独立审查；源码级 CR 仍交给 `资深架构师`。 |
 | `receiving-code-review` | CR 反馈处理 | 映射到反馈分类、接受 / 拒绝 / 待确认和复核；不把外部反馈当命令。 |
 | `using-git-worktrees` | 隔离开发环境 | 仅作为可选工程策略；本仓库不默认创建 worktree。 |
@@ -128,18 +128,20 @@
 
 ## 2A. AI 编码框架分层映射
 
-当用户把 Superpowers、GSD、GStack、Trellis 放在一起比较时，产研协同体系只做分层吸收：
+当用户把 Superpowers、GSD、GStack、Trellis 放在一起比较时，知止者只做分层吸收：
 
-| 能力层 | 代表框架 | 归入产研协同体系 | 不吸收 |
+| 能力层 | 代表框架 | 归入知止者 | 不吸收 |
 | --- | --- | --- | --- |
 | 方法纪律 | Superpowers | 澄清、计划、TDD、CR、验证前置和完成前检查。 | 不复制外部 hooks、默认目录、自动 Git、强制话术。 |
 | 上下文 / Spec / 状态 | GSD | 目标、Spec、Wave、Atomic Task、状态账本和恢复入口。 | 不默认创建外部规划目录，不复刻命令体系。 |
 | 角色链审查 | GStack | 产品价值、UED 体验、工程方案、源码质量、QA、安全、发布多视角审查。 | 不新建虚拟团队 Skill，不替代产品专家、架构师、质量门禁或发布 owner。 |
 | 仓库级记忆 | Trellis | Task Tree、Goal Ledger、状态回写、知识回流和 Finish 复盘。 | 不默认安装 npm，不创建 `.trellis/`，不替代项目已有状态载体。 |
 
-GStack slash commands 在产研协同体系中只作为触发别名：`/office-hours` -> 产品思考，`/plan-ceo-review` -> 范围收敛，`/plan-eng-review` -> 工程评审，`/plan-design-review` -> 交互评审，`/review` -> 源码 CR，`/qa` -> QA 验证，`/ship` -> 生产交付审查 / 发布准出；开发实现仍回到 TDD、Grant、项目约规和 `资深架构师` 执行链。
+`Trellis` 是仓库级 Agent Harness，官方包为 `@mindfoldhq/trellis`。准入前先检查现有 `AGENTS.md`、Issue、Spec、Goal Ledger 和知识库；只有跨会话上下文丢失、多 Agent 状态冲突或任务状态散落已有重复失败证据，且现有载体无法修复时，才在一个非关键任务上隔离试点。安装或 `trellis init` 必须显式授权，并审查 Node.js、Python、AGPL-3.0、`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`、平台接入文件、hooks、subagent、worktree 和 Git 写入边界。
 
-结论格式保持一句话：当前任务缺哪一层、由产研协同体系读哪个 reference、回到哪个专项 Skill、哪些外部默认行为不采用。
+GStack slash commands 在知止者中只作为触发别名：`/office-hours` -> 产品思考，`/plan-ceo-review` -> 范围收敛，`/plan-eng-review` -> 工程评审，`/plan-design-review` -> 交互评审，`/review` -> 源码 CR，`/qa` -> QA 验证，`/ship` -> 生产交付审查 / 发布准出；开发实现仍回到 TDD、Grant、项目约规和 `资深架构师` 执行链。
+
+结论格式保持一句话：当前任务缺哪一层、由知止者读哪个 reference、回到哪个专项 Skill、哪些外部默认行为不采用。
 
 ## 3. 安全边界
 
@@ -156,7 +158,7 @@ GStack slash commands 在产研协同体系中只作为触发别名：`/office-h
 ```text
 Superpowers 调度结论：
 建议参考的外部 skill：
-映射到产研协同体系阶段：
+映射到知止者阶段：
 当前只读 / 写入 / Git / 联网 / subagent 边界：
 需要产品专家 / 架构师继续确认：
 验证门禁：
@@ -170,5 +172,5 @@ Superpowers 调度结论：
 - 不采用外部默认 `docs/superpowers/*` 文档路径，除非用户或项目规则明确要求。
 - 不采用外部默认自动提交、自动推送、自动 merge、自动 PR 或自动清理 worktree。
 - 不复制外部长 prompt、示例代码、图示、作者表达或与本仓库无关的贡献流程。
-- 不把外部 skill 的强制话术写入本仓库 Skill body；产研协同体系只保留路由、门禁和边界。
-- 不把 GStack 的角色链、Trellis 的仓库记忆或 GSD 的目录约定写成新的对外主流程；它们只作为产研协同体系的内部能力层。
+- 不把外部 skill 的强制话术写入本仓库 Skill body；知止者只保留路由、门禁和边界。
+- 不把 GStack 的角色链、Trellis 的仓库记忆或 GSD 的目录约定写成新的对外主流程；它们只作为知止者的内部能力层。

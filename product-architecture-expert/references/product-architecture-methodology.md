@@ -30,7 +30,7 @@
 ## 需要继续读取的 reference
 
 - PRD、用户故事、验收标准和产品文档结构读 `product-design-and-prd.md`，需要模板细节再读 `product-prd-template.md`。
-- AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文和产品侧交接读 `ai-native-product-context.md`；端到端 GSD/CAD 准入与 AI 工具编排交给 `delivery-collab`。
+- AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文和产品侧交接读 `ai-native-product-context.md`；端到端 GSD/CAD 准入与 AI 工具编排交给 `wise-agent`。
 - 支付、资金、清结算、账务、VCC、跨境和金融监管相关问题读 `payment-scenario-routing.md`。
 - 图形化交付默认读 `diagram-output.md`，复杂技术图可继续调用 `fireworks-tech-graph`。
 - 产品洞察、资料资产化、客户/竞品/标杆情报分拣、证据推理链和机会雷达读 `product-insight-analyst.md`。

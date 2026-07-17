@@ -376,7 +376,7 @@ Engineering Handoff 输入:
 - 灰度 / 回滚 / 失败回写位置:
 - 执行 owner / 验证 owner / 停止条件:
 
-Engineering Handoff 由产研协同体系编排，不是 Execution Grant、测试通过、Git 授权或上线批准。
+Engineering Handoff 由知止者编排，不是 Execution Grant、测试通过、Git 授权或上线批准。
 
 ## 七、参考资料与证据索引
 | 类型 | 资料名称 | 链接或路径 | 版本/日期 | 用途与核验状态 |
