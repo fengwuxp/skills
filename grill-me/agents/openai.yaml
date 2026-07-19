@@ -1,0 +1,6 @@
+interface:
+  display_name: "Grill Me"
+  short_description: "逐一盘清关键分叉，复用历史结论并形成可执行决策快照"
+  default_prompt: "使用 $grill-me 压力测试当前方案：先从文档、代码、决策和知识库裁决哪些问题可以自答，只对证据无法关闭的剩余 Decision 一次问一个，记录结论，达到 shared understanding 前不执行。"
+policy:
+  allow_implicit_invocation: true

@@ -515,6 +515,58 @@
       }
     },
     {
+      "id": "wise-agent-should-wayfind-before-spec",
+      "skill": "wise-agent",
+      "query": "使用 $wise-agent 推进权限系统重构。目标大致明确，但角色、策略、组织、自定义权限和迁移之间的路线仍很模糊，明显不是一次会话能可靠写成 Spec 或实施计划的；先不要实现，也不要把猜测拆成开发任务。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入知止者的决策寻路路径，而不是直接生成 Spec、Goal Ready、Wave 或实施计划；先命名 Destination 并判断是否真的存在跨轮迷雾，没有迷雾就立即退出寻路；复用项目已有 Issue、Goal Ledger、Spec、Decision Log 或任务状态作为权威载体，未授权时只在当前任务输出，不自动创建外部任务系统；地图只作索引，按 Decisions so far、Frontier、Not yet specified、Out of scope 和 Next decision 保存低分辨率状态，每个决策正文只保留一个权威位置；Frontier 只包含已经能准确表述且未关闭、未阻塞、未占用的决策；每轮最多关闭一个决策，按需把节点路由为 grill-me、research、prototype 或 prerequisite task，决策全部清晰后才交给 Spec / 最小计划，寻路阶段不执行最终方案。",
+      "behavior_contract": {
+        "entry_gate": "目标大致存在、到达目标的路线仍模糊、且工作超过一次会话可可靠承载时才进入决策寻路；没有迷雾时跳过。",
+        "map_must_include": [
+          "Destination",
+          "Decisions so far",
+          "Frontier",
+          "Not yet specified",
+          "Out of scope",
+          "Next decision"
+        ],
+        "node_routes": [
+          "grill-me",
+          "research",
+          "prototype",
+          "prerequisite task"
+        ],
+        "must_not_do": [
+          "不得把地图当决策正文的第二真相源",
+          "不得把尚不能准确表述的迷雾预拆成任务",
+          "不得在寻路阶段执行最终方案",
+          "不得自动创建 Issue、分支、Worker 或外部任务系统"
+        ]
+      }
+    },
+    {
+      "id": "wise-agent-should-skip-wayfinding-for-clear-plan",
+      "skill": "wise-agent",
+      "query": "使用 $wise-agent 按已经确认的 Spec 和实施计划修改当前模块；目标、任务、依赖、验收、写入范围和验证命令都已清楚，本轮可以完成，不要重新做问题地图或决策寻路。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "仍由知止者持有目标和授权边界，但跳过决策寻路；已有 Spec 与实施计划已经关闭关键分叉且当前会话可完成，应按现有工程交付路径执行和验证，不创建 Destination 地图、Frontier、Not yet specified、Issue 或新的 Goal，也不重新进入 grill-me。"
+    },
+    {
       "id": "wise-agent-should-questioning-repair",
       "skill": "wise-agent",
       "query": "$wise-agent 做一轮问询修复：先审计当前决策问题是否重复、缺少事实核验或没有写回决策快照，再给出最小修复。",
@@ -2181,6 +2233,21 @@
       "expected_handling": "进入通用 Java 约规的阿里手册选择性采纳检查；把语雀 1.3.1 手册作为 java-coding-conventions.md 的外部基础来源，不创建独立 Skill；检查 Maven / Gradle 依赖治理、SNAPSHOT、dependencyManagement 或平台约束、dependency:tree 或 dependencyInsight、Objects.equals、包装类型 equals、serialVersionUID、禁止 finally 返回、禁止 SELECT * 和索引隐式类型转换；项目没有 Wind/Nobe 高置信度信号，不加载 Wind 专项；测试方法按团队通用规则强制使用 testXxx，但不把该规则归因于阿里手册；不采用机械作者日期、统一覆盖率百分比、time_wait、Xms/Xmx 或文件句柄等旧版和运行环境规则。"
     },
     {
+      "id": "wind-coding-conventions-should-apply-clean-code-boundaries",
+      "skill": "wind-coding-conventions",
+      "query": "这是普通 Java 21 项目，没有 Wind/Nobe 依赖。请按代码整洁原则检查：查询方法会偷偷写库和发消息，第三方 SDK 升级只跑了编译，测试依赖执行顺序和本机环境；不要把每个测试一个断言、统一未检查异常或固定函数行数写成强制规则。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入通用 Java 约规的代码整洁边界检查；查询或判定方法遵循命令与查询分离，不隐式修改状态、持久化写入、发送消息或触发外部副作用，命令方法通过命名和契约暴露副作用；新增或升级非平凡第三方依赖时，用最小学习测试或兼容性测试固定项目实际依赖的默认值、异常、序列化和协议行为，不以仅编译通过代替兼容验证；测试按 FIRST 检查 Fast、Independent、Repeatable、Self-Validating、Timely，一个测试聚焦一个行为但允许多个服务于同一场景的必要断言；项目没有 Wind/Nobe 高置信度信号，不加载 Wind 专项；不把每个测试一个断言、统一未检查异常、禁止 null 或固定函数/类行数升级为机械强制规则；源码级 CR、重构和测试实现继续交给 senior-software-architect。"
+    },
+    {
       "id": "wind-coding-conventions-should-trigger-generic-java-agents",
       "skill": "wind-coding-conventions",
       "query": "给这个普通 Gradle Java 21 项目初始化 AGENTS.md 编码约规入口；项目没有 Wind/Nobe 依赖，不要加入 face/impl 或 Wind API 规则。",
@@ -2581,6 +2648,129 @@
       ],
       "preferred_skill": "document-authoring",
       "negative_reason": "任务是专业文档结构、表达和 PDF 交付，应由 document-authoring 处理；没有汉字学或训诂问题。"
+    },
+    {
+      "id": "grill-me-should-stress-test-with-question-ledger",
+      "skill": "grill-me",
+      "query": "使用 $grill-me 压力测试这份结算重构方案。一次只问一个关键问题，每次给推荐答案；记录每个问题和结论，确认共同理解前不要开始修改代码。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入独立 grill-me 能力；先读取方案、历史决策和项目事实，建立问题台账；沿决策树一次只问一个主 blocker，每问给推荐答案、依据和影响；记录问题 ID、决策主题、已查证据、用户回答、最终结论和状态；达到 shared understanding 前不执行方案。"
+    },
+    {
+      "id": "grill-me-should-review-history-before-next-question",
+      "skill": "grill-me",
+      "query": "这个方案先别实现。逐个关闭关键分叉，每轮只提出一个最重要问题并给建议；先回看之前已经确认和排除的结论，不要换个说法重复问。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入历史去重路径；从现有问题台账、决策快照、Issue、Goal、Spec、ADR、文档和知识库恢复已确认、已排除、待确认和红线；按决策主题检查语义重复，已确认问题不得复问；只有证据变化、结论冲突或风险升级才重开并说明原因。"
+    },
+    {
+      "id": "grill-me-should-self-decide-from-authoritative-evidence",
+      "skill": "grill-me",
+      "query": "做方案决策审查时，能从现有 PRD、源码、测试、ADR 和知识库确认的内容请自行决定并留痕；只有新的价值取舍、公共契约、风险升级或红线冲突再问我。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "先区分 Facts 与 Decisions；可由权威证据确定的事实直接自答，已有 owner 结论或低风险可逆且在授权内的选择可以自决并写入问题台账；新的价值取舍、公共契约、高风险事项和红线必须询问 owner；证据冲突时停止覆盖并登记待确认。"
+    },
+    {
+      "id": "grill-me-should-decide-whether-to-ask-from-project-evidence",
+      "skill": "grill-me",
+      "query": "使用 $grill-me 审查退款状态机方案。先自动检查项目里的 PRD、ADR、知识库、源码、测试、现有决策和红线，能确定的直接给出结论并留痕；只问这些证据仍无法关闭的关键决策，不要让我重复回答项目里已经写清楚的内容。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "output_quality",
+        "efficiency_metrics",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入证据先行的问询裁决路径；先把当前 blocker 写成可核验命题并判断是意图与约束、当前实现、历史决策还是风险与红线，再分别读取匹配的一手来源；PRD、ADR、知识库、源码和测试不得不分语义地互相覆盖，知识库只有能回链来源、Owner、适用范围和更新时间时才作为已确认依据；交叉核验后选择 fact-confirmed、decision-reused、self-decided 或 ask-owner 裁决动作，并按确定映射写入唯一的最终结论状态；每条对外台账必须同时原样输出裁决动作与最终结论，不得省略或改用近义标签；前三类直接形成结论，不向用户提问；只有证据缺失、冲突、失效，或剩余项属于新的价值取舍、公共契约、高风险、不可逆和红线冲突时，才一次向 Owner 询问一个剩余 Decision。",
+      "behavior_contract": {
+        "evidence_gate": "先定义命题与命题类型，再读取与该命题匹配的文档、决策、知识库、代码、测试或日志；不得只列资料名而不实际核验。",
+        "decision_actions": [
+          "fact-confirmed",
+          "decision-reused",
+          "self-decided",
+          "ask-owner"
+        ],
+        "ask_gate": "仅当证据无法关闭且影响 Owner 责任边界时进入 ask-owner；问题必须是证据核验后的剩余 Decision。",
+        "ledger_must_include": [
+          "待裁决命题",
+          "命题类型",
+          "证据锚点",
+          "证据冲突",
+          "裁决动作",
+          "最终结论",
+          "置信边界"
+        ],
+        "must_not_do": [
+          "不得重复询问已由有效证据关闭的问题",
+          "不得把知识库或当前代码天然视为业务真相",
+          "不得用模型记忆代替项目证据"
+        ]
+      }
+    },
+    {
+      "id": "grill-me-negative-factual-codebase-query",
+      "skill": "grill-me",
+      "query": "请直接查源码并告诉我 PaymentService 的实现类、主要调用方和对应测试文件，只要事实和文件路径，不需要方案讨论。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "preferred_skill": "senior-software-architect",
+      "negative_reason": "这是可从代码库直接查证的事实查询，没有未决方案或设计分叉；应直接读取源码，不进入 grill-me。"
+    },
+    {
+      "id": "grill-me-should-continue-after-partially-confirmed-history",
+      "skill": "grill-me",
+      "query": "退款方案里 A 已经由 owner 确认，B 仍是会改变公共状态契约的待确认分叉。请复用 A，不要重问；继续用项目文档、代码和决策记录审查 B，证据无法关闭时只问我 B 这一个问题。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入部分历史已确认的剩余 Decision 路径；A 映射为 decision-reused / confirmed 并复用，不因出现已确认内容而整体退出 grill-me；继续读取 B 的匹配证据，证据不能关闭且涉及公共状态契约时，将 B 映射为 ask-owner / pending，一次只问 B，并把两项统一写入同一状态模型和决策快照。"
+    },
+    {
+      "id": "grill-me-negative-confirmed-plan-execution",
+      "skill": "grill-me",
+      "query": "方案、决策快照和执行范围已经由 owner 确认，请按现有任务卡修改指定文件并运行验证，不要重新发起需求澄清或设计问询。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "wise-agent",
+      "negative_reason": "关键决策已经确认，当前任务是按授权执行和验证；没有证据变化或冲突时不得重新进入 grill-me。"
     },
     {
       "id": "huaxia-practical-wisdom-should-calibrate-real-world-decision",

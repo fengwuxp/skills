@@ -23,6 +23,7 @@ FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 SKILLS = {
     "wise-agent",
     "document-authoring",
+    "grill-me",
     "hanzi-philology",
     "huaxia-practical-wisdom",
     "java-service-code-generator",
@@ -38,6 +39,7 @@ SKILL_MENTIONS = {
         "按需调用能力",
     ],
     "document-authoring": ["document-authoring", "专业文档撰写"],
+    "grill-me": ["grill-me", "grill me", "盘问", "拷问"],
     "hanzi-philology": ["hanzi-philology", "汉字学与训诂专家"],
     "huaxia-practical-wisdom": [
         "huaxia-practical-wisdom",

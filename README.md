@@ -28,7 +28,7 @@
 | 只读 CR | `我有 PRD 和代码路径，只做只读 CR，不改代码；请给出源码证据、严重级别和残余风险。` |
 | 产品设计 | `根据 <访谈/需求/原型> 写一版可评审 PRD，区分事实、推断、待确认和范围外不做。` |
 | 工程交付 | `基于 <PRD/系分/源码> 完成 <Bug/TDD/重构/代码>，写入范围是 <路径>，验证命令是 <命令>。` |
-| 决策盘问 | `做 grill-me 盘问：盘一下这个方案，一次只问一个主 blocker。` |
+| 决策盘问 | `使用 $grill-me 盘一下这个方案：先查历史问题和项目事实，一次只问一个主 blocker，记录每个问题和结论。` |
 | 经世决策 | `使用 $huaxia-practical-wisdom：基于这些事实校准当前取舍，给出最小行动、止损和验证，不要只讲古语。` |
 | 知识回流 | `进入知识回流视图：把这轮 CR 结论沉淀到项目约规，并说明权威落点和证据。` |
 | 发布准入 | `做生产交付审查：只判断能不能发布，列证据、回退、人工确认点和停止条件。` |
@@ -48,6 +48,7 @@
 | 正式报告、制度、手册、研究说明、材料合并、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不替代产品、工程、法律、合规或领域事实判断 |
 | 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体考据 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只作证据之一，不单独证明本义 |
 | 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | 华夏经世智慧，ID：`huaxia-practical-wisdom`，路径：[huaxia-practical-wisdom](./huaxia-practical-wisdom) | 现实事实、目标、约束、主体、时限、最坏损失 | 不作古籍训诂、医学诊疗、占卜命理，不替代专业结论 |
+| 方案、计划或设计的逐项盘问、历史去重和决策快照 | `grill-me`，路径：[grill-me](./grill-me) | 方案、已有材料、历史决策、Owner 和风险边界 | 未达到 shared understanding 不执行；自决不扩大授权 |
 | DDL/schema/Java 类/字段表格到 Java Service 脚手架 | `java-service-code-generator`，路径：[java-service-code-generator](./java-service-code-generator) | 结构化输入、表名、模块、输出目录、覆盖授权 | 不从纯自然语言直接生成生产代码 |
 | Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项 | `wind-coding-conventions`，路径：[wind-coding-conventions](./wind-coding-conventions) | Java 源码证据、依赖/包名、规则问题 | 只做规则判断和偏差说明；源码设计、CR、TDD、修复和验证由架构师主责 |
 
@@ -84,6 +85,8 @@
 
 五者不是一套固定流水线：SDLC 是阶段地图，Goal 保存完成线，Loop 管反复运行，Worker 管执行分工，Checker 管独立证明。可以只有 Checker 没有 Worker，也可以只用 Goal 而不进入 Loop。
 
+决策寻路不是第六个控制机制。它只在目标大致明确，但路线仍模糊、超过一次会话且还不能可靠形成 Spec 或计划时使用，处在问题地图之后、Spec / Goal Ready 之前。你可以说：`进入决策寻路：先定义 Destination，区分 Frontier、Not yet specified 和 Out of scope，一次关闭一个决策；不要生成 Spec、计划或执行任务。` 如果路线已经清楚，知止者会跳过建图。
+
 “视图”只是强调任务边界的可选短句，不是前置流程：只读理解视图用于只读事实核验，默认不写文件、不联网、不安装；交付推进视图用于完成真实产物；验证发布视图用于给出 Ready / Not Ready / Human Approval Required；知识回流视图用于把已验证经验归位到约规、上下文、ADR、reference、fixture 或脚本。涉及上下文治理、知识库、技术早报、培训、代码库教程、调研沉淀时，也可说 `进入知识生产`，形成可维护的上下文资产。
 
 ### 3.2 什么时候会停下来问你
@@ -94,6 +97,8 @@
 
 - 触发：关键分叉未决、回答含糊、连续返工，或下一步会改变公共契约、状态机、验收、写入范围或发布风险。
 - 交互：你只需要回答接受建议、改答案、补材料或停止；用户说 `按你建议推进` 时只关闭当前 blocker。
+- 历史：每问前检查问题台账、决策快照、文档、代码、测试和知识库；已确认或已排除的问题不得换个说法重问。
+- 自决：可查 Facts、已有 Owner 结论及低风险可逆默认项由 Agent 自答并留痕；新价值取舍、公共契约、高风险和红线仍问 Owner。
 - 退出：确认 shared understanding 并形成决策快照，未确认前不执行。
 - 红线：红线、底线、不能碰、不可、禁止、必须等字眼必须进入决策快照或待确认项。
 
@@ -149,9 +154,10 @@ git diff --check
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke
 scripts/smoke-wise-agent-behavior.sh --mode superpowers --output-dir /tmp/wise-agent-superpowers-smoke
 scripts/smoke-wise-agent-behavior.sh --mode governance --output-dir /tmp/wise-agent-governance-smoke
+scripts/smoke-wise-agent-behavior.sh --mode grill-me --runs 3 --output-dir /tmp/grill-me-smoke
 ```
 
-该 smoke 只证明样例行为满足契约，不能单独证明所有任务的路由稳定性。跨轮任务需要审计状态一致性时，可把已有 Goal Ledger、Issue 或任务状态投影为 JSON 后运行 `python3 wise-agent/scripts/check_state_contract.py <contract.json>`；普通任务不需要手写状态契约。维护者复装或更新外部 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；安装或更新官方 Superpowers 插件后，运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
+`grill-me` 专项 smoke 会让真实 Agent 读取 PRD、决策记录、知识库、Java 源码和测试夹具，分别验证“证据已关闭时不提问”和“证据冲突时只问一个问题”；`--runs 3` 用于观察同一 prompt 的行为方差。该 smoke 仍只证明样例行为满足契约，不能单独证明所有任务的路由稳定性。跨轮任务需要审计状态一致性时，可把已有 Goal Ledger、Issue 或任务状态投影为 JSON 后运行 `python3 wise-agent/scripts/check_state_contract.py <contract.json>`；普通任务不需要手写状态契约。维护者同步或更新项目自有 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；安装或更新官方 Superpowers 插件后，运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
 
 ## 维护者与高级扩展
 

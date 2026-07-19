@@ -10,6 +10,7 @@
 - 用户要求“结合 GSD 与 CAD”“自动推进哪些任务”“默认授权哪些任务”“按什么顺序交给架构师或 Agent”“任务阶段是否提交代码”“Execution Grant 还缺什么”。
 - 用户希望减少每个任务审批，希望在 GSD/CAD 模式下默认授权、自动推进，或提到 Codex 的“替我审批”模式。
 - 用户担心大项目被拆散、上下文漂移、多个 Agent 互相覆盖、CAD 被误用于整个 Roadmap。
+- 目标大致存在，但到达目标的路线仍模糊、明显超过一次会话可可靠形成 Spec 或计划，需要先消除决策不确定性。
 - 用户要求 GSD 模式支持 Superpowers skills、TDD、Review、verification-before-completion 或外部工程纪律接入。
 - 用户要求把 Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent 或多 Agent 监督接入 GSD/CAD，并希望持续推进但可验证、可停止、可交接。
 - AI 产品、企业协作 AI、Agent 入口或组织级 AI 助手要从战略叙事、AI 原型、发布会目标或 dogfooding 进入工程化，需要先判断是否真的值得进入真实工作流。
@@ -26,6 +27,7 @@
 - 知止者的产研交付视图准入结论：轻量执行、进入 GSD Round 0、只做只读侦察、可形成 CAD 候选，或必须停止补上下文。
 - GSD / Loop / CAD 协同状态机：当前处于 Round 0、GSD Candidate、Wave Plan、Plan Grant Active、Loop Candidate、CAD Candidate、CAD Loop Active、Verified、Paused、Escalated 还是 Closed。
 - GSD Round 0 缺口：目标、非目标、对象/规则、OpenSpec、owner、写入范围、验证命令、风险确认方和停止条件。
+- 决策寻路结论：是否需要建图、当前 Destination、低分辨率地图、Next decision 和进入 Spec / Goal Ready 的阻断项。
 - Wave / Atomic Task 候选：只给候选形态、依赖顺序、owner、写入/只读边界、生产可用能力锚点、事实/推断/待确认边界和验证证据，不写成执行授权。
 - Superpowers 方法门禁：当前 GSD 是否需要参考 brainstorming、writing-plans、test-driven-development、requesting/receiving-code-review、verification-before-completion 等外部 skill，以及对应的 TDD、CR 和完成前验证要求。
 - AI 产品工程化准入卡：业务 context、真实工作流、用户收益/负担、权限与责任、旧系统接入、灰度止损、成本稳定性和事实边界是否足够。
@@ -45,12 +47,14 @@
 - 验证矩阵、CR、发布和质量/测试门禁读 `verification-review-release.md`。
 - 工程侧大项目任务包、上下文账本、阶段状态和 Wave 执行细则交给 `senior-software-architect/references/ai-large-project-orchestration.md`。
 - 单个原子任务的 CAD Mode、Execution Grant 和自动分轮执行细则交给 `senior-software-architect/references/cad-mode.md`。
+- 单个关键决策需要盘问、历史去重或 Owner 裁决时装载独立 `grill-me`；本文只持有地图和选择下一决策。
 
 ## 按任务读取索引
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断是否进入 GSD Round 0 | 1、2、3 | 不生成完整工程任务包 |
+| 目标存在但路线仍模糊 | 1、2、2A | 不生成 Spec、Wave 或实施计划 |
 | 拆 Wave / Atomic Task 候选 | 3、4 | 不写 CAD 每轮执行计划 |
 | 判断 CAD 候选缺口 | 5、6 | 不把候选当 Execution Grant |
 | 优化 GSD/CAD 授权策略或阶段提交 | 5、6、6A、6B | 不把全部动作默认通过 |
@@ -142,6 +146,41 @@ Round 0
 | Goal + 状态载体 + 反馈源 + 验证者 + 预算/最大轮次 + 无进展检测 + 停止条件 | 可形成 Agent Loop 候选。 | 只在授权范围内循环推进，达到停止条件或硬门禁时交接。 |
 
 GSD 规划还必须给出提交切片：每个 Wave / Task 完成验证后应如何组成一个可独立理解、验证和回滚的提交单元。默认 Git 策略为 `summary_only`，只输出建议提交单元和建议 commit message；只有用户明确要求“阶段提交 / 任务提交 / 自动提交本地 commit”，且 Grant 写清 Git 范围时，才可进入 `commit_after_verified_task`。
+
+## 2A. 决策寻路准入
+
+决策寻路不是新的 Skill、Goal 或执行流程，而是 `Round 0 / Goal Draft` 中消除不确定性的临时工作方式。只有同时满足以下条件才进入：
+
+- 能用一两句话命名 Destination，即完成寻路后应得到的 Spec、决策或可计划状态。
+- 通往 Destination 的关键路线仍模糊，当前不能可靠写成 Spec 或最小计划。
+- 工作明显超过一次会话可承载，跨轮恢复或多人协作确有价值。
+
+只有可查 Facts、路线已经清楚、当前会话可闭环，或用户已提供确认过的 Spec / 计划时，跳过决策寻路，直接进入对应专业交付与验证。
+
+优先复用用户指定位置或项目已有 Issue、Goal Ledger、Spec、Decision Log、任务状态。没有获准载体时只在当前任务输出；不得自动创建 Issue、分支、Worker 或外部任务系统。地图只作索引，每个决策正文只保留一个权威位置，地图只写名称、状态、摘要和链接：
+
+```text
+Destination: 寻路完成后应达到的清晰状态。
+Decisions so far: 已关闭决策的名称、单行摘要和权威链接。
+Frontier: 已能准确表述，且未关闭、未阻塞、未占用的决策。
+Not yet specified: 已知在前方，但当前还无法准确表述的问题区域。
+Out of scope: 与本轮 Destination 无关，不会自动复活的内容。
+Next decision: 当前只选择一个最高价值 Frontier 决策。
+Handoff condition: 何时可进入 Spec、最小计划或 Goal Ready。
+```
+
+`Frontier` 与 `Not yet specified` 的分界不是能否回答，而是现在能否准确写出待裁决命题；不能准确表述的迷雾不得预拆成任务。决策关闭后才把新近可表述的内容提升到 Frontier；若新结论使旧节点失效、越界或重新阻塞，应更新、关闭或移入 Out of scope，不保留僵尸任务。
+
+每轮最多关闭一个决策，并按节点性质复用现有能力：
+
+| 节点性质 | 路由 | 边界 |
+| --- | --- | --- |
+| 需要 Owner 价值取舍或公共契约裁决 | `grill-me` | 一次一个问题，结论写回原权威载体。 |
+| 缺外部文档、API、项目材料或知识库事实 | `research`：使用现有读取与检索能力 | Worker 仅在输入可冻结、互不写入且已有授权时使用。 |
+| 需要低成本具体产物才能判断行为或形态 | `prototype`：路由产品或工程主能力 | 原型只服务决策，不冒充最终交付。 |
+| 必须先获取账号、环境、数据或人工操作结果 | `prerequisite task` | 只完成解锁决策所需动作，仍服从联网、权限和写入授权。 |
+
+地图存在开放 Frontier，或 Not yet specified 中仍有阻断 Destination 的迷雾时，Goal 保持 `Draft`，不得生成完整 Spec、Wave、Atomic Task、Plan Grant 或执行方案。路线清晰后才进入 Spec、最小计划或 Goal Ready；若初始梳理没有迷雾，立即停止建图并回到当前任务的最短交付路径。
 
 ## 3. GSD Round 0 判断
 

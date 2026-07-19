@@ -18,6 +18,7 @@ REFERENCE_ROOTS = [
     ROOT / "product-architecture-expert" / "references",
     ROOT / "java-service-code-generator" / "references",
     ROOT / "wind-coding-conventions" / "references",
+    ROOT / "wise-agent" / "references",
 ]
 WARN_LINE_THRESHOLD = 500
 REQUIRED_INDEX_THRESHOLD = 350

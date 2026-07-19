@@ -9,6 +9,7 @@ set -euo pipefail
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 MODE="all"
 OUTPUT_DIR="/tmp/wise-agent-smoke-$(date +%Y%m%d-%H%M%S)"
+RUNS=1
 
 assert_product() {
   local file="$1" term
@@ -104,6 +105,38 @@ assert_state_resume() {
   done
 }
 
+question_record_count() {
+  awk '{ count += gsub(/本轮问题[：:]/, "") } END { print count + 0 }' "$1"
+}
+
+assert_grill_evidence_closed() {
+  local file="$1" term
+  for term in "confirmed" "D-101"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "PRD" "product-requirements" || return 1
+  assert_any "${file}" "知识库" "domain-knowledge" || return 1
+  assert_any "${file}" "测试" "RefundPolicyTests" || return 1
+  assert_any "${file}" "源码" "代码" "实现" "Java" "RefundPolicy" || return 1
+  assert_any "${file}" "fact-confirmed" "decision-reused" || return 1
+  assert_none "${file}" "ask-owner" "请确认" "本轮问题" || return 1
+  [[ "$(question_record_count "${file}")" -eq 0 ]]
+}
+
+assert_grill_evidence_conflict() {
+  local file="$1" term
+  for term in "ask-owner" "D-102"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "PRD" "product-requirements" || return 1
+  assert_any "${file}" "源码" "代码" "实现" "Java" "RefundPolicy" || return 1
+  assert_any "${file}" "推荐" "建议" || return 1
+  assert_any "${file}" "pending" "conflict" || return 1
+  assert_any "${file}" "不执行" "不得执行" "停止执行" "未执行" || return 1
+  assert_none "${file}" "开始修改" "已修改" "正在执行" "开始执行" || return 1
+  [[ "$(question_record_count "${file}")" -eq 1 ]]
+}
+
 run_codex_smoke() {
   local output_file="$1" prompt="$2"
   rm -f "${output_file}"
@@ -130,7 +163,11 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-product.txt" \
       "${sample_dir}/bad-lightweight.txt" \
       "${sample_dir}/bad-superpowers-git.txt" \
-      "${sample_dir}/state-resume.txt"
+      "${sample_dir}/state-resume.txt" \
+      "${sample_dir}/grill-closed.txt" \
+      "${sample_dir}/grill-conflict.txt" \
+      "${sample_dir}/bad-grill-closed.txt" \
+      "${sample_dir}/bad-grill-conflict.txt"
     rmdir "${sample_dir}"
   }
   trap cleanup_self_test EXIT
@@ -145,6 +182,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '先建立 Goal，再派 Worker 修改。' > "${sample_dir}/bad-lightweight.txt"
   printf '%s\n' 'Git 未授权；可以创建 worktree 并 commit。' > "${sample_dir}/bad-superpowers-git.txt"
   printf '%s\n' '从 docs/goal-ledger.md 恢复，只按 D-1 推进；B 不得复活，C 不得脑补。' > "${sample_dir}/state-resume.txt"
+  printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/grill-closed.txt"
+  printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；证据链接：decision?id=D-102；本轮不执行方案。推荐答案：人工复核。本轮问题：是否确认人工复核？' > "${sample_dir}/grill-conflict.txt"
+  printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。请确认？' > "${sample_dir}/bad-grill-closed.txt"
+  printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
   assert_product "${sample_dir}/product.txt"
   assert_engineering "${sample_dir}/engineering.txt"
   assert_superpowers_product "${sample_dir}/superpowers-product.txt"
@@ -153,6 +194,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_lightweight "${sample_dir}/lightweight.txt"
   assert_simple_wording "${sample_dir}/simple-wording.txt"
   assert_state_resume "${sample_dir}/state-resume.txt"
+  assert_grill_evidence_closed "${sample_dir}/grill-closed.txt"
+  assert_grill_evidence_conflict "${sample_dir}/grill-conflict.txt"
   if assert_product "${sample_dir}/engineering.txt"; then
     echo "FAIL product smoke accepted an engineering-only response" >&2
     exit 1
@@ -169,6 +212,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL Superpowers Git smoke accepted an authorization-contradictory response" >&2
     exit 1
   fi
+  if assert_grill_evidence_closed "${sample_dir}/bad-grill-closed.txt"; then
+    echo "FAIL grill-me evidence-closed smoke accepted a redundant question" >&2
+    exit 1
+  fi
+  if assert_grill_evidence_conflict "${sample_dir}/bad-grill-conflict.txt"; then
+    echo "FAIL grill-me conflict smoke accepted multiple questions" >&2
+    exit 1
+  fi
   echo "OK wise-agent behavior smoke self-test"
   exit 0
 fi
@@ -177,14 +228,19 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode) MODE="$2"; shift 2 ;;
     --output-dir) OUTPUT_DIR="$2"; shift 2 ;;
+    --runs) RUNS="$2"; shift 2 ;;
     *) echo "Unknown argument: $1" >&2; exit 2 ;;
   esac
 done
 
 case "${MODE}" in
-  all|product|engineering|superpowers|governance) ;;
-  *) echo "--mode must be all, product, engineering, superpowers, or governance" >&2; exit 2 ;;
+  all|product|engineering|superpowers|governance|grill-me) ;;
+  *) echo "--mode must be all, product, engineering, superpowers, governance, or grill-me" >&2; exit 2 ;;
 esac
+if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
+  echo "--runs must be a positive integer" >&2
+  exit 2
+fi
 
 cd "${ROOT_DIR}"
 scripts/validate-installed-skills.sh
@@ -231,6 +287,18 @@ if [[ "${MODE}" == "all" || "${MODE}" == "governance" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/state-resume.txt" \
     '长任务上下文已经压缩。允许的状态载体 docs/goal-ledger.md 记录：Goal G-17=Active，确认 D-1，排除 B，C 待确认，下一动作只允许执行 D-1。请在 200 字内判断恢复后能做什么以及何时停止；只读判断。'
   assert_state_resume "${OUTPUT_DIR}/state-resume.txt" || { echo "FAIL state resume behavior smoke: ${OUTPUT_DIR}/state-resume.txt" >&2; exit 1; }
+fi
+
+if [[ "${MODE}" == "all" || "${MODE}" == "grill-me" ]]; then
+  for ((run = 1; run <= RUNS; run++)); do
+    run_codex_smoke "${OUTPUT_DIR}/grill-evidence-closed-${run}.txt" \
+      '使用 $grill-me 只读审查退款过期时间。实际读取 grill-me/fixtures/behavior-evidence 下的 PRD、决策记录、知识库、Java 源码和测试；按当前协议裁决是否需要问 Owner。只输出本轮台账记录和结论，不执行方案，控制在 350 字。'
+    assert_grill_evidence_closed "${OUTPUT_DIR}/grill-evidence-closed-${run}.txt" || { echo "FAIL grill-me evidence-closed behavior smoke: ${OUTPUT_DIR}/grill-evidence-closed-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/grill-evidence-conflict-${run}.txt" \
+      '使用 $grill-me 只读审查供应商超时后的退款重试策略。实际读取 grill-me/fixtures/behavior-evidence 下的 PRD、决策记录、知识库和 Java 源码；按当前协议处理意图与实现冲突。只输出本轮台账和需要 Owner 回答的一个问题，不执行方案，控制在 350 字。'
+    assert_grill_evidence_conflict "${OUTPUT_DIR}/grill-evidence-conflict-${run}.txt" || { echo "FAIL grill-me evidence-conflict behavior smoke: ${OUTPUT_DIR}/grill-evidence-conflict-${run}.txt" >&2; exit 1; }
+  done
 fi
 
 echo "OK wise-agent behavior smoke: ${OUTPUT_DIR}"

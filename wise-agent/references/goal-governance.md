@@ -326,7 +326,7 @@ Verified -> Closed
 
 状态定义：
 
-- `Draft`：目标尚未清楚，不能执行。
+- `Draft`：目标尚未清楚，不能执行；决策寻路尚未完成、仍有阻断 Destination 的 Frontier 或迷雾时，不能从 `Draft` 进入 `Ready`。
 - `Ready`：目标、成功标准、非目标、owner、预算、停止条件和验证方式已明确。
 - `Active`：已进入 GSD Wave、Spec、CAD 候选或验证闭环。
 - `Blocked`：出现明确阻塞，需要用户、产品、架构、权限、验证环境或专业确认输入。

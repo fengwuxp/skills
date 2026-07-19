@@ -20,7 +20,7 @@
 ## 需要继续读取的 reference
 
 - 认知闭环、上下文与协作形态读 `cognition-and-capability-model.md`。
-- 长任务自治、授权、状态和 grill-me 决策对账读 `delivery-execution-control.md`。
+- 盘问、问题台账、历史去重和决策快照装载独立 `grill-me`；长任务自治、授权和执行前对账读 `delivery-execution-control.md`。
 - 产品到工程生命周期读 `product-to-engineering-lifecycle.md` 与 `delivery-lifecycle.md`。
 - Maker / Checker、Harness、Goal 与多 Agent 成本读 `engineering-governance.md`。
 - 外部 Skill 吸收和供应链边界读 `superpowers-skill-library.md` 与 `source-map.md`。
@@ -32,6 +32,7 @@
 | 选择现有能力 | `一、先分四类责任`、`二、最小装载算法`、`三、已知能力地图` | 不展开新能力接入 |
 | 判断 Worker / Checker | `五、单体、Worker 与 Checker` | 不为展示协作而并行 |
 | 新增、安装或吸收 Skill | `六、新能力接入门禁`、`七、回流与验证` | 未审查前不安装、不写默认能力 |
+| 消解能力歧义或检查加载扇出 | `二 A、路由消歧、后置加载与加载扇出` | 不预加载全部能力和 reference |
 | 产品到工程跨阶段状态 | `三 A、跨阶段状态契约`，再读生命周期 references | 不把状态卡当角色人格或执行授权 |
 | 专业文档与训诂组合 | `三 B、文档与训诂能力组合` | 不让成文能力改写领域证据 |
 
@@ -55,6 +56,14 @@
 5. 能力返回后，由知止者检查证据、冲突、边界和授权，再综合成一个最终交付；不得把多份角色意见拼接成结果。
 6. 高风险、重要交付或 Maker 容易自洽时，增加独立 Checker；低风险一步任务使用回读或确定性校验即可。
 
+### 二 A、路由消歧、后置加载与加载扇出
+
+- 遵循先主能力、后协同能力：先按交付物、真实风险和一手材料锁定主能力，只有主能力出现明确缺口时才增加协同能力。
+- 能力重叠时写清正向信号、负向信号、优先级和停止条件；Facts 先从材料查证，剩余 Decisions 才交 Owner，不用能力名称替代消歧。
+- 专项方法、垂直知识和额外 Checker 尽量在证据出现后再加载；不因“可能有用”提前展开整棵能力树。
+- 检查加载扇出：按任务读取索引应精确到章节并写明跳过内容；常见任务若仍需读取多个完整 reference 或大量无关章节，先收敛重复内容或细化章节路由，不设置机械文件数阈值。
+- 重复出现的路由歧义必须沉淀为正例、负例或消歧 fixture，并由 validator 复核；单次偶发歧义不扩写永久路由规则。
+
 ## 三、已知能力地图
 
 | 任务信号 | 主能力 | 可选协同能力 | 独立验证 |
@@ -66,7 +75,7 @@
 | 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段任务由 `wise-agent` 持有目标；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
 | DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成后消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
-| 决策压力测试 | 当前主能力 + `grill-me` | 只在关键分叉、含糊回答或连续返工时升级 | 决策快照与执行前对账 |
+| 方案、计划或设计的决策压力测试 | `grill-me` | 当前产品 / 工程主能力；需要经典校准时 `huaxia-practical-wisdom` | 问题台账、历史去重、决策快照与执行前对账 |
 | 产品澄清、工程计划、TDD、调试、CR 或完成前验证的方法缺口 | 当前产品 / 工程主能力 | 官方 Superpowers 插件中的对应方法 Skill | 专业 owner 回读、项目验证、新会话行为冒烟 |
 | 其它领域 | 先判断通用能力是否足够，再审查已安装或候选 Skill | 仅装载能缩小错误空间的能力 | 该能力声明的 validator、来源证据或专业人工复核 |
 

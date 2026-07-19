@@ -110,7 +110,8 @@ Superpowers 不成为第二 Owner。知止者保持统一行动主体，专业 S
 
 - `grill-me` 是复杂或模糊计划的升级盘问能力：一次一个问题，Facts 先查，Decisions 等 owner，形成可执行决策摘要。
 - `brainstorming` 负责探索目标、约束和备选；`grill-me` 只在关键分叉未决、回答含糊或连续返工时升级，二者不得重复问同一问题。
-- 当前本地 `grill-me` 的安装、版本和验证仍由其独立 validator 管理；不安装 Matt Pocock 全仓库，不运行 npm、Claude plugin、hooks 或外部任务系统。
+- 当前 `grill-me` 是项目自有独立 Skill，保留 Matt Pocock 版本的一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding 核心，并增加问题台账、历史去重、自决边界、红线与决策快照；上游只作来源参考，不安装全仓库，不运行 npm、Claude plugin、hooks 或外部任务系统。
+- 上游 `wayfinder` 只作为决策寻路方法来源：知止者持有 Destination 与低分辨率地图，`grill-me` 只关闭单个决策，路线清晰后再进入 Spec 或最小计划。项目不安装 `wayfinder`，也不继承其默认 Issue、分支、subagent 或外部 tracker 操作。
 
 ## 调度结论格式
 

@@ -14,7 +14,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 agents_rules = "AGENTS.md"
+readme = "README.md"
 repo_source_map = "references/source-map.md"
+reference_index_audit = "scripts/audit-reference-indexes.py"
 
 
 def read(path: str) -> str:
@@ -280,6 +282,9 @@ huaxia_classical_lenses = "huaxia-practical-wisdom/references/classical-lenses.m
 huaxia_decision_practice = "huaxia-practical-wisdom/references/decision-practice.md"
 huaxia_evidence_boundaries = "huaxia-practical-wisdom/references/evidence-boundaries.md"
 huaxia_source_map = "huaxia-practical-wisdom/references/source-map.md"
+grill_me_skill = "grill-me/SKILL.md"
+grill_me_agent = "grill-me/agents/openai.yaml"
+grill_me_question_ledger = "grill-me/references/question-ledger.md"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
 wise_agent_cognition_model = "wise-agent/references/cognition-and-capability-model.md"
@@ -327,8 +332,6 @@ wise_agent_terms = [
     "角色loop",
     "产研协同",
     "产品判断 Loop",
-    "设计评审",
-    "编码评审",
     "可用性安全性评估",
     "可用性 / 安全性 / 可靠性评估",
     "意图到生产交付",
@@ -773,6 +776,36 @@ huaxia_negative_terms = [
     "测字",
     "命理",
 ]
+grill_me_explicit_terms = [
+    "$grill-me",
+    "grill-me",
+    "grill me",
+    "盘问这个",
+    "拷问这个",
+    "压力测试这份",
+]
+grill_me_implicit_terms = [
+    "逐个关闭关键分叉",
+    "每轮只提出一个最重要问题",
+    "不要换个说法重复问",
+    "先回看之前已经确认",
+    "方案决策审查",
+    "自行决定并留痕",
+    "只继续审查和询问",
+]
+grill_me_negative_terms = [
+    "只要事实和文件路径",
+    "已经由 owner 确认",
+    "不要重新发起需求澄清",
+]
+grill_me_unresolved_terms = [
+    "仍是",
+    "待确认",
+    "剩余",
+    "只继续",
+    "冲突",
+    "风险升级",
+]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "能力-项目-系统映射", "知识库回流", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
 product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
 product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
@@ -860,6 +893,7 @@ reference_headers = [
     wise_agent_superpowers_library,
     wise_agent_skill_type_owner_routing,
     wise_agent_source_map,
+    grill_me_question_ledger,
     huaxia_classical_lenses,
     huaxia_decision_practice,
     huaxia_evidence_boundaries,
@@ -919,6 +953,19 @@ expected_handling_has(
         "测试方法按团队通用规则强制使用 testXxx",
         "不把该规则归因于阿里手册",
         "不采用机械作者日期、统一覆盖率百分比",
+    ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-apply-clean-code-boundaries",
+    (
+        "命令与查询分离",
+        "不隐式修改状态、持久化写入、发送消息或触发外部副作用",
+        "最小学习测试或兼容性测试",
+        "Fast、Independent、Repeatable、Self-Validating、Timely",
+        "允许多个服务于同一场景的必要断言",
+        "不加载 Wind 专项",
+        "不把每个测试一个断言、统一未检查异常、禁止 null 或固定函数/类行数升级为机械强制规则",
+        "senior-software-architect",
     ),
 )
 
@@ -1016,6 +1063,32 @@ check(
             "采纳边界",
             "不吸收",
             "`testXxx` 是团队规则，不归因于该手册",
+        ],
+    ),
+)
+
+check(
+    "generic Java conventions absorb Clean Code boundaries without mechanical dogma",
+    has_all(
+        wind_skill_java,
+        [
+            "命令与查询分离",
+            "不得隐式修改状态、持久化写入、发送消息或触发外部副作用",
+            "最小学习测试或兼容性测试",
+            "Fast、Independent、Repeatable、Self-Validating、Timely",
+            "允许多个服务于同一场景的必要断言",
+        ],
+    )
+    and has_all(
+        wind_skill_source_map,
+        [
+            "代码整洁之道，读书笔记",
+            "岁月如风",
+            "2025-05-01 18:54",
+            "2026-07-19",
+            "9780132350884",
+            "What Is Clean Code?",
+            "不吸收",
         ],
     ),
 )
@@ -1730,7 +1803,7 @@ check(
 )
 
 check(
-    "wise agent records Matt Pocock lightweight questioning boundary",
+    "project-owned grill-me keeps upstream core and wise-agent boundary",
     has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_none(
         wise_agent_skill,
@@ -1745,11 +1818,10 @@ check(
             "轻量问询结论",
             "`grill-me` 盘问结论",
             *DECISION_GRILL_BOUNDARY_TERMS,
-            "复杂或模糊任务不要先生成大段方案让用户审",
-            "一次只问一个关键问题",
-            "Loop 推进中适时进入 `grill-me`",
-            "问询结论必须写入产品上下文卡、工程交接卡、任务树 / 计划切片或下一阶段输入",
-            "完整规则统一读 `delivery-execution-control.md`",
+            "装载这一独立 Skill",
+            "完整盘问、问题台账、历史去重、自决和决策快照由该 Skill 负责",
+            "Loop 推进中适时装载 `grill-me`",
+            "执行前对账读 `delivery-execution-control.md`",
         ],
     )
     and has_none(
@@ -1759,22 +1831,15 @@ check(
     and has_all(
         wise_agent_delivery_execution_control,
         [
-            "本节是 `grill-me` 盘问、问题去重、决策快照和执行前对账的唯一权威来源",
-            "自动触发只看四类信号",
-            "角色 Loop 自动触发",
-            "关键分叉会改变业务目标、公共契约、状态机、验收样例、写入范围或发布风险",
-            "Facts / Decisions",
-            "Decisions 才沿一个决策树分支深度优先盘问",
-            "每问必须等待 owner 反馈",
-            "shared understanding",
-            "已问问题和答案状态",
-            "不得重问原问题",
-            "模糊回答 push back",
+            "盘问、问题台账、历史去重和决策快照由独立 `grill-me` 负责",
+            "完整盘问、问题台账、历史去重、自决和红线规则",
+            "本节只消费决策快照并做执行前对账",
+            "已确认选择、被排除方案、待确认项、red_lines、下一阶段输入和写回位置",
             "被排除方案不得复活",
             "待确认项不得脑补",
-            "不一致时停止并问 owner",
+            "快照缺失或不一致时停止并问 Owner",
             "领域知识分流",
-            "只有 owner 已确认",
+            "只有 Owner 已确认",
             "冲突证据与影响范围",
             "按业务域或模块写入术语与对象表、证据地图或领域知识卡",
             "难以逆转",
@@ -1796,11 +1861,12 @@ check(
             "一次一个问题",
             "Facts 先查",
             "Decisions 等 owner",
-            "可执行决策摘要",
             "关键分叉未决、回答含糊或连续返工时升级",
             "不得重复问同一问题",
-            "独立 validator 管理",
-            "不安装 Matt Pocock 全仓库",
+            "项目自有独立 Skill",
+            "问题台账、历史去重、自决边界、红线与决策快照",
+            "上游只作来源参考",
+            "不安装全仓库",
         ],
     )
     and has_all(
@@ -1830,6 +1896,9 @@ check(
             "代码交叉验证",
             "即时回写",
             "ADR 门禁",
+            "2026-07-18 状态更新",
+            "项目新增自有独立 `grill-me` Skill",
+            "上游原文",
             "不得把 `mattpocock/skills` 全仓库、Trellis、Claude plugin、npm 脚本、跳过权限模式或未核验工具写成当前默认能力",
         ],
     )
@@ -1873,20 +1942,27 @@ check(
             "复杂或模糊任务一次只问一个主 blocker",
             "Facts 先从材料、源码、测试或日志自答",
             "Decisions 才问 owner",
+            "路径：[grill-me](./grill-me)",
+            "已确认或已排除的问题不得换个说法重问",
+            "自决不扩大授权",
         ],
     ),
 )
 
 check(
-    "wise agent assetizes grill-me taste injection handoff",
+    "project-owned grill-me keeps stateful handoff boundaries",
     has_all(
-        wise_agent_delivery_execution_control,
+        grill_me_skill,
         [
-            "长链路、结果分叉多、返工成本高",
-            "人的 Taste / 偏好 / 红线会影响方案",
-            "Shared Context / Issue / PR / hand-off prompt",
-            "退出条件不是问完所有问题",
+            "优先恢复已有问题台账、决策快照、Issue、Goal、Spec、ADR、PRD、源码、测试、日志、项目约规和知识库",
+            "没有获准的持久载体时",
+            "每次裁决和实际问题都写入问题台账",
+            "退出时",
         ],
+    )
+    and has_all(
+        grill_me_question_ledger,
+        ["Issue / Goal Ledger / Spec / Decision Log", "当前任务中维护并在退出前输出", "不得为了台账自动创建"],
     )
     and has_all(
         wise_agent_source_map,
@@ -2065,6 +2141,75 @@ check(
             "设计模式的本质",
             "真实变化轴、稳定边界、职责分离、依赖倒置",
             "不把策略、工厂、状态机、规则引擎、接口隔离或依赖倒置写成默认答案",
+        ],
+    ),
+)
+
+check(
+    "grill-me is a standalone project-owned capability",
+    frontmatter(grill_me_skill).strip().startswith("name: grill-me")
+    and has_all(
+        grill_me_skill,
+        [
+            "# Grill Me",
+            "一次只问一个",
+            "每问给推荐答案",
+            "Facts 先查",
+            "Decisions 才问",
+            "问题台账",
+            "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`",
+            "语义重复",
+            "shared understanding",
+            "未确认前不执行",
+            "red_lines",
+            "huaxia-practical-wisdom",
+        ],
+    )
+    and has_all(
+        grill_me_agent,
+        [
+            'display_name: "Grill Me"',
+            "$grill-me",
+            "allow_implicit_invocation: true",
+        ],
+    )
+    and has_reference_header(grill_me_question_ledger)
+    and has_task_reading_index(grill_me_question_ledger)
+    and has_all(
+        grill_me_question_ledger,
+        [
+            "问题 ID",
+            "决策主题",
+            "已查证据",
+            "最终结论",
+            "语义重复",
+            "自决边界",
+            "证据先行的问询裁决",
+            "命题类型",
+            "ask-owner",
+            "裁决动作到最终结论的确定映射",
+            "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`",
+            "fact-confirmed` -> `confirmed",
+            "decision-reused` -> 沿用原最终结论",
+            "ask-owner` -> `pending",
+            "red_lines",
+            "决策快照",
+        ],
+    )
+    and has_all(
+        wise_agent_skill,
+        [
+            "按需装载独立能力 `grill-me`",
+            "问题台账、历史去重和决策快照由该 Skill 负责",
+            "方案、计划或设计的关键分叉盘问、历史去重和决策快照",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "方案、计划或设计的决策压力测试",
+            "`grill-me`",
+            "问题台账、历史去重、决策快照与执行前对账",
         ],
     ),
 )
@@ -2328,6 +2473,70 @@ check(
         "fixtures/skill-eval/prompt-cases.json",
         [
             "Execution Handoff Card",
+        ],
+    ),
+)
+check(
+    "wise agent decision wayfinding stays upstream of spec and execution",
+    has_all(
+        wise_agent_skill,
+        [
+            "决策寻路",
+            "目标大致存在，但到达目标的路线仍模糊",
+            "planning-execution-admission.md",
+        ],
+    )
+    and has_all(
+        wise_agent_planning_execution_admission,
+        [
+            "## 2A. 决策寻路准入",
+            "Destination",
+            "Decisions so far",
+            "Frontier",
+            "Not yet specified",
+            "Out of scope",
+            "Next decision",
+            "地图只作索引",
+            "每轮最多关闭一个决策",
+            "grill-me",
+            "research",
+            "prototype",
+            "prerequisite task",
+            "不得自动创建 Issue、分支、Worker 或外部任务系统",
+            "路线清晰后才进入 Spec、最小计划或 Goal Ready",
+        ],
+    )
+    and has_all(
+        wise_agent_goal_governance,
+        [
+            "决策寻路尚未完成",
+            "不能从 `Draft` 进入 `Ready`",
+        ],
+    )
+    and has_all(
+        wise_agent_product_to_engineering,
+        [
+            "-> [跨轮且路线模糊时] 决策寻路",
+            "| 决策寻路 |",
+            "不是所有问题地图的必经阶段",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "决策寻路",
+            "目标大致明确，但路线仍模糊",
+            "不要生成 Spec、计划或执行任务",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/_u7U-aXg0KXXzyFNtLcvIw",
+            "https://www.aihero.dev/skills-wayfinder",
+            "mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md",
+            "地图是索引而不是决策正文",
+            "不安装 wayfinder",
         ],
     ),
 )
@@ -3064,9 +3273,7 @@ check(
             "确认规则",
             "不能确认业务意图、需求价值、用户验收、架构批准、测试通过、CR 准出、Git 授权或上线审批",
             "每个阶段的小闭环完成后，先自问再问人",
-            "问询推进只处理一个主 blocker",
-            "默认暂停点",
-            "下一最高价值 blocker",
+            "完整盘问、问题台账、历史去重、自决和决策快照由该 Skill 负责",
             "自决推进",
             "询问 owner",
         ],
@@ -3276,9 +3483,9 @@ check(
         wise_agent_delivery_execution_control,
         [
             "计划生成准入先于计划审查",
-            "让 owner 审查 AI 假设",
-            "一个主 blocker",
-            "决策快照经 owner 确认后",
+            "仍夹带未决 Owner 判断",
+            "装载独立 `grill-me` 关闭最高价值 Decision",
+            "决策快照经 Owner 确认后",
         ],
     ),
 )
@@ -4121,6 +4328,66 @@ check(
     ),
 )
 check(
+    "wise agent separates knowledge freshness and bounds routing fanout",
+    has_all(
+        agents_rules,
+        [
+            "## 知识变更频率分层",
+            "稳定知识",
+            "时效知识",
+            "任务知识",
+            "上下文范围分层与变更频率分层是两条正交轴",
+            "维护粒度与读取粒度可以不同",
+            "不设置机械文件数或行数阈值",
+            "旧事实 / 旧行为",
+            "新事实 / 新行为",
+            "旧值清除检查",
+            "新值到位检查",
+            "不得静默采集用户纠错、重复提问或放弃对话",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "### 二 A、路由消歧、后置加载与加载扇出",
+            "先主能力、后协同能力",
+            "正向信号、负向信号、优先级和停止条件",
+            "证据出现后再加载",
+            "加载扇出",
+            "精确到章节",
+            "正例、负例或消歧 fixture",
+        ],
+    )
+    and has_all(
+        wise_agent_code_delivery,
+        [
+            "Knowledge Change Register",
+            "旧事实 / 旧行为",
+            "新事实 / 新行为",
+            "权威来源",
+            "影响位置",
+            "旧值清除检查",
+            "新值到位检查",
+            "回归 fixture / validator",
+            "不得静默采集用户纠错、重复提问或放弃对话",
+        ],
+    )
+    and contains(reference_index_audit, 'ROOT / "wise-agent" / "references"')
+    and has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/mF3TyV_GzkBdoyYfK14fWQ",
+            "面向复杂业务场景的智能分析 Skills 架构设计与演进实践",
+            "钟雨洁",
+            "2026-07-18",
+            "稳定知识与时效知识",
+            "维护粒度与读取粒度",
+            "不静默采集用户反馈",
+            "不吸收固定文件行数、方法数量、行业数量或压缩比例",
+        ],
+    ),
+)
+check(
     "ai-native governance keeps codebase visual understanding gate",
     has_all(
         wise_agent_engineering_governance,
@@ -4417,6 +4684,7 @@ check(
             "## 验证与同步安全",
             "./scripts/validate.sh",
             "scripts/smoke-wise-agent-behavior.sh",
+            "--mode grill-me --runs 3",
             "普通使用这些能力不需要运行安装校验",
         ],
     )
@@ -4537,15 +4805,8 @@ check(
     ),
 )
 check(
-    "senior skill and references guard comment readability",
-    has_all(
-        senior_skill,
-        [
-            "不得用注释替代可读性重构",
-            "命名、方法抽取、常量/枚举、强类型和值对象、测试表达意图",
-            "Why not",
-        ],
-    )
+    "Java authority and review guard comment readability without senior duplication",
+    has_none(senior_skill, ["不得用注释替代可读性重构", "Why not"])
     and has_all(
         coding,
         [
@@ -5832,7 +6093,9 @@ check(
             "assert_lightweight",
             "assert_simple_wording",
             "assert_state_resume",
-            "all|product|engineering|superpowers|governance",
+            "assert_grill_evidence_closed",
+            "assert_grill_evidence_conflict",
+            "all|product|engineering|superpowers|governance|grill-me",
             "scripts/validate-superpowers-install.sh",
             "systematic-debugging",
             "test-driven-development",
@@ -5848,6 +6111,11 @@ check(
             "orchestration-heavy response",
             "不得复活",
             "不得脑补",
+            "grill-me/fixtures/behavior-evidence",
+            "fact-confirmed",
+            "decision-reused",
+            "ask-owner",
+            "证据冲突",
         ],
     )
     and has_none(
@@ -5904,7 +6172,7 @@ check(
     and has_all(
         wise_agent_delivery_execution_control,
         [
-            "Loop、跨轮状态、决策快照、预算、停止和恢复规则的唯一权威来源",
+            "Loop、跨轮状态、执行前对账、预算、停止和恢复规则的唯一权威来源",
         ],
     )
     and has_all(
@@ -7779,6 +8047,45 @@ check(
     ),
 )
 check(
+    "architecture health scan keeps scope evidence and output bounded",
+    has_all(
+        senior_routing,
+        [
+            "最近改动 / diff、指定模块、全仓或仅架构层",
+            "默认快速体检只返回 3-5 个最高价值候选",
+            "用户明确要求深度扫描才扩展",
+        ],
+    )
+    and has_all(
+        review,
+        [
+            "| 架构坏味扫描 | `架构健康扫描契约`",
+            "## 架构健康扫描契约",
+            "候选信号",
+            "确认问题",
+            "项目已有静态分析、测试、查询日志、profiler 或依赖图",
+            "N+1 / 循环内 I/O",
+            "循环内重复线性扫描",
+            "循环内排序",
+            "错误数据结构",
+            "渲染路径重复计算",
+            "默认不生成健康分数、坏味数量排行榜或 3-12 个月路线图",
+            "扫描结果不得自动触发重构",
+        ],
+    )
+    and has_all(
+        senior_source_map,
+        [
+            "https://mp.weixin.qq.com/s/q7aKFiBeldJcjEhZ7v2Smg",
+            "寻找你代码中的臭味：一个让 AI 帮你嗅出架构腐化的开源 Skill",
+            "smallnest/goal-workflow",
+            "2026-07-18",
+            "不吸收固定行数、方法数、参数数阈值",
+            "不默认启动多 Agent",
+        ],
+    ),
+)
+check(
     "review guidance absorbs Google review collaboration rules",
     has_all(
         review,
@@ -7907,16 +8214,8 @@ check(
     and has_all(review, ["项目本地规范和 `wind-coding-conventions` 的通用 Java 层"]),
 )
 check(
-    "Java coding style follows project conventions first",
-    has_all(
-        senior_skill,
-        [
-            "编码风格以项目为准",
-            "默认先遵循项目统一编码规范、格式化配置、lint/静态检查和团队约规",
-            "参考当前项目已有代码的命名、分层、包结构、异常日志、测试和格式风格",
-            "不得按个人偏好或通用模板自行发挥",
-        ],
-    )
+    "Java coding style stays in the rule authority",
+    has_none(senior_skill, ["编码风格以项目为准", "不得按个人偏好或通用模板自行发挥"])
     and has_all(
         coding,
         [
@@ -7960,16 +8259,8 @@ check(
     ),
 )
 check(
-    "Java service and interface split requires real business responsibility",
-    has_all(
-        senior_skill,
-        [
-            "接口和服务拆分必须有真实业务职责",
-            "ApplicationService",
-            "只透传调用",
-            "似是而非的抽象",
-        ],
-    )
+    "Java service split rule stays in the authority and review",
+    has_none(senior_skill, ["接口和服务拆分必须有真实业务职责", "只透传调用"])
     and has_all(
         coding,
         [
@@ -7990,15 +8281,8 @@ check(
     ),
 )
 check(
-    "Java single-line pass-through methods are banned unless semantic",
-    has_all(
-        senior_skill,
-        [
-            "不得保留无业务语义的单行透传方法",
-            "原样转调、原样传参、改名包装或返回下游结果",
-            "应直接删除并内联调用",
-        ],
-    )
+    "Java pass-through rule stays in the authority and review",
+    has_none(senior_skill, ["不得保留无业务语义的单行透传方法", "原样转调、原样传参"])
     and has_all(
         coding,
         [
@@ -8052,6 +8336,45 @@ check(
         ],
     ),
 )
+check(
+    "senior keeps concise cross-language source decision red lines",
+    has_all(
+        senior_skill,
+        [
+            "跨语言、始终生效",
+            "项目规则优先",
+            "失败与敏感信息不可丢失",
+            "公共契约和边界不可静默破坏",
+            "业务职责不得错层",
+            "不得引入无主复杂度",
+            "以风险和证据裁决",
+        ],
+    )
+    and has_none(
+        senior_skill,
+        [
+            "`System.out.println`",
+            "`new BigDecimal(double)`",
+            "`InMemoryXxxService`",
+            "`Supplier`",
+        ],
+    ),
+)
+check(
+    "clean code treats parameter count as a review signal",
+    has_all(
+        "senior-software-architect/references/clean-code.md",
+        [
+            "参数过多是职责或契约可读性的 Review 信号",
+            "保持显式参数或引入稳定业务类型",
+            "不为降低数量制造一次性参数对象",
+        ],
+    )
+    and has_none(
+        "senior-software-architect/references/clean-code.md",
+        ["参数过多时优先抽取参数对象"],
+    ),
+)
 
 check(
     "general coding rules treat policy thresholds as contextual",
@@ -8065,16 +8388,8 @@ check(
     ),
 )
 check(
-    "Java production code bans in-memory business service implementations",
-    has_all(
-        senior_skill,
-        [
-            "业务代码不得用内存版 Service 冒充生产实现",
-            "`InMemoryXxxService`",
-            "Map/List 存储型业务实现",
-            "只在进程内保留状态的应用服务",
-        ],
-    )
+    "Java production implementation rule stays in the authority and execution reference",
+    has_none(senior_skill, ["业务代码不得用内存版 Service 冒充生产实现", "`InMemoryXxxService`"])
     and has_all(
         coding,
         [
@@ -11477,6 +11792,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"},
     ),
     RouteFixture(
+        name="cross language complexity hotspot scan",
+        prompt="只看最近改动里的 N+1、循环内 I/O、循环内重复线性扫描和错误数据结构，做一次复杂度热点检查",
+        routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"},
+    ),
+    RouteFixture(
         name="service layer architecture smell",
         prompt="这个 Spring Service 有跨层调用、事务边界混乱和公共模块垃圾桶问题，帮我做架构坏味 CR",
         routes={"senior", "coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"},
@@ -11640,6 +11960,16 @@ scenario_fixtures: list[RouteFixture] = [
         name="AI Native GSD CAD handoff",
         prompt="产品上下文包已有目标对象规则和验收种子，评估如何把 GSD Wave 和 CAD 原子任务结合，输出 Harness 摘要、Execution Grant 缺口和停止条件",
         routes={"wise-agent", "product-to-engineering-lifecycle.md", "engineering-governance.md", "planning-execution-admission.md"},
+    ),
+    RouteFixture(
+        name="wise-agent decision wayfinding before spec",
+        prompt="使用 $wise-agent 推进权限系统重构。目标大致明确，但角色、策略、组织、自定义权限和迁移之间的路线仍很模糊，明显不是一次会话能可靠写成 Spec 或实施计划的；先不要实现，也不要把猜测拆成开发任务。",
+        routes={"wise-agent", "planning-execution-admission.md"},
+    ),
+    RouteFixture(
+        name="wise-agent explicit Wayfinder method absorption",
+        prompt="使用 $wise-agent 按 Wayfinder 的决策地图方法处理这个跨轮模糊任务，但不要安装外部 Skill 或创建 Issue。",
+        routes={"wise-agent", "planning-execution-admission.md", "superpowers-skill-library.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native GSD wise agent",
@@ -12262,6 +12592,26 @@ scenario_fixtures: list[RouteFixture] = [
         routes=codegen_safety_route,
     ),
     RouteFixture(
+        name="grill-me explicit decision pressure test",
+        prompt="使用 $grill-me 压力测试这份结算重构方案，一次只问一个关键问题并记录每个结论。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me implicit history-aware convergence",
+        prompt="这个方案先别实现，逐个关闭关键分叉；每轮只提出一个最重要问题，先回看之前已经确认的内容，不要换个说法重复问。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me implicit evidence-backed self decision",
+        prompt="做方案决策审查时，能从现有 PRD、源码、测试、ADR 和知识库确认的内容请自行决定并留痕；只有新的价值取舍、公共契约、风险升级或红线冲突再问我。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me partially confirmed decision tree",
+        prompt="退款方案里 A 已经由 owner 确认，B 仍是会改变公共状态契约的待确认分叉；复用 A，只继续审查和询问 B。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
         name="huaxia practical wisdom explicit decision calibration",
         prompt="使用 $huaxia-practical-wisdom 分析这次跨部门合作是否现在启动：给出取舍、止损、最小行动和验证，不要只讲古语。",
         routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
@@ -12279,6 +12629,16 @@ scenario_fixtures: list[RouteFixture] = [
 ]
 
 negative_route_fixtures: list[RouteFixture] = [
+    RouteFixture(
+        name="grill-me on factual codebase query",
+        prompt="请直接查源码并告诉我 PaymentService 的实现类、主要调用方和对应测试文件，只要事实和文件路径。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me on confirmed plan execution",
+        prompt="方案和决策快照已经由 owner 确认，请按现有任务卡执行，不要重新发起需求澄清。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
     RouteFixture(
         name="java conventions on non Java JVM project",
         prompt="这是一个只包含 Kotlin 源码的 Gradle JVM 项目，请检查编码约规；项目没有任何 Java 源码。",
@@ -12332,6 +12692,16 @@ negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="wise agent on concrete code review",
         prompt="做一轮代码 CR：这个 Spring Boot Service 改了事务边界、缓存一致性和异常处理，帮我按严重级别列问题并补测试建议",
+        routes={"wise-agent"},
+    ),
+    RouteFixture(
+        name="wise agent on ordinary Java coding review wording",
+        prompt="请对这个 Java Service 做一次编码评审，只读检查事务边界、异常契约和测试缺口，不改代码。",
+        routes={"wise-agent"},
+    ),
+    RouteFixture(
+        name="wise agent on ordinary Java design review wording",
+        prompt="请对这个 Java Service 的模块边界和接口做一次设计评审，只读给出问题和源码依据，不做跨角色编排。",
         routes={"wise-agent"},
     ),
     RouteFixture(
@@ -12429,6 +12799,14 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
+    grill_me_requested = contains_any(prompt, grill_me_explicit_terms) or contains_any(
+        prompt, grill_me_implicit_terms
+    )
+    grill_me_fully_resolved = contains_any(prompt, grill_me_negative_terms) and not contains_any(
+        prompt, grill_me_unresolved_terms
+    )
+    if grill_me_requested and not grill_me_fully_resolved:
+        route.update({"grill-me", "question-ledger.md"})
     huaxia_blocked = contains_any(prompt, huaxia_negative_terms)
     huaxia_requested = contains_any(prompt, huaxia_explicit_terms) or (
         contains_any(prompt, huaxia_implicit_terms)
@@ -12478,7 +12856,7 @@ def route_fixture(prompt: str) -> set[str]:
                 "source-map.md",
             }
         )
-    if contains_any(prompt, ["意图到生产交付", "从意图", "需求收集", "生产交付闭环", "Intent-to-Production", "多角色分工", "阶段分工", "分角色流程", "控制不同 Skill", "控制不同 skills", "专项 Skill 控制矩阵", "角色协作判断矩阵", "协作判断矩阵", "分角色 Loop", "Skill、工具、框架", "产研协同", "设计评审", "编码评审", "可用性安全性评估", "可用性 / 安全性", "按设计、设计评审、TDD、编码", "自我挖掘", "自主交付控制卡", "人工确认边界", "找到变化", "封装变化", "真实变化轴", "设计模式的本质"]):
+    if contains_any(prompt, ["意图到生产交付", "从意图", "需求收集", "生产交付闭环", "Intent-to-Production", "多角色分工", "阶段分工", "分角色流程", "控制不同 Skill", "控制不同 skills", "专项 Skill 控制矩阵", "角色协作判断矩阵", "协作判断矩阵", "分角色 Loop", "Skill、工具、框架", "产研协同", "可用性安全性评估", "可用性 / 安全性", "按设计、设计评审、TDD、编码", "自我挖掘", "自主交付控制卡", "人工确认边界", "找到变化", "封装变化", "真实变化轴", "设计模式的本质"]):
         route.update(
             {
                 "wise-agent",
@@ -12681,7 +13059,7 @@ def route_fixture(prompt: str) -> set[str]:
             )
         if not contains_any(prompt, ["不调用外部代码评审工具", "没有要求 Open Code Review", "不需要外部 Checker 工具"]) and contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "代码评审工具", ".opencodereview", "rule.json", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "代码阅读理解", "阅读理解代码", "上下文工程", "上下文治理", "Context System", "知识库治理", "知识库工具", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 插件", "superpowers@openai-api-curated", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.1", "上游 release", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grill-me", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
+        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 插件", "superpowers@openai-api-curated", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.1", "上游 release", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grill-me", "Wayfinder", "wayfinder", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
             if contains_any(prompt, ["升级", "版本", "上游 release", "上游 latest", "latest release", "v6.1.1", "helper", "不默认运行外部脚本", "Harness"]):
@@ -12696,7 +13074,7 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("engineering-governance.md")
             if contains_any(prompt, ["Checker", "独立验证机制"]):
                 route.add("verification-review-release.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡", "决策寻路", "决策地图", "Wayfinder", "wayfinder", "目标大致明确", "路线仍很模糊", "不是一次会话", "Destination", "Frontier", "Not yet specified"]):
             route.add("planning-execution-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "/qa", "/ship", "QA Lead", "Release Engineer", "QA 验证", "发布准出", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
@@ -12732,6 +13110,11 @@ def route_fixture(prompt: str) -> set[str]:
             "治理自腐",
             "守卫自检",
             "深度质量扫描",
+            "复杂度热点",
+            "N+1",
+            "循环内 I/O",
+            "循环内重复线性扫描",
+            "错误数据结构",
             "上帝类",
             "循环依赖",
             "跨层调用",
@@ -12781,7 +13164,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("testing.md")
     if contains_any(prompt, ["陌生代码库", "架构现状", "接手侦察", "Node.js", "技术栈", "入口路径", "部署链路"]):
         route.update({"language-agnostic-architecture.md", "workflow.md"})
-    if contains_any(prompt, ["架构坏味", "深度质量扫描", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶", "InMemory", "内存版业务 Service", "Map 存储实现"]):
+    if contains_any(prompt, ["架构坏味", "深度质量扫描", "复杂度热点", "N+1", "循环内 I/O", "循环内重复线性扫描", "错误数据结构", "上帝类", "循环依赖", "跨层调用", "事务边界混乱", "公共模块垃圾桶", "InMemory", "内存版业务 Service", "Map 存储实现"]):
         route.update({"coding-review-deep-dive.md", "clean-code.md", "negative-constraints.md"})
     if java_source_task:
         route.update({"senior", "java-coding-conventions.md"})
@@ -13563,6 +13946,55 @@ behavior_contract_has(
         "决策快照",
         "owner 确认",
         "最小计划",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-wayfind-before-spec",
+    (
+        "决策寻路路径",
+        "Destination",
+        "Decisions so far",
+        "Frontier",
+        "Not yet specified",
+        "Out of scope",
+        "Next decision",
+        "地图只作索引",
+        "每轮最多关闭一个决策",
+        "grill-me",
+        "research",
+        "prototype",
+        "prerequisite task",
+        "不执行最终方案",
+    ),
+)
+
+behavior_contract_has(
+    "wise-agent-should-wayfind-before-spec",
+    ("entry_gate", "map_must_include", "node_routes", "must_not_do"),
+    (
+        "Destination",
+        "Decisions so far",
+        "Frontier",
+        "Not yet specified",
+        "Out of scope",
+        "Next decision",
+        "grill-me",
+        "research",
+        "prototype",
+        "prerequisite task",
+        "不得自动创建 Issue、分支、Worker 或外部任务系统",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-skip-wayfinding-for-clear-plan",
+    (
+        "跳过决策寻路",
+        "当前会话可完成",
+        "按现有工程交付路径执行和验证",
+        "不创建 Destination 地图、Frontier、Not yet specified、Issue 或新的 Goal",
+        "不重新进入 grill-me",
     ),
 )
 
@@ -14898,6 +15330,39 @@ expected_handling_has(
 expected_handling_has(
     "hanzi-philology-should-support-product-term-evidence",
     ("可选命名证据协作者", "训诂证据卡中的命名证据", "产品架构专家", "领域统一语言", "训诂不得替代产品判断"),
+)
+expected_handling_has(
+    "grill-me-should-stress-test-with-question-ledger",
+    ("独立 grill-me 能力", "建立问题台账", "一次只问一个主 blocker", "推荐答案", "最终结论", "shared understanding 前不执行"),
+)
+expected_handling_has(
+    "grill-me-should-review-history-before-next-question",
+    ("历史去重路径", "恢复已确认、已排除、待确认和红线", "语义重复", "不得复问", "证据变化、结论冲突或风险升级"),
+)
+expected_handling_has(
+    "grill-me-should-self-decide-from-authoritative-evidence",
+    ("Facts 与 Decisions", "权威证据", "自决并写入问题台账", "新的价值取舍、公共契约、高风险事项和红线", "证据冲突时停止覆盖"),
+)
+expected_handling_has(
+    "grill-me-should-decide-whether-to-ask-from-project-evidence",
+    ("证据先行的问询裁决路径", "意图与约束", "当前实现", "历史决策", "风险与红线", "裁决动作", "唯一的最终结论状态", "同时原样输出裁决动作与最终结论", "fact-confirmed", "decision-reused", "self-decided", "ask-owner", "剩余 Decision"),
+)
+behavior_contract_has(
+    "grill-me-should-decide-whether-to-ask-from-project-evidence",
+    ("evidence_gate", "decision_actions", "ask_gate", "ledger_must_include", "must_not_do"),
+    ("待裁决命题", "命题类型", "证据锚点", "证据冲突", "裁决动作", "置信边界", "不得把知识库或当前代码天然视为业务真相"),
+)
+expected_handling_has(
+    "grill-me-should-continue-after-partially-confirmed-history",
+    ("剩余 Decision 路径", "decision-reused / confirmed", "不因出现已确认内容而整体退出 grill-me", "ask-owner / pending", "一次只问 B", "统一写入同一状态模型"),
+)
+negative_reason_has(
+    "grill-me-negative-factual-codebase-query",
+    ("可从代码库直接查证", "没有未决方案或设计分叉", "不进入 grill-me"),
+)
+negative_reason_has(
+    "grill-me-negative-confirmed-plan-execution",
+    ("关键决策已经确认", "按授权执行和验证", "不得重新进入 grill-me"),
 )
 expected_handling_has(
     "huaxia-practical-wisdom-should-calibrate-real-world-decision",

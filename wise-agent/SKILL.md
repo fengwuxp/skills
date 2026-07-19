@@ -40,7 +40,9 @@ description: |
 5. **验**：用独立 Checker、测试、validator、回读或人工验收核对目标、边界和产物；Maker 不自证。
 6. **化**：回写状态、决策、验证和残余风险；只有反复出现且已验证的经验才进入 Skill、reference、fixture、script、AGENTS、CONTEXT、ADR 或知识库。
 
-复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker，并给出建议答案、依据、影响和默认暂停点。`grill-me` 只在关键分叉、含糊回答、半答或连续返工时升级；规则读取 `references/delivery-execution-control.md`。
+复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker，并给出建议答案、依据、影响和默认暂停点。关键分叉、含糊回答、半答或连续返工时，按需装载独立能力 `grill-me`；盘问、问题台账、历史去重和决策快照由该 Skill 负责，执行前对账读取 `references/delivery-execution-control.md`。
+
+当目标大致存在，但到达目标的路线仍模糊，且明显超过一次会话可可靠形成 Spec 或计划时，先进入**决策寻路**：只维护通往目标的决策地图，不把未知预拆成开发任务，不执行最终方案；地图清晰后再进入 Spec、Goal Ready 或最小计划。具体准入、地图契约和退出条件读取 `references/planning-execution-admission.md`；若初步检查没有迷雾，立即跳过寻路。
 
 低风险一步任务直接完成并做相称验证，不展开完整 SDLC，不创建 Goal，不装载 Superpowers，不派 Worker；只有任务确实跨阶段、跨轮、存在方法缺口或需要独立上下文时才升级控制强度。
 
@@ -71,6 +73,7 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 | 报告、制度、手册、研究说明、文档审校和正式载体 | `document-authoring` | 不改变领域事实和证据等级 |
 | 汉字学、训诂、古文字、通假、异体和名相考据 | `hanzi-philology` | 不把单一字书或现代字形当定论 |
 | 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | `huaxia-practical-wisdom` | 经典只作判断镜片，不替代事实、专业结论和人类责任 |
+| 方案、计划或设计的关键分叉盘问、历史去重和决策快照 | `grill-me` | 未达到 shared understanding 不执行；自决不扩大用户授权 |
 | DDL / schema / Java 类 / 字段表到 Java Service 骨架 | `java-service-code-generator` | 只消费结构化输入，生成后必须验证 |
 | Java 通用约规及按证据启用的 Wind / Nobe 专项 | `wind-coding-conventions` | 规则能力不成为源码 CR 的第二 Owner |
 | 产品澄清、工程计划、TDD、调试、CR 或完成前验证的方法缺口 | 官方 Superpowers 插件的对应 Skill | 只补方法；产品 / 工程结论仍回专业 Skill，已安装不扩大脚本、Git、worktree 或 subagent 授权 |

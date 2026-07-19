@@ -56,7 +56,7 @@
 | 纯 Java/Wind 约规检查 | 不触发本 Skill；交给 `wind-coding-conventions` | 纯 Java/Wind 约规检查不触发本 Skill，也不把规则清单升级成源码 CR。 |
 | 普通 Java 源码任务：设计、CR、TDD、修复或验证 | 项目本地规范、`wind-coding-conventions` 的 `java-coding-conventions.md`、`coding-review-deep-dive.md`、`workflow.md` | 由架构师主责，统一消费通用 Java 规则；没有 Wind/Nobe 高置信度信号时不加载 Wind 专项。 |
 | Wind/Nobe 源码任务 | 先按普通 Java 源码任务加载通用层；存在 Wind/Nobe 高置信度信号时再读取 `wind-coding-conventions.md`，按需读取 `project-governance-service-api-modeling.md`、`coding-review-deep-dive.md` 或 `testing.md` | 仍由架构师单一主责；规则 Skill 不成为第二 owner。只有孤立的 face、impl、ServiceImpl 或普通 MyBatis 用法时，不启用 Wind 专项。 |
-| 架构坏味 / 深度代码质量扫描 | `coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` 和项目本地规范 | 先按业务语义、边界、契约和失败路径 Review，再追加上帝类、循环依赖、过长方法、Feature Envy、Data Clumps 等启发式扫描。 |
+| 架构坏味 / 深度代码质量扫描 | `coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` 和项目本地规范 | 先确认最近改动 / diff、指定模块、全仓或仅架构层；默认快速体检只返回 3-5 个最高价值候选，用户明确要求深度扫描才扩展。先按业务语义、边界、契约和失败路径 Review，再追加上帝类、循环依赖、过长方法、Feature Envy、Data Clumps 和复杂度热点等启发式扫描。 |
 | Bug 修复 / 调试诊断 / 根因分析 / 测试失败 | `debugging-diagnosis.md`、`testing.md`、`workflow.md` 和项目本地规范 | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试；高风险问题补时间线和 5-Why 复盘草稿。 |
 | 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 | `testing.md` 和项目本地规范 | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、保护对象、风险来源、真实链路和替身边界；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
 | 代码 Review / PR Review | `review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 问题优先，按 P0-P3 给文件行号、风险、证据、建议和验证。 |
