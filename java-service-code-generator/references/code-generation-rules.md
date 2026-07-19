@@ -203,7 +203,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - 生成批量删除方法 `void deleteXxxByIds(@NonNull Long... ids);`。
 - 单 ID 删除方法作为 Service 接口 default 方法直接委托批量删除：`default void deleteXxxById(@NonNull Long id) { deleteXxxByIds(id); }`。这是稳定服务契约，不视为无意义的一行方法复用。
 - ServiceImpl 只实现批量删除方法，使用 `mapper.deleteBatchByIds(Arrays.asList(ids))`，并断言影响行数与传入 ID 数一致。
-- 公有方法参数不得超过 5 个；如果生成或重构需要超过 5 个参数，必须先和用户确认。
+- 参数数量只是职责或契约可读性的 Review 信号；先复用项目已有 Request、Query、Command、Options 或稳定业务类型，显式参数更清楚时保持显式，不为降低参数数量制造一次性参数对象。
 
 ## 类型映射规程
 

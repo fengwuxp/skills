@@ -20,9 +20,6 @@ from typing import Any, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIRS = sorted(path.parent.name for path in ROOT.glob("*/SKILL.md"))
-SCRIPTLESS_VALIDATED_SKILLS = {
-    "wind-coding-conventions",
-}
 REQUIRED_VALIDATE_HOOKS = [
     "scripts/validate-trigger-paths.py",
     "scripts/audit-reference-indexes.py",
@@ -368,10 +365,11 @@ def score_deterministic(
     prompt_stats: dict[str, Any],
 ) -> tuple[int, list[str]]:
     warnings: list[str] = []
-    if script_count == 0 and skill_name in SCRIPTLESS_VALIDATED_SKILLS:
-        score = 80
+    if script_count == 0:
+        score = 65
+        score += score_ratio(fixture_count, 2, 10)
         if prompt_stats["positive_cases"] >= 2 and prompt_stats["hard_negative_cases"] >= 2:
-            score += 10
+            score += 15
         if prompt_stats["positive_without_name_cases"] >= 1:
             score += 5
         return max(min(score, 100), 0), warnings
@@ -672,6 +670,22 @@ def print_text(report: dict[str, Any]) -> None:
 
 def run_self_test() -> None:
     report = evaluate_all()
+    scriptless_score, scriptless_warnings = score_deterministic(
+        "judgment-skill",
+        script_count=0,
+        fixture_count=0,
+        has_self_test_signal=False,
+        prompt_stats={
+            "positive_cases": 3,
+            "hard_negative_cases": 3,
+            "positive_without_name_cases": 2,
+        },
+    )
+    if scriptless_score < 85 or scriptless_warnings:
+        raise SystemExit(
+            "scriptless judgment skill evaluation is misleading: "
+            f"score={scriptless_score}, warnings={scriptless_warnings}"
+        )
     legacy_wind_skill = "wind-project-" + "coding-conventions"
     if legacy_wind_skill in SKILL_DIRS or "wind-coding-conventions" not in SKILL_DIRS:
         raise SystemExit("Wind coding conventions skill ID migration is incomplete")

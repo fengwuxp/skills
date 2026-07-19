@@ -39,6 +39,12 @@ REQUIRED_LEDGER_MARKERS = (
     "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`",
 )
 
+REQUIRED_SOURCE_MARKERS = (
+    "mattpocock/skills",
+    "项目自有独立 `grill-me`",
+    "不安装上游全仓库",
+)
+
 BANNED_MARKERS = (
     "name: grilling",
     "Run a `/grilling`",
@@ -55,6 +61,7 @@ def validate_install(codex_home: Path) -> list[str]:
     skill_root = codex_home / "skills"
     grill_me = skill_root / "grill-me" / "SKILL.md"
     question_ledger = skill_root / "grill-me" / "references" / "question-ledger.md"
+    source_map = skill_root / "grill-me" / "references" / "source-map.md"
     grilling = skill_root / "grilling"
     errors: list[str] = []
 
@@ -82,20 +89,58 @@ def validate_install(codex_home: Path) -> list[str]:
         if marker not in ledger_text:
             errors.append(f"missing required marker in question ledger: {marker}")
 
+    if not source_map.exists():
+        errors.append(f"missing grill-me source map: {source_map}")
+        return errors
+
+    source_text = source_map.read_text(encoding="utf-8")
+    for marker in REQUIRED_SOURCE_MARKERS:
+        if marker not in source_text:
+            errors.append(f"missing required marker in grill-me source map: {marker}")
+
     return errors
 
 
-def write_skill(codex_home: Path, body: str, ledger_body: str | None = None) -> None:
+def write_skill(
+    codex_home: Path,
+    body: str,
+    ledger_body: str | None = None,
+    source_body: str | None = None,
+) -> None:
     target = codex_home / "skills" / "grill-me"
     target.mkdir(parents=True)
     (target / "SKILL.md").write_text(body, encoding="utf-8")
     if ledger_body is not None:
         references = target / "references"
-        references.mkdir()
+        references.mkdir(exist_ok=True)
         (references / "question-ledger.md").write_text(ledger_body, encoding="utf-8")
+    if source_body is not None:
+        references = target / "references"
+        references.mkdir(exist_ok=True)
+        (references / "source-map.md").write_text(source_body, encoding="utf-8")
 
 
 def self_test() -> None:
+    with TemporaryDirectory() as tmp:
+        codex_home = Path(tmp)
+        write_skill(
+            codex_home,
+            (
+                "---\nname: grill-me\n---\n"
+                "一次只问一个问题并给推荐答案，Facts 先查，Decisions 再问。\n"
+                "先做证据裁决，只有 ask-owner 才提问。\n"
+                "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`。\n"
+                "维护问题台账，达到 shared understanding 前未确认前不执行。\n"
+            ),
+            "问题 ID / 决策主题 / 已查证据 / 最终结论 / red_lines / 语义重复\n"
+            "证据先行的问询裁决 / 命题类型 / 置信边界\n"
+            "裁决动作到最终结论的确定映射\n"
+            "历史恢复、语义去重和决策快照只读取最终结论\n"
+            "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`\n",
+        )
+        errors = validate_install(codex_home)
+        assert any("source map" in error for error in errors), errors
+
     with TemporaryDirectory() as tmp:
         codex_home = Path(tmp)
         write_skill(
@@ -125,6 +170,7 @@ def self_test() -> None:
             "裁决动作到最终结论的确定映射\n"
             "历史恢复、语义去重和决策快照只读取最终结论\n"
             "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`\n",
+            "mattpocock/skills / 项目自有独立 `grill-me` / 不安装上游全仓库\n",
         )
         assert validate_install(codex_home) == []
 

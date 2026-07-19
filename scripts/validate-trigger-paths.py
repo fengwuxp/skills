@@ -285,6 +285,7 @@ huaxia_source_map = "huaxia-practical-wisdom/references/source-map.md"
 grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
 grill_me_question_ledger = "grill-me/references/question-ledger.md"
+grill_me_source_map = "grill-me/references/source-map.md"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
 wise_agent_cognition_model = "wise-agent/references/cognition-and-capability-model.md"
@@ -894,6 +895,7 @@ reference_headers = [
     wise_agent_skill_type_owner_routing,
     wise_agent_source_map,
     grill_me_question_ledger,
+    grill_me_source_map,
     huaxia_classical_lenses,
     huaxia_decision_practice,
     huaxia_evidence_boundaries,
@@ -1870,36 +1872,15 @@ check(
         ],
     )
     and has_all(
-        wise_agent_source_map,
+        grill_me_source_map,
         [
-            "GitHub 仓库 [mattpocock/skills]",
-            "热门Skill研究：Grill-Me，凭什么火遍整个开发者圈？",
-            "读行万里的AI日记",
-            "2026-06-04 07:00:00 Asia/Shanghai",
-            "轻量问询",
-            "grill-me/SKILL.md",
-            "本地只保留 `grill-me`",
-            "不安装本地 `grilling`",
-            "scripts/validate-grill-me-install.py",
-            "安装层校验",
-            "未通过不得宣称完成",
-            "每问给推荐答案并等待反馈",
-            "Facts 用代码库自答",
-            "Decisions 等 owner",
-            "shared understanding",
-            "Loop 推进中遇到关键分叉未决",
-            "2026-07-13 核验 GitHub tags 最新发布为 `v1.1.0`",
-            "2026-07-15 复核上游 `main`",
-            "当前 `main` 的 `grill-me` 只调用 `/grilling`",
-            "`domain-modeling`",
-            "术语冲突",
-            "代码交叉验证",
-            "即时回写",
-            "ADR 门禁",
-            "2026-07-18 状态更新",
-            "项目新增自有独立 `grill-me` Skill",
-            "上游原文",
-            "不得把 `mattpocock/skills` 全仓库、Trellis、Claude plugin、npm 脚本、跳过权限模式或未核验工具写成当前默认能力",
+            "Matt Pocock skills",
+            "2026-07-15 核验上游 `main`",
+            "上游当时的 `grill-me` 只调用 `/grilling`",
+            "一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding",
+            "项目自有独立 `grill-me`",
+            "不安装上游全仓库",
+            "不保留 `/grilling` alias",
         ],
     )
     and has_none(
@@ -1912,9 +1893,8 @@ check(
         ],
     )
     and has_none(
-        wise_agent_source_map,
+        grill_me_source_map,
         [
-            "alias",
             "安装最小 Markdown 对 `grill-me` 与 `grilling`",
         ],
     )
@@ -1965,7 +1945,7 @@ check(
         ["Issue / Goal Ledger / Spec / Decision Log", "当前任务中维护并在退出前输出", "不得为了台账自动创建"],
     )
     and has_all(
-        wise_agent_source_map,
+        grill_me_source_map,
         [
             "如何看待 grill-me（拷问我）这个 Skill？",
             "LastWhisperDev",
@@ -2175,6 +2155,26 @@ check(
     )
     and has_reference_header(grill_me_question_ledger)
     and has_task_reading_index(grill_me_question_ledger)
+    and has_reference_header(grill_me_source_map)
+    and has_task_reading_index(grill_me_source_map)
+    and has_all(
+        grill_me_source_map,
+        [
+            "mattpocock/skills",
+            "K4CN1LxsZgFR2FYv7f8Y3w",
+            "jw7pqTwco_lLGnN_KmExig",
+            "项目自有独立 `grill-me`",
+            "不安装上游全仓库",
+        ],
+    )
+    and has_all(wise_agent_source_map, ["../../grill-me/references/source-map.md"])
+    and has_none(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/K4CN1LxsZgFR2FYv7f8Y3w",
+            "https://mp.weixin.qq.com/s/jw7pqTwco_lLGnN_KmExig",
+        ],
+    )
     and has_all(
         grill_me_question_ledger,
         [
@@ -2211,6 +2211,21 @@ check(
             "`grill-me`",
             "问题台账、历史去重、决策快照与执行前对账",
         ],
+    ),
+)
+
+check(
+    "wise agent metadata requires coordination evidence rather than generic verification",
+    has_all(
+        wise_agent_skill,
+        [
+            "跨专业协同、跨阶段交付、跨轮状态管理、能力组合、状态恢复或知识回流",
+            "单一专业任务（包括只读 CR）直接加载对应 Skill",
+        ],
+    )
+    and has_none(
+        wise_agent_skill,
+        ["能力组合、独立验证或知识回流"],
     ),
 )
 
@@ -2595,7 +2610,7 @@ check(
         for term in [
             "用户显式说“知止者”“wise-agent”“自己判断并推进”“按需调用能力”",
             "跨专业协同、跨阶段交付、跨轮状态管理",
-            "单一专业任务直接加载对应 Skill",
+            "单一专业任务（包括只读 CR）直接加载对应 Skill",
             "简单问答、翻译和一步措辞不触发",
         ]
     )
@@ -7807,7 +7822,7 @@ check(
             "不得为了通过 DDL 虚构业务默认值",
             "命中 Wind/Nobe 专项的项目将以下字段并入字段清单",
             "`id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime` 为强制",
-            "新增字段如果为必填，必须有默认值",
+            "默认值、分阶段回填或暂时允许为空",
             "查询/排序场景",
             "数据校验与回滚",
             "## 5. 状态、流程与专项设计模板",
@@ -8373,6 +8388,60 @@ check(
     and has_none(
         "senior-software-architect/references/clean-code.md",
         ["参数过多时优先抽取参数对象"],
+    ),
+)
+
+check(
+    "Java rule consumers do not revive a mechanical five parameter gate",
+    all(
+        has_none(
+            path,
+            [
+                "超过 5 个公有参数",
+                "公有方法参数不得超过 5 个",
+                "公有方法超过 5 个参数必须先和用户确认",
+                "公有方法可能超过 5 个参数",
+            ],
+        )
+        for path in [
+            codegen_skill,
+            "java-service-code-generator/references/code-generation-rules.md",
+            "java-service-code-generator/references/nobe-patterns.md",
+            "senior-software-architect/references/ai-assisted-engineering.md",
+            "senior-software-architect/references/cad-mode.md",
+        ]
+    )
+    and has_all(
+        "java-service-code-generator/references/code-generation-rules.md",
+        [
+            "参数数量只是职责或契约可读性的 Review 信号",
+            "不为降低参数数量制造一次性参数对象",
+        ],
+    ),
+)
+
+check(
+    "system design consumes contextual required field migration policy",
+    all(
+        has_all(
+            path,
+            [
+                "新增必填字段必须给兼容迁移方案",
+                "默认值、分阶段回填或暂时允许为空",
+                "不得为了通过 DDL 虚构业务默认值",
+            ],
+        )
+        and has_none(
+            path,
+            [
+                "新增字段如果为必填，必须有默认值；否则字段必须可空",
+                "新增字段如果为必填，必须有默认值；没有真实业务默认值时字段必须可空",
+            ],
+        )
+        for path in [
+            "senior-software-architect/references/system-analysis-design.md",
+            "senior-software-architect/references/system-analysis-template.md",
+        ]
     ),
 )
 
