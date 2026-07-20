@@ -6183,6 +6183,8 @@ check(
             "单一专业源码 CR",
             "讨论过订单优惠券类名",
             "Owner 连续三次纠正",
+            "skill-improvement-coordinated-auth.txt",
+            "不修改、提交、同步或发布",
             "bad-skill-improvement-noise.txt",
             "bad-skill-improvement-authorization.txt",
             "accepted business noise",

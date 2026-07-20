@@ -115,9 +115,9 @@ assert_skill_improvement() {
     grep -Fq "${term}" "${file}" || return 1
   done
   grep -Eq '不得吸收[：:][^。；]*(订单优惠券)|订单优惠券[^。；]*(不得吸收|不回流|排除)' "${file}" || return 1
-  assert_any "${file}" "不修改" "不得修改" "只读" || return 1
-  assert_any "${file}" "不提交" "不得提交" "未授权提交" || return 1
-  assert_any "${file}" "不同步" "不正式同步" "不得同步" "未授权同步" || return 1
+  grep -Eq '(不|不得|未授权)[^。；]*(修改|写入)' "${file}" || return 1
+  grep -Eq '(不|不得|未授权)[^。；]*(提交|commit)' "${file}" || return 1
+  grep -Eq '(不|不得|未授权)[^。；]*(同步|发布)' "${file}" || return 1
   assert_none "${file}" "已修改" "已经修改" "已提交" "已经提交" "已同步" "已经同步" || return 1
 }
 
@@ -184,6 +184,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/state-resume-variant-2.txt" \
       "${sample_dir}/state-resume-variant-3.txt" \
       "${sample_dir}/skill-improvement.txt" \
+      "${sample_dir}/skill-improvement-coordinated-auth.txt" \
       "${sample_dir}/bad-skill-improvement-noise.txt" \
       "${sample_dir}/bad-skill-improvement-authorization.txt" \
       "${sample_dir}/grill-closed.txt" \
@@ -208,6 +209,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '从 docs/goal-ledger.md 恢复，仅允许执行已确认的 D-1；不得触碰已排除的 B，也不得替 C 作决定。' > "${sample_dir}/state-resume-variant-2.txt"
   printf '%s\n' '从 docs/goal-ledger.md 恢复，仅可按已确认的 D-1 推进；不得执行 B，也不得假定 C。' > "${sample_dir}/state-resume-variant-3.txt"
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：单一专业任务直接加载对应 Skill；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：订单优惠券业务细节；授权边界：只读，不修改、不提交、不同步。' > "${sample_dir}/skill-improvement.txt"
+  printf '%s\n' '目标 Skill：wise-agent；真实失败模式：普通单一专业源码 CR 误触发；可复用规则：单一专业任务只加载架构师；权威落点：metadata；最小修改：保持零 diff；验证方式：fixture 与 validator；不得吸收：订单优惠券类名；授权边界：只读，不修改、提交、同步或发布。' > "${sample_dir}/skill-improvement-coordinated-auth.txt"
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：把订单优惠券类名写入通用规则；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：无；授权边界：只读，不修改、不提交、不同步。' > "${sample_dir}/bad-skill-improvement-noise.txt"
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：单一专业任务直接加载对应 Skill；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：订单优惠券业务细节；授权边界：已修改、已提交并同步。' > "${sample_dir}/bad-skill-improvement-authorization.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/grill-closed.txt"
@@ -226,6 +228,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_state_resume "${sample_dir}/state-resume-variant-2.txt"
   assert_state_resume "${sample_dir}/state-resume-variant-3.txt"
   assert_skill_improvement "${sample_dir}/skill-improvement.txt"
+  assert_skill_improvement "${sample_dir}/skill-improvement-coordinated-auth.txt"
   assert_grill_evidence_closed "${sample_dir}/grill-closed.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict.txt"
   if assert_product "${sample_dir}/engineering.txt"; then
