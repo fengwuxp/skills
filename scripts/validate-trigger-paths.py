@@ -292,6 +292,7 @@ grill_me_source_map = "grill-me/references/source-map.md"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
 wise_agent_global_kernel = "wise-agent/assets/codex-global-agents.md"
+wise_agent_learning_ledger = "wise-agent/scripts/skill-learning-ledger.py"
 professional_skill_files = sorted(
     path.relative_to(ROOT).as_posix()
     for path in ROOT.glob("*/SKILL.md")
@@ -307,6 +308,7 @@ wise_agent_code_understanding_tools = "wise-agent/references/code-understanding-
 wise_agent_domain_expert_distillation = "wise-agent/references/domain-expert-distillation.md"
 wise_agent_spec_template_practices = "wise-agent/references/spec-template-practices.md"
 wise_agent_code_delivery = "wise-agent/references/code-delivery.md"
+wise_agent_skill_learning_backflow = "wise-agent/references/skill-learning-backflow.md"
 wise_agent_goal_governance = "wise-agent/references/goal-governance.md"
 wise_agent_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
 wise_agent_verification_release = "wise-agent/references/verification-review-release.md"
@@ -897,6 +899,7 @@ reference_headers = [
     wise_agent_domain_expert_distillation,
     wise_agent_spec_template_practices,
     wise_agent_code_delivery,
+    wise_agent_skill_learning_backflow,
     wise_agent_goal_governance,
     wise_agent_delivery_execution_control,
     wise_agent_verification_release,
@@ -1024,6 +1027,9 @@ check(
             "再加载 `$wise-agent`",
             "必须取得用户明确授权",
             "更深目录的 `AGENTS.md` 可以补充或覆盖",
+            "学习回流模式",
+            "候选证据",
+            "任务收口",
         ],
     )
     and "每次都加载 `$wise-agent`" not in read(wise_agent_global_kernel)
@@ -3461,6 +3467,39 @@ check(
         ],
     ),
 )
+
+check(
+    "product and architecture design keep layered responsibility and orthogonal composition",
+    has_all(
+        "AGENTS.md",
+        [
+            "分层承责，正交合用",
+            "目标、流程、能力和实现",
+            "编排不得吞并能力内部规则",
+            "正交是降低耦合的趋近目标，不是绝对隔离",
+        ],
+    )
+    and has_all(
+        product_skill,
+        [
+            "业务流程编排产品能力",
+            "不用一个“万能能力”承载所有问题",
+            "不把产品能力图提前等同于服务、接口、数据库或工作流引擎",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "应用编排、领域承责",
+            "应用层只编排用例",
+            "不让统一编排器吞并领域决策",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        ["分层承责，正交合用", "不成为吞并专项规则的万能业务编排层"],
+    ),
+)
 check(
     "wise agent keeps Superpowers skill library boundary",
     has_reference_header(wise_agent_superpowers_library)
@@ -4645,6 +4684,8 @@ check(
             "wise-agent-should-handle-production-incident",
             "wise-agent-should-direct-lightweight-local-edit",
             "wise-agent-should-commit-verified-change",
+            "wise-agent-should-record-opt-in-learning-candidate",
+            "wise-agent-should-not-record-one-off-learning-noise",
             "wise-agent-should-resume-from-state-contract",
             "wise-agent-should-select-control-mechanisms-by-evidence",
             "wise-agent-should-avoid-worker-for-coupled-task",
@@ -6193,15 +6234,19 @@ check(
             "assert_simple_wording",
             "assert_state_resume",
             "assert_skill_improvement",
+            "assert_design_composition_product",
+            "assert_design_composition_engineering",
             "assert_grill_evidence_closed",
             "assert_grill_evidence_conflict",
-            "all|product|engineering|superpowers|governance|self-improvement|grill-me",
+            "all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me",
             "scripts/validate-superpowers-install.sh",
             "systematic-debugging",
             "test-driven-development",
             "verification-before-completion",
             "会员按等级获得权益",
             "请给出最重要的问题、判断依据、需要补的验证",
+            "万能业务处理能力",
+            "UnifiedFlowOrchestrator",
             "当前先调用哪种探索方法、何时升级强盘问",
             "请选择从定位、修复到完成声明的方法链",
             "未授权任何 Git 或隔离工作区动作",
@@ -12802,6 +12847,11 @@ scenario_fixtures: list[RouteFixture] = [
         prompt="做一轮提交：只提交当前已经验证的变更，不要混入其他文件，也不要 push。",
         routes={"wise-agent", "delivery-execution-control.md", "verification-review-release.md"},
     ),
+    RouteFixture(
+        name="wise agent opt in learning candidate",
+        prompt="$wise-agent：知止者学习回流模式已显式启用。两个已验证任务暴露同一触发遗漏，请只记录 candidate，不要直接修改 Skill。",
+        routes={"wise-agent", "code-delivery.md", "skill-learning-backflow.md", "skill-learning-ledger.py"},
+    ),
 ]
 
 negative_route_fixtures: list[RouteFixture] = [
@@ -13043,6 +13093,11 @@ def route_fixture(prompt: str) -> set[str]:
         ],
     ):
         route.update({"wise-agent", "delivery-execution-control.md", "verification-review-release.md"})
+    if contains_any(
+        prompt,
+        ["学习回流模式", "Skill 经验账本", "经验候选账本", "$SKILL_LEARNING_HOME", "只记录 candidate"],
+    ):
+        route.update({"wise-agent", "code-delivery.md", "skill-learning-backflow.md", "skill-learning-ledger.py"})
     if contains_any(prompt, ["SDLC", "Agentic SDLC", "Agentic DevOps"]):
         route.update(
             {
@@ -15509,6 +15564,14 @@ expected_handling_has(
     ("产品架构专家保持产品语义和正文主责", "同一权威版本", "不得改变产品结论", "重新运行产品交付物检查", "文档结构、渲染检查"),
 )
 expected_handling_has(
+    "product-should-compose-orthogonal-capabilities-by-business-flow",
+    ("拒绝用一个万能能力", "目标、业务流程和产品能力分层", "对象不变量", "可独立验收", "产品能力图不提前等同于服务"),
+)
+expected_handling_has(
+    "senior-should-reject-god-orchestrator",
+    ("拒绝让统一编排器吞并领域规则", "应用层只编排用例", "领域能力持有业务规则、状态和不变量", "不为分层制造透传服务"),
+)
+expected_handling_has(
     "senior-should-collaborate-with-document-authoring",
     ("资深架构师保持系分和工程结论主责", "同一权威版本", "不得改动接口、字段、状态、规则编号或验证语义", "重新运行架构交付物检查", "文档结构、渲染检查"),
 )
@@ -15594,6 +15657,19 @@ expected_handling_has(
     ("检查工作区", "精确暂存", "验证证据", "项目约规", "用户语言", "不执行 push"),
 )
 expected_handling_has(
+    "wise-agent-should-record-opt-in-learning-candidate",
+    ("当前任务", "已脱敏", "可复核", "去重", "$SKILL_LEARNING_HOME", "candidate", "不得扫描历史对话", "不得自动晋升"),
+)
+behavior_contract_has(
+    "wise-agent-should-record-opt-in-learning-candidate",
+    ("record_gate", "write_scope", "dedup_gate", "must_not_do"),
+    ("当前任务", "candidate", "重复候选不得再次写入", "扫描历史对话", "直接修改 Skill"),
+)
+expected_handling_has(
+    "wise-agent-should-not-record-one-off-learning-noise",
+    ("不生成学习记录", "单次偏好", "没有验证证据", "不得写入 $SKILL_LEARNING_HOME"),
+)
+expected_handling_has(
     "wise-agent-should-resume-from-state-contract",
     ("D-1", "B 不得复活", "C 不得脑补", "check_state_contract.py", "不靠模型记忆猜测"),
 )
@@ -15612,6 +15688,77 @@ expected_handling_has(
 negative_reason_has(
     "wise-agent-negative-single-domain-prd",
     ("单一产品领域任务", "product-architecture-expert", "不为维持默认人格概念额外加载 wise-agent"),
+)
+
+check(
+    "wise-agent learning backflow keeps automatic writes candidate-only",
+    has_all(
+        wise_agent_skill,
+        ["学习回流模式", "$SKILL_LEARNING_HOME", "candidate", "不得扫描历史对话"],
+    )
+    and has_all(
+        wise_agent_code_delivery,
+        ["`skill-learning-backflow.md`", "确认后的知识归位与最小改进 diff"],
+    )
+    and has_reference_header(wise_agent_skill_learning_backflow)
+    and has_task_reading_index(wise_agent_skill_learning_backflow)
+    and has_all(
+        wise_agent_skill_learning_backflow,
+        [
+            "candidate -> confirmed -> promoted",
+            "skill-learning-ledger.py",
+            "单次偏好",
+            "重复候选不得再次写入",
+            "Git、同步和发布仍需单独授权",
+        ],
+    )
+    and has_all(
+        wise_agent_learning_ledger,
+        [
+            "current-task-explicit-evidence-only",
+            "candidate-only",
+            "history_scan",
+            "auto_promote",
+            "SKIP duplicate",
+            "learning home must not be inside a Git repository",
+            "身份证",
+            "手机号",
+            "0o700",
+            "0o600",
+            "def fingerprint(skill: str, observed: str, expected: str)",
+            "for value in (skill, observed, expected)",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "wise-agent skill learning ledger",
+            "skill-learning-ledger.py --self-test",
+            "py_compile wise-agent/scripts/skill-learning-ledger.py",
+        ],
+    )
+    and has_all(
+        "scripts/smoke-wise-agent-behavior.sh",
+        ["--mode learning", "SKILL_LEARNING_HOME", "learning candidate", "one-off learning noise"],
+    )
+    and has_all(
+        readme,
+        ["开启学习回流模式", "只会把当前任务", "candidate", "不会成为运行时指令"],
+    ),
+)
+
+check(
+    "wise-agent source map records teach learning workspace boundaries",
+    has_all(
+        wise_agent_source_map,
+        [
+            "一个12万星的Skills，帮助你学会任何技能",
+            "mattpocock/skills/tree/main/skills/productivity/teach",
+            "learning-records/*.md",
+            "不记录逐会话活动日志",
+            "不自动读取历史对话",
+        ],
+    ),
 )
 negative_reason_has(
     "wise-agent-negative-single-domain-system-design",

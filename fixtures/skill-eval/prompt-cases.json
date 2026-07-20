@@ -1502,6 +1502,32 @@
       "expected_handling": "知止者先检查工作区和目标差异，确认验证证据后精确暂存本轮文件；当前指令只授权本地 stage / commit，不执行 push、PR、merge 或同步。commit message 优先遵循项目约规；项目没有约规时跟随用户语言，代码、命令、模块名和协议字段保持原文。"
     },
     {
+      "id": "wise-agent-should-record-opt-in-learning-candidate",
+      "skill": "wise-agent",
+      "query": "$wise-agent：知止者学习回流模式已显式启用。最近两个已验证任务都暴露同一触发遗漏，已有 fixture 失败和人工纠偏证据；请在本轮收口时记录经验，但不要直接修改 Skill、提交或同步。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者只读取当前任务明确提供、已脱敏且可复核的 fixture 失败与人工纠偏证据，先按目标 Skill 和活跃记录去重；命中门禁后只向 $SKILL_LEARNING_HOME/wise-agent/records 写入 candidate 经验记录，记录目标 Skill、观察失败、期望行为、证据引用、复用范围、建议权威落点、验证方式和敏感信息检查。不得扫描历史对话，不得自动晋升 confirmed/promoted、直接修改 Skill、Git 提交或同步。",
+      "behavior_contract": {
+        "record_gate": "仅接受当前任务明确提供、已脱敏、可复核且重复出现或具有明确失败样例的证据",
+        "write_scope": "$SKILL_LEARNING_HOME/wise-agent/records，只写 candidate",
+        "dedup_gate": "按目标 Skill、观察失败和期望行为检查活跃记录，重复候选不得再次写入",
+        "must_not_do": ["扫描历史对话", "自动晋升 confirmed/promoted", "直接修改 Skill", "Git 提交或同步"]
+      }
+    },
+    {
+      "id": "wise-agent-should-not-record-one-off-learning-noise",
+      "skill": "wise-agent",
+      "query": "$wise-agent：这次回答简短一点，只确认收到；即使学习回流模式已经启用，也不要把这次措辞偏好写成长期经验。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者直接按本轮措辞要求简短回答，不生成学习记录；单次偏好、一次性措辞和没有验证证据的反馈不满足 candidate 门禁，不得写入 $SKILL_LEARNING_HOME、仓库、Skill 或安装目录。"
+    },
+    {
       "id": "wise-agent-should-resume-from-state-contract",
       "skill": "wise-agent",
       "query": "长任务上下文已压缩，请从允许的状态载体恢复：Goal G-17 为 Active，已确认 D-1，已排除 B，C 待确认，下一动作只允许执行 D-1，恢复入口是 docs/goal-ledger.md；判断现在能做什么。",
@@ -2146,6 +2172,26 @@
         "variance_check"
       ],
       "expected_handling": "进入产品架构专家的既有 PRD 更新路径；保持 docs/member-prd-v2.md 原路径，补齐对象、流程、规则和验收；本次不是命名迁移，不得自动改名为 〈主题〉-产品设计.md，不得修改 AGENTS.md / README.md；若仓库命名冲突，将冲突列为待确认并询问 owner，只有用户明确授权项目约规治理时才修改项目约规；模板回退命名只用于新文档，只有用户明确进入命名迁移任务时才改名并同步所有引用。"
+    },
+    {
+      "id": "product-should-compose-orthogonal-capabilities-by-business-flow",
+      "skill": "product-architecture-expert",
+      "query": "设计一个跨境电商履约产品。为了统一，我想把下单、支付、库存、风控、物流和售后都做成一个万能业务处理能力，由它解决全部问题；请直接输出能力地图和流程。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "产品架构专家拒绝用一个万能能力覆盖全部问题；先按目标、业务流程和产品能力分层，再围绕稳定业务职责、对象不变量和真实变化轴划分高内聚、低重叠、契约清晰且可独立验收的能力，由价值流或业务流程组合完成端到端目标。产品能力图不提前等同于服务、接口、数据库或工作流引擎；简单局部问题也不为分层而分层。"
+    },
+    {
+      "id": "senior-should-reject-god-orchestrator",
+      "skill": "senior-software-architect",
+      "query": "请设计订单履约系统。我准备把下单、支付、库存、风控、物流的全部业务规则和状态判断都写进 UnifiedFlowOrchestrator，再让各服务只做数据读写，这样所有问题都能在编排层解决。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "资深架构师拒绝让统一编排器吞并领域规则；应用层只编排用例的顺序、条件、事务、超时、异常和补偿，领域能力持有业务规则、状态和不变量，基础设施只提供实现机制。按稳定职责、对象不变量和真实变化轴划分模块；不把分层等同于微服务拆分，不为分层制造透传服务，简单局部流程可以直接调用。"
     },
     {
       "id": "product-negative-bug-diagnosis",

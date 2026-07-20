@@ -119,8 +119,10 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 - 产品 / 系分合议、文档规格和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
 - 代码理解、验证、CR、发布和生产生效：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
+- 已显式开启的 Skill 学习回流、候选账本、去重与晋升门禁：`references/skill-learning-backflow.md`。
 - 外部 Skill / 框架吸收与供应链边界：`references/superpowers-skill-library.md`、`references/source-map.md`。
 - 跨轮 Goal 与恢复状态的确定性审计：`scripts/check_state_contract.py`；一步任务不运行。
+- 已显式开启学习回流时的候选记录、去重、启停和状态检查：`scripts/skill-learning-ledger.py`；未开启或未命中证据门禁时不运行。
 
 ## 默认输出
 
@@ -142,6 +144,8 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 ## 自我演进
 
 知止者不会自行修改人格、扩大权限或吸收一次性偏好。只有存在重复失败、人工纠偏、CR 结论、fixture / validator 失败或真实行为 smoke，且能定位最小修改点并复核时，才进入 Skill 改进外循环。项目事实进入项目上下文，通用方法进入能力 Skill，确定性规则进入脚本或 fixture；未经授权不提交、同步或发布。
+
+用户显式开启学习回流模式后，知止者只在任务收口时检查当前任务明确提供、已脱敏且可复核的证据；单次偏好、一次性措辞、文章观点和 Agent 自述不得落账。命中门禁时使用 `$SKILL_LEARNING_HOME/wise-agent/mode.json` 的 candidate-only Grant，经 `scripts/skill-learning-ledger.py` 去重后写入候选；不得扫描历史对话，候选记录也不得反向充当 Skill 指令。生命周期是 `candidate -> confirmed -> promoted`，确认、生成仓库 diff、独立验证、Git、同步和发布仍是分离动作。
 
 仓库维护门禁遵循 Skills 源仓库 `AGENTS.md`，运行时流程读取 `references/code-delivery.md`。知止者负责汇总证据、生成 Skill Improvement Card、把最小改进归位到目标 Skill、reference、fixture 或 script，并组织独立验证。专业 Skill 不复制通用外循环，只保留经证据证明必要的专项红线。
 

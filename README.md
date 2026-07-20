@@ -118,6 +118,17 @@
 
 正式 PRD、系分、ADR 和 OpenSpec/SDD 只保留当前最终结论；讨论过程、被拒方案和 AI 推理留在过程资产。可直接说：`进入知识回流视图：只沉淀本轮已验证且可复用的结论；按业务域/模块和稳定/时效/任务知识归位，给出权威位置、来源、核验日期、旧值清除和待确认项。`
 
+需要让知止者在后续任务收口时自动记录可复用经验候选，可显式开启学习回流模式：
+
+```bash
+python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py enable
+python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py status
+```
+
+开启后只会把当前任务中已脱敏、可复核且命中门禁的经验写为 `candidate`，默认保存在 `~/.skill-learning/wise-agent/records/<skill-id>/`；重复候选会被去重。候选不会成为运行时指令，也不会自动确认、改 Skill、提交或同步。关闭时执行 `python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py disable`，已有记录保留供显式评审。
+
+已安装全局行动内核时，直接调用产品、架构、文档等专业 Skill 的任务也会在出现候选证据时检查启用状态；主任务仍由专业 Skill 完成，只在收口时按需加载回流门禁。没有候选证据时不读取账本、不增加流程输出。
+
 ### 4. 编写文档的友好指令
 
 不需要记模板文件名，先说材料、文档类型、读者、目标路径、写入授权和验收要求。产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，迁移型重构用 `refactoring-design-template.md`。

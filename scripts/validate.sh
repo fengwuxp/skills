@@ -97,6 +97,9 @@ scripts/smoke-wise-agent-behavior.sh --self-test
 echo "==> wise-agent state contract"
 python3 wise-agent/scripts/check_state_contract.py --self-test
 
+echo "==> wise-agent skill learning ledger"
+python3 wise-agent/scripts/skill-learning-ledger.py --self-test
+
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
@@ -109,6 +112,7 @@ python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
+python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py

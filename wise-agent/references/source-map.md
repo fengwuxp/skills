@@ -177,3 +177,4 @@
 - 不把 AI 快速阅读、上下文生成、可视化或结构化思考工具写成默认依赖；只吸收“事实锚点、推断边界、验证证据、上下文漂移检查和人工 CR 交接”的方法。
 - 不把个人长期偏好、个人工作方式、用户背景或私有对话历史写入仓库、安装目录或 Skill 改进材料；需要长期记忆时必须走用户明确要求的独立记忆机制，不能借 Skill 自我改进外循环变相落盘。
 - 不把第三方安全、AI 风险或管理体系材料写成组织已满足的审计、合规或认证结论。
+- 微信文章 [《一个12万星的Skills，帮助你学会任何技能》](https://mp.weixin.qq.com/s/gJUl8vXxyewemUrlBu6EfA) 与 Matt Pocock 上游 [`teach`](https://github.com/mattpocock/skills/tree/main/skills/productivity/teach)：文章作者 / 账号为 `FF的客栈`，页面发布时间为 2026-06-29 15:00；2026-07-20 常规网页读取失败，随后通过 Codex in-app Browser 读取标题、作者、发布时间和正文，并核验上游 `SKILL.md`、`MISSION-FORMAT.md`、`RESOURCES-FORMAT.md`、`LEARNING-RECORD-FORMAT.md`。文章将状态简化为单个 `learning-records.json`，当前上游实际使用 `MISSION.md`、`RESOURCES.md`、`learning-records/*.md`、`lessons/*.html`、`reference/` 和 `NOTES.md`；Learning Record 只记录已证明的理解、先验知识、误解纠正或使命变化，不记录逐会话活动日志。本仓库只吸收状态落盘、证据门禁、按目标回读、去重和 superseded 生命周期；不复制教学工作区、HTML 课程、原文或作者表达，不自动读取历史对话、记录个人偏好、让候选成为运行时指令、自动修改 Skill、提交、同步或发布。

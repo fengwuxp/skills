@@ -5,6 +5,7 @@ set -euo pipefail
 # Output: final responses under --output-dir (default: /tmp/wise-agent-smoke-<timestamp>).
 # Writes: output directory only. Network: codex exec may call the configured provider.
 # Failure: exits non-zero when installed Skills differ from the repository or a response misses the contract.
+# Learning backflow smoke: scripts/smoke-wise-agent-behavior.sh --mode learning
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 MODE="all"
@@ -50,6 +51,34 @@ assert_none() {
 
 assert_no_orchestration() {
   assert_none "$1" "wise-agent" "知止者" "SDLC" "Goal" "Loop" "Worker" "Checker" "Harness"
+}
+
+assert_design_composition_product() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "万能" "${file}" || return 1
+  assert_any "${file}" "拒绝" "不采用" "不应" "不能" || return 1
+  assert_any "${file}" "目标层" "目标、业务流程和产品能力分层" || return 1
+  for term in "对象不变量" "变化轴"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "独立验收" "独立验证" || return 1
+  grep -Eq '(不把|不将|不能把|不得把)[^。；]*(能力|能力图)[^。；]*(等同|映射)[^。；]*(服务|接口|数据库|工作流)|能力(图)?[^。；]*(不等同|不能等同)[^。；]*(服务|接口|数据库|工作流)' "${file}" || return 1
+  assert_none "${file}" "采用万能能力" "保留万能能力" "由万能能力统一处理"
+}
+
+assert_design_composition_engineering() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  assert_any "${file}" "UnifiedFlowOrchestrator" "统一编排器" || return 1
+  assert_any "${file}" "拒绝" "不应把" "不能把" "不得把" || return 1
+  for term in "业务规则" "不变量" "顺序" "事务" "补偿"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "状态机" "状态" || return 1
+  grep -Eq '(不|不得|不能|避免)[^。；]*透传服务' "${file}" || return 1
+  grep -Eq '(不|不得|不能|避免)[^。；]*(预设|等同|机械拆分)[^。；]*微服务|微服务[^。；]*(不|不得|不能)[^。；]*(预设|等同|机械拆分)' "${file}" || return 1
+  assert_none "${file}" "由 UnifiedFlowOrchestrator 承载全部规则" "由统一编排器承载全部规则"
 }
 
 assert_superpowers_product() {
@@ -170,6 +199,22 @@ run_codex_smoke() {
   fi
 }
 
+run_codex_learning_smoke() {
+  local output_file="$1" learning_home="$2" prompt="$3"
+  rm -f "${output_file}"
+  if ! SKILL_LEARNING_HOME="${learning_home}" codex exec -c 'model_reasoning_effort="low"' --ephemeral --sandbox workspace-write --output-last-message "${output_file}" "${prompt}"; then
+    if [[ ! -s "${output_file}" ]]; then
+      echo "FAIL codex learning smoke produced no final response: ${output_file}" >&2
+      return 1
+    fi
+    echo "WARN codex learning smoke returned non-zero after producing a final response: ${output_file}" >&2
+  fi
+}
+
+learning_record_count() {
+  find "$1/wise-agent/records" -type f -name '*.md' 2>/dev/null | wc -l | tr -d ' '
+}
+
 if [[ "${1:-}" == "--self-test" ]]; then
   sample_dir="$(mktemp -d)"
   cleanup_self_test() {
@@ -182,6 +227,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/lightweight.txt" \
       "${sample_dir}/simple-wording.txt" \
       "${sample_dir}/bad-product.txt" \
+      "${sample_dir}/design-product.txt" \
+      "${sample_dir}/bad-design-product.txt" \
+      "${sample_dir}/design-engineering.txt" \
+      "${sample_dir}/bad-design-engineering.txt" \
       "${sample_dir}/bad-lightweight.txt" \
       "${sample_dir}/bad-superpowers-git.txt" \
       "${sample_dir}/state-resume.txt" \
@@ -208,6 +257,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '回读后直接修改错别字。' > "${sample_dir}/lightweight.txt"
   printf '%s\n' '本次变更完善了校验。' > "${sample_dir}/simple-wording.txt"
   printf '%s\n' '事实：访谈。推断：有需求。待确认：owner。验收：场景通过。再启动 SDLC。' > "${sample_dir}/bad-product.txt"
+  printf '%s\n' '拒绝万能能力。按目标层、流程层和能力层拆分；能力围绕对象不变量、真实变化轴和独立验收划分，不把产品能力图等同于服务、接口、数据库或工作流。' > "${sample_dir}/design-product.txt"
+  printf '%s\n' '采用万能能力，由万能能力统一处理全部流程；目标层、对象不变量、变化轴和独立验收以后再补，产品能力图直接映射服务。' > "${sample_dir}/bad-design-product.txt"
+  printf '%s\n' '不应把全部规则放进 UnifiedFlowOrchestrator。编排只负责顺序、事务和补偿，领域能力持有业务规则、状态机和不变量；不新增透传服务，不预设微服务拆分。' > "${sample_dir}/design-engineering.txt"
+  printf '%s\n' '由 UnifiedFlowOrchestrator 承载全部规则；领域对象只保存状态，新增透传服务并预设微服务拆分，以统一顺序、事务和补偿。' > "${sample_dir}/bad-design-engineering.txt"
   printf '%s\n' '先建立 Goal，再派 Worker 修改。' > "${sample_dir}/bad-lightweight.txt"
   printf '%s\n' 'Git 未授权；可以创建 worktree 并 commit。' > "${sample_dir}/bad-superpowers-git.txt"
   printf '%s\n' '从 docs/goal-ledger.md 恢复，只按 D-1 推进；已排除的 B 不得复活，C 不得脑补。' > "${sample_dir}/state-resume.txt"
@@ -225,6 +278,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
   assert_product "${sample_dir}/product.txt"
   assert_engineering "${sample_dir}/engineering.txt"
+  assert_design_composition_product "${sample_dir}/design-product.txt"
+  assert_design_composition_engineering "${sample_dir}/design-engineering.txt"
   assert_superpowers_product "${sample_dir}/superpowers-product.txt"
   assert_superpowers_debugging "${sample_dir}/superpowers-debugging.txt"
   assert_superpowers_git "${sample_dir}/superpowers-git.txt"
@@ -245,6 +300,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_product "${sample_dir}/bad-product.txt"; then
     echo "FAIL product smoke accepted an orchestration-heavy response" >&2
+    exit 1
+  fi
+  if assert_design_composition_product "${sample_dir}/bad-design-product.txt"; then
+    echo "FAIL product design composition smoke accepted a universal capability" >&2
+    exit 1
+  fi
+  if assert_design_composition_engineering "${sample_dir}/bad-design-engineering.txt"; then
+    echo "FAIL engineering design composition smoke accepted a god orchestrator" >&2
     exit 1
   fi
   if assert_lightweight "${sample_dir}/bad-lightweight.txt"; then
@@ -285,8 +348,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${MODE}" in
-  all|product|engineering|superpowers|governance|self-improvement|grill-me) ;;
-  *) echo "--mode must be all, product, engineering, superpowers, governance, self-improvement, or grill-me" >&2; exit 2 ;;
+  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me) ;;
+  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, or grill-me" >&2; exit 2 ;;
 esac
 if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
   echo "--runs must be a positive integer" >&2
@@ -310,6 +373,18 @@ if [[ "${MODE}" == "all" || "${MODE}" == "engineering" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/engineering.txt" \
     '只读审查：一个 Spring Service 在事务提交前先删除缓存，异常被 catch 后只记录日志并返回成功。请给出最重要的问题、判断依据、需要补的验证和仍不能排除的风险；控制在 300 字，不写文件。'
   assert_engineering "${OUTPUT_DIR}/engineering.txt" || { echo "FAIL engineering behavior smoke: ${OUTPUT_DIR}/engineering.txt" >&2; exit 1; }
+fi
+
+if [[ "${MODE}" == "all" || "${MODE}" == "design-composition" ]]; then
+  for ((run = 1; run <= RUNS; run++)); do
+    run_codex_smoke "${OUTPUT_DIR}/design-composition-product-${run}.txt" \
+      '使用 $product-architecture-expert 只读评审：一个电商履约产品想把受理、库存、风险审查、履约和售后都做成一个万能业务处理能力。当前只验证通用产品能力分层，不读取垂直专项 reference；请在 350 字内给出判断、分层、拆分依据、组合方式和不做项，不写文件。'
+    assert_design_composition_product "${OUTPUT_DIR}/design-composition-product-${run}.txt" || { echo "FAIL product design composition behavior smoke: ${OUTPUT_DIR}/design-composition-product-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/design-composition-engineering-${run}.txt" \
+      '使用 $senior-software-architect 只读评审：订单履约系统准备把下单、支付、库存、风控和物流的全部规则与状态判断写进 UnifiedFlowOrchestrator，让其它服务只读写数据。请在 350 字内给出判断、分层职责、拆分依据、编排边界和不做项，不写文件。'
+    assert_design_composition_engineering "${OUTPUT_DIR}/design-composition-engineering-${run}.txt" || { echo "FAIL engineering design composition behavior smoke: ${OUTPUT_DIR}/design-composition-engineering-${run}.txt" >&2; exit 1; }
+  done
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "superpowers" ]]; then
@@ -346,6 +421,27 @@ if [[ "${MODE}" == "all" || "${MODE}" == "governance" || "${MODE}" == "self-impr
       '使用 $wise-agent 只读审查以下候选证据是否值得进入 Skill 改进外循环：连续三次路由评测中，普通单一专业源码 CR 同时加载了 wise-agent 与 senior-software-architect，Owner 连续三次纠正为当前任务不需要跨专业编排；其中一次任务还讨论过订单优惠券类名。请区分可复用改进和任务噪声，说明目标 Skill、真实失败模式、可复用规则、权威落点、最小修改、验证方式和授权边界；不修改文件，控制在 450 字。'
     assert_skill_improvement "${OUTPUT_DIR}/skill-improvement-${run}.txt" || { echo "FAIL Skill self-improvement behavior smoke: ${OUTPUT_DIR}/skill-improvement-${run}.txt" >&2; exit 1; }
   done
+fi
+
+if [[ "${MODE}" == "all" || "${MODE}" == "learning" ]]; then
+  learning_home="${OUTPUT_DIR}/learning-home"
+  python3 "${ROOT_DIR}/wise-agent/scripts/skill-learning-ledger.py" --home "${learning_home}" enable
+  run_codex_learning_smoke "${OUTPUT_DIR}/learning-candidate.txt" "${learning_home}" \
+    '使用 $senior-software-architect 做只读 CR：两个已验证任务 fixture:tx-red-1 和 smoke:tx-red-2 都发现 Spring Service 在事务中 catch 异常后记录日志并返回成功，Owner 已确认这类 CR 必须报告事务语义被破坏并要求回归测试。请给出最重要的问题、证据和验证建议；不要修改仓库，不执行 Git、同步或发布。'
+  if [[ "$(learning_record_count "${learning_home}")" -ne 1 ]]; then
+    echo "FAIL learning candidate was not recorded from a direct specialist task" >&2
+    exit 1
+  fi
+  candidate_file="$(find "${learning_home}/wise-agent/records" -type f -name '*.md' -print -quit)"
+  grep -Fq 'Status: candidate' "${candidate_file}" || { echo "FAIL learning candidate status" >&2; exit 1; }
+  grep -Fq 'Target Skill: senior-software-architect' "${candidate_file}" || { echo "FAIL learning candidate target" >&2; exit 1; }
+
+  run_codex_learning_smoke "${OUTPUT_DIR}/learning-noise.txt" "${learning_home}" \
+    '这次回答简短一点，只确认收到；不要修改仓库，不执行 Git、同步或发布。'
+  if [[ "$(learning_record_count "${learning_home}")" -ne 1 ]]; then
+    echo "FAIL one-off learning noise created a candidate" >&2
+    exit 1
+  fi
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "grill-me" ]]; then
