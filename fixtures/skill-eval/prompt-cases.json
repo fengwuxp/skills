@@ -1492,6 +1492,16 @@
       "expected_handling": "知止者在当前工作区直接完成指定的一处低风险修改并回读；不展开完整 SDLC，不装载 Superpowers，不派 Worker，不创建 Goal、worktree、commit、push 或 PR，不输出能力菜单和流程表演。"
     },
     {
+      "id": "wise-agent-should-commit-verified-change",
+      "skill": "wise-agent",
+      "query": "做一轮提交：只提交当前已经验证的变更，不要混入其他文件，也不要 push。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者先检查工作区和目标差异，确认验证证据后精确暂存本轮文件；当前指令只授权本地 stage / commit，不执行 push、PR、merge 或同步。commit message 优先遵循项目约规；项目没有约规时跟随用户语言，代码、命令、模块名和协议字段保持原文。"
+    },
+    {
       "id": "wise-agent-should-resume-from-state-contract",
       "skill": "wise-agent",
       "query": "长任务上下文已压缩，请从允许的状态载体恢复：Goal G-17 为 Active，已确认 D-1，已排除 B，C 待确认，下一动作只允许执行 D-1，恢复入口是 docs/goal-ledger.md；判断现在能做什么。",
@@ -1618,6 +1628,17 @@
       "hard_negative": true,
       "dimensions": ["trigger_accuracy"],
       "negative_reason": "这是无需材料、工具、专项能力或验证的一步翻译，应直接回答，不加载知止者工作闭环。"
+    },
+    {
+      "id": "wise-agent-negative-commit-message-translation",
+      "skill": "wise-agent",
+      "query": "把 commit message 'fix payment timeout' 翻译成中文，只返回译文，不执行 Git。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "variance_check"],
+      "negative_reason": "这只是翻译 commit message 的一步措辞任务，不执行 Git、不读取工作区，也不触发知止者。"
     },
     {
       "id": "wise-agent-negative-simple-fact",

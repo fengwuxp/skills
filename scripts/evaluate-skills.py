@@ -388,7 +388,7 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
     warnings: list[str] = []
     score = 80
     expected_terms = {
-        "wise-agent": ["知止者", "自己判断并推进", "只读 CR", "补单元测试"],
+        "wise-agent": ["知止者", "自己判断并推进", "做一轮提交", "补单元测试"],
         "document-authoring": ["document-authoring", "正式报告", "DOCX"],
         "hanzi-philology": ["hanzi-philology", "甲骨文", "《说文解字》"],
         "java-service-code-generator": ["CREATE TABLE", "字段表格", "Java Entity"],

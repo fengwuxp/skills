@@ -62,6 +62,9 @@ WISE_AGENT_CORE_TERMS = [
     "完成必须同时具备",
     "联网、安装、Git、密钥、部署、生产、删除、不可逆操作",
     "单个领域词不等于专项证据",
+    "明确要求执行 Git stage / commit / push",
+    "仅翻译或改写 commit message 不触发",
+    "提交信息优先遵循当前项目约规",
 ]
 
 
@@ -288,6 +291,7 @@ grill_me_question_ledger = "grill-me/references/question-ledger.md"
 grill_me_source_map = "grill-me/references/source-map.md"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
+wise_agent_global_kernel = "wise-agent/assets/codex-global-agents.md"
 professional_skill_files = sorted(
     path.relative_to(ROOT).as_posix()
     for path in ROOT.glob("*/SKILL.md")
@@ -995,6 +999,10 @@ check(
         ["精确 description", "同一 Agent", "不产生多个行动主体"],
     )
     and has_all(
+        wise_agent_agent,
+        ["allow_implicit_invocation: true", "提交信息优先遵循项目约规", "跟随用户语言"],
+    )
+    and has_all(
         wise_agent_skill_type_owner_routing,
         ["专业 Skill 也按精确 description 隐式匹配", "同一 Agent", "不产生第二人格或重复 Owner"],
     )
@@ -1004,6 +1012,29 @@ check(
     and has_all(hanzi_skill, ["知止者按需装载", "显式调用只表示优先装载考据能力"])
     and has_all(codegen_skill, ["知止者按需装载的确定性 Java Service 代码生成能力包"])
     and has_all(wind_skill, ["知止者按需装载的 Java 项目分层约规能力包"]),
+)
+check(
+    "wise-agent global kernel stays minimal, conditional, and authorization-bound",
+    has_all(
+        wise_agent_global_kernel,
+        [
+            "简单任务直接完成",
+            "最短可验证路径",
+            "最小专业 Skill",
+            "再加载 `$wise-agent`",
+            "必须取得用户明确授权",
+            "更深目录的 `AGENTS.md` 可以补充或覆盖",
+        ],
+    )
+    and "每次都加载 `$wise-agent`" not in read(wise_agent_global_kernel)
+    and has_all(
+        wise_agent_skill,
+        [
+            "`assets/codex-global-agents.md`",
+            "已有非空全局规则时先合并",
+            "不得直接覆盖",
+        ],
+    ),
 )
 expected_handling_has(
     "wind-coding-conventions-should-trigger-wind-dependency",
@@ -2614,9 +2645,10 @@ check(
         term in frontmatter(wise_agent_skill)
         for term in [
             "用户显式说“知止者”“wise-agent”“自己判断并推进”“按需调用能力”",
+            "明确要求执行 Git stage / commit / push、提交并同步或创建 / 合并 PR",
             "跨专业协同、跨阶段交付、跨轮状态管理",
             "单一专业任务（包括只读 CR）直接加载对应 Skill",
-            "简单问答、翻译和一步措辞不触发",
+            "简单问答、一步措辞以及仅翻译或改写 commit message 不触发",
         ]
     )
     and has_all(
@@ -4612,6 +4644,7 @@ check(
             "wise-agent-should-write-tests",
             "wise-agent-should-handle-production-incident",
             "wise-agent-should-direct-lightweight-local-edit",
+            "wise-agent-should-commit-verified-change",
             "wise-agent-should-resume-from-state-contract",
             "wise-agent-should-select-control-mechanisms-by-evidence",
             "wise-agent-should-avoid-worker-for-coupled-task",
@@ -4626,6 +4659,7 @@ check(
             "wise-agent-negative-simple-translation",
             "wise-agent-negative-simple-fact",
             "wise-agent-negative-simple-wording",
+            "wise-agent-negative-commit-message-translation",
             "wise-agent-negative-simple-definition",
             "wise-agent-negative-simple-synonyms",
             "product-should-nonstandard-problem-solution",
@@ -4640,7 +4674,7 @@ check(
             "\"wise-agent\"",
             "\"知止者\"",
             "\"自己判断并推进\"",
-            "\"只读 CR\"",
+            "\"做一轮提交\"",
             "\"补单元测试\"",
         ],
     ),
@@ -12763,6 +12797,11 @@ scenario_fixtures: list[RouteFixture] = [
         prompt="请结合老祖宗智慧校准这个合作方案：责任还不清楚，但可以先做可回退试点。",
         routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
     ),
+    RouteFixture(
+        name="wise agent on explicit local commit action",
+        prompt="做一轮提交：只提交当前已经验证的变更，不要混入其他文件，也不要 push。",
+        routes={"wise-agent", "delivery-execution-control.md", "verification-review-release.md"},
+    ),
 ]
 
 negative_route_fixtures: list[RouteFixture] = [
@@ -12815,6 +12854,11 @@ negative_route_fixtures: list[RouteFixture] = [
         name="product on bug screenshot",
         prompt="这张错误截图显示 NullPointerException，帮我定位根因并补回归测试",
         routes={"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
+        name="wise agent on commit message translation only",
+        prompt="把 commit message 'fix payment timeout' 翻译成中文，只返回译文，不执行 Git。",
+        routes={"wise-agent"},
     ),
     RouteFixture(
         name="wise agent on ordinary PRD",
@@ -12983,6 +13027,22 @@ def route_fixture(prompt: str) -> set[str]:
         prompt,
         ["不需要跨角色流程设计", "不需要跨角色交付编排", "不需要流程编排", "不需要规划协作流程"],
     )
+    if contains_any(
+        prompt,
+        [
+            "做一轮提交",
+            "提交当前变更",
+            "提交这些变更",
+            "提交并同步",
+            "提交并推送",
+            "执行 git commit",
+            "执行 Git commit",
+            "推送到远端",
+            "创建 PR",
+            "合并 PR",
+        ],
+    ):
+        route.update({"wise-agent", "delivery-execution-control.md", "verification-review-release.md"})
     if contains_any(prompt, ["SDLC", "Agentic SDLC", "Agentic DevOps"]):
         route.update(
             {
@@ -15530,6 +15590,10 @@ expected_handling_has(
     ("直接完成", "不展开完整 SDLC", "不装载 Superpowers", "不派 Worker", "不创建 Goal"),
 )
 expected_handling_has(
+    "wise-agent-should-commit-verified-change",
+    ("检查工作区", "精确暂存", "验证证据", "项目约规", "用户语言", "不执行 push"),
+)
+expected_handling_has(
     "wise-agent-should-resume-from-state-contract",
     ("D-1", "B 不得复活", "C 不得脑补", "check_state_contract.py", "不靠模型记忆猜测"),
 )
@@ -15576,6 +15640,10 @@ negative_reason_has(
 negative_reason_has(
     "wise-agent-negative-simple-wording",
     ("一步措辞改写", "不加载知止者工作闭环"),
+)
+negative_reason_has(
+    "wise-agent-negative-commit-message-translation",
+    ("翻译 commit message", "不执行 Git", "不触发知止者"),
 )
 negative_reason_has(
     "wise-agent-negative-simple-definition",
