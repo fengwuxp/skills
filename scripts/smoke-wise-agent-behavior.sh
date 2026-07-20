@@ -111,14 +111,14 @@ assert_state_resume() {
 
 assert_skill_improvement() {
   local file="$1" term
-  for term in "目标 Skill" "可复用规则" "授权边界" "wise-agent" "单一专业" "权威落点" "最小修改" "订单优惠券"; do
+  for term in "目标 Skill" "可复用规则" "wise-agent" "单一专业" "权威落点" "最小修改" "订单优惠券"; do
     grep -Fq "${term}" "${file}" || return 1
   done
   assert_any "${file}" "真实失败模式" "真实失败" || return 1
   assert_any "${file}" "验证方式" "验证" || return 1
-  assert_any "${file}" "fixture" "负例" || return 1
-  assert_any "${file}" "validator" "评测" "校验脚本" "evaluate-skills.py" || return 1
+  assert_any "${file}" "fixture" "负例" "validator" "评测" "校验脚本" "evaluate-skills.py" || return 1
   assert_any "${file}" "不得吸收" "不回流" "任务噪声" || return 1
+  assert_any "${file}" "授权边界" "授权" || return 1
   grep -Eq '不得吸收[：:][^。；]*(订单优惠券)|任务噪声[^。；]*(订单优惠券)|订单优惠券[^。；]*(不得吸收|不回流|排除|不得写入|不写入|任务噪声)' "${file}" || return 1
   grep -Eq '(不|不得|未授权)[^。；]*(修改|写入)|(修改|写入|Git)[^。；]*(需|须)[^。；]*授权' "${file}" || return 1
   grep -Eq '(不|不得|未授权)[^。；]*(提交|commit)|(提交|commit|Git)[^。；]*(需|须)[^。；]*授权' "${file}" || return 1
@@ -216,7 +216,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '从 docs/goal-ledger.md 恢复，仅可按已确认的 D-1 推进；不得执行 B，也不得假定 C。' > "${sample_dir}/state-resume-variant-3.txt"
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：单一专业任务直接加载对应 Skill；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：订单优惠券业务细节；授权边界：只读，不修改、不提交、不同步。' > "${sample_dir}/skill-improvement.txt"
   printf '%s\n' '目标 Skill：wise-agent；真实失败模式：普通单一专业源码 CR 误触发；可复用规则：单一专业任务只加载架构师；权威落点：metadata；最小修改：保持零 diff；验证方式：fixture 与 validator；不得吸收：订单优惠券类名；授权边界：只读，不修改、提交、同步或发布。' > "${sample_dir}/skill-improvement-coordinated-auth.txt"
-  printf '%s\n' '目标 Skill：wise-agent；真实失败：普通单一专业源码 CR 误触发；可复用规则：只加载架构师；权威落点：触发评测契约；最小修改：加强 hard-negative fixture；验证：多轮运行 evaluate-skills.py；任务噪声：订单优惠券类名不具跨项目价值，不得写入 Skill；授权边界：本轮仅审查，修改、同步、Git 均需另行授权。' > "${sample_dir}/skill-improvement-semantic-variant.txt"
+  printf '%s\n' '目标 Skill：wise-agent；真实失败：普通单一专业源码 CR 误触发；可复用规则：只加载架构师；权威落点：触发评测契约；最小修改：加强 hard-negative fixture；验证：旧样例转绿；任务噪声：订单优惠券类名不具跨项目价值，不得写入 Skill；授权：本轮仅审查，不修改、提交、同步或发布。' > "${sample_dir}/skill-improvement-semantic-variant.txt"
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：把订单优惠券类名写入通用规则；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：无；授权边界：只读，不修改、不提交、不同步。' > "${sample_dir}/bad-skill-improvement-noise.txt"
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：单一专业任务直接加载对应 Skill；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：订单优惠券业务细节；授权边界：已修改、已提交并同步。' > "${sample_dir}/bad-skill-improvement-authorization.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/grill-closed.txt"

@@ -6186,7 +6186,7 @@ check(
             "skill-improvement-coordinated-auth.txt",
             "不修改、提交、同步或发布",
             "skill-improvement-semantic-variant.txt",
-            "修改、同步、Git 均需另行授权",
+            "授权：本轮仅审查",
             "不得写入 Skill",
             "bad-skill-improvement-noise.txt",
             "bad-skill-improvement-authorization.txt",
