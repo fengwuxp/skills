@@ -30,7 +30,7 @@
 | 工程交付 | `基于 <PRD/系分/源码> 完成 <Bug/TDD/重构/代码>，写入范围是 <路径>，验证命令是 <命令>。` |
 | 决策盘问 | `使用 $grill-me 盘一下这个方案：先查历史问题和项目事实，一次只问一个主 blocker，记录每个问题和结论。` |
 | 经世决策 | `使用 $huaxia-practical-wisdom：基于这些事实校准当前取舍，给出最小行动、止损和验证，不要只讲古语。` |
-| 知识回流 | `进入知识回流视图：把这轮 CR 结论沉淀到项目约规，并说明权威落点和证据。` |
+| 知识回流 | `进入知识回流视图：把这轮 CR 结论沉淀到项目约规或知识库；按业务域/模块和稳定/时效/任务知识归位，并说明权威落点和证据。` |
 | 发布准入 | `做生产交付审查：只判断能不能发布，列证据、回退、人工确认点和停止条件。` |
 | 项目约规 | `初始化/更新项目 AGENTS.md：只做最小项目约规 patch。` |
 
@@ -104,6 +104,18 @@
 
 常用短句只用于强调边界：`进入知止者`、`进入只读理解视图`、`做质量门禁`、`做源码质量评审`、`做生产交付审查`、`进入知识回流视图`。
 
+### 3.3 知识如何回流
+
+知识回流不是把任务总结整篇复制进知识库。先确认结论已被源码、测试、文档、日志或 Owner 验证，再按业务域或模块找到已有权威位置；没有权威位置或写入授权时，只给候选落点，不自动新建目录。
+
+| 类型 | 适合保存 | 保存要求 |
+| --- | --- | --- |
+| 稳定知识 | 概念、责任边界、核心流程、长期不变量、证据规则 | 写入项目约规、领域知识库或 ADR 等权威位置；变更时说明依据、影响面并清除旧值 |
+| 时效知识 | 工具能力、版本、平台限制、外部规范、近期策略 | 记录来源、核验日期、适用范围和复核条件，不混成永久规则 |
+| 任务知识 | 本轮材料、计划、验证结果、临时判断、待确认项 | 默认留在 Issue、Goal Ledger、计划或评审记录；只有可复用且已验证时才晋升 |
+
+正式 PRD、系分、ADR 和 OpenSpec/SDD 只保留当前最终结论；讨论过程、被拒方案和 AI 推理留在过程资产。可直接说：`进入知识回流视图：只沉淀本轮已验证且可复用的结论；按业务域/模块和稳定/时效/任务知识归位，给出权威位置、来源、核验日期、旧值清除和待确认项。`
+
 ### 4. 编写文档的友好指令
 
 不需要记模板文件名，先说材料、文档类型、读者、目标路径、写入授权和验收要求。产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，迁移型重构用 `refactoring-design-template.md`。
@@ -148,16 +160,17 @@ git diff --check
 
 正式同步后运行 `scripts/validate-installed-skills.sh`，确认仓库管理的 Skill 文件一致且退役 Skill 已移除。`sync-skills.sh` 使用 `rsync --delete`，已有目标会备份到 `$CODEX_HOME/skills/.backups/`；`--dry-run` 不写入安装目录。
 
-`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。完成正式同步后，可运行行为 smoke；它会先检查安装一致性，再通过配置的 Codex provider 发起只读请求，并把结果写到指定目录。`all` 覆盖通用产品、工程、三类 Superpowers 协同、轻量任务和跨轮状态恢复；只验证 Superpowers 时使用 `superpowers`，只验证控制机制时使用 `governance`：
+`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。完成正式同步后，可运行行为 smoke；它会先检查安装一致性，再通过配置的 Codex provider 发起只读请求，并把结果写到指定目录。`all` 覆盖通用产品、工程、三类 Superpowers 协同、轻量任务、跨轮状态恢复和 Skill 自我改进；只验证 Superpowers 时使用 `superpowers`，只验证控制机制时使用 `governance`：
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke
 scripts/smoke-wise-agent-behavior.sh --mode superpowers --output-dir /tmp/wise-agent-superpowers-smoke
 scripts/smoke-wise-agent-behavior.sh --mode governance --output-dir /tmp/wise-agent-governance-smoke
+scripts/smoke-wise-agent-behavior.sh --mode self-improvement --runs 3 --output-dir /tmp/wise-agent-self-improvement-smoke
 scripts/smoke-wise-agent-behavior.sh --mode grill-me --runs 3 --output-dir /tmp/grill-me-smoke
 ```
 
-`grill-me` 专项 smoke 会让真实 Agent 读取 PRD、决策记录、知识库、Java 源码和测试夹具，分别验证“证据已关闭时不提问”和“证据冲突时只问一个问题”；`--runs 3` 用于观察同一 prompt 的行为方差。该 smoke 仍只证明样例行为满足契约，不能单独证明所有任务的路由稳定性。跨轮任务需要审计状态一致性时，可把已有 Goal Ledger、Issue 或任务状态投影为 JSON 后运行 `python3 wise-agent/scripts/check_state_contract.py <contract.json>`；普通任务不需要手写状态契约。维护者同步或更新项目自有 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；安装或更新官方 Superpowers 插件后，运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
+`governance` 包含 Skill 自我改进 smoke；只验证该能力时使用 `self-improvement`。它会检查 Agent 能否把重复路由失败归位到正确 Skill、拒绝吸收一次性业务细节、提出最小 fixture / validator，且不擅自修改、提交或同步。`grill-me` 专项 smoke 会让真实 Agent 读取 PRD、决策记录、知识库、Java 源码和测试夹具，分别验证“证据已关闭时不提问”和“证据冲突时只问一个问题”；`--runs 3` 用于观察同一 prompt 的行为方差。该 smoke 仍只证明样例行为满足契约，不能单独证明所有任务的路由稳定性。跨轮任务需要审计状态一致性时，可把已有 Goal Ledger、Issue 或任务状态投影为 JSON 后运行 `python3 wise-agent/scripts/check_state_contract.py <contract.json>`；普通任务不需要手写状态契约。维护者同步或更新项目自有 `grill-me` 后，运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；安装或更新官方 Superpowers 插件后，运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
 
 ## 维护者与高级扩展
 

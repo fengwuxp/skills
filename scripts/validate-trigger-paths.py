@@ -288,6 +288,11 @@ grill_me_question_ledger = "grill-me/references/question-ledger.md"
 grill_me_source_map = "grill-me/references/source-map.md"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
+professional_skill_files = sorted(
+    path.relative_to(ROOT).as_posix()
+    for path in ROOT.glob("*/SKILL.md")
+    if path.parent.name != "wise-agent"
+)
 wise_agent_cognition_model = "wise-agent/references/cognition-and-capability-model.md"
 wise_agent_delivery_lifecycle = "wise-agent/references/delivery-lifecycle.md"
 wise_agent_product_to_engineering = "wise-agent/references/product-to-engineering-lifecycle.md"
@@ -4291,10 +4296,47 @@ check(
     ),
 )
 check(
-    "wise agent keeps skill self-improvement and experience placement",
+    "repo centralizes skill self-improvement and avoids professional skill duplication",
     has_all(
+        agents_rules,
+        [
+            "## Skill 自我改进外循环",
+            "Skills 源仓库维护门禁",
+            "运行时识别、分发和回流编排",
+            "专业 Skill 不复制本节",
+            "内循环",
+            "外循环",
+            "Skill Improvement Card",
+        ],
+    )
+    and has_all(
+        wise_agent_skill,
+        [
+            "## 自我演进",
+            "才进入 Skill 改进外循环",
+            "仓库维护门禁遵循 Skills 源仓库 `AGENTS.md`",
+            "运行时流程读取 `references/code-delivery.md`",
+            "生成 Skill Improvement Card",
+            "专业 Skill 不复制通用外循环",
+            "未经授权不提交、同步或发布",
+        ],
+    )
+    and all(
+        has_none(
+            path,
+            [
+                "## Skill 自我改进外循环",
+                "Skill 自我改进外循环遵循仓库",
+                "Skill 改进必须遵循仓库",
+            ],
+        )
+        for path in professional_skill_files
+    )
+    and has_all(
         wise_agent_code_delivery,
         [
+            "知止者运行时的知识回流与 Skill 改进编排",
+            "Skills 源仓库的维护准入、隐私、授权和 Git 边界以根目录 `AGENTS.md` 为准",
             "经验归位判断",
             "Skill 自我改进外循环",
             "Knowledge Harness",
@@ -4684,6 +4726,13 @@ check(
             "询问 owner",
             "继续收敛",
             "停止交接",
+            "### 3.3 知识如何回流",
+            "知识回流不是把任务总结整篇复制进知识库",
+            "按业务域或模块找到已有权威位置",
+            "| 稳定知识 |",
+            "| 时效知识 |",
+            "| 任务知识 |",
+            "没有权威位置或写入授权时，只给候选落点",
             "### 4. 编写文档的友好指令",
             "### 5. 边界与授权",
             "Ready / Not Ready / Human Approval Required",
@@ -4699,6 +4748,7 @@ check(
             "## 验证与同步安全",
             "./scripts/validate.sh",
             "scripts/smoke-wise-agent-behavior.sh",
+            "--mode self-improvement --runs 3",
             "--mode grill-me --runs 3",
             "普通使用这些能力不需要运行安装校验",
         ],
@@ -6108,9 +6158,10 @@ check(
             "assert_lightweight",
             "assert_simple_wording",
             "assert_state_resume",
+            "assert_skill_improvement",
             "assert_grill_evidence_closed",
             "assert_grill_evidence_conflict",
-            "all|product|engineering|superpowers|governance|grill-me",
+            "all|product|engineering|superpowers|governance|self-improvement|grill-me",
             "scripts/validate-superpowers-install.sh",
             "systematic-debugging",
             "test-driven-development",
@@ -6126,6 +6177,16 @@ check(
             "orchestration-heavy response",
             "不得复活",
             "不得脑补",
+            "state-resume-variant-3",
+            "不得执行 B，也不得假定 C",
+            "Skill Improvement Card",
+            "单一专业源码 CR",
+            "讨论过订单优惠券类名",
+            "Owner 连续三次纠正",
+            "bad-skill-improvement-noise.txt",
+            "bad-skill-improvement-authorization.txt",
+            "accepted business noise",
+            "accepted unauthorized delivery",
             "grill-me/fixtures/behavior-evidence",
             "fact-confirmed",
             "decision-reused",
@@ -6140,6 +6201,8 @@ check(
             "按严重级别、证据、测试、残余风险四项答复",
             "明确写出“不生成工程实现计划”",
             "用“Superpowers 已安装不等于”开头",
+            "已确认的可复用方向是单一专业任务直接加载对应 Skill",
+            "只输出 Skill Improvement Card，必须包含",
         ],
     ),
 )

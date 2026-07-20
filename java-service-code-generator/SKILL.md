@@ -9,10 +9,6 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind/Nobe Java Se
 
 本技能的基础服务、DTO、Request、Query、Entity、Mapper、MapStruct、Service、ServiceImpl 模板是 Wind 编码约规的标准生成面；权威规则以 `wind-coding-conventions` Skill 为准，本技能只保存可确定生成的模板细节，避免复制一套会漂移的约规。
 
-## Skill 自我改进外循环
-
-Skill 自我改进外循环遵循仓库 `AGENTS.md`。本技能只接收基于生成失败、fixture 失败、CR 反馈或项目约规偏差的最小改进；不保存个人长期偏好或私有轨迹，不把业务私有 schema 或生产配置写入仓库。
-
 ## 工作流程
 
 1. 读取用户输入：DDL/SQL、schema 文件路径、Java 类、字段说明表格、目标表名、业务模块；优先根据用户已有材料生成，不强制要求用户补 DDL。输入源与详细规程见 `references/code-generation-rules.md`。
