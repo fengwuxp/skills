@@ -60,6 +60,8 @@ description: |
 
 组合顺序是：先判断是否需要 SDLC 坐标，再判断是否需要 Goal 保持完成线；只有确实要反复运行才增加 Loop。Worker 与 Checker 不是顺序阶段，而是两条正交判断：Worker 解决如何分工执行，Checker 解决如何独立证明；可以只用 Checker 而不派 Worker，也可以多个 Worker 共用一个独立 Checker。
 
+工作拓扑投影不是第六个机制或新的 `Graph Mode`。只有任务存在三个以上节点，并出现分支 / 汇合依赖、并行 Worker、跨 Wave 交接或需要随新证据拆分、取消、重排时，才把现有 Task Tree 投影为可校验 `work_graph`；简单、线性或单文件任务不生成。Goal 仍定义整体完成线，Loop 只在需要反复执行的节点内运行，Worker / Checker 分别附着到执行与验证节点；详细契约读取 `references/delivery-execution-control.md`。
+
 ## 能力装载
 
 先判断任务需要什么能力，再读取对应 Skill；默认只加载一个主能力，确有交接、互证或复合产物时再加载协同能力。完整责任与装载规则读取 `references/capability-routing.md`。
@@ -98,7 +100,7 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 
 多 Agent、状态载体、文件化 handoff、Maker / Checker、模型成本和执行状态门禁读取 `references/engineering-governance.md`；长任务自治读取 `references/delivery-execution-control.md` 和 `references/goal-governance.md`。
 
-长任务进入跨轮、上下文压缩或恢复前，必须先从允许的状态载体恢复 Goal、已确认选择、排除项、待确认项、执行依据和下一动作；需要确定性审计时，把现有载体投影为 JSON 状态契约并运行 `scripts/check_state_contract.py`。该脚本只校验状态一致性，不替代原状态载体、Owner 判断或完成证据。
+长任务进入跨轮、上下文压缩或恢复前，必须先从允许的状态载体恢复 Goal、已确认选择、排除项、待确认项、执行依据和下一动作；需要确定性审计时，把现有载体投影为 JSON 状态契约并运行 `scripts/check_state_contract.py`。复杂任务可在同一契约中附加可选 `work_graph`，校验节点依赖、并行写入、状态和证据；该脚本不替代原状态载体、Owner 判断或完成证据。
 
 ## 工作与授权
 
@@ -121,7 +123,7 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
 - 已显式开启的 Skill 学习回流、候选账本、去重与晋升门禁：`references/skill-learning-backflow.md`。
 - 外部 Skill / 框架吸收与供应链边界：`references/superpowers-skill-library.md`、`references/source-map.md`。
-- 跨轮 Goal 与恢复状态的确定性审计：`scripts/check_state_contract.py`；一步任务不运行。
+- 跨轮 Goal、恢复状态与可选工作拓扑的确定性审计：`scripts/check_state_contract.py`；一步任务不运行。
 - 已显式开启学习回流时的候选记录、去重、启停和状态检查：`scripts/skill-learning-ledger.py`；未开启或未命中证据门禁时不运行。
 
 ## 默认输出

@@ -1548,6 +1548,26 @@
       "expected_handling": "知止者把 SDLC 作为跨阶段地图，把 Goal 作为跨轮目标与完成线；只有状态载体、反馈源、预算、无进展检测和停止条件齐备时才启用 Loop；三个模块输入可冻结、写入不重叠且低耦合时才派 Worker；公共契约和发布风险需要独立 Checker。Worker 与 Checker 不是顺序阶段，也不因任务复杂就机械启用全部机制。"
     },
     {
+      "id": "wise-agent-should-project-complex-work-topology",
+      "skill": "wise-agent",
+      "query": "Goal G-21 跨多轮，任务关系是 A 完成后 B、C 可并行，B 与 C 完成后 D 才能集成；但 B、C 当前都计划修改同一个契约文件，D 属于高风险公共契约。请按知止者推进并说明如何组织工作，不要新增模式菜单。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "知止者不新增 Graph Mode，只在现有 Goal 状态契约中生成可选工作拓扑投影；记录 A -> B/C -> D 的节点、依赖、状态、写入范围和证据。B、C 写入范围冲突，不能作为同一 parallel_group 并行，必须改为串行或重新切分；D 绑定独立 Checker。Loop 只留在需要反复执行的节点内，并用 check_state_contract.py 校验依赖、并行写入和状态证据。"
+    },
+    {
+      "id": "wise-agent-should-not-project-work-topology-for-simple-task",
+      "skill": "wise-agent",
+      "query": "$wise-agent：只修 README 中一个错字并回读确认，要不要也生成 Graph Mode 和工作图？",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "知止者直接完成这个一步、单文件、线性任务并回读验证；不新增 Graph Mode，不生成 work_graph，不创建 Goal、Loop 或 Worker。只有复杂任务出现三个以上节点以及分支 / 汇合依赖、并行 Worker、跨 Wave 交接或动态取消 / 重排时，才使用可选工作拓扑投影。"
+    },
+    {
       "id": "wise-agent-should-avoid-worker-for-coupled-task",
       "skill": "wise-agent",
       "query": "只修改一个 Service 文件里的强耦合事务逻辑并补同文件附近测试，调用链连续、同一上下文才能判断；请自己推进，不需要并行表演。",
@@ -2407,6 +2427,16 @@
         "output_quality"
       ],
       "expected_handling": "进入 Wind 幂等与业务唯一性分层检查；业务唯一性和业务身份由表内业务 UK、联合 UK、状态条件或版本约束保护；外部 Idempotency-Key/requestSn 可以用于请求重放去重，但不得冒充业务身份，必须定义租户或调用方与接口作用域、参数摘要、有效期、并发冲突、结果回放和过期后重用语义；有自然业务唯一约束时独立保留数据库兜底，没有自然业务 UK 时不得为了形式完整虚构联合 UK；不能笼统地把外部请求号降为只允许追踪，也不能机械要求所有请求幂等键与业务 UK 合并。"
+    },
+    {
+      "id": "wind-coding-conventions-should-not-duplicate-mdc-context",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind 项目已由统一日志链路和 MDC 注入 traceId、应用名称、userId、tenantId、客户端 IP、User-Agent 和设备信息，但 ServiceImpl 又在每条 logger.info 中手动打印这些字段，请按 Wind 编码约规检查。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "进入 Wind MDC 日志上下文红线检查；已有 MDC 配置和运行证据时，不得在业务日志消息模板或参数中重复打印 traceId、应用名称、用户 ID、租户标识、客户端 IP、User-Agent 或设备信息，只补业务 ID、动作、结果、失败原因和必要外部调用摘要。异步、线程池、MQ、定时或批处理缺失上下文时，应修复入口初始化、上下文传播和执行后清理，不在每条日志中手动追加字段；结构化审计或事件契约明确要求时按 schema 保存，不等同于日志字符串重复；没有 MDC 证据时不得机械删除现有上下文字段，并继续遵守最小必要和敏感信息脱敏。"
     },
     {
       "id": "wind-coding-conventions-should-trigger-agents-template",

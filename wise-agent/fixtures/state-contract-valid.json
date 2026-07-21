@@ -36,5 +36,71 @@
   "recovery_entry": "docs/goal-ledger.md#G-17",
   "residual_risk_owner": "repository maintainer",
   "max_iterations": 6,
-  "no_progress_limit": 2
+  "no_progress_limit": 2,
+  "work_graph": {
+    "revision": 1,
+    "revision_reason": "",
+    "revision_evidence": [],
+    "nodes": [
+      {
+        "id": "A",
+        "objective": "确认状态恢复契约",
+        "status": "Verified",
+        "depends_on": [],
+        "write_scope": [],
+        "risk": "low",
+        "checker": "",
+        "evidence": [
+          "Goal G-17 决策快照"
+        ],
+        "status_reason": ""
+      },
+      {
+        "id": "B",
+        "objective": "更新知止者规则",
+        "status": "Ready",
+        "depends_on": [
+          "A"
+        ],
+        "parallel_group": "implementation",
+        "write_scope": [
+          "wise-agent/SKILL.md"
+        ],
+        "risk": "low",
+        "checker": "",
+        "evidence": [],
+        "status_reason": ""
+      },
+      {
+        "id": "C",
+        "objective": "更新执行控制说明",
+        "status": "Ready",
+        "depends_on": [
+          "A"
+        ],
+        "parallel_group": "implementation",
+        "write_scope": [
+          "wise-agent/references/delivery-execution-control.md"
+        ],
+        "risk": "medium",
+        "checker": "",
+        "evidence": [],
+        "status_reason": ""
+      },
+      {
+        "id": "D",
+        "objective": "独立验证工作拓扑",
+        "status": "Pending",
+        "depends_on": [
+          "B",
+          "C"
+        ],
+        "write_scope": [],
+        "risk": "high",
+        "checker": "check_state_contract.py",
+        "evidence": [],
+        "status_reason": ""
+      }
+    ]
+  }
 }

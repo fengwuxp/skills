@@ -4688,6 +4688,8 @@ check(
             "wise-agent-should-not-record-one-off-learning-noise",
             "wise-agent-should-resume-from-state-contract",
             "wise-agent-should-select-control-mechanisms-by-evidence",
+            "wise-agent-should-project-complex-work-topology",
+            "wise-agent-should-not-project-work-topology-for-simple-task",
             "wise-agent-should-avoid-worker-for-coupled-task",
             "wise-agent-should-use-checker-without-worker",
             "wise-agent-negative-single-domain-prd",
@@ -6355,6 +6357,49 @@ check(
         wise_agent_verification_release,
         [
             "验证矩阵、独立 Checker、CR 准出、发布证据和复盘规则的唯一权威来源",
+        ],
+    ),
+)
+check(
+    "wise-agent projects complex work topology without adding Graph Mode",
+    has_all(
+        wise_agent_skill,
+        ["工作拓扑投影不是第六个机制", "三个以上节点", "可校验 `work_graph`", "简单、线性或单文件任务不生成"],
+    )
+    and has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "可选工作拓扑投影",
+            "不是新的 `Graph Mode`",
+            "Goal 定义整体完成线",
+            "Loop 只在需要反复行动和反馈的节点内运行",
+            "同一 `parallel_group` 的写入范围必须不重叠",
+            "高风险节点必须绑定独立 Checker",
+            "revision_reason",
+            "revision_evidence",
+            "已取消节点保留为 tombstone",
+            "工作图不得整体删除",
+            "节点写入范围必须属于顶层 `write_scope`",
+            "所有节点必须为 `Verified / Cancelled`",
+            "--previous <previous.json>",
+        ],
+    )
+    and has_all(
+        "wise-agent/scripts/check_state_contract.py",
+        [
+            "validate_work_graph",
+            "work_graph dependencies must be acyclic",
+            "overlapping_scopes",
+            "requires checker",
+            "requires status_reason and evidence",
+            "optional work_graph broke legacy contract",
+            "outside contract write_scope",
+            "requires every work_graph node to be Verified or Cancelled",
+            "must remain as tombstone",
+            "must not be revived",
+            "must retain work_graph",
+            "increment previous revision by one",
+            "--previous",
         ],
     ),
 )
@@ -15315,6 +15360,42 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "wind-coding-conventions-should-not-duplicate-mdc-context",
+    (
+        "Wind MDC 日志上下文红线检查",
+        "不得在业务日志消息模板或参数中重复打印 traceId、应用名称、用户 ID、租户标识、客户端 IP、User-Agent 或设备信息",
+        "只补业务 ID、动作、结果、失败原因和必要外部调用摘要",
+        "修复入口初始化、上下文传播和执行后清理",
+        "结构化审计或事件契约明确要求时按 schema 保存",
+        "没有 MDC 证据时不得机械删除现有上下文字段",
+        "敏感信息脱敏",
+    ),
+)
+
+check(
+    "Wind logging avoids duplicating MDC-injected context",
+    has_all(
+        wind_skill_conventions,
+        [
+            "MDC 日志上下文",
+            "不得在消息模板或参数中重复打印这些字段",
+            "异步任务、线程池、MQ、定时任务或批处理",
+            "入口初始化、上下文传播和执行后清理",
+            "不得机械删除现有上下文字段",
+            "结构化审计 / 事件 schema",
+        ],
+    )
+    and has_all(
+        wind_skill_agents_template,
+        [
+            "已由统一日志链路 / MDC 注入",
+            "不得在业务日志中重复打印",
+            "依靠业务 ID 和 MDC 中的 traceId 串起时间线",
+        ],
+    ),
+)
+
+expected_handling_has(
     "wise-agent-should-route-practical-design-documents",
     (
         "核心名相",
@@ -15690,6 +15771,14 @@ expected_handling_has(
 expected_handling_has(
     "wise-agent-should-select-control-mechanisms-by-evidence",
     ("SDLC 作为跨阶段地图", "Goal 作为跨轮目标", "状态载体", "低耦合时才派 Worker", "独立 Checker", "不是顺序阶段"),
+)
+expected_handling_has(
+    "wise-agent-should-project-complex-work-topology",
+    ("不新增 Graph Mode", "可选工作拓扑投影", "B、C 写入范围冲突", "D 绑定独立 Checker", "Loop 只留在", "check_state_contract.py"),
+)
+expected_handling_has(
+    "wise-agent-should-not-project-work-topology-for-simple-task",
+    ("直接完成", "不生成 work_graph", "不创建 Goal、Loop 或 Worker", "三个以上节点"),
 )
 expected_handling_has(
     "wise-agent-should-avoid-worker-for-coupled-task",

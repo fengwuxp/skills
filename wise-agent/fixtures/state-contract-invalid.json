@@ -34,5 +34,68 @@
   "recovery_entry": "",
   "residual_risk_owner": "repository maintainer",
   "max_iterations": 2,
-  "no_progress_limit": 3
+  "no_progress_limit": 3,
+  "work_graph": {
+    "revision": 2,
+    "revision_reason": "",
+    "revision_evidence": [],
+    "nodes": [
+      {
+        "id": "A",
+        "objective": "错误启动 A",
+        "status": "Running",
+        "depends_on": [
+          "B"
+        ],
+        "parallel_group": "unsafe",
+        "write_scope": [
+          "wise-agent"
+        ],
+        "risk": "low",
+        "checker": "",
+        "evidence": [],
+        "status_reason": ""
+      },
+      {
+        "id": "B",
+        "objective": "错误启动 B",
+        "status": "Ready",
+        "depends_on": [
+          "A"
+        ],
+        "parallel_group": "unsafe",
+        "write_scope": [
+          "wise-agent/SKILL.md"
+        ],
+        "risk": "high",
+        "checker": "",
+        "evidence": [],
+        "status_reason": ""
+      },
+      {
+        "id": "C",
+        "objective": "伪造验证完成",
+        "status": "Verified",
+        "depends_on": [
+          "missing"
+        ],
+        "write_scope": [],
+        "risk": "low",
+        "checker": "",
+        "evidence": [],
+        "status_reason": ""
+      },
+      {
+        "id": "D",
+        "objective": "无依据取消任务",
+        "status": "Cancelled",
+        "depends_on": [],
+        "write_scope": [],
+        "risk": "low",
+        "checker": "",
+        "evidence": [],
+        "status_reason": ""
+      }
+    ]
+  }
 }

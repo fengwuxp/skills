@@ -201,6 +201,15 @@ AI 注释去噪 / 可读性门禁:
 
 跨轮或上下文压缩前，需要确定性审计时，把上述载体投影为 `wise-agent/scripts/check_state_contract.py` 可校验的 JSON；投影只用于检查 Goal、决策集合、执行依据、预算、停止和恢复字段，不替代 Goal Ledger、Spec、Issue 或任务文档本身。
 
+## 2B.1 可选工作拓扑投影
+工作拓扑投影不是新的 `Graph Mode`、流程或真相源，只把现有 Task Tree / Wave plan 中已经存在的工作关系变成可校验结构。满足任一条件时才附加 `work_graph`：至少三个节点且存在分支或汇合依赖；多个 Worker 可能并行；任务跨 Wave 交接；新证据可能导致节点拆分、取消或重排。简单、线性、单文件或一次可完成的任务继续直接执行。
+层次保持不变：Goal 定义整体完成线；`work_graph` 表达节点、依赖和当前可执行集合；Loop 只在需要反复行动和反馈的节点内运行；Worker 承担低耦合执行节点；Checker 是高风险节点或汇合准入的独立验证者。稳定的能力地图仍由 `capability-routing.md` 管理，Skill 是能力包，不把它们虚构成常驻 Agent 组织。
+最小契约为 `work_graph.revision / revision_reason / revision_evidence / nodes[]`；节点字段为 `id / objective / status / depends_on / parallel_group? / write_scope / risk / checker / evidence / status_reason`。
+- 状态只使用 `Pending / Ready / Running / Blocked / Verified / Cancelled`；依赖未 `Verified`，后继不得进入 `Ready / Running / Verified`；`Verified` 必须有证据，`Blocked / Cancelled` 必须有原因和证据，高风险节点必须绑定独立 Checker。
+- 同一 `parallel_group` 的写入范围必须不重叠；冲突时拆顺序，不为并行修改公共契约、状态机或共享测试夹具。
+- 新证据导致拆分、取消或重排时逐一递增 `revision`，记录 `revision_reason` 和 `revision_evidence`；revision 大于 1 必须用 `--previous` 对账，工作图不得整体删除，已取消节点保留为 tombstone，不得删除或复活。
+- 节点写入范围必须属于顶层 `write_scope`；Goal 进入 `Verified / Closed` 时，所有节点必须为 `Verified / Cancelled`。投影不成为第二真相源，也不扩大 Worker、Git 或生产授权。
+- 运行 `python3 wise-agent/scripts/check_state_contract.py <current.json> --previous <previous.json>` 校验唯一节点、无环依赖、执行准入、并行写入、Checker、状态证据、授权范围与 revision；首版省略 `--previous`。
 ## 2C. Loop 组件清单
 
 设计可运行 Loop 时，至少判断下列组件是否存在；缺失组件必须写进 Loop 缺口，而不是用更长 Prompt 补偿。
