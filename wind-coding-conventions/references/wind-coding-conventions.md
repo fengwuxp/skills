@@ -112,6 +112,9 @@
 - 枚举命名和模板：生命周期用 `XxxState`，分类用 `XxxType`，动作/指令用 `XxxAction`；对外枚举放 `*-face/enums` 或稳定公共 `core/enums`，只给 impl 使用的内部枚举留在 `*-impl`。公开枚举优先实现 `DescriptiveEnum`，使用 `@Getter`、`@AllArgsConstructor`、`private final String desc`，枚举值使用大写下划线；需要颜色、层级或前端展示时通过 DTO/Converter 输出，不把展示字段随意塞进业务枚举。
 - 系统字典、国际化和业务事件：Key 是稳定契约，展示文案可调整；业务逻辑、持久化判断和状态机只能依赖 code、enum、errorCode 或 eventKey，不依赖中文、英文文案或翻译结果。Key 按场景分命名空间，常用前缀为 `ui.`、`enum.`、`error.`、`event.`、`config.`；同一中文在不同业务场景也不要复用 Key。业务事件、审计展示和可回放消息存 `{eventKey, params}`，不存渲染后的中文句子；params 放业务 code 或变量值，不放“已支付”这类可变文案。Key 只能新增和废弃，语义改变必须新建 Key，历史 Key 不随意删除。
 - 公共接口、公有方法、DTO/Request/Query、配置属性和扩展点要有 Javadoc，说明职责、调用方、空值、异常、权限、幂等、事务和副作用；注释说明 Why / Why not，不翻译代码。
+- 【强制】Wind 项目新增生产 Java 命名类型统一使用类型级 Javadoc，覆盖 `class`、`interface`、`record`、`enum` 和注解类型 `@interface`，至少包含一行真实的职责 / 边界说明、`@author` 和 `@since`；详细格式读取 `wind-coding-examples.md`。类型说明不得只复述类型名，`@author` 必须使用可核验的项目账号或维护团队，不得由 AI 猜测，`@since` 默认记录首次引入日期 `yyyy-MM-dd`，项目已有版本格式时服从项目约规。匿名类、局部类和工具生成代码不机械补模板。
+- 泛型类型参数和 `record` 组件在类型级 Javadoc 中使用 `@param` 说明；公开构造器、方法、枚举值和注解元素仍按实际契约补充文档，不把共同类型头误当成完整 API 文档。
+- 【强制】首次引入信息不随每次修改刷新；修改作者和修改时间由 Git 记录，不在类型头维护变更流水，不新增非标准 `@description`、`@date` 或“最后修改时间”标签。存量类型不因无关修改批量补模板，只在新增类型或用户明确要求治理时处理。
 - 项目已依赖 JSpecify 时，内部 Java 空值契约使用 JSpecify；项目已使用 Bean Validation 时，API 入参沿用对应注解；业务前置条件和状态条件使用项目断言工具。已由 JSpecify 标为非空的值，不再加无业务语义的空判断。若 `ServiceImpl` 会为 Request 字段补默认值，该字段的 Bean Validation 必须允许缺省，默认值应在服务入口归一化后再参与幂等查询、唯一键判断、转换和落库；不得把基础服务内部默认值泄露给调用方或上层 ApplicationService。
 - 金额必须明确币种、精度和舍入规则；时间必须明确格式、时区和精度；ID 必须考虑唯一性、可追踪、并发和外部暴露风险。
 - Spring Bean 优先构造注入；Lombok 只减少样板代码，不隐藏业务不变量、状态变化、副作用或敏感字段。

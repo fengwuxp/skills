@@ -1,10 +1,10 @@
 # Wind 项目编码最佳实践示例
 
-本文是 `wind-coding-conventions` Skill 的示例参考，只在已读取 `wind-coding-conventions.md` 后使用，用少量正反例帮助判断服务分层、模型归属、DAL 和测试边界；它不是代码生成模板。
+本文是 `wind-coding-conventions` Skill 的示例参考，只在已读取 `wind-coding-conventions.md` 后使用，用少量正反例和类型头 Javadoc 模板帮助判断服务分层、模型归属、DAL、注释和测试边界；它不是代码生成模板。
 
 ## 使用时机
 
-- 用户要求 Wind 编码约规的最佳实践、示例、正反例或落地参照。
+- 用户要求 Wind 编码约规的最佳实践、示例、正反例、Java 类型头模板或落地参照。
 - AI Maker / Checker 对 ApplicationService、基础服务、DTO/Entity、MyBatis Flex 或测试替身边界拿不准。
 
 ## 不适用场景
@@ -25,6 +25,25 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 最佳实践 / 正反例 / 新人或 AI Maker 纠偏 | 下方 `示例卡` | 不把示例当模板复制，不为示例新增无业务入口代码 |
+| Java 类型头 Javadoc | 下方 `Java 类型头 Javadoc 模板` | 不批量改存量类型，不维护修改流水账 |
+
+## Java 类型头 Javadoc 模板
+
+```java
+/**
+ * 负责<核心业务职责>，边界是<不负责事项或关键约束>。
+ *
+ * @author <项目账号或维护团队>
+ * @since <yyyy-MM-dd>
+ */
+public class XxxType {
+}
+```
+
+- 同一模板必须紧贴在 `class`、`interface`、`record`、`enum` 或注解类型 `@interface` 声明前；类型说明写职责、边界或关键约束，不重复类型名。匿名类、局部类和工具生成代码不机械补模板。
+- 泛型类型参数写 `@param <T>`，`record` 组件写 `@param componentName`；公开构造器、方法、枚举值和注解元素的参数、返回、异常及副作用继续按实际契约补充 Javadoc。
+- `@author` 只填项目可核验身份，AI 不得填写自己或猜测用户名；`@since` 只记录首次引入日期，项目已统一使用发布版本时沿用版本格式。
+- Git 负责修改历史；不新增 `@description`、`@date`、修改人或最后修改时间，不因普通修改刷新类型头。
 
 ## 示例卡
 

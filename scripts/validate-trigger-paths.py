@@ -15396,6 +15396,65 @@ check(
 )
 
 expected_handling_has(
+    "wind-coding-conventions-should-standardize-type-javadoc",
+    (
+        "Wind Java 类型头 Javadoc 模板检查",
+        "class、interface、record、enum 和注解类型 @interface",
+        "真实职责或边界说明",
+        "标准 Javadoc @author 与 @since",
+        "不得由 AI 猜测",
+        "首次引入日期 yyyy-MM-dd",
+        "泛型类型参数和 record 组件在类型级 Javadoc 中使用 @param",
+        "公开构造器、方法、枚举值和注解元素仍按实际契约补充文档",
+        "匿名类、局部类和工具生成代码不机械补模板",
+        "不得使用非标准 @description、@date",
+        "修改历史交给 Git",
+        "存量类型不因无关修改批量补模板",
+    ),
+)
+
+check(
+    "Wind Java type Javadoc template keeps metadata minimal and traceable",
+    has_all(
+        wind_skill_conventions,
+        [
+            "新增生产 Java 命名类型统一使用类型级 Javadoc",
+            "`class`、`interface`、`record`、`enum` 和注解类型 `@interface`",
+            "`@author` 必须使用可核验的项目账号或维护团队",
+            "不得由 AI 猜测",
+            "`@since` 默认记录首次引入日期 `yyyy-MM-dd`",
+            "泛型类型参数和 `record` 组件在类型级 Javadoc 中使用 `@param`",
+            "公开构造器、方法、枚举值和注解元素仍按实际契约补充文档",
+            "首次引入信息不随每次修改刷新",
+            "不新增非标准 `@description`、`@date`",
+            "匿名类、局部类和工具生成代码不机械补模板",
+            "存量类型不因无关修改批量补模板",
+        ],
+    )
+    and has_all(
+        wind_skill_examples,
+        [
+            "Java 类型头 Javadoc 模板",
+            "`class`、`interface`、`record`、`enum` 或注解类型 `@interface`",
+            "@author <项目账号或维护团队>",
+            "@since <yyyy-MM-dd>",
+            "泛型类型参数写 `@param <T>`",
+            "`record` 组件写 `@param componentName`",
+            "Git 负责修改历史",
+            "不新增 `@description`、`@date`",
+        ],
+    )
+    and has_all(
+        wind_skill_agents_template,
+        [
+            "新增生产 Java 命名类型使用 Wind 类型头 Javadoc",
+            "`class`、`interface`、`record`、`enum` 和 `@interface`",
+            "首次引入信息不随修改刷新",
+        ],
+    ),
+)
+
+expected_handling_has(
     "wise-agent-should-route-practical-design-documents",
     (
         "核心名相",

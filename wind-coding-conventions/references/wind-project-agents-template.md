@@ -86,6 +86,7 @@
 - 不把 Entity、Mapper、Repository、MyBatis Page 或 QueryWrapper 暴露到 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口或事件消息契约。
 - 不新增一行透传方法、Mapper 包装、浅服务、似是而非的 ApplicationService、内存版业务 Service、Fake/Mock 业务实现或看上去可用的样子货。
 - TDD 和测试按公开契约黑盒验证；不为凑绿感知私有方法、内部调用顺序、Mapper/Repository 调用次数、临时字段、内部 Mock 交互或当前实现步骤。
+- 新增生产 Java 命名类型使用 Wind 类型头 Javadoc，覆盖 `class`、`interface`、`record`、`enum` 和 `@interface`：真实职责 / 边界说明、`@author` 和 `@since`；身份必须可核验，首次引入信息不随修改刷新，不使用 `@description`、`@date` 或类型头变更流水账。
 
 ## 业务日志与审计
 

@@ -2439,6 +2439,16 @@
       "expected_handling": "进入 Wind MDC 日志上下文红线检查；已有 MDC 配置和运行证据时，不得在业务日志消息模板或参数中重复打印 traceId、应用名称、用户 ID、租户标识、客户端 IP、User-Agent 或设备信息，只补业务 ID、动作、结果、失败原因和必要外部调用摘要。异步、线程池、MQ、定时或批处理缺失上下文时，应修复入口初始化、上下文传播和执行后清理，不在每条日志中手动追加字段；结构化审计或事件契约明确要求时按 schema 保存，不等同于日志字符串重复；没有 MDC 证据时不得机械删除现有上下文字段，并继续遵守最小必要和敏感信息脱敏。"
     },
     {
+      "id": "wind-coding-conventions-should-standardize-type-javadoc",
+      "skill": "wind-coding-conventions",
+      "query": "给 Wind 项目新增的 class、interface、record、enum 等 Java 类型制定统一类型头模板，需要包含类型说明、作者和时间，同时避免 AI 生成无意义注释。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "进入 Wind Java 类型头 Javadoc 模板检查；新增生产 Java 命名类型统一覆盖 class、interface、record、enum 和注解类型 @interface，至少写一行真实职责或边界说明，并使用标准 Javadoc @author 与 @since，其中作者必须是可核验的项目账号或维护团队，不得由 AI 猜测，@since 默认记录首次引入日期 yyyy-MM-dd，项目已有版本格式时服从项目约规。泛型类型参数和 record 组件在类型级 Javadoc 中使用 @param，公开构造器、方法、枚举值和注解元素仍按实际契约补充文档；匿名类、局部类和工具生成代码不机械补模板。不得使用非标准 @description、@date、修改人或最后修改时间维护变更流水，修改历史交给 Git，首次引入信息不随每次修改刷新，存量类型不因无关修改批量补模板。"
+    },
+    {
       "id": "wind-coding-conventions-should-trigger-agents-template",
       "skill": "wind-coding-conventions",
       "query": "用 知止者给这个遵循 Wind 编码约规的新项目初始化 AGENTS.md，让后续 AI 能按产品专家、资深架构师、Wind 约规和代码生成器分工推进。",
