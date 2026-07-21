@@ -395,6 +395,8 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
         "product-architecture-expert": ["PRD", "业务能力地图", "验收种子"],
         "senior-software-architect": ["CR", "架构", "TDD"],
         "wind-coding-conventions": ["Wind 编码约规", "Entity 不外露", "AGENTS.md"],
+        "grill-me": ["$grill-me", "压力测试", "关键分叉", "重复问"],
+        "huaxia-practical-wisdom": ["$huaxia-practical-wisdom", "老祖宗智慧", "名实是否相符", "可逆"],
     }
     trigger_text = "\n".join(
         case.get("query", "")
@@ -698,6 +700,10 @@ def run_self_test() -> None:
     hanzi = next(item for item in report["skills"] if item["name"] == "hanzi-philology")
     if any("甲骨文" in warning for warning in hanzi["warnings"]):
         raise SystemExit("hanzi-philology: trigger scoring ignored prompt fixture query text")
+    for skill_name in ("grill-me", "huaxia-practical-wisdom"):
+        item = next(item for item in report["skills"] if item["name"] == skill_name)
+        if item["dimensions"]["trigger_fixtures"] != 100:
+            raise SystemExit(f"{skill_name}: trigger fixture coverage is incomplete")
     for item in report["skills"]:
         metrics = item["metrics"]
         if not metrics["openai_yaml"]:

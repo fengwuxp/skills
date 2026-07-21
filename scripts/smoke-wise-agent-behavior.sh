@@ -26,6 +26,17 @@ assert_engineering() {
     grep -Fq "${term}" "${file}" || return 1
   done
   assert_no_orchestration "${file}"
+  assert_none "${file}" "华夏经世智慧" "老祖宗智慧" "周易" "道德经" "阴阳五行"
+}
+
+assert_huaxia_decision() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "事实" "待确认" "行动" "止损" "验证"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "可逆" "试点" "可回退" "试行" || return 1
+  assert_none "${file}" "保证成功" "必然成功" "替代专业判断"
 }
 
 assert_any() {
@@ -156,7 +167,11 @@ assert_skill_improvement() {
 }
 
 question_record_count() {
-  awk '{ count += gsub(/本轮问题[：:]/, "") } END { print count + 0 }' "$1"
+  awk '{
+    count += gsub(/本轮问题[：:]/, "")
+    count += gsub(/需要 Owner 回答的一个问题[：:]/, "")
+    count += gsub(/(^|[[:space:]])问题[：:]/, "")
+  } END { print count + 0 }' "$1"
 }
 
 assert_grill_evidence_closed() {
@@ -221,6 +236,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
     rm -f \
       "${sample_dir}/product.txt" \
       "${sample_dir}/engineering.txt" \
+      "${sample_dir}/huaxia.txt" \
+      "${sample_dir}/huaxia-variant.txt" \
+      "${sample_dir}/bad-huaxia.txt" \
+      "${sample_dir}/bad-engineering-huaxia.txt" \
       "${sample_dir}/superpowers-product.txt" \
       "${sample_dir}/superpowers-debugging.txt" \
       "${sample_dir}/superpowers-git.txt" \
@@ -244,6 +263,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-skill-improvement-authorization.txt" \
       "${sample_dir}/grill-closed.txt" \
       "${sample_dir}/grill-conflict.txt" \
+      "${sample_dir}/grill-conflict-variant.txt" \
       "${sample_dir}/bad-grill-closed.txt" \
       "${sample_dir}/bad-grill-conflict.txt"
     rmdir "${sample_dir}"
@@ -251,6 +271,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   trap cleanup_self_test EXIT
   printf '%s\n' '事实：访谈。推断：有需求。待确认：owner。验收：场景通过。' > "${sample_dir}/product.txt"
   printf '%s\n' '严重级别：P1。证据：源码。测试：补回归。残余风险：并发。' > "${sample_dir}/engineering.txt"
+  printf '%s\n' '事实：目标一致。待确认：责任 owner。行动：做可逆试点。止损：责任不清则停止。验证：复盘结果。' > "${sample_dir}/huaxia.txt"
+  printf '%s\n' '事实：目标一致。待确认：责任 owner。最小行动：选择可回退流程试行。止损：成本触顶则停止。验证：对照基线。' > "${sample_dir}/huaxia-variant.txt"
+  printf '%s\n' '顺其自然即可，必然成功。' > "${sample_dir}/bad-huaxia.txt"
+  printf '%s\n' '严重级别：P1。证据：源码。测试：补回归。残余风险：并发。按周易阴阳五行处理。' > "${sample_dir}/bad-engineering-huaxia.txt"
   printf '%s\n' '知止者先用 brainstorming 收敛，关键分叉再用 grill-me；暂不写工程计划。' > "${sample_dir}/superpowers-product.txt"
   printf '%s\n' '知止者采用 systematic-debugging、test-driven-development、verification-before-completion。' > "${sample_dir}/superpowers-debugging.txt"
   printf '%s\n' 'Git 和 worktree 未授权；不允许 commit，也不允许 push 或创建 PR。' > "${sample_dir}/superpowers-git.txt"
@@ -274,10 +298,13 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' 'Skill Improvement Card；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；可复用规则：单一专业任务直接加载对应 Skill；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；验证方式：回归 fixture / validator；不得吸收：订单优惠券业务细节；授权边界：已修改、已提交并同步。' > "${sample_dir}/bad-skill-improvement-authorization.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/grill-closed.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；证据链接：decision?id=D-102；本轮不执行方案。推荐答案：人工复核。本轮问题：是否确认人工复核？' > "${sample_dir}/grill-conflict.txt"
+  printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，Java 实现不能定义业务意图；未确认不得执行方案。推荐答案：人工复核。需要 Owner 回答的一个问题：是否确认人工复核？' > "${sample_dir}/grill-conflict-variant.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。请确认？' > "${sample_dir}/bad-grill-closed.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
   assert_product "${sample_dir}/product.txt"
   assert_engineering "${sample_dir}/engineering.txt"
+  assert_huaxia_decision "${sample_dir}/huaxia.txt"
+  assert_huaxia_decision "${sample_dir}/huaxia-variant.txt"
   assert_design_composition_product "${sample_dir}/design-product.txt"
   assert_design_composition_engineering "${sample_dir}/design-engineering.txt"
   assert_superpowers_product "${sample_dir}/superpowers-product.txt"
@@ -294,8 +321,17 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_skill_improvement "${sample_dir}/skill-improvement-semantic-variant.txt"
   assert_grill_evidence_closed "${sample_dir}/grill-closed.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict.txt"
+  assert_grill_evidence_conflict "${sample_dir}/grill-conflict-variant.txt"
   if assert_product "${sample_dir}/engineering.txt"; then
     echo "FAIL product smoke accepted an engineering-only response" >&2
+    exit 1
+  fi
+  if assert_huaxia_decision "${sample_dir}/bad-huaxia.txt"; then
+    echo "FAIL Huaxia smoke accepted slogan-only certainty" >&2
+    exit 1
+  fi
+  if assert_engineering "${sample_dir}/bad-engineering-huaxia.txt"; then
+    echo "FAIL engineering smoke accepted Huaxia framing for ordinary engineering CR" >&2
     exit 1
   fi
   if assert_product "${sample_dir}/bad-product.txt"; then
@@ -348,8 +384,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${MODE}" in
-  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me) ;;
-  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, or grill-me" >&2; exit 2 ;;
+  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia) ;;
+  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, or huaxia" >&2; exit 2 ;;
 esac
 if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
   echo "--runs must be a positive integer" >&2
@@ -373,6 +409,14 @@ if [[ "${MODE}" == "all" || "${MODE}" == "engineering" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/engineering.txt" \
     '只读审查：一个 Spring Service 在事务提交前先删除缓存，异常被 catch 后只记录日志并返回成功。请给出最重要的问题、判断依据、需要补的验证和仍不能排除的风险；控制在 300 字，不写文件。'
   assert_engineering "${OUTPUT_DIR}/engineering.txt" || { echo "FAIL engineering behavior smoke: ${OUTPUT_DIR}/engineering.txt" >&2; exit 1; }
+fi
+
+if [[ "${MODE}" == "all" || "${MODE}" == "huaxia" ]]; then
+  for ((run = 1; run <= RUNS; run++)); do
+    run_codex_smoke "${OUTPUT_DIR}/huaxia-decision-${run}.txt" \
+      '使用 $huaxia-practical-wisdom 只读校准一次跨部门合作试点。已知双方目标一致、资源只够小范围试行；责任 owner 和失败成本仍待确认。请区分事实与待确认，给出最小可逆行动、止损条件、验证方式，以及何时停止或调整试点；不要用古语替代现实证据，控制在 300 字。'
+    assert_huaxia_decision "${OUTPUT_DIR}/huaxia-decision-${run}.txt" || { echo "FAIL Huaxia decision behavior smoke: ${OUTPUT_DIR}/huaxia-decision-${run}.txt" >&2; exit 1; }
+  done
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "design-composition" ]]; then
