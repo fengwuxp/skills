@@ -92,6 +92,36 @@ assert_design_composition_engineering() {
   assert_none "${file}" "由 UnifiedFlowOrchestrator 承载全部规则" "由统一编排器承载全部规则"
 }
 
+assert_in_order() {
+  local file="$1" body term
+  shift
+  body="$(tr '\n' ' ' < "${file}")"
+  for term in "$@"; do
+    [[ "${body}" == *"${term}"* ]] || return 1
+    body="${body#*"${term}"}"
+  done
+}
+
+assert_design_document_product() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  assert_in_order "${file}" "背景" "目标" "定性" "概要设计" "详细设计" "关键流程" "业务规则" "接口抽象" "验收摘要" || return 1
+  for term in "能力提供者" "共性" "特殊性" "执行计划"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_none "${file}" "按每个需求复制" "验收摘要放在背景之前" "不需要执行计划"
+}
+
+assert_design_document_engineering() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  assert_in_order "${file}" "背景" "目标" "定性" "概要设计" "详细设计" "关键流程" "业务规则" "接口抽象" "验收摘要" || return 1
+  for term in "能力提供者" "对象" "不变量" "特殊性" "变化轴" "执行计划"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_none "${file}" "按每个需求复制" "验收摘要放在背景之前" "不需要执行计划"
+}
+
 assert_superpowers_product() {
   local file="$1" term
   for term in "知止者" "brainstorming" "grill-me"; do
@@ -250,6 +280,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-design-product.txt" \
       "${sample_dir}/design-engineering.txt" \
       "${sample_dir}/bad-design-engineering.txt" \
+      "${sample_dir}/design-document-product.txt" \
+      "${sample_dir}/bad-design-document-product.txt" \
+      "${sample_dir}/design-document-engineering.txt" \
+      "${sample_dir}/bad-design-document-engineering.txt" \
       "${sample_dir}/bad-lightweight.txt" \
       "${sample_dir}/bad-superpowers-git.txt" \
       "${sample_dir}/state-resume.txt" \
@@ -285,6 +319,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '采用万能能力，由万能能力统一处理全部流程；目标层、对象不变量、变化轴和独立验收以后再补，产品能力图直接映射服务。' > "${sample_dir}/bad-design-product.txt"
   printf '%s\n' '不应把全部规则放进 UnifiedFlowOrchestrator。编排只负责顺序、事务和补偿，领域能力持有业务规则、状态机和不变量；不新增透传服务，不预设微服务拆分。' > "${sample_dir}/design-engineering.txt"
   printf '%s\n' '由 UnifiedFlowOrchestrator 承载全部规则；领域对象只保存状态，新增透传服务并预设微服务拆分，以统一顺序、事务和补偿。' > "${sample_dir}/bad-design-engineering.txt"
+  printf '%s\n' '能力提供者先察同共性，再按证据辨别特殊性。正文依次为背景、目标、定性、概要设计、详细设计、关键流程、业务规则、接口抽象和验收摘要；详细验收矩阵进入执行计划。' > "${sample_dir}/design-document-product.txt"
+  printf '%s\n' '按每个需求复制一套能力。验收摘要放在背景之前，详细验收矩阵铺在正文开头，不需要执行计划。' > "${sample_dir}/bad-design-document-product.txt"
+  printf '%s\n' '系统以能力提供者承接共同目标、对象和不变量，特殊性只进入有证据的变化轴。正文依次为背景、目标、定性、概要设计、详细设计、关键流程、业务规则、接口抽象和验收摘要；详细验收矩阵进入执行计划。' > "${sample_dir}/design-document-engineering.txt"
+  printf '%s\n' '按每个需求复制模块。验收摘要放在背景之前，详细验收矩阵铺在正文开头，不需要执行计划。' > "${sample_dir}/bad-design-document-engineering.txt"
   printf '%s\n' '先建立 Goal，再派 Worker 修改。' > "${sample_dir}/bad-lightweight.txt"
   printf '%s\n' 'Git 未授权；可以创建 worktree 并 commit。' > "${sample_dir}/bad-superpowers-git.txt"
   printf '%s\n' '从 docs/goal-ledger.md 恢复，只按 D-1 推进；已排除的 B 不得复活，C 不得脑补。' > "${sample_dir}/state-resume.txt"
@@ -307,6 +345,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_huaxia_decision "${sample_dir}/huaxia-variant.txt"
   assert_design_composition_product "${sample_dir}/design-product.txt"
   assert_design_composition_engineering "${sample_dir}/design-engineering.txt"
+  assert_design_document_product "${sample_dir}/design-document-product.txt"
+  assert_design_document_engineering "${sample_dir}/design-document-engineering.txt"
   assert_superpowers_product "${sample_dir}/superpowers-product.txt"
   assert_superpowers_debugging "${sample_dir}/superpowers-debugging.txt"
   assert_superpowers_git "${sample_dir}/superpowers-git.txt"
@@ -344,6 +384,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_design_composition_engineering "${sample_dir}/bad-design-engineering.txt"; then
     echo "FAIL engineering design composition smoke accepted a god orchestrator" >&2
+    exit 1
+  fi
+  if assert_design_document_product "${sample_dir}/bad-design-document-product.txt"; then
+    echo "FAIL product design document smoke accepted mechanical output" >&2
+    exit 1
+  fi
+  if assert_design_document_engineering "${sample_dir}/bad-design-document-engineering.txt"; then
+    echo "FAIL engineering design document smoke accepted mechanical output" >&2
     exit 1
   fi
   if assert_lightweight "${sample_dir}/bad-lightweight.txt"; then
@@ -428,6 +476,14 @@ if [[ "${MODE}" == "all" || "${MODE}" == "design-composition" ]]; then
     run_codex_smoke "${OUTPUT_DIR}/design-composition-engineering-${run}.txt" \
       '使用 $senior-software-architect 只读评审：订单履约系统准备把下单、支付、库存、风控和物流的全部规则与状态判断写进 UnifiedFlowOrchestrator，让其它服务只读写数据。请在 350 字内给出判断、分层职责、拆分依据、编排边界和不做项，不写文件。'
     assert_design_composition_engineering "${OUTPUT_DIR}/design-composition-engineering-${run}.txt" || { echo "FAIL engineering design composition behavior smoke: ${OUTPUT_DIR}/design-composition-engineering-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/design-document-product-${run}.txt" \
+      '使用 $product-architecture-expert 只读评审一个产品文档要求：团队想按三个需求各造一套能力，并把详细验收矩阵、AC、验证命令和 owner 放在正文开头。请拒绝不合理部分，只给出能力提供者视角的一句原则、推荐的 PRD 正文顺序，以及详细执行控制的归处；控制在 300 字，不写文件。'
+    assert_design_document_product "${OUTPUT_DIR}/design-document-product-${run}.txt" || { echo "FAIL product design document behavior smoke: ${OUTPUT_DIR}/design-document-product-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/design-document-engineering-${run}.txt" \
+      '使用 $senior-software-architect 只读评审一个系分文档要求：团队想按每条需求复制模块和接口，并把详细验收矩阵、测试映射、验证命令和 owner 放在正文开头。请拒绝不合理部分，只给出能力提供者视角的一句原则、推荐的系分正文顺序，以及详细执行控制的归处；控制在 300 字，不写文件。'
+    assert_design_document_engineering "${OUTPUT_DIR}/design-document-engineering-${run}.txt" || { echo "FAIL engineering design document behavior smoke: ${OUTPUT_DIR}/design-document-engineering-${run}.txt" >&2; exit 1; }
   done
 fi
 

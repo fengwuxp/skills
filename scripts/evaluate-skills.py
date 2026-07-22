@@ -248,7 +248,7 @@ def reference_searchability_score(
     score = 0
     score += score_ratio(
         sum(1 for item in reference_stats if item["has_progressive_headers"]),
-        min(reference_count, 8),
+        reference_count,
         22,
     )
     score += score_ratio(
@@ -287,15 +287,15 @@ def score_references(
 ) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 70
-    score += score_ratio(reference_count, 10, 18)
-    score += score_ratio(reference_headers, min(reference_count, 8), 12) if reference_count else 0
+    if reference_count:
+        score = 82 + score_ratio(reference_headers, reference_count, 18)
     if reference_count == 0:
         warnings.append("no bundled references")
     if reference_lines > 8000:
-        score -= 8
+        score -= 12
         warnings.append("reference set is large; keep indexes sharp")
     elif reference_lines > 5000 and searchability_score < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE:
-        score -= 4
+        score -= min(16, 8 + CONTROLLED_REFERENCE_SEARCHABILITY_SCORE - searchability_score)
         warnings.append("reference set is sizable; monitor searchability")
     over_soft = [
         item
@@ -672,6 +672,17 @@ def print_text(report: dict[str, Any]) -> None:
 
 def run_self_test() -> None:
     report = evaluate_all()
+    compact_reference_score, _ = score_references(
+        "sample", 1, 200, 1, [], [], 100
+    )
+    fragmented_reference_score, _ = score_references(
+        "sample", 10, 200, 10, [], [], 100
+    )
+    if fragmented_reference_score > compact_reference_score:
+        raise SystemExit(
+            "reference scoring rewards file count: "
+            f"compact={compact_reference_score}, fragmented={fragmented_reference_score}"
+        )
     scriptless_score, scriptless_warnings = score_deterministic(
         "judgment-skill",
         script_count=0,

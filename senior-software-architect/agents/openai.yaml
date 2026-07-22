@@ -2,6 +2,6 @@ interface:
   display_name: "资深架构师"
   short_description: "架构/系分/重构设计、Bug/TDD/代码评审、代码库接手与生产风险"
   brand_color: "#0F766E"
-  default_prompt: "Use $senior-software-architect 帮我做架构设计、系分、重构设计、代码评审、Bug 修复或 TDD：先构造用例、边界和验证标准，再审查接口契约、测试、发布回滚和生产风险；需要图形化交付时默认输出 SVG。"
+  default_prompt: "Use $senior-software-architect 帮我做架构设计、系分、重构设计、代码评审、Bug 修复或 TDD；设计任务先以能力提供者视角收敛共同目标、对象、不变量和真实变化轴，正式正文按背景、目标、定性、概要、详细设计、流程、规则、接口抽象、风险和验收摘要展开，详细执行控制进入执行计划；工程任务仍以源码、测试、发布回滚和生产风险为准，需要图形化交付时默认输出 SVG。"
 policy:
   allow_implicit_invocation: true

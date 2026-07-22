@@ -34,15 +34,15 @@ CHECKS: dict[str, list[RequiredGroup]] = {
     ],
     "system-design": [
         RequiredGroup("requirements", ["需求背景", "背景", "问题", "不做的风险"], 2),
-        RequiredGroup("product_semantics", ["产品语义输入", "核心名相", "规则ID", "验收种子", "质量属性种子"], 2),
-        RequiredGroup("goal_boundary", ["目标", "非目标", "系统边界", "数据边界", "安全边界"], 3),
-        RequiredGroup("overview_design", ["概要设计", "核心方案", "关键依赖", "同步", "异步"], 2),
-        RequiredGroup("detail_design", ["详细设计", "模块", "类设计", "接口设计", "数据设计"], 3),
-        RequiredGroup("runtime_and_rules", ["运行时场景", "业务入口", "状态机", "状态与工程规则", "守卫条件", "失败处理"], 3),
-        RequiredGroup("rule_landing", ["规则落地表", "业务表达", "工程承接", "验证证据"], 3),
-        RequiredGroup("quality", ["非功能", "性能", "容量", "可用性", "兼容性", "生产就绪"], 2),
-        RequiredGroup("testing", ["测试设计", "第一批失败测试", "单元测试", "集成测试", "契约测试", "回归测试"], 2),
-        RequiredGroup("implementation_handoff", ["实施", "第一实施切片", "Engineering Handoff", "写入范围", "验证命令", "停止条件"], 3),
+        RequiredGroup("goal_and_scope", ["目标", "非目标", "定性", "范围", "系统职责", "系统边界"], 4),
+        RequiredGroup("design_basis", ["设计依据", "当前事实", "产品文档", "假设", "待确认"], 2),
+        RequiredGroup("overview_design", ["概要设计", "核心方案", "总体结构", "关键依赖", "关键流程", "设计取舍"], 3),
+        RequiredGroup("detail_design", ["详细设计", "模块", "职责", "接口抽象", "数据设计", "状态设计"], 3),
+        RequiredGroup("runtime_and_rules", ["关键流程", "业务入口", "运行时", "状态机", "业务规则", "守卫条件", "失败语义"], 3),
+        RequiredGroup("contracts", ["接口抽象", "业务契约", "技术契约", "输入", "输出", "失败语义", "幂等"], 3),
+        RequiredGroup("quality_and_risk", ["非功能", "性能", "容量", "可用性", "兼容性", "风险", "待确认"], 3),
+        RequiredGroup("acceptance_summary", ["验收摘要", "业务结果", "系统不变量", "质量目标", "关键边界", "红线"], 2),
+        RequiredGroup("execution_plan_reference", ["执行计划", "实施计划", "任务计划", "权威路径", "适用版本"], 2),
     ],
     "refactoring-design": [
         RequiredGroup("admission", ["重构准入", "独立重构设计", "为什么局部修改", "行为变化", "非目标"], 2),
@@ -80,6 +80,16 @@ CHECKS: dict[str, list[RequiredGroup]] = {
     ],
 }
 PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
+HEADING_PATTERN = re.compile(r"(?m)^#{2,6}\s+(.+?)\s*$")
+SYSTEM_DESIGN_SECTION_ORDER = [
+    ("section_background", ("需求背景", "背景与问题")),
+    ("section_goal", ("目标与边界", "目标与非目标")),
+    ("section_overview", ("概要设计",)),
+    ("section_detail", ("详细设计",)),
+    ("section_runtime_and_rules", ("运行时场景", "关键流程", "状态与工程规则")),
+    ("section_quality_and_risk", ("非功能", "风险与待确认")),
+    ("section_acceptance_and_plan", ("验收摘要",)),
+]
 TABLE_DESIGN_MARKERS = ("表名", "字段清单")
 TABLE_DESIGN_CHECKS = [
     RequiredGroup("table_identity", ["表名：", "业务用途：", "数据归属："], 3),
@@ -108,15 +118,17 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "背景：需要优化。",
     ),
     "system-design": (
-        "需求背景：解决回调超时问题；背景：订单处理慢；问题：积压；不做的风险：生产延迟。"
-        "产品语义输入：核心名相为回调任务；规则ID R-001；验收种子 AC-001。"
-        "目标：降低 RT；非目标：不迁移数据库；系统边界、数据边界和安全边界明确。"
-        "概要设计：核心方案、关键依赖、同步和异步关系。"
-        "详细设计：模块、类设计、接口设计和数据设计。"
-        "运行时场景：业务入口为订单完成事件；状态机和守卫条件明确，失败处理可恢复。"
-        "规则落地表：业务表达映射到工程承接和验证证据。"
-        "非功能：性能和容量。测试设计：第一批失败测试、集成测试和回归测试。"
-        "实施：第一实施切片写入范围明确；Engineering Handoff 包含验证命令和停止条件。",
+        "## 一、需求背景\n需求背景：解决回调超时问题；背景：订单处理慢；问题：积压；不做的风险：生产延迟。\n"
+        "## 二、目标与边界\n目标：降低 RT；非目标：不迁移数据库；定性：存量链路治理；范围和系统职责明确。"
+        "设计依据：产品文档和当前事实已核对，假设与待确认项已分开。\n"
+        "## 三、概要设计\n概要设计：核心方案说明总体结构、关键依赖、关键流程和设计取舍。\n"
+        "## 四、详细设计\n详细设计：模块职责、接口抽象、数据设计和状态设计。\n"
+        "## 五、运行时场景、状态与工程规则\n"
+        "关键流程：业务入口为订单完成事件；运行时状态机和守卫条件明确。"
+        "业务规则：失败语义可恢复。接口抽象给出业务契约、技术契约、输入、输出和幂等。\n"
+        "## 六、非功能、风险与待确认\n非功能覆盖性能、容量和可用性；风险和待确认项已经列出。\n"
+        "## 七、验收摘要与执行计划\n验收摘要说明业务结果、系统不变量和质量目标。"
+        "执行计划：详细验收矩阵和验证命令见任务计划；权威路径及适用版本明确。",
         "需求背景：解决回调超时问题。",
     ),
     "refactoring-design": (
@@ -200,6 +212,24 @@ def parse_field_tables(text: str) -> list[tuple[set[str], list[dict[str, str]]]]
     return tables
 
 
+def missing_ordered_sections(text: str, sections: list[tuple[str, tuple[str, ...]]]) -> list[str]:
+    headings = [match.group(1).casefold() for match in HEADING_PATTERN.finditer(text)]
+    missing: list[str] = []
+    positions: list[int] = []
+    for name, aliases in sections:
+        position = next(
+            (index for index, heading in enumerate(headings) if any(alias.casefold() in heading for alias in aliases)),
+            None,
+        )
+        if position is None:
+            missing.append(name)
+        else:
+            positions.append(position)
+    if not missing and positions != sorted(positions):
+        missing.append("section_order")
+    return missing
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
@@ -246,6 +276,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
                 break
     if PLACEHOLDER_FIELD.search(text):
         missing.append("placeholder_fields")
+    if kind == "system-design":
+        missing.extend(missing_ordered_sections(text, SYSTEM_DESIGN_SECTION_ORDER))
     return missing
 
 
@@ -270,6 +302,22 @@ def run_self_test() -> int:
         placeholder_text = SELF_TESTS[kind][0] + "owner：〈待填写〉"
         if "placeholder_fields" not in missing_groups(kind, placeholder_text):
             failures.append(f"{kind}: placeholder fixture unexpectedly passed")
+    flat_system_design = re.sub(
+        r"(?m)^#{2,6}\s+", "", SELF_TESTS["system-design"][0]
+    ).replace("\n", " ")
+    if not any(
+        item.startswith("section_")
+        for item in missing_groups("system-design", flat_system_design)
+    ):
+        failures.append("system-design: flat keyword fixture unexpectedly passed")
+    wrong_order_system_design = (
+        SELF_TESTS["system-design"][0]
+        .replace("## 一、需求背景", "## __SWAP__", 1)
+        .replace("## 二、目标与边界", "## 一、需求背景", 1)
+        .replace("## __SWAP__", "## 二、目标与边界", 1)
+    )
+    if "section_order" not in missing_groups("system-design", wrong_order_system_design):
+        failures.append("system-design: wrong section order unexpectedly passed")
     incomplete_table = SELF_TESTS["system-design"][0] + "表名：callback_task；字段清单：id。"
     expected_table_missing = {
         "table_identity",

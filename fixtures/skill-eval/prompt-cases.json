@@ -335,6 +335,36 @@
       "expected_handling": "进入最终文档准出模式，区分正式 PRD/系分/Spec 正文与过程资产；正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接；讨论过程、迭代草稿、AI 推理轨迹、被拒方案、MAGI 争论和完整 Goal Ledger 流水外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划，并按需要路由产品专家或资深架构师修正文档。"
     },
     {
+      "id": "wise-agent-should-keep-design-docs-human-readable",
+      "skill": "wise-agent",
+      "query": "知止者，请重构产品设计和系分的输出方式。现在正文一上来就是追踪 ID、验收矩阵、AC/Test 映射、验证命令和执行 owner，人读起来太机械。正式文档应先讲背景、目标、定性、概要设计、详细设计、关键流程、业务规则和接口抽象；AI 执行需要的详细验收与任务控制放到最后或单独执行计划。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入正式设计文档可读性治理；把名 -> 事 ->（图）-> 法 -> 器 -> 验保留为内部完整性检查，不把它或 AI 工作流字段机械展开成可见目录。产品设计和系分正文按读者理解顺序组织：背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象 -> 风险与待确认。正文末尾只保留面向人类评审的验收摘要；详细验收矩阵、AC 与测试映射、验证命令、执行 owner、任务状态和 Loop/Harness 控制进入执行计划或按需附录，并保持 PRD、系分和实现 Spec 的事实源边界。"
+    },
+    {
+      "id": "wise-agent-should-design-as-capability-provider",
+      "skill": "wise-agent",
+      "query": "知止者，请补充产品、需求和系分设计的顶层站位：不要把每条诉求直接翻译成一个功能、接口或模块，要站在能力提供者角度，先评估和提炼核心要素、共性与特殊性，再决定如何设计。借‘智者察同，愚者察异’校准，但不要为了复用把一次性差异过度平台化。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入能力提供者站位：产品、需求和系分不做诉求的逐条实现者，先跨诉求与场景察同，提炼共同目标、主体、对象、流程、规则、不变量和接口契约，再辨异识别有证据的主体、渠道、法域、时点或外部依赖差异。共性沉淀为边界清楚、可组合和可验证的稳定能力；特殊性按证据留在场景规则、参数、适配器或明确分支，不复制一套能力。察同不抹平真实差异，辨异也不为每个差异造一套；一次性、局部或尚未证明复用价值的需求直接做最小实现，不提前平台化。验收既覆盖当前需求，也用代表性场景验证能力边界。"
+    },
+    {
       "id": "wise-agent-should-planning-execution-admission-gate",
       "skill": "wise-agent",
       "query": "做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。",

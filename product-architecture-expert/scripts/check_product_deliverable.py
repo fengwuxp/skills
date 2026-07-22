@@ -23,15 +23,18 @@ class RequiredGroup(NamedTuple):
 
 CHECKS: dict[str, list[RequiredGroup]] = {
     "prd": [
-        RequiredGroup("goal_and_scope", ["目标", "非目标", "范围", "不做范围", "成功指标"], 3),
+        RequiredGroup("background_and_goal", ["背景", "问题", "现状", "目标", "非目标", "成功指标"], 4),
+        RequiredGroup("qualitative_and_scope", ["定性", "总体判断", "产品定位", "范围", "边界", "不做范围"], 3),
+        RequiredGroup("overview_design", ["概要设计", "方案概述", "核心方案", "能力布局", "总体流程"], 2),
         RequiredGroup("definition_and_boundary", ["核心名相", "定义", "不是什么", "归属主体", "产品边界"], 2),
         RequiredGroup("actors_and_roles", ["用户", "主体", "角色", "验收方", "责任边界"], 2),
-        RequiredGroup("objects_and_states", ["对象", "状态", "字段", "生命周期", "不变量", "状态机图", "对象关系图"], 2),
+        RequiredGroup("detail_design", ["详细设计", "场景", "功能", "对象", "状态", "生命周期", "不变量", "状态机图"], 3),
         RequiredGroup("flows", ["主流程", "逆向流程", "异常流程", "人工处理", "业务流程", "用例图", "流程图", "泳道图"], 2),
         RequiredGroup("rules", ["规则", "权限", "审批", "额度", "计费", "版本", "验收样例"], 2),
+        RequiredGroup("interface_abstraction", ["接口抽象", "产品接口", "业务契约", "输入", "输出", "失败语义", "责任边界"], 3),
         RequiredGroup("data_and_audit", ["数据", "指标", "报表", "埋点", "审计", "追溯"], 2),
         RequiredGroup("risk_and_confirmation", ["风险", "依赖", "待确认", "确认方", "影响范围"], 2),
-        RequiredGroup("acceptance", ["验收", "测试场景", "边界路径", "异常路径", "验收标准"], 2),
+        RequiredGroup("acceptance_summary", ["验收摘要", "业务结果", "关键边界", "红线", "验收标准"], 2),
     ],
     "product-architecture": [
         RequiredGroup("business_goal", ["业务目标", "用户价值", "成功指标", "非目标"], 2),
@@ -60,17 +63,34 @@ CHECKS: dict[str, list[RequiredGroup]] = {
     ],
 }
 PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
+HEADING_PATTERN = re.compile(r"(?m)^#{2,6}\s+(.+?)\s*$")
+PRD_SECTION_ORDER = [
+    ("section_background", ("背景与问题",)),
+    ("section_goal", ("目标与非目标",)),
+    ("section_qualitative", ("定性与范围", "定性、范围")),
+    ("section_overview", ("概要设计",)),
+    ("section_detail", ("详细设计",)),
+    ("section_flow", ("关键流程", "业务流程")),
+    ("section_rules_and_interface", ("业务规则与接口抽象", "业务规则和接口抽象")),
+    ("section_risk", ("数据与风险", "数据、权限、风险", "风险与待确认")),
+    ("section_acceptance", ("验收摘要",)),
+]
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "prd": (
-        "目标：提升运营效率；非目标：不改结算规则；范围：后台审核。"
+        "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
+        "## 二、目标与非目标\n目标：提升运营效率；非目标：不改结算规则。\n"
+        "## 三、定性与范围\n产品定性：存量审核流程治理；总体判断：先统一口径；范围和产品边界为后台审核。\n"
+        "## 四、概要设计\n概要设计：核心方案是统一审核入口和能力布局，并说明总体流程。\n"
         "核心名相：审核任务；定义：等待运营判断的申请；不是什么：交易订单；归属主体：平台。"
-        "用户：运营；主体：平台；角色：审核员；验收方：产品和运营。"
-        "对象：申请单；状态：待审、通过、驳回；字段：amount；生命周期：创建到关闭。"
-        "主流程：提交、审核、通知；异常流程：重复提交；人工处理：补录；流程图：审核路径。"
-        "规则：权限、审批、版本和验收样例。数据：指标、报表、审计和追溯。"
-        "风险：外部依赖待确认，确认方为业务，影响范围是审核上线。"
-        "验收：验收标准、边界路径、异常路径和测试场景。",
+        "用户：运营；主体：平台；角色：审核员；验收方：产品和运营。\n"
+        "## 五、详细设计\n详细设计：场景和功能围绕申请单；对象状态为待审、通过、驳回；生命周期从创建到关闭。\n"
+        "## 六、关键流程\n主流程：提交、审核、通知；异常流程：重复提交；人工处理：补录；流程图：审核路径。\n"
+        "## 七、业务规则与接口抽象\n"
+        "规则：权限、审批、版本和验收样例。产品接口抽象说明业务契约、输入、输出和失败语义。\n"
+        "## 八、数据与风险\n数据：指标、报表、审计和追溯。"
+        "风险：外部依赖待确认，确认方为业务，影响范围是审核上线。\n"
+        "## 九、验收摘要\n验收摘要：业务结果可观察，验收标准覆盖关键边界和红线。",
         "目标：提升效率。",
     ),
     "product-architecture": (
@@ -105,6 +125,24 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+def missing_ordered_sections(text: str, sections: list[tuple[str, tuple[str, ...]]]) -> list[str]:
+    headings = [match.group(1).casefold() for match in HEADING_PATTERN.finditer(text)]
+    missing: list[str] = []
+    positions: list[int] = []
+    for name, aliases in sections:
+        position = next(
+            (index for index, heading in enumerate(headings) if any(alias.casefold() in heading for alias in aliases)),
+            None,
+        )
+        if position is None:
+            missing.append(name)
+        else:
+            positions.append(position)
+    if not missing and positions != sorted(positions):
+        missing.append("section_order")
+    return missing
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
@@ -114,6 +152,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.append(group.name)
     if PLACEHOLDER_FIELD.search(text):
         missing.append("placeholder_fields")
+    if kind == "prd":
+        missing.extend(missing_ordered_sections(text, PRD_SECTION_ORDER))
     return missing
 
 
@@ -137,6 +177,17 @@ def run_self_test() -> int:
     placeholder_text = SELF_TESTS["prd"][0] + "owner：〈待填写〉"
     if "placeholder_fields" not in missing_groups("prd", placeholder_text):
         failures.append("prd: placeholder fixture unexpectedly passed")
+    flat_prd = re.sub(r"(?m)^#{2,6}\s+", "", SELF_TESTS["prd"][0]).replace("\n", " ")
+    if not any(item.startswith("section_") for item in missing_groups("prd", flat_prd)):
+        failures.append("prd: flat keyword fixture unexpectedly passed")
+    wrong_order_prd = (
+        SELF_TESTS["prd"][0]
+        .replace("## 一、背景与问题", "## __SWAP__", 1)
+        .replace("## 二、目标与非目标", "## 一、背景与问题", 1)
+        .replace("## __SWAP__", "## 二、目标与非目标", 1)
+    )
+    if "section_order" not in missing_groups("prd", wrong_order_prd):
+        failures.append("prd: wrong section order unexpectedly passed")
     if failures:
         print("FAIL product deliverable self-test", file=sys.stderr)
         for failure in failures:

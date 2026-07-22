@@ -158,8 +158,9 @@ python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py disable
 
 产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，迁移型重构用 `refactoring-design-template.md`。不需要记路径，直接说明材料、文档类型、读者、目标文件和验收要求：
 
-- `基于 <需求或材料路径> 编写可评审产品设计，保存到 <目标路径>；区分事实、推断、待确认和范围外不做。`
-- `基于 <产品文档> 和 <源码/接口/DDL> 编写系分，保存到 <目标路径>；补齐边界、流程、规则、接口、数据、测试、发布和回滚。`
+- `基于 <需求或材料路径> 编写可评审产品设计，保存到 <目标路径>；正文按背景、目标、定性、概要、详细设计、流程、规则和产品接口抽象展开，验收摘要放在最后。`
+- `基于 <产品文档> 和 <源码/接口/DDL> 编写系分，保存到 <目标路径>；先讲清背景、目标、定性、概要和详细设计，再展开流程、业务规则、接口抽象、数据与风险。`
+- `为 <产品设计/系分> 另建执行计划，承接详细验收矩阵、AC 与测试映射、验证命令、执行 owner、任务状态、发布和回滚；不要把这些控制字段铺进正式正文。`
 - `基于 <现状证据> 判断是否需要独立重构设计；需要时输出可验证、可暂停、可回退的 MIG 切片。`
 - `只评审 <文档路径>，不要改文件；列出必改项、待确认项、证据缺口和能否进入下一阶段。`
 - `更新 <既有文档路径>，保持文件名和已确认结论；只补本轮变化。`
@@ -203,6 +204,7 @@ git diff --check
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke
+scripts/smoke-wise-agent-behavior.sh --mode design-composition --runs 3 --output-dir /tmp/wise-agent-design-smoke
 scripts/smoke-wise-agent-behavior.sh --mode superpowers --output-dir /tmp/wise-agent-superpowers-smoke
 scripts/smoke-wise-agent-behavior.sh --mode governance --output-dir /tmp/wise-agent-governance-smoke
 scripts/smoke-wise-agent-behavior.sh --mode self-improvement --runs 3 --output-dir /tmp/wise-agent-self-improvement-smoke
@@ -210,7 +212,7 @@ scripts/smoke-wise-agent-behavior.sh --mode grill-me --runs 3 --output-dir /tmp/
 scripts/smoke-wise-agent-behavior.sh --mode huaxia --runs 3 --output-dir /tmp/huaxia-wisdom-smoke
 ```
 
-`all` 覆盖产品、工程、Superpowers 协同、轻量治理、状态恢复、学习回流、`grill-me` 和华夏决策校准；`--runs 3` 用于观察方差。真实 smoke 仍只证明样例行为满足契约。维护者更新项目自有 `grill-me` 后可运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；更新官方 Superpowers 插件后可运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
+`all` 覆盖产品、工程、设计分层与文档主线、Superpowers 协同、轻量治理、状态恢复、学习回流、`grill-me` 和华夏决策校准；`--runs 3` 用于观察方差。真实 smoke 仍只证明样例行为满足契约。维护者更新项目自有 `grill-me` 后可运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；更新官方 Superpowers 插件后可运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
 
 ## 维护者入口
 
