@@ -2429,6 +2429,34 @@
       "expected_handling": "进入 Wind 幂等与业务唯一性分层检查；业务唯一性和业务身份由表内业务 UK、联合 UK、状态条件或版本约束保护；外部 Idempotency-Key/requestSn 可以用于请求重放去重，但不得冒充业务身份，必须定义租户或调用方与接口作用域、参数摘要、有效期、并发冲突、结果回放和过期后重用语义；有自然业务唯一约束时独立保留数据库兜底，没有自然业务 UK 时不得为了形式完整虚构联合 UK；不能笼统地把外部请求号降为只允许追踪，也不能机械要求所有请求幂等键与业务 UK 合并。"
     },
     {
+      "id": "wind-coding-conventions-should-avoid-redundant-null-checks",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind Java 项目的 status 列已经是 NOT NULL，Entity 映射也声明非空；Controller 对 Request 使用了 @Valid，字段有 @NotNull；内部包使用 @NullMarked。但 ServiceImpl 每层仍重复 if (x == null) 和 Objects.requireNonNull。请按编码红线评审，同时说明哪些边界仍必须保留空值校验。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Java/Wind 空值责任边界检查；先核对实际 schema、迁移状态、Entity / ORM / Mapper 映射，确认 NOT NULL 约束真实生效；确认 Controller 或方法上的 @Valid / @Validated 会实际触发 @NotNull 等 Bean Validation，并核对 @NullMarked / @Nullable 等项目 Java 空安全契约。数据库非空约束及映射、已生效参数校验或 Java 空安全契约已经证明非空时，删除下游重复的 if null、Objects.requireNonNull 和同义断言，只在最靠近责任边界的位置检查一次。数据库约束只是持久化兜底，不能替代不可信 API / Command 输入校验；契约本就可空、外部或历史数据、外连接或聚合、反序列化或反射、可能绕过校验入口的内部调用，以及业务前置条件、状态条件、查不到数据和不可达分支仍保留必要检查。schema、注解、映射与代码语义冲突时修正契约，不用层层判空或无依据默认值掩盖。"
+    },
+    {
+      "id": "wind-coding-conventions-should-enforce-project-format-authority",
+      "skill": "wind-coding-conventions",
+      "query": "这是一个普通 Java 21 项目，只修改一个 Service。我的 IDEA 个人默认 Code Style 会重排整个模块，但仓库已有 .editorconfig、Spotless、Checkstyle 和提交到版本库的 IDEA Project Code Style。请按编码约规判断该用哪套格式规则、允许格式化多大范围，以及如何验证。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入通用 Java 代码格式红线检查；项目已提交且可复现的格式约规优先，顺序是项目 .editorconfig、Spotless / Checkstyle 等配置及构建任务，高于已纳入版本控制的 IDEA Project Code Style，再高于同模块邻近代码；不得使用个人 IDEA 默认设置、个人偏好或未提交的本机配置覆盖项目规范。IDEA Reformat Code、Optimize Imports 和其他格式化工具只能使用当前项目配置，并限定在本次修改的文件和必要范围，不得重排无关文件、导入、换行或注释。格式化后审查 diff，并运行项目已有 formatter / check / lint 命令；git diff --check 只能发现空白错误，不能替代项目格式门禁。项目没有明确格式配置时遵循邻近代码，不应仅为本次改动新增 formatter、依赖或全仓配置。普通 Java 项目不加载 Wind 专项。"
+    },
+    {
       "id": "wind-coding-conventions-should-not-duplicate-mdc-context",
       "skill": "wind-coding-conventions",
       "query": "这个 Wind 项目已由统一日志链路和 MDC 注入 traceId、应用名称、userId、tenantId、客户端 IP、User-Agent 和设备信息，但 ServiceImpl 又在每条 logger.info 中手动打印这些字段，请按 Wind 编码约规检查。",

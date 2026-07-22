@@ -8400,9 +8400,49 @@ check(
         coding,
         [
             "项目已依赖 JSpecify 时，内部 Java 契约使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked`",
-            "已由空值注解标为非空的参数、返回值和字段，不再额外添加无业务语义的重复空判断",
+            "空值责任按边界唯一归位",
+            "先核对实际 schema、迁移状态和 ORM / Mapper 映射",
+            "并确保校验入口实际生效",
+            "不得对已由数据库非空约束及映射、已生效的参数校验或 Java 空安全契约证明为非空的值重复执行 `null` 判断",
+            "数据库约束是持久化兜底，不能替代不可信输入校验",
+            "并在最靠近责任边界的位置检查一次",
+            "不得用层层判空或无依据默认值掩盖冲突",
+        ],
+    )
+    and has_all(
+        wind_skill_conventions,
+        [
+            "空值责任只在所属边界处理一次",
+            "数据库约束不能替代不可信输入校验",
+            "外部 / 历史数据、外连接、反序列化和可能绕过校验入口的路径",
+        ],
+    )
+    and has_all(
+        wind_skill_agents_template,
+        [
+            "空值责任按边界处理一次",
+            "数据库约束不能替代不可信输入校验",
+            "契约冲突必须修正 schema、注解、映射或代码语义",
+        ],
+    )
+    and has_all(
+        wind_skill,
+        [
+            "空值责任必须按数据库持久化约束、参数验证和 Java 空安全契约归位",
+            "已经证明非空的值不得重复判空",
         ],
     ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-avoid-redundant-null-checks",
+    [
+        "确认 NOT NULL 约束真实生效",
+        "@Valid / @Validated 会实际触发",
+        "删除下游重复的 if null、Objects.requireNonNull 和同义断言",
+        "数据库约束只是持久化兜底，不能替代不可信 API / Command 输入校验",
+        "可能绕过校验入口的内部调用",
+        "不用层层判空或无依据默认值掩盖",
+    ],
 )
 check(
     "review consumes Java rules without copying nullability details",
@@ -8446,6 +8486,51 @@ check(
             "不得自创一套写法",
         ],
     ),
+)
+check(
+    "Java formatting redline uses project-owned reproducible configuration",
+    has_all(
+        coding,
+        [
+            "项目已提交且可复现的格式约规",
+            "项目 `.editorconfig`、Spotless / Checkstyle",
+            "已纳入版本控制的 IDEA Project Code Style",
+            "同模块邻近代码",
+            "个人 IDEA 默认设置",
+            "不得借局部需求批量重排无关文件",
+            "格式化后必须审查 diff",
+            "`git diff --check` 只用于发现空白错误",
+            "不能替代项目格式门禁",
+        ],
+    )
+    and has_all(
+        wind_skill,
+        [
+            "项目已提交的格式配置",
+            "版本化 IDE 项目设置",
+            "不得格式化无关代码",
+        ],
+    )
+    and has_all(
+        wind_skill_agents_template,
+        [
+            "版本化 IDEA Project Code Style",
+            "不得使用个人 IDE 默认设置覆盖项目约规",
+            "不得格式化本次修改范围外的代码",
+            "格式化后审查 diff",
+        ],
+    ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-enforce-project-format-authority",
+    [
+        "项目已提交且可复现的格式约规优先",
+        "个人 IDEA 默认设置",
+        "限定在本次修改的文件和必要范围",
+        "运行项目已有 formatter / check / lint 命令",
+        "git diff --check 只能发现空白错误",
+        "不加载 Wind 专项",
+    ],
 )
 check(
     "Java reserved identifiers are banned from coding names",
