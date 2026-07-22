@@ -2473,6 +2473,64 @@
       "expected_handling": "进入 Java/Wind 空值责任边界检查；先核对实际 schema、迁移状态、Entity / ORM / Mapper 映射，确认 NOT NULL 约束真实生效；确认 Controller 或方法上的 @Valid / @Validated 会实际触发 @NotNull 等 Bean Validation，并核对 @NullMarked / @Nullable 等项目 Java 空安全契约。数据库非空约束及映射、已生效参数校验或 Java 空安全契约已经证明非空时，删除下游重复的 if null、Objects.requireNonNull 和同义断言，只在最靠近责任边界的位置检查一次。数据库约束只是持久化兜底，不能替代不可信 API / Command 输入校验；契约本就可空、外部或历史数据、外连接或聚合、反序列化或反射、可能绕过校验入口的内部调用，以及业务前置条件、状态条件、查不到数据和不可达分支仍保留必要检查。schema、注解、映射与代码语义冲突时修正契约，不用层层判空或无依据默认值掩盖。"
     },
     {
+      "id": "wind-coding-conventions-should-follow-jspecify-nullness",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind Java 项目使用 org.jspecify.annotations：package-info.java 标了 @NullMarked，普通参数、显式 @NonNull 参数、@Nullable 返回值，以及一个用 @NullUnmarked 退回未指定空值语义的兼容类，现在都统一加了 Objects.requireNonNull。请按约规判断哪些应该删除、哪些必须处理；Controller 外部输入是否只靠 JSpecify 就够了？",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入通用 Java 的 JSpecify 空值契约检查；先确认注解来自 org.jspecify.annotations，并识别实际 @NullMarked / @NullUnmarked 作用域。显式 @NonNull 和 @NullMarked 作用域内未标 @Nullable 的适用类型用法属于非空契约，业务内部不得再用 if null、Objects.requireNonNull 或同义断言重复证明；@Nullable 表示 null 是合法值，消费方必须在解引用前分支处理、转换为 Optional 或在有明确业务前置条件时于最近责任边界转换为非空，不能为了消除静态告警无依据断言非空；@NullUnmarked 作用域内未注解类型的空值语义未指定，不得当作非空，也不得机械给所有值判空，应先补齐契约或依据真实来源在责任边界处理。JSpecify 是静态空值契约，不会自动执行运行时参数校验；Controller、反序列化、反射、外部或历史数据等不可信边界仍使用已生效的 Bean Validation 或明确运行时校验。若注解与实现事实冲突，修正注解或实现并用静态检查、编译或测试验证，不用重复断言掩盖冲突。"
+    },
+    {
+      "id": "wind-coding-conventions-should-not-repeat-controller-bean-validation-in-service",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind Spring MVC 接口在 Controller 使用 @Valid @RequestBody，Request 字段来自 javax.validation.constraints，分别标了 @NotNull、@NotBlank、@NotEmpty 和 @Size；但 ServiceImpl 又手工调用 Validator.validate，并重复 null、blank、empty、长度判断。另有 MQ Listener 可能直接调用同一个 Service。请按红线评审验证责任应该放在哪里。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Java/Wind Bean Validation 责任边界检查；javax.validation.constraints 与 jakarta.validation.constraints 按项目版本二选一，不在同一模块混用。先证明 Controller 或协议入口的 @Valid / @Validated、Validator provider、validation group 和异常处理真实生效，并保证验证失败时不会调用 Service。验证成功后，@NotNull 已证明非空，Service / ServiceImpl 不得再写 if null、Objects.requireNonNull、Assert.notNull 或同义断言；@NotBlank 已证明非空且含非空白字符，不得再做 null、isBlank、trim().isEmpty 或同义断言；@NotEmpty 已证明非空且非空集合、Map、数组或字符序列，@Size 等约束已证明对应范围。Service / ServiceImpl 也不得手工调用 Validator.validate 重跑同一组输入验证。@Valid 只触发级联验证，本身不是约束。Service 仍负责业务前置条件、状态、不变量、权限和持久化结果，不把它们误删成输入验证。MQ、定时任务、内部 RPC 等绕过 Controller 的调用必须在自己的控制层、Listener 或 Adapter 入口执行同一契约验证；若项目明确把 Service 方法定义为独立验证边界，才可显式启用并测试方法校验，不得默默假设 Controller 约束已经生效，也不得用 Service 层重复手工判空兜底。"
+    },
+    {
+      "id": "wind-coding-conventions-provider-contract-does-not-require-runtime-validator",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Java 模块只发布 face Service、Request 和 DTO 作为公共能力，没有 Controller、Listener、Web 入口或可运行应用。Request 字段使用 Bean Validation 注解，ServiceImpl 按契约直接处理。请 CR 是否必须在这个仓库证明 Validator provider 和 @Valid 会运行。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "按当前 artifact 与调用路径判责；用模块职责、构建产物、架构约定或调用关系证明该 artifact 是纯 face / 公共 Service 能力提供方，不能只凭没有 Controller 推定。Bean Validation 注解在此用于声明调用方必须满足的前置契约，不要求提供方 artifact 存在 Controller、Validator provider、@Valid 调用或 Service 方法校验，也不得仅因缺少这些运行时证据判为缺陷。ServiceImpl 可以按公共契约处理，不为补偿未知消费方重复手工执行同义输入验证；实际接收不可信输入的消费方入口负责触发验证。仍需检查约束语义、默认值、嵌套 @Valid、javax / jakarta 版本和业务前置条件是否正确。"
+    },
+    {
+      "id": "wind-coding-conventions-should-scope-validation-in-hybrid-repository",
+      "skill": "wind-coding-conventions",
+      "query": "同一个多模块仓库既有只发布 Service、Request、DTO 的 order-face，也有真正接收 HTTP 请求的 order-web。两个模块都使用同一组 Bean Validation 注解。请 CR 时判断验证责任，不能因为仓库里有 Controller 就要求 face 自证运行时校验，也不能因为有 face 就豁免 Controller。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "按当前 artifact 与真实调用路径分别检查，不在项目级二选一。order-face 经模块职责、构建产物或调用关系证明为公共能力提供方时，只声明调用前置契约，不要求该 artifact 具备 Controller、Validator provider 或方法校验；order-web 是实际 HTTP 入口，必须证明 @Valid / @Validated、Validator provider、validation group 和异常处理真实生效，并保证失败请求不调用 Service。不能因同仓库存在 Controller 而连坐 face，也不能因存在 face 而豁免 Web 入口。"
+    },
+    {
+      "id": "wind-coding-conventions-should-not-force-after-commit-for-every-success-log",
+      "skill": "wind-coding-conventions",
+      "query": "一个 @Transactional Service 在更新状态后记录‘订单状态已更新’，但它可能加入调用方外层事务。CR 是否要强制把每条成功日志都改成 TransactionSynchronization.afterCommit？",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "不为普通成功日志机械增加 TransactionSynchronization。先区分业务方法处理完成、事务内状态已更新和数据库已经持久化提交三种语义：前两者可以在事务内按真实措辞记录，不得提前宣称已持久化提交；只有审计、通知、外部副作用或明确依赖提交事实的日志才进入 after-commit。方法加入外层事务时自身不能决定最终提交时点，更不能用普通 Service 日志冒充提交证据。"
+    },
+    {
       "id": "wind-coding-conventions-should-enforce-project-format-authority",
       "skill": "wind-coding-conventions",
       "query": "这是一个普通 Java 21 项目，只修改一个 Service。我的 IDEA 个人默认 Code Style 会重排整个模块，但仓库已有 .editorconfig、Spotless、Checkstyle 和提交到版本库的 IDEA Project Code Style。请按编码约规判断该用哪套格式规则、允许格式化多大范围，以及如何验证。",

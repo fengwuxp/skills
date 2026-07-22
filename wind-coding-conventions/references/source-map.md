@@ -26,6 +26,8 @@
 | --- | --- | --- |
 | 核验阿里手册采纳 | `阿里 Java 开发手册` | 不复制手册正文和旧版环境参数 |
 | 核验 Clean Code 启发 | `《代码整洁之道》公开学习材料` | 不把读书笔记或启发式建议升级成机械强制规则 |
+| 核验 Bean Validation 语义与触发边界 | `Bean Validation / Jakarta Validation / Spring MVC 官方文档` | 不把注解声明误写成已执行验证 |
+| 核验 JSpecify 空值语义 | `JSpecify 官方文档` | 不把静态契约误写成运行时校验 |
 | 核验 Wind 项目族经验 | `Wind 项目族公开样本` | 不把公开样本当当前项目事实 |
 
 ## 阿里 Java 开发手册
@@ -49,3 +51,17 @@
 - 读取状态：历史提炼已落入 `wind-architecture-patterns.md`，原始读取日期和 commit/tag 未留存；2026-07-17 本轮只复核本地提炼与来源链接，未重新读取公开仓库。涉及当前目录、API、依赖版本或实现事实时，必须重新读取并记录 commit/tag。
 - 采纳边界：只提炼端口适配、Starter、Trace、安全和企业集成等稳定模式；具体规则见 `wind-architecture-patterns.md`。
 - 不吸收：不复制实现，不把公开仓库的历史目录、依赖版本或临时实现写成当前项目必须照搬的事实。
+
+## JSpecify 官方文档
+
+- 来源：[JSpecify Nullness User Guide](https://jspecify.dev/docs/user-guide/) 与 [Annotation API](https://jspecify.dev/docs/api/)；JSpecify 1.0.0 定义 `@Nullable`、`@NonNull`、`@NullMarked`、`@NullUnmarked` 四个注解。
+- 读取状态：2026-07-22 已核对官方 User Guide、`@NullMarked` API 和注解总览。
+- 采纳边界：按注解及实际作用域区分非空、可空和未指定空值语义；明确 JSpecify 是静态分析契约，不替代不可信边界的运行时参数校验。
+- 不吸收：不要求未使用 JSpecify 的项目新增依赖，不把分析器告警级别或特定工具行为写成统一规则。
+
+## Bean Validation 与 Spring MVC 官方文档
+
+- 来源：[Bean Validation 2.0 规范](https://beanvalidation.org/2.0/spec/)、[Jakarta Validation 3.1](https://jakarta.ee/specifications/bean-validation/3.1/)与[Spring MVC Validation](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html)。
+- 读取状态：2026-07-22 已核对 `javax.validation` / `jakarta.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty`、`@Valid` 语义及 Spring MVC 控制层触发条件。
+- 采纳边界：按当前 artifact 与调用路径区分运行时入口和纯公共能力提供方；前者执行输入验证，后者可以只声明调用前置契约。同一仓库两类 artifact 分别检查，显式 Service 方法校验只作为有配置与测试证据的例外。
+- 不吸收：不把注解存在、依赖在 classpath 或 Service 被 Spring 管理当成运行时验证已执行的证据；不因能力 artifact 没有 Controller 而判缺陷，也不只凭没有 Controller 就把不完整入口误判为能力提供方。

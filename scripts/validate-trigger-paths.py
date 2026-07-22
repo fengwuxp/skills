@@ -1085,7 +1085,7 @@ check(
             "项目数据库专项",
             "Wind 项目一旦出现币种字段",
             "必须统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`",
-            "项目已依赖 JSpecify 时",
+            "JSpecify、Bean Validation、Lombok、MapStruct、MyBatis Flex",
             "项目已使用 MapStruct 时",
             "项目实际使用 MyBatis Flex 时",
             "项目已采用 Wind MySQL 表约规时",
@@ -8408,9 +8408,13 @@ check(
         coding,
         [
             "项目已依赖 JSpecify 时，内部 Java 契约使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked`",
+            "`@NonNull` 和 `@NullMarked` 作用域内未标 `@Nullable` 的适用类型用法 | 非空",
+            "`@Nullable` | `null` 是合法值",
+            "`@NullUnmarked` 作用域内未显式标注的类型用法 | 空值语义未指定",
+            "JSpecify 只表达静态空值契约，不会自动执行运行时参数校验",
             "空值责任按边界唯一归位",
             "先核对实际 schema、迁移状态和 ORM / Mapper 映射",
-            "并确保校验入口实际生效",
+            "按当前 artifact 与调用路径区分运行时入口和纯公共能力提供方",
             "不得对已由数据库非空约束及映射、已生效的参数校验或 Java 空安全契约证明为非空的值重复执行 `null` 判断",
             "数据库约束是持久化兜底，不能替代不可信输入校验",
             "并在最靠近责任边界的位置检查一次",
@@ -8421,8 +8425,7 @@ check(
         wind_skill_conventions,
         [
             "空值责任只在所属边界处理一次",
-            "数据库约束不能替代不可信输入校验",
-            "外部 / 历史数据、外连接、反序列化和可能绕过校验入口的路径",
+            "数据库字段、JSpecify、业务前置条件、默认值和不可信数据仍按通用 Java 约规处理",
         ],
     )
     and has_all(
@@ -8439,6 +8442,14 @@ check(
             "空值责任必须按数据库持久化约束、参数验证和 Java 空安全契约归位",
             "已经证明非空的值不得重复判空",
         ],
+    )
+    and has_all(
+        wind_skill_source_map,
+        [
+            "JSpecify Nullness User Guide",
+            "https://jspecify.dev/docs/user-guide/",
+            "JSpecify 是静态分析契约，不替代不可信边界的运行时参数校验",
+        ],
     ),
 )
 expected_handling_has(
@@ -8451,6 +8462,137 @@ expected_handling_has(
         "可能绕过校验入口的内部调用",
         "不用层层判空或无依据默认值掩盖",
     ],
+)
+expected_handling_has(
+    "wind-coding-conventions-should-follow-jspecify-nullness",
+    [
+        "识别实际 @NullMarked / @NullUnmarked 作用域",
+        "显式 @NonNull 和 @NullMarked 作用域内未标 @Nullable 的适用类型用法属于非空契约",
+        "@Nullable 表示 null 是合法值",
+        "@NullUnmarked 作用域内未注解类型的空值语义未指定",
+        "JSpecify 是静态空值契约，不会自动执行运行时参数校验",
+        "不可信边界仍使用已生效的 Bean Validation 或明确运行时校验",
+        "不用重复断言掩盖冲突",
+    ],
+)
+check(
+    "Bean Validation entry and provider ownership rules are encoded in coding standards",
+    has_all(
+        coding,
+        [
+            "Bean Validation 按当前审查的 artifact 与调用路径判责",
+            "不能只凭“没找到 Controller”推定它是能力提供方",
+            "Service 不得手工调用 `Validator.validate`",
+            "`@NotNull` | 非空",
+            "`@NotBlank` | 非空且至少包含一个非空白字符",
+            "`@NotEmpty` | 非空且非空集合、`Map`、数组或字符序列",
+            "`@Valid` 只标记级联验证，本身不是约束",
+            "绕过 Controller 的 MQ、定时任务、内部 RPC、批处理或其他调用",
+            "只有项目明确把 Service 方法定义为独立验证边界",
+        ],
+    )
+    and has_all(
+        wind_skill_conventions,
+        [
+            "按当前审查的 artifact 与调用路径判责",
+            "不能只凭没有 Controller 作此推定",
+            "Service / ServiceImpl 不手工重跑同一组验证",
+            "入口验证成功或调用方按公共契约传入后",
+        ],
+    )
+    and has_all(
+        wind_skill_agents_template,
+        [
+            "按当前 artifact 与调用路径判责",
+            "不能只凭没有 Controller 作此推定",
+            "Service 不重复同义输入验证",
+        ],
+    )
+    and has_all(
+        wind_skill,
+        [
+            "按当前审查的 artifact 与调用路径判责",
+            "同一仓库同时存在能力模块和入口模块时分别检查",
+        ],
+    )
+    and has_all(
+        wind_skill_source_map,
+        [
+            "Bean Validation 2.0 规范",
+            "Spring MVC Validation",
+            "不只凭没有 Controller 就把不完整入口误判为能力提供方",
+        ],
+    ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-not-repeat-controller-bean-validation-in-service",
+    [
+        "javax.validation.constraints 与 jakarta.validation.constraints 按项目版本二选一",
+        "保证验证失败时不会调用 Service",
+        "@NotNull 已证明非空，Service / ServiceImpl 不得再写 if null、Objects.requireNonNull、Assert.notNull 或同义断言",
+        "@NotBlank 已证明非空且含非空白字符，不得再做 null、isBlank、trim().isEmpty 或同义断言",
+        "@NotEmpty 已证明非空且非空集合、Map、数组或字符序列",
+        "不得手工调用 Validator.validate 重跑同一组输入验证",
+        "@Valid 只触发级联验证，本身不是约束",
+        "Service 仍负责业务前置条件、状态、不变量、权限和持久化结果",
+        "绕过 Controller 的调用必须在自己的控制层、Listener 或 Adapter 入口执行同一契约验证",
+        "项目明确把 Service 方法定义为独立验证边界",
+    ],
+)
+expected_handling_has(
+    "wind-coding-conventions-provider-contract-does-not-require-runtime-validator",
+    [
+        "按当前 artifact 与调用路径判责",
+        "模块职责、构建产物、架构约定或调用关系",
+        "不能只凭没有 Controller 推定",
+        "不要求提供方 artifact 存在 Controller、Validator provider、@Valid 调用或 Service 方法校验",
+        "不得仅因缺少这些运行时证据判为缺陷",
+        "ServiceImpl 可以按公共契约处理",
+        "消费方入口负责触发验证",
+        "仍需检查约束语义、默认值、嵌套 @Valid、javax / jakarta 版本和业务前置条件",
+    ],
+)
+expected_handling_has(
+    "wind-coding-conventions-should-scope-validation-in-hybrid-repository",
+    [
+        "按当前 artifact 与真实调用路径分别检查",
+        "不在项目级二选一",
+        "不要求该 artifact 具备 Controller、Validator provider 或方法校验",
+        "order-web 是实际 HTTP 入口",
+        "保证失败请求不调用 Service",
+        "不能因同仓库存在 Controller 而连坐 face",
+        "不能因存在 face 而豁免 Web 入口",
+    ],
+)
+expected_handling_has(
+    "wind-coding-conventions-should-not-force-after-commit-for-every-success-log",
+    [
+        "不为普通成功日志机械增加 TransactionSynchronization",
+        "业务方法处理完成、事务内状态已更新和数据库已经持久化提交三种语义",
+        "不得提前宣称已持久化提交",
+        "明确依赖提交事实的日志才进入 after-commit",
+        "方法加入外层事务时自身不能决定最终提交时点",
+    ],
+)
+check(
+    "transaction log rule distinguishes processing from durable commit",
+    has_all(
+        coding,
+        [
+            "不得在事务提交前把业务处理结果表述为“已持久化提交”",
+            "普通处理完成、状态已更新或等待提交日志可以在事务内按真实语义记录",
+            "明确依赖提交事实的日志才使用 after-commit",
+            "不得为了普通成功日志给每个事务机械增加 `TransactionSynchronization`",
+        ],
+    )
+    and has_all(
+        wind_skill_examples,
+        [
+            "为每条普通成功日志注册事务同步",
+            "事务内按真实语义记录处理完成、状态更新或等待提交",
+            "明确依赖提交事实的审计、通知、外部副作用或日志才进入 after-commit",
+        ],
+    ),
 )
 check(
     "review consumes Java rules without copying nullability details",

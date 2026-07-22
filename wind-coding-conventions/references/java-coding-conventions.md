@@ -170,11 +170,31 @@
 ## 5. 契约规约
 
 - 【强制】公共 API 的空值、异常、权限、幂等、分页、默认值和兼容语义必须明确。
-- 【强制】空值责任按边界唯一归位：读取受本服务治理的持久化数据时，先核对实际 schema、迁移状态和 ORM / Mapper 映射，`NOT NULL` 等数据库约束成立的字段按非空契约处理；API / Command 输入在项目使用 Bean Validation 时用 `@NotNull`、`@NotBlank`、`@Valid` / `@Validated` 等表达约束，并确保校验入口实际生效；内部 Java 契约沿用项目空安全约规或空值注解体系；业务前置条件、状态条件和不可达分支使用项目统一断言工具或清晰的标准库检查。
+- 【强制】空值责任按边界唯一归位：读取受本服务治理的持久化数据时，先核对实际 schema、迁移状态和 ORM / Mapper 映射，`NOT NULL` 等数据库约束成立的字段按非空契约处理；API / Command 输入在项目使用 Bean Validation 时用 `@NotNull`、`@NotBlank`、`@Valid` / `@Validated` 等表达约束，并按当前 artifact 与调用路径区分运行时入口和纯公共能力提供方；内部 Java 契约沿用项目空安全约规或空值注解体系；业务前置条件、状态条件和不可达分支使用项目统一断言工具或清晰的标准库检查。
 - 【强制】由服务层提供的默认值必须在用例入口归一化后再参与校验、幂等查询、唯一键判断、转换和落库；不要让调用方或上层应用服务知道基础服务内部默认值。只有纯展示或非业务唯一条件字段才优先考虑数据库默认值。
 - 【强制】Bean Validation 必须和服务默认值语义一致：允许服务补默认值的字段不得继续标 `@NotBlank` / `@NotNull` 导致入口校验先失败；默认值、兼容语义和边界场景必须有测试覆盖。
 - 【强制】公共 API 的空值语义必须明确，必要时使用 `javax.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty` 等验证注解；项目已迁移 Jakarta EE / Spring Boot 3+ 时，可使用 `jakarta.validation` 等价注解，但不得在同一模块内混用两套 validation 包。
-- 【推荐】项目已依赖 JSpecify 时，内部 Java 契约使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked` 等注解表达可空与非空语义；未依赖时沿用项目现有空值契约，不为套规约新增依赖。
+- 【强制】Bean Validation 按当前审查的 artifact 与调用路径判责。实际接收不可信输入的 Controller、Listener、Adapter 或其他协议入口必须确认 `@Valid` / `@Validated`、Validator provider、validation group 和异常处理真实生效，并保证验证失败时不调用 Service。只有模块职责、构建产物、架构约定或调用关系能够证明当前 artifact 是纯 `face` / 公共 Service 能力提供方时，才允许只用约束注解声明调用方必须满足的前置契约，不要求该 artifact 提供运行时验证，也不得要求 Service / ServiceImpl 重复手工验证；不能只凭“没找到 Controller”推定它是能力提供方。同一仓库同时包含能力模块和入口模块时分别检查各自路径。入口验证成功或调用方按公共契约传入后，Service 不得手工调用 `Validator.validate` 重跑同一组输入验证。
+
+| 入口已执行或公共能力已声明的约束 | 调用前置契约 | Service 层要求 |
+| --- | --- | --- |
+| `@NotNull` | 非空 | 不重复 `null` 判断、`Objects.requireNonNull`、`Assert.notNull` 或同义断言。 |
+| `@NotBlank` | 非空且至少包含一个非空白字符 | 不重复 `null`、`Objects.requireNonNull`、`Assert.notNull`、`isBlank`、`trim().isEmpty()` 或同义断言 / 检查。 |
+| `@NotEmpty` | 非空且非空集合、`Map`、数组或字符序列 | 不重复 `null`、`isEmpty`、长度或 size 检查。 |
+| `@Size`、`@Min`、`@Max`、`@Positive`、`@Pattern` 等 | 注解及当前 validation group 声明的范围或格式 | 不重复同义范围、长度或正则检查。 |
+
+- 【强制】`@Valid` 只标记级联验证，本身不是约束；运行时入口只有确实触发校验且嵌套约束通过后，才能把输入视为已验证；纯公共能力 artifact 则把嵌套约束作为调用方前置契约。Service 仍负责业务前置条件、状态、不变量、权限、查无数据和持久化结果，这些业务判断不得冒充或误删为输入验证。
+- 【强制】实际拥有运行时入口的 artifact 中，绕过 Controller 的 MQ、定时任务、内部 RPC、批处理或其他调用必须在自己的 Listener、Adapter 或协议入口执行同一契约验证，再调用 Service。纯公共能力 artifact 不检查或猜测消费方如何触发验证；只有项目明确把 Service 方法定义为独立验证边界，并用配置、代理调用、validation group 和测试证明方法校验真实生效时，才把方法校验作为该 artifact 的责任。
+- 【推荐】项目已依赖 JSpecify 时，内部 Java 契约使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked`、`NullUnmarked` 表达空值语义；未依赖时沿用项目现有空值契约，不为套规约新增依赖。
+- 【强制】启用 JSpecify 后必须先识别实际注解和作用域，再按下表决定是否判空或断言：
+
+| 注解或作用域 | 空值契约 | 判空或断言要求 |
+| --- | --- | --- |
+| `@NonNull` 和 `@NullMarked` 作用域内未标 `@Nullable` 的适用类型用法 | 非空 | 受信任的内部实现不得再用 `if (x == null)`、`Objects.requireNonNull` 或同义断言重复证明。 |
+| `@Nullable` | `null` 是合法值 | 消费方必须在解引用前分支处理，或在有明确业务前置条件时于最近责任边界转换为非空；不得为消除静态告警无依据断言非空。 |
+| `@NullUnmarked` 作用域内未显式标注的类型用法 | 空值语义未指定 | 不得擅自当作非空，也不得机械为所有值补判空；先补齐契约，或依据真实来源在责任边界处理。 |
+
+- 【强制】JSpecify 只表达静态空值契约，不会自动执行运行时参数校验；Controller、反序列化、反射、外部 / 历史数据和其他不可信边界仍使用已生效的 Bean Validation 或明确运行时校验。业务确实要求把 `@Nullable` 值收窄为非空时，使用能表达业务错误的项目断言或显式异常并只检查一次；不得用默认关闭的 Java `assert` 承担生产校验。
 - 【强制】不得对已由数据库非空约束及映射、已生效的参数校验或 Java 空安全契约证明为非空的值重复执行 `null` 判断、`Objects.requireNonNull` 或同义断言。数据库约束是持久化兜底，不能替代不可信输入校验；只有契约本就可空、外部 / 历史数据、外连接或聚合、反序列化 / 反射、可能绕过校验入口的调用路径，以及业务前置条件、状态条件、集合内容约束、查不到数据和不可达分支才保留检查，并在最靠近责任边界的位置检查一次。schema、注解、映射与代码语义不一致时修正契约，不得用层层判空或无依据默认值掩盖冲突。
 - 【强制】变量上下文、Map 或表达式变量表不写无业务语义的 `null` 占位；只有公共契约明确要求 key 存在或 `null` 本身表达业务状态时才写入，并用测试说明。
 - 【强制】不要把 `Optional` 用作字段、DTO 属性或序列化模型属性。
@@ -203,12 +223,15 @@
 ### 6.2 日志基础规则
 
 - 【强制】统一使用 SLF4J 门面，不使用 `System.out.println` 打印日志。
-- 【强制】日志使用占位符，不使用字符串拼接。
+- 【强制】日志中的运行时值使用占位符，不使用字符串拼接；为排版把纯字符串字面量跨行组合属于编译期常量拼接，可以保留。
 - 【强制】错误日志必须包含错误消息和异常堆栈，异常对象作为最后一个参数传入。
 - 【强制】日志不得输出密码、token、密钥、身份证、银行卡、手机号等敏感信息；必要时脱敏。
+- 【强制】`Request`、`Response`、`DTO`、`Entity` 默认不得整体打印；只记录排障、审计或检索实际需要的白名单业务字段，并继续执行敏感信息脱敏。
+- 【强制】不得在事务提交前把业务处理结果表述为“已持久化提交”。普通处理完成、状态已更新或等待提交日志可以在事务内按真实语义记录；只有审计、通知、外部副作用或明确依赖提交事实的日志才使用 after-commit。不得为了普通成功日志给每个事务机械增加 `TransactionSynchronization`。
 - 【推荐】日志变量名统一使用 `logger` 或 `LOG`。
 - 【推荐】日志内容采用 key/value 风格，保留 traceId、业务 ID、用户 ID、租户、请求来源、外部调用目标等关键上下文。
-- 【推荐】不重复打印同一个异常；异常如果会被全局处理器打印，业务层只在必要时补充上下文。
+- 【强制】事件名称已经表达成功或失败结果时，不重复输出固定 `result`、`failureStage`、`failureType`；只有维度确实被告警、统计或检索消费时才保留。
+- 【推荐】捕获后原样抛出的异常默认不重复打印；由全局处理器或更高层统一记录堆栈，当前层只在会改变诊断结论时补充上下文。`exception.getClass().getSimpleName()` 只能作为被消费的分类维度，不能替代异常对象及其堆栈。
 
 ```java
 logger.info("Processing trade, tradeId = {}, symbol = {}", tradeId, symbol);

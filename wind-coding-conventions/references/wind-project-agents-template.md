@@ -88,6 +88,7 @@
 - TDD 和测试按公开契约黑盒验证；不为凑绿感知私有方法、内部调用顺序、Mapper/Repository 调用次数、临时字段、内部 Mock 交互或当前实现步骤。
 - 新增生产 Java 命名类型使用 Wind 类型头 Javadoc，覆盖 `class`、`interface`、`record`、`enum` 和 `@interface`：真实职责 / 边界说明、`@author` 和 `@since`；身份必须可核验，首次引入信息不随修改刷新，不使用 `@description`、`@date` 或类型头变更流水账。
 - 空值责任按边界处理一次：数据库 schema / 映射、已生效的 Bean Validation 和项目 Java 空安全契约已经证明非空时，不再层层判空；数据库约束不能替代不可信输入校验，契约冲突必须修正 schema、注解、映射或代码语义。
+- Bean Validation 按当前 artifact 与调用路径判责：实际接收不可信输入的 Controller、Listener 或 Adapter 执行验证；经模块职责、构建产物、架构约定或调用关系证明为纯公共能力提供方时，可以只声明调用前置契约，不能只凭没有 Controller 作此推定。同一仓库的能力模块和入口模块分别检查；Service 不重复同义输入验证，业务前置条件、状态和不变量仍由 Service 负责。
 
 ## 业务日志与审计
 

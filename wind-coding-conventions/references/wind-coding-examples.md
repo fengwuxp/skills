@@ -139,3 +139,9 @@ public class XxxType {
 - 反例：业务判断依赖 `"已支付"`、`"Paid"` 或前端展示名称；业务事件直接保存一整句中文，历史记录随文案修改而漂移。
 - 正例：业务逻辑依赖 `PaymentState.PAID`、`error.payment.order-not-found` 或 `event.payment.order-paid`；业务事件保存 `{eventKey, params}`，params 放订单号、金额、状态 code 等变量值，展示层再按语言渲染。
 - 验证点：Key 是否按 `ui.`、`enum.`、`error.`、`event.`、`config.` 等命名空间区分；同一中文在不同场景是否避免复用 Key；语义变化是否新增 Key 而不是改旧 Key。
+
+### 16. 公共契约和日志必须有真实消费方
+
+- 反例：模块另建 `CouponOperator` 复制操作人字段；`queryCouponOverview(query, activityOptions, couponOptions)` 同时承载两套分页；为单个 `reason` 新建无校验、无复用的值对象；生成 `correlationId` 后只写库、返回或打印。日志整体打印 Request / Entity，在事务提交前宣称“已持久化提交”，或为每条普通成功日志注册事务同步；事件名已经表示失败仍固定输出 `failureStage` / `failureType`，捕获异常后只打印 `getSimpleName()` 再原样抛出。
+- 正例：公共契约直接复用 `com.wind.integration.operator.WindOperator`；每个分页方法只接收一个 `WindQuery`，独立结果集拆成独立查询；操作原因留在对应 Request / Command；无人消费的 `correlationId` / `version` 删除。事务内按真实语义记录处理完成、状态更新或等待提交；只有明确依赖提交事实的审计、通知、外部副作用或日志才进入 after-commit。异常堆栈只由一个明确 owner 输出，纯字符串字面量可跨行组合，运行时值统一使用占位符。
+- 验证点：操作人与查询类型是否复用现有公共契约；字段能否指出生成方和真实消费者；每个分页是否独立；成功日志是否可能早于回滚；日志维度是否被告警、统计或检索消费；同一异常是否只有一份完整堆栈。
