@@ -20,6 +20,21 @@ METHOD_DECLARATION = re.compile(
     r"[\w<>,.?@\[\]]+\s+(?P<name>\w+)\s*\("
 )
 TEST_METHOD_NAME = re.compile(r"test[A-Z0-9]\w*")
+METHOD_WITH_BODY = re.compile(
+    r"(?P<annotations>(?:^[ \t]*@[A-Za-z_][\w.]*[^\n]*\n)*)"
+    r"^[ \t]*(?:(?:public|protected|private|static|final|synchronized|default|native|strictfp)\s+)*"
+    r"(?:<[^>{}]+>\s+)?[\w.$?@<>,\[\] ]+\s+(?P<name>\w+)\s*"
+    r"\((?P<params>[^{};]*)\)\s*(?:throws\s+[^{}]+)?\{",
+    re.MULTILINE,
+)
+NULLABLE_ANNOTATION = re.compile(r"@(?:[\w.]+\.)?Nullable\b")
+NONNULL_ANNOTATION = re.compile(r"@(?:[\w.]+\.)?NonNull\b")
+NULL_MARKED_ANNOTATION = re.compile(r"@(?:[\w.]+\.)?NullMarked\b")
+NULL_UNMARKED_ANNOTATION = re.compile(r"@(?:[\w.]+\.)?NullUnmarked\b")
+UNTRUSTED_PARAMETER_ANNOTATION = re.compile(
+    r"@(?:[\w.]+\.)?(?:RequestBody|RequestParam|PathVariable|RequestHeader|CookieValue)\b"
+)
+PRIMITIVE_TYPES = {"boolean", "byte", "short", "int", "long", "char", "float", "double"}
 
 
 @dataclass(frozen=True)
@@ -55,6 +70,95 @@ def java_files(root: Path) -> list[Path]:
 
 def stripped(line: str) -> str:
     return line.strip()
+
+
+def split_parameters(parameters: str) -> list[str]:
+    result: list[str] = []
+    start = 0
+    depth = 0
+    for index, char in enumerate(parameters):
+        if char in "<([":
+            depth += 1
+        elif char in ">)]":
+            depth = max(0, depth - 1)
+        elif char == "," and depth == 0:
+            result.append(parameters[start:index].strip())
+            start = index + 1
+    tail = parameters[start:].strip()
+    if tail:
+        result.append(tail)
+    return result
+
+
+def method_body(text: str, opening_brace: int) -> str:
+    depth = 0
+    for index in range(opening_brace, len(text)):
+        if text[index] == "{":
+            depth += 1
+        elif text[index] == "}":
+            depth -= 1
+            if depth == 0:
+                return text[opening_brace + 1 : index]
+    return text[opening_brace + 1 :]
+
+
+def last_match_start(pattern: re.Pattern[str], text: str) -> int:
+    return max((match.start() for match in pattern.finditer(text)), default=-1)
+
+
+def check_redundant_jspecify_checks(
+    path: Path, root: Path, text: str, package_null_marked: bool = False
+) -> list[Finding]:
+    if not package_null_marked and "NonNull" not in text and "NullMarked" not in text:
+        return []
+
+    findings: list[Finding] = []
+    for method in METHOD_WITH_BODY.finditer(text):
+        annotations = method.group("annotations")
+        scope = text[: method.start()] + annotations
+        marked_at = last_match_start(NULL_MARKED_ANNOTATION, scope)
+        unmarked_at = last_match_start(NULL_UNMARKED_ANNOTATION, scope)
+        null_marked = marked_at > unmarked_at if max(marked_at, unmarked_at) >= 0 else package_null_marked
+        body_start = method.end() - 1
+        body = method_body(text, body_start)
+        statement_ends = [match.end() for match in re.finditer(";", body)]
+        leading_statements = body[: statement_ends[min(4, len(statement_ends) - 1)]] if statement_ends else body
+
+        for parameter in split_parameters(method.group("params")):
+            name_match = re.search(r"(?P<name>[A-Za-z_]\w*)\s*(?:\[\])?\s*$", parameter)
+            if not name_match or NULLABLE_ANNOTATION.search(parameter):
+                continue
+            parameter_type = re.sub(r"@[\w.]+(?:\([^)]*\))?\s*", "", parameter[: name_match.start()])
+            parameter_type = re.sub(r"\bfinal\s+", "", parameter_type).strip().removesuffix("...").strip()
+            if parameter_type in PRIMITIVE_TYPES:
+                continue
+            if not (NONNULL_ANNOTATION.search(parameter) or null_marked):
+                continue
+            if UNTRUSTED_PARAMETER_ANNOTATION.search(parameter):
+                continue
+
+            name = re.escape(name_match.group("name"))
+            redundant_assertion = re.search(
+                rf"\b(?:Objects\.requireNonNull|(?:AssertUtils|Assert)\.notNull)\s*\(\s*{name}\b",
+                leading_statements,
+            )
+            redundant_ternary = re.search(
+                rf"\b{name}\s*==\s*null\s*\?\s*null\s*:\s*{name}\s*\.",
+                body,
+            )
+            for match in (redundant_assertion, redundant_ternary):
+                if match:
+                    line_no = text.count("\n", 0, body_start + 1 + match.start()) + 1
+                    findings.append(
+                        Finding(
+                            "WARN",
+                            path.relative_to(root),
+                            line_no,
+                            "JSpecify 非空参数不得重复判空或断言",
+                        )
+                    )
+
+    return findings
 
 
 def check_test_method_names(path: Path, root: Path, text: str) -> list[Finding]:
@@ -98,11 +202,14 @@ def check_test_method_names(path: Path, root: Path, text: str) -> list[Finding]:
     return findings
 
 
-def check_file(path: Path, root: Path, profile: str = "wind") -> list[Finding]:
+def check_file(
+    path: Path, root: Path, profile: str = "wind", package_null_marked: bool = False
+) -> list[Finding]:
     findings: list[Finding] = []
     rel = path.relative_to(root)
     text = path.read_text(encoding="utf-8", errors="ignore")
     findings.extend(check_test_method_names(path, root, text))
+    findings.extend(check_redundant_jspecify_checks(path, root, text, package_null_marked))
 
     if profile == "java":
         return findings
@@ -137,8 +244,15 @@ def run(root: Path, profile: str = "wind") -> list[Finding]:
     if not root.exists():
         raise SystemExit(f"root not found: {root}")
     findings: list[Finding] = []
-    for path in java_files(root):
-        findings.extend(check_file(path, root, profile))
+    files = java_files(root)
+    null_marked_packages = {
+        path.parent
+        for path in files
+        if path.name == "package-info.java"
+        and NULL_MARKED_ANNOTATION.search(path.read_text(encoding="utf-8", errors="ignore"))
+    }
+    for path in files:
+        findings.extend(check_file(path, root, profile, path.parent in null_marked_packages))
     return findings
 
 
@@ -185,6 +299,16 @@ def self_test() -> None:
     if missing:
         print_findings(invalid)
         raise SystemExit("invalid fixture missing: " + ", ".join(missing))
+
+    redundant_jspecify_checks = [
+        item for item in invalid if "JSpecify 非空参数不得重复判空或断言" in item.message
+    ]
+    if len(redundant_jspecify_checks) != 4:
+        print_findings(invalid)
+        raise SystemExit(
+            "invalid fixture expected 4 redundant JSpecify findings, "
+            f"got {len(redundant_jspecify_checks)}"
+        )
     print("OK wind convention guard self-test")
 
 

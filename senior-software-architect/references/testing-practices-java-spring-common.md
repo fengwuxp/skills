@@ -7,6 +7,7 @@
 - 已读取 `testing-practices.md`，并命中 Java/Spring 测试场景。
 - 需要判断是否启动 Spring、是否使用最小上下文、如何替换外部依赖、如何设计测试基类。
 - Web、Service Flow、数据库测试中出现重复的 Spring 装配、H2、MyBatis、缓存、锁、上下文清理或测试属性配置。
+- 需要判断 Maven / Surefire 输出是否真的执行了目标测试，或区分测试失败与 Harness 失败。
 
 ## 不适用场景
 
@@ -17,7 +18,7 @@
 
 ## 读取后必须产出
 
-- 是否启动 Spring、最小上下文范围、真实代码范围、外部依赖替身、测试基础设施归属和禁止过重启动的理由。
+- 是否启动 Spring、最小上下文范围、真实代码范围、外部依赖替身、测试基础设施归属、禁止过重启动的理由和可回链的测试执行证据。
 
 ## 需要继续读取的 reference
 
@@ -35,6 +36,7 @@
 | 公共测试基类和基础设施 | 3 | HTTP 断言细节 |
 | SpringBoot 测试减负 | 4 | 业务流程样例 |
 | 测试底座红线 | 5 | 具体业务断言 |
+| Maven / Surefire 结果核验 | 6 | 不重复业务断言设计 |
 
 ## 1. Java/Spring 测试核心判断
 
@@ -86,3 +88,10 @@ abstract class AbstractExampleSpringTest {
 - 不因为继承了测试基类就只验证“调用成功”。
 - 不让线程上下文、租户、静态工具、缓存、锁或审计配置污染其他测试。
 - 不把外部系统不可用变成单元测试失败原因。
+
+## 6. Maven / Surefire 测试证据
+
+- 执行前检查本轮命令、目标模块、父子 `pom.xml`、激活 profile 和命令行属性是否设置 `maven.test.skip` 或 `skipTests`；不能只看默认配置或最终退出码。
+- `BUILD SUCCESS` 只说明 Maven 生命周期成功结束。输出出现 `Tests are skipped`、`No tests to run`，或者目标模块本轮没有新生成 Surefire 报告时，结论只能是测试未执行或证据不足，不能写“测试通过”。
+- 从目标模块的 `target/surefire-reports/TEST-*.xml` 核对预期测试类，并读取 `testsuite` / `testsuites` 的 `tests`、`failures`、`errors`、`skipped`；报告必须由本轮命令新生成，旧 XML / TXT、根模块汇总或其他模块报告不得冒充目标测试证据。
+- 自定义 Runner、脚本或包装命令若因类路径、依赖、配置、权限或启动错误而未进入目标测试，标记为 Harness 失败；它既不是业务断言失败，也不构成通过证据。修复 Harness 后重新运行目标测试并核对新报告。

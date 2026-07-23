@@ -231,6 +231,7 @@ testing_practice_refs = [
     "senior-software-architect/references/testing-practices-business-funds.md",
     "senior-software-architect/references/testing-practices-non-java-and-selection.md",
 ]
+testing_java_spring_common = "senior-software-architect/references/testing-practices-java-spring-common.md"
 skill_tree_refs = [
     "senior-software-architect/references/skill-tree-architecture-design.md",
     "senior-software-architect/references/skill-tree-engineering-quality.md",
@@ -8452,6 +8453,31 @@ check(
         ],
     ),
 )
+check(
+    "JSpecify redundant null checks have warning guard and counterexamples",
+    has_all(
+        "wind-coding-conventions/scripts/check_wind_conventions.py",
+        [
+            "check_redundant_jspecify_checks",
+            "JSpecify 非空参数不得重复判空或断言",
+            "UNTRUSTED_PARAMETER_ANNOTATION",
+            "Objects\\.requireNonNull",
+            "AssertUtils|Assert",
+        ],
+    )
+    and has_all(
+        "wind-coding-conventions/fixtures/invalid/sample-impl/src/main/java/com/acme/order/service/impl/RedundantJSpecifyChecks.java",
+        ["Objects.requireNonNull", "@NonNull", "AssertUtils.notNull", "value == null ? null"],
+    )
+    and has_all(
+        "wind-coding-conventions/fixtures/invalid/sample-impl/src/main/java/com/acme/order/service/impl/package-info.java",
+        ["@NullMarked", "package com.acme.order.service.impl"],
+    )
+    and has_all(
+        "wind-coding-conventions/fixtures/valid/sample-impl/src/main/java/com/acme/order/service/impl/ValidJSpecifyChecks.java",
+        ["@Nullable", "@RequestBody", "Objects.requireNonNull"],
+    ),
+)
 expected_handling_has(
     "wind-coding-conventions-should-avoid-redundant-null-checks",
     [
@@ -8744,7 +8770,12 @@ check(
         [
             "不得保留无业务语义的单行透传方法",
             "公有或私有方法如果只是原样转调、原样传参、改名包装或返回下游结果",
+            "单调用方方法若仅重命名 JDK / 项目 helper、getter 或原样转发相同参数",
+            "策略、归一化、复用、测试替身、副作用边界或稳定业务语义",
             "单行方法只有在承载领域语言、兼容 API、框架回调、权限边界、异常语义、埋点审计或可替换策略时才有保留价值",
+            "单调用方方法若只包装 `LocalDateTime.now()` 通常直接内联",
+            "封装 `Clock`、统一时区、可测试时间源或业务时间策略时应保留",
+            "该判断依赖调用语境，不做静态扫描",
         ],
     )
     and has_all(
@@ -8753,6 +8784,52 @@ check(
             "直通包装",
             "单行透传方法无论公有或私有，都应优先删除并内联",
             "业务语义、边界保护、错误聚合、观测或测试隔离",
+        ],
+    ),
+)
+check(
+    "test evidence gate rejects Maven false green and classifies harness failures",
+    has_all(
+        wise_agent_verification_release,
+        [
+            "Maven `BUILD SUCCESS`",
+            "`Tests are skipped`",
+            "`No tests to run`",
+            "新测试报告",
+            "Harness 失败",
+            "既不是业务测试失败，也不能作为通过证据",
+        ],
+    )
+    and has_all(
+        testing_java_spring_common,
+        [
+            "## 6. Maven / Surefire 测试证据",
+            "`maven.test.skip`",
+            "`skipTests`",
+            "`target/surefire-reports/TEST-*.xml`",
+            "`tests`、`failures`、`errors`、`skipped`",
+            "报告必须由本轮命令新生成",
+            "标记为 Harness 失败",
+        ],
+    ),
+)
+check(
+    "Wind overloads preserve state change information and logs keep consumed dimensions",
+    has_all(
+        wind_skill_conventions,
+        [
+            "同一状态变化只保留一个规范入口",
+            "便利重载或接口 `default method` 只能补充明确默认值",
+            "不得接收后丢弃 `statusCode`、响应摘要、操作原因等有效参数",
+            "存在兼容诉求时必须列出调用方和下线责任人",
+        ],
+    )
+    and has_all(
+        coding,
+        [
+            "日志维度必须有明确的排障、审计、告警、统计或检索消费价值",
+            "删除无人消费的维度",
+            "稳定业务 ID、动作、结果和必要失败摘要",
         ],
     ),
 )
