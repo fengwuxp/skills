@@ -107,6 +107,7 @@ python3 -m py_compile hanzi-philology/scripts/check_philology_evidence.py
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
+python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
@@ -135,6 +136,9 @@ product-architecture-expert/scripts/check_product_deliverable.py --self-test
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
 document-authoring/scripts/check_document_style.py --self-test
+
+echo "==> resource capability candidate checker"
+resource-capability-distiller/scripts/check_capability_candidate.py --self-test
 
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test

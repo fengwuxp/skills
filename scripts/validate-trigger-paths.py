@@ -275,6 +275,11 @@ document_agent = "document-authoring/agents/openai.yaml"
 document_checker = "document-authoring/scripts/check_document_deliverable.py"
 document_style_checker = "document-authoring/scripts/check_document_style.py"
 document_routing = "document-authoring/references/scenario-routing.md"
+resource_distiller_skill = "resource-capability-distiller/SKILL.md"
+resource_distiller_agent = "resource-capability-distiller/agents/openai.yaml"
+resource_distiller_contract = "resource-capability-distiller/references/distillation-contract.md"
+resource_distiller_source_map = "resource-capability-distiller/references/source-map.md"
+resource_distiller_candidate_checker = "resource-capability-distiller/scripts/check_capability_candidate.py"
 hanzi_skill = "hanzi-philology/SKILL.md"
 hanzi_agent = "hanzi-philology/agents/openai.yaml"
 hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
@@ -16467,6 +16472,136 @@ negative_reason_has(
 negative_reason_has(
     "wise-agent-negative-simple-synonyms",
     ("一步语言生成", "直接回答"),
+)
+
+expected_handling_has(
+    "resource-capability-distiller-should-distill-multisource-materials",
+    (
+        "实际读取",
+        "能力单元",
+        "跨来源一致性",
+        "允许零能力",
+        "不自动安装、同步、提交或晋升",
+    ),
+)
+expected_handling_has(
+    "resource-capability-distiller-should-route-reusable-capability-assets",
+    (
+        "来源清单和冲突矩阵",
+        "触发与非触发",
+        "失败分支",
+        "停止条件",
+        "不默认创建顶层 Skill",
+    ),
+)
+negative_reason_has(
+    "resource-capability-distiller-negative-ordinary-article-summary",
+    ("正式摘要", "document-authoring", "不触发资源炼技"),
+)
+negative_reason_has(
+    "resource-capability-distiller-negative-domain-expert-modeling",
+    ("业务专家建模", "wise-agent", "不触发资源炼技"),
+)
+
+check(
+    "resource capability distiller is self-contained and routes capability units",
+    (ROOT / resource_distiller_skill).exists()
+    and (ROOT / resource_distiller_agent).exists()
+    and (ROOT / resource_distiller_contract).exists()
+    and (ROOT / resource_distiller_source_map).exists()
+    and (ROOT / resource_distiller_candidate_checker).exists()
+    and has_all(
+        resource_distiller_skill,
+        [
+            "name: resource-capability-distiller",
+            "普通摘要",
+            "能力单元",
+            "允许零能力",
+            "不得自动安装、同步、提交或晋升",
+            "`references/distillation-contract.md`",
+            "`references/source-map.md`",
+        ],
+    )
+    and has_none(
+        resource_distiller_skill,
+        ["cangjie-skill", "skill-creator", "superpowers:"],
+    )
+    and has_all(
+        resource_distiller_agent,
+        ["资源炼技", "$resource-capability-distiller", "allow_implicit_invocation: true"],
+    )
+    and has_reference_header(resource_distiller_contract)
+    and has_task_reading_index(resource_distiller_contract)
+    and has_all(
+        resource_distiller_contract,
+        [
+            "教程或视频",
+            "代码",
+            "文档或规范",
+            "成功与失败产物",
+            "来源锚点",
+            "完整性",
+            "可追溯性",
+            "跨来源一致性",
+            "整体理解",
+            "候选、接受和拒绝",
+            "证据支撑",
+            "外推能力",
+            "非平庸性",
+            "相邻能力混淆",
+            "Skill",
+            "reference",
+            "script",
+            "asset",
+            "fixture",
+            "任务内",
+        ],
+    )
+    and has_none(
+        resource_distiller_contract,
+        ["cangjie-skill", "skill-creator", "superpowers:"],
+    )
+    and has_all(
+        resource_distiller_source_map,
+        [
+            "微软开源 Resource2Skill",
+            "https://github.com/microsoft/Resource2Skill",
+            "https://arxiv.org/abs/2606.29538",
+            "cangjie-skill",
+            "不作为运行时依赖",
+            "2026-07-23",
+            "未吸收",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py",
+            "resource-capability-distiller/scripts/check_capability_candidate.py --self-test",
+        ],
+    ),
+)
+check(
+    "resource capability distiller is discoverable without taking ownership",
+    has_all(
+        readme,
+        [
+            "resource-capability-distiller",
+            "资源炼技",
+            "不默认创建新 Skill",
+            "#### 2.1 资源炼技使用指南",
+            "候选不是安装结果",
+            "check_capability_candidate.py --file <candidate.json>",
+        ],
+    )
+    and has_all(
+        wise_agent_skill,
+        ["resource-capability-distiller", "多源材料", "不自动安装、同步、提交或晋升"],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        ["resource-capability-distiller", "能力单元", "不默认创建顶层 Skill"],
+    ),
 )
 
 failed = [name for name, ok in checks if not ok]

@@ -28,6 +28,7 @@ SKILLS = {
     "huaxia-practical-wisdom",
     "java-service-code-generator",
     "product-architecture-expert",
+    "resource-capability-distiller",
     "senior-software-architect",
     "wind-coding-conventions",
 }
@@ -48,6 +49,11 @@ SKILL_MENTIONS = {
     ],
     "java-service-code-generator": ["java-service-code-generator"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
+    "resource-capability-distiller": [
+        "resource-capability-distiller",
+        "资源炼技",
+        "多源材料提炼",
+    ],
     "senior-software-architect": ["资深架构师", "senior-software-architect"],
     "wind-coding-conventions": ["wind-coding-conventions", "Wind 编码约规"],
 }

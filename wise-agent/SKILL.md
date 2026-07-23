@@ -74,6 +74,7 @@ Codex 可按各 Skill 的精确 description 同时加载知止者与专业能力
 | 产品语义、业务架构、PRD、对象流程规则、验收和产品图 | `product-architecture-expert` | 业务取舍仍由人类 Owner 确认 |
 | 系分、架构、代码、Bug、TDD、源码 CR、生产变更和工程图 | `senior-software-architect` | 代码事实、测试和发布证据不可省略 |
 | 报告、制度、手册、研究说明、文档审校和正式载体 | `document-authoring` | 不改变领域事实和证据等级 |
+| 教程、视频、代码、文档、规范和产物等多源材料到可复用能力候选 | `resource-capability-distiller` | 只提炼、验证和归位能力单元；不自动安装、同步、提交或晋升 |
 | 汉字学、训诂、古文字、通假、异体和名相考据 | `hanzi-philology` | 不把单一字书或现代字形当定论 |
 | 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | `huaxia-practical-wisdom` | 经典只作判断镜片，不替代事实、专业结论和人类责任 |
 | 方案、计划或设计的关键分叉盘问、历史去重和决策快照 | `grill-me` | 未达到 shared understanding 不执行；自决不扩大用户授权 |

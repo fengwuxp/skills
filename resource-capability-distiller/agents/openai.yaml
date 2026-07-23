@@ -1,0 +1,6 @@
+interface:
+  display_name: "资源炼技"
+  short_description: "从教程、代码、文档与产物中提炼可验证并可正确归位的复用能力候选"
+  default_prompt: "使用 $resource-capability-distiller 实际读取多源材料，提炼带证据的可执行能力单元，并把每个单元归入最小适当资产。"
+policy:
+  allow_implicit_invocation: true

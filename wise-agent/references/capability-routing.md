@@ -32,6 +32,7 @@
 | 选择现有能力 | `一、先分四类责任`、`二、最小装载算法`、`三、已知能力地图` | 不展开新能力接入 |
 | 判断 Worker / Checker | `五、单体、Worker 与 Checker` | 不为展示协作而并行 |
 | 新增、安装或吸收 Skill | `六、新能力接入门禁`、`七、回流与验证` | 未审查前不安装、不写默认能力 |
+| 从多源材料提炼复用能力 | `三、已知能力地图`、`六、新能力接入门禁` | 不默认创建顶层 Skill，不跳过逐项归位 |
 | 消解能力歧义或检查加载扇出 | `二 A、路由消歧、后置加载与加载扇出` | 不预加载全部能力和 reference |
 | 产品到工程跨阶段状态 | `三 A、跨阶段状态契约`，再读生命周期 references | 不把状态卡当角色人格或执行授权 |
 | 专业文档与训诂组合 | `三 B、文档与训诂能力组合` | 不让成文能力改写领域证据 |
@@ -73,6 +74,7 @@
 | PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | `document-authoring` | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
+| 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
 | 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 正式报告按需用 `document-authoring`；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
 | 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段任务由 `wise-agent` 持有目标；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
 | DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成后消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
