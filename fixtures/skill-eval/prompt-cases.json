@@ -365,6 +365,26 @@
       "expected_handling": "进入能力提供者站位：产品、需求和系分不做诉求的逐条实现者，先跨诉求与场景察同，提炼共同目标、主体、对象、流程、规则、不变量和接口契约，再辨异识别有证据的主体、渠道、法域、时点或外部依赖差异。共性沉淀为边界清楚、可组合和可验证的稳定能力；特殊性按证据留在场景规则、参数、适配器或明确分支，不复制一套能力。察同不抹平真实差异，辨异也不为每个差异造一套；一次性、局部或尚未证明复用价值的需求直接做最小实现，不提前平台化。验收既覆盖当前需求，也用代表性场景验证能力边界。"
     },
     {
+      "id": "wise-agent-should-place-local-requirement-without-expanding-capability-model",
+      "skill": "wise-agent",
+      "query": "知止者，讨论一个局部需求：在已有订单查询页增加导出按钮，继续使用现有查询条件和导出接口，没有新增主体、业务对象、状态、规则或复用场景。请判断是否需要新建‘订单导出能力中心’并展开完整能力设计。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "先做轻量能力归位，判断该需求是在使用或局部增强既有订单查询 / 导出能力，而不是新增稳定能力。默认审视不等于默认展开；当前没有多场景、多主体、跨渠道、跨模块、生命周期或真实变化轴证据，因此不展开能力地图，不新建能力中心、平台、模块或抽象层。只核对现有查询条件、权限、导出契约和验收是否覆盖新增入口，然后按一次性局部需求做最小实现。"
+    },
+    {
+      "id": "wise-agent-should-expand-capability-model-for-multi-scenario-design",
+      "skill": "wise-agent",
+      "query": "知止者，三个场景都需要受理业务申请：商户入驻、权限申请、配置变更。它们都有提交、补件、审核、撤回和结果通知，但申请主体、材料、审核规则与审批链不同。请判断是否需要做能力提炼，并给出产品到系分的设计落点。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "先做能力归位并判断这是多个场景组合使用同类稳定能力，已有多场景、不同主体、生命周期和真实变化轴证据，应展开能力提炼。跨场景察同形成申请、申请主体、材料、审核决定、状态生命周期和提交 / 补件 / 审核 / 撤回 / 通知契约；按证据辨异，把材料要求、审核规则和审批链放入规则、参数、策略或适配边界，不为三个场景复制三套能力。产品设计定义稳定能力、对象、流程和代表性验收场景；系分明确应用编排、领域不变量、模块职责和接口契约。"
+    },
+    {
       "id": "wise-agent-should-planning-execution-admission-gate",
       "skill": "wise-agent",
       "query": "做 GSD/CAD 准入：判断是否进入 Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口。",

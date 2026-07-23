@@ -15441,6 +15441,64 @@ expected_handling_has(
     ),
 )
 
+expected_handling_has(
+    "wise-agent-should-place-local-requirement-without-expanding-capability-model",
+    (
+        "先做轻量能力归位",
+        "使用或局部增强既有订单查询 / 导出能力",
+        "默认审视不等于默认展开",
+        "不展开能力地图",
+        "按一次性局部需求做最小实现",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-expand-capability-model-for-multi-scenario-design",
+    (
+        "已有多场景、不同主体、生命周期和真实变化轴证据",
+        "应展开能力提炼",
+        "跨场景察同形成申请、申请主体、材料、审核决定、状态生命周期",
+        "把材料要求、审核规则和审批链放入规则、参数、策略或适配边界",
+        "不为三个场景复制三套能力",
+        "系分明确应用编排、领域不变量、模块职责和接口契约",
+    ),
+)
+
+check(
+    "capability-first requirement placement defaults to review and expands only with evidence",
+    has_all(
+        wise_agent_skill,
+        [
+            "能力本位，需求归位",
+            "所有需求讨论和设计先站在能力提供者视角做一次轻量能力归位",
+            "使用、增强、组合还是新增",
+            "默认审视不等于默认展开",
+            "多场景、多主体、跨渠道、跨模块、存在生命周期或真实变化轴",
+            "Bug、文案调整、局部字段、一次性迁移",
+            "不展开能力地图",
+        ],
+    )
+    and has_all(
+        wise_agent_global_kernel,
+        [
+            "需求讨论和设计先做轻量能力归位",
+            "默认只审视",
+            "有多场景或真实变化轴证据时才展开",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "默认能力视角",
+            "先做能力归位",
+            "使用、增强、组合还是新增",
+            "默认审视不等于默认展开",
+            "多场景、多主体、跨渠道、跨模块、存在生命周期或真实变化轴",
+            "不展开能力地图",
+        ],
+    ),
+)
+
 check(
     "product and system design use capability-provider stance",
     has_all(
