@@ -24,7 +24,8 @@
   "next_action": "只按 D-1 运行状态契约验证",
   "write_scope": [
     "wise-agent",
-    "scripts"
+    "scripts",
+    "docs/goal-ledger.md"
   ],
   "state_carrier": "docs/goal-ledger.md",
   "verification_evidence": [],
@@ -41,13 +42,25 @@
     "revision": 1,
     "revision_reason": "",
     "revision_evidence": [],
+    "state_inputs": [
+      "goal_ledger"
+    ],
     "nodes": [
       {
         "id": "A",
         "objective": "确认状态恢复契约",
         "status": "Verified",
         "depends_on": [],
-        "write_scope": [],
+        "consumes": [
+          "goal_ledger"
+        ],
+        "produces": [
+          "decision_snapshot"
+        ],
+        "writeback": "docs/goal-ledger.md#G-17/decision-snapshot",
+        "write_scope": [
+          "docs/goal-ledger.md"
+        ],
         "risk": "low",
         "checker": "",
         "evidence": [
@@ -62,6 +75,13 @@
         "depends_on": [
           "A"
         ],
+        "consumes": [
+          "decision_snapshot"
+        ],
+        "produces": [
+          "skill_rule_update"
+        ],
+        "writeback": "wise-agent/SKILL.md",
         "parallel_group": "implementation",
         "write_scope": [
           "wise-agent/SKILL.md"
@@ -78,6 +98,13 @@
         "depends_on": [
           "A"
         ],
+        "consumes": [
+          "decision_snapshot"
+        ],
+        "produces": [
+          "execution_control_update"
+        ],
+        "writeback": "wise-agent/references/delivery-execution-control.md",
         "parallel_group": "implementation",
         "write_scope": [
           "wise-agent/references/delivery-execution-control.md"
@@ -95,7 +122,31 @@
           "B",
           "C"
         ],
-        "write_scope": [],
+        "consumes": [
+          "skill_rule_update",
+          "execution_control_update"
+        ],
+        "produces": [
+          "validation_result"
+        ],
+        "writeback": "docs/goal-ledger.md#G-17/verification",
+        "transitions": [
+          {
+            "when": "validation_passed",
+            "target": "Complete"
+          },
+          {
+            "when": "default",
+            "target": "Stop"
+          }
+        ],
+        "failure_policy": {
+          "max_attempts": 2,
+          "on_exhausted": "human"
+        },
+        "write_scope": [
+          "docs/goal-ledger.md"
+        ],
         "risk": "high",
         "checker": "check_state_contract.py",
         "evidence": [],

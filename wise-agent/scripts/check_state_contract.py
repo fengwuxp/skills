@@ -20,6 +20,8 @@ from typing import Any, Sequence
 STATUSES = {"Draft", "Ready", "Active", "Blocked", "Verified", "Closed", "Superseded"}
 WORK_NODE_STATUSES = {"Pending", "Ready", "Running", "Blocked", "Verified", "Cancelled"}
 WORK_NODE_RISKS = {"low", "medium", "high"}
+WORK_GRAPH_TERMINALS = {"Complete", "Stop", "Human handoff"}
+FAILURE_OUTCOMES = {"fallback", "stop", "human"}
 STRING_FIELDS = {
     "goal_id",
     "objective",
@@ -83,6 +85,7 @@ def validate_work_graph(
     allowed_write_scope: Any = None,
     previous_graph: Any = None,
     require_previous: bool = True,
+    max_attempts_budget: Any = None,
 ) -> list[str]:
     if graph is None:
         return []
@@ -119,6 +122,9 @@ def validate_work_graph(
     if not isinstance(raw_nodes, list) or not raw_nodes:
         errors.append("work_graph nodes must be a non-empty list")
         return errors
+    state_inputs = graph.get("state_inputs", [])
+    if not is_string_list(state_inputs):
+        errors.append("work_graph state_inputs must be a list of non-empty strings")
 
     nodes: dict[str, dict[str, Any]] = {}
     for index, node in enumerate(raw_nodes):
@@ -162,8 +168,111 @@ def validate_work_graph(
             not isinstance(node["parallel_group"], str) or not node["parallel_group"].strip()
         ):
             errors.append(f"work_graph node {node_id} parallel_group must be a non-empty string")
+        for field in ("consumes", "produces"):
+            if field in node and not is_string_list(node[field]):
+                errors.append(
+                    f"work_graph node {node_id} {field} must be a list of non-empty strings"
+                )
+        produces = node.get("produces", [])
+        if is_string_list(produces) and produces and (
+            not isinstance(node.get("writeback"), str) or not node["writeback"].strip()
+        ):
+            errors.append(f"work_graph node {node_id} with produces requires writeback")
+        elif is_string_list(produces) and produces:
+            writeback = node["writeback"]
+            writeback_path = writeback.split("#", 1)[0]
+            node_write_scope = node.get("write_scope")
+            if not is_string_list(node_write_scope) or not scope_is_within(
+                writeback_path, node_write_scope
+            ):
+                errors.append(
+                    f"work_graph node {node_id} writeback {writeback} is outside node write_scope"
+                )
+            elif is_string_list(allowed_write_scope) and not scope_is_within(
+                writeback_path, allowed_write_scope
+            ):
+                errors.append(
+                    f"work_graph node {node_id} writeback {writeback} is outside contract write_scope"
+                )
+
+        transitions = node.get("transitions")
+        if transitions is not None:
+            if not isinstance(transitions, list) or not transitions:
+                errors.append(f"work_graph node {node_id} transitions must be a non-empty list")
+            else:
+                default_count = 0
+                for transition in transitions:
+                    if not isinstance(transition, dict):
+                        errors.append(f"work_graph node {node_id} transition must be an object")
+                        continue
+                    condition = transition.get("when")
+                    target = transition.get("target")
+                    if not isinstance(condition, str) or not condition.strip():
+                        errors.append(
+                            f"work_graph node {node_id} transition when must be a non-empty string"
+                        )
+                    elif condition == "default":
+                        default_count += 1
+                    if not isinstance(target, str) or not target.strip():
+                        errors.append(
+                            f"work_graph node {node_id} transition target must be a non-empty string"
+                        )
+                if default_count != 1:
+                    errors.append(
+                        f"work_graph node {node_id} transitions require exactly one default branch"
+                    )
+
+        failure_policy = node.get("failure_policy")
+        if failure_policy is not None:
+            if not isinstance(failure_policy, dict):
+                errors.append(f"work_graph node {node_id} failure_policy must be an object")
+            else:
+                max_attempts = failure_policy.get("max_attempts")
+                if (
+                    not isinstance(max_attempts, int)
+                    or isinstance(max_attempts, bool)
+                    or max_attempts < 1
+                ):
+                    errors.append(
+                        f"work_graph node {node_id} failure_policy max_attempts must be a positive integer"
+                    )
+                elif (
+                    isinstance(max_attempts_budget, int)
+                    and not isinstance(max_attempts_budget, bool)
+                    and max_attempts > max_attempts_budget
+                ):
+                    errors.append(
+                        f"work_graph node {node_id} failure_policy max_attempts "
+                        "must not exceed contract max_iterations"
+                    )
+                on_exhausted = failure_policy.get("on_exhausted")
+                if on_exhausted not in FAILURE_OUTCOMES:
+                    errors.append(
+                        f"work_graph node {node_id} failure_policy on_exhausted must be fallback, stop, or human"
+                    )
+                if "backoff" in failure_policy and (
+                    not isinstance(failure_policy["backoff"], str)
+                    or not failure_policy["backoff"].strip()
+                ):
+                    errors.append(
+                        f"work_graph node {node_id} failure_policy backoff must be a non-empty string"
+                    )
 
     known_ids = set(nodes)
+    state_producers: dict[str, list[str]] = defaultdict(list)
+    for node_id, node in nodes.items():
+        if node.get("status") == "Cancelled":
+            continue
+        produces = node.get("produces", [])
+        if is_string_list(produces):
+            for state_key in produces:
+                state_producers[state_key].append(node_id)
+    for state_key, producers in state_producers.items():
+        if len(producers) > 1:
+            errors.append(
+                f"work_graph state key {state_key} has multiple producers: {', '.join(producers)}"
+            )
+
     dependencies: dict[str, list[str]] = {}
     for node_id, node in nodes.items():
         depends_on = node.get("depends_on")
@@ -181,22 +290,105 @@ def validate_work_graph(
                     f"work_graph node {node_id} cannot be {status} before dependency {dependency} is Verified"
                 )
 
+        transitions = node.get("transitions")
+        if isinstance(transitions, list):
+            for transition in transitions:
+                if not isinstance(transition, dict):
+                    continue
+                target = transition.get("target")
+                if (
+                    isinstance(target, str)
+                    and target.strip()
+                    and target not in known_ids
+                    and target not in WORK_GRAPH_TERMINALS
+                ):
+                    errors.append(
+                        f"work_graph node {node_id} transition target {target} does not exist"
+                    )
+
+        failure_policy = node.get("failure_policy")
+        if isinstance(failure_policy, dict) and failure_policy.get("on_exhausted") == "fallback":
+            target = failure_policy.get("target")
+            if not isinstance(target, str) or not target.strip() or target not in known_ids:
+                errors.append(
+                    f"work_graph node {node_id} fallback requires an existing target node"
+                )
+
+    execution_successors: dict[str, set[str]] = defaultdict(set)
+    execution_indegree = {node_id: 0 for node_id in nodes}
+
+    def add_execution_edge(source: str, target: str) -> None:
+        if target not in execution_successors[source]:
+            execution_successors[source].add(target)
+            execution_indegree[target] += 1
+
+    for node_id, node_dependencies in dependencies.items():
+        for dependency in node_dependencies:
+            add_execution_edge(dependency, node_id)
+    for node_id, node in nodes.items():
+        transitions = node.get("transitions")
+        if isinstance(transitions, list):
+            for transition in transitions:
+                if not isinstance(transition, dict):
+                    continue
+                target = transition.get("target")
+                if isinstance(target, str) and target in known_ids:
+                    add_execution_edge(node_id, target)
+        failure_policy = node.get("failure_policy")
+        if isinstance(failure_policy, dict) and failure_policy.get("on_exhausted") == "fallback":
+            target = failure_policy.get("target")
+            if isinstance(target, str) and target in known_ids:
+                add_execution_edge(node_id, target)
+
+    execution_ready = deque(
+        node_id for node_id, degree in execution_indegree.items() if degree == 0
+    )
+    execution_visited = 0
+    while execution_ready:
+        current = execution_ready.popleft()
+        execution_visited += 1
+        for successor in execution_successors[current]:
+            execution_indegree[successor] -= 1
+            if execution_indegree[successor] == 0:
+                execution_ready.append(successor)
+    if execution_visited != len(nodes):
+        errors.append("work_graph execution edges must be acyclic")
+
     indegree = {node_id: len(dependencies.get(node_id, [])) for node_id in nodes}
     successors: dict[str, list[str]] = defaultdict(list)
     for node_id, node_dependencies in dependencies.items():
         for dependency in node_dependencies:
             successors[dependency].append(node_id)
     ready = deque(node_id for node_id, degree in indegree.items() if degree == 0)
+    topological_order: list[str] = []
     visited = 0
     while ready:
         current = ready.popleft()
         visited += 1
+        topological_order.append(current)
         for successor in successors[current]:
             indegree[successor] -= 1
             if indegree[successor] == 0:
                 ready.append(successor)
     if visited != len(nodes):
         errors.append("work_graph dependencies must be acyclic")
+    elif is_string_list(state_inputs):
+        available_state: dict[str, set[str]] = {}
+        for node_id in topological_order:
+            available = set(state_inputs)
+            for dependency in dependencies.get(node_id, []):
+                available.update(available_state.get(dependency, set()))
+            consumes = nodes[node_id].get("consumes", [])
+            if is_string_list(consumes):
+                for state_key in consumes:
+                    if state_key not in available:
+                        errors.append(
+                            f"work_graph node {node_id} consumes unavailable state key {state_key}"
+                        )
+            produces = nodes[node_id].get("produces", [])
+            if is_string_list(produces):
+                available.update(produces)
+            available_state[node_id] = available
 
     if isinstance(previous_graph, dict):
         previous_revision = previous_graph.get("revision")
@@ -323,6 +515,7 @@ def validate(
             data.get("write_scope"),
             previous_graph,
             require_previous=require_previous,
+            max_attempts_budget=maximum,
         )
     )
     if isinstance(status, str) and status in {"Verified", "Closed"} and isinstance(work_graph, dict):
@@ -402,6 +595,70 @@ def run_self_test() -> None:
     expected_dependency_error = "work_graph node B cannot be Verified before dependency A is Verified"
     if expected_dependency_error not in validate(verified_before_dependency):
         raise SystemExit("Verified node bypassed an unfinished dependency")
+
+    broken_state_handoff = copy.deepcopy(valid_contract)
+    broken_state_handoff["work_graph"]["state_inputs"] = ["decision_snapshot"]
+    broken_state_handoff["work_graph"]["nodes"][3]["consumes"] = ["missing_report_input"]
+    handoff_error = "work_graph node D consumes unavailable state key missing_report_input"
+    if handoff_error not in validate(broken_state_handoff):
+        raise SystemExit("work_graph allowed a broken Search -> Clean -> Report state handoff")
+
+    broken_conditional_route = copy.deepcopy(valid_contract)
+    broken_conditional_route["work_graph"]["nodes"][0]["transitions"] = [
+        {"when": "blocked", "target": "missing-node"}
+    ]
+    route_errors = set(validate(broken_conditional_route))
+    expected_route_errors = {
+        "work_graph node A transition target missing-node does not exist",
+        "work_graph node A transitions require exactly one default branch",
+    }
+    if not expected_route_errors <= route_errors:
+        raise SystemExit("work_graph allowed an incomplete sensitive-check conditional route")
+
+    unbounded_retry = copy.deepcopy(valid_contract)
+    unbounded_retry["work_graph"]["nodes"][1]["failure_policy"] = {
+        "max_attempts": 0,
+        "on_exhausted": "retry",
+    }
+    retry_errors = set(validate(unbounded_retry))
+    expected_retry_errors = {
+        "work_graph node B failure_policy max_attempts must be a positive integer",
+        "work_graph node B failure_policy on_exhausted must be fallback, stop, or human",
+    }
+    if not expected_retry_errors <= retry_errors:
+        raise SystemExit("work_graph allowed an unbounded crawler retry policy")
+
+    escaped_writeback = copy.deepcopy(valid_contract)
+    escaped_writeback["work_graph"]["nodes"][1]["writeback"] = "../../outside.md"
+    writeback_error = "work_graph node B writeback ../../outside.md is outside node write_scope"
+    if writeback_error not in validate(escaped_writeback):
+        raise SystemExit("work_graph allowed writeback outside the node grant")
+
+    duplicate_output = copy.deepcopy(valid_contract)
+    duplicate_output["work_graph"]["nodes"][1]["produces"] = ["shared_result"]
+    duplicate_output["work_graph"]["nodes"][2]["produces"] = ["shared_result"]
+    duplicate_output["work_graph"]["nodes"][3]["consumes"] = ["shared_result"]
+    producer_error = "work_graph state key shared_result has multiple producers: B, C"
+    if producer_error not in validate(duplicate_output):
+        raise SystemExit("work_graph allowed ambiguous parallel state producers")
+
+    route_cycle = copy.deepcopy(valid_contract)
+    route_cycle["work_graph"]["nodes"][3]["transitions"] = [
+        {"when": "default", "target": "A"}
+    ]
+    if "work_graph execution edges must be acyclic" not in validate(route_cycle):
+        raise SystemExit("work_graph allowed a conditional route back edge")
+
+    oversized_retry = copy.deepcopy(valid_contract)
+    oversized_retry["work_graph"]["nodes"][3]["failure_policy"] = {
+        "max_attempts": 100,
+        "on_exhausted": "stop",
+    }
+    retry_budget_error = (
+        "work_graph node D failure_policy max_attempts must not exceed contract max_iterations"
+    )
+    if retry_budget_error not in validate(oversized_retry):
+        raise SystemExit("work_graph retry policy exceeded the Goal iteration budget")
 
     malformed_root = copy.deepcopy(valid_contract)
     malformed_root["status"] = []

@@ -1552,6 +1552,16 @@
       "expected_handling": "知止者先检查工作区和目标差异，确认验证证据后精确暂存本轮文件；当前指令只授权本地 stage / commit，不执行 push、PR、merge 或同步。commit message 优先遵循项目约规；项目没有约规时跟随用户语言，代码、命令、模块名和协议字段保持原文。"
     },
     {
+      "id": "wise-agent-should-preserve-unrelated-staged-blobs",
+      "skill": "wise-agent",
+      "query": "做一轮提交：当前暂存区混有其他人的无关变更，只提交我指定的三个文件。可以使用隔离候选索引，但不能丢失或改写无关暂存内容，也不要 push。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "提交前记录 HEAD、目标文件白名单、真实暂存文件及每个无关暂存路径的 blob；只把白名单放入候选提交。混合暂存区若使用隔离候选树或 GIT_INDEX_FILE，提交后仍回读真实索引，而不能只检查候选索引。提交后核对新提交文件集合严格等于白名单，并确认无关暂存 blob 前后不变；若无关暂存发生并发变化，只报告差异并停止，不擅自恢复旧索引。当前授权不包含 push、PR、merge 或同步。"
+    },
+    {
       "id": "wise-agent-should-record-opt-in-learning-candidate",
       "skill": "wise-agent",
       "query": "$wise-agent：知止者学习回流模式已显式启用。最近两个已验证任务都暴露同一触发遗漏，已有 fixture 失败和人工纠偏证据；请在本轮收口时记录经验，但不要直接修改 Skill、提交或同步。",
@@ -2329,6 +2339,36 @@
       "negative_reason": "缺少产品语义或工程实现目标，不能仅凭“状态机”抢占主责；应先澄清是业务状态与验收，还是系统实现与工程落点。"
     },
     {
+      "id": "senior-should-route-interactive-repository-map-to-archify",
+      "skill": "senior-software-architect",
+      "query": "分析这个真实代码库并生成可交互的单文件 HTML 运行时架构地图；保留 typed JSON IR，执行确定性结构与布局校验，并支持按需导出 SVG/PNG。请判断应该使用哪个画图后端。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "由 senior-software-architect 负责代码库证据、架构语义和工程回链；只有 Archify 已通过来源、许可证、脚本、依赖、联网、读写和凭据边界审查，且已经安装可用或用户明确授权时，才把 brief 交给 Archify，保留 typed JSON IR，以自包含 HTML 为主交付并运行其确定性 Schema、布局和产物校验；SVG/PNG 等派生格式按用户要求导出。不得把 Archify 当作架构 owner，不得假定未安装能力可用。"
+    },
+    {
+      "id": "senior-should-keep-static-uml-on-fireworks",
+      "skill": "senior-software-architect",
+      "query": "给当前系统画一张精美的静态 UML 类图和 ER 图，输出 SVG；不要交互页面，也不要引入新的画图工具。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
+      "expected_handling": "由 senior-software-architect 负责类、关系、实体和基数等工程语义；静态 UML/ER SVG 优先使用已安装的 fireworks-tech-graph 完成视觉呈现与渲染校验，未安装时使用本地可审查的 SVG 路径。Archify 只覆盖架构、工作流、时序、数据流和生命周期等受支持视图，不因它能输出 SVG 就替换静态 UML/ER 路由，也不安装新工具。"
+    },
+    {
+      "id": "senior-should-verify-maven-tests-really-ran",
+      "skill": "senior-software-architect",
+      "query": "Maven 最后显示 BUILD SUCCESS，但日志里出现 Tests are skipped，Surefire 也没有本轮新 XML。另一个隔离编译候选只复制了生产源码包，没有契约测试和 jdbc-schema.sql。请判断能否报告测试通过。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "不得报告测试通过。BUILD SUCCESS 只证明 Maven 生命周期成功结束；出现 Tests are skipped、没有本轮新增或更新的 Surefire XML、或 XML 汇总 tests 为 0，任一项都阻断测试通过结论。Java 交付必须只统计本轮新生成或更新的 Surefire XML，并汇总 tests、failures、errors、skipped；至少实际执行一个目标测试，failures 和 errors 为 0，目标契约测试不得被 skipped。隔离编译候选必须覆盖本轮契约测试及 jdbc-schema.sql 等运行资源，不能只按生产源码包截取。"
+    },
+    {
       "id": "wind-coding-conventions-should-trigger-generic-java",
       "skill": "wind-coding-conventions",
       "query": "这是一个普通 Maven Java 21 项目，没有 Wind/Nobe 依赖。请按通用 Java 约规检查命名、空值契约、异常日志、金额时间处理和测试代码，不要套 face/impl 或 Wind API 规则。",
@@ -2549,6 +2589,26 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
       "expected_handling": "不为普通成功日志机械增加 TransactionSynchronization。先区分业务方法处理完成、事务内状态已更新和数据库已经持久化提交三种语义：前两者可以在事务内按真实措辞记录，不得提前宣称已持久化提交；只有审计、通知、外部副作用或明确依赖提交事实的日志才进入 after-commit。方法加入外层事务时自身不能决定最终提交时点，更不能用普通 Service 日志冒充提交证据。"
+    },
+    {
+      "id": "wind-coding-conventions-should-judge-short-methods-and-stereotypes-by-semantics",
+      "skill": "wind-coding-conventions",
+      "query": "给这个 Wind 项目的 AI Maker 一组语义型正反例：是否删除一行 now()、字段纯别名和无策略透传方法，是否保留 identityKey()；OrderServiceImpl、OrderStore、RuleRegistry、OrderAssembler 应该用 @Service 还是 @Component。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "不制定按方法行数删除的机械规则。没有时间策略的 now()、不增加语义的字段纯别名和无策略透传包装应删除；表达稳定身份键、不变量、归一化或跨调用方复用策略的 identityKey() 等方法应保留并测试其语义。承载业务服务契约的 OrderServiceImpl 使用 @Service；Store、Registry、Assembler 等技术协作者优先使用 @Component，若由配置或调用方显式构造则可以不加 stereotype，不为名称统一滥用 @Service。"
+    },
+    {
+      "id": "wind-coding-conventions-should-preserve-existing-service-contract-rules",
+      "skill": "wind-coding-conventions",
+      "query": "按 Wind 编码约规给新增基础服务做规则检查：确认 face/impl 归位、公开写入参数、需要审计的操作人，并防止回归；不要再发明一套基础服务规则。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "复用现有 Wind 规则，不新增平行口径：公开 Service 契约和 DTO/Request/Query 放 face，ServiceImpl、Entity、Mapper 与转换实现放 impl；写入使用 CreateXxxRequest、UpdateXxxRequest 或明确业务动作 Request，不以 Entity 作为公开入参；基础服务签名遵循现有 create/update/delete/get/query 与 WindQuery 分页约定；需要审计或操作人上下文时复用 com.wind.integration.operator.WindOperator，不创建模块私有操作人模型。"
     },
     {
       "id": "wind-coding-conventions-should-enforce-project-format-authority",
@@ -2919,6 +2979,26 @@
         "variance_check"
       ],
       "expected_handling": "进入历史去重路径；从现有问题台账、决策快照、Issue、Goal、Spec、ADR、文档和知识库恢复已确认、已排除、待确认和红线；按决策主题检查语义重复，已确认问题不得复问；只有证据变化、结论冲突或风险升级才重开并说明原因。"
+    },
+    {
+      "id": "grill-me-should-not-rephrase-confirmed-question",
+      "skill": "grill-me",
+      "query": "继续用 $grill-me 盘问。Owner 已确认退款状态由原交易状态机统一管理；不要把它改写成‘退款是否需要独立生命周期’再问一次。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "按对象、取舍和范围识别为同一决策主题，复用原问题的 decision-reused / confirmed 结论，不换说法重问、不创建新问题 ID。只有出现新证据、风险升级或 Owner 明确要求重开时才能再次提问，并在原记录填写重开原因。"
+    },
+    {
+      "id": "grill-me-should-close-deferred-or-out-of-scope-questioning",
+      "skill": "grill-me",
+      "query": "继续用 $grill-me 审查当前版本。Owner 已明确把多区域容灾延期到下一阶段，把自定义报表列为范围外，并保留现有路由设计；当前版本没有其他未决分叉。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "把明确延期、范围外和保留设计分别写入决策快照并关闭当前盘问，不继续追问这些主题，不把延期误写成 pending blocker。只有新证据、风险升级或 Owner 明确重开时才能恢复对应问题，并输出具体重开原因。"
     },
     {
       "id": "grill-me-should-self-decide-from-authoritative-evidence",

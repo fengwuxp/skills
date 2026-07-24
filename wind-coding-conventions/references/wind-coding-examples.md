@@ -145,3 +145,9 @@ public class XxxType {
 - 反例：模块另建 `CouponOperator` 复制操作人字段；`queryCouponOverview(query, activityOptions, couponOptions)` 同时承载两套分页；为单个 `reason` 新建无校验、无复用的值对象；生成 `correlationId` 后只写库、返回或打印。日志整体打印 Request / Entity，在事务提交前宣称“已持久化提交”，或为每条普通成功日志注册事务同步；事件名已经表示失败仍固定输出 `failureStage` / `failureType`，捕获异常后只打印 `getSimpleName()` 再原样抛出。
 - 正例：公共契约直接复用 `com.wind.integration.operator.WindOperator`；每个分页方法只接收一个 `WindQuery`，独立结果集拆成独立查询；操作原因留在对应 Request / Command；无人消费的 `correlationId` / `version` 删除。事务内按真实语义记录处理完成、状态更新或等待提交；只有明确依赖提交事实的审计、通知、外部副作用或日志才进入 after-commit。异常堆栈只由一个明确 owner 输出，纯字符串字面量可跨行组合，运行时值统一使用占位符。
 - 验证点：操作人与查询类型是否复用现有公共契约；字段能否指出生成方和真实消费者；每个分页是否独立；成功日志是否可能早于回滚；日志维度是否被告警、统计或检索消费；同一异常是否只有一份完整堆栈。
+
+### 17. 短方法和 Spring stereotype 按职责判断
+
+- 反例：因为方法只有一行就全部删除，或保留没有时间策略的 `now()`、字段纯别名和无策略透传包装；把 `Store`、`Registry`、`Assembler` 等技术协作者统一标成 `@Service`。
+- 正例：删除没有增加语义、约束或替换点的 `now()`、纯别名和透传包装；保留并测试表达稳定身份键、不变量、归一化或跨调用方复用策略的 `identityKey()`。承载业务服务契约的 `XxxServiceImpl` 使用 `@Service`；`Store`、`Registry`、`Assembler` 等技术协作者优先使用 `@Component`，由配置或调用方显式构造时可以不加 stereotype。
+- 验证点：方法是否承载调用方需要共享的业务语义，而不是只看行数；组件是否承担业务 Service 契约；删除包装后是否仍保留身份、不变量和归一化策略；Spring 装配是否唯一且可验证。

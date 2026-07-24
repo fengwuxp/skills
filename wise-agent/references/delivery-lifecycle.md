@@ -50,7 +50,7 @@
 - 结构化 Java Service 基础服务、DTO / Request / Query / Entity / Mapper / Converter / Service / ServiceImpl 骨架生成由 `java-service-code-generator` 执行；生成后回 `wind-coding-conventions` 检查通用 Java 约规并按依赖/上下文叠加 Wind/Nobe 专项，再回 `资深架构师` 做源码级设计 / TDD / CR。
 - Java 项目编码指导和规则由 `wind-coding-conventions` 执行；它提供通用 Java 约规，并在命中 Wind/Nobe 信号后提供专项规则和模板样例，架构裁决、测试策略、源码级 Review 和生产风险仍回 `资深架构师`。
 - 代码阅读理解、设计-代码对齐和外部理解工具准入读 `code-understanding-tools.md`；工具输出只是只读证据，不替代源码锚点、测试、CR 或 owner 判断。
-- 产品图和工程图分别回 `产品架构专家` / `资深架构师` 的 `diagram-output.md`；复杂图形渲染、Architecture Diagram Generator 或 `$fireworks-tech-graph` 只在语义 brief 已确认后作为可选生成后端。
+- 产品图和工程图分别回 `产品架构专家` / `资深架构师` 的 `diagram-output.md`；Archify 或 `$fireworks-tech-graph` 只在语义 brief 已确认、能力已安装可用或获得明确授权后作为可选生成后端。
 - 外部框架或工具只按当前角色节点补强：Superpowers / SDD / Harness 补工程纪律和独立验证，GStack 补角色链审查，`grill-me` 补轻量问询，Ponytail 补最小正确实现，Open Code Review 补外部 Checker，Gemini / AgentRC / WorkBuddy 补只读理解或本地执行准入；来源与边界读 `superpowers-skill-library.md`、`code-understanding-tools.md`、`source-map.md`。
 - PRD / 系分合议预审、多角色挑战、ACCEPT/REJECT/PENDING 决策日志读 `prd-system-design-review.md`。
 - OpenSpec、Harness、权限边界、事实边界和多 Agent 治理读 `engineering-governance.md`。

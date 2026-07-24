@@ -5620,18 +5620,20 @@ check(
             "AI Agent Systems",
             "AI 辅助画图 / draw.io 可编辑图 / 文档转图",
             "AI 辅助可编辑图",
-            "Architecture Diagram Generator 准入",
-            "Architecture Diagram Generator 路由",
-            "复杂分层架构图",
-            "架构描述转可编辑图",
-            "生成器输出只能作为可编辑草案",
+            "Archify 准入",
+            "## Archify 路由",
+            "typed JSON IR",
+            "自包含 HTML",
+            "不得假定 Archify 已安装",
+            "Schema、布局和产物校验",
+            "未安装、校验不可用或校验失败时不得伪造通过",
             "不能写成架构质量结论、CR 通过、测试通过、Execution Grant 或上线审批",
             "微信公众号文章《如何画架构图：技术负责人带你画技术（系统）架构》",
             "第二篇《如何画架构图：业务架构的画法》当前链接只能访问校验页",
             "微信公众号文章《架构师必备--让AI画架构图》",
             "C4 Model、arc42 和 draw.io 官方文档",
-            "`Architecture Diagram Generator` 可作为复杂架构图、代码库理解图和架构描述转图的候选生成后端",
-            "未提供明确仓库、Skill 包或安装来源前，只能作为待审查工具名记录在路由中",
+            "`tt-a1i/archify` 可作为复杂架构图、代码库理解图和架构描述转图的候选生成后端",
+            "不得从文章宣传推导能力",
             "可选续作：fireworks-tech-graph",
             "调用 `$fireworks-tech-graph`",
             "供应链安全审查",
@@ -5658,10 +5660,11 @@ check(
             "用户旅程",
             "服务蓝图",
             "AI 辅助可编辑图",
-            "Architecture Diagram Generator 准入",
-            "Architecture Diagram Generator 路由",
-            "产品到系统的上下文图、容器/模块候选图或依赖边界图",
+            "Archify 准入",
+            "## Archify 路由",
+            "产品到系统的上下文图、运行时架构图、容器/模块候选图或依赖边界图",
             "以下场景继续使用原有产品图形能力",
+            "不调用 Archify",
             "生成器输出不能替代产品判断、合规确认、工程设计或验收结论",
             "默认使用 SVG 作为正式图形化交付物",
             "Mermaid/Markdown 草图",
@@ -5670,8 +5673,8 @@ check(
             "PNG 不默认导出",
             "Finance Ledger",
             "支付资金四流",
-            "`Architecture Diagram Generator` 可作为复杂架构图生成后端的候选能力",
-            "未提供明确仓库、Skill 包或安装来源前，只能作为待审查工具名记录在路由中",
+            "`tt-a1i/archify` 可作为产品到系统交接图的候选生成后端",
+            "不得从文章宣传推导能力",
             "NN/g 的 UX mapping、journey mapping 和 service blueprinting 文章",
             "draw.io 官方文档",
             "可选续作：fireworks-tech-graph",
@@ -8787,8 +8790,9 @@ check(
         review,
         [
             "直通包装",
-            "单行透传方法无论公有或私有，都应优先删除并内联",
-            "业务语义、边界保护、错误聚合、观测或测试隔离",
+            "方法行数不是删除依据",
+            "身份键、不变量、归一化或复用策略",
+            "没有增加业务语义、边界保护、错误聚合、观测或测试隔离",
         ],
     ),
 )
@@ -16475,6 +16479,60 @@ negative_reason_has(
 )
 
 expected_handling_has(
+    "wise-agent-should-preserve-unrelated-staged-blobs",
+    ("HEAD", "白名单", "blob", "真实索引", "前后不变", "并发变化", "不擅自恢复"),
+)
+expected_handling_has(
+    "senior-should-verify-maven-tests-really-ran",
+    ("Tests are skipped", "Surefire XML", "tests", "failures", "errors", "skipped", "jdbc-schema.sql"),
+)
+expected_handling_has(
+    "senior-should-route-interactive-repository-map-to-archify",
+    ("senior-software-architect", "Archify", "typed JSON IR", "自包含 HTML", "Schema", "不得假定未安装能力可用"),
+)
+expected_handling_has(
+    "senior-should-keep-static-uml-on-fireworks",
+    ("senior-software-architect", "fireworks-tech-graph", "UML/ER", "Archify", "不安装新工具"),
+)
+expected_handling_has(
+    "grill-me-should-not-rephrase-confirmed-question",
+    (
+        "decision-reused / confirmed",
+        "不换说法重问",
+        "只有出现新证据、风险升级或 Owner 明确要求重开时",
+        "重开原因",
+    ),
+)
+expected_handling_has(
+    "grill-me-should-close-deferred-or-out-of-scope-questioning",
+    (
+        "延期",
+        "范围外",
+        "保留设计",
+        "关闭当前盘问",
+        "不继续追问",
+        "只有新证据、风险升级或 Owner 明确重开时",
+        "重开原因",
+    ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-judge-short-methods-and-stereotypes-by-semantics",
+    (
+        "不制定按方法行数删除的机械规则",
+        "now()",
+        "纯别名",
+        "透传包装",
+        "identityKey() 等方法应保留并测试其语义",
+        "@Service",
+        "@Component",
+    ),
+)
+expected_handling_has(
+    "wind-coding-conventions-should-preserve-existing-service-contract-rules",
+    ("face", "impl", "Request", "WindQuery", "com.wind.integration.operator.WindOperator"),
+)
+
+expected_handling_has(
     "resource-capability-distiller-should-distill-multisource-materials",
     (
         "实际读取",
@@ -16601,6 +16659,68 @@ check(
     and has_all(
         wise_agent_skill_type_owner_routing,
         ["resource-capability-distiller", "能力单元", "不默认创建顶层 Skill"],
+    ),
+)
+
+check(
+    "wise-agent protects unrelated staged blobs in dirty worktrees",
+    has_all(
+        wise_agent_code_delivery,
+        ["提交前记录", "HEAD", "暂存", "blob", "白名单", "真实索引", "并发变化", "不得恢复"],
+    )
+    and (ROOT / "wise-agent/scripts/check_dirty_worktree_commit.sh").exists()
+    and has_all(
+        "wise-agent/scripts/check_dirty_worktree_commit.sh",
+        [
+            "mktemp -d",
+            "GIT_INDEX_FILE",
+            "diff-tree",
+            "ls-files",
+            "unrelated staged blob changed",
+            "real index is not reusable",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        ["wise-agent/scripts/check_dirty_worktree_commit.sh --self-test"],
+    ),
+)
+check(
+    "senior Maven verification proves tests really executed",
+    has_all(
+        testing,
+        ["Tests are skipped", "Surefire XML", "tests", "failures", "errors", "skipped", "jdbc-schema.sql"],
+    ),
+)
+check(
+    "diagram routing names Archify without replacing static SVG backends",
+    has_all(
+        senior_diagram,
+        ["Archify 路由", "typed JSON IR", "自包含 HTML", "不得假定 Archify 已安装", "fireworks-tech-graph"],
+    )
+    and has_all(
+        product_diagram,
+        ["Archify 路由", "产品到系统", "不调用 Archify", "fireworks-tech-graph"],
+    )
+    and has_all(wise_agent_delivery_lifecycle, ["Archify", "fireworks-tech-graph"])
+    and has_all(repo_source_map, ["tt-a1i/archify", "hTjvzwqcFzsJUPR6_skIQg"]),
+)
+check(
+    "Wind examples judge short methods and Spring stereotypes semantically",
+    has_all(
+        wind_skill_examples,
+        [
+            "因为方法只有一行就全部删除",
+            "now()",
+            "纯别名",
+            "透传包装",
+            "identityKey()",
+            "@Service",
+            "@Component",
+            "Store",
+            "Registry",
+            "Assembler",
+        ],
     ),
 )
 

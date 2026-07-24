@@ -16,6 +16,7 @@ bash -n scripts/audit-skills.sh
 bash -n scripts/validate-installed-skills.sh
 bash -n scripts/smoke-wise-agent-behavior.sh
 bash -n scripts/validate-superpowers-install.sh
+bash -n wise-agent/scripts/check_dirty_worktree_commit.sh
 
 echo "==> skill audit"
 scripts/audit-skills.sh
@@ -96,6 +97,9 @@ scripts/smoke-wise-agent-behavior.sh --self-test
 
 echo "==> wise-agent state contract"
 python3 wise-agent/scripts/check_state_contract.py --self-test
+
+echo "==> wise-agent dirty-worktree commit fixture"
+wise-agent/scripts/check_dirty_worktree_commit.sh --self-test
 
 echo "==> wise-agent skill learning ledger"
 python3 wise-agent/scripts/skill-learning-ledger.py --self-test
