@@ -546,6 +546,10 @@ def run_self_test() -> None:
     without_graph.pop("work_graph")
     if errors := validate(without_graph):
         raise SystemExit(f"optional work_graph broke legacy contract: {errors}")
+    invalid_loop_status = dict(valid_contract)
+    invalid_loop_status["status"] = "Loop Active [engineering]"
+    if not any(error.startswith("status must be one of") for error in validate(invalid_loop_status)):
+        raise SystemExit("execution profile was accepted as a Goal status")
     malformed_errors = validate_work_graph({"revision": "2", "nodes": [{"id": "A", "status": [], "risk": []}]})
     if "work_graph revision must be a positive integer" not in malformed_errors:
         raise SystemExit(f"malformed work_graph missed type errors: {malformed_errors}")

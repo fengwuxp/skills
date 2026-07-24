@@ -5,7 +5,7 @@
 1. 使用 `System.out.println` 打印日志。
 2. 使用 `e.printStackTrace()` 输出异常。
 3. 提交 `.env` 文件、密钥、token 到版本控制系统。
-4. 在未告知用户的情况下执行外部 API 调用，例如发送邮件、创建 PR、提交 commit；CAD Mode 仅在 `cad-mode.md` 定义的 Plan Grant / Execution Grant 和工具层权限均允许时，才可执行授权内 Git 写操作。
+4. 在未告知用户的情况下执行外部 API 调用，例如发送邮件、创建 PR、提交 commit；受控工程执行 Loop 也只能消费已有 Plan Grant / Execution Grant，并服从项目和工具层 Git 权限。
 5. 修改 `.gitignore`、CI/CD、构建、部署等核心配置文件，除非任务明确要求。
 6. 在修复 Bug 时顺手重构不相关的代码或文件。
 7. 在代码中添加“预留接口”“未来扩展”等任务范围外的抽象。
@@ -32,15 +32,15 @@
 |------|------|------|
 | 直接执行 | 无需额外确认 | 读取文件、搜索代码、生成方案、运行安全的本地编译/测试/静态检查 |
 | 需要确认 | 需用户确认或遵守当前工具权限 | 修改文件、创建文件、执行耗时命令、调用第三方 API、提交 commit、创建 PR |
-| CAD Mode 授权后执行 | 仅限当前任务链和 Plan Grant / Execution Grant | 修改授权写入范围、运行授权验证命令、清理授权临时产物、记录每轮变更摘要；Git 策略和自动提交边界以 `cad-mode.md` 为准 |
+| 受控工程执行 Loop | 仅限当前任务链和 Plan Grant / Execution Grant | 修改授权写入范围、运行授权验证命令、清理授权临时产物、记录每轮变更摘要；Git 策略服从项目和工具层规则 |
 | 禁止执行 | 绝不主动执行 | 发送邮件/消息、push 到远程、部署生产环境、删除数据、修改 CI/CD 配置、无回滚方案的生产修数、绕过工具权限或沙箱限制 |
 
-## CAD Mode 额外边界
+## 受控工程执行 Loop 额外边界
 
-CAD Mode 的进入门禁、Plan Grant / Execution Grant、Git 策略、自动提交、每轮摘要、5 秒人工中断窗口和严重错误处理，统一以 `cad-mode.md` 为唯一详细规则源。本文只保留不可越过的安全底线：
+受控工程执行 Loop 的准入、轮内动作、工程停止条件和回写以 `cad-mode.md` 为详细规则源；Plan Grant / Execution Grant、Git 与高风险授权服从各自权威来源。本文只保留不可越过的安全底线：
 
-- 未形成 OpenSpec、Harness Plan 和 Plan Grant / Execution Grant 时，不得进入自动逐轮推进。
-- 建议进入 CAD Mode 不等于授权；用户未明确确认 CAD Mode 和 Plan Grant / Execution Grant 前，不得自动推进。
+- 原子任务、关键决策、写入与验证边界、状态载体、反馈源、停止条件和 Plan Grant / Execution Grant 未齐备时，不得进入自动逐轮推进。
+- 建议进入受控工程执行 Loop 不等于授权；Loop 只能消费已存在且覆盖当前任务的 Plan Grant / Execution Grant。
 - 不包含 `git push`、创建 PR、merge、rebase、reset hard 或强制覆盖历史。
 - 遇到公共契约、资金、权限、租户、审计、生产数据、密钥、外部接口、数据库迁移或真实支付/资金通道，必须暂停确认。
 - 平台工具要求额外授权时，必须按工具规则请求，不得通过脚本绕过。

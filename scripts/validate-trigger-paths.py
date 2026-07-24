@@ -633,7 +633,7 @@ wise_agent_terms = [
     "替我审批",
     "授权策略",
     "Wave Grant",
-    "CAD Grant",
+    "Execution Grant",
     "事实边界检查",
     "事实边界",
     "无根据猜测",
@@ -1747,7 +1747,7 @@ check(
             "GSD 的目标是交付生产可用能力",
             "GSD Round 0 缺口",
             "Atomic Task 候选",
-            "CAD 候选缺口",
+            "工程执行 Loop 候选缺口",
             "授权策略",
             "Execution Grant 缺口",
         ],
@@ -2477,7 +2477,7 @@ check(
         [
             "产品交接只交事实与验收",
             "Product Context Card / 产品上下文交接卡",
-            "不判定 GSD/CAD 准入",
+            "不判定 GSD / 工程执行准入",
             "不生成 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线审批",
             "产品合议只评产品内容",
             "不替代 `wise-agent` 的跨角色准入、工程分派、发布门禁",
@@ -2489,7 +2489,7 @@ check(
         [
             "Product Context Card / 产品上下文交接卡",
             "不生成 Engineering Handoff Card、生产交付卡或 Execution Grant",
-            "产品专家不输出 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant、CAD Grant 或上线批准",
+            "产品专家不输出 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线批准",
         ],
     )
     and has_all(
@@ -2773,7 +2773,7 @@ check(
             "Round 0C：业务同质性和价值成本门禁",
             "业务 / 产品 / 技术交叉准入",
             "技术复制成本",
-            "不能进入 GSD Wave、CAD 候选、Execution Grant 或代码生成",
+            "不能进入 GSD Wave、工程执行 Loop 候选、Execution Grant 或代码生成",
             "需求条目说明外部可见行为，而不是内部实现方案",
             "P0/P1 需求具备原子性、完整性、一致性、必要性、无二义性、可行性、可验证性和可追踪性",
             "图、流程、原型或表格有正文解释、需求 ID 或验收种子回链",
@@ -2790,7 +2790,7 @@ check(
             "知止者交接结论",
             "AI 代码交付闭环",
             "code-delivery.md",
-            "CAD 候选缺口",
+            "工程执行 Loop 候选缺口",
             "瘦身边界",
             "最小产品上下文",
             "Round 0 补齐清单",
@@ -2805,7 +2805,7 @@ check(
             "人类能否 Review，Agent 能否执行，机器能否验证",
             "spec-template-practices.md",
             "Spec 强度、五段式骨架、AC 与测试映射、spec-lint、AC 覆盖和漂移检查",
-            "不能跳到代码生成、GSD Wave 或 CAD 候选",
+            "不能跳到代码生成、GSD Wave 或工程执行 Loop 候选",
             "前后台 / 多端 / 运营能力分工",
         ],
     )
@@ -2836,13 +2836,13 @@ check(
             "插件已安装也不能自动获得脚本、worktree、Git、subagent、联网或项目写入授权",
             "轻量执行",
             "Harness / GSD",
-            "CAD 候选",
+            "工程执行 Loop 候选",
             "计划内授权 / 自动推进",
             "GSD/CAD 自动推进、计划内授权、减少每个任务审批",
             "授权策略判断",
-            "授权策略: 只读 / 计划内低风险执行 / Plan Grant / Wave Grant / CAD Grant / 显式确认",
+            "授权策略: 只读 / 计划内低风险执行 / Plan Grant / Wave Grant / Execution Grant / 显式确认",
             "Codex 替我审批: 未启用 / 已启用但仅低风险 / 不适用",
-            "GSD/CAD 授权必须按风险分级",
+            "GSD / 工程执行授权必须按风险分级",
             "Codex “替我审批”只能记录为当前会话已启用的低风险审批通道",
             "权限边界",
             "Wave 0",
@@ -2880,18 +2880,18 @@ check(
             "是否需要 GSD Round 0",
             "Wave / Atomic Task 候选",
             "Superpowers 方法门禁",
-            "CAD 候选缺口",
-            "GSD/CAD 授权策略卡",
+            "工程执行 Loop 候选缺口",
+            "授权策略卡",
             "默认授权哪些任务",
             "Codex 的“替我审批”模式",
             "Execution Grant 缺口",
             "下一步 owner",
-            "知止者决定“是否进入产研交付视图、是否启用 GSD/CAD 内部层，以及下一步 owner”",
+            "知止者决定“是否进入产研交付视图、是否启用 GSD / 工程执行内部层，以及下一步 owner”",
             "GSD-like 决定“哪些阶段和任务可以被执行”",
-            "CAD Mode 决定“当前选中的原子任务是否可以自动执行”",
+            "工程执行 profile 决定“当前选中的原子任务如何执行、验证、回写和停止”",
             "Execution Grant 决定“本轮实际允许做什么”",
             "授权策略不是让每个任务都重新问一次，也不是让所有动作无条件通过",
-            "把授权前移到 Goal 任务计划、Wave 或 CAD Grant 层",
+            "把授权前移到 Goal 任务计划、Wave 或 Execution Grant 层",
             "Skill 自行开启",
             "Superpowers 在 GSD 中只作为方法纪律层",
             "官方插件可以独立安装并由知止者按需调度",
@@ -2934,9 +2934,9 @@ check(
             "TDD 切入点",
             "最小 Review 输入包",
             "完成前验证命令",
-            "是否已有 Superpowers/TDD/Review/Verification 方法门禁",
-            "CAD 候选但缺授权策略",
-            "CAD Grant 候选",
+            "是否已有测试策略、Review 和完成前验证门禁",
+            "工程执行 Loop 候选但缺授权策略",
+            "Execution Grant 候选",
             "只读侦察",
             "计划内低风险执行",
             "Wave Grant",
@@ -2950,20 +2950,20 @@ check(
             "事实边界红线",
             "无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张",
             "事实依据、推断依据、待确认项和范围外不做",
-            "未区分时不能进入 CAD",
+            "未区分时不能进入工程执行",
             "事实边界:",
             "交给 `senior-software-architect/references/ai-large-project-orchestration.md`",
             "交给 `senior-software-architect/references/cad-mode.md`",
             "不写成执行授权",
             "不是 Execution Grant",
-            "不建议进入 CAD",
+            "不建议进入工程执行 Loop",
             "让 AI 随机推进模拟模块、mock 流程、无业务入口 demo、空服务骨架或看上去可用的样子货",
             "只检查页面能打开、接口能返回假数据或测试桩能跑通",
             "把内存版业务 Service、Map/List 存储实现、Fake/Mock 服务或进程内状态当成生产实现",
             "把 Superpowers skills 当成 GSD 的默认插件安装、默认外部脚本、默认 worktree、默认 subagent 或默认 Git 操作",
             "把计划内低风险执行写成无条件自动通过",
             "让 Codex 替我审批绕过工具权限、sandbox、项目规则和用户授权",
-            "在知止者中复制 CAD 每轮 Pick / Red / Green / Review / Refactor / Verify / Record 细则",
+            "在知止者中复制工程 profile 的 Pick / Build/Test / Review / Verify / Record 细则",
         ],
     )
     and has_all(
@@ -3393,7 +3393,7 @@ check(
             "Round 0D：问题核心诊断门禁",
             "问题核心诊断卡",
             "不用流程勤奋掩盖战略懒惰",
-            "进入 PRD / OpenSpec / GSD / CAD / Loop / 工具准入结论",
+            "进入 PRD / OpenSpec / GSD / 工程执行 / Loop / 工具准入结论",
         ],
     )
     and has_all(
@@ -3432,7 +3432,7 @@ check(
             "症",
             "5.11 四定变化治理",
             "先定方向，再定性质，再定位置，最后定量",
-            "GSD/CAD 任务拆解必须能说明每个 Atomic Task 的定向、定性、定位和验证方式",
+            "GSD / 工程执行任务拆解必须能说明每个 Atomic Task 的定向、定性、定位和验证方式",
         ],
     )
     and has_all(
@@ -3656,7 +3656,7 @@ check(
             "轻量任务卡",
             "可评审 Spec",
             "Harness/GSD Spec",
-            "CAD 候选 Spec",
+            "工程执行 Loop 候选 Spec",
             "AC 与测试映射",
             "Given-When-Then",
             "spec-lint",
@@ -3754,10 +3754,10 @@ check(
             "对外统一归入知止者",
             "Goal 是目标层",
             "GSD 是分波计划层",
-            "CAD 是原子执行子循环",
+            "受控工程执行是 Loop 的工程 profile",
             "当前任务使用了哪些内部层",
             "GSD + Goal",
-            "CAD + Goal",
+            "工程执行 Loop + Goal",
             "Spec + Goal",
             "CR/发布 + Goal",
             "Goal 卡",
@@ -3769,8 +3769,8 @@ check(
             "Draft / Ready / Active / Blocked / Verified / Closed / Superseded",
             "Goal 不会自动创建运行时 Goal",
             "只有在用户明确要求按任务计划推进且 Plan Grant 字段齐备时",
-            "GSD/CAD 默认授权收敛到 Goal / Plan Grant / Wave / CAD Grant",
-            "Goal 可以挂接 Plan Grant、Wave Grant 或 CAD Grant",
+            "GSD / 工程执行的默认授权收敛到 Goal / Plan Grant / Wave / Execution Grant",
+            "Goal 可以挂接 Plan Grant、Wave Grant 或 Execution Grant",
             "GSD 规划必须给出阶段/任务提交切片",
             "每个 Wave 的授权策略",
             "每个 Wave 的提交切片",
@@ -3779,7 +3779,7 @@ check(
             "建议 commit message",
             "范围内低风险本地任务按计划推进",
             "Wave Grant 只能覆盖该 Wave 内互不冲突、低风险、可验证、可回滚的任务",
-            "Codex 替我审批只可作为当前 CAD Grant 范围内低风险工具审批通道",
+            "Codex 替我审批只可作为当前 Execution Grant 范围内低风险工具审批通道",
             "用 Goal、Wave 状态或 Codex 替我审批扩大默认授权范围",
             "GSD 管 Wave 和任务顺序，Goal 管目标、成功标准、状态、预算、停止条件、验证证据和交接节奏",
             "在 GSD 场景中，Goal 的完成线必须是生产可用能力",
@@ -3988,16 +3988,21 @@ check(
         wise_agent_planning_execution_admission,
         [
             "Agent Loop 准入卡",
-            "GSD / Loop / CAD 协同状态机",
+            "Goal 状态与当前阶段",
             "Engineering Handoff Card",
             "Plan Grant Active",
-            "CAD Loop Active",
-            "Wave Loop 与 CAD Loop 的差异",
+            "Goal 状态沿用 `goal-governance.md` 和 `check_state_contract.py` 的唯一词表",
+            "工程执行 Loop 候选是准入结论，不是可写状态",
+            "Wave Loop 与工程执行 Loop 的差异",
             "Loop 预算",
             "失败回写",
             "Goal + 状态载体 + 反馈源 + 验证者 + 预算/最大轮次 + 无进展检测 + 停止条件",
             "只能作为待补齐的 Loop 候选",
         ],
+    )
+    and has_none(
+        wise_agent_planning_execution_admission,
+        ["Loop Active [engineering]", "`Paused`", "`Escalated`"],
     )
     and has_all(
         wise_agent_source_map,
@@ -4732,6 +4737,9 @@ check(
             "wise-agent-should-write-tests",
             "wise-agent-should-handle-production-incident",
             "wise-agent-should-direct-lightweight-local-edit",
+            "senior-should-fast-code-simple-local-change",
+            "senior-should-confirm-fast-code-bounded-change",
+            "senior-should-exit-fast-code-high-risk-change",
             "wise-agent-should-commit-verified-change",
             "wise-agent-should-record-opt-in-learning-candidate",
             "wise-agent-should-not-record-one-off-learning-noise",
@@ -7254,9 +7262,9 @@ check(
     and has_all(
         knowledge_graph,
         [
-            "AI 协作、上下文衰减或 CAD Mode",
+            "AI 协作、上下文衰减或受控工程执行",
             "`ai-large-project-orchestration.md`",
-            "OpenSpec、Harness、上下文账本、Wave 编排、CAD Mode",
+            "OpenSpec、Harness、上下文账本、Wave 编排、受控工程执行",
             "AI 写到后面越来越乱 / 长任务上下文太重",
         ],
     )
@@ -7517,12 +7525,12 @@ check(
     ),
 )
 check(
-    "workflow routes AI and CAD references separately",
+    "workflow routes AI and controlled engineering references separately",
     has_all(
         workflow,
         [
             "AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`",
-            "CAD Mode、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`",
+            "受控工程执行、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`",
         ],
     ),
 )
@@ -7545,7 +7553,7 @@ check(
         [
             "## 工程生命周期映射",
             "必须服从 `workflow.md`",
-            "不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Plan Grant / Execution Grant、验证或高风险人工确认点",
+            "不得把“用户说继续”解释为扩大范围、跳过 Plan Grant / Execution Grant、验证或高风险人工确认点",
         ],
     ),
 )
@@ -7561,7 +7569,7 @@ check(
             "轻量修改：目标 + 写入范围 + 验证命令",
             "中高风险 AI 编码：OpenSpec + Harness Plan + Superpowers 检查",
             "中大型项目：OpenSpec + context ledger + GSD Stage/Wave/Atomic Task + Harness Plan + verification matrix",
-            "受控自动推进：上述门禁 + 单个 CAD 候选任务 + Plan Grant / Execution Grant",
+            "受控工程执行：单个已选任务 + 冻结决策 + 写入与验证边界 + Loop 契约 + Plan Grant / Execution Grant",
         ],
     )
     and has_all(
@@ -7606,9 +7614,9 @@ check(
         senior_skill,
         [
             "`scripts/check_harness_plan.py`",
-            "`--kind lightweight|gsd-wave|cad-candidate`",
+            "`--kind lightweight|gsd-wave|engineering-loop`",
             "缺少 Task ID、Owner、写入范围、只读范围、依赖顺序、验证命令、停止条件、交接或 Execution Grant 关联时返回非 0",
-            "脚本通过不等于 CAD 授权、测试通过或生产审批",
+            "脚本通过不等于执行授权、测试通过或生产审批",
         ],
     )
     and has_all(
@@ -7624,14 +7632,15 @@ check(
             "CHECKS",
             "lightweight",
             "gsd-wave",
-            "cad-candidate",
+            "engineering-loop",
             "SELF_TESTS",
             "FAIL harness plan check",
             "OK harness plan self-test",
             "does not access the network",
             "does not access the network, upload content, read secrets, or judge technical quality",
         ],
-    ),
+    )
+    and has_none(harness_plan_checker, ["cad-candidate", "CAD-001", "before CAD/GSD work"]),
 )
 check(
     "Harness plan becomes executable collaboration contract",
@@ -7643,7 +7652,7 @@ check(
             "Harness Plan 分级",
             "lightweight",
             "gsd-wave",
-            "cad-candidate",
+            "engineering-loop",
             "需要正式检查 Harness Plan 时，使用 `scripts/check_harness_plan.py`",
             "Harness 交接最小格式",
             "不允许 Harness Plan 的写入范围宽到“整个仓库”“整个 src”而没有进一步切片",
@@ -7664,98 +7673,145 @@ check(
     ),
 )
 check(
-    "CAD mode split keeps AI engineering as overview",
+    "controlled engineering profile keeps AI engineering as overview",
     has_all(
         senior_skill,
         [
             "`references/ai-assisted-engineering.md`",
             "`references/cad-mode.md`",
-            "CAD Mode 唯一详细规则源",
+            "`cad-mode.md` 是受控工程执行 Loop 工程 profile 的唯一详细规则源",
         ],
     )
     and has_all(
         ai_engineering,
         [
-            "CAD Mode 详细执行规则只读 `cad-mode.md`",
-            "不得把“用户说继续”解释为跳过 OpenSpec、Harness Plan、Plan Grant / Execution Grant、验证或高风险人工确认点",
-            "AI 协作总纲不得复制这些细节",
+            "受控工程执行 Loop 的详细工程规则只读 `cad-mode.md`",
+            "不得把“用户说继续”解释为扩大范围、跳过 Plan Grant / Execution Grant、验证或高风险人工确认点",
+            "AI 协作总纲和 `cad-mode.md` 不复制这些细节",
         ],
     )
     and has_all(
         cad_mode,
         [
             "## 使用时机",
-            "## 按任务读取索引",
-            "受控自治开发模式",
-            "Plan Grant / Execution Grant 是 CAD Mode 的权限边界",
-            "每轮执行闭环",
+            "# 受控工程执行 Loop（CAD 工程 Profile）",
+            "`CAD` 只保留为 `cad-mode.md` 的内部路由标识",
+            "Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause",
+            "不机械要求每轮都先 Red",
+            "用户在任意时点提出暂停或修改约束都立即生效",
+            "Goal 状态: Active / Blocked / Verified",
+            "执行方式: 受控工程执行 Loop",
+            "覆盖当前任务的 Plan Grant，或单任务 Execution Grant",
+        ],
+    )
+    and has_none(
+        cad_mode,
+        [
+            "CAD Candidate",
+            "CAD Loop Active",
+            "CAD Grant",
+            "Loop Active [engineering]",
+            "`Paused`",
+            "`Escalated`",
             "5 秒",
-            "平台权限边界优先于 Plan Grant / Execution Grant",
+            "Pick -> Red -> Green",
         ],
     ),
 )
 check(
-    "GSD-CAD protocol keeps planning separate from execution authorization",
+    "fast coding stays a lightweight build-first path with final verification",
     has_all(
-        ai_large_project,
+        workflow,
         [
-            "## 8. GSD-CAD 双层协议",
-            "GSD-like 编排管大盘，CAD Mode 跑单元",
-            "不得对整个大项目直接开启 CAD",
-            "GSD defines what can be executed",
-            "CAD decides whether it may be executed automatically",
-            "Plan Grant / Execution Grant decides what is actually allowed",
-            "Validation decides whether it may continue",
-            "CAD 候选任务必须同时满足",
-            "已准备 Plan Grant / Execution Grant",
-            "已准备提交切片",
-            "commit_after_verified_task",
-            "CAD 输出必须回写阶段状态、验证矩阵和 handoff",
-            "只有原子任务包满足 CAD 门禁时，才建议进入 CAD",
-        ],
-    )
-    and has_all(
-        cad_mode,
-        [
-            "中大型项目、长任务、上下文衰减或 Wave 编排读 `ai-large-project-orchestration.md`",
-            "CAD 只消费其中已满足门禁的单个任务包或阶段切片",
-            "CAD 不直接消费整个 Roadmap",
-            "Plan Grant: Active",
-            "用户只给了 GSD-like Roadmap、Wave 或任务清单，但没有选定单个任务包、写入范围、验证命令，也没有 Plan Grant / Execution Grant",
-            "必须已选定单个 Task ID 或阶段切片",
-            "GSD-CAD 联动审查",
-            "回写阶段状态、验证矩阵和 handoff",
-            "Harness Plan 已形成：Task ID、Owner、任务拆分、写入范围、只读范围、依赖顺序、验证命令、停止条件、交接方式和恢复入口清楚",
-            "通过 `scripts/check_harness_plan.py --kind cad-candidate`",
-            "Harness Plan 中的写入范围与 Plan Grant / Execution Grant 的授权范围一致",
+            "## 快速编码模式（Build-first Fast Path）",
+            "先连续完成最小实现，再集中补测试、验证和 CR",
+            "不强制先写失败测试",
+            "实现已完成，测试与验证待补",
+            "已修改行为：",
+            "待补测试：",
+            "待运行验证：",
+            "待确认风险：",
+            "验证债务未清零时，不得声称任务完成",
+            "立即退出快速编码模式",
         ],
     )
     and has_all(
         senior_routing,
         [
-            "GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片",
-            "GSD-like 编排 + CAD Mode",
-            "不得对整个大项目直接开启 CAD",
+            "快速编码 / 仅编码 / 测试最后补 / 小范围代码调整",
+            "快速编码 + 测试后置",
+            "不把测试后置解释为测试可选",
+            "先按 `workflow.md` 判断快速编码准入",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "| 快速编码 |",
+            "#### 快速编码怎么用",
+            "快速改这个方法，先完成实现，测试最后统一补",
+            "实现已完成，测试与验证待补",
+        ],
+    ),
+)
+check(
+    "GSD and controlled engineering keep planning separate from execution authorization",
+    has_all(
+        ai_large_project,
+        [
+            "## 8. GSD 与工程执行双层协议",
+            "GSD-like 编排管大盘，受控工程执行 Loop 跑单元",
+            "不得把整个大项目直接交给工程执行 Loop",
+            "GSD defines what can be executed",
+            "Engineering Loop controls how the selected task is executed and stopped",
+            "Plan Grant / Execution Grant decides what is actually allowed",
+            "Validation decides whether it may continue",
+            "工程执行 Loop 候选任务必须同时满足",
+            "Plan Grant 覆盖当前任务，或单任务 Execution Grant",
+            "已准备提交切片",
+            "commit_after_verified_task",
+            "工程执行输出必须回写阶段状态、验证矩阵和 handoff",
+            "只有原子任务包满足工程执行 Loop 门禁时才进入",
+        ],
+    )
+    and has_all(
+        cad_mode,
+        [
+            "单个 Task ID 或阶段切片已经选定",
+            "业务与架构决策已冻结",
+            "预计至少需要两轮实现、反馈、修正或验证",
+            "Goal / Task、Loop 状态载体、反馈源、验证者、预算、无进展检测、停止条件和适用授权已齐备",
+            "不要求两者并存",
+            "本文只定义工程 profile 的准入、轮内动作、工程停止条件和回写",
+            "大项目任务回写 Stage / Wave 状态、验证矩阵和 handoff",
+        ],
+    )
+    and has_all(
+        senior_routing,
+        [
+            "GSD-like 编排管大盘，受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片",
+            "GSD-like 编排 + 受控工程执行 Loop",
+            "不得把整个大项目直接交给工程执行 Loop",
             "不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant",
         ],
     ),
 )
 check(
-    "negative constraints routes CAD authority to CAD mode",
+    "negative constraints keep engineering loop within existing authorities",
     has_all(
         negative_constraints,
         [
-            "`cad-mode.md` 定义的 Plan Grant / Execution Grant",
-            "Git 策略和自动提交边界以 `cad-mode.md` 为准",
-            "统一以 `cad-mode.md` 为唯一详细规则源",
+            "受控工程执行 Loop 也只能消费已有 Plan Grant / Execution Grant",
+            "Plan Grant / Execution Grant、Git 与高风险授权服从各自权威来源",
+            "建议进入受控工程执行 Loop 不等于授权",
         ],
     )
     and has_none(
         negative_constraints,
         [
-            "`ai-assisted-engineering.md` 定义的 Execution Grant",
-            "Git 策略和自动提交边界以 `ai-assisted-engineering.md` 为准",
-            "统一以 `ai-assisted-engineering.md` 为唯一详细规则源",
+            "5 秒人工中断窗口",
+            "CAD Grant",
+            "Git 策略和自动提交边界以 `cad-mode.md` 为准",
         ],
     ),
 )
@@ -7836,8 +7892,8 @@ check(
             "Task ID:",
             "Wave 0：只读侦察",
             "同一 Wave 内任务必须互不重叠、无顺序依赖、可独立验证",
-            "GSD-CAD 双层协议",
-            "CAD 候选：是/否，原因",
+            "GSD 与工程执行双层协议",
+            "工程执行 Loop 候选：是/否，原因",
             "Execution Grant 要求",
             "暂停前必须更新 `03-state.md`",
             "恢复时先读",
@@ -7873,7 +7929,7 @@ check(
             "`ai-large-project-orchestration.md`",
             "中大型长任务",
             "原子任务包",
-            "GSD-like 编排 + CAD Mode",
+            "GSD-like 编排 + 受控工程执行 Loop",
             "验证矩阵、暂停恢复和收口流程",
         ],
     ),
@@ -7950,22 +8006,22 @@ check(
             "AI Native 交接结论",
             "OpenSpec / context ledger / verification matrix",
             "GSD Stage / Wave / Atomic Task",
-            "CAD 候选 / Execution Grant 缺口",
+            "工程执行 Loop 候选 / Execution Grant 缺口",
             "产品上下文包回答“这个产品候选是否值得工程化、工程化必须保留哪些业务事实”",
             "知止者持续持有端到端目标与状态",
             "按需装载产品、工程和验证能力",
             "消费 AI Native 编排交接结论",
             "本文件只消费以下工程输入",
-            "业务方能跑通 MVP，就直接让 CAD 改代码",
+            "业务方能跑通 MVP，就直接进入工程执行 Loop 改代码",
         ],
     )
     and has_all(
         cad_mode,
         [
-            "从 AI Native 产品上下文或 MVP harden 进入 CAD",
-            "不把产品上下文包、Hardened Candidate 或业务 MVP 当授权",
-            "`wise-agent/references/planning-execution-admission.md` 或产品侧交接结论",
-            "不得把业务 MVP、PRD、产品上下文包或 GSD Roadmap 直接当授权",
+            "业务与架构决策已冻结",
+            "业务语义、公共契约、数据模型、兼容策略或风险取舍仍未确认",
+            "适用授权、Git 与高风险授权策略读取 `wise-agent/references/planning-execution-admission.md`",
+            "用户说“继续”“自动推进”或“进入 CAD”只表达执行意图",
         ],
     )
     and has_all(
@@ -10737,7 +10793,7 @@ check(
             "AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师",
             "Hardened Candidate 门禁",
             "产品侧交接条件",
-            "端到端流程和 GSD/CAD 准入交给 `wise-agent`",
+            "端到端流程和 GSD / 工程执行准入交给 `wise-agent`",
             "用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文",
         ],
     ),
@@ -10757,8 +10813,8 @@ check(
             "Product Builder",
             "MVP / 原型 harden 门禁",
             "与 AI Native 编排和架构师的交接",
-            "不得直接判定 GSD/CAD 准入或 Execution Grant",
-            "GSD/CAD 准入结论由 `wise-agent` 编排",
+            "不得直接判定 GSD / 工程执行准入或 Execution Grant",
+            "GSD / 工程执行准入结论由 `wise-agent` 编排",
             "产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant",
             "不把“放下 PRD”写成跳过产品语义、评审、留痕、合规和验收",
         ],
@@ -12429,6 +12485,21 @@ check(
 
 scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="simple local change takes fast coding path",
+        prompt="这个局部代码调整行为已经明确，请快速编码，先完成最小实现，测试和 CR 最后集中补。",
+        routes={"senior", "workflow.md"},
+    ),
+    RouteFixture(
+        name="bounded module change takes confirmed fast coding path",
+        prompt="这个单模块代码改动的决策、写入范围和验证命令都已冻结，我明确要求快速编码并接受测试最后补。",
+        routes={"senior", "workflow.md"},
+    ),
+    RouteFixture(
+        name="high risk code change still routes to engineering verification",
+        prompt="直接修改支付状态机、公共消息契约和数据库表结构，测试最后再补。",
+        routes={"senior", "workflow.md"},
+    ),
+    RouteFixture(
         name="codebase onboarding reconnaissance",
         prompt="这个陌生代码库我不熟，帮我先做架构现状分析和接手侦察",
         routes={"senior", "language-agnostic-architecture.md", "workflow.md"},
@@ -12770,7 +12841,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native target plan atomic handoff state machine",
-        prompt="进入知止者的目标计划和原子执行协同流程，梳理 Round0 到 Wave Plan、Plan Grant Active、Loop Candidate、Atomic Candidate、Atomic Loop Active、Verified/Paused/Escalated/Closed 的状态机，并输出 Engineering Handoff Card、Plan Grant + Loop 预算绑定、失败回写和下一 owner",
+        prompt="进入知止者的目标计划和原子执行协同流程：Goal 状态只使用 Draft/Ready/Active/Blocked/Verified/Closed/Superseded，另记录 Round 0、Wave Plan、工程执行 Loop 等当前阶段，并输出 Engineering Handoff Card、Plan Grant + Loop 预算绑定、失败回写和下一 owner",
         routes={"wise-agent", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "code-delivery.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -13292,6 +13363,16 @@ scenario_fixtures: list[RouteFixture] = [
 
 negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="simple fast coding does not start heavy orchestration",
+        prompt="这个局部代码调整行为已经明确，请快速编码，先完成最小实现，测试最后集中补。",
+        routes={"cad-mode.md", "ai-large-project-orchestration.md", "planning-execution-admission.md", "wise-agent"},
+    ),
+    RouteFixture(
+        name="bounded confirmed fast coding does not imply CAD",
+        prompt="这个单模块代码改动的决策、写入范围和验证命令都已冻结，我明确要求快速编码并接受测试最后补。",
+        routes={"cad-mode.md", "ai-large-project-orchestration.md", "planning-execution-admission.md"},
+    ),
+    RouteFixture(
         name="grill-me on factual codebase query",
         prompt="请直接查源码并告诉我 PaymentService 的实现类、主要调用方和对应测试文件，只要事实和文件路径。",
         routes={"grill-me", "question-ledger.md"},
@@ -13762,7 +13843,7 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("engineering-governance.md")
             if contains_any(prompt, ["Checker", "独立验证机制"]):
                 route.add("verification-review-release.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "CAD Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡", "决策寻路", "决策地图", "Wayfinder", "wayfinder", "目标大致明确", "路线仍很模糊", "不是一次会话", "Destination", "Frontier", "Not yet specified"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "Execution Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡", "决策寻路", "决策地图", "Wayfinder", "wayfinder", "目标大致明确", "路线仍很模糊", "不是一次会话", "Destination", "Frontier", "Not yet specified"]):
             route.add("planning-execution-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "/qa", "/ship", "QA Lead", "Release Engineer", "QA 验证", "发布准出", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
@@ -15855,7 +15936,7 @@ expected_handling_has(
         "超出用户目标的实现扩张",
         "GSD Wave",
         "Atomic Task",
-        "CAD 候选",
+        "工程执行 Loop 候选",
         "实现建议",
         "授权缺口",
     ),
@@ -16433,6 +16514,73 @@ negative_reason_has(
 expected_handling_has(
     "wise-agent-should-direct-lightweight-local-edit",
     ("直接完成", "不展开完整 SDLC", "不装载 Superpowers", "不派 Worker", "不创建 Goal"),
+)
+expected_handling_has(
+    "senior-should-fast-code-simple-local-change",
+    (
+        "进入快速编码模式",
+        "读取相关源码、调用方、测试和项目约规",
+        "编码先行",
+        "实现已完成，测试与验证待补",
+        "已修改行为、待补测试、待运行验证和待确认风险",
+        "测试后置不等于测试可选",
+        "验证债务清零前不得声称任务完成或可交付",
+        "不创建 Goal、Worker 或工程执行 Loop",
+    ),
+)
+expected_handling_has(
+    "senior-should-confirm-fast-code-bounded-change",
+    (
+        "核对目标、预期行为、冻结决策、写入范围、停止条件和最终验证路径",
+        "单模块、局部、可逆",
+        "可以进入快速编码模式",
+        "立即退出快速路径",
+        "集中补测试、验证和 CR",
+    ),
+)
+expected_handling_has(
+    "senior-should-use-standard-engineering-for-one-shot-change",
+    (
+        "使用标准工程流程",
+        "源码读取、最小修改、测试、验证和 CR",
+        "不进入快速编码",
+        "不创建 Goal、Worker 或受控工程执行 Loop",
+        "出现多轮反馈需求时才重新判断 Loop 准入",
+    ),
+)
+expected_handling_has(
+    "senior-should-exit-fast-code-high-risk-change",
+    (
+        "不得默认进入快速编码模式",
+        "资金、公共契约和数据迁移高风险边界",
+        "停止编码并要求 Owner 确认",
+        "局部候选实现",
+        "不得直接提交、发布或宣称交付完成",
+        "测试与验证不得省略",
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-map-cad-alias-to-controlled-engineering-loop",
+    (
+        "受控工程执行 Loop 的输入别名",
+        "不创建独立模式、CAD Candidate、CAD Loop Active 或 CAD Grant",
+        "Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause",
+        "Goal 状态为 Active / Blocked / Verified",
+        "执行方式为受控工程执行 Loop",
+        "状态原因与恢复条件",
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-block-cad-alias-without-loop-contract",
+    (
+        "工程 Loop 条件不足",
+        "不开始写入",
+        "状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件和适用授权缺口",
+        "不能替代 Plan Grant 或 Execution Grant",
+        "Goal 保持 Draft / Ready",
+        "不创建 CAD Candidate、CAD Loop Active 或 CAD Grant",
+        "不脑补授权",
+    ),
 )
 expected_handling_has(
     "wise-agent-should-commit-verified-change",

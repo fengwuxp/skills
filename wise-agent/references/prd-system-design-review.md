@@ -7,7 +7,7 @@
 - 用户要求对 PRD、PRD-Lite、OpenSpec 输入、系统分析设计、系分、详细设计、Harness Plan 或 GSD 任务包做预审、合议评审、多视角评审、MAGI 三角色评审、A2A 虚拟评审或 IPD 式互审。
 - PRD 或系分已经由 AI 生成，担心只是写得快，但产品判断、工程判断、验收和风险没有被充分反向拷问。
 - 正式评审前希望先暴露低级问题、分歧、风险和待确认项，避免评审会变成补文档现场。
-- 产品专家与架构师交接前，需要判断 PRD 是否足以进入 OpenSpec，或系分是否足以进入 Harness/GSD/CAD 候选。
+- 产品专家与架构师交接前，需要判断 PRD 是否足以进入 OpenSpec，或系分是否足以进入 Harness/GSD/工程执行 候选。
 - 多角色意见很多，但缺少 owner 决策、接受/拒绝/待定理由和后续动作。
 
 ## 不适用场景
@@ -26,12 +26,12 @@
 - 三角色分工：流程控制位、主笔 / 决策 owner、挑战者位。
 - 三个硬任务结果：`review_task`、`evaluation_task`、`reporting_task`。
 - 决策日志：每条关键反馈必须落为 `ACCEPT`、`REJECT` 或 `PENDING`，并说明理由、动作、owner 和验证方式。
-- 准出判断：能否进入 PRD 修订、OpenSpec、系分修订、Harness/GSD、CAD 候选或必须回到 Round 0。
+- 准出判断：能否进入 PRD 修订、OpenSpec、系分修订、Harness/GSD、工程执行 Loop 候选或必须回到 Round 0。
 
 ## 需要继续读取的 reference
 
 - 产品到工程成熟度、PRD-Lite 和交接包读 `product-to-engineering-lifecycle.md`。
-- OpenSpec、Harness、GSD/CAD 和 Agent 权限边界读 `engineering-governance.md`。
+- OpenSpec、Harness、GSD / 工程执行 和 Agent 权限边界读 `engineering-governance.md`。
 - 验证矩阵、CR、发布和复盘读 `verification-review-release.md`。
 - PRD 正文、产品合议细节和产品质量门禁回到 `product-architecture-expert`；评审会前 AI 预扫描读取其 `product-prd-quality-gates.md` 的“AI 预扫描四维度”。
 - 系统设计正文、架构质量、测试和生产风险回到 `senior-software-architect`。
@@ -135,7 +135,7 @@ product-architecture-expert/scripts/check_product_deliverable.py --kind product-
 
 ## 4. 系分预审门禁
 
-系分预审的目标不是替架构师写方案，而是判断它能否进入 Harness/GSD/CAD 编排。
+系分预审的目标不是替架构师写方案，而是判断它能否进入 Harness/GSD/工程执行 编排。
 
 重点检查：
 
@@ -175,7 +175,7 @@ owner：
 
 追踪规则：
 
-- PRD 中无验收种子的能力，不应直接进入 CAD 候选。
+- PRD 中无验收种子的能力，不应直接进入 工程执行 Loop 候选。
 - 系分中无法回指业务目标、规则或质量属性的模块，先列入分歧或待确认。
 - 双向追踪必须形成双向回证：上游目标、业务不变量和边界约束由工程承接；源码、数据、测试或运行证据与 PRD 不一致时，先判断冲突条款属于已批准的**规范性目标或公共契约**，还是未经 owner 确认的**描述性现状假设**，不得把两类冲突统一降级为产品待确认。
 - 对已批准的规范性目标或公共契约，保持产品契约权威，记录工程实现偏差及影响，停止把偏差当作正常兼容继续交付；由工程 owner 给出修复、迁移或显式兼容方案及验证证据。只有方案需要改变产品目标、业务不变量或公共契约时，才交产品 / 业务 owner 重新裁决。
@@ -195,7 +195,7 @@ owner：
 | 可进入 PRD 修订 | PRD 问题可由产品专家补齐。 | 路由 `产品架构专家`。 |
 | 可进入 OpenSpec / 系分 | 产品上下文足以让架构师承接。 | 路由 `资深架构师`。 |
 | 可进入 Harness/GSD 候选 | 系分和验证证据足以拆任务，但仍需 Harness 细化。 | 读取 `engineering-governance.md` 与 `planning-execution-admission.md`。 |
-| 仅 CAD 候选缺口 | 原子任务边界可能成立，但缺 Execution Grant、写入范围或验证命令。 | 只列缺口，不执行。 |
+| 仅 工程执行 Loop 候选缺口 | 原子任务边界可能成立，但缺 Execution Grant、写入范围或验证命令。 | 只列缺口，不执行。 |
 | 必须回退 Round 0 | 缺目标、证据、owner、边界、验收、风险或专业确认。 | 补材料后再评审。 |
 
 ## 7. 输出格式

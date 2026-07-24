@@ -21,7 +21,7 @@
 
 ## 需要继续读取的 reference
 
-- AI 协作任务读 `ai-assisted-engineering.md`；CAD Mode、Plan Grant / Execution Grant 或自动分轮推进继续读 `cad-mode.md`。
+- AI 协作任务读 `ai-assisted-engineering.md`；受控工程执行、Plan Grant / Execution Grant 或自动分轮推进继续读 `cad-mode.md`。
 - 测试任务读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
 - 生产发布、数据修复或外部依赖变更读 `production-readiness.md` 和 `negative-constraints.md`。
 
@@ -32,7 +32,7 @@
 | 代码修改或测试补充 | `工程生命周期门禁`、`代码修改前`、`代码修改后（必须验证）`、`验证命令选择矩阵` | 不先读 Git 规约或提交模板 |
 | 只做验证、CR 或提交前检查 | `代码修改后（必须验证）`、`PR 提交前检查`、`Git 规约` | 不重新展开设计方法论 |
 | 外部 API、SDK、云产品或规则变化 | `外部知识时效性门禁`、`工程生命周期门禁` | 不依赖模型记忆或二手博客给确定结论 |
-| AI 协作、OpenSpec、Harness、多 Agent 或 CAD Mode | `工程生命周期门禁`、`代码修改前`，再读 `ai-assisted-engineering.md` 与 `cad-mode.md` | 不把 CAD 建议、外部工作流命令或并行编排当作自动授权 |
+| AI 协作、OpenSpec、Harness、多 Agent 或受控工程执行 | `工程生命周期门禁`、`代码修改前`，再读 `ai-assisted-engineering.md` 与 `cad-mode.md` | 不把连续推进意图、外部工作流命令或并行编排当作自动授权 |
 | 文档、注释或说明类变更 | `代码修改后（必须验证）` 中文档行、`语言偏好` | 不运行无意义编译但必须说明原因 |
 | Git 边界和提交建议 | `Git 规约`、`PR 提交前检查` | 用户未要求时不执行 Git 写操作 |
 | PR / CL 说明 | `PR/CL 说明质量`、`PR 提交前检查` | 不写“fix bug”“phase 1”类无上下文说明 |
@@ -76,9 +76,42 @@
 - Build 阶段的每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景；无法追溯的“顺手优化”、格式化、抽象或删除，默认不进入本轮变更。
 - Verify 阶段无法执行真实验证时，必须说明原因、替代证据和残余风险，不得用“看起来没问题”代替验证。
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
-- AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；CAD Mode、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
+- AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；受控工程执行、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
 - 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充 Harness Plan、上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
 - Harness Plan 必须体现 OpenSpec / Superpowers / Harness 的责任分离：OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。
+
+## 快速编码模式（Build-first Fast Path）
+
+快速编码模式用于简单任务、确定性高的场景和小范围代码调整：压缩前置设计与过程验证，先连续完成最小实现，再集中补测试、验证和 CR。它是现有工程生命周期的轻量路径，不是新 Skill、独立状态机或受控工程执行 Loop；“仅编码模式”只表示当前编码阶段先行，不表示最终可以跳过测试。
+
+### 准入与升级
+
+- 目标、预期行为、写入范围和停止条件明确，相关事实可从源码、调用方、测试和项目约规确认。
+- 修改局部、可逆，不需要重新定义业务规则、公共契约、数据模型或架构边界，且最终存在可运行的编译、测试或等价验证路径。
+- 同时满足以上条件的简单任务默认进入，不询问用户选择模式，也不展开 OpenSpec、Harness、Goal、Worker 或工程执行 Loop。
+- 边界已经冻结、但实现量略大的单模块任务，只有用户明确要求快速编码且确认写入范围、测试后置和最终验证方式后才进入。
+- 公共 API / DTO / 消息、数据库结构或数据迁移、资金、权限、租户、安全、事务一致性、幂等、生产操作、不可逆动作、新依赖或跨模块架构调整不得默认进入；确需先做局部候选实现时，必须先冻结决策与高风险确认点，且候选不得直接提交、发布或宣称交付完成。
+
+文件数和代码行数只作为范围信号，不设机械阈值。实现中发现业务语义未决、影响范围扩大、公共契约变化、根因不明或验证路径失效时，立即退出快速编码模式，转入澄清、设计、调试、TDD 或受控工程执行 Loop。
+
+### 执行与收口
+
+1. **快速归位**：把 Clarify、Design、Plan 合并为内部准入判断，只确认目标、范围、事实、风险、预期行为和最终验证；不为简单任务生成流程文档。
+2. **编码先行**：读取相关源码、调用方、测试和本地约规后连续完成最小实现；不强制先写失败测试，也不要求每次编辑后运行完整测试，必要时可在自然检查点运行快速编译或类型检查。
+3. **实现回读**：回看最终 diff、调用方、异常路径和无关修改。此时只能声明“实现已完成，测试与验证待补”。
+4. **集中补测**：行为变化补行为测试，Bug 修复补回归测试；纯机械变更可使用编译、静态检查和差异回读作为等价证据。
+5. **验证与 CR**：按“代码修改后（必须验证）”运行最小充分验证，核对真实报告，再做源码 CR 和交付判断。
+
+编码阶段允许短暂存在验证债务，但必须在当前任务内记录并在收口前清零：
+
+```text
+已修改行为：
+待补测试：
+待运行验证：
+待确认风险：
+```
+
+验证债务未清零时，不得声称任务完成、测试通过或可交付，不得据此 commit、PR、merge 或发布。跨会话、跨轮或多人接力仍未清零时，升级为 Goal 或任务状态，不把临时债务留在模型记忆中。
 
 ## 语言偏好
 
@@ -92,8 +125,8 @@
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
 - 多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口；如果任务只是明确小修或一次性 demo，不启动重型并行流程。
-- Harness Plan 需要正式校验时，使用 `senior-software-architect/scripts/check_harness_plan.py --kind lightweight|gsd-wave|cad-candidate`；脚本只检查结构完整性，不替代测试、Review、Plan Grant / Execution Grant 或用户授权。
-- 当需求讨论已经具备完整产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律、验收场景或验证矩阵，且任务需要多轮实现与验证时，可以建议用户进入 CAD Mode；建议不等于授权，详细进入门禁、Git 策略、每轮摘要和停止条件以 `cad-mode.md` 为准。
+- Harness Plan 需要正式校验时，使用 `senior-software-architect/scripts/check_harness_plan.py --kind lightweight|gsd-wave|engineering-loop`；脚本只检查结构完整性，不替代测试、Review、Plan Grant / Execution Grant 或用户授权。
+- 当一个工程任务已经选定、关键决策冻结、写入与验证边界清楚，且实现、反馈和修正明显需要至少两轮时，可以进入受控工程执行 Loop；详细准入、轮内动作和停止条件以 `cad-mode.md` 为准，授权仍以 Plan Grant / Execution Grant 和项目规则为准。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。
 - Java 项目通常为 `mvn compile`、`./gradlew compileJava` 或项目约定任务；非 Java 项目按本地生态选择 `go test`、`npm run build`、`pytest`、`cargo test` 等项目命令。
 - 仅文档、注释、说明类修改可跳过编译，但最终回复必须说明未运行编译的原因。
@@ -156,8 +189,8 @@ PR、CL 或提交说明是长期版本记录的一部分，不能只服务当前
 ## Git 规约
 - 【强制】提交前运行项目对应测试命令，确保相关测试通过；无法运行全量测试时必须说明原因和替代验证。
 - 【推荐】用户未明确要求执行 Git 写操作时，只做验证、审查和确认；最终告诉用户是否已经可以提交，并给出建议提交信息。`git add`、`git commit`、`git push`、创建 PR 等操作默认由用户执行。
-- 【推荐】当产品设计、系分设计、OpenSpec、Harness Plan、Superpowers/TDD 纪律和验证边界已经较完整时，可以建议用户进入 CAD Mode；不得把建议视为自动推进授权。
-- 【强制】CAD Mode 的进入门禁、Git 策略、自动提交、每轮摘要、5 秒人工中断窗口和严重错误处理，统一以 `cad-mode.md` 为唯一详细规则源；本文只保留 Git 基础规约和默认协作边界。
+- 【推荐】当原子任务已选定、关键决策冻结、写入与验证边界清楚且需要多轮反馈时，可以建议进入受控工程执行 Loop；不得把建议视为自动推进授权。
+- 【强制】受控工程执行 Loop 的准入、轮内动作、工程停止条件和回写统一以 `cad-mode.md` 为唯一详细规则源；Goal、Loop 状态、Plan Grant / Execution Grant 和 Git 分别服从其既有权威来源。
 - 【强制】输出提交建议前必须检查 `git status` 和 `git diff`，确认建议范围只包含本任务相关文件；如发现用户已有改动混入同一文件或无法区分来源，必须暂停并请求确认。
 - 【建议】做小而完整的提交。文件数和行数只是提示信号，不是机械门槛；关键是一个提交能被独立理解、验证、回滚，并包含必要测试和说明。
 - 【强制】禁止提交 .env 文件、密钥、token 到版本控制。

@@ -55,6 +55,7 @@
 | 陌生代码库接手 / 项目现状分析 / 跨语言方案或非 Java 项目 | `language-agnostic-architecture.md`、`workflow.md` | 先做项目清单、技术指纹、入口路径、目录语义、配置、测试、数据和运行链路侦察，再迁移通用原则，不强套 Java/Spring 规则。 |
 | 纯 Java/Wind 约规检查 | 不触发本 Skill；交给 `wind-coding-conventions` | 纯 Java/Wind 约规检查不触发本 Skill，也不把规则清单升级成源码 CR。 |
 | 普通 Java 源码任务：设计、CR、TDD、修复或验证 | 项目本地规范、`wind-coding-conventions` 的 `java-coding-conventions.md`、`coding-review-deep-dive.md`、`workflow.md` | 由架构师主责，统一消费通用 Java 规则；没有 Wind/Nobe 高置信度信号时不加载 Wind 专项。 |
+| 快速编码 / 仅编码 / 测试最后补 / 小范围代码调整 | `workflow.md` 的“快速编码模式”与项目本地规范；Java 项目按普通 Java 源码任务加载通用规则 | 目标和行为明确、修改局部可逆、没有未决业务或高风险边界时默认编码先行，最后集中补测试、验证和 CR；不展开 OpenSpec、Harness、Goal、Worker 或工程执行 Loop，不把测试后置解释为测试可选。 |
 | Wind/Nobe 源码任务 | 先按普通 Java 源码任务加载通用层；存在 Wind/Nobe 高置信度信号时再读取 `wind-coding-conventions.md`，按需读取 `project-governance-service-api-modeling.md`、`coding-review-deep-dive.md` 或 `testing.md` | 仍由架构师单一主责；规则 Skill 不成为第二 owner。只有孤立的 face、impl、ServiceImpl 或普通 MyBatis 用法时，不启用 Wind 专项。 |
 | 架构坏味 / 深度代码质量扫描 | `coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` 和项目本地规范 | 先确认最近改动 / diff、指定模块、全仓或仅架构层；默认快速体检只返回 3-5 个最高价值候选，用户明确要求深度扫描才扩展。先按业务语义、边界、契约和失败路径 Review，再追加上帝类、循环依赖、过长方法、Feature Envy、Data Clumps 和复杂度热点等启发式扫描。 |
 | Bug 修复 / 调试诊断 / 根因分析 / 测试失败 | `debugging-diagnosis.md`、`testing.md`、`workflow.md` 和项目本地规范 | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试；高风险问题补时间线和 5-Why 复盘草稿。 |
@@ -72,7 +73,7 @@
 | 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中 CAD Mode、Plan Grant / Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程先由 `wise-agent` 编排 | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论；GSD-like 编排管大盘，CAD Mode 只消费已满足门禁的单个任务包或阶段切片，并必须额外确认授权、Git 策略、人工中断和停止条件。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中受控工程执行、Plan Grant / Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程先由 `wise-agent` 编排 | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论；GSD-like 编排管大盘，受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片，并服从授权、Git、用户中断和停止条件。 |
 | AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 
@@ -88,16 +89,17 @@
 - **Java 通用约规 + Wind 条件专项 + 代码实现 / CR / TDD**：源码任务由架构师单一主责，所有 Java 项目先消费 `wind-coding-conventions` 的通用 Java 细则；只有项目本地声明、依赖坐标、包名/import、Wind 类型、模块结构或任务上下文构成 Wind/Nobe 高置信度信号时才读取 Wind 专项。纯规则任务交给规则 Skill，源码级任务继续读取 `project-governance-service-api-modeling.md`、`coding-review-deep-dive.md` 或 `testing.md`。
 - **Java Review + 代码质量深化**：先用 `coding-review-deep-dive.md` 按业务语义、边界方向、契约完整性、失败路径和工程一致性检查，再追加架构坏味启发式扫描，最后回到具体强规约。
 - **Bug 修复 + TDD**：先用 `debugging-diagnosis.md` 建立稳定失败反馈环，再用 `testing.md` 选择回归测试形态；修复后必须证明原失败路径通过且旧行为未回退。
+- **快速编码 + 测试后置**：先按 `workflow.md` 判断是否满足快速编码准入；满足时合并轻量 Clarify / Design / Plan，连续完成最小实现，再集中补测试、验证和 CR。发现语义未决、范围扩大、公共契约或高风险边界时立即退出快速路径，不得借“仅编码”继续推进。
 - **业务驱动验证 + TDD**：先用 `product-design.md` 第 3.3 节把业务目标、参与方、行为、对象规则、质量属性、验收样例、节点/通信边和状态传播分为可代码化、可观测化和可评审化，再用 `testing.md` 选择第一批失败测试候选；不要把业务确认、合规确认、运营验收或隐藏边排障强行写成单元测试。
 - **生产现象 + 代码修复**：先只读采集影响面、故障时间线、日志、指标和数据事实，再按 `debugging-diagnosis.md` 收敛根因；高风险问题修复后补 5-Why 复盘草稿，需要上线或数据处理时补充 `production-readiness.md` 和 `negative-constraints.md`。
 - **DDD/分层架构 + 写测试/TDD**：先用 `testing.md` 第 2 节选择测试形态，再用第 6 节定位保护事实和测试层级；只有命中 Domain Service / Policy / Specification、Application Service / Use Case、Repository / DAO / Mapper 或第 12 节专项条件时，再读 `testing-practices.md`。
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。
 - **遗留系统迁移 + 生产发布**：优先小步迁移，使用防腐层、双写/回填/切流、契约测试和灰度观测，避免一次性替换核心链路。
 - **安全改造 + 遗留系统**：先识别现有权限和数据隔离缺口，再用防腐层、灰度开关和回归测试逐步收敛，不一次性重写认证授权体系。
-- **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载项目本地规范、`wind-coding-conventions` 的通用 Java 层与 `coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文启用。若进入 CAD Mode，再读 `cad-mode.md` 确认授权与逐轮推进边界。
+- **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载项目本地规范、`wind-coding-conventions` 的通用 Java 层与 `coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文启用。若进入受控工程执行 Loop，再读 `cad-mode.md` 确认工程准入与逐轮推进边界。
 - **AI 编码协作 + 高风险生产行为**：先确认 OpenSpec 中的业务不变量、验收场景和回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范。
 - **AI 编码协作 + 中大型长任务**：先判断是需求不清还是上下文衰减；需求不清回到 OpenSpec 和产品/系分补齐，上下文衰减或真实大项目则读取 `ai-large-project-orchestration.md`，建立上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和收口流程。明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程。
-- **GSD-like 编排 + CAD Mode**：先用 `ai-large-project-orchestration.md` 拆出 Stage、Wave 和原子任务包，再只对已选定且门禁完整的单个 Task ID 或阶段切片读取 `cad-mode.md`。不得对整个大项目直接开启 CAD，不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant。
+- **GSD-like 编排 + 受控工程执行 Loop**：先用 `ai-large-project-orchestration.md` 拆出 Stage、Wave 和原子任务包，再只对已选定且门禁完整的单个 Task ID 或阶段切片读取 `cad-mode.md`。不得把整个大项目直接交给工程执行 Loop，不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant。
 
 ## 输出路由
 
@@ -105,13 +107,13 @@
 - 用户要“接手/分析陌生代码库”：输出代码库定位、入口、核心模块、关键链路、本地验证、主要风险和下一步，不自动创建新文档。
 - 用户要“架构坏味/深度质量扫描”：在普通 Review 后输出坏味、证据、风险和最小整改步骤，避免无边界重构。
 - 用户要“设计”：输出架构方案或系分结构，必须包含目标、非目标、边界、数据、可靠性、安全、验证和发布。
-- 用户要“处理非标工程问题 / 无标准答案问题”：读取 `architecture.md`，先输出非标工程问题卡和最小可逆实验；只有验证路径、写入边界和风险 owner 清楚后，才进入实现、重构、TDD 或 GSD/CAD。
+- 用户要“处理非标工程问题 / 无标准答案问题”：读取 `architecture.md`，先输出非标工程问题卡和最小可逆实验；只有验证路径、写入边界和风险 owner 清楚后，才进入实现、重构、TDD 或 GSD / 工程执行。
 - 用户要“画图 / 图形化产物”：读取 `diagram-output.md`，先说明图形目标、图形类型和工程落点；正式图形化交付默认只生成 SVG 并报告验证结论；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式只在用户明确提出时生成。
 - 用户要“写测试 / 补测试 / 加测试 / 按 TDD 推进”：先输出或执行测试选择，说明测试层级、真实链路、替身边界、断言事实和验证命令；TDD 场景先构造失败测试，再推进实现。
 - 用户要“修 Bug / 查异常 / 诊断失败”：先输出或执行复现与证据计划，说明反馈环、假设、插桩边界、最小修复和回归验证；生产故障补事实时间线和 5-Why 复盘草稿。
 - 用户要“选型”：输出 ADR 风格的取舍，不只给结论。
 - 用户要“上线”：输出生产就绪检查、风险清单、回滚和监控。
-- 用户要“改代码”：先按 `workflow.md` 过 Clarify、Design、Plan、Build、Verify、Review/Ship 生命周期门禁，再识别技术栈和本地规范，小步修改并运行对应验证。
+- 用户要“改代码”：先按 `workflow.md` 判断快速编码准入；简单、确定、局部、可逆的任务合并轻量 Clarify / Design / Plan 后编码先行，最后集中补测试、验证和 CR；其余任务按 Clarify、Design、Plan、Build、Verify、Review/Ship 生命周期门禁推进。
 - 用户要“用 AI 写代码 / 多 Agent 协作”：先按 `workflow.md` 过生命周期门禁，再输出或确认 OpenSpec 与 Harness Plan；中大型任务读取 `ai-large-project-orchestration.md`，补上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和交接说明，之后执行小步实现和 Superpowers 验证闭环。
 - 用户只要“建议”：克制输出不超过 3 个高价值方向，必要时说明假设。
 

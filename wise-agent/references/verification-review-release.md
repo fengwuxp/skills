@@ -59,7 +59,7 @@
 | Spec 模板进入验证 | 先读 `spec-template-practices.md`，再读 `1. 验证矩阵`、`5. CR 顺序` | 不把模板完整当验证通过 |
 | PRD / 系分预审后的验证 | 先读 `prd-system-design-review.md`，再读 `1. 验证矩阵`、`5. CR 顺序` | 不把预审通过当测试通过 |
 | 设计质量 / 测试门禁 | `3. 质量 / 测试门禁`、`5. CR 顺序` | 不替代架构师写测试策略或测试代码 |
-| 角色协作门禁 | `3A. 角色协作验证顺序`、`5. CR 顺序`、`7. 发布门禁` | 不把 GSD/CAD/Goal 当主流程 |
+| 角色协作门禁 | `3A. 角色协作验证顺序`、`5. CR 顺序`、`7. 发布门禁` | 不把 GSD / 工程执行 / Goal 当主流程 |
 | 设计 AI 代码 CR | `4. 代码库理解 / 影响可视化门禁`、`5. CR 顺序`、`6. AI 产物风险` | 不写普通风格检查清单 |
 | 源码质量评审 Loop | `4. 代码库理解 / 影响可视化门禁`、`5A. 源码质量评审 Loop`、`5. CR 顺序`，必要时读 `code-understanding-tools.md`；用户明确要求经典视角时装载 `huaxia-practical-wisdom` | 不把工具或经典框架当最终裁决 |
 | AI bug report / AI patch 门禁 | `5B. AI bug / 补丁门禁`、`5A. 源码质量评审 Loop`；需要取舍反偏时可装载 `huaxia-practical-wisdom` | 不让 AI bug report、AI patch 或经典类比自证完成 |
@@ -160,7 +160,7 @@ CR 前置条件：
 
 ## 3A. 角色协作验证顺序
 
-知止者的默认验证顺序应服务真实交付，而不是服务某个机制名。GSD、CAD、Goal、Harness 只在对应阶段内部使用。
+知止者的默认验证顺序应服务真实交付，而不是服务某个机制名。GSD、工程执行 profile、Goal、Harness 只在对应阶段内部使用。
 
 ```text
 设计评审

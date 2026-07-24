@@ -2,7 +2,7 @@
 """Check Harness Plan completeness for AI coding orchestration.
 
 The script only inspects local text or an explicit local file. It does not access the network, upload content, read secrets, or judge technical quality.
-It is a deterministic guard for the collaboration layer before CAD/GSD work.
+It is a deterministic guard for the collaboration layer before GSD or controlled engineering work.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("validation", ["验收场景", "验证命令", "完成条件", "回归", "Review"], 2),
         RequiredGroup("handoff", ["交接要求", "handoff", "恢复入口", "回滚提示"], 1),
     ],
-    "cad-candidate": [
+    "engineering-loop": [
         RequiredGroup("task_identity", ["Task ID", "任务", "目标", "阶段切片"], 2),
         RequiredGroup("owner", ["Owner", "负责人", "执行者", "角色"], 1),
         RequiredGroup("scope", ["写入范围", "写入文件", "只读范围", "只读参考"], 3),
@@ -70,14 +70,14 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "交接要求：写入 handoffs；回滚提示：还原 DTO diff。",
         "Task ID: W1-001。写入文件：src。验证命令：mvn test。",
     ),
-    "cad-candidate": (
-        "Task ID: CAD-001。任务：修复授权边界。目标：补齐失败路径。"
+    "engineering-loop": (
+        "Task ID: ENG-001。任务：修复授权边界。目标：补齐失败路径。"
         "Owner：助手。写入文件：service 和 tests。写入范围：授权服务。只读参考：OpenSpec。只读范围：docs。"
         "验收场景：无权限失败；验证命令：mvn test；完成条件：测试通过。"
         "TDD：先红后绿；Review：检查编码红线；AI 产物复核：无幻觉 API。"
         "Execution Grant：授权范围限 service/tests；Git 策略 summary_only；禁止事项：不改 DTO；撤销方式：用户暂停。"
         "人工确认：公共契约变化即停止。交接：回写阶段状态、残余风险和恢复入口。",
-        "Task ID: CAD-001。写入文件：service。验证命令：mvn test。",
+        "Task ID: ENG-001。写入文件：service。验证命令：mvn test。",
     ),
 }
 

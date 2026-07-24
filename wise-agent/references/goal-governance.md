@@ -2,18 +2,18 @@
 
 本文定义知止者的 Goal 目标层。Goal 是显式目标管理和持续推进契约，用来说明为什么持续推进、做到什么才算完成、预算 / 时间盒如何约束、何时停止、如何验证和交接；它不等于当前会话自动创建运行时 Goal，也不替代测试通过或发布批准。用户明确要求 `GSD + Goal 按任务计划推进` 时，Goal 可以挂接 Plan Grant，让范围内低风险本地任务按计划推进。
 
-对外统一归入知止者；Goal 是目标层，GSD 是分波计划层，CAD 是原子执行子循环。输出时不要要求用户在 `GSD + Goal`、`CAD + Goal`、`Spec + Goal` 和 `Loop` 间手动选择，而是说明当前任务使用了哪些内部层。
+对外统一归入知止者；Goal 是目标层，GSD 是分波计划层，受控工程执行是 Loop 的工程 profile。输出时不要要求用户在 `GSD + Goal`、`工程执行 Loop + Goal`、`Spec + Goal` 和 `Loop` 间手动选择，而是说明当前任务使用了哪些内部层。
 
 ## 使用时机
 
 - 用户要求 `GSD + Goal`、`CAD + Goal`、`Spec + Goal`、`GSD + Goal + Loop`、目标驱动推进、持续推进、长任务 Goal、目标状态、预算 / 时间盒、停止条件或跨轮交接。
 - 用户要求把 GSD、CAD、Goal 多个模式统一成 Loop，但需要保留目标完成线、预算、验证证据和交接节奏。
-- 中大型项目需要把业务目标、GSD Wave、CAD 候选、Spec 模板、质量门禁、发布复盘挂到同一目标链路。
+- 中大型项目需要把业务目标、GSD Wave、工程执行 Loop、Spec 模板、质量门禁、发布复盘挂到同一目标链路。
 - 多 Agent、多 owner 或多轮任务容易出现目标漂移、状态过期、验证证据断裂或交接丢失。
 - 需要把产品专家的业务目标和验收种子，转换成架构师可消费的 Goal 卡、GSD Wave / Goal 映射和验证矩阵。
 - 需要防止 GSD 目标漂移成“多做几个 AI 任务”或“搭一些看上去可用的 demo”，必须重新锚定到生产可用能力。
-- 需要把 GSD/CAD 默认授权和阶段提交收敛到 Goal / Plan Grant / Wave / CAD Grant，减少每个任务重复审批但保留高风险硬门禁。
-- GSD/CAD 默认授权收敛到 Goal / Plan Grant / Wave / CAD Grant；只有在用户明确要求按任务计划推进且 Plan Grant 字段齐备时，才允许范围内低风险任务默认推进。
+- 需要把 GSD / 工程执行的默认授权和阶段提交收敛到 Goal / Plan Grant / Wave / Execution Grant，减少每个任务重复审批但保留高风险硬门禁。
+- GSD / 工程执行的默认授权收敛到 Goal / Plan Grant / Wave / Execution Grant；只有在用户明确要求按任务计划推进且 Plan Grant 字段齐备时，才允许范围内低风险任务默认推进。
 - 需要把 `/goal`、`/loop`、auto mode、后台 Agent 或持续编排挂到 Goal，避免 Loop 漂移、无限循环或把执行轮数误当完成证据。
 - 用户要求“先输出计划”“确认后创建 Goal”“先计划再执行到验证完成”或等价表达，需要把计划成熟度桥接到 Goal / Plan Grant，而不是新增一套流程。
 
@@ -27,7 +27,7 @@
 ## 读取后必须产出
 
 - 一张 Goal 卡：Goal ID、目标、owner、参与方、成功标准、非目标、范围、预算 / 时间盒、状态、停止条件、验证证据和交接要求。
-- 一份组合判断：当前 Loop 需要哪些内部层，例如 Goal + GSD-Wave、Goal + CAD-Atomic、Goal + Spec、Goal + CR/发布或产品到工程 Goal。
+- 一份组合判断：当前 Loop 需要哪些内部层，例如 Goal + GSD-Wave、Goal + Engineering-Atomic、Goal + Spec、Goal + CR/发布或产品到工程 Goal。
 - 若涉及持续编排，一份 Loop 目标层判断：Loop ID、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物。
 - 一份 Goal 状态结论：`Draft / Ready / Active / Blocked / Verified / Closed / Superseded` 之一，并说明证据。
 - 一份 Goal Ledger 更新：最近证据、变化假设、开放风险、提交切片、下一 owner、下一动作和复盘回流位置。
@@ -37,9 +37,9 @@
 ## 需要继续读取的 reference
 
 - 产品上下文、PRD-Lite 和产品专家交接读 `product-to-engineering-lifecycle.md`。
-- OpenSpec、Superpowers、Harness、GSD、CAD 和权限边界读 `engineering-governance.md`。
+- OpenSpec、Superpowers、Harness、GSD、工程执行 profile 和权限边界读 `engineering-governance.md`。
 - Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent 和循环停止条件读 `delivery-execution-control.md`。
-- GSD Round 0、Wave/Atomic Task、CAD 候选缺口和 Execution Grant 缺口读 `planning-execution-admission.md`。
+- GSD Round 0、Wave/Atomic Task、工程执行 Loop 缺口和 Execution Grant 缺口读 `planning-execution-admission.md`。
 - Spec / SDD / OpenSpec 模板、AC 编号、测试映射和漂移检查读 `spec-template-practices.md`。
 - AI 代码交付闭环、独立验证、CR 减负、知识回流和指标读 `code-delivery.md`。
 - 验证矩阵、CR、发布和复盘读 `verification-review-release.md`。
@@ -48,11 +48,11 @@
 
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
-| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `planning-execution-admission.md` | 输出为知止者的产研交付视图，不展开 CAD 执行细则 |
+| 做 `GSD + Goal` | `1. Goal 边界`、`3. GSD + Goal`，再读 `planning-execution-admission.md` | 输出为知止者的产研交付视图，不展开工程执行细节 |
 | 先计划再创建 Goal / 推进执行 | `Plan-to-Goal Bridge`、`1. Goal 边界`、`3A. Plan Grant` | 不新增场景视图，不把计划等同授权 |
 | 做 `GSD + Goal + Loop` | `1. Goal 边界`、`3B. GSD + Goal + Loop`，再读 `delivery-execution-control.md` | 不把 Loop 当授权或完成证据 |
-| 做 `CAD + Goal` | `1. Goal 边界`、`4. CAD + Goal`，再读 `engineering-governance.md` | 输出为 CAD 原子子循环，不把 Goal 当 Execution Grant |
-| 将默认授权挂到 Goal | `1. Goal 边界`、`3. GSD + Goal`、`4. CAD + Goal`，再读 `planning-execution-admission.md` | 不把 Goal 状态当授权 |
+| 做 `工程执行 Loop + Goal` | `1. Goal 边界`、`4. 工程执行 Loop + Goal`，再读 `engineering-governance.md` | 输出为工程执行 profile，不把 Goal 当 Execution Grant |
+| 将默认授权挂到 Goal | `1. Goal 边界`、`3. GSD + Goal`、`4. 工程执行 Loop + Goal`，再读 `planning-execution-admission.md` | 不把 Goal 状态当授权 |
 | 按任务计划自动推进或阶段提交 | `1. Goal 边界`、`3A. Plan Grant`，再读 `planning-execution-admission.md` | 不逐任务索要 Execution Grant |
 | 做 `Spec + Goal` | `1. Goal 边界`、`5. Spec + Goal`，再读 `spec-template-practices.md` | 不重复写完整 Spec 模板 |
 | 做 CR / 发布 Goal 验证 | `6. CR/发布 + Goal`，再读 `verification-review-release.md` | 不把测试通过当 Goal 自动关闭 |
@@ -93,7 +93,7 @@ Plan Grant: Draft / Active / 不适用
 
 Goal 回答：为什么持续做、做到什么叫完成、预算 / 时间盒如何约束、何时停止、如何交接。
 
-在 GSD 场景中，Goal 的完成线必须是生产可用能力，而不是 AI 产物数量、模拟模块数量或表面可运行效果。Goal 必须能映射到真实业务入口、生产边界、验收种子、验证证据、发布/回滚条件和责任 owner；否则只能停在 `Draft` 或 `Blocked`，不能进入 GSD Wave 或 CAD 候选。
+在 GSD 场景中，Goal 的完成线必须是生产可用能力，而不是 AI 产物数量、模拟模块数量或表面可运行效果。Goal 必须能映射到真实业务入口、生产边界、验收种子、验证证据、发布/回滚条件和责任 owner；否则只能停在 `Draft` 或 `Blocked`，不能进入 GSD Wave 或工程执行 Loop。
 
 相邻概念的边界：
 
@@ -101,16 +101,16 @@ Goal 回答：为什么持续做、做到什么叫完成、预算 / 时间盒如
 | --- | --- | --- |
 | Goal | 目标、成功标准、状态、预算、停止和交接。 | 测试、CR、发布批准。 |
 | GSD | 分几波做、先做什么、谁接下一波。 | 业务目标和成功标准。 |
-| CAD | 当前原子任务能否受控自动执行。 | 整个项目自动驾驶。 |
+| 工程执行 profile | 当前原子任务如何在 Loop 内受控执行。 | 整个项目自动驾驶。 |
 | Harness | 谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | 产品确认和上线审批。 |
 | Plan Grant | 在已确认 Goal 任务计划内默认允许哪些低风险本地任务推进，以及 Git 是否仅建议或验证后提交。 | Git push、PR、联网、生产、密钥、部署、不可逆操作和高风险业务确认。 |
 | Loop | 每轮如何读取状态、执行动作、吸收反馈、验证和停止。 | Goal、Harness、授权、测试、CR、上线审批。 |
-| Execution Grant | 单个 CAD 任务或高风险动作实际允许做什么。 | 长期目标或跨轮授权。 |
+| Execution Grant | 单个原子任务或高风险动作实际允许做什么。 | 长期目标或跨轮授权。 |
 
 原则：
 
-- Goal 可以约束 GSD Wave 和 CAD 候选，但不能单独授予提交、联网、部署或生产操作权限。
-- Goal 可以挂接 Plan Grant、Wave Grant 或 CAD Grant 来减少重复审批；Plan Grant 必须单独写清任务计划、写入范围、验证命令、Git 策略、默认审批通道和显式确认边界。
+- Goal 可以约束 GSD Wave 和工程执行 Loop，但不能单独授予提交、联网、部署或生产操作权限。
+- Goal 可以挂接 Plan Grant、Wave Grant 或 Execution Grant 来减少重复审批；Plan Grant 必须单独写清任务计划、写入范围、验证命令、Git 策略、默认审批通道和显式确认边界。
 - Goal 可以挂接 Loop，但 Loop 必须有状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件；Goal Active 不代表 Loop 可以无限运行。
 - GSD 规划必须给出阶段/任务提交切片；默认只建议提交，只有用户明确授权 `commit_after_verified_task` 时才在验证通过后执行本地 commit。
 - Goal 状态必须有证据，不能只靠“感觉已完成”。
@@ -244,9 +244,9 @@ Ledger 更新:
 - `/goal`、`/loop`、auto mode 和后台 Agent 只能作为运行方式，不能替代成功标准、验证证据、CR 或上线审批。
 - Loop 完成只代表某轮循环达到停止条件；Goal 是否 Verified / Closed 仍要看成功标准和交接回流是否满足。
 
-## 4. CAD + Goal
+## 4. 工程执行 Loop + Goal
 
-`CAD + Goal` 只用于已经被拆成原子任务的候选。Goal 负责说明该原子任务服务哪个目标、成功标准和停止条件；若 Plan Grant 覆盖该任务，CAD 可消费 Plan Grant 作为低风险本地动作授权；不覆盖时仍按 CAD Grant / Execution Grant 处理。
+`工程执行 Loop + Goal` 只用于已经被拆成原子任务的候选。Goal 负责说明该原子任务服务哪个目标、成功标准和停止条件；若 Plan Grant 覆盖该任务，工程 profile 可消费 Plan Grant 作为低风险本地动作授权；不覆盖时按 Execution Grant 处理。
 
 准入判断：
 
@@ -266,10 +266,10 @@ Codex 替我审批:
 
 红线：
 
-- Goal Ready 不代表 CAD 可执行。
-- 父 Goal Active 不代表所有子任务都被 Plan Grant / CAD Grant 覆盖。
-- Codex 替我审批只可作为当前 CAD Grant 范围内低风险工具审批通道，不代表 Git、联网、生产或高风险动作自动放行。
-- CAD 执行失败时，更新 Goal Ledger 的阻塞证据和下一 owner，不把失败隐藏成“继续推进”。
+- Goal Ready 不代表工程执行 Loop 可执行。
+- 父 Goal Active 不代表所有子任务都被 Plan Grant / Execution Grant 覆盖。
+- Codex 替我审批只可作为当前 Execution Grant 范围内低风险工具审批通道，不代表 Git、联网、生产或高风险动作自动放行。
+- 工程执行失败时，更新 Goal Ledger 的阻塞证据和下一 owner，不把失败隐藏成“继续推进”。
 
 ## 5. Spec + Goal
 
@@ -328,7 +328,7 @@ Verified -> Closed
 
 - `Draft`：目标尚未清楚，不能执行；决策寻路尚未完成、仍有阻断 Destination 的 Frontier 或迷雾时，不能从 `Draft` 进入 `Ready`。
 - `Ready`：目标、成功标准、非目标、owner、预算、停止条件和验证方式已明确。
-- `Active`：已进入 GSD Wave、Spec、CAD 候选或验证闭环。
+- `Active`：已进入 GSD Wave、Spec、受控工程执行 Loop 或验证闭环。
 - `Blocked`：出现明确阻塞，需要用户、产品、架构、权限、验证环境或专业确认输入。
 - `Verified`：成功标准已有可复核证据。
 - `Closed`：验证、交接、知识回流和残余风险处理完成。
@@ -350,7 +350,7 @@ Goal ID:
 触发更新：
 
 - GSD Wave 进入或结束。
-- Plan Grant / CAD Grant 消耗、失败或回退。
+- Plan Grant / Execution Grant 消耗、失败或回退。
 - Spec / AC / 验证矩阵发生实质变化。
 - 测试、CR、发布或人工确认失败。
 - 交接 owner 变化。
@@ -362,7 +362,7 @@ Goal ID:
 - Goal 只追求 AI 任务推进数量、模拟模块数量或 demo 可运行，没有生产可用能力锚点。
 - `GSD + Goal` 只写父目标，不给 Wave Goal 和验证证据。
 - Goal 状态长期停在 Active，没有 Ledger 更新。
-- 用 Goal 扩大写入范围、跳过 Plan Grant / CAD Grant、跳过测试或跳过 CR。
+- 用 Goal 扩大写入范围、跳过 Plan Grant / Execution Grant、跳过测试或跳过 CR。
 - 用 Goal、Wave 状态或 Codex 替我审批扩大默认授权范围，跳过 Git/联网/生产/密钥/部署/不可逆操作的显式确认。
 - 把 “测试通过” 直接等同于 Goal Closed。
 - 目标过大，无法在一次 Wave、一次 CR 或一次发布中判断完成。

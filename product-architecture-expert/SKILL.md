@@ -45,7 +45,7 @@ description: |
 11. **概念定名先于扩需求**：当需求持续膨胀、术语含混或价值主张摇摆时，先定义产品概念、目标主体、价值/意义边界、适用场景和非目标；名字必须表达业务本质，不用新名词包装未确认欲望。
 12. **概念生命周期要能退役**：新增概念、规则、页面、状态或能力时，必须说明谁拥有、替代什么、旧概念如何保留/合并/迁移/归档/下线、何时复审与退役；产品不能只加新名词，不处理事实源分裂和用户理解成本。
 13. **产品原则不替代证据**：外部文章、行业方法论、AI 原型和竞品观点只能帮助提问与收敛；没有用户事实、业务证据、验收种子和 owner 确认时，不写成产品结论。
-14. **产品交接只交事实与验收**：被 `wise-agent` 编排或架构师调用时，只输出 Product Context Card / 产品上下文交接卡，承载业务目标、对象规则、流程、验收种子、风险和待确认；不判定 GSD/CAD 准入，不生成 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线审批。
+14. **产品交接只交事实与验收**：被 `wise-agent` 编排或架构师调用时，只输出 Product Context Card / 产品上下文交接卡，承载业务目标、对象规则、流程、验收种子、风险和待确认；不判定 GSD / 工程执行准入，不生成 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线审批。
 15. **产品合议只评产品内容**：MAGI、多角色或 PM/Reviewer 合议用于检查产品目标、对象规则、流程、验收种子、分歧和待确认项；不替代 `wise-agent` 的跨角色准入、工程分派、发布门禁，也不判定系分或代码可执行性。
 16. **非标诉求不做传话筒**：老板、销售、客户或运营只给方向、抱怨或功能愿望时，先判断真实问题、影响面、失败成本、当前替代方式、解决方案假设和验收种子；产品岗提供解决方案，不被动搬运需求。
 17. **轻量问询不写进正式 PRD**：`wise-agent` 交来轻量问询结论、`grill-me` 结论或任务树节点时，只消费其中的事实、建议答案、验收种子和待确认项；复杂 / 模糊需求可以一次只问一个关键问题并给建议答案，但问询过程、推理轨迹和被拒分支进入任务计划或评审记录，不进入正式 PRD 正文。
@@ -151,7 +151,7 @@ description: |
 - `references/product-insight-analyst.md`：产品洞察/机会雷达、资料资产化、客户/竞品/标杆情报分拣和证据推理链。
 - `references/po-backlog-manager.md`：PO Backlog 决策、机会清单/Backlog 决策、需求优先级、BV/EE、P0/P1/P2、User Story/AC。
 - `references/product-deliberation-workflow.md`：复杂 PRD、AI 生成方案、原型候选、多方争议、PM/Reviewer/产品大师/MAGI 合议式产品评审、阶段门、共识/分歧/待确认和准出检查。
-- `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文、产品侧上下文包、验收种子和交给 `wise-agent` 编排/架构师的交接条件；端到端 GSD/CAD 准入由 `wise-agent` 处理。
+- `references/ai-native-product-context.md`：AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文、产品侧上下文包、验收种子和交给 `wise-agent` 编排/架构师的交接条件；端到端 GSD / 工程执行准入由 `wise-agent` 处理。
 - `references/product-design-and-prd.md`：产品方案、PRD、验收标准和评审清单。
 - `references/product-prd-template.md`：PRD、产品需求文档、需求文档模板、PRD 模板、产品方案模板和可复制主骨架。
 - `references/product-prd-quality-gates.md`：PRD 提交前自检、符合性评审、验收门禁和必改/建议输出。

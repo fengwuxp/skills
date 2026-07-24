@@ -39,7 +39,7 @@
 | Java/Spring/Wind 设计或 Review | 项目本地规范、`wind-coding-conventions` 通用层、`coding-review-deep-dive.md`、`project-governance-standards.md`；Wind/Nobe 专项按依赖或上下文启用 | 通用能力解释 |
 | 测试、TDD、验收验证 | `testing.md`, `testing-practices.md` | 平台治理细节 |
 | 生产排障、安全、可观测性 | `debugging-diagnosis.md`, `production-readiness.md`, `security-architecture.md` | 产品语义细节 |
-| AI 协作、上下文衰减或 CAD Mode | `ai-assisted-engineering.md`, `ai-large-project-orchestration.md`, `cad-mode.md`, `workflow.md` | 语言运行时细节 |
+| AI 协作、上下文衰减或受控工程执行 | `ai-assisted-engineering.md`, `ai-large-project-orchestration.md`, `cad-mode.md`, `workflow.md` | 语言运行时细节 |
 | 经验沉淀或 Skill 维护 | 本文的归档规则、`source-map.md` | 具体业务方案细节 |
 
 ## 1. 根节点
@@ -69,7 +69,7 @@
 | 调试诊断与生产韧性 | Bug、线上现象、根因、回滚、Runbook | `debugging-diagnosis.md`, `production-readiness.md`, `workflow.md` | 证据链、最小修复、回归验证 |
 | 安全、数据与合规边界 | 认证授权、租户隔离、审计、敏感数据 | `security-architecture.md`, `negative-constraints.md` | 风险清单、控制点、确认方 |
 | 平台、交付与项目治理 | 模块治理、API、Git/PR、K8s、演进 | `project-governance-standards.md`，再进入治理专题 | 治理结论、门禁、演进路径 |
-| AI 编码协作与经验沉淀 | OpenSpec、Harness、上下文账本、Wave 编排、CAD Mode、Skill 维护 | `ai-assisted-engineering.md`, `ai-large-project-orchestration.md`, `cad-mode.md`, `workflow.md`, `source-map.md` | 协作边界、阶段状态、授权门禁、来源边界 |
+| AI 编码协作与经验沉淀 | OpenSpec、Harness、上下文账本、Wave 编排、受控工程执行、Skill 维护 | `ai-assisted-engineering.md`, `ai-large-project-orchestration.md`, `cad-mode.md`, `workflow.md`, `source-map.md` | 协作边界、阶段状态、授权门禁、来源边界 |
 
 ## 3. 典型判断路径
 

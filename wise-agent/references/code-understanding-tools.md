@@ -31,7 +31,7 @@
 
 - 代码库理解、影响可视化、CR 和发布门禁读 `verification-review-release.md`。
 - OpenSpec、Harness、权限和 Agent 工具治理读 `engineering-governance.md`。
-- GSD/CAD 编排准入读 `planning-execution-admission.md`。
+- GSD / 工程执行编排准入读 `planning-execution-admission.md`。
 - 具体源码级判断、测试和 CR 交给 `senior-software-architect` 对应 reference。
 - 工具来源状态和时效性边界读 `source-map.md`。
 

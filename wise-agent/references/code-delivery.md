@@ -11,7 +11,7 @@
 - 需要把 Agent Loop、`/goal`、`/loop`、auto mode 或后台 Agent 接入反馈、验证、预算和停止条件。
 - 需要把 AI 工作流 Loop 做成生产可用闭环，明确隔离执行、可复现状态、独立验证、观测审计、人工接管、发布/回滚和责任 owner。
 - 需要让 AI 在真实项目中自我挖掘需求和代码上下文、形成计划、完成低风险执行，并判断何时完成、继续、停止或人工确认。
-- 需要把多套 AI 工作流、GSD / CAD / GStack / Goal / Harness / 工具链混一为一个生产可用交付口径。
+- 需要把多套 AI 工作流、GSD / 工程执行 / GStack / Goal / Harness / 工具链混一为一个生产可用交付口径。
 - 需要落地 Spec / SDD / OpenSpec 模板、AC 验收、测试映射、spec-lint、AC 覆盖或漂移检查。
 - 需要把 Superpowers v6 SDD 的 task reviewer、file handoff、progress ledger、pre-flight plan review 或最终 broad review 接入现有知止者 Loop。
 - 需要判断 Superpowers、GSD、GStack、Trellis 等 AI 编码框架应作为方法纪律、上下文状态、角色链审查还是仓库级记忆进入交付闭环。
@@ -33,7 +33,7 @@
 - 当前瓶颈判断：需求质量、上下文缺失、Spec 层数、Harness 越界、生成质量、CR 认知负荷、测试验证、发布观测还是知识回流。
 - 一份代码交付闭环：意图、上下文、Spec 强度、Harness 摘要、独立验证、CR 减负、发布观测和知识回流。
 - 一份 Goal 交付闭环：Goal ID、成功标准、GSD Wave / Goal 映射、预算 / 时间盒、停止条件、验证证据、Ledger 更新和是否可 Verified / Closed。
-- 一份最小 Spec 强度建议：轻量执行、OpenSpec、Harness/GSD、CAD 候选或人工主导。
+- 一份最小 Spec 强度建议：轻量执行、OpenSpec、Harness/GSD、工程执行 Loop 候选或人工主导。
 - 一份 Spec 模板落地建议：可审骨架、AC 编号、Given-When-Then、测试映射、闸门证据和风险自查。
 - 一份 Spec 回写与重试闭环：复现失败、检查规范清晰度、分类 AI 错误模式、回写 Spec / AC / 测试、重新生成或实现、独立验证和人工升级条件。
 - 一份 Agent Loop 反馈闭环：状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和回写位置。
@@ -54,7 +54,7 @@
 ## 需要继续读取的 reference
 
 - 产品上下文、PRD-Lite 和工程交接读 `product-to-engineering-lifecycle.md`。
-- OpenSpec、Superpowers、Harness、GSD、CAD 和权限边界读 `engineering-governance.md`。
+- OpenSpec、Superpowers、Harness、GSD、工程执行 profile 和权限边界读 `engineering-governance.md`。
 - Goal 组合、GSD + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-governance.md`。
 - Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、预算和停止条件读 `delivery-execution-control.md`。
 - Spec / SDD / OpenSpec 模板、AC 编号、测试映射、spec-lint、AC 覆盖、漂移检查和风险自查读 `spec-template-practices.md`。
@@ -118,12 +118,12 @@ CR 是否能看懂入口路径、影响模块、源码锚点和边界变化：
 
 ## 1A. 生产可用混一模型
 
-混一不是把 GSD、CAD、GStack、Goal、Harness、工具链合并成更大的菜单，而是压成生产交付判断链：一个入口、一个契约、一个准出。
+混一不是把 GSD、工程执行、GStack、Goal、Harness、工具链合并成更大的菜单，而是压成生产交付判断链：一个入口、一个契约、一个准出。
 
 - 一个入口：知止者，判断当前阶段、owner、能力来源和停止条件。
 - 一个契约：交付契约，承接目标、事实、写入范围、验证命令、Checker 和状态回写。
 - 一个准出：生产可用准出卡，只看真实业务入口、独立证据、发布 / 回滚和 owner 责任。
-- GSD / CAD / Goal / Harness 只做目标、计划、原子执行、状态和授权层；GStack 只做角色链审查；Wisdom Lens 只做取舍校准；工具只做能力补充。
+- GSD / 工程执行 / Goal / Harness 只做目标、计划、原子执行、状态和授权层；GStack 只做角色链审查；Wisdom Lens 只做取舍校准；工具只做能力补充。
 
 ## 1B. 渐进式 SDD / Lattice Harness 收口
 
@@ -160,7 +160,7 @@ Spec 的目标不是写长文档，而是定义“可接受实现空间”。合
 | 轻量执行 | 单文件、低风险、快速验证。 | 目标、写入范围、验证命令。 |
 | OpenSpec | 契约、状态、权限、数据或多模块。 | 目标、范围、非目标、规则、验收、技术约束。 |
 | Harness / GSD | 长任务、多 Agent、跨模块、上下文易衰减。 | Task ID、owner、写入范围、依赖顺序、验证矩阵、交接。 |
-| CAD 候选 | 原子任务边界清楚、授权清楚、验证可运行。 | OpenSpec + Harness + Execution Grant + 停止条件。 |
+| 工程执行 Loop 候选 | 原子任务边界清楚、授权清楚、验证可运行。 | OpenSpec + Harness + Execution Grant + 停止条件。 |
 | 人工主导 | 高不确定架构、资金、合规、安全、生产数据、不可逆操作。 | 人工确认、专业审批、dry-run、回滚和审计。 |
 
 ## 3. Harness 三层闭环

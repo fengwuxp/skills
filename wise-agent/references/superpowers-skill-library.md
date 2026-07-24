@@ -29,7 +29,7 @@
 - 能力 owner、Maker / Checker 和多 Skill 协作读 `capability-routing.md`。
 - 产品到工程角色链读 `delivery-lifecycle.md`。
 - OpenSpec、Harness、SDD 和权限读 `engineering-governance.md`。
-- GSD / CAD / Grant 准入读 `planning-execution-admission.md`。
+- GSD / 工程执行 / Grant 准入读 `planning-execution-admission.md`。
 - CR、验证、发布和知识回流读 `verification-review-release.md` 与 `code-delivery.md`。
 - 来源、版本和历史审查事实读 `source-map.md`。
 
