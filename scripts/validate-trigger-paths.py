@@ -1005,11 +1005,11 @@ check(
     )
     and has_all(
         wise_agent_skill,
-        ["精确 description", "同一 Agent", "不产生多个行动主体"],
+        ["同一 Agent", "不切换人格", "一个目标契约"],
     )
     and has_all(
         wise_agent_agent,
-        ["allow_implicit_invocation: true", "提交信息优先遵循项目约规", "跟随用户语言"],
+        ["allow_implicit_invocation: true", "统一行动主体", "默认使用中文响应"],
     )
     and has_all(
         wise_agent_skill_type_owner_routing,
@@ -1043,7 +1043,7 @@ check(
         wise_agent_skill,
         [
             "`assets/codex-global-agents.md`",
-            "已有非空全局规则时先合并",
+            "已有非空规则时合并",
             "不得直接覆盖",
         ],
     ),
@@ -2247,9 +2247,9 @@ check(
     and has_all(
         wise_agent_skill,
         [
-            "按需装载独立能力 `grill-me`",
+            "按需装载 `grill-me`",
             "问题台账、历史去重和决策快照由该 Skill 负责",
-            "方案、计划或设计的关键分叉盘问、历史去重和决策快照",
+            "执行前对账读取 `references/delivery-execution-control.md`",
         ],
     )
     and has_all(
@@ -2267,13 +2267,13 @@ check(
     has_all(
         wise_agent_skill,
         [
-            "跨专业协同、跨阶段交付、跨轮状态管理、能力组合、状态恢复或知识回流",
-            "单一专业任务（包括只读 CR）直接加载对应 Skill",
+            "任务跨专业、跨阶段或跨轮且需要目标、状态、能力组合、独立验证或知识回流",
+            "单一专业任务（含只读 CR）",
         ],
     )
     and has_none(
         wise_agent_skill,
-        ["能力组合、独立验证或知识回流"],
+        ["仅需要独立验证时触发"],
     ),
 )
 
@@ -2306,8 +2306,8 @@ check(
     and has_all(
         wise_agent_skill,
         [
-            "按需装载独立能力 `huaxia-practical-wisdom`",
-            "不复制其框架和方法",
+            "按需装载 `huaxia-practical-wisdom`",
+            "不在本 Skill 复制其框架",
         ],
     )
     and has_none(
@@ -2545,7 +2545,7 @@ check(
         wise_agent_skill,
         [
             "决策寻路",
-            "目标大致存在，但到达目标的路线仍模糊",
+            "目标存在但路线仍模糊",
             "planning-execution-admission.md",
         ],
     )
@@ -2657,10 +2657,10 @@ check(
         term in frontmatter(wise_agent_skill)
         for term in [
             "用户显式说“知止者”“wise-agent”“自己判断并推进”“按需调用能力”",
-            "明确要求执行 Git stage / commit / push、提交并同步或创建 / 合并 PR",
-            "跨专业协同、跨阶段交付、跨轮状态管理",
-            "单一专业任务（包括只读 CR）直接加载对应 Skill",
-            "简单问答、一步措辞以及仅翻译或改写 commit message 不触发",
+            "要求 Git stage / commit / push、提交并同步或 PR",
+            "任务跨专业、跨阶段或跨轮",
+            "单一专业任务（含只读 CR）",
+            "简单问答、一步措辞和仅翻译 commit message 不触发",
         ]
     )
     and has_all(
@@ -4035,6 +4035,44 @@ check(
     ),
 )
 check(
+    "agent and skills keep one body, one coordinator, focused capabilities, and independent proof",
+    has_all(
+        agents_rules,
+        [
+            "体、枢、用、证",
+            "`AGENTS.md` 是体",
+            "`wise-agent` 是枢",
+            "专业 Skill 是用",
+            "fixtures、validator、测试和人工评审是证",
+            "同一规则只保留一个权威来源",
+        ],
+    )
+    and has_all(
+        wise_agent_skill,
+        [
+            "## 一体多能",
+            "一个入口、一个目标契约、一个准出结论",
+            "`references/cognition-and-capability-model.md`",
+            "`references/capability-routing.md` 是能力 owner 与装载规则的唯一权威",
+        ],
+    )
+    and has_none(
+        wise_agent_skill,
+        [
+            "| 任务需要 | 装载能力 | 保持的边界 |",
+            "## 自我协作",
+            "## 场景 reference",
+        ],
+    )
+    and has_none(
+        readme,
+        [
+            "#### 2.1 资源炼技使用指南",
+            "**结构化候选校验**",
+        ],
+    ),
+)
+check(
     "wise agent keeps CDD capability discovery gate",
     has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
@@ -4389,13 +4427,10 @@ check(
     and has_all(
         wise_agent_skill,
         [
-            "## 自我演进",
-            "才进入 Skill 改进外循环",
-            "仓库维护门禁遵循 Skills 源仓库 `AGENTS.md`",
-            "运行时流程读取 `references/code-delivery.md`",
-            "生成 Skill Improvement Card",
-            "专业 Skill 不复制通用外循环",
-            "未经授权不提交、同步或发布",
+            "学习回流或 Skill 改进仅在显式开启后",
+            "`references/skill-learning-backflow.md`",
+            "`references/code-delivery.md`",
+            "不得扫描历史对话、自动晋升、提交、同步或发布",
         ],
     )
     and all(
@@ -4590,6 +4625,13 @@ check(
             "正式 PRD 是否只保留最终标准版本",
             "正式系分是否只保留当前有效设计",
             "双向追踪只记录当前有效条款、偏差、决策和下一步",
+            "双向回证",
+            "规范性目标或公共契约",
+            "描述性现状假设",
+            "工程实现偏差",
+            "修复、迁移或显式兼容方案",
+            "重新标为 `PENDING`",
+            "不得让工程静默兼容",
             "每条意见必须有锚点",
             "PRD 预审门禁",
             "系分预审门禁",
@@ -6257,6 +6299,8 @@ check(
             "assert_design_document_engineering",
             "assert_grill_evidence_closed",
             "assert_grill_evidence_conflict",
+            "assert_approved_product_contract_conflict",
+            "assert_blocking_data_semantics",
             "需要 Owner 回答的一个问题",
             "grill-conflict-variant.txt",
             "assert_huaxia_decision",
@@ -6264,7 +6308,13 @@ check(
             '"可逆" "试点" "可回退" "试行"',
             "bad-engineering-huaxia.txt",
             "accepted Huaxia framing for ordinary engineering CR",
-            "all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia",
+            "all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia|semantic-contract",
+            '"${MODE}" != "semantic-contract"',
+            "以源仓库内容作为本题规则",
+            "approved-product-contract.txt",
+            "blocking-data-semantics.txt",
+            "accepted demotion of an approved product contract",
+            "accepted SQL construction with blocking semantics unresolved",
             "scripts/validate-superpowers-install.sh",
             "systematic-debugging",
             "test-driven-development",
@@ -6327,7 +6377,7 @@ check(
         wise_agent_skill,
         [
             "不展开完整 SDLC",
-            "不装载 Superpowers",
+            "不因任务复杂就自动装载 Superpowers",
             "scripts/check_state_contract.py",
         ],
     )
@@ -6423,14 +6473,14 @@ check(
     has_all(
         wise_agent_skill,
         [
-            "## 控制强度路由",
+            "## 控制强度",
             "默认直接工作",
-            "SDLC 是阶段地图",
-            "Goal 是跨轮目标契约",
-            "Loop 是反复执行契约",
-            "Worker 是执行拓扑",
-            "Checker 是独立验证机制",
-            "Worker 与 Checker 不是顺序阶段",
+            "| SDLC |",
+            "| Goal |",
+            "| Loop |",
+            "| Worker |",
+            "| Checker |",
+            "Worker 与 Checker 是正交判断",
         ],
     )
     and has_all(
@@ -11129,10 +11179,18 @@ check(
             "## 1. 运营后台与人工处理",
             "## 2. 通知、消息与任务",
             "## 3. 数据指标、埋点与报表",
+            "### 3.4 数据交付语义契约",
             "## 4. 发布与运营计划",
             "什么情况下进入人工处理",
             "指标口径",
             "报表与导出",
+            "来源映射证据",
+            "不得猜测表名、字段或业务规则",
+            "项目受治理的数据字典、语义层或指标知识库",
+            "阻断性待确认项",
+            "停止 SQL 或下游构造",
+            "非阻断待确认项",
+            "生成 SQL 不是完成证据",
         ],
     ),
 )
@@ -14819,6 +14877,38 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "wise-agent-should-preserve-approved-product-contract-on-engineering-deviation",
+    (
+        "PRD 与系分双向回证门禁",
+        "已批准的规范性目标契约与当前工程实现、历史数据区分开",
+        "PRD 目标契约保持权威且不重新标为 PENDING",
+        "工程实现偏差",
+        "停止受影响的实现",
+        "工程 owner",
+        "修复、数据迁移或显式兼容方案",
+        "改变产品目标或公共契约，再交业务 owner 裁决",
+        "同步系分、验收种子和 Decision Log",
+        "不得让工程静默兼容",
+        "不得把历史实现直接升级为新的业务规则",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-reopen-descriptive-product-assumption-on-engineering-conflict",
+    (
+        "PRD 与系分双向回证门禁",
+        "未经确认的描述性现状假设",
+        "数据库唯一键和历史数据已使其失效",
+        "停止依赖该假设的系分和实现",
+        "重新标为 PENDING",
+        "业务 owner 裁决",
+        "同步更新 PRD、系分、验收种子和 Decision Log",
+        "不得继续沿用失效假设",
+        "不得把当前实现自动认定为正确产品语义",
+    ),
+)
+
+expected_handling_has(
     "wise-agent-should-avoid-adr-for-reversible-wording-choice",
     (
         "知识回流与 ADR 准入判断",
@@ -15105,6 +15195,30 @@ expected_handling_has(
         "项目组合 / 路线图",
         "按业务域或模块分区",
         "不直接脑补系统设计、TDD、编码任务或 Execution Grant",
+    ),
+)
+
+expected_handling_has(
+    "product-should-produce-data-delivery-semantic-contract",
+    (
+        "数据交付语义契约路径",
+        "业务目标",
+        "指标定义",
+        "粒度",
+        "时间窗口",
+        "来源映射证据",
+        "分区与新鲜度",
+        "去重与空值规则",
+        "验收基线",
+        "不猜测表名、字段或业务规则",
+        "来源表、退款和时区口径会影响数据来源、指标定义与统计窗口",
+        "阻断性 PENDING",
+        "停止构造 SQL 和下游输入",
+        "非阻断待确认项可作为显式风险随交接保留",
+        "项目权威数据字典、语义层或指标知识库",
+        "Skill reference 只保留跨项目可复用的方法与门禁",
+        "生成 SQL 不是完成证据",
+        "Schema、编译、血缘、样本基线、数据质量、性能成本和业务验收",
     ),
 )
 
@@ -15555,12 +15669,11 @@ check(
     has_all(
         wise_agent_skill,
         [
-            "能力本位，需求归位",
-            "所有需求讨论和设计先站在能力提供者视角做一次轻量能力归位",
+            "需求讨论和设计先做轻量能力归位",
             "使用、增强、组合还是新增",
-            "默认审视不等于默认展开",
+            "默认审视",
             "多场景、多主体、跨渠道、跨模块、存在生命周期或真实变化轴",
-            "Bug、文案调整、局部字段、一次性迁移",
+            "局部需求走最小实现",
             "不展开能力地图",
         ],
     )
@@ -16371,7 +16484,7 @@ check(
     "wise-agent learning backflow keeps automatic writes candidate-only",
     has_all(
         wise_agent_skill,
-        ["学习回流模式", "$SKILL_LEARNING_HOME", "candidate", "不得扫描历史对话"],
+        ["学习回流或 Skill 改进仅在显式开启后", "$SKILL_LEARNING_HOME", "candidate", "不得扫描历史对话"],
     )
     and has_all(
         wise_agent_code_delivery,
@@ -16647,14 +16760,13 @@ check(
             "resource-capability-distiller",
             "资源炼技",
             "不默认创建新 Skill",
-            "#### 2.1 资源炼技使用指南",
-            "候选不是安装结果",
-            "check_capability_candidate.py --file <candidate.json>",
+            "不自动安装、同步、提交或晋升",
+            "README 只保留用户入口和职责边界",
         ],
     )
     and has_all(
         wise_agent_skill,
-        ["resource-capability-distiller", "多源材料", "不自动安装、同步、提交或晋升"],
+        ["`references/capability-routing.md` 是能力 owner 与装载规则的唯一权威"],
     )
     and has_all(
         wise_agent_skill_type_owner_routing,

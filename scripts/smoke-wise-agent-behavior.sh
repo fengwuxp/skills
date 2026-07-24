@@ -4,7 +4,8 @@ set -euo pipefail
 # Input: current Codex installation, its configured provider, and this repository.
 # Output: final responses under --output-dir (default: /tmp/wise-agent-smoke-<timestamp>).
 # Writes: output directory only. Network: codex exec may call the configured provider.
-# Failure: exits non-zero when installed Skills differ from the repository or a response misses the contract.
+# Failure: exits non-zero when a response misses the contract; installed-skill modes also require repository parity.
+# Source semantic-contract smoke: scripts/smoke-wise-agent-behavior.sh --mode semantic-contract
 # Learning backflow smoke: scripts/smoke-wise-agent-behavior.sh --mode learning
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -232,6 +233,31 @@ assert_grill_evidence_conflict() {
   [[ "$(question_record_count "${file}")" -eq 1 ]]
 }
 
+assert_approved_product_contract_conflict() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "PRD" "工程" "验证"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "规范性目标" "目标契约" "产品契约" || return 1
+  assert_any "${file}" "保持权威" "仍是权威" "继续作为权威" "继续保持权威" "保持有效" || return 1
+  assert_any "${file}" "实现偏差" "工程偏差" || return 1
+  assert_any "${file}" "修复" "迁移" || return 1
+  assert_none "${file}" "把原产品决策重新标为 PENDING" "将 PRD 重新标为 PENDING" "PRD 重新标为 PENDING"
+}
+
+assert_blocking_data_semantics() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "来源表" "退款" "时区" "SQL"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "阻断性 PENDING" "阻断项" "阻断性待确认" || return 1
+  assert_any "${file}" "owner" "Owner" "责任人" || return 1
+  grep -Eq '(停止|阻断|不得|不能|不应|暂不)[^。；]*(SQL|下游)|(SQL|下游)[^。；]*(停止|阻断|不得|不能|不应|暂不)' "${file}" || return 1
+  assert_none "${file}" "可直接生成 SQL" "继续生成 SQL" "先生成 SQL 再确认"
+}
+
 run_codex_smoke() {
   local output_file="$1" prompt="$2"
   rm -f "${output_file}"
@@ -299,7 +325,11 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/grill-conflict.txt" \
       "${sample_dir}/grill-conflict-variant.txt" \
       "${sample_dir}/bad-grill-closed.txt" \
-      "${sample_dir}/bad-grill-conflict.txt"
+      "${sample_dir}/bad-grill-conflict.txt" \
+      "${sample_dir}/approved-product-contract.txt" \
+      "${sample_dir}/bad-approved-product-contract.txt" \
+      "${sample_dir}/blocking-data-semantics.txt" \
+      "${sample_dir}/bad-blocking-data-semantics.txt"
     rmdir "${sample_dir}"
   }
   trap cleanup_self_test EXIT
@@ -339,6 +369,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，Java 实现不能定义业务意图；未确认不得执行方案。推荐答案：人工复核。需要 Owner 回答的一个问题：是否确认人工复核？' > "${sample_dir}/grill-conflict-variant.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。请确认？' > "${sample_dir}/bad-grill-closed.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
+  printf '%s\n' '业务 owner 已批准 PRD 的全局唯一目标契约，该规范性目标保持权威；当前数据库属于工程实现偏差。停止受影响实现，由工程 owner 制定修复或迁移方案并提供验证证据。' > "${sample_dir}/approved-product-contract.txt"
+  printf '%s\n' '业务 owner 已批准 PRD，但当前数据库不同，所以把原产品决策重新标为 PENDING，工程继续兼容。' > "${sample_dir}/bad-approved-product-contract.txt"
+  printf '%s\n' '来源表、退款与时区均是阻断性 PENDING；责任 owner 确认前停止 SQL 和下游构造，不猜测口径。' > "${sample_dir}/blocking-data-semantics.txt"
+  printf '%s\n' '来源表、退款与时区待确认，但可直接生成 SQL，后续再由 owner 修正。' > "${sample_dir}/bad-blocking-data-semantics.txt"
   assert_product "${sample_dir}/product.txt"
   assert_engineering "${sample_dir}/engineering.txt"
   assert_huaxia_decision "${sample_dir}/huaxia.txt"
@@ -362,6 +396,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_grill_evidence_closed "${sample_dir}/grill-closed.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict-variant.txt"
+  assert_approved_product_contract_conflict "${sample_dir}/approved-product-contract.txt"
+  assert_blocking_data_semantics "${sample_dir}/blocking-data-semantics.txt"
   if assert_product "${sample_dir}/engineering.txt"; then
     echo "FAIL product smoke accepted an engineering-only response" >&2
     exit 1
@@ -418,6 +454,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL grill-me conflict smoke accepted multiple questions" >&2
     exit 1
   fi
+  if assert_approved_product_contract_conflict "${sample_dir}/bad-approved-product-contract.txt"; then
+    echo "FAIL semantic-contract smoke accepted demotion of an approved product contract" >&2
+    exit 1
+  fi
+  if assert_blocking_data_semantics "${sample_dir}/bad-blocking-data-semantics.txt"; then
+    echo "FAIL semantic-contract smoke accepted SQL construction with blocking semantics unresolved" >&2
+    exit 1
+  fi
   echo "OK wise-agent behavior smoke self-test"
   exit 0
 fi
@@ -432,8 +476,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${MODE}" in
-  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia) ;;
-  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, or huaxia" >&2; exit 2 ;;
+  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia|semantic-contract) ;;
+  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, huaxia, or semantic-contract" >&2; exit 2 ;;
 esac
 if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
   echo "--runs must be a positive integer" >&2
@@ -441,11 +485,23 @@ if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 cd "${ROOT_DIR}"
-scripts/validate-installed-skills.sh
+if [[ "${MODE}" != "semantic-contract" ]]; then
+  scripts/validate-installed-skills.sh
+fi
 if [[ "${MODE}" == "all" || "${MODE}" == "superpowers" ]]; then
   scripts/validate-superpowers-install.sh
 fi
 mkdir -p "${OUTPUT_DIR}"
+
+if [[ "${MODE}" == "all" || "${MODE}" == "semantic-contract" ]]; then
+  run_codex_smoke "${OUTPUT_DIR}/approved-product-contract.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/SKILL.md 和 ${ROOT_DIR}/wise-agent/references/prd-system-design-review.md，以源仓库内容作为本题规则。业务 owner 已批准 PRD 将渠道订单号全局唯一作为规范性目标契约，但数据库唯一键仍是 tenant_id + channel + order_no，历史数据也存在跨渠道重复。请判断哪一方保持权威、如何处理偏差、下一步由谁做什么以及如何验证；不得写文件，控制在 350 字。"
+  assert_approved_product_contract_conflict "${OUTPUT_DIR}/approved-product-contract.txt" || { echo "FAIL approved product contract behavior smoke: ${OUTPUT_DIR}/approved-product-contract.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/blocking-data-semantics.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/product-architecture-expert/SKILL.md 和 ${ROOT_DIR}/product-architecture-expert/references/product-prd-operations-and-data.md，以源仓库内容作为本题规则。商户日 GMV 报表准备交给数据开发，但来源表、退款是否扣除和跨时区口径都未确认。请给出当前交接结论，并明确现在能否构造 SQL 或下游输入；不得写文件，控制在 350 字。"
+  assert_blocking_data_semantics "${OUTPUT_DIR}/blocking-data-semantics.txt" || { echo "FAIL blocking data semantics behavior smoke: ${OUTPUT_DIR}/blocking-data-semantics.txt" >&2; exit 1; }
+fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "product" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/product.txt" \

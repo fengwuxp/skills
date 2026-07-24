@@ -738,6 +738,36 @@
       "expected_handling": "进入知止者的领域知识冲突门禁；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；先读取现有术语与对象表，把知识库、代码和测试作为并列证据，不把当前代码自动认定为正确事实；记录冲突证据、影响范围和待确认项，停止覆盖知识库和后续实现并询问业务 owner；owner 未确认前不得提升成熟度、不得脑补统一术语、不得创建 CONTEXT.md、ADR 或新知识库目录，也不得把暂时的 grill-me 理解写成工程事实。"
     },
     {
+      "id": "wise-agent-should-preserve-approved-product-contract-on-engineering-deviation",
+      "skill": "wise-agent",
+      "query": "$wise-agent：业务 owner 已批准 PRD 将渠道订单号全局唯一作为目标契约，但数据库唯一键仍是 tenant_id + channel + order_no，历史数据也存在跨渠道重复。不要改 PRD，直接让工程兼容并继续实现。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 PRD 与系分双向回证门禁；先把已批准的规范性目标契约与当前工程实现、历史数据区分开，不把实现现状自动认定为正确产品语义；PRD 目标契约保持权威且不重新标为 PENDING，记录工程实现偏差和影响，停止受影响的实现；由工程 owner 给出修复、数据迁移或显式兼容方案及验证证据，若方案需要改变产品目标或公共契约，再交业务 owner 裁决；随后同步系分、验收种子和 Decision Log。不得让工程静默兼容，也不得把历史实现直接升级为新的业务规则。"
+    },
+    {
+      "id": "wise-agent-should-reopen-descriptive-product-assumption-on-engineering-conflict",
+      "skill": "wise-agent",
+      "query": "$wise-agent：PRD 未经业务 owner 确认就把“存量渠道订单号当前全局唯一”写成现状假设，但数据库唯一键是 tenant_id + channel + order_no，历史数据也存在跨渠道重复。直接按 PRD 假设继续做系分。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 PRD 与系分双向回证门禁；识别该条款是未经确认的描述性现状假设，数据库唯一键和历史数据已使其失效；停止依赖该假设的系分和实现，把该产品假设重新标为 PENDING，记录冲突证据与影响并交业务 owner 裁决；owner 确认目标语义后同步更新 PRD、系分、验收种子和 Decision Log，再恢复下游执行。不得继续沿用失效假设，也不得把当前实现自动认定为正确产品语义。"
+    },
+    {
       "id": "wise-agent-should-avoid-adr-for-reversible-wording-choice",
       "skill": "wise-agent",
       "query": "grill-me 已确认这个内部按钮文案暂时叫“重试”，它容易修改、不影响公共契约，也没有真实方案取舍。请为这个决定建一份 ADR 并新增 CONTEXT.md。",
@@ -2132,6 +2162,21 @@
         "variance_check"
       ],
       "expected_handling": "进入业务驱动架构交接路径，输出产品侧交接包和验证口径，覆盖目标/非目标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。"
+    },
+    {
+      "id": "product-should-produce-data-delivery-semantic-contract",
+      "skill": "product-architecture-expert",
+      "query": "要做一张商户日 GMV 报表并交给数据开发。业务只说按支付成功金额统计，请先把需求整理成可评审、可生成 SQL 的交接物；来源表、退款是否扣除和跨时区口径还不确定。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入数据交付语义契约路径，先明确业务目标、指标定义、粒度、维度、时间窗口、来源映射证据、关联与过滤、分区与新鲜度、去重与空值规则、验收基线、owner 和待确认项；不猜测表名、字段或业务规则；来源表、退款和时区口径会影响数据来源、指标定义与统计窗口，属于阻断性 PENDING，必须停止构造 SQL 和下游输入，待相应 owner 确认；不影响正确构造与验收的非阻断待确认项可作为显式风险随交接保留。稳定业务指标口径进入项目权威数据字典、语义层或指标知识库，Skill reference 只保留跨项目可复用的方法与门禁；生成 SQL 不是完成证据，确认后仍需 Schema、编译、血缘、样本基线、数据质量、性能成本和业务验收。"
     },
     {
       "id": "product-should-provide-acceptance-seeds-for-tdd",
