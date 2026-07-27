@@ -4836,6 +4836,8 @@ check(
             "DDL/schema/Java 类/字段表格到 Java Service 脚手架",
             "Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
+            "业务架构定能力与投资，产品架构定产品语义，系统架构定工程结构，技术架构定实现支撑",
+            "只说“架构图”且材料不足以判断类型时",
             "正式图形默认 SVG，PNG 仅在明确要求时导出",
             "### 3. 知止者如何工作",
             "加载 `$wise-agent` 时",
@@ -5636,11 +5638,42 @@ check(
     ),
 )
 check(
+    "wise agent keeps architecture taxonomy and owner routing",
+    has_all(
+        "wise-agent/references/capability-routing.md",
+        [
+            "### 二 B、架构名相与视图归属",
+            "本表是四类架构的路由权威",
+            "业务架构",
+            "产品架构",
+            "系统架构",
+            "技术架构",
+            "系统架构是工程整体解法",
+            "技术架构是其中偏技术实现与质量属性的支撑视图",
+            "只问一个 blocker",
+            "图形 brief 必须用独立字段声明架构类型、业务锚点、类型语义、当前态 / 目标态和视图层级",
+            "结构检查器通过不等于架构名实一致",
+        ],
+    )
+    and has_all(
+        "product-architecture-expert/references/product-architecture-methodology.md",
+        ["与业务架构的边界", "业务架构面向战略和经营决策", "产品架构承接已选定的业务能力"],
+    )
+    and has_all(
+        "senior-software-architect/references/architecture.md",
+        ["系统架构与技术架构边界", "系统架构是承载产品能力的工程整体解法", "二者不得作为同义词混用"],
+    ),
+)
+check(
     "senior diagram reference keeps delivery and safety boundaries",
     has_all(
         senior_diagram,
         [
             "图是工程判断的表达面，不是架构本身",
+            "## 系统架构与技术架构出图契约",
+            "同一业务主题可以同时产出系统架构图和技术架构图，但两者不得只改标题和标签",
+            "必须回到的业务锚点",
+            "系统架构先说明产品能力如何被工程结构承载",
             "## 卓越图形能力要求",
             "## AI 辅助可编辑图治理",
             "图形目标、目标读者、视图层级、输入材料、范围边界、节点/分组、箭头语义、风险节点、输出格式和验收标准",
@@ -5674,7 +5707,8 @@ check(
             "## Archify 路由",
             "typed JSON IR",
             "自包含 HTML",
-            "不得假定 Archify 已安装",
+            "运行时不得引用静态“已安装 / 未安装”结论",
+            "检查当前 Skill 可见性并运行其 `doctor`",
             "Schema、布局和产物校验",
             "未安装、校验不可用或校验失败时不得伪造通过",
             "不能写成架构质量结论、CR 通过、测试通过、Execution Grant 或上线审批",
@@ -5686,6 +5720,7 @@ check(
             "不得从文章宣传推导能力",
             "可选续作：fireworks-tech-graph",
             "调用 `$fireworks-tech-graph`",
+            "即使外部 Skill 默认同时导出 PNG",
             "供应链安全审查",
         ],
     ),
@@ -5696,6 +5731,10 @@ check(
         product_diagram,
         [
             "图形化交付是产品表达的一部分",
+            "## 业务架构与产品架构出图契约",
+            "同一业务主题可以同时产出业务架构图和产品架构图，但两者不得只改标题和标签",
+            "必须回到的业务锚点",
+            "技术组件堆叠图",
             "## 卓越图形能力要求",
             "## 用户旅程与服务蓝图",
             "用户旅程图",
@@ -5712,6 +5751,8 @@ check(
             "AI 辅助可编辑图",
             "Archify 准入",
             "## Archify 路由",
+            "运行时不得引用静态“已安装 / 未安装”结论",
+            "检查当前 Skill 可见性并运行其 `doctor`",
             "产品到系统的上下文图、运行时架构图、容器/模块候选图或依赖边界图",
             "以下场景继续使用原有产品图形能力",
             "不调用 Archify",
@@ -5729,6 +5770,7 @@ check(
             "draw.io 官方文档",
             "可选续作：fireworks-tech-graph",
             "调用 `$fireworks-tech-graph`",
+            "即使外部 Skill 默认同时导出 PNG",
             "供应链安全审查",
         ],
     ),
@@ -12221,7 +12263,7 @@ check(
         product_skill,
         [
             "scripts/check_product_deliverable.py",
-            "PRD、产品架构方案、图形 brief 和产品合议评审报告",
+            "PRD、业务架构规划、产品架构方案、图形 brief 和产品合议评审报告",
             "正式、完整、可评审、提交前、CR 或触发验证场景",
             "不写文件、不访问网络、不上传文件、不读取密钥",
             "不判断方案业务质量",
@@ -12233,6 +12275,7 @@ check(
         [
             "scripts/check_product_deliverable.py",
             "--kind prd",
+            "--kind business-architecture",
             "--kind product-architecture",
             "--kind diagram-brief",
             "--kind product-review",
@@ -12255,9 +12298,18 @@ check(
         product_diagram,
         [
             "scripts/check_product_deliverable.py --kind diagram-brief",
-            "图形目标、目标读者、图形类型、节点/分组、箭头语义",
+            "图形目标、目标读者、架构类型、业务锚点、类型语义、当前态 / 目标态、视图层级、图形类型、节点/分组、箭头语义",
             "必须运行",
-            "不判断图形美观度、业务正确性或渲染质量",
+            "关键词命中、脚本通过均不证明架构名实一致、业务正确、视觉美观或渲染可靠",
+        ],
+    )
+    and has_all(
+        "product-architecture-expert/references/business-architecture-planning.md",
+        [
+            "scripts/check_product_deliverable.py --kind business-architecture",
+            "战略意图、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射",
+            "只检查结构完整性",
+            "不替代业务判断、投资决策、系统事实核验或 Owner 确认",
         ],
     )
     and has_all(
@@ -12265,11 +12317,16 @@ check(
         [
             "--self-test",
             "SELF_TESTS",
+            '"business-architecture":',
             '"prd":',
             '"product-architecture":',
             '"diagram-brief":',
             '"product-review":',
             "background_and_goal",
+            "strategic_intent",
+            "capability_mapping",
+            "portfolio",
+            "governance",
             "qualitative_and_scope",
             "overview_design",
             "definition_and_boundary",
@@ -12282,6 +12339,21 @@ check(
             "流程图",
             "泳道图",
             "output_format",
+            "architecture_type",
+            "view_state",
+            "view_level",
+            "DIAGRAM_TYPE_CHECKS",
+            "declared_architecture_type",
+            "labeled_value",
+            "has_meaningful_labeled_value",
+            "business_anchor",
+            "type_semantics",
+            "business_decision_anchor",
+            "business_architecture_semantics",
+            "product_business_anchor",
+            "product_architecture_semantics",
+            "keyword-stuffed business architecture unexpectedly passed",
+            "formatted architecture type unexpectedly failed",
             "review_context",
             "disagreement",
             "pending_confirmation",
@@ -12303,6 +12375,8 @@ check(
             "不写文件、不访问网络、不上传文件、不读取密钥",
             "不判断架构质量",
             "无法运行脚本时必须说明原因、人工检查结果和残余风险",
+            "缺少架构类型",
+            "当前态 / 目标态与视图层级",
         ],
     )
     and has_all(
@@ -12328,9 +12402,9 @@ check(
         senior_diagram,
         [
             "scripts/check_architecture_deliverable.py --kind diagram-brief",
-            "图形目标、目标读者、图形类型、工程落点、节点/分组、箭头语义",
+            "图形目标、目标读者、架构类型、业务锚点、类型语义、当前态 / 目标态、视图层级、图形类型、工程落点、节点/分组、箭头语义",
             "必须运行",
-            "不判断架构质量、视觉美观度或渲染质量",
+            "关键词命中、脚本通过均不证明架构名实一致、架构质量、视觉美观或渲染可靠",
         ],
     )
     and has_all(
@@ -12347,6 +12421,22 @@ check(
             "background_and_goal",
             "release_and_risk",
             "engineering_anchor",
+            "architecture_type",
+            "view_state",
+            "view_level",
+            "DIAGRAM_TYPE_CHECKS",
+            "declared_architecture_type",
+            "labeled_value",
+            "has_meaningful_labeled_value",
+            "business_anchor",
+            "type_semantics",
+            "system_business_trace",
+            "system_architecture_semantics",
+            "technical_business_trace",
+            "technical_architecture_semantics",
+            "technical_quality_trace",
+            "keyword-stuffed system architecture unexpectedly passed",
+            "formatted architecture type unexpectedly failed",
             "PLACEHOLDER_FIELD",
             "placeholder_fields",
             "placeholder fixture unexpectedly passed",
@@ -13140,6 +13230,16 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"senior", "diagram-output.md"},
     ),
     RouteFixture(
+        name="ambiguous architecture view classification",
+        prompt="知止者，判断这张架构图应该归业务架构、产品架构、系统架构还是技术架构；现有材料没有说明用于哪类决策",
+        routes={"wise-agent", "capability-routing.md", "diagram-output.md"},
+    ),
+    RouteFixture(
+        name="same business four architecture views",
+        prompt="知止者，基于同一套跨境支付材料分别判断架构类型，并输出业务架构、产品架构、系统架构和技术架构图，不要只换标题",
+        routes={"wise-agent", "capability-routing.md", "product", "senior", "diagram-output.md"},
+    ),
+    RouteFixture(
         name="senior nonstandard engineering problem",
         prompt="这是一个跨订单支付账务的非标工程问题，没有现成 SOP，线上状态偶发不一致。请先输出问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、写入边界和停止条件，不要直接大范围重构",
         routes={"senior", "architecture.md", "adr-and-tradeoff.md", "workflow.md", "testing.md"},
@@ -13363,6 +13463,11 @@ scenario_fixtures: list[RouteFixture] = [
 
 negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="ambiguous architecture view does not preselect owner",
+        prompt="知止者，判断这张架构图应该归业务架构、产品架构、系统架构还是技术架构；现有材料没有说明用于哪类决策",
+        routes={"product", "senior"},
+    ),
+    RouteFixture(
         name="simple fast coding does not start heavy orchestration",
         prompt="这个局部代码调整行为已经明确，请快速编码，先完成最小实现，测试最后集中补。",
         routes={"cad-mode.md", "ai-large-project-orchestration.md", "planning-execution-admission.md", "wise-agent"},
@@ -13547,6 +13652,10 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
+    architecture_view_ambiguous = contains_any(
+        prompt,
+        ["业务架构、产品架构、系统架构还是技术架构", "哪类架构", "哪种架构"],
+    ) and contains_any(prompt, ["没有说明", "无法确定", "不能确定", "不清楚"])
     grill_me_requested = contains_any(prompt, grill_me_explicit_terms) or contains_any(
         prompt, grill_me_implicit_terms
     )
@@ -14016,12 +14125,16 @@ def route_fixture(prompt: str) -> set[str]:
         route.add("product-deliberation-workflow.md")
     if contains_any(prompt, ["Backlog", "机会清单", "机会点", "需求池", "需求优先级", "P0/P1/P2", "User Story"]):
         route.add("po-backlog-manager.md")
+    if contains_any(prompt, ["业务架构、产品架构、系统架构还是技术架构", "架构名相", "架构类型", "哪类架构", "哪种架构"]):
+        route.add("capability-routing.md")
     if contains_any(prompt, diagram_terms) and not contains_any(prompt, ["不要画图", "不画图", "无需画图", "只输出文字"]):
         route.add("diagram-output.md")
     if routes_codegen(prompt):
         route.update(codegen_route)
         if contains_any(prompt, codegen_safety_terms):
             route.add("requires-confirmation")
+    if architecture_view_ambiguous:
+        route.difference_update({"product", "senior"})
     return route
 
 
@@ -15276,6 +15389,39 @@ expected_handling_has(
         "项目组合 / 路线图",
         "按业务域或模块分区",
         "不直接脑补系统设计、TDD、编码任务或 Execution Grant",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-classify-ambiguous-architecture-view",
+    (
+        "架构名相与视图归属门禁",
+        "capability-routing",
+        "业务架构回答能力与投资",
+        "产品架构回答产品语义",
+        "系统架构回答工程整体结构",
+        "技术架构回答实现支撑",
+        "先从目标、读者和材料事实自动归位",
+        "架构类型、当前态 / 目标态和视图层级",
+        "只问一个 blocker",
+        "不得默认用系统架构、技术组件堆叠图或产品能力图替代判断",
+        "生成 diagram brief",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-differentiate-four-architecture-views-for-one-business",
+    (
+        "消费同一套跨境支付事实但回答不同问题",
+        "业务架构图表达业务能力、价值流、业务结果、能力 owner 和投资取舍",
+        "产品架构图表达角色、支付订单等业务对象",
+        "系统架构图表达商户接入、支付、账务、清结算等系统边界",
+        "技术架构图表达支撑交易履约质量属性的技术平台",
+        "业务锚点",
+        "类型语义",
+        "先生成并校验 diagram brief",
+        "不得只改标题、跨层填充",
+        "架构名实",
     ),
 )
 
@@ -16956,7 +17102,7 @@ check(
     "diagram routing names Archify without replacing static SVG backends",
     has_all(
         senior_diagram,
-        ["Archify 路由", "typed JSON IR", "自包含 HTML", "不得假定 Archify 已安装", "fireworks-tech-graph"],
+        ["Archify 路由", "typed JSON IR", "自包含 HTML", "检查当前 Skill 可见性并运行其 `doctor`", "fireworks-tech-graph"],
     )
     and has_all(
         product_diagram,

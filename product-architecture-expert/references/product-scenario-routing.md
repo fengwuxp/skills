@@ -109,7 +109,7 @@
 
 正式、完整、可评审、提交前或触发验证场景中，涉及外部规则时必须运行 `scripts/check_external_rules.py` 检查本地文本或显式传入的本地文件。该脚本只做完整性检查，不联网、不写文件、不替代规则真实性、适用性或可上线性的专业确认；无法运行时必须说明原因、人工检查结果和残余风险。
 
-正式、完整、可评审、提交前、CR 或触发验证场景中，PRD、产品架构方案、图形 brief 或产品合议评审报告必须运行 `scripts/check_product_deliverable.py --kind prd`、`--kind product-architecture`、`--kind diagram-brief` 或 `--kind product-review`。该脚本只做本地文本完整性检查，不联网、不写文件、不替代产品判断、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
+正式、完整、可评审、提交前、CR 或触发验证场景中，PRD、业务架构规划、产品架构方案、图形 brief 或产品合议评审报告必须运行 `scripts/check_product_deliverable.py --kind prd`、`--kind business-architecture`、`--kind product-architecture`、`--kind diagram-brief` 或 `--kind product-review`。该脚本只做本地文本完整性检查，不联网、不写文件、不替代产品判断、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
 
 ## 快速路由表
 

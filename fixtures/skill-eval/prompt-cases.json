@@ -64,6 +64,35 @@
       "expected_handling": "知止者装载产品架构能力并读取 business-architecture-planning，直接交付业务架构准入卡、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划；同时保持 owner、授权、验证与停止条件，材料不足时停止补证据，不直接脑补系统设计、TDD、编码任务或 Execution Grant。"
     },
     {
+      "id": "wise-agent-should-classify-ambiguous-architecture-view",
+      "skill": "wise-agent",
+      "query": "知止者，帮我画一张订单架构图，但现有材料只写了‘架构图’，没有说明用于业务投资、产品语义、系统结构还是技术实现决策。请先判断应该输出哪类架构和哪种视图。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入架构名相与视图归属门禁，读取 capability-routing；业务架构回答能力与投资，产品架构回答产品语义，系统架构回答工程整体结构，技术架构回答实现支撑。先从目标、读者和材料事实自动归位；材料足够时直接声明架构类型、当前态 / 目标态和视图层级，不能确定时只问一个 blocker，不得默认用系统架构、技术组件堆叠图或产品能力图替代判断。完成归位后才装载对应产品或工程能力，并生成 diagram brief。"
+    },
+    {
+      "id": "wise-agent-should-differentiate-four-architecture-views-for-one-business",
+      "skill": "wise-agent",
+      "query": "知止者，基于同一套跨境支付订单、授权、请款、退款、账务和清结算材料，分别输出业务架构图、产品架构图、系统架构图和技术架构图，不要只换标题。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "读取 capability-routing，并由产品与工程能力消费同一套跨境支付事实但回答不同问题：业务架构图表达业务能力、价值流、业务结果、能力 owner 和投资取舍；产品架构图表达角色、支付订单等业务对象、授权 / 请款 / 退款流程、状态、规则和验收；系统架构图表达商户接入、支付、账务、清结算等系统边界、模块职责、接口契约、数据归属和运行时协作；技术架构图表达支撑交易履约质量属性的技术平台、协议、中间件、数据存储、安全、可观测性、容量、容灾和部署拓扑。每张图分别用独立字段声明架构类型、业务锚点、类型语义、当前态 / 目标态、视图层级和待确认项，先生成并校验 diagram brief，再按需生成 SVG；不得只改标题、跨层填充或把 checker 通过当作业务、架构名实和视觉验收。"
+    },
+    {
       "id": "wise-agent-should-end-to-end-product-engineering-workflow",
       "skill": "wise-agent",
       "query": "我们已经有 AI 原型/eval 和业务 dogfooding 反馈，想设计从 PRD-Lite 到 OpenSpec、Harness、GSD/CAD、验证矩阵、代码 CR 和发布复盘的流程，说明产品专家、架构师和 AI Agent 的职责边界。",

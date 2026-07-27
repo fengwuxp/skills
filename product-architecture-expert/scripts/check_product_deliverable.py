@@ -22,6 +22,15 @@ class RequiredGroup(NamedTuple):
 
 
 CHECKS: dict[str, list[RequiredGroup]] = {
+    "business-architecture": [
+        RequiredGroup("strategic_intent", ["战略意图", "真实问题", "决策场景", "范围边界"], 3),
+        RequiredGroup("capability_map", ["业务能力地图", "能力分层", "能力 owner", "能力边界", "业务结果"], 3),
+        RequiredGroup("value_stream", ["价值流", "价值实现", "主链路", "异常链路", "人工节点"], 2),
+        RequiredGroup("objects_and_rules", ["核心对象", "生命周期", "业务不变量", "关键规则", "规则 owner"], 3),
+        RequiredGroup("capability_mapping", ["能力-项目-系统", "现有项目", "现有系统", "数据源", "重复建设"], 3),
+        RequiredGroup("portfolio", ["能力差距", "依赖", "优先级", "项目组合", "路线图", "停止条件"], 3),
+        RequiredGroup("governance", ["证据来源", "待确认", "验收", "知识库回流", "复审"], 3),
+    ],
     "prd": [
         RequiredGroup("background_and_goal", ["背景", "问题", "现状", "目标", "非目标", "成功指标"], 4),
         RequiredGroup("qualitative_and_scope", ["定性", "总体判断", "产品定位", "范围", "边界", "不做范围"], 3),
@@ -47,6 +56,9 @@ CHECKS: dict[str, list[RequiredGroup]] = {
     ],
     "diagram-brief": [
         RequiredGroup("diagram_goal", ["图形目标", "用途", "目标读者", "读者"], 1),
+        RequiredGroup("architecture_type", ["架构类型", "业务架构", "产品架构"], 2),
+        RequiredGroup("view_state", ["当前态", "目标态", "As-Is", "To-Be"], 1),
+        RequiredGroup("view_level", ["视图层级", "企业级", "业务域", "产品域", "场景级"], 2),
         RequiredGroup("diagram_type", ["图形类型", "能力地图", "流程图", "状态机", "产品架构图", "资金流图"], 1),
         RequiredGroup("semantic_nodes", ["节点", "分组", "角色", "对象", "系统"], 2),
         RequiredGroup("semantic_edges", ["箭头", "关系", "流向", "同步", "异步", "状态迁移"], 1),
@@ -62,7 +74,18 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("verification", ["验证方式", "验收", "检查", "下一步", "去向"], 2),
     ],
 }
+DIAGRAM_TYPE_CHECKS: dict[str, list[RequiredGroup]] = {
+    "业务架构": [
+        RequiredGroup("business_decision_anchor", ["战略意图", "业务目标", "决策问题", "经营决策", "投资取舍"], 1),
+        RequiredGroup("business_architecture_semantics", ["业务能力", "价值流", "业务结果", "能力 owner", "能力-项目-系统", "项目组合"], 2),
+    ],
+    "产品架构": [
+        RequiredGroup("product_business_anchor", ["业务目标", "用户价值", "产品方案", "验收标准", "规则矩阵"], 1),
+        RequiredGroup("product_architecture_semantics", ["角色", "业务对象", "业务流程", "状态", "规则", "验收"], 3),
+    ],
+}
 PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
+EMPTY_LABELED_VALUES = {"", "-", "无", "暂无", "待定", "待确认", "n/a", "na", "null", "none"}
 HEADING_PATTERN = re.compile(r"(?m)^#{2,6}\s+(.+?)\s*$")
 PRD_SECTION_ORDER = [
     ("section_background", ("背景与问题",)),
@@ -77,6 +100,16 @@ PRD_SECTION_ORDER = [
 ]
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
+    "business-architecture": (
+        "战略意图：提升客户经营效率；真实问题：项目重复建设；决策场景：项目组合取舍；范围边界：客户中心。"
+        "业务能力地图包含能力分层、能力 owner、业务结果和能力边界。"
+        "价值流说明从客户准入到持续经营的价值实现主链路、异常链路和人工节点。"
+        "核心对象为客户与客户关系；生命周期、业务不变量、关键规则和规则 owner 明确。"
+        "能力-项目-系统映射列出现有项目、现有系统、数据源和重复建设。"
+        "能力差距、依赖、优先级、项目组合、路线图和停止条件明确。"
+        "证据来源、待确认项、验收、知识库回流位置和复审机制明确。",
+        "战略意图：提升效率。业务能力地图：客户管理。",
+    ),
     "prd": (
         "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
         "## 二、目标与非目标\n目标：提升运营效率；非目标：不改结算规则。\n"
@@ -104,9 +137,10 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "业务目标：提升审核效率。能力地图：后台能力。",
     ),
     "diagram-brief": (
-        "图形目标：说明运营后台能力；目标读者：产品和研发；图形类型：能力地图。"
-        "节点：角色、对象、系统；分组：前台和后台；箭头：审批关系；关系：数据流。"
-        "假设：权限模型待确认；输出格式：SVG。",
+        "图形目标：说明跨境支付产品如何完成交易闭环；目标读者：产品和研发；架构类型：产品架构；目标态；视图层级：产品域；图形类型：产品架构图。"
+        "业务锚点：降低跨境交易失败；类型语义：角色、支付订单、授权、请款、退款、状态、规则和验收的产品闭环。"
+        "业务目标：降低交易失败；角色：商户和运营；业务对象：支付订单；业务流程覆盖授权、请款和退款；状态、规则和验收保持一致。"
+        "节点：角色、对象、系统；分组：前台和后台；箭头：状态迁移；关系：数据流；假设：争议规则待确认；输出格式：SVG。",
         "图形目标：说明能力；图形类型：能力地图。",
     ),
     "product-review": (
@@ -123,6 +157,38 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
 
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
+
+
+def labeled_value(text: str, label: str) -> str | None:
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            continue
+        cells = [cell.strip().strip("`*_").strip() for cell in stripped.strip("|").split("|")]
+        if len(cells) >= 2 and normalize(cells[0]) == normalize(label):
+            return cells[1]
+    match = re.search(
+        rf"(?:^|[\n；;。])\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*(?:\*\*|__|`)?\s*[：:]\s*([^；;。\n|]+)",
+        text,
+        re.IGNORECASE,
+    )
+    return match.group(1).strip().strip("`*_").strip() if match else None
+
+
+def has_meaningful_labeled_value(text: str, label: str) -> bool:
+    value = labeled_value(text, label)
+    return bool(
+        value is not None
+        and normalize(value) not in EMPTY_LABELED_VALUES
+        and not PLACEHOLDER_FIELD.search(value)
+    )
+
+
+def declared_architecture_type(text: str) -> str | None:
+    value = labeled_value(text, "架构类型")
+    if value is None:
+        return None
+    return next((name for name in DIAGRAM_TYPE_CHECKS if normalize(value) == name.casefold()), None)
 
 
 def missing_ordered_sections(text: str, sections: list[tuple[str, tuple[str, ...]]]) -> list[str]:
@@ -150,6 +216,19 @@ def missing_groups(kind: str, text: str) -> list[str]:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+    if kind == "diagram-brief":
+        for label, name in (("业务锚点", "business_anchor"), ("类型语义", "type_semantics")):
+            if not has_meaningful_labeled_value(text, label):
+                missing.append(name)
+        architecture_type = declared_architecture_type(text)
+        if architecture_type is None:
+            if "architecture_type" not in missing:
+                missing.append("architecture_type")
+        else:
+            for group in DIAGRAM_TYPE_CHECKS[architecture_type]:
+                hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
+                if hits < group.min_hits:
+                    missing.append(group.name)
     if PLACEHOLDER_FIELD.search(text):
         missing.append("placeholder_fields")
     if kind == "prd":
@@ -167,6 +246,12 @@ def read_input(args: argparse.Namespace) -> str:
 
 def run_self_test() -> int:
     failures: list[str] = []
+    if "business-architecture" not in CHECKS:
+        failures.append("business-architecture: missing deliverable kind")
+    diagram_group_names = {group.name for group in CHECKS["diagram-brief"]}
+    for required_name in ("architecture_type", "view_state", "view_level"):
+        if required_name not in diagram_group_names:
+            failures.append(f"diagram-brief: missing required group {required_name}")
     for kind, (valid_text, invalid_text) in SELF_TESTS.items():
         valid_missing = missing_groups(kind, valid_text)
         if valid_missing:
@@ -174,6 +259,35 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    business_architecture_diagram = (
+        "图形目标：判断跨境支付哪些能力值得投资；目标读者：业务负责人；架构类型：业务架构；目标态；视图层级：业务域；图形类型：能力地图。"
+        "业务锚点：决定跨境支付能力投资次序；类型语义：业务能力、价值流、业务结果、能力 owner 和投资取舍。"
+        "战略意图：提升跨境交易履约；业务能力包括商户准入、交易履约和资金结算；价值流连接签约到结算；业务结果和能力 owner 明确。"
+        "节点：业务能力；分组：交易和资金；箭头：价值流；待确认：投资取舍；输出格式：SVG。"
+    )
+    if missing_groups("diagram-brief", business_architecture_diagram):
+        failures.append("diagram-brief: business architecture fixture unexpectedly failed")
+    business_architecture_mismatch = (
+        "图形目标：说明跨境支付业务；目标读者：业务负责人；架构类型：业务架构；当前态；视图层级：业务域；图形类型：能力地图。"
+        "战略意图、业务目标、业务能力、价值流、业务结果和能力 owner 均已明确。"
+        "节点：Kafka、Redis、MySQL；分组：中间件和数据库；箭头：数据流；待确认：集群性能；输出格式：SVG。"
+    )
+    expected_business_mismatch = {"business_anchor", "type_semantics"}
+    if not expected_business_mismatch.issubset(set(missing_groups("diagram-brief", business_architecture_mismatch))):
+        failures.append("diagram-brief: keyword-stuffed business architecture unexpectedly passed")
+    for formatted_diagram in (
+        SELF_TESTS["diagram-brief"][0].replace("架构类型：产品架构；", "**架构类型**：产品架构；", 1),
+        SELF_TESTS["diagram-brief"][0].replace("架构类型：产品架构；", "\n| 架构类型 | 产品架构 |\n", 1),
+    ):
+        if missing_groups("diagram-brief", formatted_diagram):
+            failures.append("diagram-brief: formatted architecture type unexpectedly failed")
+    diagram_without_view = SELF_TESTS["diagram-brief"][0].replace(
+        "架构类型：产品架构；目标态；视图层级：产品域；",
+        "",
+    )
+    expected_diagram_missing = {"architecture_type", "view_state", "view_level"}
+    if not expected_diagram_missing.issubset(set(missing_groups("diagram-brief", diagram_without_view))):
+        failures.append("diagram-brief: missing architecture view fields unexpectedly passed")
     placeholder_text = SELF_TESTS["prd"][0] + "owner：〈待填写〉"
     if "placeholder_fields" not in missing_groups("prd", placeholder_text):
         failures.append("prd: placeholder fixture unexpectedly passed")

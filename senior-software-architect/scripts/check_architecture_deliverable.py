@@ -23,6 +23,7 @@ class RequiredGroup(NamedTuple):
 
 CHECKS: dict[str, list[RequiredGroup]] = {
     "architecture-plan": [
+        RequiredGroup("architecture_type", ["架构类型", "系统架构", "技术架构"], 2),
         RequiredGroup("background_and_goal", ["背景", "目标", "非目标", "成功标准"], 2),
         RequiredGroup("current_state", ["现状", "约束", "问题", "影响范围"], 1),
         RequiredGroup("core_decisions", ["核心决策", "选型", "职责", "边界", "取舍"], 2),
@@ -71,6 +72,9 @@ CHECKS: dict[str, list[RequiredGroup]] = {
     ],
     "diagram-brief": [
         RequiredGroup("diagram_goal", ["图形目标", "用途", "目标读者", "读者"], 1),
+        RequiredGroup("architecture_type", ["架构类型", "系统架构", "技术架构"], 2),
+        RequiredGroup("view_state", ["当前态", "目标态", "As-Is", "To-Be"], 1),
+        RequiredGroup("view_level", ["视图层级", "系统级", "子领域", "应用级", "应用粒度"], 2),
         RequiredGroup("diagram_type", ["图形类型", "架构图", "时序图", "状态机", "ER 图", "部署图"], 1),
         RequiredGroup("engineering_anchor", ["工程落点", "模块", "接口", "部署", "监控", "验证"], 2),
         RequiredGroup("semantic_nodes", ["节点", "分组", "系统", "组件", "领域"], 2),
@@ -79,7 +83,19 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("output_format", ["SVG", "输出格式", "正式图形化交付"], 1),
     ],
 }
+DIAGRAM_TYPE_CHECKS: dict[str, list[RequiredGroup]] = {
+    "系统架构": [
+        RequiredGroup("system_business_trace", ["业务目标", "业务能力", "业务流程", "业务对象", "用例", "验收场景"], 1),
+        RequiredGroup("system_architecture_semantics", ["系统边界", "模块职责", "接口契约", "数据归属", "运行时协作", "部署单元", "外部系统"], 3),
+    ],
+    "技术架构": [
+        RequiredGroup("technical_business_trace", ["业务目标", "业务能力", "业务流程", "业务对象", "用例", "验收场景"], 1),
+        RequiredGroup("technical_architecture_semantics", ["技术平台", "协议", "中间件", "基础设施", "数据存储", "安全机制", "可观测性", "容灾", "部署拓扑"], 3),
+        RequiredGroup("technical_quality_trace", ["质量属性", "可用性", "性能", "容量", "安全", "可观测性", "容灾", "运维"], 2),
+    ],
+}
 PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
+EMPTY_LABELED_VALUES = {"", "-", "无", "暂无", "待定", "待确认", "n/a", "na", "null", "none"}
 HEADING_PATTERN = re.compile(r"(?m)^#{2,6}\s+(.+?)\s*$")
 SYSTEM_DESIGN_SECTION_ORDER = [
     ("section_background", ("需求背景", "背景与问题")),
@@ -108,7 +124,7 @@ REQUEST_ID_NEGATIONS = ("不使用", "不得", "不作为", "不能作为", "不
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "architecture-plan": (
-        "背景：订单链路慢；目标：降低延迟；非目标：不改外部协议。"
+        "架构类型：系统架构。背景：订单链路慢；目标：降低延迟；非目标：不改外部协议。"
         "现状：同步调用多，约束是兼容旧接口，问题影响范围是订单链路。"
         "核心决策：按边界拆应用服务并说明取舍。"
         "接口契约：入参、出参、错误码、幂等和兼容。"
@@ -156,9 +172,10 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "影响范围：用户。",
     ),
     "diagram-brief": (
-        "图形目标：说明订单链路；目标读者：研发和 SRE；图形类型：架构图。"
-        "工程落点：模块、接口、部署、监控和验证。节点：系统、组件、领域；分组：应用层和基础设施层。"
-        "箭头：同步调用；关系：数据流。假设：容量边界待确认；输出格式：SVG。",
+        "图形目标：说明跨境支付订单到清结算的系统承载；目标读者：研发和 SRE；架构类型：系统架构；目标态；视图层级：系统级；图形类型：架构图。"
+        "业务锚点：完成跨境交易履约；类型语义：商户接入、支付交易、账务和清结算的系统边界与运行时协作。"
+        "业务目标：完成交易履约；系统边界覆盖商户接入和资金域；模块职责、接口契约、数据归属、运行时协作和部署单元明确。"
+        "工程落点：模块、接口、部署、监控和验证。节点：系统、组件、领域；分组：交易域和资金域；箭头：同步调用；关系：数据流；假设：账务边界待确认；输出格式：SVG。",
         "图形目标：说明链路；图形类型：架构图。",
     ),
 }
@@ -168,13 +185,36 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
-def labeled_value(line: str, label: str) -> str | None:
-    match = re.match(
-        rf"^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*(?:\*\*|__|`)?\s*[：:]\s*(.*)$",
-        line,
+def labeled_value(text: str, label: str) -> str | None:
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("|"):
+            continue
+        cells = [cell.strip().strip("`*_").strip() for cell in stripped.strip("|").split("|")]
+        if len(cells) >= 2 and normalize(cells[0]) == normalize(label):
+            return cells[1]
+    match = re.search(
+        rf"(?:^|[\n；;。])\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*(?:\*\*|__|`)?\s*[：:]\s*([^；;。\n|]+)",
+        text,
         re.IGNORECASE,
     )
-    return match.group(1).strip() if match else None
+    return match.group(1).strip().strip("`*_").strip() if match else None
+
+
+def has_meaningful_labeled_value(text: str, label: str) -> bool:
+    value = labeled_value(text, label)
+    return bool(
+        value is not None
+        and normalize(value) not in EMPTY_LABELED_VALUES
+        and not PLACEHOLDER_FIELD.search(value)
+    )
+
+
+def declared_architecture_type(text: str) -> str | None:
+    value = labeled_value(text, "架构类型")
+    if value is None:
+        return None
+    return next((name for name in DIAGRAM_TYPE_CHECKS if normalize(value) == name.casefold()), None)
 
 
 def uses_wind_table_rules(text: str) -> bool:
@@ -240,6 +280,19 @@ def missing_groups(kind: str, text: str) -> list[str]:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+    if kind == "diagram-brief":
+        for label, name in (("业务锚点", "business_anchor"), ("类型语义", "type_semantics")):
+            if not has_meaningful_labeled_value(text, label):
+                missing.append(name)
+        architecture_type = declared_architecture_type(text)
+        if architecture_type is None:
+            if "architecture_type" not in missing:
+                missing.append("architecture_type")
+        else:
+            for group in DIAGRAM_TYPE_CHECKS[architecture_type]:
+                hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
+                if hits < group.min_hits:
+                    missing.append(group.name)
     if (
         kind == "system-design"
         and all(marker.casefold() in normalized for marker in TABLE_DESIGN_MARKERS)
@@ -291,6 +344,15 @@ def read_input(args: argparse.Namespace) -> str:
 
 def run_self_test() -> int:
     failures: list[str] = []
+    required_groups = {
+        "architecture-plan": {"architecture_type"},
+        "diagram-brief": {"architecture_type", "view_state", "view_level"},
+    }
+    for kind, expected_names in required_groups.items():
+        actual_names = {group.name for group in CHECKS[kind]}
+        missing_names = expected_names - actual_names
+        if missing_names:
+            failures.append(f"{kind}: missing required groups {', '.join(sorted(missing_names))}")
     for kind, (valid_text, invalid_text) in SELF_TESTS.items():
         valid_missing = missing_groups(kind, valid_text)
         if valid_missing:
@@ -298,6 +360,38 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    technical_architecture_diagram = (
+        "图形目标：说明跨境支付高可用技术支撑；目标读者：技术负责人和 SRE；架构类型：技术架构；当前态；视图层级：系统级；图形类型：部署图。"
+        "业务锚点：保障跨境交易履约；类型语义：质量属性由技术平台、协议、中间件、数据存储、安全、可观测性和容灾机制支撑。"
+        "业务目标：保障交易履约；质量属性包括可用性、容量和容灾；技术平台使用 Kubernetes；协议、中间件、数据存储、安全机制、可观测性和部署拓扑明确。"
+        "工程落点：模块、接口、部署、监控和验证。节点：系统、组件、领域；分组：接入层和数据层；箭头：同步调用和异步数据流；风险：跨区恢复待确认；输出格式：SVG。"
+    )
+    if missing_groups("diagram-brief", technical_architecture_diagram):
+        failures.append("diagram-brief: technical architecture fixture unexpectedly failed")
+    system_architecture_mismatch = (
+        "图形目标：说明跨境支付系统；目标读者：研发；架构类型：系统架构；目标态；视图层级：系统级；图形类型：架构图。"
+        "业务目标、系统边界、模块职责、接口契约和数据归属均已明确。"
+        "业务能力包括商户准入、交易履约和资金结算；工程落点：模块和接口待定。节点：系统和组件；分组：能力域；箭头：调用关系；待确认：边界；输出格式：SVG。"
+    )
+    expected_system_mismatch = {"business_anchor", "type_semantics"}
+    if not expected_system_mismatch.issubset(set(missing_groups("diagram-brief", system_architecture_mismatch))):
+        failures.append("diagram-brief: keyword-stuffed system architecture unexpectedly passed")
+    for formatted_diagram in (
+        SELF_TESTS["diagram-brief"][0].replace("架构类型：系统架构；", "**架构类型**：系统架构；", 1),
+        SELF_TESTS["diagram-brief"][0].replace("架构类型：系统架构；", "\n| 架构类型 | 系统架构 |\n", 1),
+    ):
+        if missing_groups("diagram-brief", formatted_diagram):
+            failures.append("diagram-brief: formatted architecture type unexpectedly failed")
+    architecture_without_type = SELF_TESTS["architecture-plan"][0].replace("架构类型：系统架构。", "")
+    if "architecture_type" not in missing_groups("architecture-plan", architecture_without_type):
+        failures.append("architecture-plan: missing architecture type unexpectedly passed")
+    diagram_without_view = SELF_TESTS["diagram-brief"][0].replace(
+        "架构类型：系统架构；目标态；视图层级：系统级；",
+        "",
+    )
+    expected_diagram_missing = {"architecture_type", "view_state", "view_level"}
+    if not expected_diagram_missing.issubset(set(missing_groups("diagram-brief", diagram_without_view))):
+        failures.append("diagram-brief: missing architecture view fields unexpectedly passed")
     for kind in ("system-design", "refactoring-design"):
         placeholder_text = SELF_TESTS[kind][0] + "owner：〈待填写〉"
         if "placeholder_fields" not in missing_groups(kind, placeholder_text):
