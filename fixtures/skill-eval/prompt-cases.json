@@ -376,7 +376,83 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入正式设计文档可读性治理；把名 -> 事 ->（图）-> 法 -> 器 -> 验保留为内部完整性检查，不把它或 AI 工作流字段机械展开成可见目录。产品设计和系分正文按读者理解顺序组织：背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象 -> 风险与待确认。正文末尾只保留面向人类评审的验收摘要；详细验收矩阵、AC 与测试映射、验证命令、执行 owner、任务状态和 Loop/Harness 控制进入执行计划或按需附录，并保持 PRD、系分和实现 Spec 的事实源边界。"
+      "expected_handling": "进入正式设计文档可读性治理；把名 -> 事 ->（图）-> 法 -> 器 -> 验保留为内部完整性检查，不把它或 AI 工作流字段机械展开成可见目录。产品设计和系分正文按读者理解顺序组织：背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象 -> 风险与待确认。标准 / 高风险文档先给阅读摘要，说明目标读者、真实问题、本期承诺与非目标、当前状态与权威来源、关键待确认及未确认前处理。PRD、协同主记录、执行计划、Decision Log，以及已批准 PRD、系分、执行计划 / CI、ADR / Decision Log 各守自己的事实源边界。流程、规则和异常用主动责任句说明谁在什么条件下做什么、产生什么可观察结果、失败后谁承接。正文末尾只保留面向人类评审的验收摘要；详细验收矩阵、AC 与测试映射、验证命令、执行 owner、任务状态和 Loop/Harness 控制进入执行计划或按需附录。准出前由业务 / 产品 Owner、研发、测试 / 运营分别走读；若必须依赖作者口头补充才能解释，先修正文或图，不把评审评论当正式结论。",
+      "behavior_contract": {
+        "reader_summary": "标准 / 高风险文档在正文主线前提供阅读摘要；轻量文档可裁剪但必须保持背景、目标、范围和验收可理解。",
+        "authority_split": [
+          "PRD 承载当前产品语义",
+          "协同主记录承载状态、排期、过程决策和阶段门",
+          "执行计划 / CI 承载验收映射、验证命令和执行状态",
+          "Decision Log / ADR 承载历史取舍"
+        ],
+        "responsibility_language": "用主动责任句表达谁在什么条件下做什么、产生什么可观察结果、失败后谁承接。",
+        "reader_walkthrough": [
+          "业务 / 产品 Owner 能解释为什么做、做什么和不做什么",
+          "研发能解释对象、边界、规则、异常和不变量",
+          "测试 / 运营能推导正常、异常、人工兜底和可观察结果"
+        ],
+        "must_not_do": [
+          "不得把流程完整性框架机械展开成目录",
+          "不得复制易漂移的执行状态",
+          "不得用作者口头补充或评审评论替代正文和图"
+        ]
+      }
+    },
+    {
+      "id": "wise-agent-should-absorb-org-prd-template-without-tool-binding",
+      "skill": "wise-agent",
+      "query": "知止者，请参考组织内产品需求文档模板优化通用 PRD Skill：吸收轻量、标准、增强模式，文档责任，规划取舍，产品判断，成功标准与交付验收分离，原型一致性和产品语义变更门禁；但不要把具体项目管理平台、G1/G2/G3、L1/L2/L3 或某个原型工具写死到通用模板。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入组织实践到通用 PRD 能力的选择性吸收：产品模板使用轻量 / 标准 / 增强三种强度，高风险直接进入增强；正式 PRD 保留当前版本、状态、产品 owner、业务 owner、更新时间和权威来源；定性阶段说明阶段目标、能力差距、机会成本、依赖顺序、产品判断、推荐方案、不采用方案和复审条件。成功标准衡量上线后是否达成业务、用户和产品目标，验收摘要判断产品是否按当前定义正确交付。交互类需求按需给出原型或页面锚点并检查口径一致；只有目标、范围、对象、流程、规则、权限或验收等产品语义变化才升级 PRD 版本。产品先形成推荐，不把自身应完成的方案选择抛给需求方；只有资源、商业、合规、安全、财务等超出产品权限的事项交给对应 Owner。通用 Skill 不绑定具体协作平台、门禁编号、需求等级或原型工具。",
+      "behavior_contract": {
+        "document_strength": "使用轻量 / 标准 / 增强三种强度；高风险直接进入增强，未命中的条件章节删除。",
+        "document_control": "正式 PRD 保留当前版本、状态、产品 owner、业务 owner、更新时间和权威来源，不复制完整过程流水。",
+        "product_judgment": "产品先形成判断、推荐方案、明确不采用方案和复审条件，只上交超出产品权限的决策。",
+        "outcome_split": "成功标准衡量上线后目标效果；验收摘要判断当前产品定义是否正确交付。",
+        "change_gate": "原型按需锚定；只有产品语义变化才升级 PRD 版本，排期或任务状态变化不升级。",
+        "must_not_do": [
+          "不得绑定具体项目管理平台",
+          "不得绑定 G1/G2/G3",
+          "不得绑定 L1/L2/L3",
+          "不得绑定具体原型工具"
+        ]
+      }
+    },
+    {
+      "id": "wise-agent-should-govern-human-centered-prd-and-evidence",
+      "skill": "wise-agent",
+      "query": "知止者，以人为本并结合经世致用和软件工程实践，优化正式 PRD、产品结构 Checker 和文档证据治理：读者先看懂产品，再让机器检查；产品文档不要混入 Handler、事务、MQ、Outbox、Saga 等实现方案；结构脚本不能冒充独立 Checker，文档变更后旧证据不能继续复用；文档集状态要正交但不要新造通用检查平台。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入以人为本的产品文档与证据治理：正式 PRD 沿用阅读摘要，并按当前结论、产品定义 / 产品视图、主链路、核心对象与边界帮助业务、产品、研发、测试和运营快速形成共同理解；正文保留目标、主体、能力、对象、状态、业务阶段、可观察输入输出、规则、异常、人工兜底、业务红线和验收，Handler、事务边界、MQ、Outbox、Saga、实现类等实现机制归系分，只有已确认且会改变产品承诺的外部约束才在 PRD 说明。结构 Checker 对一题多章、真正重复的标题和纯关键词章节失败，对产品视图晚于详细设计和实现语言只警告，并声明结构通过不代表语义或视觉验收。确定性脚本不等于独立 Checker；证据绑定源内容指纹，正文变化后旧 evidenceRef 失效。Git 基线、工作区验证、Owner 决策和生产证据分开记录。文档集治理合并到现有 Spec 实践，README 只做稳定导航，动态台账与 Gate 分离，状态轴保持正交，源文件与派生产物记录 hash；没有第二个仓库的同类证据前不开发通用文档检查脚本。",
+      "behavior_contract": {
+        "human_reading": "阅读摘要先呈现当前结论、产品定义 / 产品视图、主链路、核心对象与边界，正文继续按人的理解顺序展开。",
+        "semantic_boundary": "PRD 只承诺业务可观察语义；Handler、事务边界、MQ、Outbox、Saga 和实现类归系分或实现 Spec。",
+        "checker_contract": "一题多章、真正重复的标题和纯关键词章节阻断；产品视图晚于详细设计和实现语言只警告；结构通过不等于语义或视觉验收。",
+        "evidence_contract": "确定性脚本不等于独立 Checker；evidenceRef 绑定源内容指纹，源内容变化后失效；四类证据互不替代。",
+        "document_set": "README、动态台账、Gate、正交状态轴和派生产物关系各守其责；暂不开发通用文档检查脚本。",
+        "must_not_do": [
+          "不得把 PRD 缩减成只有输入输出和规则",
+          "不得把实现机制写成产品方案",
+          "不得让结构脚本自证语义或视觉通过",
+          "不得把单仓库状态字段固化为所有项目强制协议"
+        ]
+      }
     },
     {
       "id": "wise-agent-should-design-as-capability-provider",
@@ -3185,6 +3261,110 @@
           "不得把知识库或当前代码天然视为业务真相",
           "不得用模型记忆代替项目证据"
         ]
+      }
+    },
+    {
+      "id": "grill-me-should-handoff-high-fidelity-question",
+      "skill": "grill-me",
+      "query": "使用 $grill-me 盘问审批工作台的视觉密度和单页还是分步表单。现在只有文字需求，没有原型、真实页面或用户操作记录；不要凭语言替 owner 断言体验好，先决定怎样取证。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "进入高保真问题媒介路由；不凭语言断言使用体验，也不把取证交接当 Owner 裁决；先建立最小可观察物，交给原型、真实页面或可执行样例形成观察证据，再回到原问题台账做证据裁决；交接记录写清决策包 ID、观察场景、交接原因、返回产物、写回位置和停止条件，未取得观察证据前不执行方案。",
+      "behavior_contract": {
+        "fidelity_gate": "视觉、交互和真实使用感等必须观察实物才能判断的问题属于高保真问题；先交给可观察媒介，不凭文本或模型记忆收敛。",
+        "handoff_must_include": [
+          "决策包 ID",
+          "观察场景",
+          "交接原因",
+          "返回产物",
+          "写回位置",
+          "停止条件"
+        ],
+        "must_not_do": [
+          "不得把取证交接当 Owner 裁决",
+          "不得凭语言断言使用体验",
+          "不得在观察证据返回前执行方案"
+        ]
+      }
+    },
+    {
+      "id": "grill-me-should-reuse-history-before-high-fidelity-handoff",
+      "skill": "grill-me",
+      "query": "使用 $grill-me 继续审查审批工作台的单页还是分步表单。Q-118 已有可用性测试、Owner 确认和决策快照，结论是单页；本轮没有新证据、风险升级或重开要求。不要因为它属于高保真问题再建原型或决策包。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "先恢复 Q-118 的历史结论并按决策主题去重，再判断本轮是否需要媒介；由于结论仍适用，复用 decision-reused / confirmed，不建立新的原型、观察交接或决策包。只有新证据、风险升级或 Owner 明确重开时，才重新判断高保真证据媒介。",
+      "behavior_contract": {
+        "history_gate": "历史恢复和语义去重先于问题保真度与媒介选择。",
+        "reuse_result": "复用 decision-reused / confirmed。",
+        "must_not_do": [
+          "不得建立新的原型",
+          "不得建立观察交接",
+          "不得建立决策包"
+        ]
+      }
+    },
+    {
+      "id": "grill-me-should-split-large-scope-into-decision-packages",
+      "skill": "grill-me",
+      "query": "使用 $grill-me 盘清一项跨审批、通知、迁移和运营配置的大改造，涉及多个 owner、阶段和验收分叉。不要用固定 token 阈值硬切；请先把可独立关闭的分叉组织好，再逐项推进。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "先按可独立关闭的决策主题拆成决策包，而不是围绕固定 token 阈值硬切；每个决策包写清范围、排除项、Owner、输入快照、证据媒介、返回产物、写回位置、预算和停止条件；包内仍一次只处理一个主 blocker，交接后以原决策快照恢复，不重新展开已经关闭的分叉。",
+      "behavior_contract": {
+        "package_must_include": [
+          "范围",
+          "排除项",
+          "Owner",
+          "输入快照",
+          "证据媒介",
+          "返回产物",
+          "写回位置",
+          "预算",
+          "停止条件"
+        ],
+        "budget_rule": "根据任务实际的时间、上下文、验证成本和无进展证据停止，不采用固定 token 阈值。",
+        "must_not_do": [
+          "不得重新展开已关闭分叉",
+          "不得把决策包当执行授权"
+        ]
+      }
+    },
+    {
+      "id": "grill-me-should-parallelize-only-independent-decision-packages",
+      "skill": "grill-me",
+      "query": "使用 $grill-me 审查两个决策包：供应商接入由支付 owner 决策，历史报表迁移由数据 owner 决策；两者没有共享契约、红线或写回位置。判断能否并行，并说明同一 owner 的同一契约分叉为何不能并行。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "仅在决策包的决策主题、Owner、输入、红线和写回位置均不重叠时，才可用 Worker 并行取证或收敛；同一 Owner 的同一决策主题必须串行，不得并行制造互相矛盾的结论；每个包返回后仍以各自的决策快照对账，未满足独立条件时保持串行。",
+      "behavior_contract": {
+        "parallel_gate": "只有决策主题、Owner、输入、红线和写回位置均不重叠的决策包可以并行。",
+        "serial_gate": "同一 Owner 的同一决策主题必须串行。",
+        "return_gate": "每个决策包返回后必须以各自的决策快照对账，再进入下一阶段。"
       }
     },
     {

@@ -35,10 +35,11 @@
 - [Matt Pocock skills](https://github.com/mattpocock/skills)：2026-07-15 核验上游 `main` 提交 `e9fcdf95b402d360f90f1db8d776d5dd450f9234`、README、`grill-me`、`grilling`、`grill-with-docs` 和 `domain-modeling`。上游当时的 `grill-me` 只调用 `/grilling`，不适合作为本项目安装权威。
 - 微信文章 [《热门Skill研究：Grill-Me，凭什么火遍整个开发者圈？》](https://mp.weixin.qq.com/s/K4CN1LxsZgFR2FYv7f8Y3w)：2026-07-08 通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文，只吸收一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding。
 - 微信文章 [《如何看待 grill-me（拷问我）这个 Skill？》](https://mp.weixin.qq.com/s/jw7pqTwco_lLGnN_KmExig)：作者 / 账号为 `LastWhisperDev`，页面显示发布时间为 2026-07-10 15:50；2026-07-13 通过本机 Chrome headless 等价浏览器读取标题、作者、发布时间和正文，只吸收 Taste Injection、Shared Context、Issue / PR、Hand-off Prompt 和执行前 Finalize 的可迁移方法。
+- 微信文章 [《grill-me SKILL 的失败模式》](https://mp.weixin.qq.com/s/9keJ9vfryl3RAmhVWTZnFA)：作者 / 账号为 `徐道AI` / `老徐`，页面显示发布时间为 2026-07-24；2026-07-29 通过浏览器读取标题、作者、发布时间和正文，只吸收高保真问题先观察、按独立决策包交接与并行、人与 Agent 共同收敛的可迁移方法。文中约 120k token 的说法只属作者经验，不作为固定阈值或项目事实。
 
 ## 项目吸收结论
 
-自 2026-07-18 起，本仓库维护项目自有独立 `grill-me`。上游与文章只作内容来源，不是安装权威；项目增加问题台账、语义去重、证据自决、红线记录和决策快照，并由 `wise-agent` 按需装载和消费结果。
+自 2026-07-18 起，本仓库维护项目自有独立 `grill-me`。上游与文章只作内容来源，不是安装权威；项目增加问题台账、语义去重、证据自决、红线记录、问题保真度、决策包和决策快照，并由 `wise-agent` 按需装载和消费结果。
 
 ## 不吸收边界
 

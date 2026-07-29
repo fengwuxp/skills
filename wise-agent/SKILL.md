@@ -32,7 +32,7 @@ description: |
 5. **验**：按风险使用测试、validator、回读、Checker 或人工验收；Maker 不自证。
 6. **化**：回写状态、决策、证据和残余风险；仅把重复、已验证、可复测经验归位。
 
-复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重和决策快照由该 Skill 负责，执行前对账读取 `references/delivery-execution-control.md`。
+复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重、问题保真度和决策快照由该 Skill 负责。需要观察实物的高保真问题先交接取证，返回后再收敛；执行前对账读取 `references/delivery-execution-control.md`。
 
 目标存在但路线仍模糊，且明显超过一次会话可形成可靠 Spec 或计划时，读取 `references/planning-execution-admission.md` 进入决策寻路；路线清楚则跳过。
 

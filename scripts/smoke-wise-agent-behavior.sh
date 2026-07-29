@@ -287,6 +287,39 @@ assert_grill_evidence_conflict() {
   [[ "$(question_record_count "${file}")" -eq 1 ]]
 }
 
+assert_grill_history_before_handoff() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "Q-118" "decision-reused" "confirmed"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "历史" "决策快照" || return 1
+  assert_any "${file}" "复用" "沿用" || return 1
+  assert_any "${file}" "不新建原型、观察交接或决策包" "不得新建原型、观察交接或决策包" "无需新建原型、观察交接或决策包" "无需新增原型、观察交接或决策包" || return 1
+  assert_none "${file}" "随后重新建立原型" "仍然新建原型" "仍需新建原型" "重新创建决策包"
+}
+
+assert_grill_decision_packages() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "决策包" "范围" "排除项" "Owner" "输入快照" "证据媒介" "返回产物" "写回位置" "预算" "停止条件"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  grep -Eq '(不|不得|不采用|不能)[^。；]*固定 token' "${file}" || return 1
+  assert_any "${file}" "不是执行授权" "不执行方案" || return 1
+  assert_none "${file}" "实际仍采用固定 token" "仍按固定 token" "仍把决策包当作执行授权"
+}
+
+assert_grill_parallel_packages() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "决策包" "决策主题" "Owner" "输入" "红线" "写回位置" "Worker" "并行" "决策快照"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  grep -Eq '同一[^。；]*Owner[^。；]*同一[^。；]*决策主题[^。；]*(串行|不得并行)' "${file}" || return 1
+  assert_none "${file}" "仍允许同一 Owner 的同一决策主题并行" "同一 Owner 的同一决策主题也并行"
+}
+
 assert_approved_product_contract_conflict() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
@@ -390,6 +423,12 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/grill-conflict-variant.txt" \
       "${sample_dir}/bad-grill-closed.txt" \
       "${sample_dir}/bad-grill-conflict.txt" \
+      "${sample_dir}/grill-history-before-handoff.txt" \
+      "${sample_dir}/bad-grill-history-before-handoff.txt" \
+      "${sample_dir}/grill-decision-packages.txt" \
+      "${sample_dir}/bad-grill-decision-packages.txt" \
+      "${sample_dir}/grill-parallel-packages.txt" \
+      "${sample_dir}/bad-grill-parallel-packages.txt" \
       "${sample_dir}/approved-product-contract.txt" \
       "${sample_dir}/bad-approved-product-contract.txt" \
       "${sample_dir}/blocking-data-semantics.txt" \
@@ -443,6 +482,12 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，Java 实现不能定义业务意图；未确认不得执行方案。推荐答案：人工复核。需要 Owner 回答的一个问题：是否确认人工复核？' > "${sample_dir}/grill-conflict-variant.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。请确认？' > "${sample_dir}/bad-grill-closed.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，不新建原型、观察交接或决策包。' > "${sample_dir}/grill-history-before-handoff.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，不新建原型、观察交接或决策包；但随后重新建立原型、观察交接和决策包。' > "${sample_dir}/bad-grill-history-before-handoff.txt"
+  printf '%s\n' '拆分决策包：范围、排除项、Owner、输入快照、证据媒介、返回产物、写回位置、预算和停止条件均独立记录；不采用固定 token 阈值，不执行方案。' > "${sample_dir}/grill-decision-packages.txt"
+  printf '%s\n' '拆分决策包：范围、排除项、Owner、输入快照、证据媒介、返回产物、写回位置、预算和停止条件均独立记录；不采用固定 token 阈值，决策包不是执行授权；但实际仍采用固定 token 阈值，并将决策包作为执行授权。' > "${sample_dir}/bad-grill-decision-packages.txt"
+  printf '%s\n' '决策包只有决策主题、Owner、输入、红线和写回位置均不重叠时才交给 Worker 并行；同一 Owner 的同一决策主题必须串行。每包返回后按决策快照对账。' > "${sample_dir}/grill-parallel-packages.txt"
+  printf '%s\n' '决策包只有决策主题、Owner、输入、红线和写回位置均不重叠时才交给 Worker 并行；同一 Owner 的同一决策主题必须串行；但实际仍允许同一 Owner 的同一决策主题并行，之后再按决策快照对账。' > "${sample_dir}/bad-grill-parallel-packages.txt"
   printf '%s\n' '业务 owner 已批准 PRD 的全局唯一目标契约，该规范性目标保持权威；当前数据库属于工程实现偏差。停止受影响实现，由工程 owner 制定修复或迁移方案并提供验证证据。' > "${sample_dir}/approved-product-contract.txt"
   printf '%s\n' '业务 owner 已批准 PRD，但当前数据库不同，所以把原产品决策重新标为 PENDING，工程继续兼容。' > "${sample_dir}/bad-approved-product-contract.txt"
   printf '%s\n' '来源表、退款与时区均是阻断性 PENDING；责任 owner 确认前停止 SQL 和下游构造，不猜测口径。' > "${sample_dir}/blocking-data-semantics.txt"
@@ -475,6 +520,9 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_grill_evidence_closed "${sample_dir}/grill-closed.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict-variant.txt"
+  assert_grill_history_before_handoff "${sample_dir}/grill-history-before-handoff.txt"
+  assert_grill_decision_packages "${sample_dir}/grill-decision-packages.txt"
+  assert_grill_parallel_packages "${sample_dir}/grill-parallel-packages.txt"
   assert_approved_product_contract_conflict "${sample_dir}/approved-product-contract.txt"
   assert_blocking_data_semantics "${sample_dir}/blocking-data-semantics.txt"
   if assert_product "${sample_dir}/engineering.txt"; then
@@ -551,6 +599,18 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_grill_evidence_conflict "${sample_dir}/bad-grill-conflict.txt"; then
     echo "FAIL grill-me conflict smoke accepted multiple questions" >&2
+    exit 1
+  fi
+  if assert_grill_history_before_handoff "${sample_dir}/bad-grill-history-before-handoff.txt"; then
+    echo "FAIL grill-me history smoke accepted a duplicate handoff" >&2
+    exit 1
+  fi
+  if assert_grill_decision_packages "${sample_dir}/bad-grill-decision-packages.txt"; then
+    echo "FAIL grill-me decision package smoke accepted token splitting" >&2
+    exit 1
+  fi
+  if assert_grill_parallel_packages "${sample_dir}/bad-grill-parallel-packages.txt"; then
+    echo "FAIL grill-me parallel smoke accepted same-owner parallelism" >&2
     exit 1
   fi
   if assert_approved_product_contract_conflict "${sample_dir}/bad-approved-product-contract.txt"; then
@@ -720,6 +780,18 @@ if [[ "${MODE}" == "all" || "${MODE}" == "grill-me" ]]; then
     run_codex_smoke "${OUTPUT_DIR}/grill-evidence-conflict-${run}.txt" \
       '使用 $grill-me 只读审查供应商超时后的退款重试策略。实际读取 grill-me/fixtures/behavior-evidence 下的 PRD、决策记录、知识库和 Java 源码；按当前协议处理意图与实现冲突。只输出本轮台账和需要 Owner 回答的一个问题，不执行方案，控制在 350 字。'
     assert_grill_evidence_conflict "${OUTPUT_DIR}/grill-evidence-conflict-${run}.txt" || { echo "FAIL grill-me evidence-conflict behavior smoke: ${OUTPUT_DIR}/grill-evidence-conflict-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/grill-history-before-handoff-${run}.txt" \
+      '使用 $grill-me 只读继续审查审批工作台单页还是分步表单。Q-118 已有可用性测试、Owner 确认和决策快照，结论为单页；本轮没有新证据、风险升级或重开要求。请判断是否还需要问询或建立新的观察材料，只输出本轮台账、结论和下一步，不执行方案，控制在 300 字。'
+    assert_grill_history_before_handoff "${OUTPUT_DIR}/grill-history-before-handoff-${run}.txt" || { echo "FAIL grill-me history-before-handoff behavior smoke: ${OUTPUT_DIR}/grill-history-before-handoff-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/grill-decision-packages-${run}.txt" \
+      '使用 $grill-me 只读审查跨审批、通知、迁移和运营配置的大改造，涉及多个 Owner、证据来源和待决事项。请说明怎样拆开组织后续盘问与取证，避免按上下文长度机械切分；只输出组织方案和停止边界，不执行方案，控制在 300 字。'
+    assert_grill_decision_packages "${OUTPUT_DIR}/grill-decision-packages-${run}.txt" || { echo "FAIL grill-me decision-packages behavior smoke: ${OUTPUT_DIR}/grill-decision-packages-${run}.txt" >&2; exit 1; }
+
+    run_codex_smoke "${OUTPUT_DIR}/grill-parallel-packages-${run}.txt" \
+      '使用 $grill-me 只读判断两组待决事项能否并行：供应商接入由支付 Owner 处理，历史报表迁移由数据 Owner 处理，两者没有共享契约；另有两项都涉及支付 Owner 对同一退款契约的取舍。请给出组织方式、判断依据和返回后的收口动作，不执行方案，控制在 300 字。'
+    assert_grill_parallel_packages "${OUTPUT_DIR}/grill-parallel-packages-${run}.txt" || { echo "FAIL grill-me parallel-packages behavior smoke: ${OUTPUT_DIR}/grill-parallel-packages-${run}.txt" >&2; exit 1; }
   done
 fi
 

@@ -2248,7 +2248,7 @@ check(
         wise_agent_skill,
         [
             "按需装载 `grill-me`",
-            "问题台账、历史去重和决策快照由该 Skill 负责",
+            "问题台账、历史去重、问题保真度和决策快照由该 Skill 负责",
             "执行前对账读取 `references/delivery-execution-control.md`",
         ],
     )
@@ -2257,7 +2257,59 @@ check(
         [
             "方案、计划或设计的决策压力测试",
             "`grill-me`",
-            "问题台账、历史去重、决策快照与执行前对账",
+            "问题台账、历史去重、保真度路由、决策包、决策快照与执行前对账",
+        ],
+    ),
+)
+
+check(
+    "grill-me routes fidelity gaps and large decision packages without a parallel workflow",
+    has_all(
+        grill_me_skill,
+        [
+            "问题保真度",
+            "高保真问题",
+            "最小可观察物",
+            "决策包",
+            "同一 Owner 的同一决策主题不得并行",
+            "**温故**",
+            "**正名**",
+            "**定媒**",
+            "**决断**",
+        ],
+    )
+    and read(grill_me_skill).index("**温故**") < read(grill_me_skill).index("**正名**") < read(grill_me_skill).index("**定媒**") < read(grill_me_skill).index("**决断**")
+    and has_all(
+        grill_me_question_ledger,
+        [
+            "保真度与媒介路由",
+            "高保真",
+            "决策包与交接",
+            "决策包 ID",
+            "交接原因",
+            "同一 Owner 的同一决策主题不得并行",
+        ],
+    )
+    and has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "`grill-me` 负责问题保真度与决策包",
+            "高保真问题先交给可观察媒介",
+            "同一 Owner 的同一决策主题必须串行",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "高保真问题先交给原型、真实页面、可执行样例或观测",
+            "决策包",
+        ],
+    )
+    and has_all(
+        grill_me_source_map,
+        [
+            "grill-me SKILL 的失败模式",
+            "9keJ9vfryl3RAmhVWTZnFA",
         ],
     ),
 )
@@ -6349,10 +6401,16 @@ check(
             "assert_design_document_engineering",
             "assert_grill_evidence_closed",
             "assert_grill_evidence_conflict",
+            "assert_grill_history_before_handoff",
+            "assert_grill_decision_packages",
+            "assert_grill_parallel_packages",
             "assert_approved_product_contract_conflict",
             "assert_blocking_data_semantics",
             "需要 Owner 回答的一个问题",
             "grill-conflict-variant.txt",
+            "grill-history-before-handoff.txt",
+            "grill-decision-packages.txt",
+            "grill-parallel-packages.txt",
             "assert_huaxia_decision",
             "huaxia-variant.txt",
             '"可逆" "试点" "可回退" "试行"',
@@ -13435,6 +13493,26 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"grill-me", "question-ledger.md"},
     ),
     RouteFixture(
+        name="grill-me high-fidelity question handoff",
+        prompt="使用 $grill-me 审查审批工作台的视觉密度和单页还是分步表单；没有原型、真实页面或用户操作记录，先决定怎样取证。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me history closes high-fidelity question before handoff",
+        prompt="使用 $grill-me 审查单页还是分步表单；Q-118 已有可用性测试、Owner 确认和决策快照，本轮没有新证据，不要再建原型或决策包。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me large scope decision packages",
+        prompt="使用 $grill-me 盘清跨审批、通知、迁移和运营配置的大改造；先拆为可独立关闭的决策包，不要用固定 token 阈值硬切。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="grill-me parallel only independent decision packages",
+        prompt="使用 $grill-me 审查两个没有共享契约、红线或写回位置的决策包；判断能否并行，并说明同一 owner 的同一契约分叉为何不能并行。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
         name="huaxia practical wisdom explicit decision calibration",
         prompt="使用 $huaxia-practical-wisdom 分析这次跨部门合作是否现在启动：给出取舍、止损、最小行动和验证，不要只讲古语。",
         routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
@@ -15851,8 +15929,200 @@ expected_handling_has(
         "内部完整性检查",
         "不把它或 AI 工作流字段机械展开成可见目录",
         "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象",
+        "标准 / 高风险文档先给阅读摘要",
+        "当前状态与权威来源",
+        "主动责任句",
+        "业务 / 产品 Owner、研发、测试 / 运营分别走读",
         "正文末尾只保留面向人类评审的验收摘要",
         "详细验收矩阵、AC 与测试映射、验证命令、执行 owner、任务状态和 Loop/Harness 控制进入执行计划或按需附录",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-keep-design-docs-human-readable",
+    ("reader_summary", "authority_split", "responsibility_language", "reader_walkthrough", "must_not_do"),
+    (
+        "PRD 承载当前产品语义",
+        "协同主记录承载状态、排期、过程决策和阶段门",
+        "执行计划 / CI 承载验收映射、验证命令和执行状态",
+        "Decision Log / ADR 承载历史取舍",
+        "谁在什么条件下做什么、产生什么可观察结果、失败后谁承接",
+        "业务 / 产品 Owner 能解释为什么做、做什么和不做什么",
+        "研发能解释对象、边界、规则、异常和不变量",
+        "测试 / 运营能推导正常、异常、人工兜底和可观察结果",
+        "不得用作者口头补充或评审评论替代正文和图",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-absorb-org-prd-template-without-tool-binding",
+    (
+        "轻量 / 标准 / 增强",
+        "高风险直接进入增强",
+        "当前版本、状态、产品 owner、业务 owner、更新时间和权威来源",
+        "阶段目标、能力差距、机会成本、依赖顺序、产品判断、推荐方案、不采用方案和复审条件",
+        "成功标准衡量上线后",
+        "验收摘要判断产品是否按当前定义正确交付",
+        "只有目标、范围、对象、流程、规则、权限或验收等产品语义变化才升级 PRD 版本",
+        "超出产品权限",
+        "不绑定具体协作平台、门禁编号、需求等级或原型工具",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-absorb-org-prd-template-without-tool-binding",
+    ("document_strength", "document_control", "product_judgment", "outcome_split", "change_gate", "must_not_do"),
+    (
+        "轻量 / 标准 / 增强",
+        "高风险直接进入增强",
+        "产品先形成判断",
+        "成功标准衡量上线后目标效果",
+        "验收摘要判断当前产品定义是否正确交付",
+        "只有产品语义变化才升级 PRD 版本",
+        "排期或任务状态变化不升级",
+        "不得绑定具体项目管理平台",
+        "不得绑定 G1/G2/G3",
+        "不得绑定 L1/L2/L3",
+        "不得绑定具体原型工具",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-govern-human-centered-prd-and-evidence",
+    (
+        "阅读摘要",
+        "产品定义 / 产品视图、主链路、核心对象与边界",
+        "业务阶段、可观察输入输出",
+        "Handler、事务边界、MQ、Outbox、Saga、实现类等实现机制归系分",
+        "一题多章、真正重复的标题和纯关键词章节失败",
+        "产品视图晚于详细设计和实现语言只警告",
+        "结构通过不代表语义或视觉验收",
+        "确定性脚本不等于独立 Checker",
+        "正文变化后旧 evidenceRef 失效",
+        "Git 基线、工作区验证、Owner 决策和生产证据分开记录",
+        "没有第二个仓库的同类证据前不开发通用文档检查脚本",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-govern-human-centered-prd-and-evidence",
+    ("human_reading", "semantic_boundary", "checker_contract", "evidence_contract", "document_set", "must_not_do"),
+    (
+        "当前结论、产品定义 / 产品视图、主链路、核心对象与边界",
+        "Handler、事务边界、MQ、Outbox、Saga 和实现类归系分或实现 Spec",
+        "结构通过不等于语义或视觉验收",
+        "evidenceRef 绑定源内容指纹",
+        "四类证据互不替代",
+        "暂不开发通用文档检查脚本",
+        "不得把单仓库状态字段固化为所有项目强制协议",
+    ),
+)
+
+check(
+    "human-centered PRD checker and document evidence governance stay bounded",
+    has_all(
+        product_prd,
+        [
+            "当前结论 -> 产品定义 / 产品视图 -> 主链路 -> 核心对象与边界",
+            "业务阶段、可观察输入输出",
+            "`Handler`、事务边界、MQ、Outbox、Saga",
+            "归入系分设计",
+        ],
+    )
+    and has_all(
+        product_prd_template,
+        ["当前结论", "产品定义 / 产品视图", "主链路", "核心对象与边界"],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        ["实现语言", "先列为警告", "结构检查", "产品语义正确", "视觉验收通过"],
+    )
+    and has_all(
+        product_deliverable_checker,
+        [
+            "section_heading_reused",
+            "duplicate_headings",
+            "keyword_only_section",
+            "product_view_late",
+            "implementation_language",
+            "STRUCTURE_ONLY_MESSAGE",
+        ],
+    )
+    and has_all(
+        wise_agent_verification_release,
+        [
+            "确定性校验脚本不等于独立 Checker",
+            "source hash",
+            "STALE",
+            "Git 基线",
+            "工作区验证",
+            "Owner 决策",
+            "生产证据",
+        ],
+    )
+    and has_all(
+        wise_agent_spec_template_practices,
+        [
+            "文档集治理",
+            "根 README",
+            "动态任务台账",
+            "Gate 是准出状态的唯一权威",
+            "DesignStatus",
+            "OwnerDecision",
+            "EvidenceLevel",
+            "ImplementationStatus",
+            "GateStatus",
+            "source hash",
+            "artifact hash",
+            "第二个仓库",
+        ],
+    ),
+)
+
+check(
+    "product PRD template absorbs organizational practice without tool lock-in",
+    has_all(
+        product_prd_template,
+        [
+            "轻量 / 标准 / 增强",
+            "高风险需求直接使用增强模式",
+            "必填 / 条件必填",
+            "文档状态与责任",
+            "当前版本",
+            "产品 owner",
+            "业务 owner",
+            "更新时间",
+            "阶段目标关系",
+            "能力差距",
+            "机会成本",
+            "依赖顺序",
+            "产品判断",
+            "推荐方案",
+            "明确不采用的方案",
+            "复审条件",
+            "成功标准衡量上线后",
+            "验收摘要判断产品是否按当前定义正确交付",
+            "原型或页面锚点",
+            "产品语义变化",
+            "排期、任务状态",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "产品应先形成自己的判断和推荐方案",
+            "超出产品权限",
+            "成功标准",
+            "交付验收",
+            "原型或页面锚点",
+            "产品语义变化",
+            "不升级 PRD 版本",
+        ],
+    )
+    and has_none(
+        product_prd_template,
+        ["Teambition", "G1/G2/G3", "L1/L2/L3", "墨刀", "Figma"],
+    )
+    and has_none(
+        product_prd_quality_gates,
+        ["Teambition", "G1/G2/G3", "L1/L2/L3", "墨刀", "Figma"],
     ),
 )
 
@@ -15996,16 +16266,56 @@ check(
         product_prd_template,
         [
             "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象",
+            "阅读摘要",
+            "轻量 / 标准 / 增强",
+            "PRD 是当前产品语义的权威来源",
+            "协同主记录",
+            "执行计划",
+            "Decision Log",
+            "谁在什么条件下做什么",
+            "产品产生什么可观察结果",
+            "失败后谁承接",
             "验收摘要放在正文末尾",
             "详细验收矩阵进入执行计划",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "读者走读",
+            "业务 / 产品 Owner",
+            "研发",
+            "测试 / 运营",
+            "作者口头补充",
+            "修正文或图",
         ],
     )
     and has_all(
         system_analysis_template,
         [
             "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象",
+            "阅读摘要",
+            "标准 / 高风险",
+            "已批准 PRD 是产品语义的权威来源",
+            "本系分是当前工程设计的权威来源",
+            "执行计划 / CI",
+            "ADR / Decision Log",
+            "谁在什么条件下做什么",
+            "系统产生什么结果",
+            "失败后谁承接",
             "验收摘要放在正文末尾",
             "详细验收矩阵、AC 与测试映射、验证命令、执行 owner 和任务状态进入执行计划",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/system-analysis-design.md",
+        [
+            "读者走读",
+            "业务 / 产品 Owner",
+            "研发 / 架构",
+            "测试 / 运维",
+            "作者口头补充",
+            "修正文或图",
         ],
     )
     and has_all(
@@ -16624,6 +16934,42 @@ behavior_contract_has(
 expected_handling_has(
     "grill-me-should-continue-after-partially-confirmed-history",
     ("剩余 Decision 路径", "decision-reused / confirmed", "不因出现已确认内容而整体退出 grill-me", "ask-owner / pending", "一次只问 B", "统一写入同一状态模型"),
+)
+expected_handling_has(
+    "grill-me-should-handoff-high-fidelity-question",
+    ("高保真问题媒介路由", "不凭语言断言使用体验", "原型、真实页面或可执行样例", "回到原问题台账", "不把取证交接当 Owner 裁决"),
+)
+behavior_contract_has(
+    "grill-me-should-handoff-high-fidelity-question",
+    ("fidelity_gate", "handoff_must_include", "must_not_do"),
+    ("高保真问题", "决策包 ID", "观察场景", "交接原因", "返回产物", "写回位置", "停止条件", "不得凭语言断言使用体验"),
+)
+expected_handling_has(
+    "grill-me-should-reuse-history-before-high-fidelity-handoff",
+    ("先恢复 Q-118 的历史结论", "去重，再判断本轮是否需要媒介", "decision-reused / confirmed", "不建立新的原型、观察交接或决策包", "新证据、风险升级或 Owner 明确重开"),
+)
+behavior_contract_has(
+    "grill-me-should-reuse-history-before-high-fidelity-handoff",
+    ("history_gate", "reuse_result", "must_not_do"),
+    ("历史恢复和语义去重先于问题保真度与媒介选择", "decision-reused / confirmed", "不得建立新的原型", "不得建立观察交接", "不得建立决策包"),
+)
+expected_handling_has(
+    "grill-me-should-split-large-scope-into-decision-packages",
+    ("决策包", "固定 token 阈值", "范围", "排除项", "Owner", "输入快照", "证据媒介", "返回产物", "写回位置", "预算和停止条件"),
+)
+behavior_contract_has(
+    "grill-me-should-split-large-scope-into-decision-packages",
+    ("package_must_include", "budget_rule", "must_not_do"),
+    ("范围", "排除项", "Owner", "输入快照", "证据媒介", "返回产物", "写回位置", "预算", "停止条件", "不采用固定 token 阈值"),
+)
+expected_handling_has(
+    "grill-me-should-parallelize-only-independent-decision-packages",
+    ("决策主题、Owner、输入、红线和写回位置均不重叠", "Worker 并行", "同一 Owner 的同一决策主题必须串行", "决策快照对账"),
+)
+behavior_contract_has(
+    "grill-me-should-parallelize-only-independent-decision-packages",
+    ("parallel_gate", "serial_gate", "return_gate"),
+    ("决策主题、Owner、输入、红线和写回位置均不重叠", "同一 Owner 的同一决策主题必须串行", "决策快照对账"),
 )
 negative_reason_has(
     "grill-me-negative-factual-codebase-query",

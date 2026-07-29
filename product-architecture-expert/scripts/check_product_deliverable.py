@@ -98,6 +98,20 @@ PRD_SECTION_ORDER = [
     ("section_risk", ("数据与风险", "数据、权限、风险", "风险与待确认")),
     ("section_acceptance", ("验收摘要",)),
 ]
+STRUCTURE_ONLY_MESSAGE = "仅通过结构检查，不代表语义和视觉验收通过"
+IMPLEMENTATION_LANGUAGE_TERMS = (
+    "Handler",
+    "@Transactional",
+    "事务边界",
+    "MQ",
+    "Outbox",
+    "Saga",
+    "Repository",
+    "ServiceImpl",
+    "实现类",
+    "Kafka",
+    "Redis",
+)
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "business-architecture": (
@@ -111,6 +125,7 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "战略意图：提升效率。业务能力地图：客户管理。",
     ),
     "prd": (
+        "## 阅读摘要\n当前结论：统一审核入口；产品定义 / 产品视图：为运营提供可追踪的审核能力；主链路：提交、审核、通知；核心对象与边界：申请单由平台管理，不改变交易订单。\n"
         "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
         "## 二、目标与非目标\n目标：提升运营效率；非目标：不改结算规则。\n"
         "## 三、定性与范围\n产品定性：存量审核流程治理；总体判断：先统一口径；范围和产品边界为后台审核。\n"
@@ -191,22 +206,90 @@ def declared_architecture_type(text: str) -> str | None:
     return next((name for name in DIAGRAM_TYPE_CHECKS if normalize(value) == name.casefold()), None)
 
 
+def markdown_sections(text: str) -> list[tuple[str, str]]:
+    matches = list(HEADING_PATTERN.finditer(text))
+    return [
+        (match.group(1), text[match.end() : matches[index + 1].start() if index + 1 < len(matches) else len(text)])
+        for index, match in enumerate(matches)
+    ]
+
+
+def matching_heading_positions(headings: list[str], aliases: tuple[str, ...]) -> list[int]:
+    return [
+        index
+        for index, heading in enumerate(headings)
+        if any(alias.casefold() in heading for alias in aliases)
+    ]
+
+
 def missing_ordered_sections(text: str, sections: list[tuple[str, tuple[str, ...]]]) -> list[str]:
-    headings = [match.group(1).casefold() for match in HEADING_PATTERN.finditer(text)]
+    headings = [normalize(heading) for heading, _ in markdown_sections(text)]
     missing: list[str] = []
     positions: list[int] = []
+    positions_by_section: dict[str, list[int]] = {}
     for name, aliases in sections:
-        position = next(
-            (index for index, heading in enumerate(headings) if any(alias.casefold() in heading for alias in aliases)),
-            None,
-        )
-        if position is None:
+        matched = matching_heading_positions(headings, aliases)
+        positions_by_section[name] = matched
+        if not matched:
             missing.append(name)
         else:
-            positions.append(position)
+            positions.append(matched[0])
+    if len(headings) != len(set(headings)):
+        missing.append("duplicate_headings")
+    heading_owners: dict[int, list[str]] = {}
+    for name, matched in positions_by_section.items():
+        for position in matched:
+            heading_owners.setdefault(position, []).append(name)
+    if any(len(owners) > 1 for owners in heading_owners.values()):
+        missing.append("section_heading_reused")
     if not missing and positions != sorted(positions):
         missing.append("section_order")
     return missing
+
+
+def has_keyword_only_section(text: str) -> bool:
+    sections = markdown_sections(text)
+    headings = [heading.casefold() for heading, _ in sections]
+    keywords = sorted(
+        {
+            alias.casefold()
+            for group in CHECKS["prd"]
+            for alias in group.aliases
+        }
+        | {alias.casefold() for _, aliases in PRD_SECTION_ORDER for alias in aliases},
+        key=len,
+        reverse=True,
+    )
+    for _, aliases in PRD_SECTION_ORDER:
+        matched = matching_heading_positions(headings, aliases)
+        if len(matched) != 1:
+            continue
+        body = sections[matched[0]][1].casefold()
+        for keyword in keywords:
+            body = body.replace(keyword, "")
+        residue = re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", body)
+        if len(residue) < 2:
+            return True
+    return False
+
+
+def contains_term(text: str, term: str) -> bool:
+    if term.isascii() and term.replace("@", "").isalnum():
+        return bool(re.search(rf"(?i)(?<![a-z0-9_]){re.escape(term)}(?![a-z0-9_])", text))
+    return term.casefold() in text.casefold()
+
+
+def warning_groups(kind: str, text: str) -> list[str]:
+    if kind != "prd":
+        return []
+    warnings: list[str] = []
+    detail_design = re.search(r"(?m)^#{2,6}\s+.*详细设计.*$", text)
+    product_view = re.search(r"产品定义\s*/\s*产品视图|产品视图", text)
+    if detail_design and product_view and product_view.start() > detail_design.start():
+        warnings.append("product_view_late")
+    if any(contains_term(text, term) for term in IMPLEMENTATION_LANGUAGE_TERMS):
+        warnings.append("implementation_language")
+    return warnings
 
 
 def missing_groups(kind: str, text: str) -> list[str]:
@@ -233,6 +316,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
         missing.append("placeholder_fields")
     if kind == "prd":
         missing.extend(missing_ordered_sections(text, PRD_SECTION_ORDER))
+        if has_keyword_only_section(text):
+            missing.append("keyword_only_section")
     return missing
 
 
@@ -302,6 +387,66 @@ def run_self_test() -> int:
     )
     if "section_order" not in missing_groups("prd", wrong_order_prd):
         failures.append("prd: wrong section order unexpectedly passed")
+    reused_heading_prd = (
+        SELF_TESTS["prd"][0]
+        .replace("## 五、详细设计\n", "## 五、详细设计与关键流程\n", 1)
+        .replace("## 六、关键流程\n", "", 1)
+    )
+    if "section_heading_reused" not in missing_groups("prd", reused_heading_prd):
+        failures.append("prd: one heading satisfied multiple sections")
+    duplicate_heading_prd = SELF_TESTS["prd"][0] + "\n## 五、详细设计\n补充说明：审核结果可追踪。"
+    if "duplicate_headings" not in missing_groups("prd", duplicate_heading_prd):
+        failures.append("prd: duplicate heading unexpectedly passed")
+    nested_flow_prd = SELF_TESTS["prd"][0].replace(
+        "## 六、关键流程\n",
+        "## 六、关键流程\n### 6.1 业务流程\n流程补充：审核员处理申请单并输出可观察结果。\n",
+        1,
+    )
+    if "duplicate_headings" in missing_groups("prd", nested_flow_prd):
+        failures.append("prd: nested flow heading incorrectly treated as duplicate")
+    keyword_only_prd = (
+        "## 背景与问题\n背景 问题 现状 目标 非目标 成功指标\n"
+        "## 目标与非目标\n背景 问题 现状 目标 非目标 成功指标\n"
+        "## 定性与范围\n定性 总体判断 产品定位 范围 边界 不做范围\n"
+        "## 概要设计\n概要设计 方案概述 核心方案 能力布局 总体流程\n"
+        "## 详细设计\n核心名相 定义 不是什么 归属主体 产品边界 用户 主体 角色 验收方 责任边界 详细设计 场景 功能 对象 状态 生命周期 不变量 状态机图\n"
+        "## 关键流程\n主流程 逆向流程 异常流程 人工处理 业务流程 用例图 流程图 泳道图\n"
+        "## 业务规则与接口抽象\n规则 权限 审批 额度 计费 版本 验收样例 接口抽象 产品接口 业务契约 输入 输出 失败语义 责任边界\n"
+        "## 数据与风险\n数据 指标 报表 埋点 审计 追溯 风险 依赖 待确认 确认方 影响范围\n"
+        "## 验收摘要\n验收摘要 业务结果 关键边界 红线 验收标准"
+    )
+    if "keyword_only_section" not in missing_groups("prd", keyword_only_prd):
+        failures.append("prd: keyword-only sections unexpectedly passed")
+    warning_checker = globals().get("warning_groups")
+    if not callable(warning_checker):
+        failures.append("prd: warning analyzer missing")
+    else:
+        if warning_checker("prd", SELF_TESTS["prd"][0]):
+            failures.append("prd: clean fixture unexpectedly warned")
+        late_product_view_prd = SELF_TESTS["prd"][0].replace(
+            "产品定义 / 产品视图：为运营提供可追踪的审核能力；",
+            "",
+            1,
+        ) + "\n产品视图：审核能力。"
+        if "product_view_late" not in warning_checker("prd", late_product_view_prd):
+            failures.append("prd: late product view warning missing")
+        product_view_before_detail_prd = SELF_TESTS["prd"][0].replace(
+            "产品定义 / 产品视图：为运营提供可追踪的审核能力；",
+            "",
+            1,
+        ).replace(
+            "## 五、详细设计",
+            "产品视图：为运营提供可追踪的审核能力。\n\n## 五、详细设计",
+            1,
+        )
+        if "product_view_late" in warning_checker("prd", product_view_before_detail_prd):
+            failures.append("prd: product view before detail design unexpectedly warned")
+        implementation_prd = SELF_TESTS["prd"][0] + "\n实现说明：Handler 通过 MQ 和 Outbox 驱动 Saga。"
+        if "implementation_language" not in warning_checker("prd", implementation_prd):
+            failures.append("prd: implementation language warning missing")
+    boundary_message = globals().get("STRUCTURE_ONLY_MESSAGE", "")
+    if "仅通过结构检查" not in boundary_message or "不代表语义和视觉验收通过" not in boundary_message:
+        failures.append("checker: structure-only acceptance boundary missing")
     if failures:
         print("FAIL product deliverable self-test", file=sys.stderr)
         for failure in failures:
@@ -337,7 +482,9 @@ def main() -> int:
         )
         return 1
 
-    print(f"OK product deliverable check: kind={args.kind}")
+    for warning in warning_groups(args.kind, text):
+        print(f"WARN product deliverable check: kind={args.kind} {warning}", file=sys.stderr)
+    print(f"OK product deliverable check: kind={args.kind}; {STRUCTURE_ONLY_MESSAGE}")
     return 0
 
 
