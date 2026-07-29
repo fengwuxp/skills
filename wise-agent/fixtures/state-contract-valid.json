@@ -66,6 +66,16 @@
         "evidence": [
           "Goal G-17 决策快照"
         ],
+        "evidence_refs": [
+          {
+            "type": "source",
+            "ref": "docs/goal-ledger.md#G-17/decision-snapshot",
+            "fingerprint": "sha256:fixture-decision-snapshot",
+            "method": "source readback",
+            "result": "confirmed",
+            "observed_at": "2026-01-01T00:00:00Z"
+          }
+        ],
         "status_reason": ""
       },
       {

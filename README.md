@@ -146,7 +146,7 @@ SDLC 是阶段地图，Goal 是跨轮目标契约，Loop 是反复执行契约�
 
 ##### 3.1.1 复杂工作图怎么用
 
-工作拓扑投影不是新的 `Graph Mode`，也不是另一份任务真相源。简单、线性、单文件或一次可完成的任务直接执行；只有至少三个节点存在分支 / 汇合依赖、并行 Worker、跨 Wave 交接或动态取消 / 重排时，才在现有 Goal 状态契约中附加 `work_graph`。
+工作拓扑投影不是新的 `Graph Mode`，也不是另一份任务真相源。简单、线性、单文件或一次可完成的任务直接执行；只有两项同时满足，才在现有 Goal 状态契约中附加 `work_graph`：上下文隔离、并行、专业化交接或断点恢复有明确收益；至少三个节点存在分支、汇合、并行或跨 Wave 交接。
 
 按复杂度逐层增加字段，不为完整而补空结构：
 
@@ -157,7 +157,23 @@ SDLC 是阶段地图，Goal 是跨轮目标契约，Loop 是反复执行契约�
 | 可核验条件会改变下一节点 | 增加带唯一 `default` 的 `transitions` |
 | 外部调用确有暂时失败和重试价值 | 增加有界 `failure_policy` |
 
-使用时守住四条边界：写回路径同时属于节点和 Goal 的 `write_scope`；一个有效状态键只有一个产出节点；依赖、条件路由和 fallback 合并后仍无环；节点 `max_attempts` 不得超过 Goal 的 `max_iterations`。并行节点写入范围不能重叠，高风险节点必须有独立 Checker。
+使用时守住五条边界：写回路径同时属于节点和 Goal 的 `write_scope`；一个有效状态键只有一个产出节点；依赖、条件路由和 fallback 合并后仍无环；节点 `max_attempts` 不得超过 Goal 的 `max_iterations`；`Verified` 节点必须绑定结构化 `evidence_refs`，不能只写 Maker 自述。并行节点写入范围不能重叠，高风险节点必须有独立 Checker，且 Checker 只消费原始产物、Goal / AC 和源证据。
+
+`Verified` 的用户判断口径：
+
+| 场景 | 最低要求 |
+| --- | --- |
+| 普通节点 | `evidence` 摘要 + `evidence_refs`；至少一个引用不是 `validator` |
+| 高风险节点 | 额外声明不同的 `maker / checker`，并提供 `independent_review` 引用 |
+| 结构 validator 通过 | 只证明字段和关系符合契约，不能单独证明任务真实完成 |
+
+升级旧状态时，不要补写历史记录。把旧文件作为 `--previous`，在 current 中递增 `revision`、说明迁移原因并补齐新证据字段：
+
+```bash
+python3 wise-agent/scripts/check_state_contract.py current.json --previous previous.json
+```
+
+兼容只对 previous 生效；current 仍必须满足严格证据契约。
 
 可以直接这样说：
 

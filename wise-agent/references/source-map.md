@@ -132,6 +132,7 @@
 - OWASP Top 10 for LLM Applications 2025：`https://owasp.org/www-project-top-10-for-large-language-model-applications/assets/PDF/OWASP-Top-10-for-LLMs-v2025.pdf`。公开内容用于参考 prompt injection、敏感信息泄漏、过度授权、供应链和 Agent 风险；具体安全控制仍需安全负责人确认。
 - ISO/IEC 42001：`https://www.iso.org/standard/81230.html`。公开内容用于参考 AI 管理体系、责任、风险、控制和持续改进；不把其作为认证或合规结论。
 - 微信文章 [《面向复杂业务场景的智能分析 Skills 架构设计与演进实践》](https://mp.weixin.qq.com/s/mF3TyV_GzkBdoyYfK14fWQ)：作者 `钟雨洁`，页面显示发布时间为 2026-07-17 18:18；2026-07-18 通用网页读取未返回可用正文，随后通过 Chrome UA `curl` 公开 HTML 读取标题、作者、发布时间和 `#js_content` 正文。本文用于补强稳定知识与时效知识分层、维护粒度与读取粒度分离、少选项强信号、后置加载、Knowledge Change Register、知识更新复测和 token 经济性边界，并落实到仓库 `AGENTS.md`、`capability-routing.md`、`code-delivery.md` 与引用索引审计；不静默采集用户反馈，不读取历史对话或私有轨迹，不自动修改或晋升知识，不吸收固定文件行数、方法数量、行业数量或压缩比例，也不把文章案例数据、“架构决定上限”或作者经验写成当前 Skill 效果、项目事实、执行授权或准出结论。
+- 微信文章 [《Loop Engineering 已死？一文带你了解 Graph Engineering》](https://mp.weixin.qq.com/s/LzpfUsJRMcpPHzDovo5IrA)：作者 `lukiexing`，账号 `腾讯技术工程`，页面显示发布时间为 2026-07-28 18:33；2026-07-29 通用网页读取无法打开，随后通过 Codex in-app Browser 读取标题、作者、发布时间和正文。本文用于复核工作拓扑不是新模式、Graph 价值来自确定性而非 Agent 数量、Checker 干净上下文、现实证据锚点、指标反证和任务图 / 长期权限分离，并落实到 `SKILL.md`、`delivery-execution-control.md`、`goal-governance.md`、状态契约 validator 与行为 fixture；不新增 `Graph Mode`、顶层 Skill、框架或常驻多 Agent 组织，不复制原文、图片和作者表达，不吸收文章性能数字、框架 token 对比、厂商案例或“Loop 已死”的传播结论，也不把文章观点写成执行授权、测试通过、CR 或上线审批。
 
 ## 提炼边界
 

@@ -22,6 +22,17 @@ WORK_NODE_STATUSES = {"Pending", "Ready", "Running", "Blocked", "Verified", "Can
 WORK_NODE_RISKS = {"low", "medium", "high"}
 WORK_GRAPH_TERMINALS = {"Complete", "Stop", "Human handoff"}
 FAILURE_OUTCOMES = {"fallback", "stop", "human"}
+EVIDENCE_REF_TYPES = {
+    "source",
+    "test",
+    "validator",
+    "independent_review",
+    "owner_confirmation",
+    "runtime",
+    "production",
+}
+NON_VALIDATOR_EVIDENCE_REF_TYPES = EVIDENCE_REF_TYPES - {"validator"}
+EVIDENCE_REF_FIELDS = {"ref", "fingerprint", "method", "result", "observed_at"}
 STRING_FIELDS = {
     "goal_id",
     "objective",
@@ -45,6 +56,27 @@ LIST_FIELDS = {
 
 def is_string_list(value: Any) -> bool:
     return isinstance(value, list) and all(isinstance(item, str) and item.strip() for item in value)
+
+
+def validate_evidence_refs(node_id: str, value: Any) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        return [f"work_graph node {node_id} evidence_refs must be a list"]
+
+    errors: list[str] = []
+    for index, evidence_ref in enumerate(value):
+        prefix = f"work_graph node {node_id} evidence_refs[{index}]"
+        if not isinstance(evidence_ref, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        evidence_type = evidence_ref.get("type")
+        if not isinstance(evidence_type, str) or evidence_type not in EVIDENCE_REF_TYPES:
+            errors.append(f"{prefix} type must be one of {sorted(EVIDENCE_REF_TYPES)}")
+        for field in sorted(EVIDENCE_REF_FIELDS):
+            if not isinstance(evidence_ref.get(field), str) or not evidence_ref[field].strip():
+                errors.append(f"{prefix} {field} must be a non-empty string")
+    return errors
 
 
 def overlapping_scopes(left: set[str], right: set[str]) -> list[str]:
@@ -86,6 +118,7 @@ def validate_work_graph(
     previous_graph: Any = None,
     require_previous: bool = True,
     max_attempts_budget: Any = None,
+    strict_verified_evidence: bool = True,
 ) -> list[str]:
     if graph is None:
         return []
@@ -160,8 +193,13 @@ def validate_work_graph(
             errors.append(f"work_graph node {node_id} risk must be one of {sorted(WORK_NODE_RISKS)}")
         if not isinstance(node.get("checker"), str):
             errors.append(f"work_graph node {node_id} checker must be a string")
+        if "maker" in node and (
+            not isinstance(node["maker"], str) or not node["maker"].strip()
+        ):
+            errors.append(f"work_graph node {node_id} maker must be a non-empty string")
         if not is_string_list(node.get("evidence")):
             errors.append(f"work_graph node {node_id} evidence must be a list of non-empty strings")
+        errors.extend(validate_evidence_refs(node_id, node.get("evidence_refs")))
         if not isinstance(node.get("status_reason"), str):
             errors.append(f"work_graph node {node_id} status_reason must be a string")
         if "parallel_group" in node and (
@@ -420,8 +458,28 @@ def validate_work_graph(
     for node_id, node in nodes.items():
         status = node.get("status")
         evidence = node.get("evidence")
+        evidence_refs = node.get("evidence_refs")
+        evidence_ref_types = {
+            evidence_ref.get("type")
+            for evidence_ref in evidence_refs
+            if isinstance(evidence_ref, dict)
+        } if isinstance(evidence_refs, list) else set()
         if isinstance(status, str) and status == "Verified" and is_string_list(evidence) and not evidence:
             errors.append(f"work_graph Verified node {node_id} requires evidence")
+        if strict_verified_evidence and isinstance(status, str) and status == "Verified" and (
+            not isinstance(evidence_refs, list) or not evidence_refs
+        ):
+            errors.append(f"work_graph Verified node {node_id} requires evidence_refs")
+        if (
+            strict_verified_evidence
+            and status == "Verified"
+            and isinstance(evidence_refs, list)
+            and evidence_refs
+            and not evidence_ref_types & NON_VALIDATOR_EVIDENCE_REF_TYPES
+        ):
+            errors.append(
+                f"work_graph Verified node {node_id} requires at least one non-validator evidence_ref"
+            )
         if isinstance(status, str) and status in {"Blocked", "Cancelled"} and (
             not isinstance(node.get("status_reason"), str)
             or not node["status_reason"].strip()
@@ -433,6 +491,23 @@ def validate_work_graph(
             not isinstance(node.get("checker"), str) or not node["checker"].strip()
         ):
             errors.append(f"work_graph high-risk node {node_id} requires checker")
+        if strict_verified_evidence and status == "Verified" and node.get("risk") == "high":
+            maker = node.get("maker")
+            checker = node.get("checker")
+            if not isinstance(maker, str) or not maker.strip():
+                errors.append(f"work_graph high-risk Verified node {node_id} requires maker")
+            elif (
+                isinstance(checker, str)
+                and checker.strip()
+                and checker.strip().casefold() == maker.strip().casefold()
+            ):
+                errors.append(
+                    f"work_graph high-risk Verified node {node_id} requires checker different from maker"
+                )
+            if "independent_review" not in evidence_ref_types:
+                errors.append(
+                    f"work_graph high-risk Verified node {node_id} requires independent_review evidence_ref"
+                )
 
         parallel_group = node.get("parallel_group")
         write_scope = node.get("write_scope")
@@ -454,6 +529,7 @@ def validate(
     data: dict[str, Any],
     previous_contract: dict[str, Any] | None = None,
     require_previous: bool = True,
+    strict_verified_evidence: bool = True,
 ) -> list[str]:
     errors: list[str] = []
     status = data.get("status")
@@ -516,6 +592,7 @@ def validate(
             previous_graph,
             require_previous=require_previous,
             max_attempts_budget=maximum,
+            strict_verified_evidence=strict_verified_evidence,
         )
     )
     if isinstance(status, str) and status in {"Verified", "Closed"} and isinstance(work_graph, dict):
@@ -534,6 +611,14 @@ def validate(
                     f"non-terminal: {', '.join(non_terminal)}"
                 )
     return errors
+
+
+def validate_previous_contract(data: dict[str, Any]) -> list[str]:
+    return validate(
+        data,
+        require_previous=False,
+        strict_verified_evidence=False,
+    )
 
 
 def run_self_test() -> None:
@@ -566,6 +651,7 @@ def run_self_test() -> None:
         "work_graph nodes A and B in parallel group unsafe have overlapping write_scope: wise-agent <-> wise-agent/SKILL.md",
         "work_graph high-risk node B requires checker",
         "work_graph Verified node C requires evidence",
+        "work_graph Verified node C requires evidence_refs",
         "work_graph Cancelled node D requires status_reason and evidence",
         "work_graph revision > 1 requires previous contract validation",
     }
@@ -599,6 +685,73 @@ def run_self_test() -> None:
     expected_dependency_error = "work_graph node B cannot be Verified before dependency A is Verified"
     if expected_dependency_error not in validate(verified_before_dependency):
         raise SystemExit("Verified node bypassed an unfinished dependency")
+
+    self_reported_verification = copy.deepcopy(valid_contract)
+    self_reported_node = self_reported_verification["work_graph"]["nodes"][0]
+    self_reported_node["evidence"] = ["Implementation Maker reports tests passed"]
+    self_reported_node.pop("evidence_refs")
+    self_report_error = "work_graph Verified node A requires evidence_refs"
+    if self_report_error not in validate(self_reported_verification):
+        raise SystemExit("work_graph accepted a Maker self-report as verification evidence")
+
+    model_assertion_ref = copy.deepcopy(valid_contract)
+    model_assertion_ref["work_graph"]["nodes"][0]["evidence_refs"][0]["type"] = "model_assertion"
+    if not any(
+        error.startswith("work_graph node A evidence_refs[0] type must be one of")
+        for error in validate(model_assertion_ref)
+    ):
+        raise SystemExit("work_graph accepted model_assertion as a reality anchor")
+
+    validator_only = copy.deepcopy(valid_contract)
+    validator_only["work_graph"]["nodes"][0]["evidence_refs"][0]["type"] = "validator"
+    validator_only_error = (
+        "work_graph Verified node A requires at least one non-validator evidence_ref"
+    )
+    if validator_only_error not in validate(validator_only):
+        raise SystemExit("work_graph accepted a validator as the only reality anchor")
+
+    same_maker_checker = copy.deepcopy(valid_contract)
+    same_maker_node = same_maker_checker["work_graph"]["nodes"][0]
+    same_maker_node["risk"] = "high"
+    same_maker_node["maker"] = "implementation-maker"
+    same_maker_node["checker"] = "implementation-maker"
+    same_maker_node["evidence_refs"].append(
+        {
+            "type": "independent_review",
+            "ref": "reviews/G-17-A.md",
+            "fingerprint": "sha256:fixture-independent-review",
+            "method": "review source and test evidence",
+            "result": "passed",
+            "observed_at": "2026-01-01T00:00:00Z",
+        }
+    )
+    same_maker_error = (
+        "work_graph high-risk Verified node A requires checker different from maker"
+    )
+    if same_maker_error not in validate(same_maker_checker):
+        raise SystemExit("work_graph allowed the Maker to act as its own Checker")
+
+    missing_independent_review = copy.deepcopy(valid_contract)
+    high_risk_node = missing_independent_review["work_graph"]["nodes"][0]
+    high_risk_node["risk"] = "high"
+    high_risk_node["maker"] = "implementation-maker"
+    high_risk_node["checker"] = "independent-checker"
+    independent_review_error = (
+        "work_graph high-risk Verified node A requires independent_review evidence_ref"
+    )
+    if independent_review_error not in validate(missing_independent_review):
+        raise SystemExit("work_graph allowed high-risk verification without independent review")
+
+    legacy_previous = copy.deepcopy(valid_contract)
+    legacy_previous["work_graph"]["nodes"][0].pop("evidence_refs")
+    if errors := validate_previous_contract(legacy_previous):
+        raise SystemExit(f"legacy previous contract cannot be migrated: {errors}")
+    migrated_current = copy.deepcopy(valid_contract)
+    migrated_current["work_graph"]["revision"] = 2
+    migrated_current["work_graph"]["revision_reason"] = "补充结构化证据引用"
+    migrated_current["work_graph"]["revision_evidence"] = ["Migration M-1"]
+    if errors := validate(migrated_current, legacy_previous):
+        raise SystemExit(f"strict current rejected legacy previous migration: {errors}")
 
     broken_state_handoff = copy.deepcopy(valid_contract)
     broken_state_handoff["work_graph"]["state_inputs"] = ["decision_snapshot"]
@@ -746,7 +899,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         current_contract = read_contract(args.path)
         previous_contract = read_contract(args.previous) if args.previous else None
         if previous_contract is not None:
-            previous_errors = validate(previous_contract, require_previous=False)
+            previous_errors = validate_previous_contract(previous_contract)
             if previous_errors:
                 for error in previous_errors:
                     print(f"ERROR {args.previous}: {error}", file=sys.stderr)

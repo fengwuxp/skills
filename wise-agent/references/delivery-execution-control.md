@@ -202,17 +202,17 @@ AI 注释去噪 / 可读性门禁:
 跨轮或上下文压缩前，需要确定性审计时，把上述载体投影为 `wise-agent/scripts/check_state_contract.py` 可校验的 JSON；投影只用于检查 Goal、决策集合、执行依据、预算、停止和恢复字段，不替代 Goal Ledger、Spec、Issue 或任务文档本身。
 
 ## 2B.1 可选工作拓扑投影
-工作拓扑投影不是新的 `Graph Mode`、流程或真相源，只把现有 Task Tree / Wave plan 中已经存在的工作关系变成可校验结构。满足任一条件时才附加 `work_graph`：至少三个节点且存在分支或汇合依赖；多个 Worker 可能并行；任务跨 Wave 交接；新证据可能导致节点拆分、取消或重排。简单、线性、单文件或一次可完成的任务继续直接执行。
+工作拓扑投影不是新的 `Graph Mode`、流程或真相源，只把现有 Task Tree / Wave plan 中已经存在的工作关系变成可校验结构。只有两项同时满足才附加 `work_graph`：上下文隔离、并行、专业化交接或断点恢复有明确收益；至少三个节点且存在分支、汇合、并行或跨 Wave 交接。简单、线性、单文件或一次可完成的任务继续直接执行。
 层次保持不变：Goal 定义整体完成线；`work_graph` 表达节点、依赖和当前可执行集合；Loop 只在需要反复行动和反馈的节点内运行；Worker 承担低耦合执行节点；Checker 是高风险节点或汇合准入的独立验证者。稳定的能力地图仍由 `capability-routing.md` 管理，Skill 是能力包，不把它们虚构成常驻 Agent 组织。
-最小契约为 `work_graph.revision / revision_reason / revision_evidence / nodes[]`；节点字段为 `id / objective / status / depends_on / parallel_group? / write_scope / risk / checker / evidence / status_reason`。只有复杂工作图确实存在跨节点数据、条件分支或可重试外部调用时，才增加以下可选运行语义，不要求普通节点补空字段：
-- 数据交接：`work_graph.state_inputs` 声明初始状态键；节点用 `consumes / produces / writeback` 声明读取、产出和写回位置。`consumes` 只能引用初始状态或依赖祖先已经 `produces` 的键；每个有效状态键只允许一个未取消节点产出，确需汇总时拆成不同键并增加显式汇合节点。`writeback` 使用仓库相对路径和可选锚点，路径必须同时属于节点与 Goal 的 `write_scope`，避免结果只留在对话里或越权写回。
+最小契约为 `work_graph.revision / revision_reason / revision_evidence / nodes[]`；节点字段为 `id / objective / status / depends_on / parallel_group? / write_scope / risk / maker? / checker / evidence / evidence_refs? / status_reason`。只有复杂工作图确实存在跨节点数据、条件分支或可重试外部调用时，才增加以下可选运行语义，不要求普通节点补空字段：
+- 数据交接：`work_graph.state_inputs` 声明初始状态键；节点用 `consumes / produces / writeback` 声明读取、产出和写回位置。`consumes` 只能引用初始状态或依赖祖先已经 `produces` 的键；每个有效状态键只允许一个未取消节点产出，确需汇总时拆成不同键并增加显式汇合节点。`writeback` 使用仓库相对路径和可选锚点，路径必须同时属于节点与 Goal 的 `write_scope`，避免结果只留在对话里或越权写回。Checker 节点按 `capability-routing.md` 的独立性规则，只消费原始产物、Goal / AC 和源证据；Maker 推理轨迹或摘要不得成为唯一输入。
 - 条件路由：`transitions[]` 每项只保留可回链事实或验证结果的 `when / target`；必须有且只有一个 `default`，目标只能是现有节点或 `Complete / Stop / Human handoff`。依赖、条件路由和 fallback 共同构成的执行边必须无环。本契约不发明条件表达式 DSL，也不把模型判断伪装成确定性条件。
 - 失败处置：`failure_policy` 只用于确有失败面的节点，记录正整数 `max_attempts`、可选 `backoff`，以及耗尽后的 `fallback / stop / human`；`fallback` 必须指向现有节点，`max_attempts` 不得超过 Goal 的 `max_iterations`。重试不得延长 Goal 预算、复活排除项或扩大授权。
-- 状态只使用 `Pending / Ready / Running / Blocked / Verified / Cancelled`；依赖未 `Verified`，后继不得进入 `Ready / Running / Verified`；`Verified` 必须有证据，`Blocked / Cancelled` 必须有原因和证据，高风险节点必须绑定独立 Checker。
+- 状态只使用 `Pending / Ready / Running / Blocked / Verified / Cancelled`；依赖未 `Verified`，后继不得进入 `Ready / Running / Verified`；`Verified` 必须同时有摘要 `evidence` 和至少一个结构化 `evidence_refs`，且至少一个引用不能是 `validator`。高风险 `Verified` 还必须声明不同的 `maker / checker`，并包含 `independent_review` 引用；`Blocked / Cancelled` 必须有原因和证据。每个 `evidence_refs[]` 记录 `type / ref / fingerprint / method / result / observed_at`；`type` 只允许 `source / test / validator / independent_review / owner_confirmation / runtime / production`。validator 只检查声明结构，模型自述、Maker 摘要或结构校验退出码不能单独构成现实锚点；Checker 仍须回读 `ref / fingerprint`，具体证据身份与失效规则回到 `verification-review-release.md`。
 - 同一 `parallel_group` 的写入范围必须不重叠；冲突时拆顺序，不为并行修改公共契约、状态机或共享测试夹具。
-- 新证据导致拆分、取消或重排时逐一递增 `revision`，记录 `revision_reason` 和 `revision_evidence`；revision 大于 1 必须用 `--previous` 对账，工作图不得整体删除，已取消节点保留为 tombstone，不得删除或复活。
+- 新证据导致拆分、取消或重排时逐一递增 `revision`，记录 `revision_reason` 和 `revision_evidence`；revision 大于 1 必须用 `--previous` 对账，工作图不得整体删除，已取消节点保留为 tombstone，不得删除或复活。旧版 previous 中的 `Verified` 节点可以缺少新增证据字段，只作为迁移输入读取；current 必须补齐当前严格契约，不得为了迁移回写或伪造历史证据。
 - 节点写入范围必须属于顶层 `write_scope`；Goal 进入 `Verified / Closed` 时，所有节点必须为 `Verified / Cancelled`。投影不成为第二真相源，也不扩大 Worker、Git 或生产授权。
-- 运行 `python3 wise-agent/scripts/check_state_contract.py <current.json> --previous <previous.json>` 校验唯一节点、无环执行边、执行准入、并行写入、数据交接、条件目标、有界失败处置、Checker、状态证据、授权范围与 revision；首版省略 `--previous`。
+- 运行 `python3 wise-agent/scripts/check_state_contract.py <current.json> --previous <previous.json>` 校验唯一节点、无环执行边、执行准入、并行写入、数据交接、条件目标、有界失败处置、Checker、`evidence_refs`、授权范围与 revision；首版省略 `--previous`。
 ## 2C. Loop 组件清单
 
 设计可运行 Loop 时，至少判断下列组件是否存在；缺失组件必须写进 Loop 缺口，而不是用更长 Prompt 补偿。

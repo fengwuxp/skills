@@ -50,7 +50,7 @@ description: |
 | Worker | 子任务输入可冻结、写入不重叠且并行收益明确 | `references/engineering-governance.md` |
 | Checker | 高风险、公共契约、重要交付或发布准出 | `references/verification-review-release.md` |
 
-先判断 SDLC，再判断 Goal，确需反复运行才增加 Loop；Worker 与 Checker 是正交判断。工作拓扑投影不是第六个机制：三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有 Goal 上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
+先判断 SDLC，再判断 Goal，确需反复运行才增加 Loop；Worker 与 Checker 是正交判断。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有 Goal 上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
 
 ## 能力装载
 

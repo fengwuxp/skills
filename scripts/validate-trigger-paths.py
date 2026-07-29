@@ -6537,17 +6537,26 @@ check(
     "wise-agent projects complex work topology without adding Graph Mode",
     has_all(
         wise_agent_skill,
-        ["工作拓扑投影不是第六个机制", "三个以上节点", "可校验 `work_graph`", "简单、线性或单文件任务不生成"],
+        ["工作拓扑投影不是第六个机制", "上下文隔离", "三个以上节点", "可校验 `work_graph`", "简单、线性或单文件任务不生成"],
+    )
+    and has_all(
+        readme,
+        ["上下文隔离、并行、专业化交接或断点恢复有明确收益", "至少三个节点", "两项同时满足"],
     )
     and has_all(
         wise_agent_delivery_execution_control,
         [
             "可选工作拓扑投影",
             "不是新的 `Graph Mode`",
+            "上下文隔离、并行、专业化交接或断点恢复有明确收益",
+            "至少三个节点",
+            "两项同时满足",
             "Goal 定义整体完成线",
             "Loop 只在需要反复行动和反馈的节点内运行",
             "同一 `parallel_group` 的写入范围必须不重叠",
-            "高风险节点必须绑定独立 Checker",
+            "高风险 `Verified` 还必须声明不同的 `maker / checker`",
+            "evidence_refs",
+            "Maker 推理轨迹或摘要不得成为唯一输入",
             "revision_reason",
             "revision_evidence",
             "已取消节点保留为 tombstone",
@@ -6564,6 +6573,13 @@ check(
             "work_graph dependencies must be acyclic",
             "overlapping_scopes",
             "requires checker",
+            "EVIDENCE_REF_TYPES",
+            "requires evidence_refs",
+            "accepted a Maker self-report",
+            "requires at least one non-validator evidence_ref",
+            "requires checker different from maker",
+            "requires independent_review evidence_ref",
+            "legacy previous contract cannot be migrated",
             "requires status_reason and evidence",
             "optional work_graph broke legacy contract",
             "outside contract write_scope",
@@ -6573,6 +6589,25 @@ check(
             "must retain work_graph",
             "increment previous revision by one",
             "--previous",
+        ],
+    )
+    and has_all(
+        wise_agent_goal_governance,
+        ["反证条件或护栏指标", "指标上升不能单独证明 Goal 达成"],
+    ),
+)
+check(
+    "wise-agent records the Graph Engineering source without adding a mode",
+    has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/LzpfUsJRMcpPHzDovo5IrA",
+            "Loop Engineering 已死？一文带你了解 Graph Engineering",
+            "lukiexing",
+            "2026-07-29",
+            "现实证据锚点",
+            "不新增 `Graph Mode`、顶层 Skill、框架或常驻多 Agent 组织",
+            "不吸收文章性能数字、框架 token 对比、厂商案例",
         ],
     ),
 )
@@ -17101,11 +17136,15 @@ expected_handling_has(
 )
 expected_handling_has(
     "wise-agent-should-project-complex-work-topology",
-    ("不新增 Graph Mode", "可选工作拓扑投影", "B、C 写入范围冲突", "D 绑定独立 Checker", "Loop 只留在", "check_state_contract.py"),
+    ("不新增 Graph Mode", "可选工作拓扑投影", "B、C 写入范围冲突", "D 绑定独立 Checker", "原始产物", "evidence_refs", "Loop 只留在", "check_state_contract.py"),
+)
+expected_handling_has(
+    "wise-agent-should-reject-self-reported-work-graph-verification",
+    ("撤回 D 的 Verified", "阻塞准出", "Maker 自述", "maker / checker", "evidence_refs", "fingerprint", "validator 不能作为唯一现实证据", "independent_review", "独立 Checker", "原始产物", "可回滚和交付压力不能替代现实证据"),
 )
 expected_handling_has(
     "wise-agent-should-not-project-work-topology-for-simple-task",
-    ("直接完成", "不生成 work_graph", "不创建 Goal、Loop 或 Worker", "三个以上节点"),
+    ("直接完成", "不生成 work_graph", "不创建 Goal、Loop 或 Worker", "上下文隔离", "三个以上节点"),
 )
 expected_handling_has(
     "wise-agent-should-avoid-worker-for-coupled-task",

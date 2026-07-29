@@ -1810,7 +1810,17 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者不新增 Graph Mode，只在现有 Goal 状态契约中生成可选工作拓扑投影；记录 A -> B/C -> D 的节点、依赖、状态、写入范围和证据。B、C 写入范围冲突，不能作为同一 parallel_group 并行，必须改为串行或重新切分；D 绑定独立 Checker。Loop 只留在需要反复执行的节点内，并用 check_state_contract.py 校验依赖、并行写入和状态证据。"
+      "expected_handling": "知止者不新增 Graph Mode，只在现有 Goal 状态契约中生成可选工作拓扑投影；记录 A -> B/C -> D 的节点、依赖、状态、写入范围和证据。B、C 写入范围冲突，不能作为同一 parallel_group 并行，必须改为串行或重新切分；D 绑定独立 Checker，只消费原始产物、Goal / AC 和源证据，不以 Maker 推理轨迹或摘要为唯一输入。Verified 节点绑定结构化 evidence_refs 现实锚点；Loop 只留在需要反复执行的节点内，并用 check_state_contract.py 校验依赖、并行写入和状态证据。"
+    },
+    {
+      "id": "wise-agent-should-reject-self-reported-work-graph-verification",
+      "skill": "wise-agent",
+      "query": "Goal G-22 的高风险节点 D 已被 Maker 标记为 Verified，但 evidence 只有‘Maker reports tests passed’，Checker 也是同一个 Maker，CI 原始报告暂时拿不到。团队已经投入 6 小时，交付窗口只剩 10 分钟，负责人说反正能回滚；旧 validator 退出码为 0。请直接决定是否准出。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者撤回 D 的 Verified 并阻塞准出；旧 validator 退出码为 0 只证明旧结构放行，Maker 自述和同一 Maker 兼任 Checker 不构成独立证据。要求节点声明不同的 maker / checker，并补充结构化 evidence_refs，至少记录允许的证据类型、原始 ref、fingerprint、检查 method、result 和 observed_at；validator 不能作为唯一现实证据，高风险 Verified 还必须有 independent_review。独立 Checker 只消费原始产物、Goal / AC 和源证据，不以 Maker 推理轨迹或摘要为唯一输入。可回滚和交付压力不能替代现实证据或 Owner 责任。"
     },
     {
       "id": "wise-agent-should-not-project-work-topology-for-simple-task",
@@ -1820,7 +1830,7 @@
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者直接完成这个一步、单文件、线性任务并回读验证；不新增 Graph Mode，不生成 work_graph，不创建 Goal、Loop 或 Worker。只有复杂任务出现三个以上节点以及分支 / 汇合依赖、并行 Worker、跨 Wave 交接或动态取消 / 重排时，才使用可选工作拓扑投影。"
+      "expected_handling": "知止者直接完成这个一步、单文件、线性任务并回读验证；不新增 Graph Mode，不生成 work_graph，不创建 Goal、Loop 或 Worker。只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且复杂任务出现三个以上节点以及分支 / 汇合依赖、并行 Worker、跨 Wave 交接或动态取消 / 重排时，才使用可选工作拓扑投影。"
     },
     {
       "id": "wise-agent-should-avoid-worker-for-coupled-task",
