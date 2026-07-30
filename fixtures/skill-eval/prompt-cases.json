@@ -3740,6 +3740,21 @@
       "expected_handling": "识别为 UI 可用性验证与实现后 Design QA；先继承已确认产品规则和设计契约，声明当前证据等级，定义目标用户、招募排除、真实任务、起点、成功/失败/恢复、环境、隐私和停止条件。任务测试记录完成、错误、恢复、求助、用时、信心、触发步骤和原话，不从小样本外推总体比例；Design QA 覆盖浏览器中的状态矩阵、响应式、键盘/焦点、内容韧性、控制台和失败请求。findings 按 P0-P3 写明证据等级、触发条件、任务影响、最小修复、Owner 与复测范围，不把截图、像素一致或专家意见冒充目标用户可用性证据。"
     },
     {
+      "id": "ui-design-expert-should-plan-figma-clickable-prototype",
+      "skill": "ui-design-expert",
+      "query": "使用 $ui-design-expert 把已确认的 Web 审批任务做成可编辑、可点击的 Figma 原型，覆盖列表、详情、退回弹层和结果页，并交接给开发或 AI 编码还原。请给出页面、状态、交互、工具路由和验证证据；不要把原型说成生产代码。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "识别为 UI 设计与 L1 Figma 可点击原型任务；先稳定用户、范围、页面/状态图和交互表，再按当前 Figma 能力使用 figma-create-new-file、figma-use 与 figma-generate-design，交互通过 setReactionsAsync 建立并在 preview 走查。Figma 文件使用 components、Code Connect、variables、语义命名、Auto Layout、annotations 和 dev resources；AI 编码交接提供 exact node，依次获取 design context、必要时 metadata 缩小范围和 screenshot，复用项目组件、tokens、路由、状态与数据模式。代码实现仍由 senior-software-architect 负责；截图不证明可点击，MCP 输出不是生产代码。"
+    },
+    {
       "id": "ui-design-expert-negative-product-prd-only",
       "skill": "ui-design-expert",
       "query": "请根据支付业务访谈定义退款申请的主体、业务对象、状态机、金额规则、权限、风控、审计和验收标准，输出可评审 PRD；本轮不做页面、交互或视觉设计。",

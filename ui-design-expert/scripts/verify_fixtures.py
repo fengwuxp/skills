@@ -7,8 +7,9 @@ from pathlib import Path
 
 try:
     from check_ui_design_deliverable import CHECKS, missing_groups
+    from check_ui_source import scan_file
 except ModuleNotFoundError:
-    print("FAIL UI fixture verification: missing check_ui_design_deliverable.py")
+    print("FAIL UI fixture verification: missing UI checker")
     raise SystemExit(1)
 
 
@@ -20,13 +21,22 @@ VALID_CASES = [
     ("ui-review", FIXTURES / "ui-review-valid.md"),
     ("ui-review", FIXTURES / "ui-review-heading-valid.md"),
     ("usability-plan", FIXTURES / "usability-plan-valid.md"),
+    ("prototype-plan", FIXTURES / "prototype-plan-valid.md"),
+    ("prototype-plan", FIXTURES / "prototype-plan-l0-valid.md"),
+    ("prototype-plan", FIXTURES / "prototype-plan-l2-valid.md"),
 ]
 INVALID_CASES = [
     ("design-brief", FIXTURES / "invalid-incomplete.md"),
     ("design-brief", FIXTURES / "keyword-stuffed-invalid.md"),
     ("ui-review", FIXTURES / "ui-review-invalid-no-severity.md"),
     ("usability-plan", FIXTURES / "usability-plan-invalid.md"),
+    ("prototype-plan", FIXTURES / "prototype-plan-invalid.md"),
+    ("prototype-plan", FIXTURES / "prototype-plan-keyword-stuffed-invalid.md"),
+    ("prototype-plan", FIXTURES / "prototype-plan-level-invalid.md"),
 ]
+SOURCE_VALID = FIXTURES / "source-valid.tsx"
+SOURCE_INVALID = FIXTURES / "source-invalid.tsx"
+EXPECTED_SOURCE_RULES = {"zoom-disabled", "transition-all", "non-semantic-click", "paste-blocked"}
 
 
 def read_fixture(path: Path) -> str:
@@ -52,6 +62,20 @@ def main() -> int:
             failures.append(f"invalid fixture unexpectedly passed: {invalid_kind} {invalid_path.name}")
         else:
             print(f"OK negative UI design fixture {invalid_kind} {invalid_path.name}")
+
+    if findings := scan_file(SOURCE_VALID):
+        failures.append(f"valid source fixture failed: {', '.join(finding.rule for finding in findings)}")
+    else:
+        print(f"OK UI source fixture {SOURCE_VALID.name}")
+
+    actual_rules = {finding.rule for finding in scan_file(SOURCE_INVALID)}
+    if actual_rules != EXPECTED_SOURCE_RULES:
+        failures.append(
+            "invalid source fixture rules mismatch: "
+            f"expected {sorted(EXPECTED_SOURCE_RULES)}, got {sorted(actual_rules)}"
+        )
+    else:
+        print(f"OK negative UI source fixture {SOURCE_INVALID.name}")
 
     if failures:
         print("FAIL UI fixture verification")

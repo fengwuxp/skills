@@ -1,14 +1,14 @@
 ---
 name: ui-design-expert
 description: |
-  用户要求设计、评审或验证 Web UI 或浏览器应用界面，处理页面任务流、界面结构、交互状态、视觉系统、实现后 Design QA 或任务型可用性测试时触发。原生 iOS/Android、纯产品业务语义、纯后端或系统实现、已有 Figma 设计到代码的还原不触发。
+  用户要求设计、评审或验证 Web UI 或浏览器应用界面，处理页面任务流、界面结构、交互状态、可操作原型、Figma 原型、视觉系统、实现后 Design QA 或任务型可用性测试时触发。原生 iOS/Android、纯产品业务语义、纯后端或系统实现、已有 Figma 设计到代码的还原不触发。
 ---
 
 # UI 设计专家
 
 ## 定位
 
-本 Skill 是知止者按需装载的 Web UI 设计能力包，负责把已确认的用户目标、产品语义、真实内容和技术约束转成可实现、可验证的浏览器界面设计契约。它覆盖信息架构、任务流、页面层级、交互状态、响应式、可访问性、视觉方向、设计系统约束、可用性验证和实现后 Design QA。
+本 Skill 是知止者按需装载的 Web UI 设计能力包，负责把已确认的用户目标、产品语义、真实内容和技术约束转成可实现、可验证的浏览器界面设计契约。它覆盖信息架构、任务流、页面层级、交互状态、可操作原型、响应式、可访问性、视觉方向、设计系统约束、可用性验证和实现后 Design QA。
 
 它不负责定义产品业务语义、规则和验收口径，也不替代前端工程实现、源码 CR 或生产发布。需要跨产品、设计和工程推进时，由 `wise-agent` 持有目标；产品事实由 `product-architecture-expert` 稳定，界面设计由本 Skill 负责，代码实现与工程验证由 `senior-software-architect` 负责。
 
@@ -34,9 +34,9 @@ description: |
 6. **定义响应式与可访问性**：说明不同视口的结构变化、触控与键盘行为、焦点顺序、语义、对比、缩放、减弱动效和内容扩展策略。
 7. **交付并验证**：交付设计 brief、结构/交互说明、状态矩阵、视觉约束和验证计划；需要证明可用性或核对实现时，声明证据等级并执行任务测试或 Design QA。
 
-详细场景路由、设计契约和评审清单读取 `references/design-and-review-workflow.md`。建立视觉基础时读 `references/design-foundations.md`，复用常见业务模式时读 `references/common-scenario-patterns.md`，选择设计系统或 UI 资产时读 `references/ui-library-landscape.md`，建立视觉风格或东方审美方向时读 `references/visual-style-directions.md`，规划任务测试或实现后 Design QA 时读 `references/usability-validation-and-design-qa.md`。需要复核外部方法来源、许可证和未吸收内容时读取 `references/source-map.md`。
+详细场景路由、设计契约和评审清单读取 `references/design-and-review-workflow.md`。建立视觉基础时读 `references/design-foundations.md`，复用常见业务模式时读 `references/common-scenario-patterns.md`，选择设计系统或 UI 资产时读 `references/ui-library-landscape.md`，建立视觉风格或东方审美方向时读 `references/visual-style-directions.md`，规划任务测试或实现后 Design QA 时读 `references/usability-validation-and-design-qa.md`，输出可操作原型或做 Figma 工程交接时读 `references/prototype-output.md`。需要复核外部方法来源、许可证和未吸收内容时读取 `references/source-map.md`。
 
-正式、完整、可评审、提交前或触发验证场景下，使用 `scripts/check_ui_design_deliverable.py --kind design-brief`、`scripts/check_ui_design_deliverable.py --kind ui-review` 或 `scripts/check_ui_design_deliverable.py --kind usability-plan` 检查设计契约、UI 评审或可用性验证计划的结构完整性。脚本只读取显式本地文本或文件，不写文件、不联网、不读取密钥；通过只表示必要结构存在，不判断视觉质量、实际可用性或 WCAG 合规。无法运行时说明原因、人工检查结果和残余风险。
+正式、完整、可评审、提交前或触发验证场景下，使用 `scripts/check_ui_design_deliverable.py --kind design-brief`、`scripts/check_ui_design_deliverable.py --kind ui-review`、`scripts/check_ui_design_deliverable.py --kind usability-plan` 或 `scripts/check_ui_design_deliverable.py --kind prototype-plan` 检查设计契约、UI 评审、可用性验证计划或原型交付计划的结构完整性。审查 HTML、CSS、JSX、TSX、Vue 或 Svelte 源码时，可运行 `scripts/check_ui_source.py <path>` 检查少量高置信反模式。脚本只读取显式本地文本或文件，不写文件、不联网、不读取密钥；通过只表示未命中这些窄规则，不判断视觉质量、语义完整性、实际可用性或 WCAG 合规。无法运行时说明原因、人工检查结果和残余风险。
 
 ## 场景路由
 
@@ -46,9 +46,10 @@ description: |
 - **设计系统或 UI 资产选型**：读取 `references/ui-library-landscape.md`，先继承现状并区分完整设计体系、组件库、无样式行为原语与开放代码分发；未经授权不安装、升级或迁移。
 - **东方或中国文化视觉方向**：仅在用户明确提出相关设计目标时读取 `references/visual-style-directions.md`；以真实内容和资产为依据，不把水墨、米色、红金、书法或传统符号当默认答案。
 - **任务测试或实现后 Design QA**：读取 `references/usability-validation-and-design-qa.md`；先声明 E1-E4 证据等级，再按验证问题选择认知走查、目标用户任务测试、浏览器 Design QA 或运行观察，不用截图和主观偏好冒充可用性证据。
+- **可操作原型或 Figma 交付**：读取 `references/prototype-output.md`，选择能回答验证问题的最低原型层级；本 Skill 稳定页面、状态与交互契约，Figma 操作按 `figma-create-new-file`、`figma-use`、`figma-generate-design` 等当前能力路由，代码实现仍由工程能力负责。
 - **原生 iOS / Android**：本 Skill 不负责原生界面设计；路由到对应平台能力，不把 WCAG、HTML 或浏览器验证契约机械套用为原生标准。
-- **已有 Figma 设计到代码**：设计已确认时不由本 Skill 重新设计；路由到工程能力，并按需使用 Figma design-to-code 工具。
-- **需要在 Figma 创建或维护设计**：本 Skill 先稳定设计契约，再按当前工具约规调用 Figma 执行能力；工具不替代设计判断。
+- **已有 Figma 设计到代码**：设计已确认时不由本 Skill 重新设计；路由到工程能力，并按 `references/prototype-output.md` 的精确 node、Code Connect、design context、screenshot 和浏览器验证契约使用 Figma design-to-code 工具。
+- **需要在 Figma 创建或维护设计**：本 Skill 先稳定设计契约，再按 `references/prototype-output.md` 路由当前 Figma 执行能力；工具不替代设计判断。
 - **需要前端代码**：本 Skill 提供设计契约，`senior-software-architect` 负责实现、测试和代码质量；完成后本 Skill 可复核视觉与可用性。
 
 ## 最小输出
@@ -80,4 +81,5 @@ description: |
 - 不把 React Aria、Radix Primitives 或 shadcn/ui 冒充完整设计体系，也不因候选流行就替换项目已有系统。
 - 不把自动检查、静态截图或主观审美当成完整可用性证明。
 - 不把专家评审冒充目标用户证据，不从小样本外推总体比例，也不用像素一致替代任务、状态、语义和恢复验证。
+- 不把 Figma 截图当作可点击原型证据，也不把 Figma MCP 输出当作生产代码。
 - 不复制外部 Skill 原文、脚本、Hooks 或持久化机制；只使用已归因、可迁移的方法。

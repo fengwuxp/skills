@@ -514,6 +514,17 @@ assert_ui_design_figma_route() {
   assert_none "${file}" "重新定义视觉方向"
 }
 
+assert_ui_figma_prototype() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "L1 Figma 可点击原型" "页面" "状态" "交互表" "setReactionsAsync" "Code Connect" "get_design_context" "get_screenshot" "senior-software-architect"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "截图不证明可点击" "截图不能证明可点击" || return 1
+  grep -Fq "MCP 输出不是生产代码" "${file}" || return 1
+  assert_none "${file}" "MCP 输出就是生产代码" "截图即证明可点击"
+}
+
 assert_ui_ecosystem_selection() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
@@ -669,6 +680,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/ui-design-figma-route.txt" \
       "${sample_dir}/bad-ui-design-figma-route.txt" \
       "${sample_dir}/bad-ui-design-figma-route-contradictory.txt" \
+      "${sample_dir}/ui-figma-prototype.txt" \
+      "${sample_dir}/bad-ui-figma-prototype.txt" \
       "${sample_dir}/ui-ecosystem-selection.txt" \
       "${sample_dir}/bad-ui-ecosystem-selection.txt" \
       "${sample_dir}/ui-eastern-aesthetics.txt" \
@@ -763,6 +776,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' 'Figma 已确认，ui-design-expert 不触发；由 senior-software-architect 负责工程还原，按需使用 design-to-code。' > "${sample_dir}/ui-design-figma-route.txt"
   printf '%s\n' 'Figma 已确认，仍由 ui-design-expert 重新设计并重新定义视觉方向。' > "${sample_dir}/bad-ui-design-figma-route.txt"
   printf '%s\n' 'Figma 已确认，由 senior-software-architect 负责还原，ui-design-expert 不触发；但重新设计交给 ui-design-expert 执行。' > "${sample_dir}/bad-ui-design-figma-route-contradictory.txt"
+  printf '%s\n' '选择 L1 Figma 可点击原型，先给页面与状态图、交互表，再用 setReactionsAsync 建立跳转与弹层；文件核对 Code Connect，AI 交接取 get_design_context 和 get_screenshot。senior-software-architect 负责代码实现；截图不证明可点击，MCP 输出不是生产代码。' > "${sample_dir}/ui-figma-prototype.txt"
+  printf '%s\n' 'Figma 截图即证明可点击，直接把 MCP 输出就是生产代码。' > "${sample_dir}/bad-ui-figma-prototype.txt"
   printf '%s\n' 'Ant Design 与 Carbon 属于完整设计体系；React Aria、Radix 属于无样式行为原语；shadcn/ui 是开放代码分发，不是传统组件库。按任务、技术栈、可访问性、tokens、维护迁移和许可筛选，再用真实关键路径试片。' > "${sample_dir}/ui-ecosystem-selection.txt"
   printf '%s\n' 'Radix 是完整设计体系，React Aria 是完整设计体系，shadcn/ui 是传统组件库；按 stars 选择即可，无需试片。' > "${sample_dir}/bad-ui-ecosystem-selection.txt"
   printf '%s\n' '以真实器物和真实藏品内容为依据，资料缺失时不补写文化寓意；用留白与节律、现代中文字体形成视觉变量，响应式覆盖移动端，验证对比、键盘和焦点等可访问性。' > "${sample_dir}/ui-eastern-aesthetics.txt"
@@ -818,6 +833,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_ui_design_product_route "${sample_dir}/ui-design-product-route.txt"
   assert_ui_design_product_route "${sample_dir}/ui-design-product-route-not-owner.txt"
   assert_ui_design_figma_route "${sample_dir}/ui-design-figma-route.txt"
+  assert_ui_figma_prototype "${sample_dir}/ui-figma-prototype.txt"
   assert_ui_ecosystem_selection "${sample_dir}/ui-ecosystem-selection.txt"
   assert_ui_eastern_aesthetics "${sample_dir}/ui-eastern-aesthetics.txt"
   assert_ui_locked_system_route "${sample_dir}/ui-locked-system-route.txt"
@@ -972,6 +988,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL UI design smoke accepted contradictory Figma ownership" >&2
     exit 1
   fi
+  if assert_ui_figma_prototype "${sample_dir}/bad-ui-figma-prototype.txt"; then
+    echo "FAIL UI design smoke accepted a screenshot-only Figma prototype" >&2
+    exit 1
+  fi
   if assert_ui_ecosystem_selection "${sample_dir}/bad-ui-ecosystem-selection.txt"; then
     echo "FAIL UI design smoke accepted incorrect UI ecosystem categories" >&2
     exit 1
@@ -1073,6 +1093,10 @@ if [[ "${MODE}" == "all" || "${MODE}" == "ui-design" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/ui-design-figma-route.txt" \
     "只读行为验证，对应 fixture ui-design-expert-negative-figma-to-code。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/senior-software-architect/SKILL.md，以源仓库内容为规则。Figma 组件、变量、断点和交互已经确认，任务只要求严格还原 React、补测试并验证一致性，不允许改设计。请判断由哪个 Skill 负责、是否触发 ui-design-expert，以及 Figma 工具的角色；不写文件，控制在 200 字。"
   assert_ui_design_figma_route "${OUTPUT_DIR}/ui-design-figma-route.txt" || { echo "FAIL UI design Figma routing behavior smoke: ${OUTPUT_DIR}/ui-design-figma-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/ui-figma-prototype.txt" \
+    "只读行为验证，对应 fixture ui-design-expert-should-plan-figma-clickable-prototype。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/ui-design-expert/references/prototype-output.md，以源仓库内容为规则。把已确认的 Web 审批任务规划为可编辑、可点击的 Figma 原型，覆盖页面、状态、弹层和失败恢复，并交接给开发或 AI 编码还原；说明原型层级、Figma 工具与结构、交互建立、代码交接、验证证据和责任边界；控制在 450 字。"
+  assert_ui_figma_prototype "${OUTPUT_DIR}/ui-figma-prototype.txt" || { echo "FAIL UI Figma prototype behavior smoke: ${OUTPUT_DIR}/ui-figma-prototype.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/ui-ecosystem-selection.txt" \
     "只读行为验证，对应 fixture ui-design-expert-should-select-ui-ecosystem-by-category。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/ui-design-expert/references/ui-library-landscape.md，以源仓库内容为规则。为新的 React 财务运营工作台比较 Ant Design、Carbon、React Aria、Radix 和 shadcn/ui；说明类别差异、选型维度、主选/备选、真实路径试片和停止条件，不安装依赖；控制在 450 字。"

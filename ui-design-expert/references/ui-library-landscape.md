@@ -48,6 +48,8 @@
 | 资产 | 严格类别 | 更匹配的场景 | 技术与边界 |
 | --- | --- | --- | --- |
 | [Material 3](https://m3.material.io/) | 完整通用设计体系 | 跨平台消费产品、Google/Android 生态 | 设计语言不等于某个 Web 实现；Web 组件维护状态另核验 |
+| [GOV.UK Design System](https://design-system.service.gov.uk/) | 公共服务设计体系 | 高责任、表单密集的公共服务 | 模式强调完整任务、内容和恢复；品牌样式不外推到其他组织 |
+| [USWDS](https://designsystem.digital.gov/) | 公共服务设计体系 | 美国联邦网站与数字服务 | 可按原则、UX 指南和代码分层采用；项目适用性与法定要求另核验 |
 | [Ant Design](https://ant.design/) | 企业 Web 设计体系 + React 组件库 | 中后台、表单、数据密集业务 | 三层 tokens 和主题算法成熟；服从项目当前主版本，不自动升级 |
 | [Fluent 2](https://fluent2.microsoft.design/) | 完整通用设计体系 | Microsoft 生态、生产力工具 | global/alias tokens，支持 light/dark/high-contrast/brand；代码与品牌资产许可分开 |
 | [Carbon](https://carbondesignsystem.com/) | 完整企业设计体系 | 数据密集 B2B、IBM 风格产品 | 有组件、模式、tokens 和可访问性指南；品牌识别较强 |
@@ -70,7 +72,8 @@
 4. **可访问性证据**：是否公开语义、键盘、焦点和测试说明；官方自述只是基础，项目组合仍需验证。
 5. **tokens 与定制**：能否通过语义 tokens 和受支持 API 适配；若必须大量覆盖内部样式，应降低优先级。
 6. **许可与资产**：代码、字体、图标、Logo、商标、Figma 资源分别核验，MIT/Apache 代码许可不能外推到全部资产。
-7. **迁移与退出**：先用一个真实关键路径做试片；定义升级责任、替换成本和不通过时的停止条件。
+7. **采用层级**：按 `原则 -> UX 指南 -> 代码` 判断实际采用深度；复用组件不等于原则、模式、内容和治理已经成熟。
+8. **迁移与退出**：先用一个真实关键路径做试片；定义升级责任、替换成本和不通过时的停止条件。
 
 ## 四、无样式原语与开放代码
 

@@ -299,7 +299,9 @@ ui_design_scenarios = "ui-design-expert/references/common-scenario-patterns.md"
 ui_design_landscape = "ui-design-expert/references/ui-library-landscape.md"
 ui_design_styles = "ui-design-expert/references/visual-style-directions.md"
 ui_design_usability = "ui-design-expert/references/usability-validation-and-design-qa.md"
+ui_design_prototype = "ui-design-expert/references/prototype-output.md"
 ui_design_checker = "ui-design-expert/scripts/check_ui_design_deliverable.py"
+ui_design_source_checker = "ui-design-expert/scripts/check_ui_source.py"
 ui_design_fixture_verifier = "ui-design-expert/scripts/verify_fixtures.py"
 hanzi_skill = "hanzi-philology/SKILL.md"
 hanzi_agent = "hanzi-philology/agents/openai.yaml"
@@ -17867,7 +17869,9 @@ check(
     and (ROOT / ui_design_landscape).exists()
     and (ROOT / ui_design_styles).exists()
     and (ROOT / ui_design_usability).exists()
+    and (ROOT / ui_design_prototype).exists()
     and (ROOT / ui_design_checker).exists()
+    and (ROOT / ui_design_source_checker).exists()
     and (ROOT / ui_design_fixture_verifier).exists()
     and has_all(
         ui_design_skill,
@@ -17885,10 +17889,13 @@ check(
             "references/ui-library-landscape.md",
             "references/visual-style-directions.md",
             "references/usability-validation-and-design-qa.md",
+            "references/prototype-output.md",
             "references/source-map.md",
             "scripts/check_ui_design_deliverable.py --kind design-brief",
             "scripts/check_ui_design_deliverable.py --kind ui-review",
             "scripts/check_ui_design_deliverable.py --kind usability-plan",
+            "scripts/check_ui_design_deliverable.py --kind prototype-plan",
+            "scripts/check_ui_source.py",
             "“一、任务与变更类型”至“七、交付契约”",
             "原生 iOS / Android",
         ],
@@ -17900,10 +17907,25 @@ check(
             "design-brief",
             "ui-review",
             "usability-plan",
+            "prototype-plan",
+            "PROTOTYPE_LEVEL_CHECKS",
+            "prototype_level",
+            "PROTOTYPE_MIN_NON_KEYWORD_SECTION_CHARS",
             "severity_finding",
             "placeholder_fields",
             "does not access",
             "judge visual and usability quality",
+        ],
+    )
+    and has_all(
+        ui_design_source_checker,
+        [
+            "zoom-disabled",
+            "transition-all",
+            "non-semantic-click",
+            "paste-blocked",
+            "mask_comments",
+            "does not access the network",
         ],
     )
     and has_all(
@@ -17913,15 +17935,23 @@ check(
             "ui-review-valid.md",
             "ui-review-heading-valid.md",
             "usability-plan-valid.md",
+            "prototype-plan-valid.md",
+            "prototype-plan-l0-valid.md",
+            "prototype-plan-l2-valid.md",
             "invalid-incomplete.md",
             "keyword-stuffed-invalid.md",
             "ui-review-invalid-no-severity.md",
             "usability-plan-invalid.md",
+            "prototype-plan-invalid.md",
+            "prototype-plan-keyword-stuffed-invalid.md",
+            "prototype-plan-level-invalid.md",
+            "source-valid.tsx",
+            "source-invalid.tsx",
         ],
     )
     and has_all(
         ui_design_agent,
-        ["UI 设计专家", "$ui-design-expert", "Web 界面"],
+        ["UI 设计专家", "$ui-design-expert", "Web 界面", "可操作原型"],
     )
     and has_reference_header(ui_design_workflow)
     and has_task_reading_index(ui_design_workflow)
@@ -17944,6 +17974,23 @@ check(
             "vercel-labs/web-interface-guidelines",
             "WCAG 2.2",
             "ARIA Authoring Practices Guide",
+            "GOV.UK Design System",
+            "USWDS",
+            "Nielsen 十项可用性启发式",
+            "Design Tokens Community Group",
+            "v2025.10",
+            "nextlevelbuilder/ui-ux-pro-max-skill",
+            "google-labs-code/stitch-skills",
+            "jiji262/claude-design-skill",
+            "alchaincyf/huashu-design",
+            "developers.figma.com/docs/figma-mcp-server/structure-figma-file",
+            "developers.figma.com/docs/figma-mcp-server/code-connect-integration",
+            "developers.figma.com/docs/figma-mcp-server/mcp-vs-agent",
+            "developers.figma.com/docs/figma-mcp-server/code-to-canvas",
+            "developers.figma.com/docs/plugins/api/properties/nodes-reactions",
+            "figma/mcp-server-guide",
+            "openai/skills",
+            "4.0.4",
             "2026-07-30",
             "未吸收",
             "原生 iOS / Android",
@@ -17957,6 +18004,9 @@ check(
             "排版与中英文混排",
             "布局、栅格与留白",
             "语义化 design tokens",
+            "DTCG v2025.10",
+            "`$type`",
+            "`$value`",
             "颜色不能成为唯一信息通道",
             "内容韧性",
         ],
@@ -17969,6 +18019,9 @@ check(
             "数据工作台与表格",
             "搜索、筛选与结果",
             "表单与分步任务",
+            "任务型服务与恢复",
+            "确认页",
+            "服务不可用",
             "审批与复核",
             "监控与仪表盘",
             "不是页面模板",
@@ -17983,6 +18036,9 @@ check(
             "组件库",
             "无样式行为原语",
             "开放代码分发",
+            "GOV.UK Design System",
+            "USWDS",
+            "原则 -> UX 指南 -> 代码",
             "shadcn/ui 不是传统组件库",
             "React Aria",
             "Radix Primitives",
@@ -18015,12 +18071,40 @@ check(
             "E4 用户/运行证据",
             "目标用户与招募",
             "认知走查",
+            "Nielsen 十项可用性启发式",
+            "系统状态可见",
+            "错误预防",
+            "识别而非回忆",
             "任务测试",
             "实现后 Design QA",
             "小样本",
             "像素差异",
             "P0-P3",
             "--kind usability-plan",
+        ],
+    )
+    and has_reference_header(ui_design_prototype)
+    and has_task_reading_index(ui_design_prototype)
+    and has_all(
+        ui_design_prototype,
+        [
+            "L0 流程契约",
+            "L1 Figma 可点击原型",
+            "L2 浏览器可运行原型",
+            "figma-create-new-file",
+            "figma-use",
+            "figma-generate-design",
+            "figma-generate-library",
+            "figma-design-to-code",
+            "figma-code-connect",
+            "setReactionsAsync",
+            "get_design_context",
+            "get_metadata",
+            "get_screenshot",
+            "Code Connect",
+            "Figma variables",
+            "Auto Layout",
+            "MCP 输出不是生产代码",
         ],
     )
     and has_all(
@@ -18053,6 +18137,7 @@ check(
             "ui-design-expert-should-redesign-mobile-form-flow",
             "ui-design-expert-negative-product-prd-only",
             "ui-design-expert-negative-figma-to-code",
+            "ui-design-expert-should-plan-figma-clickable-prototype",
             "ui-design-expert-should-select-ui-ecosystem-by-category",
             "ui-design-expert-should-use-eastern-aesthetics-with-boundaries",
             "ui-design-expert-negative-locked-system-implementation",

@@ -60,6 +60,92 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
             4,
         ),
     ),
+    "prototype-plan": (
+        RequiredGroup("goal_scope", ("验证问题", "范围", "非目标", "假设", "owner"), 5),
+        RequiredGroup(
+            "screens_states_content",
+            ("入口", "退出", "重置", "页面图", "状态图", "loading", "empty", "error", "权限", "弱网", "真实"),
+            6,
+        ),
+        RequiredGroup(
+            "interactions_and_recovery",
+            (
+                "交互表",
+                "source",
+                "trigger",
+                "condition",
+                "action",
+                "destination",
+                "feedback",
+                "failure",
+                "overlay",
+                "setReactionsAsync",
+                "保留用户输入",
+                "焦点",
+            ),
+            7,
+        ),
+        RequiredGroup(
+            "responsive_accessibility",
+            ("响应式", "桌面", "移动", "键盘", "焦点", "可访问名称", "对比", "200%"),
+            4,
+        ),
+        RequiredGroup(
+            "evidence_and_stop",
+            ("成功", "失败", "验证", "证据", "版本", "任务走查", "停止", "残余风险", "不宣称", "不证明"),
+            5,
+        ),
+    ),
+}
+
+PROTOTYPE_LEVEL_CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
+    "l0": (
+        RequiredGroup(
+            "flow_contract_evidence",
+            ("owner 确认", "页面图", "状态图", "交互表", "不证明可点击", "不证明可访问", "不证明可实现"),
+            5,
+        ),
+    ),
+    "l1": (
+        RequiredGroup(
+            "figma_structure",
+            ("components", "Code Connect", "Figma variables", "Auto Layout", "语义命名", "annotations", "dev resources"),
+            5,
+        ),
+        RequiredGroup(
+            "figma_interaction_evidence",
+            ("setReactionsAsync", "Figma preview", "frame 链接", "overlay", "返回", "重置", "不证明可点击"),
+            5,
+        ),
+        RequiredGroup(
+            "figma_code_handoff",
+            (
+                "exact node",
+                "get_design_context",
+                "get_metadata",
+                "get_screenshot",
+                "项目组件",
+                "tokens",
+                "路由",
+                "状态",
+                "数据模式",
+                "senior-software-architect",
+            ),
+            6,
+        ),
+    ),
+    "l2": (
+        RequiredGroup(
+            "browser_execution",
+            ("浏览器", "Playwright", "URL", "表单", "请求失败", "桌面", "移动", "键盘", "焦点"),
+            6,
+        ),
+        RequiredGroup(
+            "browser_handoff",
+            ("项目组件", "tokens", "路由", "状态", "数据模式", "senior-software-architect", "测试"),
+            4,
+        ),
+    ),
 }
 
 SECTION_ORDER: dict[str, tuple[tuple[str, tuple[str, ...]], ...]] = {
@@ -84,11 +170,23 @@ SECTION_ORDER: dict[str, tuple[tuple[str, tuple[str, ...]], ...]] = {
         ("section_evidence", ("证据与判断", "观察证据与判断")),
         ("section_retest", ("复测与停止条件", "复测、风险与停止条件")),
     ),
+    "prototype-plan": (
+        ("section_goal", ("目标、层级与边界", "目标、原型层级与边界")),
+        ("section_screens", ("页面、状态与真实内容", "页面与状态")),
+        ("section_interactions", ("交互与失败恢复",)),
+        ("section_handoff", ("工程交接与可访问性", "交接与可访问性")),
+        ("section_verification", ("验证证据与停止条件", "验证与停止条件")),
+    ),
 }
 
 HEADING_PATTERN = re.compile(r"(?m)^#{2,6}\s+(.+?)\s*$")
 PLACEHOLDER_PATTERN = re.compile(r"〈[^〉\n]+〉|\{\{[^}\n]+\}\}|\bTBD\b", re.IGNORECASE)
 FINDING_PATTERN = re.compile(r"(?mi)^\s*(?:(?:#{2,6}|[-*])\s*)?\[P[0-3]\]")
+PROTOTYPE_LEVEL_PATTERN = re.compile(
+    r"(?:选择|选定|交付层级|原型层级)\s*(?:为|是|[:：])?\s*(l[012])(?=$|[^0-9a-z])",
+    re.IGNORECASE,
+)
+PROTOTYPE_MIN_NON_KEYWORD_SECTION_CHARS = 12
 
 
 def normalize(text: str) -> str:
@@ -115,10 +213,13 @@ def missing_sections(kind: str, text: str) -> list[str]:
 
 def has_keyword_only_section(kind: str, text: str) -> bool:
     matches = list(HEADING_PATTERN.finditer(text))
+    groups = CHECKS[kind]
+    if kind == "prototype-plan":
+        groups += tuple(group for level_groups in PROTOTYPE_LEVEL_CHECKS.values() for group in level_groups)
     keywords = sorted(
         {
             normalize(alias)
-            for group in CHECKS[kind]
+            for group in groups
             for alias in group.aliases
         }
         | {
@@ -144,7 +245,8 @@ def has_keyword_only_section(kind: str, text: str) -> bool:
         body = normalize(text[match.end() : matches[index + 1].start() if index + 1 < len(matches) else len(text)])
         for keyword in keywords:
             body = body.replace(keyword, "")
-        if len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", body)) < 2:
+        minimum_chars = PROTOTYPE_MIN_NON_KEYWORD_SECTION_CHARS if kind == "prototype-plan" else 2
+        if len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", body)) < minimum_chars:
             return True
     return False
 
@@ -156,6 +258,16 @@ def missing_groups(kind: str, text: str) -> list[str]:
         for group in CHECKS[kind]
         if sum(1 for alias in group.aliases if normalize(alias) in normalized) < group.min_hits
     ]
+    if kind == "prototype-plan":
+        selected_levels = {match.group(1).casefold() for match in PROTOTYPE_LEVEL_PATTERN.finditer(text)}
+        if len(selected_levels) != 1:
+            missing.append("prototype_level")
+        else:
+            missing.extend(
+                group.name
+                for group in PROTOTYPE_LEVEL_CHECKS[selected_levels.pop()]
+                if sum(1 for alias in group.aliases if normalize(alias) in normalized) < group.min_hits
+            )
     missing.extend(missing_sections(kind, text))
     if has_keyword_only_section(kind, text):
         missing.append("keyword_only_section")
@@ -180,6 +292,9 @@ def run_self_test() -> int:
         ("design-brief", fixtures / "design-brief-valid.md"),
         ("ui-review", fixtures / "ui-review-valid.md"),
         ("usability-plan", fixtures / "usability-plan-valid.md"),
+        ("prototype-plan", fixtures / "prototype-plan-valid.md"),
+        ("prototype-plan", fixtures / "prototype-plan-l0-valid.md"),
+        ("prototype-plan", fixtures / "prototype-plan-l2-valid.md"),
     )
     failures = [
         f"{kind}: {', '.join(missing)}"
@@ -191,6 +306,9 @@ def run_self_test() -> int:
         ("design-brief", "keyword-stuffed-invalid.md"),
         ("ui-review", "ui-review-invalid-no-severity.md"),
         ("usability-plan", "usability-plan-invalid.md"),
+        ("prototype-plan", "prototype-plan-invalid.md"),
+        ("prototype-plan", "prototype-plan-keyword-stuffed-invalid.md"),
+        ("prototype-plan", "prototype-plan-level-invalid.md"),
     )
     for invalid_kind, invalid_name in invalid_cases:
         if not missing_groups(invalid_kind, (fixtures / invalid_name).read_text(encoding="utf-8")):
