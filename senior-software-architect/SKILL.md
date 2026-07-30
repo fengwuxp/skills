@@ -64,7 +64,7 @@ description: |
 
 ## 工程编码红线
 
-Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取项目本地规范与 `wind-coding-conventions` 的通用 Java 层；只有存在 Wind/Nobe 高置信度信号时才叠加专项。架构师只消费规则结论，不复制 Java/Wind 约规正文，最终按源码事实、业务不变量、风险和验证证据裁决。
+Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取项目本地规范与 `wind-coding-conventions` 的通用 Java 层；只有存在 Wind 高置信度信号时才叠加专项。架构师只消费规则结论，不复制 Java/Wind 约规正文，最终按源码事实、业务不变量、风险和验证证据裁决。
 
 以下裁决底线跨语言、始终生效；具体语言、框架和项目条目回到项目本地规范及对应规则 Skill：
 
@@ -130,7 +130,7 @@ Harness Plan 在正式、完整、可评审、GSD Wave、工程执行 Loop 候�
 按四类读取索引：
 
 - **架构表达**：`references/language-agnostic-architecture.md`、`references/scenario-routing.md`、`references/architecture.md`、`references/system-analysis-design.md`、`references/system-analysis-template.md`、`references/refactoring-design-template.md`、`references/product-design.md`、`references/adr-and-tradeoff.md`、`references/diagram-output.md`；系统架构图等正式图形化交付默认只生成 SVG。
-- **代码质量 / 测试**：`references/coding-review-deep-dive.md`、`references/debugging-diagnosis.md`、`references/clean-code.md`、`references/project-governance-standards.md`、`references/testing.md`、`references/testing-practices.md`、`references/workflow.md`；Java 项目在本地规范之后读取 `wind-coding-conventions` 的通用层，Wind/Nobe 专项按依赖或上下文启用；架构师负责源码级设计、TDD、CR 和验证。
+- **代码质量 / 测试**：`references/coding-review-deep-dive.md`、`references/debugging-diagnosis.md`、`references/clean-code.md`、`references/project-governance-standards.md`、`references/testing.md`、`references/testing-practices.md`、`references/workflow.md`；Java 项目在本地规范之后读取 `wind-coding-conventions` 的通用层，Wind 专项按依赖或上下文启用；架构师负责源码级设计、TDD、CR 和验证。
 - **AI 协作 / 生产专项**：`references/ai-assisted-engineering.md`、`references/ai-large-project-orchestration.md`、`references/cad-mode.md`、`references/negative-constraints.md`、`references/production-readiness.md`、`references/distributed-consistency.md`、`references/evolutionary-architecture.md`、`references/security-architecture.md`；`cad-mode.md` 是受控工程执行 Loop 工程 profile 的唯一详细规则源，不安装或照搬外部 GSD 工具。
 - **能力地图 / 证据来源**：`references/review-and-output-templates.md`、`references/acceptance-scenarios.md`、`references/skill-tree.md`、`references/skill-tree-architecture-design.md`、`references/skill-tree-engineering-quality.md`、`references/skill-tree-platform-leadership-ai.md`、`references/knowledge-graph.md`、`references/source-map.md`。
 
@@ -140,7 +140,7 @@ Harness Plan 在正式、完整、可评审、GSD Wave、工程执行 Loop 候�
 
 1. 复杂任务先读取 `references/scenario-routing.md`，按任务类型、技术栈、风险等级和目标产物选择最小参考集。
 2. 用户未指定语言或仓库技术栈不明时，先读取 `references/language-agnostic-architecture.md`，按语言无关原则分析。
-3. 识别到 Java、JVM、Spring、Maven、Gradle 或 MyBatis 时，先加载项目本地规范和 `wind-coding-conventions` 的通用 Java 层；再按依赖坐标、包名/import、类型、模块结构或任务上下文判断是否叠加 Wind/Nobe 专项。
+3. 识别到 Java、JVM、Spring、Maven、Gradle 或 MyBatis 时，先加载项目本地规范和 `wind-coding-conventions` 的通用 Java 层；再按依赖坐标、包名/import、类型、模块结构或任务上下文判断是否叠加 Wind 专项。
 4. 识别到 Go、Node.js、Python、Rust、前端、数据工程等技术栈时，优先尊重项目已有构建、测试、lint、格式化、部署和目录约定，不强套 Java/Spring 规则。
 5. 代码修改后必须按项目技术栈选择验证命令；无法运行时说明原因和替代验证。
 

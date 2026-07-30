@@ -30,6 +30,7 @@ SKILLS = {
     "product-architecture-expert",
     "resource-capability-distiller",
     "senior-software-architect",
+    "ui-design-expert",
     "wind-coding-conventions",
 }
 SKILL_MENTIONS = {
@@ -55,6 +56,7 @@ SKILL_MENTIONS = {
         "多源材料提炼",
     ],
     "senior-software-architect": ["资深架构师", "senior-software-architect"],
+    "ui-design-expert": ["ui-design-expert", "UI 设计专家"],
     "wind-coding-conventions": ["wind-coding-conventions", "Wind 编码约规"],
 }
 REQUIRED_DIMENSIONS = {

@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- 命中 Wind/Nobe 依赖、包名、类型、模块结构或明确上下文时，模块、服务和模型规则读 `wind-coding-conventions.md`；核验外部来源和采纳边界读 `source-map.md`；深度 Review、项目治理和测试交给 `资深架构师`。
+- 命中 Wind 依赖、包名、类型、模块结构或明确上下文时，模块、服务和模型规则读 `wind-coding-conventions.md`；核验外部来源和采纳边界读 `source-map.md`；深度 Review、项目治理和测试交给 `资深架构师`。
 
 ## 按任务读取索引
 
@@ -242,9 +242,11 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 
 ## 7. Java/Spring 专项规约
 
-- 【强制】禁止字段注入；Spring Bean 优先使用构造注入。
-- 【推荐】Spring Bean 构造注入优先使用 `final` 依赖字段 + Lombok `@AllArgsConstructor`。
-- 【推荐】若 Bean 中存在非依赖状态、可选依赖或特殊构造逻辑，应改用显式构造器并说明原因。
+- 【强制】禁止字段注入；Spring Bean 的必需依赖使用构造注入并声明为 `private final`。单一构造器无需添加 `@Autowired`；循环依赖应通过职责拆分或依赖方向修正，不得退回字段注入掩盖。
+- 【强制】当构建依赖、项目规则或源码证据证明模块启用 Spring 时，准备由 Spring 容器托管的具体类必须使用与职责匹配的 stereotype，或通过显式 `@Bean` / `@Import` 配置注册；承载业务 Service 契约的 `XxxServiceImpl` 使用 `@Service`，持久化适配、通用技术协作者和配置分别使用 `@Repository`、`@Component`、`@Configuration` 等相应注解。face Service 接口、抽象基类、DTO、Request、Query、Command、Event、Entity、值对象、普通领域对象、纯工具类和调用方显式构造的对象不机械注册为 Bean。
+- 【强制】模块已启用 Lombok 时，每个具体 Spring Bean 使用 `@Slf4j` 作为统一日志入口；即使当前没有日志语句也不添加无意义流水日志。未启用 Lombok 时不得只为套规约新增依赖，沿用项目已有 Logger 约定。stereotype 与 `@Slf4j` 不替代组件扫描、Bean 唯一装配和实际日志消费验证。
+- 【推荐】模块已启用 Lombok 时，Spring Bean 的必需依赖优先使用 `private final` 字段 + `@RequiredArgsConstructor`，不为依赖注入使用 `@AllArgsConstructor`。未启用 Lombok 时使用显式构造器，不得只为减少构造器样板新增 Lombok。
+- 【推荐】构造参数需要 `@Qualifier`、`@Value`、校验或转换，或 Bean 存在特殊构造逻辑时，使用显式构造器表达真实装配契约；不得假设字段注解会自动复制到 Lombok 生成的构造参数。只有依赖确实可选、类内有合理默认行为且需要运行时重配置时才使用 setter / 配置方法注入。
 - 【强制】事务边界必须在应用服务或明确的用例边界上表达；不得在 Controller 中承载事务业务规则。
 - 【强制】事务内避免不可控远程调用、长耗时计算和无上限循环；确需调用时必须说明超时、补偿和失败处理。
 - 【推荐】Configuration Properties 必须有清晰前缀、字段说明、默认值和校验。
@@ -266,7 +268,7 @@ logger.error("Handle payment error, orderNo = {}, message = {}", orderNo, except
 - 【强制】领域对象、有业务行为的类、继承层次复杂的类，不得无脑使用 `@Data`、`@Setter`、`@AllArgsConstructor`。
 - 【强制】`@ToString`、`@EqualsAndHashCode` 必须避开敏感字段、大字段、双向关联和懒加载对象，避免信息泄露、递归和性能问题。
 - 【推荐】简单 DTO、VO、Query、Command、Event 可使用 `@Getter`、`@Setter`、`@NoArgsConstructor`、`@Builder`，但公共契约语义必须清晰。
-- 【推荐】Spring Bean 构造注入优先使用 `final` 依赖字段 + `@AllArgsConstructor`；特殊构造逻辑使用显式构造器。
+- 【推荐】模块已启用 Lombok 时，Spring Bean 构造注入使用 `private final` 依赖字段 + `@RequiredArgsConstructor`；特殊装配契约使用显式构造器，不使用 `@AllArgsConstructor` 扩大注入参数。
 
 ### 8.2 MapStruct
 
@@ -412,7 +414,7 @@ Review 优先使用 `coding-review-deep-dive.md` 的判断顺序：业务语义�
 | 依赖与漏洞 | Maven/Gradle dependency check、SCA、镜像扫描 |
 | 架构边界 | ArchUnit、模块依赖扫描、包依赖检查 |
 | 测试质量 | JUnit 5、Mockito、AssertJ、Testcontainers、覆盖率门禁 |
-| 测试命名 | Checkstyle / PMD MethodName，或 `scripts/check_wind_conventions.py --profile java` |
+| 测试命名与高置信度 Spring Bean 注解 | Checkstyle / PMD MethodName，或 `scripts/check_wind_conventions.py --profile java`；Bean 实际装配仍用编译和 Spring 上下文测试验证 |
 | 契约兼容 | API 契约测试、Schema 测试、消息兼容测试 |
 
 自动化检查不能替代 Review。工具擅长发现确定性问题，架构师必须判断业务语义、边界、契约、失败路径和生产风险。
@@ -450,8 +452,8 @@ TDD、测试通过和代码能跑只说明当前反馈源变绿，不自动说�
 
 ## 20. 与其他规范的关系
 
-- `wind-coding-conventions.md`：命中 Wind/Nobe 信号后读取的模块、服务、模型、DAL、查询、API、字典和 TDD/CR 专项规则。
-- `wind-coding-examples.md`：命中 Wind/Nobe 信号且需要示例时读取的编码正反例。
-- `wind-architecture-patterns.md`：命中 Wind/Nobe 信号后读取的项目族端口、Starter、Trace、安全和企业集成模式。
+- `wind-coding-conventions.md`：命中 Wind 信号后读取的模块、服务、模型、DAL、查询、API、字典和 TDD/CR 专项规则。
+- `wind-coding-examples.md`：命中 Wind 信号且需要示例时读取的编码正反例。
+- `wind-architecture-patterns.md`：命中 Wind 信号后读取的项目族端口、Starter、Trace、安全和企业集成模式。
 - `source-map.md`：阿里 Java 手册与 Wind 项目族公开样本的读取状态、采纳边界和不吸收项。
 - `资深架构师`：源码级设计、Review、测试、工作流、项目治理和生产风险。

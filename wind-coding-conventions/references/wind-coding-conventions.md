@@ -1,11 +1,11 @@
 # Wind 编码约规
 
-本文是 `wind-coding-conventions` Skill 的 Wind 专项规则。只有入口 Skill 根据项目 `AGENTS.md`、任务说明、依赖坐标、包名/import、Wind 类型或模块上下文判定命中 Wind/Nobe 后才读取；项目本地规则、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-coding-conventions` Skill 的 Wind 专项规则。只有入口 Skill 根据项目 `AGENTS.md`、任务说明、依赖坐标、包名/import、Wind 类型或模块上下文判定命中 Wind 后才读取；项目本地规则、OpenSpec/ADR、CI 与附近代码风格优先。
 
 ## 使用时机
 
 - 项目本地 `AGENTS.md`、任务说明或用户明确要求遵守 Wind 编码约规。
-- Maven/Gradle 依赖、包名/import、Wind 类型或模块上下文提供 Wind/Nobe 高置信度信号。
+- Maven/Gradle 依赖、包名/import、Wind 类型或模块上下文提供 Wind 高置信度信号。
 - 评审 face/impl 模块边界、接口放置、基础服务、方法签名、服务/模型/枚举命名、应用层服务、DTO/Request/Query/Entity、查询字段命名、内网 API、安全等级、系统字典/国际化、模型包归位、分包规则、MyBatis Flex、外部集成端口或代码生成后审查。
 - 初始化或改进遵循 Wind 约规项目的本地 `AGENTS.md`，让 知止者能按项目规则调度产品、架构、Wind 规则和代码生成能力。
 
@@ -16,19 +16,19 @@
 
 ## 读取后必须产出
 
-- 当前项目命中的 Wind/Nobe 上下文证据；命中的模块、接口、服务、模型、DAL、外部调用和测试规则；违反项的最小整改建议与验证方式。
+- 当前项目命中的 Wind 上下文证据；命中的模块、接口、服务、模型、DAL、外部调用和测试规则；违反项的最小整改建议与验证方式。
 
 ## 需要继续读取的 reference
 
 - Java/Spring 编码细则读本 Skill 的 `java-coding-conventions.md`；Wind 项目族端口、Starter、Trace、安全和企业集成模式读 `wind-architecture-patterns.md`；Service/API/DTO/Query 的通用设计、测试/TDD、模块依赖和深度源码 CR 仍交 `资深架构师`；需要最佳实践正反例时读 `wind-coding-examples.md`。
 
-重复规则归位：所有 Java 项目的通用编码细则归 `java-coding-conventions.md`；命中 Wind/Nobe 后的 face/impl、模型包位、基础服务模板、查询方法语义、`XxxQuery` 后缀、内网 API 路径安全等级、系统字典/国际化和业务事件 Key 归本文件；通用架构、源码级 CR、调试、测试策略和生产风险归 `资深架构师`。有冲突时，项目本地 `AGENTS.md` / OpenSpec / ADR 优先，其次才是已命中的 Wind 项目特化规则。
+重复规则归位：所有 Java 项目的通用编码细则归 `java-coding-conventions.md`；命中 Wind 后的 face/impl、模型包位、基础服务模板、查询方法语义、`XxxQuery` 后缀、内网 API 路径安全等级、系统字典/国际化和业务事件 Key 归本文件；通用架构、源码级 CR、调试、测试策略和生产风险归 `资深架构师`。有冲突时，项目本地 `AGENTS.md` / OpenSpec / ADR 优先，其次才是已命中的 Wind 项目特化规则。
 
 专项启用分三层：
 
 | 层级 | 启用条件 | 规则示例 |
 | --- | --- | --- |
-| Wind 通用专项 | 已命中 Wind/Nobe 高置信度信号 | face/impl、Entity 不外露、服务与模型边界；出现币种字段时无条件统一使用 `CurrencyIsoCode` |
+| Wind 通用专项 | 已命中 Wind 高置信度信号 | face/impl、Entity 不外露、服务与模型边界；出现币种字段时无条件统一使用 `CurrencyIsoCode` |
 | 依赖专项 | 对应依赖、import 或源码上下文存在 | JSpecify、Bean Validation、Lombok、MapStruct、MyBatis Flex |
 | 项目数据库专项 | 项目 `AGENTS.md`、既有 schema 或数据库约规已采用对应 Wind MySQL 表约规 | `id`、`gmt_create`、`gmt_modified` 等字段与类型 |
 
@@ -46,11 +46,13 @@
 
 ## 1. 启用、模块与分包
 
-- 启用：项目本地 `AGENTS.md` 明确声明是最强信号；明确的 Wind/Nobe 依赖坐标、包名/import、Wind 类型或项目族上下文也可启用。启用后仍按项目 `AGENTS.md`、OpenSpec、ADR、CI、附近代码、本规约的顺序取舍。
+- 启用：项目本地 `AGENTS.md` 明确声明是最强信号；明确的 Wind 依赖坐标、包名/import、Wind 类型或项目族上下文也可启用。启用后仍按项目 `AGENTS.md`、OpenSpec、ADR、CI、附近代码、本规约的顺序取舍。
 
-- 源码观察边界：本规约已抽样对照 `wind-integration / nobe / capte-domain 源码观察`，提炼的是稳定共性，不把某个仓库的历史包名、业务模块名或临时实现照搬成强制规则；具体项目仍以本地 `AGENTS.md`、附近代码和 CI 为准。
+- 源码观察边界：本规约已抽样对照多个本地业务项目，提炼的是稳定共性，不把某个仓库的历史包名、业务模块名或临时实现照搬成强制规则；具体项目仍以本地 `AGENTS.md`、附近代码和 CI 为准。
 
 - 放置四问：先问谁调用、生命周期归谁、变化 owner 在哪、依赖方向是否越界。对外或跨模块调用进 `*-face`；模块内部实现进 `*-impl`；Web 展示和入口进 `web-api` / `web-security`；跨模块稳定公共能力进 `core`；技术适配和框架配置进 `infrastructure`。依赖 Web/DAL/第三方 SDK/具体框架实现的类型不得进入 face/core。
+
+- 【强制】模块依赖方向保持 `composition root -> impl -> face/core`：`*-face` 不得依赖任何 `*-impl`；业务 `*-impl` 跨业务模块只依赖对方 `*-face` 或稳定 `core` 契约，不直接依赖对方 `*-impl`。`bootstrap`、`web`、`job` 等明确负责最终装配的组合根和集成测试可以依赖多个 `*-impl`；`dependencyManagement` / BOM 只管理版本时不视为运行依赖。其他跨 impl 例外必须有当前调用证据、ADR、owner 和移除条件，不得以传递依赖可用代替直接声明所消费的 face 契约。
 
 - 模块：`*-face` 只放对外契约：`service/services`、必要的 `application` 契约、`model/dto`、`model/request`、`model/query`、`model/command`、`enums`、`constants`、明确需要跨模块消费的 `event`，以及回调入口、扩展点或业务 SPI 的 `callback/spi`、`callback/request`、`callback/service`；历史兼容场景允许继续使用既有 `dto`、`request`、`query`、`command` 包。同一 face 有多个业务子域时，可按业务名继续分包，例如 `transaction/model/dto`、`channel/model/request`、`domain/model/dto`、`domain/model/request`，兼容既有 `transaction/dto`、`channel/request`、`domain/dto`、`domain/request`，但 `domain` 必须表示稳定业务语义，不得作为杂物包。`*-impl` 放内部 `service` / `service/impl`、`application/impl`、`domain` / `domain/impl`、`impl`、`dal/entities`、`dal/mapper`、`mapstruct`、业务/通道 `converter`、`support`、`configuration`、`listener`、`webhook` 和内部枚举；`*-impl` 一般不放对外 DTO/Request/Query/Command，除非是实现层内部模型且不对外暴露。`web-api` / `web-security` 放 Controller、Web VO、Web 登录/表单 Request 和 Web 层 Converter。`core` 放跨模块稳定基础契约、值对象、枚举、事件、上下文、规则、告警、缓存兑换、操作人等公共能力，不放业务模块私有 DTO/Request/Query/Command/Entity、Web VO、Mapper/Repository 或具体业务实现。`infrastructure` 放消息发送、KMS、MyBatis Flex helper、通用工具和框架配置等技术适配，不放业务契约、Controller、业务 Service 或业务 Entity。Controller 不直接访问 Mapper/Entity。
 
@@ -58,7 +60,7 @@
 
 - 包名判断：源码样本中 `*-face` 常见 `service/services`、`application`、`dto|model/dto`、`request|model/request`、`query|model/query`、`event`、`callback/spi`；`*-impl` 常见 `service/impl`、`application/impl`、`dal/entities`、`dal/mapper`、`mapstruct`、`converter`、`listener`、`webhook`；`web-api` 常见 `controller`；`core` 常见跨模块 `enums`、`event`、`context`、`operator`；`infrastructure` 常见 `dal` helper、外部技术 adapter 和 framework config。新代码优先按这些 owner 放置，不把 web、dal、第三方 SDK 或具体实现依赖上推到 face/core。
 
-- capte-domain platform 样本补充：`platform/*-face` 中稳定出现 `service`、`dto`、`request`、`query`、`enums`、`task`，`platform/*-impl` 中稳定出现 `service/impl`、`dal/entities`、`dal/mapper`、`mapstruct`、`configuration`、`notification`；这说明历史项目可沿用直连 `dto/request/query/enums` 包，但不改变新代码优先 `model/*` 的规则。
+- 本地 platform 样本补充：`platform/*-face` 中稳定出现 `service`、`dto`、`request`、`query`、`enums`、`task`，`platform/*-impl` 中稳定出现 `service/impl`、`dal/entities`、`dal/mapper`、`mapstruct`、`configuration`、`notification`；这说明历史项目可沿用直连 `dto/request/query/enums` 包，但不改变新代码优先 `model/*` 的规则。
 
 ## 2. 服务层
 
@@ -75,7 +77,7 @@
 - 【强制】同一状态变化只保留一个规范入口。便利重载或接口 `default method` 只能补充明确默认值并委托规范入口，不得接收后丢弃 `statusCode`、响应摘要、操作原因等有效参数；没有兼容诉求时直接删除旧重载，存在兼容诉求时必须列出调用方和下线责任人。
 - 【强制】公共方法最多接受一个 `WindQuery<? extends QueryOrderField>`。两个以上独立分页或排序诉求必须拆成独立查询；不得通过多个 `WindQuery`、多个结果集或综合视图大接口隐藏不同查询的分页、排序和生命周期边界。
 - 基础服务公开签名不得使用 Entity、Mapper、QueryWrapper；入参按 Create/Update/Query/业务动作 Request 或业务标识，出参用 DTO、分页或明确结果对象。实现层可私有读取 Entity，但离开 `*-impl/service/impl` 前必须完成转换。
-- ServiceImpl 通用实现：`@Service` + 构造注入，Mapper 字段 `final`；Request 先经 `XxxConverter.INSTANCE.convertToXxx` 转 Entity；新增优先 `insertSelective`，保存类入口可用 `insertOrUpdateSelective`。更新不机械执行“先查再写”：只确认存在时直接更新并校验影响行数，状态流转使用带旧状态的条件更新，一般读改写使用版本号乐观锁；只有业务规则、审计或返回契约确实需要旧值时才读取，并同时提供并发保护。删除先校验 ids 非空和影响行数；查询条件集中在 `createQueryWrapper` 或 `fillQueryWrapper`，使用 `MybatisQueryHelper.from(options)`、`XxxNameRefs`、`counter`、`resultQueryFunc`、`converter` 输出 DTO。
+- ServiceImpl 通用实现：Spring Bean 注册、依赖注入和日志注解直接遵循通用 Java 的依赖专项规则；Mapper 依赖字段 `final`。Request 先经 `XxxConverter.INSTANCE.convertToXxx` 转 Entity；新增优先 `insertSelective`，保存类入口可用 `insertOrUpdateSelective`。更新不机械执行“先查再写”：只确认存在时直接更新并校验影响行数，状态流转使用带旧状态的条件更新，一般读改写使用版本号乐观锁；只有业务规则、审计或返回契约确实需要旧值时才读取，并同时提供并发保护。删除先校验 ids 非空和影响行数；查询条件集中在 `createQueryWrapper` 或 `fillQueryWrapper`，使用 `MybatisQueryHelper.from(options)`、`XxxNameRefs`、`counter`、`resultQueryFunc`、`converter` 输出 DTO。
 - 查询服务形态：公开查询接口优先返回 `DTO` 或 `WindPagination<DTO>`，查询选项使用 `WindQuery<? extends QueryOrderField>` 或项目既有分页选项；`ServiceImpl` 内部再组合 `QueryWrapper`、Mapper、Converter 和 result enricher。默认方法只用于复用已有公开契约上的小型断言或组合查询，不新增绕过实现层的业务状态。
 - 多实现组合：同一 face Service 有多个生产实现时，保留一个主对外实现做组合编排，其他实现必须承担清晰业务职责；通过 `@Primary`、明确 bean name 或项目统一装配规则解决注入歧义，不用 `Processor`、`Handler` 这类泛名掩盖服务职责。
 - 横切控制 wrapper：普通一行转发 wrapper 不应新增；但分布式锁、幂等、鉴权、审计、灰度、限流、通道适配等横切控制逻辑可以用 wrapper 隔离。wrapper 应实现同一 face Service，内部委托真实业务实现；默认入口通过 `@Primary`、明确 bean name 或项目统一装配规则确定。真实业务 `ServiceImpl` 仍实现原接口，并保留业务规则、状态流转、声明式事务和持久化协调，不把横切控制细节混入业务主流程。
@@ -96,6 +98,7 @@
 ## 3. 模型与契约
 
 - 模型：`Request` 写入命令，`Query` 查询条件，`DTO` 对外或跨模块契约，`Entity` 只表达持久化结构。Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口、事件/消息契约不得以 Entity、Mapper、Repository 或 MyBatis `Page` 作为入参、返回值或泛型；离开 `*-impl` 边界前必须转换为 `DTO`、`Request`、`Query`、`Command`、`Event` 或值对象。
+- 【强制】face 契约保持技术纯度：DTO、Request、Query、Command、Event 和业务枚举不使用 MyBatis / JPA 等 ORM 注解，也不内嵌第三方 SDK Request / Response。持久化列、租户列和枚举映射放 `*-impl` 的 Entity、TypeHandler、Mapper 或 Converter；外部 SDK 类型在 Adapter / Converter 边界转换。只有项目已通过 ADR 或明确公共契约采用的协议类型可以例外。存量反例不触发无关模块批量迁移，但新建和本次修改的契约不得继续扩散，并应为必要迁移记录 owner、兼容策略和停止条件。
 - 模型对象职责：DTO、Request、Query、Command、Context 只表达契约字段、输入范围和确定性自有派生；不得依赖 Service、Supplier、Cache、当前用户/租户解析器、远程端口或数据库查询。规则变量、租户名称、当前操作者等运行时派生值由 ServiceImpl、ApplicationService 或 Adapter 在用例边界组装，有值才写入变量上下文，不写无业务语义的 `null` 占位。
 - 【强制】操作原因、备注、说明等只服务于某个写用例的字段归入对应 `Request` 或 `Command`；只有字段具备独立校验、跨用例复用或独立生命周期时，才提取为值对象，不为包装单个字段制造类型。
 - 【强制】`correlationId`、`version` 等关联或演进字段必须能指出明确生成方，以及至少一个消费者、查询条件或对账场景；若字段只有写入、返回或打印而无人消费，应删除，不得以“以后可能追踪”为由保留无主契约。
@@ -121,9 +124,9 @@
 - 【强制】Wind 项目新增生产 Java 命名类型统一使用类型级 Javadoc，覆盖 `class`、`interface`、`record`、`enum` 和注解类型 `@interface`，至少包含一行真实的职责 / 边界说明、`@author` 和 `@since`；详细格式读取 `wind-coding-examples.md`。类型说明不得只复述类型名，`@author` 必须使用可核验的项目账号或维护团队，不得由 AI 猜测，`@since` 默认记录首次引入日期 `yyyy-MM-dd`，项目已有版本格式时服从项目约规。匿名类、局部类和工具生成代码不机械补模板。
 - 泛型类型参数和 `record` 组件在类型级 Javadoc 中使用 `@param` 说明；公开构造器、方法、枚举值和注解元素仍按实际契约补充文档，不把共同类型头误当成完整 API 文档。
 - 【强制】首次引入信息不随每次修改刷新；修改作者和修改时间由 Git 记录，不在类型头维护变更流水，不新增非标准 `@description`、`@date` 或“最后修改时间”标签。存量类型不因无关修改批量补模板，只在新增类型或用户明确要求治理时处理。
-- 空值责任只在所属边界处理一次：Bean Validation 按当前审查的 artifact 与调用路径判责，实际接收不可信输入的 Controller、Listener 或 Adapter 执行验证；只有模块职责、构建产物、架构约定或调用关系证明当前 artifact 是纯 `face` / 公共 Service 能力提供方时，才允许只声明调用前置契约，不能只凭没有 Controller 作此推定。同一仓库的能力模块和入口模块分别检查。入口验证成功或调用方按公共契约传入后，Service / ServiceImpl 不手工重跑同一组验证，也不重复判空、集合、长度、范围或格式检查。数据库字段、JSpecify、业务前置条件、默认值和不可信数据仍按通用 Java 约规处理。
+- 空值责任只在所属边界处理一次：Bean Validation 按当前审查的 artifact 与调用路径判责，实际接收不可信输入的 Controller、Listener、Adapter 或其他协议入口执行验证；Service / ServiceImpl 不出现 `@Valid`、`@Validated`，也不手工调用 `Validator.validate`。Service 参数及其 Request、Command、DTO 可以保留约束注解声明调用前置契约，但不能把注解声明当成运行时验证证据。入口验证已证明生效时不重复同义检查；调用路径未证明、公共 Service 可被直接调用或需要领域错误语义时，在 Service 边界使用显式业务断言或领域校验。同一仓库的能力模块和入口模块分别检查；数据库字段、JSpecify、业务前置条件、默认值和不可信数据仍按通用 Java 约规处理。
 - 金额必须明确币种、精度和舍入规则；时间必须明确格式、时区和精度；ID 必须考虑唯一性、可追踪、并发和外部暴露风险。
-- Spring Bean 优先构造注入；Lombok 只减少样板代码，不隐藏业务不变量、状态变化、副作用或敏感字段。
+- Spring Bean 注册、依赖注入与 Lombok 日志注解直接遵循通用 Java 的依赖专项规则；Lombok 不得隐藏业务不变量、状态变化、副作用或敏感字段。
 - 项目已使用 MapStruct 时，Converter 放 `mapstruct`，命名 `XxxConverter`，方法 `convertToXxx`；只做转换和确定性派生值，不做业务校验、权限、远程调用、数据库查询、状态流转或审计。字段重命名、枚举、空值策略和默认值必须显式声明并补测试。
 
 ## 4. DAL 与外部集成
@@ -158,10 +161,11 @@
 - ApplicationService / ServiceImpl 流程测试保留真实内部协作者、转换器、策略、Repository、事务和状态变化；只替换第三方通道、远程 HTTP、MQ、Redis、时间、ID、随机数等外部边界。
 - 基础服务测试重点验证 QueryWrapper、Mapper 语义、分页、排序、selective 写库、事务事实和异常语义；不要只断言调用成功或对象非空。
 - MapStruct 转换测试覆盖字段完整性、枚举、空值、默认值、嵌套对象和集合转换。
+- 新增或修改的公共 Spring Service、ApplicationService、多实现组合或显式装配类，应保留一个最小 Spring 上下文测试：使用 `@ContextConfiguration` + `@Import` 或 `ApplicationContextRunner`，只提供必要协作者并按 face 接口取 Bean，证明组件扫描或显式注册、构造注入、Bean 唯一性以及 `@Primary` / `@Qualifier` 选择真实生效。`@Service`、编译通过或直接 `new` 的单元测试都不能单独证明装配；不为这项证据启动完整 `@SpringBootTest`。
 - 规则变量或上下文模型测试同时覆盖模型边界和服务组装边界：模型自身不包含运行时派生 key；服务在运行时依赖和值存在时补齐变量并驱动业务行为。
 - Bug 修复先补能复现失败的回归测试；新增资金、权限、审计、状态机、幂等或并发逻辑时补对应红线断言。
 - 测试说明放在测试方法名、Javadoc 或方法级注释中，表达场景、输入、行为、输出和红线；测试结构优先 Given/When/Then 或 Arrange/Act/Assert。
 - 完成 TDD 或 AI 生成实现后做设计质量回看：是否新增浅服务、透传接口、无主依赖、过度抽象、内部链路 mock、AI 注释噪声或只为过测试的战术实现。
-- CR 检查 Wind/Nobe 启用证据、face/impl、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全分类与鉴权、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、内存服务、测试层级、真实链路、替身边界和验证命令。
-- 普通 Java 项目可运行 `wind-coding-conventions/scripts/check_wind_conventions.py --profile java --root <project>` 检查 `testXxx`；Wind 项目使用默认的 `--profile wind` 叠加 String 币种字段、部分 face 导入/单行签名泄漏、`queryXxxById` 命名、部分非 selective 更新和生产内存 Service 预检。脚本不承诺识别完整 Java 语法、依赖方向、多实现装配或锁语义；需要确定性约束时优先在目标项目使用 Checkstyle、PMD、ArchUnit、编译或契约测试。
+- CR 检查 Wind 启用证据、face/impl 依赖方向、组合根、face 契约技术纯度、Controller、Service 职责、接口放置、Entity 是否泄漏到服务层/接口契约、模型包归位、查询方法语义、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 安全分类与鉴权、字典/国际化 Key、core/infrastructure 是否变成公共垃圾桶、Javadoc/契约、MapStruct、MyBatis Flex、外部端口、Spring 实际装配、内存服务、测试层级、真实链路、替身边界和验证命令。
+- 普通 Java 项目可运行 `wind-coding-conventions/scripts/check_wind_conventions.py --profile java --root <project>` 检查 `testXxx`，并在实际 Maven / Gradle 依赖、父构建或源码 import 明确启用 Spring / Lombok 时，检查具体 `ServiceImpl` 与直接 framework stereotype 的 `@Service` / `@Slf4j`；`dependencyManagement`、Gradle 注释和自定义同名注解不作为证据。“其他类型是否应成为 Bean”、组合 stereotype、显式配置、组件扫描和实际装配仍由 CR、编译与 Spring 上下文测试判断。Wind 项目使用默认的 `--profile wind` 叠加 String 币种字段、部分 face 导入/单行签名泄漏、`queryXxxById` 命名、部分非 selective 更新、生产内存 Service，以及 Service / ServiceImpl 的 `@Valid`、`@Validated` 和手工 `Validator.validate` 预检。脚本不承诺识别完整 Java 语法、依赖方向、多实现装配或锁语义；需要确定性约束时优先在目标项目使用 Checkstyle、PMD、ArchUnit、编译或契约测试。
 - 接入 Open Code Review / OCR 时，Wind 约规可作为项目 `.opencodereview/rule.json` 或 `ocr review --background` 的规则输入，重点覆盖 face/impl、模型归位、Entity 不外露、基础服务、查询命名、内网 API、字典/国际化、MyBatis Flex、币种枚举、测试黑盒和内存服务红线；但 OCR 不是 Wind 规则权威，工具输出必须由 `资深架构师` 按源码事实、项目 `AGENTS.md`、测试结果和本 Skill 重新判读。

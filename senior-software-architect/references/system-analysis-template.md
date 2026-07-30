@@ -229,7 +229,7 @@
 
 ## 4. 数据设计模板
 
-涉及新增或调整数据表时使用本节；无表变更时写明“不适用”及依据。普通项目先遵循本地数据库规范；项目声明、依赖或源码上下文命中 Wind/Nobe 专项时，必须包含 `id`、`gmt_create`、`gmt_modified`，并按需选择 `creator`、`modifier`、`order_index`。`tenant_id`、`sn`、`state`、`is_deleted`、`version` 仍须有真实业务依据，不机械加入所有表。
+涉及新增或调整数据表时使用本节；无表变更时写明“不适用”及依据。普通项目先遵循本地数据库规范；项目声明、依赖或源码上下文命中 Wind 专项时，必须包含 `id`、`gmt_create`、`gmt_modified`，并按需选择 `creator`、`modifier`、`order_index`。`tenant_id`、`sn`、`state`、`is_deleted`、`version` 仍须有真实业务依据，不机械加入所有表。
 
 ```markdown
 ### 4.3 数据设计
@@ -256,7 +256,7 @@ DDL / 迁移脚本：〈文件路径；未生成时说明 owner 和生成时点�
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 〈field_name〉 | 〈数据库类型、长度或精度〉 | 是/否 | 〈无/NULL/具体值〉 | 〈新表字段/新增字段/调整字段/既有字段〉 | 〈稳定业务语义〉 | 〈主键/业务唯一/枚举/金额币种精度/敏感级别等〉 | 〈示例〉 |
 
-命中 Wind/Nobe 专项的项目将以下字段并入字段清单：`id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime` 为强制；`creator`、`modifier` 类型遵循项目约规并按需使用；`order_index int(11)` 按需使用。
+命中 Wind 专项的项目将以下字段并入字段清单：`id bigint(20)`、`gmt_create datetime`、`gmt_modified datetime` 为强制；`creator`、`modifier` 类型遵循项目约规并按需使用；`order_index int(11)` 按需使用。
 
 新增必填字段必须给兼容迁移方案；默认值、分阶段回填或暂时允许为空按真实业务语义和数据库变更能力选择，不得为了通过 DDL 虚构业务默认值。金额、时间、状态、敏感数据和外部协议字段必须写清单位、精度、时区、枚举、脱敏或映射口径。
 

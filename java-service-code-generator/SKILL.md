@@ -1,6 +1,6 @@
 ---
 name: java-service-code-generator
-description: 根据 DDL/schema、Java 类或字段表格生成 Wind/Nobe Java Service 脚手架；仅在用户明确要求生成、转换、脚手架或配套代码，且有结构化输入时触发。代码评审、Bug 修复和补测试优先交给架构师。
+description: 根据 DDL/schema、Java 类或字段表格生成 Wind Java Service 脚手架；仅在用户明确要求生成、转换、脚手架或配套代码，且有结构化输入时触发。代码评审、Bug 修复和补测试优先交给架构师。
 ---
 
 # Java Service 代码生成
@@ -21,7 +21,7 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind/Nobe Java Se
 5. 将输入源归一为内部表结构模型，识别表名、表注释、字段、主键、空值约束、默认值、自增、字段注释和逻辑删除/租户/版本字段。
 6. 优先使用内置 `scripts/generate_scaffold.py` 做确定性生成；在本仓库维护时可使用 `python3 java-service-code-generator/scripts/generate_scaffold.py`，安装到 Codex 后可使用 `$CODEX_HOME/skills/java-service-code-generator/scripts/generate_scaffold.py`。
 7. 不确定时先生成到评审目录；业务模块和包名明确时，才直接生成到模块源码目录。
-8. 生成后对比附近已有代码，先按 `wind-coding-conventions` 检查通用 Java 约规，并根据项目证据叠加 Wind/Nobe 专项，再交给 `senior-software-architect` 做源码级 CR；重点检查注释、空指针处理、参数数量、伪复用、MapStruct、Lombok、不可变对象、验证注解和查询链路可读性。
+8. 生成后对比附近已有代码，先按 `wind-coding-conventions` 检查通用 Java 约规，并根据项目证据叠加 Wind 专项，再交给 `senior-software-architect` 做源码级 CR；重点检查注释、空指针处理、参数数量、伪复用、MapStruct、Lombok、不可变对象、验证注解和查询链路可读性。
 
 ## 输入源路由
 
@@ -49,7 +49,7 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind/Nobe Java Se
 ## 生成规程与参考
 
 - 详细代码生成规程、Entity/Request/Query/Service/MyBatis-Flex/类型映射规则见 `references/code-generation-rules.md`。
-- Wind/Nobe 项目风格、模块约定和已知模式见 `references/nobe-patterns.md`；生成后规则审查回到 `wind-coding-conventions`，源码级 CR / TDD 回到 `senior-software-architect`。
+- Wind 项目风格、模块约定和已知模式见 `references/wind-project-patterns.md`；生成后规则审查回到 `wind-coding-conventions`，源码级 CR / TDD 回到 `senior-software-architect`。
 - 生成必须优先使用 `scripts/generate_scaffold.py`；脚本是确定性执行面，Skill 负责输入识别、参数推断和审查。
 
 ## 脚本安全边界

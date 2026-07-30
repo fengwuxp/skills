@@ -184,6 +184,8 @@ Skill 的改进采用内外循环分离：
 
 用户可以显式开启知止者学习回流模式。该授权只允许在 `~/.skill-learning/` 或 `SKILL_LEARNING_HOME` 下记录当前任务产生、已脱敏且可复核的 `candidate` 候选；不得扫描历史对话，不得让候选反向充当运行时指令，也不得自动确认、晋升、修改 Skill、提交、同步或发布。候选经 Owner 确认、可审查 diff 和独立验证后，才进入现有权威位置。
 
+候选确认后的受控试验与裁决规则以 `wise-agent/references/skill-learning-backflow.md` 为权威；本节只保留源仓库的证据、隐私、授权、最小修改和验证准入门禁。
+
 Skill Improvement Card 建议字段：
 
 ```text

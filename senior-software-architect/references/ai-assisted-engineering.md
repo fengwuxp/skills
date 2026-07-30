@@ -26,7 +26,7 @@
 
 ## 需要继续读取的 reference
 
-- Java/Spring 代码先读项目本地规范、`wind-coding-conventions` 通用层和 `coding-review-deep-dive.md`；Wind/Nobe 专项按依赖或上下文启用。
+- Java/Spring 代码先读项目本地规范、`wind-coding-conventions` 通用层和 `coding-review-deep-dive.md`；Wind 专项按依赖或上下文启用。
 - 测试/TDD 读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
 - 中大型项目、长任务、上下文衰减、多 Agent/Wave 编排、暂停恢复和收口流程读 `ai-large-project-orchestration.md`。
 - 受控工程执行 Loop 的工程细节读 `cad-mode.md`；Plan Grant / Execution Grant 读 `wise-agent/references/planning-execution-admission.md`。
@@ -426,7 +426,7 @@ Plan Grant / Execution Grant 是受控工程执行 Loop 消费的权限边界，
 
 ## 11. 与现有规范的关系
 
-- 项目本地规范是 Java/Spring 编码行为的首要依据；`wind-coding-conventions` 提供通用 Java 层，Wind/Nobe 专项按依赖或上下文启用。AI 生成代码必须遵守实际项目规则。
+- 项目本地规范是 Java/Spring 编码行为的首要依据；`wind-coding-conventions` 提供通用 Java 层，Wind 专项按依赖或上下文启用。AI 生成代码必须遵守实际项目规则。
 - `testing.md` 是 TDD、测试分层、测试代码整洁和测试资产治理的主规范；`testing-practices.md` 是具体测试实践参考；AI 编码必须把测试作为安全网。
 - `debugging-diagnosis.md` 是 Bug 修复、复杂异常、测试失败和生产现象诊断的主规范；AI 修复问题必须先建立反馈环、最小复现和证据链。
 - `workflow.md` 是修改前后验证、PR、Git 和交付要求的主规范；AI 编码不得降低验证标准。

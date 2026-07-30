@@ -1,0 +1,2 @@
+// implementation("org.springframework:spring-context:6.2.0")
+/* compileOnly("org.projectlombok:lombok:1.18.36") */

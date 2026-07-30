@@ -1,21 +1,21 @@
 ---
 name: wind-coding-conventions
-description: Java 项目编码约规 Skill。用户要求检查包含 Java 源码的 Java/Spring 项目编码规范或初始化项目 AGENTS.md 时触发；项目声明、依赖、包名或类型表明属于 Wind/Nobe 时叠加专项约规。仅有 JVM、Maven 或 Gradle 上下文不触发；源码设计、代码 CR、Bug 修复、TDD、验证和代码生成不触发。
+description: Java 项目编码约规 Skill。用户要求检查包含 Java 源码的 Java/Spring 项目编码规范或初始化项目 AGENTS.md 时触发；项目声明、依赖、包名或类型表明属于 Wind 时叠加专项约规。仅有 JVM、Maven 或 Gradle 上下文不触发；源码设计、代码 CR、Bug 修复、TDD、验证和代码生成不触发。
 ---
 
 # Java/Wind 编码约规
 
 ## 定位
 
-本 Skill 是知止者按需装载的 Java 项目分层约规能力包。Codex 可按精确 description 隐式加载本 Skill；若与 `wise-agent` 同时加载，仍由同一 Agent 统一目标和交付，不形成第二人格。所有包含 Java 源码的项目先使用通用 Java 约规；Spring、JSpecify、Lombok、MapStruct、MyBatis 等规则按实际依赖或源码上下文启用；只有命中 Wind/Nobe 信号时，才叠加 face/impl、服务分层、模型归位、Entity 不外露、ServiceImpl、基础服务并发/锁边界、查询字段/方法、内网 API 和字典国际化等 Wind 专项规则。`CurrencyIsoCode` 是 Wind 项目币种字段的通用强制项，不属于依赖按需规则。
+本 Skill 是知止者按需装载的 Java 项目分层约规能力包。Codex 可按精确 description 隐式加载本 Skill；若与 `wise-agent` 同时加载，仍由同一 Agent 统一目标和交付，不形成第二人格。所有包含 Java 源码的项目先使用通用 Java 约规；Spring、JSpecify、Lombok、MapStruct、MyBatis 等规则按实际依赖或源码上下文启用；只有命中 Wind 信号时，才叠加 face/impl、服务分层、模型归位、Entity 不外露、ServiceImpl、基础服务并发/锁边界、查询字段/方法、内网 API 和字典国际化等 Wind 专项规则。`CurrencyIsoCode` 是 Wind 项目币种字段的通用强制项，不属于依赖按需规则。
 
 本 Skill 只回答“当前 Java 项目应启用哪层约规、具体约规是什么、当前设计或代码是否偏离约规”。纯约规检查由本 Skill 主责；源码设计、代码 CR、Bug 修复、TDD 和验证不触发本 Skill 主责，只把本 Skill 的通用 Java 与按需 Wind 规则作为输入交给 `senior-software-architect`；结构化 Java Service 生成继续交给 `java-service-code-generator`。
 
 ## 触发条件
 
 - 用户要求检查包含 Java 源码的 Java/Spring 项目编码规范、契约、异常日志、依赖适配、数据库访问、测试代码或项目 `AGENTS.md` 约规；Maven、Gradle 或 JVM 只能作为构建上下文，不能单独证明适用本 Skill。
-- 项目 `AGENTS.md`、任务说明、依赖坐标、包名、import、类型或模块结构表明项目属于 Wind/Nobe 项目族。
-- 用户要求检查 Wind/Nobe 风格项目的 `face` / `impl` 模块边界、接口放置、模型归属、分包规则或 ServiceImpl 实现方式。
+- 项目 `AGENTS.md`、任务说明、依赖坐标、包名、import、类型或模块结构表明项目属于 Wind 项目族。
+- 用户要求检查 Wind 风格项目的 `face` / `impl` 模块边界、接口放置、模型归属、分包规则或 ServiceImpl 实现方式。
 - 用户要求判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、Converter、callback/spi、listener、webhook、core、infrastructure 应放在哪个模块或包。
 - 用户要求基于 Wind 约规判断服务层、基础服务、并发与锁边界、方法签名、服务命名、模型命名、枚举命名、ApplicationService、Entity 不外露或 MyBatis Flex 查询等规则条目与正反例；真实源码 CR 或 TDD 交给 `senior-software-architect`。
 - 用户要求检查服务查询方法 `get/find/query/exists/count/stats/summary`、`XxxQuery` 字段后缀、`/inc/basic` / `/inc/secure` 内网 API、安全等级、系统字典、国际化 Key 或业务事件 `eventKey`。
@@ -28,7 +28,7 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 1. 先读项目 `AGENTS.md`、`pom.xml` / Gradle 配置、相关源码包与 import、模块结构和用户任务上下文，记录实际技术信号；不能读取时只使用用户已给事实，不猜依赖。
 2. 任何包含 Java 源码的项目都先读取 `references/java-coding-conventions.md`；只启用与当前 JDK、框架、依赖和任务匹配的章节，不因 reference 提到某个库就要求项目新增该库。
 3. 普通 Java 项目初始化或改进 `AGENTS.md` 时，只根据项目事实给最小 patch：记录 JDK/构建工具、项目本地规范优先级、实际依赖对应的约规章节、构建/测试/静态检查命令和验证边界；不读取 Wind 项目模板，不写 face/impl、Wind API 或 Wind 类型规则。
-4. 出现以下任一高置信度信号时叠加 Wind 专项：用户、任务或 `AGENTS.md` 明确声明 Wind/Nobe；Maven/Gradle 坐标、包名或 import 明确属于 Wind/Nobe；源码使用 `WindPagination`、`WindQuery`、`CurrencyIsoCode` 等 Wind 类型；`face` / `impl` 结构与 Wind 类型或项目族上下文同时出现。只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind。
+4. 出现以下任一高置信度信号时叠加 Wind 专项：用户、任务或 `AGENTS.md` 明确声明 Wind；Maven/Gradle 坐标、包名或 import 明确属于 Wind；源码使用 `WindPagination`、`WindQuery`、`CurrencyIsoCode` 等 Wind 类型；`face` / `impl` 结构与 Wind 类型或项目族上下文同时出现。只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind。
 5. 命中 Wind 后读取 `references/wind-coding-conventions.md`：face/impl、Entity 不外露、服务/模型边界和所有币种字段使用 `CurrencyIsoCode` 属于 Wind 通用专项；JSpecify、MapStruct、MyBatis Flex 等依赖专项仍按实际依赖或源码启用；固定数据库字段只按项目已采用的 Wind MySQL 表约规启用。用户要求初始化或改进 Wind 项目 `AGENTS.md` 时再读 `references/wind-project-agents-template.md`；需要正反例时读 `references/wind-coding-examples.md`；涉及 Wind 项目族端口、Starter、Trace、安全或企业集成能力时读 `references/wind-architecture-patterns.md`。
 6. 输出时把结论分成：适用层级、上下文证据、触发约规、当前偏差、建议改法、需要回到架构师或代码生成器的后续动作。
 7. 如果涉及真实源码修改、TDD、深度 CR、生产发布或风险回滚，只给规则判断和路由建议，不替代 `senior-software-architect` 的执行与验证。
@@ -38,9 +38,9 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 ## Reference 路由
 
 - `references/java-coding-conventions.md`：所有 Java 项目的通用入口；Java/Spring 编码、契约、异常日志、Lombok/MapStruct、数据库、MyBatis Flex、安全和测试代码细则按依赖与任务读取；普通 Java `AGENTS.md` 初始化也只从本文件提炼最小项目 patch。
-- `references/wind-coding-conventions.md`：Wind 编码约规主规则；只有命中 Wind/Nobe 高置信度信号时读取。
+- `references/wind-coding-conventions.md`：Wind 编码约规主规则；只有命中 Wind 高置信度信号时读取。
 - `references/wind-architecture-patterns.md`：Wind 项目族端口、Starter、Trace、安全、查询和企业集成模式；涉及能力复用或架构模式时读取。
-- `references/wind-project-agents-template.md`：Wind 项目本地 `AGENTS.md` 初始化 / 改进模板；只有已经命中 Wind/Nobe 高置信度信号且用户要求项目 AGENTS 初始化、改进或 `wise-agent` 项目约规入口时读取。
+- `references/wind-project-agents-template.md`：Wind 项目本地 `AGENTS.md` 初始化 / 改进模板；只有已经命中 Wind 高置信度信号且用户要求项目 AGENTS 初始化、改进或 `wise-agent` 项目约规入口时读取。
 - `references/wind-coding-examples.md`：正反例和最佳实践；只有用户要求示例、参考或 AI Maker 落地参照时读取。
 - `references/source-map.md`：外部来源、读取状态、采纳边界和不吸收项；核验规则来源或演进约规时读取。
 - `scripts/check_wind_conventions.py`：离线结构守卫；普通 Java 用 `--profile java`，Wind 项目使用默认的 `--profile wind`，需要扫描真实项目或做规则自测时运行。
@@ -61,7 +61,7 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 
 ## 红线
 
-- 所有 Java 项目都加载通用约规；没有 Wind/Nobe 高置信度信号时，不加载 Wind face/impl、基础服务或模型包专项规则。
+- 所有 Java 项目都加载通用约规；没有 Wind 高置信度信号时，不加载 Wind face/impl、基础服务或模型包专项规则。
 - 对外接口、Controller、Facade、Adapter、跨模块接口和事件契约不得暴露 Entity、Mapper、Repository 或 MyBatis Page。
 - 只有 Wind 专项启用后，币种字段才统一使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，不得用 String、业务私有枚举或魔法常量承载。
 - 业务唯一性和请求重放幂等分层处理：业务身份与业务不变量优先由表内业务 UK、联合 UK、状态条件或版本约束保护；外部 `Idempotency-Key` / `requestSn` 可以用于请求重放去重，但不得冒充业务身份，必须定义作用域、参数摘要、有效期、冲突和结果回放语义。
@@ -73,5 +73,6 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 - 不为了套分层新增浅服务、透传接口、似是而非的 ApplicationService 或 Mapper 包装。
 - 生产源码路径不得新增内存版业务 Service、模拟模块或看上去可用的样子货。
 - 空值责任必须按数据库持久化约束、参数验证和 Java 空安全契约归位；已经证明非空的值不得重复判空，数据库约束也不得替代不可信输入校验。
-- Bean Validation 按当前审查的 artifact 与调用路径判责：实际接收不可信输入的 Controller、Listener 或 Adapter 执行验证；经模块职责、构建产物或调用关系证明为纯 `face` / 公共 Service 能力提供方时，可以只用注解声明调用前置契约，不因缺少 Controller、Validator provider 或方法校验而判缺陷，也不要求 Service / ServiceImpl 重复手工验证。同一仓库同时存在能力模块和入口模块时分别检查，不因一方存在而豁免或连坐另一方。
-- 代码格式必须服从项目已提交的格式配置、构建检查和版本化 IDE 项目设置，不得用个人 IDE 默认设置覆盖，也不得格式化无关代码；详细优先级、执行范围和验证门禁以通用 Java 约规为准，命中 Wind/Nobe 信号后再叠加 Wind 专项。
+- Wind 的 Bean Validation 服务边界以 `references/wind-coding-conventions.md` 为唯一详细规则源；仅在 Wind profile 中执行对应脚本守卫，通用 Java 仍按实际 artifact、调用路径和项目契约判责。
+- Spring Bean 注册、依赖注入与 Lombok 日志注解以 `references/java-coding-conventions.md` 为唯一详细规则源；仅在依赖或源码证据命中时启用，Wind 专项不得复制或放宽该规则。
+- 代码格式必须服从项目已提交的格式配置、构建检查和版本化 IDE 项目设置，不得用个人 IDE 默认设置覆盖，也不得格式化无关代码；详细优先级、执行范围和验证门禁以通用 Java 约规为准，命中 Wind 信号后再叠加 Wind 专项。

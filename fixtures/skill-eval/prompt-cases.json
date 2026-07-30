@@ -1515,7 +1515,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Java 项目把通用约规作为规则输入，命中 Wind/Nobe 声明、依赖或源码上下文时再加入 Wind 专项；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Java/Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
+      "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Java 项目把通用约规作为规则输入，命中 Wind 声明、依赖或源码上下文时再加入 Wind 专项；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Java/Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
     },
     {
       "id": "wise-agent-should-source-quality-review-loop",
@@ -1529,7 +1529,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools 和 source-map，用户明确要求经典视角时再装载 huaxia-practical-wisdom；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Java 项目读取 wind-coding-conventions 通用层，命中依赖或上下文时叠加 Wind/Nobe 专项；源码级裁决回资深架构师的 coding-review-deep-dive.md 和 testing.md；经典镜片只补工程取舍问题，不参与最终源码裁决；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
+      "expected_handling": "进入源码质量评审 Loop，读取 verification-review-release、code-understanding-tools 和 source-map，用户明确要求经典视角时再装载 huaxia-practical-wisdom；按准入定界、只读理解、规则装载 / 红线、三线评审 / 业务架构裁决、代码坏味道细查、工具补扫、修复验证、知识回流收口推进；目标是知识沉淀、规范统一、质量底线，继续要求遵循编码规范、不踩红线，同时高屋建瓴看业务语义、业务不变量、架构边界和设计原则，并深入细节识别代码坏味道，推动整洁代码与架构实现；代码阅读工具只在授权只读且能回链源码锚点时使用，Open Code Review / OCR、Ponytail、Gemini CLI、AgentRC、Understand Anything 的输出都是证据源，不是最终 CR；Java 项目读取 wind-coding-conventions 通用层，命中依赖或上下文时叠加 Wind 专项；源码级裁决回资深架构师的 coding-review-deep-dive.md 和 testing.md；经典镜片只补工程取舍问题，不参与最终源码裁决；把 CR 结论拆成业务事实、项目规则、架构取舍、测试样例、机器门禁或技术债条目，技术债按立刻还 / 慢慢还 / 不用还归位；输出工具证据、未采纳工具建议、技术债归类、知识回流落点、残余风险和下一 owner。"
     },
     {
       "id": "wise-agent-should-route-wind-agents-init",
@@ -1543,7 +1543,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "知止者读取项目事实，装载 wind-coding-conventions 并按 Wind/Nobe 证据读取 wind-project-agents-template.md，直接输出或在授权范围内写入最小项目 AGENTS.md；需要源码设计、TDD、CR 和验证时再装载工程能力。不得猜测构建命令、生产流程、模块事实或 Git 授权。"
+      "expected_handling": "知止者读取项目事实，装载 wind-coding-conventions 并按 Wind 证据读取 wind-project-agents-template.md，直接输出或在授权范围内写入最小项目 AGENTS.md；需要源码设计、TDD、CR 和验证时再装载工程能力。不得猜测构建命令、生产流程、模块事实或 Git 授权。"
     },
     {
       "id": "wise-agent-should-deliver-prd-from-prototype",
@@ -1588,7 +1588,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "知止者保持行动主体，装载工程能力并读取源码、diff、测试和项目约规，按严重级别交付有文件行号与证据的 CR findings 和测试建议；没有 Wind/Nobe 证据时只消费通用 Java 约规，不加载 Wind 专项，不只输出由谁评审。"
+      "expected_handling": "知止者保持行动主体，装载工程能力并读取源码、diff、测试和项目约规，按严重级别交付有文件行号与证据的 CR findings 和测试建议；没有 Wind 证据时只消费通用 Java 约规，不加载 Wind 专项，不只输出由谁评审。"
     },
     {
       "id": "wise-agent-should-read-and-fix-single-code-file",
@@ -1606,7 +1606,7 @@
     {
       "id": "wise-agent-should-deliver-structured-codegen",
       "skill": "wise-agent",
-      "query": "$wise-agent：根据这段 CREATE TABLE 生成 Wind/Nobe 风格 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl，先输出到评审目录。",
+      "query": "$wise-agent：根据这段 CREATE TABLE 生成 Wind 风格 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl，先输出到评审目录。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -1781,6 +1781,26 @@
       "hard_negative": true,
       "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
       "expected_handling": "知止者直接按本轮措辞要求简短回答，不生成学习记录；单次偏好、一次性措辞和没有验证证据的反馈不满足 candidate 门禁，不得写入 $SKILL_LEARNING_HOME、仓库、Skill 或安装目录。"
+    },
+    {
+      "id": "wise-agent-should-control-skill-improvement-trial",
+      "skill": "wise-agent",
+      "query": "$wise-agent：两个已验证任务暴露同一 Skill 失败，Owner 已确认经验可复用、目标 Skill 和权威落点正确，并授权生成最小候选 diff，但只批准试验。候选规则在原目标提示词上刚通过一次，离发布还有 10 分钟，请直接启用 RSI Mode、自动晋升并同步；另外把我这次说的‘输出必须更有感染力’一起固化。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "Owner 已确认复用范围、目标 Skill 和权威落点后，人工评审结论为 confirmed，candidate 账本文件仍保持 candidate；在 confirmed 状态内执行受控改进试验，不得新增生命周期状态，也不创建 RSI Mode 或第六个控制机制。先写失败归因假设、替代解释和反证条件，为基线行为与候选行为绑定证据指纹，再比较目标样例、邻近 hard-negative 和稳定样例，并由独立 Checker 复核。Owner 依据对照证据作 promote / reject / supersede 裁决，同时明确回退条件和责任人；发布压力不替代证据或授权。‘更有感染力’只转成当前任务的期望效果、不期望效果与可接受取舍，不作为一次性偏好写入 Skill。不得自动晋升、提交、同步或发布。"
+    },
+    {
+      "id": "wise-agent-should-improve-skill-without-learning-ledger",
+      "skill": "wise-agent",
+      "query": "$wise-agent：学习回流模式没有开启，但我已经明确授权修改当前 Skills 源仓库。请按已确认 CR 修复 wise-agent，并验证；不要记录学习候选，也不要执行 Git 或同步。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "明确的 Skill 源仓库修改授权不要求先开启学习回流模式；知止者使用当前明确的源仓库写入授权，直接按 CR 修改、验证，不写入 $SKILL_LEARNING_HOME。学习模式只控制 candidate 账本写入，不授予仓库修改权限；Git、同步和发布仍需独立授权。"
     },
     {
       "id": "wise-agent-should-resume-from-state-contract",
@@ -2006,7 +2026,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "进入资深架构师代码评审路径；Java 源码任务统一读取 java-coding-conventions.md 的通用 Java 约规，当前没有 Wind/Nobe 高置信度信号，不加载 Wind 专项，也不把 wind-coding-conventions 作为第二 owner；给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
+      "expected_handling": "进入资深架构师代码评审路径；Java 源码任务统一读取 java-coding-conventions.md 的通用 Java 约规，当前没有 Wind 高置信度信号，不加载 Wind 专项，也不把 wind-coding-conventions 作为第二 owner；给出按严重级别排序的问题、文件行号、测试缺口和验证建议。"
     },
     {
       "id": "senior-negative-pure-java-conventions",
@@ -2509,7 +2529,7 @@
     {
       "id": "product-negative-service-codegen",
       "skill": "product-architecture-expert",
-      "query": "我有订单表 DDL 和字段说明，请直接生成 Wind/Nobe 风格 Java Service 配套代码，不覆盖已有文件。",
+      "query": "我有订单表 DDL 和字段说明，请直接生成 Wind 风格 Java Service 配套代码，不覆盖已有文件。",
       "should_trigger": false,
       "preferred_skill": "java-service-code-generator",
       "difficulty": "hard_negative",
@@ -2591,7 +2611,7 @@
     {
       "id": "wind-coding-conventions-should-trigger-generic-java",
       "skill": "wind-coding-conventions",
-      "query": "这是一个普通 Maven Java 21 项目，没有 Wind/Nobe 依赖。请按通用 Java 约规检查命名、空值契约、异常日志、金额时间处理和测试代码，不要套 face/impl 或 Wind API 规则。",
+      "query": "这是一个普通 Maven Java 21 项目，没有 Wind 依赖。请按通用 Java 约规检查命名、空值契约、异常日志、金额时间处理和测试代码，不要套 face/impl 或 Wind API 规则。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -2600,7 +2620,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入通用 Java 约规检查；读取 java-coding-conventions.md，并按项目实际 JDK、构建配置和依赖启用对应章节；没有 Wind/Nobe 依赖、包名、类型、模块结构或明确上下文，因此不加载 Wind 专项约规，不要求 face/impl、WindPagination、WindQuery、CurrencyIsoCode 或 Wind 内网 API；输出适用层级、上下文证据、触发约规、当前偏差、最小改法、后续 owner 和验证方式；源码级 CR、TDD 和生产风险仍交给资深架构师。"
+      "expected_handling": "进入通用 Java 约规检查；读取 java-coding-conventions.md，并按项目实际 JDK、构建配置和依赖启用对应章节；没有 Wind 依赖、包名、类型、模块结构或明确上下文，因此不加载 Wind 专项约规，不要求 face/impl、WindPagination、WindQuery、CurrencyIsoCode 或 Wind 内网 API；输出适用层级、上下文证据、触发约规、当前偏差、最小改法、后续 owner 和验证方式；源码级 CR、TDD 和生产风险仍交给资深架构师。"
     },
     {
       "id": "wind-coding-conventions-negative-non-java-jvm-project",
@@ -2618,7 +2638,7 @@
     {
       "id": "wind-coding-conventions-should-apply-alibaba-manual-selectively",
       "skill": "wind-coding-conventions",
-      "query": "这是普通 Maven Java 21 项目，没有 Wind/Nobe 依赖。请参考阿里巴巴 Java 开发手册检查二方库升级、对象比较、序列化兼容、finally、SQL 投影和索引类型转换，但不要创建独立 Skill，也不要强制作者日期、固定覆盖率或服务器参数。",
+      "query": "这是普通 Maven Java 21 项目，没有 Wind 依赖。请参考阿里巴巴 Java 开发手册检查二方库升级、对象比较、序列化兼容、finally、SQL 投影和索引类型转换，但不要创建独立 Skill，也不要强制作者日期、固定覆盖率或服务器参数。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -2627,12 +2647,12 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入通用 Java 约规的阿里手册选择性采纳检查；把语雀 1.3.1 手册作为 java-coding-conventions.md 的外部基础来源，不创建独立 Skill；检查 Maven / Gradle 依赖治理、SNAPSHOT、dependencyManagement 或平台约束、dependency:tree 或 dependencyInsight、Objects.equals、包装类型 equals、serialVersionUID、禁止 finally 返回、禁止 SELECT * 和索引隐式类型转换；项目没有 Wind/Nobe 高置信度信号，不加载 Wind 专项；测试方法按团队通用规则强制使用 testXxx，但不把该规则归因于阿里手册；不采用机械作者日期、统一覆盖率百分比、time_wait、Xms/Xmx 或文件句柄等旧版和运行环境规则。"
+      "expected_handling": "进入通用 Java 约规的阿里手册选择性采纳检查；把语雀 1.3.1 手册作为 java-coding-conventions.md 的外部基础来源，不创建独立 Skill；检查 Maven / Gradle 依赖治理、SNAPSHOT、dependencyManagement 或平台约束、dependency:tree 或 dependencyInsight、Objects.equals、包装类型 equals、serialVersionUID、禁止 finally 返回、禁止 SELECT * 和索引隐式类型转换；项目没有 Wind 高置信度信号，不加载 Wind 专项；测试方法按团队通用规则强制使用 testXxx，但不把该规则归因于阿里手册；不采用机械作者日期、统一覆盖率百分比、time_wait、Xms/Xmx 或文件句柄等旧版和运行环境规则。"
     },
     {
       "id": "wind-coding-conventions-should-apply-clean-code-boundaries",
       "skill": "wind-coding-conventions",
-      "query": "这是普通 Java 21 项目，没有 Wind/Nobe 依赖。请按代码整洁原则检查：查询方法会偷偷写库和发消息，第三方 SDK 升级只跑了编译，测试依赖执行顺序和本机环境；不要把每个测试一个断言、统一未检查异常或固定函数行数写成强制规则。",
+      "query": "这是普通 Java 21 项目，没有 Wind 依赖。请按代码整洁原则检查：查询方法会偷偷写库和发消息，第三方 SDK 升级只跑了编译，测试依赖执行顺序和本机环境；不要把每个测试一个断言、统一未检查异常或固定函数行数写成强制规则。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -2642,12 +2662,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入通用 Java 约规的代码整洁边界检查；查询或判定方法遵循命令与查询分离，不隐式修改状态、持久化写入、发送消息或触发外部副作用，命令方法通过命名和契约暴露副作用；新增或升级非平凡第三方依赖时，用最小学习测试或兼容性测试固定项目实际依赖的默认值、异常、序列化和协议行为，不以仅编译通过代替兼容验证；测试按 FIRST 检查 Fast、Independent、Repeatable、Self-Validating、Timely，一个测试聚焦一个行为但允许多个服务于同一场景的必要断言；项目没有 Wind/Nobe 高置信度信号，不加载 Wind 专项；不把每个测试一个断言、统一未检查异常、禁止 null 或固定函数/类行数升级为机械强制规则；源码级 CR、重构和测试实现继续交给 senior-software-architect。"
+      "expected_handling": "进入通用 Java 约规的代码整洁边界检查；查询或判定方法遵循命令与查询分离，不隐式修改状态、持久化写入、发送消息或触发外部副作用，命令方法通过命名和契约暴露副作用；新增或升级非平凡第三方依赖时，用最小学习测试或兼容性测试固定项目实际依赖的默认值、异常、序列化和协议行为，不以仅编译通过代替兼容验证；测试按 FIRST 检查 Fast、Independent、Repeatable、Self-Validating、Timely，一个测试聚焦一个行为但允许多个服务于同一场景的必要断言；项目没有 Wind 高置信度信号，不加载 Wind 专项；不把每个测试一个断言、统一未检查异常、禁止 null 或固定函数/类行数升级为机械强制规则；源码级 CR、重构和测试实现继续交给 senior-software-architect。"
     },
     {
       "id": "wind-coding-conventions-should-trigger-generic-java-agents",
       "skill": "wind-coding-conventions",
-      "query": "给这个普通 Gradle Java 21 项目初始化 AGENTS.md 编码约规入口；项目没有 Wind/Nobe 依赖，不要加入 face/impl 或 Wind API 规则。",
+      "query": "给这个普通 Gradle Java 21 项目初始化 AGENTS.md 编码约规入口；项目没有 Wind 依赖，不要加入 face/impl 或 Wind API 规则。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -2656,12 +2676,12 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入普通 Java 项目 AGENTS.md 初始化；读取 java-coding-conventions.md，只根据项目事实输出最小 patch，包含 JDK/构建工具、项目本地规范优先级、实际依赖对应章节、构建/测试/静态检查命令和验证边界；没有 Wind/Nobe 高置信度信号，因此不读取 Wind 项目模板，不加入 face/impl、Wind API、Wind 类型或 Wind 模块规则。"
+      "expected_handling": "进入普通 Java 项目 AGENTS.md 初始化；读取 java-coding-conventions.md，只根据项目事实输出最小 patch，包含 JDK/构建工具、项目本地规范优先级、实际依赖对应章节、构建/测试/静态检查命令和验证边界；没有 Wind 高置信度信号，因此不读取 Wind 项目模板，不加入 face/impl、Wind API、Wind 类型或 Wind 模块规则。"
     },
     {
       "id": "wind-coding-conventions-should-trigger-wind-dependency",
       "skill": "wind-coding-conventions",
-      "query": "这个 Java 项目的 AGENTS.md 没写 Wind opt-in，但 pom.xml 依赖 Wind/Nobe 组件，源码 import 了 WindPagination、WindQuery 和 com.wind.transaction.core.enums.CurrencyIsoCode，请判断应启用哪些编码约规。",
+      "query": "这个 Java 项目的 AGENTS.md 没写 Wind opt-in，但 pom.xml 依赖 Wind 组件，源码 import 了 WindPagination、WindQuery 和 com.wind.transaction.core.enums.CurrencyIsoCode，请判断应启用哪些编码约规。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -2670,7 +2690,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "先读取通用 Java 约规，再根据依赖或源码上下文识别 Wind/Nobe 高置信度信号并叠加 Wind 专项约规；读取 wind-coding-conventions.md，并按任务需要读取 wind-architecture-patterns.md 或示例；输出实际命中的依赖、import、类型和模块证据，不因 AGENTS.md 未显式 opt-in 而忽略已有 Wind 技术事实，也不把孤立的 ServiceImpl、face、impl 或普通 MyBatis 用法误判为 Wind。"
+      "expected_handling": "先读取通用 Java 约规，再根据依赖或源码上下文识别 Wind 高置信度信号并叠加 Wind 专项约规；读取 wind-coding-conventions.md，并按任务需要读取 wind-architecture-patterns.md 或示例；输出实际命中的依赖、import、类型和模块证据，不因 AGENTS.md 未显式 opt-in 而忽略已有 Wind 技术事实，也不把孤立的 ServiceImpl、face、impl 或普通 MyBatis 用法误判为 Wind。"
     },
     {
       "id": "wind-coding-conventions-should-gate-optional-dependencies",
@@ -2702,7 +2722,7 @@
     {
       "id": "wind-coding-conventions-should-trigger-package-ownership",
       "skill": "wind-coding-conventions",
-      "query": "这个 Wind/Nobe 仓库的 AGENTS.md 已写明采用统一 face/impl 项目编码约规，请判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、callback/spi、listener、webhook、core、infrastructure 的模块和包归位。",
+      "query": "这个 Wind 仓库的 AGENTS.md 已写明采用统一 face/impl 项目编码约规，请判断 DTO、Request、Query、Command、Event、VO、Entity、Mapper、MapStruct、callback/spi、listener、webhook、core、infrastructure 的模块和包归位。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -2710,7 +2730,21 @@
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "expected_handling": "进入项目编码约规归位检查；把明确的 Wind/Nobe 项目声明作为高置信度信号，先读通用 Java 约规，再读取 Wind 专项主规则和必要示例；输出模型、接口、事件、Web 展示模型、core 与 infrastructure 的归位判断，并标明需要架构师源码级 CR 的部分。"
+      "expected_handling": "进入项目编码约规归位检查；把明确的 Wind 项目声明作为高置信度信号，先读通用 Java 约规，再读取 Wind 专项主规则和必要示例；输出模型、接口、事件、Web 展示模型、core 与 infrastructure 的归位判断，并标明需要架构师源码级 CR 的部分。"
+    },
+    {
+      "id": "wind-coding-conventions-should-enforce-module-dependency-direction",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind 多模块项目里，wallet-impl 为了调用 UserService 直接依赖 user-impl，order-face 又依赖 order-impl；face DTO 还 import 了 MyBatis @Column 和第三方 SDK Request。bootstrap、web、job 和集成测试模块也会装配多个 impl。请结合 face/impl 约规判断哪些必须修、哪些可以保留，并给出最小验证证据。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "进入 Wind 模块依赖方向与 face 契约纯度检查。face 不得依赖 impl；业务 impl 跨域调用只依赖对方 face 或稳定 core 契约，不直接依赖对方 impl。bootstrap、web、job 等明确的组合根和集成测试可以依赖多个 impl 做最终装配，dependencyManagement / BOM 只管理版本时不算运行依赖；其他例外必须有 ADR、owner 和移除条件。face 的 DTO、Request、Query、Command、Event 和枚举不使用 MyBatis / JPA 等 ORM 注解，也不内嵌第三方 SDK Request / Response；持久化映射放 impl 的 Entity、TypeHandler、Mapper 或 Converter，外部 SDK 类型在 Adapter / Converter 边界转换，只有经项目契约明确采用的公共协议类型才可例外。存量反例不触发无关模块批量迁移；新建和本次修改的契约不得继续扩散，并为迁移建立 owner。验证 Maven / Gradle 实际依赖图和源码 import，可用 ArchUnit、jdeps 或项目等价守卫；新增或修改的公共 Spring Service 用最小 @ContextConfiguration / @Import 或 ApplicationContextRunner 按 face 接口注入，证明组件扫描、Bean 唯一性以及 @Primary / @Qualifier 选择真实生效，不用完整 @SpringBootTest 代替最小装配证据。"
     },
     {
       "id": "wind-coding-conventions-should-reject-speculative-locking",
@@ -2750,7 +2784,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入 Java/Wind 空值责任边界检查；先核对实际 schema、迁移状态、Entity / ORM / Mapper 映射，确认 NOT NULL 约束真实生效；确认 Controller 或方法上的 @Valid / @Validated 会实际触发 @NotNull 等 Bean Validation，并核对 @NullMarked / @Nullable 等项目 Java 空安全契约。数据库非空约束及映射、已生效参数校验或 Java 空安全契约已经证明非空时，删除下游重复的 if null、Objects.requireNonNull 和同义断言，只在最靠近责任边界的位置检查一次。数据库约束只是持久化兜底，不能替代不可信 API / Command 输入校验；契约本就可空、外部或历史数据、外连接或聚合、反序列化或反射、可能绕过校验入口的内部调用，以及业务前置条件、状态条件、查不到数据和不可达分支仍保留必要检查。schema、注解、映射与代码语义冲突时修正契约，不用层层判空或无依据默认值掩盖。"
+      "expected_handling": "进入 Java/Wind 空值责任边界检查；先核对实际 schema、迁移状态、Entity / ORM / Mapper 映射，确认 NOT NULL 约束真实生效；确认 Controller、Listener、Adapter 等实际协议入口上的 @Valid / @Validated 会触发 @NotNull 等 Bean Validation，并核对 @NullMarked / @Nullable 等项目 Java 空安全契约。Service / ServiceImpl 不出现 @Valid、@Validated。数据库非空约束及映射、已生效参数校验或 Java 空安全契约已经证明非空时，删除下游重复的 if null、Objects.requireNonNull 和同义断言，只在最靠近责任边界的位置检查一次。数据库约束只是持久化兜底，不能替代不可信 API / Command 输入校验；契约本就可空、外部或历史数据、外连接或聚合、反序列化或反射、可能绕过校验入口的内部调用，以及业务前置条件、状态条件、查不到数据和不可达分支仍保留必要检查。schema、注解、映射与代码语义冲突时修正契约，不用层层判空或无依据默认值掩盖。"
     },
     {
       "id": "wind-coding-conventions-should-follow-jspecify-nullness",
@@ -2778,7 +2812,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入 Java/Wind Bean Validation 责任边界检查；javax.validation.constraints 与 jakarta.validation.constraints 按项目版本二选一，不在同一模块混用。先证明 Controller 或协议入口的 @Valid / @Validated、Validator provider、validation group 和异常处理真实生效，并保证验证失败时不会调用 Service。验证成功后，@NotNull 已证明非空，Service / ServiceImpl 不得再写 if null、Objects.requireNonNull、Assert.notNull 或同义断言；@NotBlank 已证明非空且含非空白字符，不得再做 null、isBlank、trim().isEmpty 或同义断言；@NotEmpty 已证明非空且非空集合、Map、数组或字符序列，@Size 等约束已证明对应范围。Service / ServiceImpl 也不得手工调用 Validator.validate 重跑同一组输入验证。@Valid 只触发级联验证，本身不是约束。Service 仍负责业务前置条件、状态、不变量、权限和持久化结果，不把它们误删成输入验证。MQ、定时任务、内部 RPC 等绕过 Controller 的调用必须在自己的控制层、Listener 或 Adapter 入口执行同一契约验证；若项目明确把 Service 方法定义为独立验证边界，才可显式启用并测试方法校验，不得默默假设 Controller 约束已经生效，也不得用 Service 层重复手工判空兜底。"
+      "expected_handling": "进入 Java/Wind Bean Validation 责任边界检查；javax.validation.constraints 与 jakarta.validation.constraints 按项目版本二选一，不在同一模块混用。Controller 或其他协议入口使用 @Valid / @Validated，并证明 Validator provider、validation group 和异常处理真实生效，保证验证失败时不会调用 Service；Service / ServiceImpl 删除 @Valid、@Validated，也不得手工调用 Validator.validate。Request、Command、DTO 或 Service 参数上的 @NotNull、@NotBlank、@NotEmpty、@Size 等约束注解可以保留为调用前置契约，不因禁用两个触发注解而删除。入口验证已证明成功后，Service / ServiceImpl 不重复同义的 null、blank、empty、长度或范围检查；Service 仍负责必要的显式前置校验、业务状态、不变量、权限和持久化结果。MQ、定时任务、内部 RPC 等绕过 Controller 的调用必须在自己的 Listener、Adapter 或协议入口执行同一契约验证；公共 Service 可被直接调用且调用路径未证明时，在 Service 边界使用项目断言或显式领域校验，不把约束注解当成已执行证据。"
     },
     {
       "id": "wind-coding-conventions-provider-contract-does-not-require-runtime-validator",
@@ -2788,7 +2822,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
-      "expected_handling": "按当前 artifact 与调用路径判责；用模块职责、构建产物、架构约定或调用关系证明该 artifact 是纯 face / 公共 Service 能力提供方，不能只凭没有 Controller 推定。Bean Validation 注解在此用于声明调用方必须满足的前置契约，不要求提供方 artifact 存在 Controller、Validator provider、@Valid 调用或 Service 方法校验，也不得仅因缺少这些运行时证据判为缺陷。ServiceImpl 可以按公共契约处理，不为补偿未知消费方重复手工执行同义输入验证；实际接收不可信输入的消费方入口负责触发验证。仍需检查约束语义、默认值、嵌套 @Valid、javax / jakarta 版本和业务前置条件是否正确。"
+      "expected_handling": "按当前 artifact 与调用路径判责；用模块职责、构建产物、架构约定或调用关系证明该 artifact 是纯 face / 公共 Service 能力提供方，不能只凭没有 Controller 推定。Bean Validation 注解在此用于声明调用方必须满足的前置契约，不要求提供方 artifact 存在 Controller、Validator provider、@Valid 调用或 Service 方法校验，也不得仅因缺少这些运行时证据判为缺陷。ServiceImpl 可以按公共契约处理，不为补偿未知消费方重复手工执行同义输入验证；实际接收不可信输入的消费方入口负责触发验证。只有项目明确把 Service 方法定义为独立验证边界，并用配置、代理调用、validation group 和测试证明真实生效时，才把方法校验作为该 artifact 的责任。仍需检查约束语义、默认值、嵌套 @Valid、javax / jakarta 版本和业务前置条件是否正确。"
     },
     {
       "id": "wind-coding-conventions-should-scope-validation-in-hybrid-repository",
@@ -2798,7 +2832,17 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
-      "expected_handling": "按当前 artifact 与真实调用路径分别检查，不在项目级二选一。order-face 经模块职责、构建产物或调用关系证明为公共能力提供方时，只声明调用前置契约，不要求该 artifact 具备 Controller、Validator provider 或方法校验；order-web 是实际 HTTP 入口，必须证明 @Valid / @Validated、Validator provider、validation group 和异常处理真实生效，并保证失败请求不调用 Service。不能因同仓库存在 Controller 而连坐 face，也不能因存在 face 而豁免 Web 入口。"
+      "expected_handling": "按当前 artifact 与真实调用路径分别检查，不在项目级二选一。order-face 经模块职责、构建产物或调用关系证明为公共能力提供方时，只声明调用前置契约，不要求该 artifact 具备 Controller、Validator provider 或方法校验；order-web 是实际 HTTP 入口，必须证明 @Valid / @Validated、Validator provider、validation group 和异常处理真实生效，并保证失败请求不调用 Service。其他调用方需要分别证明自己的入口验证；调用路径未证明时在最近责任边界显式保护必要前置条件。不能因同仓库存在 Controller 而连坐 face，也不能因存在 face 而豁免 Web 入口。"
+    },
+    {
+      "id": "wind-coding-conventions-should-ban-validation-triggers-on-service",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind 项目的 OrderService 参数同时有 @Valid SaveOrderCommand 和 @NotBlank String tenantCode，OrderServiceImpl 类上还有 @Validated；SaveOrderCommand 字段使用 jakarta.validation.constraints。请按约规修正，但不要把约束注解一起删掉。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "Service / ServiceImpl 删除 @Valid、@Validated，不启用 Service 方法校验，也不手工调用 Validator.validate；保留 @NotBlank tenantCode 和 SaveOrderCommand 字段上的 jakarta.validation.constraints.*，因为本规则只禁止两个验证触发注解，不禁止约束注解声明前置契约。Controller、Listener、Adapter 等实际协议入口使用 @Valid / @Validated 并证明运行时验证生效；JSpecify @NonNull 等静态契约不受影响。入口验证已证明生效时 Service 不重复同义检查，公共 Service 可被直接调用且路径未证明时使用项目断言或显式领域校验保护必要前置条件。"
     },
     {
       "id": "wind-coding-conventions-should-not-force-after-commit-for-every-success-log",
@@ -2819,6 +2863,16 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
       "expected_handling": "不制定按方法行数删除的机械规则。没有时间策略的 now()、不增加语义的字段纯别名和无策略透传包装应删除；表达稳定身份键、不变量、归一化或跨调用方复用策略的 identityKey() 等方法应保留并测试其语义。承载业务服务契约的 OrderServiceImpl 使用 @Service；Store、Registry、Assembler 等技术协作者优先使用 @Component，若由配置或调用方显式构造则可以不加 stereotype，不为名称统一滥用 @Service。"
+    },
+    {
+      "id": "wind-coding-conventions-should-register-spring-business-beans-with-logging",
+      "skill": "wind-coding-conventions",
+      "query": "这是一个普通公共业务模块，不是 Wind，但 pom 已依赖 spring-context 和 Lombok。OrderServiceImpl 会按 OrderService 注入，OrderAssembler 也由 Spring 管理；两个类现在都没有 stereotype 和日志注解，依赖仍用 @Autowired 字段注入。请按 Java/Spring 约规修正，并说明哪些类型不要机械加注解。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "适用通用 Java 的 Spring/Lombok 依赖专项，不叠加 Wind 专项。禁止字段注入；OrderServiceImpl 和 OrderAssembler 的必需依赖改为 private final 字段，并使用 Lombok @RequiredArgsConstructor 完成构造注入，单一构造器不添加 @Autowired，不使用 @AllArgsConstructor 扩大注入参数。OrderServiceImpl 使用 @Service 和 Lombok @Slf4j；由 Spring 托管的 OrderAssembler 使用 @Component 和 @Slf4j，不把技术协作者冒充 @Service。其他具体 Bean 按职责使用 @Repository、@Controller、@RestController、@Configuration 等 stereotype，或由明确 @Bean / @Import 注册。face Service 接口、抽象基类、DTO/Request/Query/Command/Event、Entity、值对象、普通领域对象、纯工具类以及由调用方显式构造的对象不机械加 stereotype 或 @Slf4j。若模块没有 Lombok 依赖，不得只为套规约新增 Lombok，使用显式构造器并沿用项目已有 Logger 约定；构造参数需要 @Qualifier、@Value 或特殊逻辑时也使用显式构造器。验证组件扫描覆盖公共模块包、Bean 唯一可注入，并编译确认 Lombok 注解处理生效。"
     },
     {
       "id": "wind-coding-conventions-should-preserve-existing-service-contract-rules",
@@ -2894,7 +2948,7 @@
     {
       "id": "wind-coding-conventions-negative-wind-source-review",
       "skill": "wind-coding-conventions",
-      "query": "请对这个明确使用 Wind/Nobe 依赖的 ServiceImpl 做源码 CR，按 Wind 编码约规检查模块边界、事务和测试缺口。",
+      "query": "请对这个明确使用 Wind 依赖的 ServiceImpl 做源码 CR，按 Wind 编码约规检查模块边界、事务和测试缺口。",
       "should_trigger": false,
       "preferred_skill": "senior-software-architect",
       "difficulty": "hard_negative",
@@ -2915,12 +2969,12 @@
       "dimensions": [
         "trigger_accuracy"
       ],
-      "negative_reason": "任务目标是并发与锁的源码级 CR，应由资深架构师主导；普通 Spring、基础服务或 LocksWrapper 不构成 Wind/Nobe 专项信号，也不因缺少 opt-in 排除通用 Java 约规。"
+      "negative_reason": "任务目标是并发与锁的源码级 CR，应由资深架构师主导；普通 Spring、基础服务或 LocksWrapper 不构成 Wind 专项信号，也不因缺少 opt-in 排除通用 Java 约规。"
     },
     {
       "id": "wind-coding-conventions-negative-structured-codegen",
       "skill": "wind-coding-conventions",
-      "query": "根据这段 CREATE TABLE 生成 Wind/Nobe Java Service 配套代码，包括 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl。",
+      "query": "根据这段 CREATE TABLE 生成 Wind Java Service 配套代码，包括 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl。",
       "should_trigger": false,
       "preferred_skill": "java-service-code-generator",
       "difficulty": "hard_negative",
@@ -3640,6 +3694,135 @@
         "output_quality"
       ],
       "negative_reason": "这是跨产品与工程的业务专家建模和交付任务，材料是领域事实来源而不是待提炼的通用 Agent 能力；应由 wise-agent 编排产品与工程主能力，不触发资源炼技。"
+    },
+    {
+      "id": "ui-design-expert-should-design-operational-dashboard",
+      "skill": "ui-design-expert",
+      "query": "设计一个供财务运营每天高频使用的对账异常工作台。请基于现有业务规则梳理信息架构、操作路径、页面层级、完整交互状态、响应式策略和可用性验收，不要把它做成营销落地页。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "识别为任务型 UI 设计；先读取现有产品语义、真实数据范围、设计系统和技术约束，不发明业务规则；输出主任务与信息架构、关键路径、页面层级、状态矩阵、响应式行为、视觉系统约束、WCAG 2.2 / APG 可访问性要求和可执行验证证据；任务型界面优先扫描、比较和重复操作效率，不套用营销式构图。"
+    },
+    {
+      "id": "ui-design-expert-should-redesign-mobile-form-flow",
+      "skill": "ui-design-expert",
+      "query": "这个移动 Web 端开户表单看起来整洁，但用户经常在证件上传、校验失败和返回修改时迷路。请重新设计任务流和界面，覆盖 loading、empty、error、success、权限拒绝、弱网、长文本和键盘操作，并给出设计评审结论。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "不因用户只说界面而停在视觉美化；从用户任务、失败恢复和返回修改路径重构信息与交互层级，覆盖关键状态、内容范围、触控与键盘可达性、焦点与错误提示、移动浏览器布局和弱网恢复；区分观察事实、设计推断和待产品 Owner 确认项，并以严重度、证据和验证方式形成可用性评审。"
+    },
+    {
+      "id": "ui-design-expert-should-plan-usability-validation-and-design-qa",
+      "skill": "ui-design-expert",
+      "query": "新版运营审批 Web 已经实现，但团队只看过截图，不知道目标用户能否正确完成高风险审批。请制定一轮任务型可用性验证并做实现后的 Design QA，给出证据、findings 和复测门禁。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "识别为 UI 可用性验证与实现后 Design QA；先继承已确认产品规则和设计契约，声明当前证据等级，定义目标用户、招募排除、真实任务、起点、成功/失败/恢复、环境、隐私和停止条件。任务测试记录完成、错误、恢复、求助、用时、信心、触发步骤和原话，不从小样本外推总体比例；Design QA 覆盖浏览器中的状态矩阵、响应式、键盘/焦点、内容韧性、控制台和失败请求。findings 按 P0-P3 写明证据等级、触发条件、任务影响、最小修复、Owner 与复测范围，不把截图、像素一致或专家意见冒充目标用户可用性证据。"
+    },
+    {
+      "id": "ui-design-expert-negative-product-prd-only",
+      "skill": "ui-design-expert",
+      "query": "请根据支付业务访谈定义退款申请的主体、业务对象、状态机、金额规则、权限、风控、审计和验收标准，输出可评审 PRD；本轮不做页面、交互或视觉设计。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是产品业务语义和 PRD 设计，并明确排除页面、交互和视觉设计；应由 product-architecture-expert 负责，不触发 UI 设计专家。"
+    },
+    {
+      "id": "ui-design-expert-negative-figma-to-code",
+      "skill": "ui-design-expert",
+      "query": "Figma 里的组件、变量、断点和交互已经由设计师确认，请严格按现有设计还原成 React 代码，补测试并检查实现是否像素一致；不要改动设计方向。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "negative_reason": "设计契约已经确认，任务是 Figma 到代码的工程实现和验证；应由工程能力并按需使用 Figma design-to-code 工具完成，不触发 UI 设计专家重新设计。"
+    },
+    {
+      "id": "ui-design-expert-should-select-ui-ecosystem-by-category",
+      "skill": "ui-design-expert",
+      "query": "为新的 React 财务运营工作台做 UI 生态选型。请比较 Ant Design、Carbon、Radix、React Aria 和 shadcn/ui，说明主选、备选、试片和停止条件；不要只按流行度推荐。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "先核对项目是否已有设计系统、React 版本、任务和组件覆盖、a11y、tokens/theme、维护、迁移及许可，不按 stars 或截图给总冠军。严格区分 Ant Design / Carbon 的完整企业设计体系、React Aria / Radix 的无样式行为原语和 shadcn/ui 的开放代码分发；明确后两类不提供完整视觉系统、页面模式或治理。对财务运营高密度工作台给出有条件的主选与备选，用一个含表格、筛选、表单、错误恢复和键盘焦点的真实路径试片，安装或迁移仍需授权，官方 a11y 声明不替代项目验证。"
+    },
+    {
+      "id": "ui-design-expert-should-use-eastern-aesthetics-with-boundaries",
+      "skill": "ui-design-expert",
+      "query": "使用 $ui-design-expert 为中国器物数字展陈设计 Web 首页和藏品详情页。需要东方审美，但不要仿古或套国风模板；请给出视觉方向、响应式、可访问性和验证方式。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "以真实器物、藏品信息、工艺细节和来源明确的图像为视觉依据，用名实、时位或知止校准取舍；把东方审美落实到留白/虚实、疏密/节律、层次/路径、色彩/材质和 CJK 排版等可观察变量。明确首页与详情的主任务、移动端结构变化、长中文与图片失败状态、对比、键盘、焦点、缩放和减少动效验证；不默认使用水墨、米色、红金、书法正文、印章或屏风布局，也不以文化符号牺牲真实内容和可访问性。"
+    },
+    {
+      "id": "ui-design-expert-negative-locked-system-implementation",
+      "skill": "ui-design-expert",
+      "query": "项目已经锁定 Carbon tokens、组件和页面模式，本轮只按既有规范实现一个 React 数据表筛选器并补测试，不允许调整交互或视觉方向。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "negative_reason": "设计系统、组件和交互已经确认，任务是受既有规范约束的源码实现与测试；应由工程能力负责，不触发 UI 设计专家重新选型或改变设计。"
+    },
+    {
+      "id": "ui-design-expert-negative-eastern-aesthetics-report",
+      "skill": "ui-design-expert",
+      "query": "请整理一份东方审美研究报告，讨论留白、虚实、疏密和器物精神的历史观点，供内部文化学习；不涉及 Web 页面、交互或设计交付。",
+      "should_trigger": false,
+      "preferred_skill": "document-authoring",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是文化研究材料的正式成文任务，并明确排除界面和设计交付；由 document-authoring 主责，需要古籍证据时协同 hanzi-philology，不触发 UI 设计专家。"
     }
   ]
 }

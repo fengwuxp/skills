@@ -1,4 +1,4 @@
-# Wind/Nobe DDL 生成模式
+# Wind 项目 DDL 生成模式
 
 参考模块：`https://github.com/fengwuxp/wind-middleware/tree/main/tools/mybatis-flex-codegen`
 
@@ -6,7 +6,7 @@
 
 ## 使用时机
 
-- 需要确认 Wind/Nobe 风格模块布局、中文描述、DTO/Request/Query、Entity/MyBatis-Flex 和 Service 生成惯例。
+- 需要确认 Wind 风格模块布局、中文描述、DTO/Request/Query、Entity/MyBatis-Flex 和 Service 生成惯例。
 
 ## 不适用场景
 

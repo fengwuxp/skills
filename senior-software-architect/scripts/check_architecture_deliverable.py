@@ -114,7 +114,7 @@ TABLE_DESIGN_CHECKS = [
     RequiredGroup("table_access_path", ["普通索引", "索引字段", "查询/排序场景"], 3),
     RequiredGroup("table_compatibility", ["数据约束与兼容", "历史数据迁移", "兼容", "回滚", "删除与归档"], 3),
 ]
-WIND_TABLE_MARKERS = ("Wind 编码约规", "wind-coding-conventions", "Wind/Nobe")
+WIND_TABLE_MARKERS = ("Wind 编码约规", "wind-coding-conventions", "Wind")
 WIND_SOURCE_NEGATIONS = ("不是", "不属于", "不适用", "未命中", "不使用", "未使用", "不遵循", "未明确", "待确认")
 WIND_REQUIRED_FIELDS = {"id", "gmt_create", "gmt_modified"}
 REQUIRED_VALUES = {"是", "[x]", "yes", "required", "not null", "强制"}
@@ -480,7 +480,7 @@ def run_self_test() -> int:
         failures.append("system-design: formatted request id business key fixture unexpectedly passed")
     explicit_non_wind_table = invalid_wind_table.replace(
         "数据库约规来源：Wind 编码约规。",
-        "数据库约规来源：本项目明确不是 Wind/Nobe。",
+        "数据库约规来源：本项目明确不是 Wind。",
     )
     if {"wind_required_fields", "wind_required_field_defaults"}.intersection(
         missing_groups("system-design", explicit_non_wind_table)

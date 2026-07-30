@@ -9,7 +9,7 @@
 
 ## 不适用场景
 
-- 项目没有 Wind/Nobe 声明、依赖、包名、类型或模块上下文等高置信度信号。
+- 项目没有 Wind 声明、依赖、包名、类型或模块上下文等高置信度信号。
 - 需要生成完整 Java Service 脚手架时，交给 `java-service-code-generator`；本文件只辅助判断，不替代项目附近代码风格。
 
 ## 读取后必须产出
@@ -106,8 +106,8 @@ public class XxxType {
 
 ### 10. 源码样本只提炼稳定共性
 
-- 反例：看到 nobe 有 `services/impl`、capte-domain 有 `dto/request/query` 直连包、某个模块叫 `global-face`，就把这些历史路径全部写成新项目强制模板。
-- 正例：从 `wind-integration / nobe / capte-domain 源码观察` 中只提炼稳定判断：face 放公开契约，impl 放 `dal/entities`、`dal/mapper`、`mapstruct` 和实现层协作，web-api 放 Controller，core 放跨模块稳定对象，infrastructure 放技术 helper；新代码优先用 `model/dto|request|query|command`，历史项目兼容既有包名。
+- 反例：看到某个样本项目有 `services/impl`、`dto/request/query` 直连包或名为 `global-face` 的模块，就把这些历史路径全部写成新项目强制模板。
+- 正例：从多个本地业务项目的源码观察中只提炼稳定判断：face 放公开契约，impl 放 `dal/entities`、`dal/mapper`、`mapstruct` 和实现层协作，web-api 放 Controller，core 放跨模块稳定对象，infrastructure 放技术 helper；新代码优先用 `model/dto|request|query|command`，历史项目兼容既有包名。
 - 验证点：新增规则能回答“谁调用、生命周期归谁、变化 owner 在哪、依赖方向是否越界”，而不是复刻某个仓库的目录树。
 
 ### 11. 平台基础服务模板可复用但不硬套
@@ -151,3 +151,9 @@ public class XxxType {
 - 反例：因为方法只有一行就全部删除，或保留没有时间策略的 `now()`、字段纯别名和无策略透传包装；把 `Store`、`Registry`、`Assembler` 等技术协作者统一标成 `@Service`。
 - 正例：删除没有增加语义、约束或替换点的 `now()`、纯别名和透传包装；保留并测试表达稳定身份键、不变量、归一化或跨调用方复用策略的 `identityKey()`。承载业务服务契约的 `XxxServiceImpl` 使用 `@Service`；`Store`、`Registry`、`Assembler` 等技术协作者优先使用 `@Component`，由配置或调用方显式构造时可以不加 stereotype。
 - 验证点：方法是否承载调用方需要共享的业务语义，而不是只看行数；组件是否承担业务 Service 契约；删除包装后是否仍保留身份、不变量和归一化策略；Spring 装配是否唯一且可验证。
+
+### 18. 模块依赖经 face，组合根装配 impl
+
+- 反例：`wallet-impl` 为调用 `UserService` 直接依赖 `user-impl`，`order-face` 反向依赖 `order-impl`；face DTO 使用 ORM 注解或直接持有第三方 SDK Request / Response。存量反例是治理输入，不是新代码模板。
+- 正例：业务 impl 跨模块只依赖对方 face/core 契约；持久化映射留在 Entity、TypeHandler、Mapper 或 Converter，外部 SDK 类型在 Adapter 边界转换。只有 `bootstrap`、`web`、`job` 等组合根和集成测试负责依赖多个 impl 完成装配，BOM 只管理版本。
+- 验证点：检查 Maven / Gradle 实际依赖图和 face 源码 import；新增公共 Service 用最小 `@ContextConfiguration` + `@Import` 或 `ApplicationContextRunner` 按 face 接口取 Bean，并验证多实现的 `@Primary` / `@Qualifier`。存量治理按 owner 和兼容策略分批，不做无关模块批量迁移。

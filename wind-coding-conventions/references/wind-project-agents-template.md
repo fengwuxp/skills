@@ -1,16 +1,16 @@
 # Wind 项目 AGENTS.md 模板
 
-本文是 `wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind/Nobe 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自 `wind-integration / nobe / capte-domain` 的稳定共性、Wind 编码约规、AI Native 产研协同、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自多个本地 Java 项目的稳定共性、Wind 编码约规、AI Native 产研协同、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
 
 ## 使用时机
 
-- 新 Wind/Nobe Java 项目需要初始化 `AGENTS.md`，明确声明 Wind 编码约规。
-- 既有项目已有 Wind/Nobe 依赖或源码上下文，需要在 `AGENTS.md` 补齐 AI 协作入口、Wind 专项入口、模块边界、测试/CR 红线或验证命令。
+- 新 Wind Java 项目需要初始化 `AGENTS.md`，明确声明 Wind 编码约规。
+- 既有项目已有 Wind 依赖或源码上下文，需要在 `AGENTS.md` 补齐 AI 协作入口、Wind 专项入口、模块边界、测试/CR 红线或验证命令。
 - 知止者需要为某个遵循 Wind 约规的项目生成或改进项目级 Agent 运行契约。
 
 ## 不适用场景
 
-- 没有 Wind/Nobe 声明、依赖、包名、类型或模块上下文的普通 Java/Spring 项目；应读取通用 Java 约规，不使用本模板强套 face/impl、模型包位或基础服务规则。
+- 没有 Wind 声明、依赖、包名、类型或模块上下文的普通 Java/Spring 项目；应读取通用 Java 约规，不使用本模板强套 face/impl、模型包位或基础服务规则。
 - 已有项目 `AGENTS.md`、OpenSpec、ADR、CI 或团队规范更具体时，不覆盖本地规则，只做缺口建议。
 - 不替代源码级架构设计、TDD、Bug 修复、代码 CR、发布审批或 Git 授权。
 
@@ -42,14 +42,14 @@
 # AGENTS.md
 
 > 本文件是 `<项目名>` 的常驻项目契约，只保留每次会话都应知道且在项目中重复出现的项目定位、模块边界、验证命令和 Skill 路由。
-> 具体编码先服从本项目规则；Wind/Nobe Java/Spring 细则读 `wind-coding-conventions`，测试、源码级 Review 和产研协同按 Skill 路由读取，不在本文件重复展开。
+> 具体编码先服从本项目规则；Wind Java/Spring 细则读 `wind-coding-conventions`，测试、源码级 Review 和产研协同按 Skill 路由读取，不在本文件重复展开。
 > 每次修改代码前必须阅读并遵守本文件。
 
 本项目遵守 Wind 编码约规。任何 AI Agent、脚本化改动或人工协作都必须先读本文件，再读任务相关源码、测试、OpenSpec/ADR 和附近代码风格。
 
 ## 项目身份
 
-- 项目类型：<Java/Spring/Wind/Nobe 服务>
+- 项目类型：<Java/Spring/Wind 服务>
 - 核心业务：<一句话说明真实业务能力>
 - 主要模块：<列出 face / impl / web-api / core / infrastructure 等模块>
 - 默认验证命令：<如 mvn test / ./gradlew test / just test；未知则写待确认>
@@ -65,6 +65,7 @@
 - 遇到问题追根因，不打补丁；每个关键决策都要能回答“为什么”。
 - 输出说重点，砍掉不改变决策的信息；事实、推断、待确认和范围外不做必须分层表达。
 - 代码格式优先服从项目已提交的 `.editorconfig`、formatter / Checkstyle 配置、构建任务和版本化 IDEA Project Code Style；不得使用个人 IDE 默认设置覆盖项目约规，也不得格式化本次修改范围外的代码。格式化后审查 diff，并运行项目已有格式检查；没有明确配置时再遵循附近代码和 Wind 编码约规。
+- Spring Bean 注册、依赖注入与 Lombok 日志注解直接遵循通用 Java 的依赖专项规则；无 Lombok 依赖时不为套规约新增依赖。
 
 ## AI 协作入口
 
@@ -88,7 +89,7 @@
 - TDD 和测试按公开契约黑盒验证；不为凑绿感知私有方法、内部调用顺序、Mapper/Repository 调用次数、临时字段、内部 Mock 交互或当前实现步骤。
 - 新增生产 Java 命名类型使用 Wind 类型头 Javadoc，覆盖 `class`、`interface`、`record`、`enum` 和 `@interface`：真实职责 / 边界说明、`@author` 和 `@since`；身份必须可核验，首次引入信息不随修改刷新，不使用 `@description`、`@date` 或类型头变更流水账。
 - 空值责任按边界处理一次：数据库 schema / 映射、已生效的 Bean Validation 和项目 Java 空安全契约已经证明非空时，不再层层判空；数据库约束不能替代不可信输入校验，契约冲突必须修正 schema、注解、映射或代码语义。
-- Bean Validation 按当前 artifact 与调用路径判责：实际接收不可信输入的 Controller、Listener 或 Adapter 执行验证；经模块职责、构建产物、架构约定或调用关系证明为纯公共能力提供方时，可以只声明调用前置契约，不能只凭没有 Controller 作此推定。同一仓库的能力模块和入口模块分别检查；Service 不重复同义输入验证，业务前置条件、状态和不变量仍由 Service 负责。
+- Bean Validation 直接遵循 `wind-coding-conventions` 的 Wind 服务边界规则；项目 `AGENTS.md` 只记录项目特例、调用路径证据和验证命令，不复制通用规则正文。
 
 ## 业务日志与审计
 
@@ -138,7 +139,7 @@
 | --- | --- | --- |
 | 端到端角色协作、Goal/Loop/GSD/CAD 编排、owner/交接物/授权/验证/停止条件 | `wise-agent` | 只做流程准入、角色协作和交接闭环；不替代产品、架构、代码、测试和 Git 授权。 |
 | 编码、编码设计、架构设计、系统分析、技术方案、代码评审、重构评估、测试设计、工程治理 | `资深架构师` | 工程边界、模块设计、接口契约、代码修改、测试策略、验证命令、Review 结论和交付说明。 |
-| Wind/Nobe 编码约规判断、face/impl、模型归位、基础服务、Entity 不外露、MyBatis Flex、ServiceImpl 和 TDD/CR 约规 | `wind-coding-conventions`，源码执行配合 `资深架构师` | 判断是否偏离 Wind 约规、给最小整改建议；真实源码修改和验证由架构师闭环。 |
+| Wind 编码约规判断、face/impl、模型归位、基础服务、Entity 不外露、MyBatis Flex、ServiceImpl 和 TDD/CR 约规 | `wind-coding-conventions`，源码执行配合 `资深架构师` | 判断是否偏离 Wind 约规、给最小整改建议；真实源码修改和验证由架构师闭环。 |
 | 产品架构、PRD、业务建模、能力地图、业务流程、状态机、规则矩阵、产品验收 | `产品架构专家` | 产品目标、角色、对象、流程、状态、规则、权限、指标、异常路径、产品验收和风险清单。 |
 
 ## 交付格式
@@ -161,5 +162,5 @@
 - 新增项目规则必须来自重复踩坑、CR 结论、验证失败、团队确认或本地源码事实；不得把单次对话、个人偏好、一次性探索、未验证外部文章或 AI 推理轨迹写入项目 `AGENTS.md`。
 - 旧术语只在 Skill 路由中作为触发别名出现；正文优先使用 `AI Native Loop`，不新增独立 CAD/Loop 权限章节。
 - 模板里的 `<...>` 占位符必须由项目事实填充；无法确认时保留“待确认”，不要推断。
-- 不把 `capte-domain`、`nobe`、`wind-integration` 的历史包名、业务模块名或命令照搬成新项目事实。
+- 不把任何样本项目的历史包名、业务模块名或命令照搬成新项目事实。
 - 改进结论优先给最小 patch 和验收标准；不输出冗长操作步骤。

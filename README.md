@@ -54,6 +54,7 @@
 | 复杂长任务 | `$wise-agent：为这项跨轮工作建立 Goal；存在真实分支、汇合或并行时再附加可校验 work_graph，保持状态并在停止条件命中时交还我。` |
 | 需求讨论 | `先做能力归位：判断这个需求是在使用、增强、组合还是新增哪项稳定能力；默认审视不等于默认展开。` |
 | 产品设计 | `根据 <访谈/需求/原型> 写一版可评审 PRD；先提炼稳定能力、共性和有证据的特殊性，再展开场景、流程、规则和验收。` |
+| UI 设计 / 可用性 CR | `$ui-design-expert：基于 <需求/页面/源码/截图> 设计或评审 Web 界面，输出信息架构、交互状态、响应式、可访问性和验证证据；需要时比较设计系统、UI 库或东方视觉方向；已有 Figma 定稿只做还原时直接走工程实现。` |
 | 系分设计 | `基于 <产品文档> 和 <源码/接口/DDL> 编写系分；先说明能力归位、共同对象与不变量，有真实变化轴才拆模块、策略或适配器。` |
 | 只读 CR | `我有 PRD 和代码路径，只做只读 CR，不改代码；请给出源码证据、严重级别、测试缺口和残余风险。` |
 | 工程交付 | `基于 <PRD/系分/源码> 完成 <Bug/TDD/重构/代码>，写入范围是 <路径>，验证命令是 <命令>。` |
@@ -92,6 +93,7 @@
 | --- | --- | --- | --- |
 | 跨领域真实工作、目标控制、能力组合、验证和知识演进 | 知止者，ID：`wise-agent`，路径：[wise-agent](./wise-agent) | 目标、事实源、范围、授权、完成证据 | 不限于产研；不获得无限自治或高风险授权 |
 | 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | 产品架构专家，ID：`product-architecture-expert`，路径：[product-architecture-expert](./product-architecture-expert) | 用户、主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
+| Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 正式报告、制度、手册、研究说明、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、法律、合规或考据结论 |
 | 教程、视频、代码、文档、规范和产物到可复用能力候选 | 资源炼技，ID：`resource-capability-distiller`，路径：[resource-capability-distiller](./resource-capability-distiller) | 可读取材料、复用目标、目标环境、许可与验收方式 | 先提炼能力单元并逐项归位；不默认创建新 Skill，不自动安装、同步、提交或晋升 |
@@ -99,15 +101,16 @@
 | 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | 华夏经世智慧，ID：`huaxia-practical-wisdom`，路径：[huaxia-practical-wisdom](./huaxia-practical-wisdom) | 事实、目标、约束、主体、时限、最坏损失 | 不作医学诊疗、占卜命理或古籍训诂，不替代专业结论 |
 | 方案、计划或设计的关键分叉、历史去重和决策快照 | `grill-me`，路径：[grill-me](./grill-me) | 方案、材料、历史决策、Owner、风险边界 | 未达到 shared understanding 不执行；自决不扩大授权 |
 | DDL/schema/Java 类/字段表格到 Java Service 脚手架 | `java-service-code-generator`，路径：[java-service-code-generator](./java-service-code-generator) | 结构化输入、表名、模块、输出目录、覆盖授权 | 不从纯自然语言直接生成生产代码；生成后仍要编译、测试和源码 CR |
-| Java 项目通用编码约规，或按依赖/上下文启用 Wind/Nobe 专项 | `wind-coding-conventions`，路径：[wind-coding-conventions](./wind-coding-conventions) | Java 源码证据、依赖/包名、规则问题 | 只做规则判断和偏差说明；源码设计、CR、TDD、修复和验证由架构师主责 |
+| Java 项目通用编码约规，或按依赖/上下文启用 Wind 专项 | `wind-coding-conventions`，路径：[wind-coding-conventions](./wind-coding-conventions) | Java 源码证据、依赖/包名、规则问题 | 只做规则判断和偏差说明；源码设计、CR、TDD、修复和验证由架构师主责 |
 
-没有 Wind/Nobe 高置信度信号时不加载 Wind face/impl、API 或模型专项；Wind 项目按实际依赖和上下文补专项入口。普通 Java 源码 CR 由架构师主责，并消费通用 Java 约规。
+没有 Wind 高置信度信号时不加载 Wind face/impl、API 或模型专项；Wind 项目按实际依赖和上下文补专项入口。普通 Java 源码 CR 由架构师主责，并消费通用 Java 约规。
 
 图形化交付按语义归属：业务架构定能力与投资，产品架构定产品语义，系统架构定工程结构，技术架构定实现支撑；详细路由以 [capability-routing.md](./wise-agent/references/capability-routing.md) 为准。产品流程、状态、资金流和验收视图由产品专家负责；系统模块、接口时序、部署和实现状态由架构师负责。只说“架构图”且材料不足以判断类型时，先确认它用于业务投资、产品语义、系统结构还是技术实现决策。复杂可编辑架构图、代码库结构转图或架构描述转图，应先稳定语义，再按需调用 `$fireworks-tech-graph`。正式图形默认 SVG，PNG 仅在明确要求时导出。
 
 常见组合仍只保留一个最终 Owner：
 
 - 从 AI 原型到工程化：产品专家稳定对象、流程、规则和验收，架构师完成系分、TDD、源码 CR 和生产验证，知止者持有跨阶段目标。
+- 从产品事实到可用界面：产品专家稳定业务语义和验收口径，UI 设计专家形成信息架构、交互状态、视觉与可用性契约，架构师实现并验证；Figma 能力只负责工具内执行或既有设计到代码。
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
 - 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，`document-authoring` 只负责成文与载体，不改变证据等级。
 - 从普通图到复杂图：先由产品专家或架构师稳定语义，再决定是否使用专用出图能力。
@@ -230,6 +233,10 @@ python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py status
 python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py disable
 ```
 
+`candidate` 只是待审证据，不代表 Skill 已改进。Owner 确认复用范围、目标 Skill 和权威落点后，人工评审结论为 `confirmed`，candidate 账本文件仍保持 `candidate`；受控试验在该状态内执行，不新增 `RSI Mode` 或其他生命周期状态。独立 Checker 复核后，由 Owner 作 `promote / reject / supersede` 裁决并留在任务证据中。学习模式只控制 candidate 账本写入；Skill 源仓库修改、Git、同步和发布分别需要对应授权。
+
+遇到“更专业”“更有感染力”等主观要求时，可直接给出本次任务级价值判断：`期望效果 / 正向参照 / 不期望效果 / 可接受取舍 / 最终 Owner`。它只约束当前交付，不会把一次措辞偏好写成长期 Skill 规则。
+
 ### 4. 编写文档的友好指令
 
 产品、系分、重构三类正式设计文档各有一个权威模板入口：产品设计用 `product-prd-template.md`，系分设计用 `system-analysis-template.md`，迁移型重构用 `refactoring-design-template.md`。不需要记路径，直接说明材料、文档类型、读者、目标文件和验收要求：
@@ -276,7 +283,7 @@ git diff --check
 
 正式同步后运行 `scripts/validate-installed-skills.sh`。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
 
-`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。真实 smoke 会先检查安装一致性，通过当前 Codex provider 发起只读请求，并把结果写到指定目录：
+`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke
@@ -286,9 +293,12 @@ scripts/smoke-wise-agent-behavior.sh --mode governance --output-dir /tmp/wise-ag
 scripts/smoke-wise-agent-behavior.sh --mode self-improvement --runs 3 --output-dir /tmp/wise-agent-self-improvement-smoke
 scripts/smoke-wise-agent-behavior.sh --mode grill-me --runs 3 --output-dir /tmp/grill-me-smoke
 scripts/smoke-wise-agent-behavior.sh --mode huaxia --runs 3 --output-dir /tmp/huaxia-wisdom-smoke
+scripts/smoke-wise-agent-behavior.sh --mode wind-validation --output-dir /tmp/wind-validation-smoke
+scripts/smoke-wise-agent-behavior.sh --mode spring-bean --output-dir /tmp/spring-bean-smoke
+scripts/smoke-wise-agent-behavior.sh --mode ui-design --output-dir /tmp/ui-design-smoke
 ```
 
-`all` 覆盖产品、工程、设计分层与文档主线、Superpowers 协同、轻量治理、状态恢复、学习回流、`grill-me` 和华夏决策校准；`--runs 3` 用于观察方差。真实 smoke 仍只证明样例行为满足契约。维护者更新项目自有 `grill-me` 后可运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；更新官方 Superpowers 插件后可运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
+`all` 覆盖产品、工程、设计分层与文档主线、Superpowers 协同、轻量治理、状态恢复、学习回流、`grill-me`、华夏决策校准、Wind Service validation、Spring Bean 注册和 Web UI 设计路由；`--runs 3` 用于观察方差。真实 smoke 仍只证明样例行为满足契约。维护者更新项目自有 `grill-me` 后可运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；更新官方 Superpowers 插件后可运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
 
 ## 维护者入口
 

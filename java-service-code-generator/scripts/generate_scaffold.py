@@ -1276,7 +1276,7 @@ def write_file(path: Path, content: str, overwrite: bool) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="根据 DDL、Java 类或字段表格生成 Wind/Nobe 风格 Java 模板代码")
+    parser = argparse.ArgumentParser(description="根据 DDL、Java 类或字段表格生成 Wind 风格 Java 模板代码")
     parser.add_argument("--input-file", help="输入文件路径，支持 DDL/SQL、Java 类、Markdown/CSV/TSV 字段表格")
     parser.add_argument("--input-type", choices=["auto", "ddl", "java", "table"], default="auto", help="输入类型，默认自动识别")
     parser.add_argument("--ddl-file", help="DDL 文件路径；未传入时读取标准输入")

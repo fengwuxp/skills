@@ -3,12 +3,12 @@
 本文从以下仓库提炼 Java/Spring/Wind 项目的可迁移实践样本：
 
 - wind-middleware：https://github.com/fengwuxp/wind-middleware
-- wind-integration：https://github.com/fengwuxp/wind-integration
+- Wind 企业集成组件：外部服务抽象、适配器与基础设施扩展
 - wind-security：https://github.com/fengwuxp/wind-security
 
 ## 使用时机
 
-- 用户正在处理 Java/Spring/Wind 项目族、Wind/Nobe 风格项目或需要复用 Wind 基础能力。
+- 用户正在处理 Java/Spring/Wind 项目族、Wind 风格项目或需要复用 Wind 基础能力。
 - 需要判断统一响应、Trace、端口适配、Spring Boot Starter、查询分页、安全域、企业集成和模块治理的本地风格。
 - 需要从公开 Wind 项目族中提炼可迁移的工程模式，但不直接复制实现。
 
@@ -43,7 +43,7 @@
 ### 1.1 项目族分层
 
 - `wind-middleware` 提供应用运行底座和基础协议，优先沉淀跨项目通用能力。
-- `wind-integration` 提供企业应用集成能力，重点是外部服务抽象、适配器和基础设施扩展。
+- 企业集成组件提供外部服务抽象、适配器和基础设施扩展。
 - `wind-security` 专注安全域，围绕认证、授权、验证码、MFA、JWT 建立独立能力层。
 - 三者共同采用“接口定义核心能力 + 适配器实现外部细节 + Spring Boot 自动装配”的模式。
 
@@ -141,7 +141,7 @@
 ## 5. 模块治理提炼
 
 - `wind-middleware` 侧重基础 API、统一响应、Web/Trace、Client、MQ、Sequence、幂等、脱敏和项目模板。
-- `wind-integration` 侧重 OSS、KMS、消息、IM、Office、指标、工作流、MyBatis Flex 扩展和基础设施适配。
+- 企业集成组件侧重 OSS、KMS、消息、IM、Office、指标、工作流、MyBatis Flex 扩展和基础设施适配。
 - `wind-security` 侧重认证、授权、JWT、验证码、MFA、Token 状态和请求权限管理。
 - 模块地图只用于能力定位；当前项目的真实模块、依赖、包名和验证命令仍以本地仓库为准。
 

@@ -1,5 +1,8 @@
 package com.acme.order.service.impl;
 
+import org.springframework.validation.annotation.Validated;
+
+@Validated
 public class BadOrderServiceImpl {
 
     void update(OrderMapper orderMapper, Object entity) {

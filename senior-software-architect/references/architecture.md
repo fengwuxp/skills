@@ -25,7 +25,7 @@
 
 - 场景选择读 `scenario-routing.md`。
 - 系分和详细设计读 `system-analysis-design.md`；架构图读 `diagram-output.md`。
-- Java 落地读项目本地规范、`wind-coding-conventions` 通用层与 `project-governance-standards.md`；Wind/Nobe 专项按依赖或上下文启用。
+- Java 落地读项目本地规范、`wind-coding-conventions` 通用层与 `project-governance-standards.md`；Wind 专项按依赖或上下文启用。
 - 生产、迁移、安全、一致性和测试分别读取对应专项 reference。
 
 ## 按任务读取索引
@@ -363,6 +363,6 @@ AI 生成代码、快速迭代和局部修补容易让代码库变浅：模块�
 - `distributed-consistency.md`：承载事务边界、消息一致性、幂等、补偿、对账和最终一致窗口。
 - `evolutionary-architecture.md`：承载遗留系统改造、防腐层、迁移、双写、回填、切流和微服务拆分门槛。
 - `security-architecture.md`：承载认证授权、租户隔离、敏感数据、密钥、审计和安全测试。
-- 项目本地规范：承载具体语言、框架和项目级编码规则；Java 通用层由 `wind-coding-conventions` 补充，Wind/Nobe 专项按依赖或上下文启用。
+- 项目本地规范：承载具体语言、框架和项目级编码规则；Java 通用层由 `wind-coding-conventions` 补充，Wind 专项按依赖或上下文启用。
 - `workflow.md`：承载修改、验证、PR 和 Git 流程。
 - `negative-constraints.md`：承载禁止行为和权限边界。

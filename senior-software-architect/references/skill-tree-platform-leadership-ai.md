@@ -20,7 +20,7 @@
 - AI 协作读 `ai-assisted-engineering.md`。
 - 中大型 AI 编码、长任务上下文衰减、多 Agent/Wave 编排读 `ai-large-project-orchestration.md`。
 - 项目治理读 `project-governance-standards.md`。
-- Wind 实践在依赖或上下文命中 Wind/Nobe 后读 `wind-coding-conventions` 的 `wind-architecture-patterns.md`。
+- Wind 实践在依赖或上下文命中 Wind 后读 `wind-coding-conventions` 的 `wind-architecture-patterns.md`。
 
 ## 按任务读取索引
 
@@ -237,7 +237,7 @@ AI 协作总纲见 `references/ai-assisted-engineering.md`；中大型项目编�
 
 ## 18. Wind 项目族实践能力
 
-基于 wind-middleware、wind-integration、wind-security 的项目级实践，处理 Java/Spring/Wind 项目时还应具备以下落地能力：
+基于 wind-middleware、wind-security 和 Wind 企业集成组件的项目级实践，处理 Java/Spring/Wind 项目时还应具备以下落地能力：
 
 - **基础架构复用**：优先复用统一响应、异常、Trace、Web、Client、配置中心、限流、消息、序列号、脚本、脱敏和日志能力。
 - **端口与适配器设计**：业务依赖 `WindXxx` 接口端口，厂商 SDK 和中间件细节放在独立适配器模块。

@@ -1,6 +1,6 @@
 # Skill 学习回流
 
-本文定义知止者学习回流模式的候选经验账本、证据门禁、生命周期、去重和授权边界。它不新增顶层流程，不替代 `code-delivery.md` 的知识归位，也不让 Skill 自行改写。
+本文定义知止者学习回流模式的候选经验账本、证据门禁、生命周期、受控改进试验、去重和授权边界。它不新增顶层流程，不替代 `code-delivery.md` 的知识归位，也不让 Skill 自行改写。
 
 ## 使用时机
 
@@ -18,7 +18,7 @@
 
 - 是否命中候选记录门禁，以及使用的当前任务证据。
 - 目标 Skill、去重结果、候选记录位置，或不记录原因。
-- 下一状态只能是保持 `candidate`、等待 Owner 确认或停止；不得自动晋升。
+- 下一人工评审结论只能由证据与 Owner 裁决为 `candidate / confirmed / promoted / rejected / superseded`；自动化最高只能写入 `candidate` 账本文件。
 
 ## 需要继续读取的 reference
 
@@ -54,14 +54,18 @@
 
 ## 3. 生命周期
 
-生命周期是 `candidate -> confirmed -> promoted`，也允许进入 `rejected` 或 `superseded`：
+评审生命周期是 `candidate -> confirmed -> promoted`，也允许进入 `rejected` 或 `superseded`。它不是记录器状态机：
 
 - `candidate`：自动化所能达到的最高状态。
-- `confirmed`：Owner 已确认经验可复用、目标 Skill 和权威落点正确；只能用于生成最小改进 diff。
+- `confirmed`：Owner 已确认经验可复用、目标 Skill 和权威落点正确；在 `confirmed` 状态内执行受控改进试验并生成最小改进 diff。
 - `promoted`：改进已进入权威 Skill、reference、fixture 或 script，并有独立验证证据。
 - `rejected / superseded`：证据不足、归位错误或已被新记录替代；保留状态用于防止旧候选复活。
 
-候选和 confirmed 记录不得反向充当 Skill 指令。运行时行为只能来自已经晋升的权威内容。
+当前确定性记录器不提供状态迁移命令。`confirmed` 是人工评审结论，写入当前任务、CR 或 Decision Log；candidate 账本文件仍保持 `candidate`，不得绕过记录器直接修改私有文件。后续 `promoted / rejected / superseded` 裁决也留在可审计的任务证据中，直到未来另有显式授权、审计和确定性迁移入口。
+
+candidate 账本与 confirmed 评审结论不得反向充当 Skill 指令。运行时行为只能来自已经晋升的权威内容。
+
+受控改进试验不是生命周期状态，不得写成 `RSI Mode` 或第六个控制机制。Owner 只同意探索、但尚未确认复用范围、目标 Skill 或权威落点时，记录仍保持 `candidate`，不得生成仓库改进 diff。
 
 ## 4. 去重与字段
 
@@ -79,6 +83,10 @@
 
 ## 6. 晋升门禁
 
-Owner 确认候选后，回到 `code-delivery.md` 生成最小可审查 diff，并补 fixture / validator 或行为 smoke。独立验证通过后才能标记 `promoted`；Git、同步和发布仍需单独授权。
+Owner 确认候选后，人工评审结论为 `confirmed`，candidate 账本文件仍保持 `candidate`，再回到 `code-delivery.md` 生成最小可审查 diff。在 `confirmed` 状态内执行受控改进试验：`失败归因假设 -> 最小候选 diff -> 目标样例 / 邻近 hard-negative / 稳定样例对照 -> 独立 Checker -> Owner 裁决`。基线与候选分别绑定原始输出、配置和证据指纹；Checker 同时寻找替代解释与反证，Owner 最终选择 `promote / reject / supersede`，并写清回退条件与责任人。一次目标样例转绿、发布时间压力或 Agent 自述不能直接晋升。
+
+产品、文档、图形和创意等含主观质量的任务，可先写任务级价值判断卡：`期望效果 / 正向参照 / 不期望效果 / 可接受取舍 / 人工判断点 / 最终 Owner`。它只限定当前任务的评价方向；只有重复出现、可复核且经 Owner 确认的模式，才重新进入 candidate 门禁。
+
+独立验证通过后，Owner 才能在任务证据中裁决为 `promoted`；Git、同步和发布仍需单独授权。
 
 候选涉及隐私、金融、合规、安全、生产上线、权限边界或未来默认行为时，即使证据充分也必须人工确认。无法确定权威落点、验证方式或旧值清除范围时停止晋升。

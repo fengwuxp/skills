@@ -181,7 +181,7 @@ WorkBuddy 类工具的可取之处是本地 IDE / 文件系统上下文扫描和
 
 准入规则：
 
-- 先读取 `AGENTS.md`、现有包名 / 分层 / 命名 / 测试 / 构建脚本；Java 项目以 `wind-coding-conventions` 的通用层为规则来源，Wind/Nobe 专项按声明、依赖、包名、类型或模块上下文启用。
+- 先读取 `AGENTS.md`、现有包名 / 分层 / 命名 / 测试 / 构建脚本；Java 项目以 `wind-coding-conventions` 的通用层为规则来源，Wind 专项按声明、依赖、包名、类型或模块上下文启用。
 - 生成物只能作为候选 diff；系统设计、TDD、源码级 CR、安全可靠性、生产风险和受控工程执行仍回 `资深架构师`。
 - 新增依赖、配置、公共 API、消息 / 状态 / 权限 / 安全、数据库迁移、覆盖同名配置或写入外部目录时，必须显式确认。
 - 冲突时走决策澄清门禁：能根据源码和项目规则自答则记录依据；仍涉及 owner 选择、兼容性或风险责任时只问关键问题。
@@ -298,7 +298,7 @@ Open Code Review 适合做“外部代码评审 Checker”，不是新的编码�
 - 对当前 staged / unstaged / untracked diff 做结构化 Review，先用 `ocr review --preview` 看覆盖范围。
 - 对单个 commit 或分支差异做 Review，使用 `--commit` 或 `--from` / `--to`。
 - 用 `--background` 注入业务目标、OpenSpec、验收种子、Wind 约规或架构师 CR 重点，降低泛泛而谈。
-- 用项目级 `.opencodereview/rule.json` 或 `--rule` 引用项目规则；Java 项目可注入通用约规，命中 Wind/Nobe 信号后再加入 Wind 专项摘要，权威仍是 `wind-coding-conventions` 和项目 `AGENTS.md`。
+- 用项目级 `.opencodereview/rule.json` 或 `--rule` 引用项目规则；Java 项目可注入通用约规，命中 Wind 信号后再加入 Wind 专项摘要，权威仍是 `wind-coding-conventions` 和项目 `AGENTS.md`。
 
 准入检查：
 
@@ -344,7 +344,7 @@ ocr review --audience agent --background "<业务目标 / Spec / 约规 / Review
 - 不默认写入、提交或同步 `.understand-anything/`、`knowledge-graph.json`、图谱中间产物、dashboard 产物或 hook。
 - 不在未授权时安装 npm 包、运行 `npx`、登录 OAuth、读取 token、写配置、修改代码或启动 CI。
 - 不把工具生成的说明文件、eval 或 MCP 配置直接当团队规范；必须进入 CR。
-- 不把 WorkBuddy 类工具输出当成项目编码约规；默认先服从项目 `AGENTS.md`、项目已有代码风格、`wind-coding-conventions` 的通用 Java 规则、按上下文启用的 Wind/Nobe 专项和 `资深架构师` 源码级判断。
+- 不把 WorkBuddy 类工具输出当成项目编码约规；默认先服从项目 `AGENTS.md`、项目已有代码风格、`wind-coding-conventions` 的通用 Java 规则、按上下文启用的 Wind 专项和 `资深架构师` 源码级判断。
 - 不把工具总结当作源码事实；关键结论必须回链文件路径、函数、类型、配置或验证命令。
 - 不把 Ponytail 的“少写”当作删除输入校验、错误处理、安全、可访问性、资金/权限/生产兜底或必要测试的理由。
 - 不把 Open Code Review 输出当作项目规范、架构师 CR 结论、测试通过、发布准出或自动修复授权；它只是外部 Checker 证据源。

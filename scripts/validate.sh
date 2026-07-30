@@ -21,6 +21,26 @@ bash -n wise-agent/scripts/check_dirty_worktree_commit.sh
 echo "==> skill audit"
 scripts/audit-skills.sh
 
+echo "==> internal project keyword guard"
+internal_project_pattern='no''be|cap''te|fin''cone|wind-inte''gration|wind-fu''nds|blue-pow''der'
+if rg -n -i --hidden \
+  --glob '!.git/**' \
+  --glob '!.idea/**' \
+  --glob '!.serena/**' \
+  --glob '!**/__pycache__/**' \
+  "${internal_project_pattern}" .; then
+  echo "FAIL internal project keyword found in Skill repository" >&2
+  exit 1
+fi
+if rg --files --hidden \
+  --glob '!.git/**' \
+  --glob '!.idea/**' \
+  --glob '!.serena/**' \
+  --glob '!**/__pycache__/**' | rg -n -i "${internal_project_pattern}"; then
+  echo "FAIL internal project keyword found in Skill repository path" >&2
+  exit 1
+fi
+
 echo "==> skill frontmatter and agent yaml"
 ruby <<'RB'
 require "yaml"
@@ -111,10 +131,13 @@ python3 -m py_compile hanzi-philology/scripts/check_philology_evidence.py
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
+python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
 python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
+python3 -m py_compile ui-design-expert/scripts/check_ui_design_deliverable.py
+python3 -m py_compile ui-design-expert/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
@@ -136,6 +159,7 @@ product-architecture-expert/scripts/check_external_rules.py --self-test
 
 echo "==> product deliverable checker"
 product-architecture-expert/scripts/check_product_deliverable.py --self-test
+python3 product-architecture-expert/scripts/verify_fixtures.py
 
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
@@ -151,6 +175,10 @@ echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py
+
+echo "==> UI design deliverable checker"
+python3 ui-design-expert/scripts/check_ui_design_deliverable.py --self-test
+python3 ui-design-expert/scripts/verify_fixtures.py
 
 echo "==> wind convention guard"
 wind-coding-conventions/scripts/check_wind_conventions.py --self-test

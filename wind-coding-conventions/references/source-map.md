@@ -27,6 +27,7 @@
 | 核验阿里手册采纳 | `阿里 Java 开发手册` | 不复制手册正文和旧版环境参数 |
 | 核验 Clean Code 启发 | `《代码整洁之道》公开学习材料` | 不把读书笔记或启发式建议升级成机械强制规则 |
 | 核验 Bean Validation 语义与触发边界 | `Bean Validation / Jakarta Validation / Spring MVC 官方文档` | 不把注解声明误写成已执行验证 |
+| 核验 Spring Bean 依赖注入与 Lombok 构造器 | `Spring Dependency Injection / Lombok constructor 官方文档` | 不把 Lombok 构造器生成误写成 Spring 装配已验证 |
 | 核验 JSpecify 空值语义 | `JSpecify 官方文档` | 不把静态契约误写成运行时校验 |
 | 核验 Wind 项目族经验 | `Wind 项目族公开样本` | 不把公开样本当当前项目事实 |
 
@@ -47,10 +48,17 @@
 
 ## Wind 项目族公开样本
 
-- 来源：[wind-middleware](https://github.com/fengwuxp/wind-middleware)、[wind-integration](https://github.com/fengwuxp/wind-integration)、[wind-security](https://github.com/fengwuxp/wind-security)。
+- 来源：[wind-middleware](https://github.com/fengwuxp/wind-middleware)、[wind-security](https://github.com/fengwuxp/wind-security)及本地复核过的 Wind 企业集成组件。
 - 读取状态：历史提炼已落入 `wind-architecture-patterns.md`，原始读取日期和 commit/tag 未留存；2026-07-17 本轮只复核本地提炼与来源链接，未重新读取公开仓库。涉及当前目录、API、依赖版本或实现事实时，必须重新读取并记录 commit/tag。
 - 采纳边界：只提炼端口适配、Starter、Trace、安全和企业集成等稳定模式；具体规则见 `wind-architecture-patterns.md`。
 - 不吸收：不复制实现，不把公开仓库的历史目录、依赖版本或临时实现写成当前项目必须照搬的事实。
+
+## 本地业务项目源码样本
+
+- 来源：两个本地业务 Java 仓库的只读源码快照；项目标识和 commit 已脱敏。
+- 读取状态：2026-07-30 已核对根 POM、代表性 face/impl POM、face 模型、ApplicationService / ServiceImpl 与集中测试。工作区在途变更和无关脏项均未作为规则依据。
+- 采纳边界：两个样本共同支持 face/impl 契约分层与入口模块装配；代表性 impl 依赖自身 face 和 infrastructure，跨业务 impl 依赖只作为耦合风险样例；以 `@ContextConfiguration` / `@Import` 按接口注入服务的测试用于提炼最小 Spring 装配证据。face 模型中的 ORM 注解和第三方 SDK 类型只作为契约泄漏样例。
+- 不吸收：不复制私有业务代码、包名或依赖版本，不把存量反例升级为推荐实践，不据此要求全仓批量迁移；只约束新建和本次修改，并由目标项目 owner 决定存量治理顺序。
 
 ## JSpecify 官方文档
 
@@ -63,5 +71,12 @@
 
 - 来源：[Bean Validation 2.0 规范](https://beanvalidation.org/2.0/spec/)、[Jakarta Validation 3.1](https://jakarta.ee/specifications/bean-validation/3.1/)与[Spring MVC Validation](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html)。
 - 读取状态：2026-07-22 已核对 `javax.validation` / `jakarta.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty`、`@Valid` 语义及 Spring MVC 控制层触发条件。
-- 采纳边界：按当前 artifact 与调用路径区分运行时入口和纯公共能力提供方；前者执行输入验证，后者可以只声明调用前置契约。同一仓库两类 artifact 分别检查，显式 Service 方法校验只作为有配置与测试证据的例外。
-- 不吸收：不把注解存在、依赖在 classpath 或 Service 被 Spring 管理当成运行时验证已执行的证据；不因能力 artifact 没有 Controller 而判缺陷，也不只凭没有 Controller 就把不完整入口误判为能力提供方。
+- 采纳边界：按当前 artifact 与调用路径区分运行时协议入口和公共能力提供方；前者使用 `@Valid` / `@Validated` 执行输入验证，Service / ServiceImpl 不出现这两个触发注解。Service 参数及其 Request、Command、DTO 可以用约束注解声明调用前置契约；调用路径未证明或公共 Service 可被直接调用时，由显式业务断言或领域校验保护必要前置条件。
+- 不吸收：不把注解存在、依赖在 classpath 或 Service 被 Spring 管理当成运行时验证已执行的证据；不把 Service 方法校验作为入口验证的替代方案，不禁止 Service 契约使用 `jakarta.validation.constraints.*` 声明前置条件，也不因能力 artifact 没有 Controller 而判缺陷。
+
+## Spring 依赖注入与 Lombok 构造器
+
+- 来源：[Spring Framework Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html) 与 [Lombok constructor annotations](https://projectlombok.org/features/constructor)。
+- 读取状态：2026-07-30 已核对 Spring 对必需依赖使用构造器、可选依赖使用 setter / 配置方法的建议，以及 Lombok `@RequiredArgsConstructor` 和 `@AllArgsConstructor` 的字段选择语义。
+- 采纳边界：Spring Bean 的必需依赖使用构造注入；模块已有 Lombok 时，用 `private final` 字段 + `@RequiredArgsConstructor` 生成必需参数构造器，没有 Lombok 或装配契约特殊时使用显式构造器。
+- 不吸收：不要求项目新增 Lombok，不把 setter 注入机械判错，不把生成构造器、stereotype 或编译通过写成 Bean 唯一装配和 Spring 上下文验证已经完成。

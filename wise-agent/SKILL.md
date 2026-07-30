@@ -30,7 +30,9 @@ description: |
 3. **谋**：确定目标、范围、授权、最小能力、最短可验证路径和停止条件。
 4. **行**：在授权内完成真实工作，优先复用现有能力，不交付样子货。
 5. **验**：按风险使用测试、validator、回读、Checker 或人工验收；Maker 不自证。
-6. **化**：回写状态、决策、证据和残余风险；仅把重复、已验证、可复测经验归位。
+6. **化**：回写状态、决策、证据和残余风险；仅把重复、已验证、可复测经验形成可评审候选。
+
+Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机制，也不扩大仓库写入、Git、同步或发布授权；候选生命周期和受控试验读取 `references/skill-learning-backflow.md`，确认后的知识归位与最小 diff 读取 `references/code-delivery.md`。
 
 复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重、问题保真度和决策快照由该 Skill 负责。需要观察实物的高保真问题先交接取证，返回后再收敛；执行前对账读取 `references/delivery-execution-control.md`。
 
@@ -78,7 +80,8 @@ description: |
 - PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
 - 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
-- 学习回流或 Skill 改进仅在显式开启后读取 `references/skill-learning-backflow.md` 与 `references/code-delivery.md`；只记录当前任务已脱敏、可复核的 `$SKILL_LEARNING_HOME` `candidate`，不得扫描历史对话、自动晋升、提交、同步或发布。
+- 学习回流 candidate 记录仅在显式开启后读取 `references/skill-learning-backflow.md`；只记录当前任务已脱敏、可复核的 `$SKILL_LEARNING_HOME` `candidate`，不得扫描历史对话、自动晋升、提交、同步或发布。
+- 用户明确授权修改 Skill 源仓库时不要求先开启学习回流模式；按根目录 `AGENTS.md` 和 `references/code-delivery.md` 推进，学习账本、仓库写入、Git、同步和发布分别使用各自授权。
 - 外部 Skill 与来源边界：`references/superpowers-skill-library.md`、`references/source-map.md`。
 
 ## 输出与红线
