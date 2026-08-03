@@ -129,7 +129,9 @@ python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
 python3 -m py_compile hanzi-philology/scripts/check_philology_evidence.py
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
-python3 -m py_compile product-architecture-expert/scripts/check_external_rules.py
+python3 -m py_compile payment-expert/scripts/check_external_rules.py
+python3 -m py_compile payment-expert/scripts/verify_behavior_cases.py
+python3 -m py_compile payment-expert/scripts/verify_fixtures.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
 python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
@@ -143,11 +145,16 @@ python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
+python3 -m py_compile scripts/check-skill-admission.py
+python3 -m py_compile scripts/test-check-skill-admission.py
 python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py
 python3 -m py_compile scripts/archive-source-evidence.py
 python3 -m py_compile scripts/audit-source-map.py
+python3 -m py_compile scripts/evaluate-skill-behavior.py
+python3 -m py_compile scripts/test-evaluate-skill-behavior.py
 python3 -m py_compile scripts/evaluate-skills.py
+python3 -m py_compile scripts/test-evaluate-skills.py
 python3 -m py_compile scripts/skillx_export_adapter.py
 python3 -m py_compile scripts/validate-trigger-paths.py
 python3 -m py_compile scripts/validate-grill-me-install.py
@@ -155,8 +162,10 @@ python3 -m py_compile scripts/validate-grill-me-install.py
 echo "==> java-service-code-generator fixtures"
 java-service-code-generator/scripts/verify_fixtures.py
 
-echo "==> product external rule checker"
-product-architecture-expert/scripts/check_external_rules.py --self-test
+echo "==> payment expert"
+payment-expert/scripts/check_external_rules.py --self-test
+python3 payment-expert/scripts/verify_behavior_cases.py
+python3 payment-expert/scripts/verify_fixtures.py
 
 echo "==> product deliverable checker"
 product-architecture-expert/scripts/check_product_deliverable.py --self-test
@@ -192,11 +201,20 @@ echo "==> source map audit"
 scripts/audit-source-map.py
 scripts/audit-source-map.py --self-test
 
+echo "==> skill admission"
+python3 scripts/check-skill-admission.py --self-test
+python3 scripts/test-check-skill-admission.py
+python3 scripts/check-skill-admission.py
+
 echo "==> source evidence archive"
 scripts/archive-source-evidence.py --self-test
 
 echo "==> Skill Eval prompt fixtures"
 scripts/audit-skill-eval-fixtures.py --self-test
+
+echo "==> Skill behavior evaluation"
+python3 scripts/evaluate-skill-behavior.py --self-test
+python3 scripts/test-evaluate-skill-behavior.py
 
 echo "==> skill quality advisory"
 scripts/audit-skill-quality.py
@@ -204,6 +222,7 @@ scripts/audit-skill-quality.py --self-test
 
 echo "==> skill evaluation"
 scripts/evaluate-skills.py --self-test
+python3 scripts/test-evaluate-skills.py
 
 echo "==> SkillX export adapter"
 python3 scripts/skillx_export_adapter.py --self-test
@@ -213,6 +232,20 @@ dry_run_home="${tmp_dir}/dry-run-home"
 CODEX_HOME="${dry_run_home}" ./sync-skills.sh --dry-run all
 if [[ -e "${dry_run_home}" ]]; then
   echo "FAIL sync dry-run wrote to CODEX_HOME" >&2
+  exit 1
+fi
+
+echo "==> candidate skill sync guard"
+candidate_home="${tmp_dir}/candidate-home"
+if CODEX_HOME="${candidate_home}" ./sync-skills.sh --dry-run payment-expert >/dev/null 2>&1; then
+  echo "FAIL candidate payment-expert was syncable" >&2
+  exit 1
+fi
+
+echo "==> optional payment routing sync guard"
+dependency_home="${tmp_dir}/dependency-home"
+if ! CODEX_HOME="${dependency_home}" ./sync-skills.sh --dry-run product-architecture-expert >/dev/null 2>&1; then
+  echo "FAIL product-architecture-expert was blocked by optional payment routing" >&2
   exit 1
 fi
 

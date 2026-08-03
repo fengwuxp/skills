@@ -35,7 +35,7 @@
 - PRD 写作标准读 `product-design-and-prd.md`。
 - 产品方案交给架构师继续设计、业务驱动架构交接或 TDD 承接时读 `product-architecture-methodology.md`。
 - 正式评审、提交前检查、CR、触发验证或符合性评审时读取 `product-prd-quality-gates.md`。
-- 支付资金读 `product-prd-financial-appendix.md`。
+- 支付资金专项由 `payment-expert` 提供。
 - 运营后台、通知、数据指标、埋点、报表、导出、发布后验证读 `product-prd-operations-and-data.md`。
 
 ## 信息传递流程
@@ -88,7 +88,7 @@ PRD 的正文按读者理解顺序组织：背景与问题 -> 目标与非目标
 | 术语歧义、新业务对象或跨团队交接 | 主模板 3-9 节、核心概念卡、业务抽象卡 | 不直接堆功能点或页面控件 |
 | 运营后台、权限、安全、审计 | 主模板 5-9 节、`product-prd-operations-and-data.md` | 不把运营后台写成普通前台功能 |
 | 数据指标、埋点、报表 | 主模板 8-9 节、`product-prd-operations-and-data.md` 指标和报表部分 | 不用泛化指标替代口径 owner |
-| 支付资金、清结算、VCC、跨境 | 主模板 7-9 节、`product-prd-financial-appendix.md` 和支付专项 reference | 不把通用 PRD 模板当金融规则结论 |
+| 支付资金、清结算、VCC、跨境 | 主模板 7-9 节，并协同 `payment-expert` | 不把通用 PRD 模板当金融规则结论 |
 | 产品到架构交接或 TDD 承接 | 主模板 4-9 节、`product-architecture-methodology.md` | 不把产品上下文包当 Execution Grant |
 | PRD 评审或提交前自检 | 当前 PRD 相关章节、`product-prd-quality-gates.md` | 不用模板完整度替代评审结论 |
 
@@ -396,5 +396,5 @@ Product Context Card:
 ## 质量门禁指针
 
 - 正式评审、提交前检查、CR、触发验证或符合性评审时读取 `product-prd-quality-gates.md`。
-- 涉及支付资金、账户账本、清结算、对账、银行卡、ACH、VCC、跨境或金融合规时读取 `product-prd-financial-appendix.md`。
+- 涉及支付资金、账户账本、清结算、对账、银行卡、ACH、VCC、跨境或金融合规时协同 `payment-expert`。
 - 涉及运营后台、通知、数据指标、埋点、报表、导出或发布后验证时读取 `product-prd-operations-and-data.md`。

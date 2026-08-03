@@ -334,6 +334,23 @@
       "expected_handling": "知止者保持统一行动主体，读取 capability-routing 与 delivery-lifecycle，按任务步骤装载最小能力：产品需求、目标对齐、产品设计和验收种子使用产品架构能力；架构设计、系分、代码、TDD、源码 CR、安全可靠和发布风险使用工程能力；结构化 Java Service 骨架使用 java-service-code-generator；Java/Wind 约规作为规则能力被工程执行消费，不设置第二行动主体；代码理解和图形能力只补当前缺口。最终由知止者综合一个结果，工具摘要不得替代测试、CR、owner 确认、Git 授权或上线审批。"
     },
     {
+      "id": "wise-agent-should-compose-simple-multi-skill-workflow",
+      "skill": "wise-agent",
+      "query": "$wise-agent：我想把素材分析、选题、大纲、写作、润色、配图和排版都塞进一个公众号万能 Skill，这样一句话就能完成。请判断该不该拆，并给出一条不需要 work_graph 的简单线性组合契约；同时说明什么时候内容内联，什么时候用文件或状态载体交接。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "进入知止者的能力组合与轻量交接路径，读取 capability-routing、delivery-execution-control 和 source-map；拒绝把全部职责塞进一个万能 Skill，也不把每个流程步骤机械拆成 Skill。先做拆分二问：产物是否具有可独立使用或验收的价值，能力是否会跨场景单独复用；两问任一为否就不拆顶层 Skill，两问均为是仍须确认稳定职责、输入、输出、失败边界和验收能否独立成立。优先复用现有 Skill、reference、script 或工作流步骤。简单线性任务不生成 work_graph，只使用轻量能力交接契约 step / consumes / produces / acceptance / next / checkpoint / failure。任务契约传递目标、约束和权限；同一会话立即消费且无需独立审阅的短内容可以内联，长内容、跨轮状态、可复用或需独立验收的事实与产物使用版本化产物指针，并保留来源、版本、新鲜度和指纹。只有稳定、可独立审阅的输出才成为交接产物，临时草稿留在步骤内部；人工检查点放在语义取舍、外部写入和高风险授权前，不把所有判断都交给人，也不把文件路径、并联或循环写成无条件最佳实践。",
+      "behavior_contract": {
+        "split_gate": "同时回答产物是否具有可独立使用或验收的价值、能力是否会跨场景单独复用；再检查稳定职责、输入、输出、失败边界和验收",
+        "simple_handoff": ["step", "consumes", "produces", "acceptance", "next", "checkpoint", "failure"],
+        "artifact_policy": "短内容可内联；长内容、跨轮状态、可复用或需独立验收的事实与产物使用带来源、版本、新鲜度和指纹的版本化产物指针",
+        "graph_boundary": "简单线性任务不生成 work_graph",
+        "must_not_do": ["新增万能 Skill", "每个步骤机械拆 Skill", "把文件路径写成无条件最佳实践", "把所有判断都交给人"]
+      }
+    },
+    {
       "id": "wise-agent-should-prd-ai-prescan-review",
       "skill": "wise-agent",
       "query": "做 PRD 评审会前 AI 预扫描：先让产品专家按完整性、一致性、可测试性、二义性找疑似问题和追问点，再接入 MAGI 预审的 review_task、evaluation_task、reporting_task，输出 ACCEPT/REJECT/PENDING 和 owner。",
@@ -582,7 +599,7 @@
     {
       "id": "wise-agent-should-reusable-work-asset-loop",
       "skill": "wise-agent",
-      "query": "参考给产品经理的 loop engineering，不要再给我一堆 Prompt。把 PRD 评审规则、客户访谈总结器、发布检查清单和每周产品信号做成可复用工作资产 Loop，要求有触发器、输入、动作、质量证据、记忆保存位置、回流方式、停止条件、人工决策点和可复测样例。",
+      "query": "$wise-agent：我每周一都要从多个项目状态、日历和待办里整理当天计划，但还不确定是否值得自动化。先发现真正稳定的重复环节，把适合委托的部分写成可实施 workflow；人工检查点尽量后移，但外部写入和优先级承诺必须停下。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -592,7 +609,14 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering / 可复用工作资产 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control 和 source-map；输出工作资产 Loop 卡，覆盖流程名称、触发器、输入、动作、质量证据 / 评测样例、记忆 / 保存位置、回流方式、停止条件、人工决策点、可复测样例和不得吸收；从高频、低风险、有证据的工作资产开始；输出变差时修规则、样例、证据或状态载体，不临时加长 Prompt；记忆位置必须版本化或可复核，例如 Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库；不得把一次性偏好、未核验业务知识、外部文章表达、工具宣传、战略取舍、客户承诺、路线图改动或上线审批交给 Loop 自行决定。"
+      "expected_handling": "进入 Agent Loop Engineering / 可复用工作资产 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control 和 source-map；先做重复工作发现门禁，用实际重复证据确认稳定触发、输入、产物、重复频率、可预测部分、变化决策、失败代价和可验证收益，证据不足时允许零候选，不为自动化而自动化；需要关闭工作流决策时复用 grill-me，一次只问一个主问题并给推荐答案，不新增 loop-me Skill；输出工作资产 Loop 卡，覆盖流程名称、事件 / 定时触发器、输入、动作、产物、质量证据 / 评测样例、记忆 / 保存位置、回流方式、失败 / 回退、权限 / 外部副作用、停止条件、人工决策点、决策简报、可复测样例和不得吸收；Push right 只把低风险、可逆、可验证的准备工作前置，在外部写入、资金、权限、发布或不可逆动作前停止；决策简报只交付已产出内容、原因、证据、风险、建议和产物链接，不把原始输出或草稿交给 Owner；完成标准是实施者无需补充未声明的业务决策即可实现，环境、账号、权限和 Owner 决策缺口必须显式标为 PENDING；从高频、低风险、有证据的工作资产开始；输出变差时修规则、样例、证据或状态载体，不临时加长 Prompt；记忆位置必须版本化或可复核，例如 Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库；不得把一次性偏好、未核验业务知识、外部文章表达、工具宣传、战略取舍、客户承诺、路线图改动或上线审批交给 Loop 自行决定。",
+      "behavior_contract": {
+        "discovery_gate": "用实际重复证据确认稳定触发、输入、产物、重复频率、可预测部分、变化决策、失败代价和可验证收益；证据不足时允许零候选",
+        "workflow_spec": ["事件 / 定时触发器", "输入", "动作", "产物", "质量证据", "失败 / 回退", "权限 / 外部副作用", "人工决策点", "决策简报", "停止条件"],
+        "checkpoint_policy": "Push right 只把低风险、可逆、可验证的准备工作前置；在外部写入、资金、权限、发布或不可逆动作前停止",
+        "done_gate": "实施者无需补充未声明的业务决策即可实现；环境、账号、权限和 Owner 决策缺口显式标为 PENDING",
+        "must_not_do": ["新增 loop-me Skill", "为自动化而自动化", "把原始输出或草稿交给 Owner", "把 PENDING 脑补为已确认"]
+      }
     },
     {
       "id": "wise-agent-should-cdd-capability-discovery-gate",
@@ -1813,6 +1837,32 @@
       "expected_handling": "知止者只从状态载体恢复 Goal、状态、决策和下一动作，以 D-1 作为执行依据；被排除方案 B 不得复活，待确认项 C 不得脑补，任何不一致必须停止并询问 Owner；需要确定性审计时把现有载体投影为状态契约并运行 check_state_contract.py，不靠模型记忆猜测。"
     },
     {
+      "id": "wise-agent-should-branch-context-for-focused-evidence-and-return",
+      "skill": "wise-agent",
+      "query": "$wise-agent：主线 Goal G-31 正在收敛产品方案，但有一个独立的真实页面可用性问题需要在干净上下文中取证，取证后还要回到原方案继续裁决。请生成交接，不要改主线决定，也不要把整段会话放进仓库。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "知止者把本次交接正名为临时 Branch，而不是 Continue、Worker、Checker 或新的控制机制；冻结主线 Goal 和决策快照，只为独立取证创建短期上下文。优先使用平台原生 handoff；没有原生能力时才把脱敏 Markdown 放到操作系统临时目录，不写入仓库。出站交接只保留目的与非目标、权威材料指针、已确认事实与 red_lines、建议加载的最小 Skills / references、允许与禁止动作、期望返回证据、原问题写回位置、预算 / 停止 / 失效条件和敏感信息检查，不复制 Spec、Plan、ADR、Issue、Commit、Diff 或整段对话。返回时只带新增证据、改变的判断、未决阻塞、产物锚点和验证结果，并与原决策快照对账；Branch 不改变 Owner 决策，不扩大 Git、联网、写入或生产授权。",
+      "behavior_contract": {
+        "handoff_kind": "Branch",
+        "outbound_requires": ["目的与非目标", "权威材料指针", "已确认事实与 red_lines", "建议加载的最小 Skills / references", "允许与禁止动作", "期望返回证据", "写回位置", "预算 / 停止 / 失效条件", "敏感信息检查"],
+        "return_requires": ["新增证据", "改变的判断", "未决阻塞", "产物锚点", "验证结果", "原决策快照对账"],
+        "must_not_do": ["复制整段对话", "写入仓库", "改变 Owner 决策", "扩大授权"]
+      }
+    },
+    {
+      "id": "wise-agent-should-continue-without-branch-on-token-threshold",
+      "skill": "wise-agent",
+      "query": "$wise-agent：下一会话只是继续 Goal G-17 已确认的 D-1，Goal Ledger、恢复入口和验证命令都齐全。听说上下文超过固定 token 数就应该 handoff，请再创建一个 Branch 和新的交接文档。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "知止者把该场景正名为 Continue：直接从既有 Goal Ledger、决策集合、恢复入口和下一动作续接，不创建 Branch、新交接文档、Worker、work_graph 或第二状态源。固定 token 阈值和外部经验不能代替上下文隔离收益与明确回传目的；只有独立子问题需要干净上下文且能说明期望返回证据时才使用临时 Branch。"
+    },
+    {
       "id": "wise-agent-should-select-control-mechanisms-by-evidence",
       "skill": "wise-agent",
       "query": "一个项目要从已确认 PRD 推进到三个低耦合模块实现、集成验证和发布准备，预计跨多轮；公共契约风险较高。请判断是否需要 SDLC、Goal、Loop、Worker 和 Checker，不要把五个机制全部机械启用。",
@@ -2236,7 +2286,7 @@
       "skill": "senior-software-architect",
       "query": "设计一个外卡收单商户结算能力，说明主体、法域、资金归属、手续费、争议拒付和待合规确认项。",
       "should_trigger": false,
-      "preferred_skill": "product-architecture-expert",
+      "preferred_skill": "payment-expert",
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": [
@@ -2271,8 +2321,53 @@
       "expected_handling": "进入原型反推 PRD 路径，先补语义、角色、对象、流程、规则、指标和验收。"
     },
     {
-      "id": "product-should-payment-clearing-map",
+      "id": "product-should-intake-vague-idea-before-prd",
       "skill": "product-architecture-expert",
+      "query": "我不是产品经理，想做一个帮助家庭整理订阅支出的 Web 小工具。请直接写一份完整 PRD 并开始开发。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入从零构思模式，先形成需求分析结论卡，用用户、业务和可行性约束校准根源需求、产品定义、目标用户、MVP、非目标和验收种子；一次只关闭一个关键 blocker，可枚举问题给 2-3 个选项和建议答案，可合理推断的信息先给默认假设并请 owner 确认；owner 确认范围后再进入 PRD-Lite，不新建并行概念 PRD，不直接开始开发，也不在正式 PRD 写技术栈、数据模型、API 或 Agent 禁行规则。"
+    },
+    {
+      "id": "product-should-optimize-existing-prd-direction-first",
+      "skill": "product-architecture-expert",
+      "query": "这份会员权益 PRD 已经有很多章节，但产品方向和本期范围还没说清。请优化成一份更完整的新 PRD。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入优化已有 PRD 模式，以现有权威文档为主版本，先诊断目标、范围、非目标和产品判断，再补对象、流程、规则、状态和验收缺口；只修改已确认缺口，不因追求完整机械重写全文或另建平行 PRD，不把技术栈、数据模型、API 和 Agent 禁行规则写进正式 PRD。"
+    },
+    {
+      "id": "product-should-add-incremental-requirement-as-delta",
+      "skill": "product-architecture-expert",
+      "query": "现有审批产品已经上线，现在新增审批记录导出。请把它补进需求，但不要重写整份 PRD。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入既有产品增量需求模式，复用当前权威 PRD 和已确认产品上下文，只输出 ADDED / MODIFIED / REMOVED 增量及影响清单，覆盖受影响的目标、对象、流程、规则、状态、权限、验收种子和上下游；不重写整份 PRD，不按固定功能批次扩需求，不替架构师决定技术栈、数据模型或 API。"
+    },
+    {
+      "id": "payment-should-clearing-map",
+      "skill": "payment-expert",
       "query": "帮我梳理平台分账分润和商户到账能力地图，区分账户、账本、清结算、对账、手续费和运营后台。",
       "should_trigger": true,
       "difficulty": "realistic",
@@ -2282,7 +2377,35 @@
         "output_quality",
         "efficiency_metrics"
       ],
-      "expected_handling": "进入支付与资金专项，输出能力地图、对象、流程、资金/账务边界、风险和待确认项。"
+      "expected_handling": "由 payment-expert 进入支付与资金路径，输出能力地图、对象、流程、资金/账务边界、风险和待确认项；不由 product-architecture-expert 继续持有支付规则。"
+    },
+    {
+      "id": "payment-should-partial-refund-limit",
+      "skill": "payment-expert",
+      "query": "一笔原支付 100 元已经部分退款 60 元，现在再次申请 50 元；请核对累计可退金额并判断是否可以送往付款通道。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "由 payment-expert 进入退款与逆向资金路径；先以原支付、已成功退款和处理中退款核算累计可退金额，超额请求必须在外部执行前停止，不把通道受理或重复通知当最终成功。"
+    },
+    {
+      "id": "product-negative-payment-clearing-map",
+      "skill": "product-architecture-expert",
+      "query": "帮我梳理平台分账分润和商户到账能力地图，区分账户、账本、清结算、对账、手续费和运营后台。",
+      "should_trigger": false,
+      "preferred_skill": "payment-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "目标是支付资金对象、账务、清结算和对账规则，应由 payment-expert 主责；通用产品专家只在需要完整 PRD 主文档时协同。"
     },
     {
       "id": "product-should-business-architecture-planning",
@@ -2314,8 +2437,8 @@
       "expected_handling": "进入业务架构规划图形化路由，读取 business-architecture-planning 和 diagram-output；按问题选择业务能力地图、价值流 / 跨角色流程图、能力-项目-系统-数据映射图、差距 / 依赖 / 路线图等最小图形；正式图形化交付默认只生成 SVG；图只辅助评审与沟通，不替代业务确认、产品判断、工程设计、Execution Grant 或上线审批。"
     },
     {
-      "id": "product-should-vcc-issuing-flow",
-      "skill": "product-architecture-expert",
+      "id": "payment-should-vcc-issuing-flow",
+      "skill": "payment-expert",
       "query": "设计一个 VCC 发卡交易流程，说明开卡、授权、冻结、清算、退款、争议和财务对账的产品边界。",
       "should_trigger": true,
       "difficulty": "edge",
@@ -2326,7 +2449,134 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 VCC 和支付资金产品路径，标出主体、外部规则、资金归属、状态机和验收口径。"
+      "expected_handling": "由 payment-expert 进入 VCC 和支付资金产品路径，标出主体、外部规则、资金归属、状态机和验收口径。"
+    },
+    {
+      "id": "payment-negative-isolated-refund-page",
+      "skill": "payment-expert",
+      "query": "会员取消订单后显示退款申请按钮，请补一条页面验收标准，不涉及原支付、资金账务或通道规则。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "这是孤立退款词下的通用产品验收，不具备原交易、支付轨道或资金账务证据，应由 product-architecture-expert 处理。"
+    },
+    {
+      "id": "payment-negative-ledger-code-tdd",
+      "skill": "payment-expert",
+      "query": "请修复 Java 账本过账服务的借贷不平衡 Bug，按 TDD 补失败测试、实现代码并运行回归。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "negative_reason": "目标是工程实现、Bug 修复和 TDD；支付专家只提供领域不变量，应由 senior-software-architect 主责。"
+    },
+    {
+      "id": "payment-negative-generic-order",
+      "skill": "payment-expert",
+      "query": "设计普通电商订单的创建、改地址和取消流程，不涉及支付、退款、资金账户或账务。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "普通订单流程缺少支付轨道、原支付和资金账务事实，应由 product-architecture-expert 处理。"
+    },
+    {
+      "id": "payment-negative-generic-member-account",
+      "skill": "payment-expert",
+      "query": "设计会员账户的头像、昵称、收货地址和资料修改页面，只处理普通会员资料，不涉及资金账户、支付或账务。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "普通会员账户不涉及资金账户、支付轨道或账务事实，应由 product-architecture-expert 处理。"
+    },
+    {
+      "id": "payment-negative-inventory-ledger",
+      "skill": "payment-expert",
+      "query": "设计仓库库存台账的入库、出库和盘点页面，不涉及资金或会计分录。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "库存台账不是支付账本或资金账户，应由 product-architecture-expert 处理。"
+    },
+    {
+      "id": "payment-negative-general-accounting",
+      "skill": "payment-expert",
+      "query": "解释一般会计教材里的总账和明细账概念，不涉及支付产品设计。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "一般会计知识问答缺少支付产品目标、资金事实和支付轨道，不触发 payment-expert。"
+    },
+    {
+      "id": "payment-funds-review-should-block-idempotency-conflict",
+      "skill": "payment-funds-review",
+      "query": "同一个 ledgerTransactionSn 第二次提交时交易头、金额和借贷账户不变，但 posting facts 的余额约束发生变化。请基于原始请求、分录和余额快照独立判断这是不是幂等冲突，以及失败后哪些事实必须保持不变。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "由 payment-funds-review 作为独立 Checker 读取原始请求、posting/entry 和余额证据，裁决 BLOCK；稳定摘要必须包含 posting facts，同一身份下事实变化属于幂等冲突；拒绝第二次请求且交易、route、posting、entry、余额投影和审计事实不得新增或变化；不接管源码修复，不把本地证据外推为生产并发安全。"
+    },
+    {
+      "id": "payment-funds-review-should-verify-failure-side-effects",
+      "skill": "payment-funds-review",
+      "query": "使用 $payment-funds-review 独立复核一次失败的原路退款：历史 route snapshot 缺失，当前绑定已变化，系统测试只断言返回失败。请给出失败无副作用的准出判断。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "作为独立 Checker 输出 BLOCK，要求读取原交易、历史 route snapshot、当前动作和失败前后事实快照；不得按当前绑定重算，不得新增交易、route、posting、entry、余额投影或审计成功事实；只有返回失败的测试不足以证明失败无副作用，实现与测试缺口交还 senior-software-architect。"
+    },
+    {
+      "id": "payment-funds-review-negative-code-fix",
+      "skill": "payment-funds-review",
+      "query": "请直接修复 Java 冻结解冻服务的累计释放校验 Bug，修改源码、补 TDD 测试并运行回归；本轮不是独立准出审查。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "negative_reason": "目标是源码实现、Bug 修复和 TDD，应由 senior-software-architect 主责；payment-funds-review 只消费实现证据做独立准出判断，不接管 Maker 工作。"
+    },
+    {
+      "id": "payment-funds-review-negative-product-design",
+      "skill": "payment-funds-review",
+      "query": "请设计一套 VCC 发卡、授权、冻结、清算、退款、争议和对账产品方案，输出对象、流程、状态、规则与验收；当前没有待独立复核的既有方案或实现证据。",
+      "should_trigger": false,
+      "preferred_skill": "payment-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "目标是支付产品设计，应由 payment-expert 主责；尚无既有方案、实现证据或测试结果供独立 Checker 准出，不触发 payment-funds-review。"
     },
     {
       "id": "product-should-push-back-tech-or-page-first-design",

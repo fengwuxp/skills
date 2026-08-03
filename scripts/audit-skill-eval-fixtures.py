@@ -27,6 +27,8 @@ SKILLS = {
     "hanzi-philology",
     "huaxia-practical-wisdom",
     "java-service-code-generator",
+    "payment-expert",
+    "payment-funds-review",
     "product-architecture-expert",
     "resource-capability-distiller",
     "senior-software-architect",
@@ -49,6 +51,8 @@ SKILL_MENTIONS = {
         "老祖宗智慧",
     ],
     "java-service-code-generator": ["java-service-code-generator"],
+    "payment-expert": ["payment-expert", "支付专家"],
+    "payment-funds-review": ["payment-funds-review", "支付资金审查"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
     "resource-capability-distiller": [
         "resource-capability-distiller",
@@ -91,6 +95,13 @@ SENSITIVE_PATTERNS = [
         r"\b\d{16,19}\b",
     ]
 ]
+REQUIRED_PAYMENT_HARD_NEGATIVES = {
+    "payment-negative-isolated-refund-page": ["退款", "不涉及原支付"],
+    "payment-negative-generic-order": ["普通电商订单", "不涉及支付"],
+}
+REQUIRED_PAYMENT_POSITIVES = {
+    "payment-should-partial-refund-limit": ["部分退款", "原支付", "累计可退"],
+}
 
 
 def load_fixture(path: Path = FIXTURE) -> dict[str, Any]:
@@ -131,6 +142,7 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
         return failures
 
     seen_ids: set[str] = set()
+    cases_by_id: dict[str, dict[str, Any]] = {}
     used_dimensions: set[str] = set()
     by_skill = {
         skill: {"positive": 0, "negative": 0, "hard_negative": 0, "positive_without_name": 0}
@@ -149,6 +161,8 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
         elif case_id in seen_ids:
             failures.append(f"{case_label}: duplicate id {case_id}")
         seen_ids.add(case_id)
+        if case_id:
+            cases_by_id.setdefault(case_id, case)
 
         skill = case.get("skill")
         if skill not in SKILLS:
@@ -206,6 +220,30 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
     if missing_used_dimensions:
         failures.append(f"{label}: no cases exercise dimensions {sorted(missing_used_dimensions)}")
 
+    for case_id, query_terms in REQUIRED_PAYMENT_HARD_NEGATIVES.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required payment hard negative {case_id}")
+            continue
+        if case.get("skill") != "payment-expert" or case.get("should_trigger") is not False:
+            failures.append(f"{label}: invalid payment hard negative routing {case_id}")
+        if case.get("hard_negative") is not True or case.get("preferred_skill") != "product-architecture-expert":
+            failures.append(f"{label}: invalid payment hard negative contract {case_id}")
+        query = str(case.get("query", ""))
+        if not all(term in query for term in query_terms):
+            failures.append(f"{label}: payment hard negative lost boundary semantics {case_id}")
+
+    for case_id, query_terms in REQUIRED_PAYMENT_POSITIVES.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required payment positive {case_id}")
+            continue
+        if case.get("skill") != "payment-expert" or case.get("should_trigger") is not True:
+            failures.append(f"{label}: invalid payment positive routing {case_id}")
+        query = str(case.get("query", ""))
+        if not all(term in query for term in query_terms):
+            failures.append(f"{label}: payment positive lost partial-refund semantics {case_id}")
+
     return failures
 
 
@@ -256,6 +294,32 @@ def run_self_test() -> None:
     expected = audit_data(invalid, label="invalid-sensitive")
     if not any("sensitive" in item for item in expected):
         raise SystemExit("self-test failed: missing sensitive data failure")
+
+    invalid = deepcopy(valid)
+    invalid["cases"] = [
+        case
+        for case in invalid["cases"]
+        if case.get("id") not in REQUIRED_PAYMENT_HARD_NEGATIVES
+    ]
+    expected = audit_data(invalid, label="invalid-payment-hard-negatives")
+    if not all(
+        any(case_id in item for item in expected)
+        for case_id in REQUIRED_PAYMENT_HARD_NEGATIVES
+    ):
+        raise SystemExit("self-test failed: missing required payment hard-negative failures")
+
+    invalid = deepcopy(valid)
+    invalid["cases"] = [
+        case
+        for case in invalid["cases"]
+        if case.get("id") not in REQUIRED_PAYMENT_POSITIVES
+    ]
+    expected = audit_data(invalid, label="invalid-payment-positives")
+    if not all(
+        any(case_id in item for item in expected)
+        for case_id in REQUIRED_PAYMENT_POSITIVES
+    ):
+        raise SystemExit("self-test failed: missing required payment-positive failures")
 
     print("OK skill eval fixture self-test")
 

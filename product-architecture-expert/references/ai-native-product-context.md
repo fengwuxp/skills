@@ -30,7 +30,7 @@
 - PRD 正文、模板、质量门禁读 `product-design-and-prd.md`、`product-prd-template.md`、`product-prd-quality-gates.md`。
 - 产品架构主线读 `product-architecture-methodology.md`。
 - 运营、数据和发布读 `product-prd-operations-and-data.md`。
-- 支付资金、外部规则和监管确认读 `payment-scenario-routing.md`、`regulatory-baseline.md`。
+- 支付资金、外部规则和监管确认使用 `payment-expert`。
 - 端到端产品到研发流程、GSD / 工程执行准入、Harness/Agent 编排和角色边界读 `wise-agent/references/product-to-engineering-lifecycle.md` 与 `wise-agent/references/engineering-governance.md`。
 
 ## 按任务读取索引

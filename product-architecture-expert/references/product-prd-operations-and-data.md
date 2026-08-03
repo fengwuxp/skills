@@ -10,7 +10,7 @@
 ## 不适用场景
 
 - 轻量需求只需说明核心功能和验收，不涉及后台、报表、通知或发布节奏时，可不读取本文。
-- 支付资金 PRD 的账务、对账和资金风险继续读取 `product-prd-financial-appendix.md` 和支付专项 reference。
+- 支付资金 PRD 的账务、对账和资金风险由 `payment-expert` 提供。
 
 ## 读取后必须产出
 
@@ -18,7 +18,7 @@
 
 ## 需要继续读取的 reference
 
-- 可复制 PRD 主模板读 `product-prd-template.md`；质量门禁读 `product-prd-quality-gates.md`；支付资金专项读 `product-prd-financial-appendix.md`。
+- 可复制 PRD 主模板读 `product-prd-template.md`；质量门禁读 `product-prd-quality-gates.md`；支付资金专项协同 `payment-expert`。
 
 ## 按任务读取索引
 

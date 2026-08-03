@@ -1,0 +1,111 @@
+{
+  "resource_overview": {
+    "purpose": "Distill a reusable admission gate from repository governance and executable sync behavior.",
+    "structure": "A governance rule defines intent, a Python checker defines dependency semantics, and a shell command exposes the delivery boundary.",
+    "limitations": [
+      "The fixture proves contract completeness, not that every future Skill dependency is appropriate."
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "governance",
+      "type": "repository-rule",
+      "title_or_path": "AGENTS.md",
+      "source_anchor": "AGENTS.md#Skill 类型与接入门禁",
+      "version_or_date": "2026-08-03",
+      "read_status": "read",
+      "applicable_scope": "Skill admission and dependency ownership",
+      "license_or_usage_boundary": "repository-local governance",
+      "freshness_risk": "recheck when repository governance changes",
+      "sensitive_content": "none observed"
+    },
+    {
+      "source_id": "admission-checker",
+      "type": "executable-source",
+      "title_or_path": "scripts/check-skill-admission.py",
+      "source_anchor": "scripts/check-skill-admission.py#audit_dependencies",
+      "version_or_date": "2026-08-03",
+      "read_status": "read",
+      "applicable_scope": "hard install dependency validation",
+      "license_or_usage_boundary": "repository-local source",
+      "freshness_risk": "re-run fixtures after checker changes",
+      "sensitive_content": "none observed"
+    },
+    {
+      "source_id": "sync-command",
+      "type": "executable-source",
+      "title_or_path": "sync-skills.sh",
+      "source_anchor": "sync-skills.sh#dependency-selection",
+      "version_or_date": "2026-08-03",
+      "read_status": "read",
+      "applicable_scope": "installable Skill selection and sync refusal",
+      "license_or_usage_boundary": "repository-local source",
+      "freshness_risk": "re-run dry-run after sync behavior changes",
+      "sensitive_content": "none observed"
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "separate-install-dependency-from-runtime-routing",
+      "status": "accepted",
+      "stable_responsibility": "Reject unavailable hard install dependencies without converting conditional runtime collaboration into a hard dependency.",
+      "reuse_scope": "Skill admission and synchronization changes",
+      "trigger_signals": [
+        "an installable Skill declares another Skill in requires"
+      ],
+      "non_trigger_signals": [
+        "a Skill only routes to another capability when domain evidence appears at runtime"
+      ],
+      "preconditions": [
+        "the caller and dependency admission metadata are readable"
+      ],
+      "inputs": [
+        "caller admission metadata",
+        "dependency admission metadata",
+        "runtime capability routing"
+      ],
+      "ordered_procedure": [
+        "classify the relationship as hard install dependency or conditional runtime collaboration",
+        "validate hard dependencies against admission status",
+        "run sync dry-run for the caller"
+      ],
+      "tools_and_parameters": [
+        "python3 scripts/check-skill-admission.py --check-dependencies <skill-dir>",
+        "./sync-skills.sh --dry-run <skill-id>"
+      ],
+      "branches_and_failures": [
+        "stop when a true hard dependency is missing or candidate",
+        "remove requires when the relationship is only conditional runtime routing"
+      ],
+      "recovery_or_stop_conditions": [
+        "delivery remains blocked until dependency semantics and admission evidence agree"
+      ],
+      "outputs": [
+        "minimal admission diff",
+        "dependency check result",
+        "sync dry-run result"
+      ],
+      "acceptance_evidence": [
+        "the caller passes dependency validation without installing optional capabilities",
+        "candidate Skills remain unsyncable"
+      ],
+      "source_anchors": [
+        "governance#single-authority",
+        "admission-checker#candidate-dependency-failure",
+        "sync-command#dry-run-gate"
+      ],
+      "version_and_freshness": "valid for the repository admission schema as of 2026-08-03",
+      "license_and_privacy_boundary": "repository-local evidence; no private content",
+      "support_rationale": "Governance, checker behavior, and sync behavior jointly distinguish install dependencies from runtime routing.",
+      "predictive_test": {
+        "passed": true,
+        "rationale": "The contract predicts that a new caller with optional domain routing can sync while the candidate domain Skill remains blocked."
+      },
+      "non_obviousness": {
+        "passed": true,
+        "rationale": "Without this distinction, a valid optional collaboration can silently disable unrelated core Skills."
+      },
+      "recommended_destination": "fixture"
+    }
+  ]
+}

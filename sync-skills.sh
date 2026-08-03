@@ -69,6 +69,8 @@ fi
 
 skill_dirs=()
 skill_names=()
+skill_statuses=()
+skill_dependency_statuses=()
 while IFS= read -r skill_file; do
   dir="$(dirname "${skill_file}")"
   key="$(basename "${dir}")"
@@ -87,6 +89,14 @@ while IFS= read -r skill_file; do
   fi
   skill_dirs+=("${key}")
   skill_names+=("${name}")
+  status="$(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" --status "${dir}")"
+  skill_statuses+=("${status}")
+  if [[ "${status}" == "installable" ]] \
+    && python3 "${REPO_ROOT}/scripts/check-skill-admission.py" --check-dependencies "${dir}" >/dev/null 2>&1; then
+    skill_dependency_statuses+=("ready")
+  else
+    skill_dependency_statuses+=("blocked")
+  fi
 done < <(find "${SKILLS_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 
 if [[ ${#skill_dirs[@]} -eq 0 ]]; then
@@ -98,7 +108,9 @@ print_skills() {
   echo "Available skills:"
   local i
   for i in "${!skill_dirs[@]}"; do
-    printf '  [%d] %s  (%s)\n' "$((i + 1))" "${skill_dirs[$i]}" "${skill_names[$i]}"
+    printf '  [%d] %s  (%s, %s, dependencies=%s)\n' \
+      "$((i + 1))" "${skill_dirs[$i]}" "${skill_names[$i]}" \
+      "${skill_statuses[$i]}" "${skill_dependency_statuses[$i]}"
   done
 }
 
@@ -126,10 +138,54 @@ add_selected() {
 }
 
 select_all() {
-  local key
-  for key in "${skill_dirs[@]}"; do
-    add_selected "${key}"
+  local i
+  for i in "${!skill_dirs[@]}"; do
+    if [[ "${skill_statuses[$i]}" == "installable" ]]; then
+      if [[ "${skill_dependency_statuses[$i]}" == "ready" ]]; then
+        add_selected "${skill_dirs[$i]}"
+      else
+        echo "Skip ${skill_dirs[$i]}: required Skill is not installable" >&2
+      fi
+    else
+      echo "Skip ${skill_dirs[$i]}: admission status ${skill_statuses[$i]}" >&2
+    fi
   done
+}
+
+status_for_skill() {
+  local candidate="$1"
+  local i
+  for i in "${!skill_dirs[@]}"; do
+    if [[ "${skill_dirs[$i]}" == "${candidate}" ]]; then
+      echo "${skill_statuses[$i]}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+dependencies_for_skill() {
+  local candidate="$1"
+  local i
+  for i in "${!skill_dirs[@]}"; do
+    if [[ "${skill_dirs[$i]}" == "${candidate}" ]]; then
+      echo "${skill_dependency_statuses[$i]}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+selected_index() {
+  local candidate="$1"
+  local i
+  for i in "${!selected[@]}"; do
+    if [[ "${selected[$i]}" == "${candidate}" ]]; then
+      echo "${i}"
+      return 0
+    fi
+  done
+  return 1
 }
 
 if [[ ${#ARGS[@]} -gt 0 ]]; then
@@ -139,6 +195,16 @@ if [[ ${#ARGS[@]} -gt 0 ]]; then
       continue
     fi
     if contains_skill "${arg}"; then
+      if [[ "$(status_for_skill "${arg}")" != "installable" ]]; then
+        echo "Skill is not installable: ${arg} ($(status_for_skill "${arg}"))" >&2
+        exit 1
+      fi
+      if [[ "$(dependencies_for_skill "${arg}")" != "ready" ]]; then
+        python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
+          --check-dependencies "${SKILLS_DIR}/${arg}" >&2 || true
+        echo "Skill has non-installable dependencies: ${arg}" >&2
+        exit 1
+      fi
       add_selected "${arg}"
     else
       echo "Unknown skill: ${arg}" >&2
@@ -181,6 +247,22 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   exit 0
 fi
 
+for selected_position in "${!selected[@]}"; do
+  key="${selected[$selected_position]}"
+  while IFS= read -r dependency; do
+    [[ -z "${dependency}" ]] && continue
+    if ! dependency_position="$(selected_index "${dependency}")"; then
+      echo "Skill dependency must be selected in the same sync: ${key} -> ${dependency}" >&2
+      exit 1
+    fi
+    if (( dependency_position >= selected_position )); then
+      echo "Select Skill dependency before its caller: ${dependency} -> ${key}" >&2
+      exit 1
+    fi
+  done < <(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
+    --list-dependencies "${SKILLS_DIR}/${key}")
+done
+
 echo "Repository root: ${REPO_ROOT}"
 echo "Codex home:      ${CODEX_HOME_DIR}"
 echo "Dry run:         ${DRY_RUN}"
@@ -197,9 +279,22 @@ sync_one() {
   local target_dir="${TARGET_ROOT}/${key}"
   local backup_dir="${BACKUP_ROOT}/${key}-${TIMESTAMP}"
   local rsync_target="${target_dir}"
+  local admission_status
+  local dependency_output
+  admission_status="$(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" --status "${source_dir}")"
 
   if [[ ! -f "${source_dir}/SKILL.md" ]]; then
     echo "Source skill is invalid, missing SKILL.md: ${source_dir}" >&2
+    exit 1
+  fi
+  if [[ "${admission_status}" != "installable" ]]; then
+    echo "Skill is not installable: ${key} (${admission_status})" >&2
+    exit 1
+  fi
+  if ! dependency_output="$(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
+    --check-dependencies "${source_dir}")"; then
+    echo "${dependency_output}" >&2
+    echo "Skill has non-installable dependencies: ${key}" >&2
     exit 1
   fi
 

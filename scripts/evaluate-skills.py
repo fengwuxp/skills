@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import runpy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
@@ -25,6 +26,7 @@ REQUIRED_VALIDATE_HOOKS = [
     "scripts/audit-reference-indexes.py",
     "scripts/audit-source-map.py",
     "scripts/audit-skill-eval-fixtures.py --self-test",
+    "scripts/evaluate-skill-behavior.py --self-test",
     "scripts/archive-source-evidence.py --self-test",
     "scripts/skillx_export_adapter.py --self-test",
     "scripts/validate-installed-skills.sh",
@@ -61,6 +63,7 @@ REFERENCE_SPLIT_TRIGGERS = [
     "the same rule repeated across multiple references",
     "more than eight level-2 topics in one reference",
 ]
+ADMISSION_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-admission.py"))
 
 
 def read(path: Path) -> str:
@@ -120,6 +123,34 @@ def fixture_files_under(skill_dir: Path) -> list[Path]:
     if not root.exists():
         return []
     return sorted(path for path in root.rglob("*") if path.is_file())
+
+
+def delivery_gates(
+    skill_dir: Path,
+    repository_root: Path = ROOT,
+) -> dict[str, Any]:
+    status, admission_failures = ADMISSION_CHECKER["audit_skill"](skill_dir)
+    dependencies: list[str] = []
+    dependency_failures: list[str] = []
+    if not admission_failures:
+        dependencies = ADMISSION_CHECKER["dependency_names"](skill_dir)
+        dependency_failures = ADMISSION_CHECKER["audit_dependencies"](
+            skill_dir,
+            repository_root,
+        )
+    blockers = [*admission_failures, *dependency_failures]
+    if status != "installable":
+        blockers.append(f"admission status is {status}")
+    ready_for_parity = status == "installable" and not blockers
+    return {
+        "admission_status": status,
+        "required_skills": dependencies,
+        "dependency_readiness": "ready" if not dependency_failures else "blocked",
+        "installed_parity": "not_checked" if ready_for_parity else "blocked",
+        "delivery_readiness": "requires_installed_parity" if ready_for_parity else "blocked",
+        "blockers": blockers,
+        "installed_parity_checker": "scripts/validate-installed-skills.sh",
+    }
 
 
 def score_ratio(value: int, target: int, full_score: int) -> int:
@@ -392,6 +423,8 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
         "document-authoring": ["document-authoring", "正式报告", "DOCX"],
         "hanzi-philology": ["hanzi-philology", "甲骨文", "《说文解字》"],
         "java-service-code-generator": ["CREATE TABLE", "字段表格", "Java Entity"],
+        "payment-expert": ["清结算", "部分退款", "VCC", "账本"],
+        "payment-funds-review": ["$payment-funds-review", "独立判断", "幂等冲突", "失败无副作用"],
         "product-architecture-expert": ["PRD", "业务能力地图", "验收种子"],
         "senior-software-architect": ["CR", "架构", "TDD"],
         "ui-design-expert": ["$ui-design-expert", "信息架构", "交互状态", "可用性"],
@@ -491,6 +524,7 @@ class SkillEvaluation:
     score: int
     dimensions: dict[str, int]
     metrics: dict[str, Any]
+    delivery_gates: dict[str, Any]
     warnings: list[str]
 
 
@@ -626,6 +660,7 @@ def evaluate_skill(skill_dir: Path, validate_text: str) -> SkillEvaluation:
         score=round(weighted),
         dimensions=dimensions,
         metrics=metrics,
+        delivery_gates=delivery_gates(skill_dir),
         warnings=warnings,
     )
 
@@ -645,6 +680,7 @@ def evaluate_all() -> dict[str, Any]:
                 "score": item.score,
                 "dimensions": item.dimensions,
                 "metrics": item.metrics,
+                "delivery_gates": item.delivery_gates,
                 "warnings": item.warnings,
             }
             for item in evaluations
@@ -653,10 +689,14 @@ def evaluate_all() -> dict[str, Any]:
 
 
 def print_text(report: dict[str, Any]) -> None:
-    print(f"Overall skill score: {report['overall_score']}/100")
+    print(f"Overall static skill score: {report['overall_score']}/100")
+    print("Delivery gates are reported separately and are not included in the score.")
     for item in report["skills"]:
         print(f"\n== {item['name']} ==")
         print(f"score: {item['score']}/100")
+        print("delivery gates (not scored):")
+        for key, value in item["delivery_gates"].items():
+            print(f"  - {key}: {value}")
         print("dimensions:")
         for key, value in item["dimensions"].items():
             print(f"  - {key}: {value}")
@@ -705,6 +745,10 @@ def run_self_test() -> None:
         raise SystemExit("Wind coding conventions skill ID migration is incomplete")
     if report["overall_score"] < 85:
         raise SystemExit(f"overall score too low: {report['overall_score']}")
+    for item in report["skills"]:
+        gates = item.get("delivery_gates", {})
+        if not gates or "installed_parity" not in gates:
+            raise SystemExit(f"{item['name']}: missing non-scored delivery gates")
     expected = set(SKILL_DIRS)
     found = {item["name"] for item in report["skills"]}
     if found != expected:

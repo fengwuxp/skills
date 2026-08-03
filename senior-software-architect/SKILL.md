@@ -154,4 +154,4 @@ Harness Plan 在正式、完整、可评审、GSD Wave、工程执行 Loop 候�
 - 跨模块、公共契约、数据迁移、核心链路替换、双轨切流或旧能力退役需要独立重构设计时，读取 `references/refactoring-design-template.md`；局部、行为保持且可测试的重构不创建独立设计文档，只用实现任务卡和测试保护。
 - 代码 Review、Java/Spring 修改、架构坏味、Bug 修复、调试诊断、根因分析、故障复盘、写测试和 TDD：先走 `scenario-routing.md`，再读取对应 Review、编码、诊断、测试和 workflow reference。
 - 陌生代码库、非 Java 技术栈、外部 API/SDK/云产品、AI 编码协作或多 Agent 推进：先走 `scenario-routing.md`，识别本地生态、外部知识时效性、协作门禁和验证边界。
-- 复杂产品语义、PRD、产品架构、规则矩阵、运营后台、数据指标、支付/资金/清结算/对账/VCC/ACH/卡组织等任务：优先使用 `product-architecture-expert` 定义产品语义和验收，再由本技能承接工程结构、系统设计、代码落地、测试和生产风险。
+- 复杂通用产品语义、PRD、产品架构、规则矩阵、运营后台和数据指标：优先使用 `product-architecture-expert`；支付/资金/清结算/对账/VCC/ACH/卡组织的领域事实与不变量使用 `payment-expert`。本技能承接工程结构、系统设计、代码落地、测试和生产风险。

@@ -1,6 +1,6 @@
 # 产品方案与 PRD
 
-本文用于生成或审查产品方案、PRD、评审材料和验收标准。它偏交付结构，不替代用户研究、市场调研或法务合规结论。需要可直接复用的完整文档骨架时，读取 `product-prd-template.md`；正式评审或提交前自检读取 `product-prd-quality-gates.md`；支付资金 PRD 读取 `product-prd-financial-appendix.md`；运营、通知、数据和发布附录读取 `product-prd-operations-and-data.md`。
+本文用于生成或审查产品方案、PRD、评审材料和验收标准。它偏交付结构，不替代用户研究、市场调研或法务合规结论。需要可直接复用的完整文档骨架时，读取 `product-prd-template.md`；正式评审或提交前自检读取 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据和发布附录读取 `product-prd-operations-and-data.md`。
 
 ## 使用时机
 
@@ -15,9 +15,9 @@
 
 - 用户要求完整可复制模板时，应读取 `product-prd-template.md`，不要只用本文。
 - 用户要求 PRD 评审、提交前检查或符合性审查时，应读取 `product-prd-quality-gates.md`。
-- PRD 涉及支付资金、账户账本、清结算、对账、VCC 或跨境时，应读取 `product-prd-financial-appendix.md`。
+- PRD 涉及支付资金、账户账本、清结算、对账、VCC 或跨境时，应协同 `payment-expert`。
 - PRD 涉及运营后台、人工处理、通知、埋点、报表或发布运营时，应读取 `product-prd-operations-and-data.md`。
-- 涉及支付、资金、账户、账本、清结算、对账、跨境或外部规则时，必须补充支付资金专项 reference。
+- 涉及支付、资金、账户、账本、清结算、对账或跨境时，使用 `payment-expert` 补充专项事实和验收种子。
 
 ## 读取后必须产出
 
@@ -30,10 +30,10 @@
 - 可复制模板读 `product-prd-template.md`。
 - 质量门禁读 `product-prd-quality-gates.md`。
 - 产品合议评审、多个 AI / PM / Reviewer / 产品大师 / MAGI 多视角审查读 `product-deliberation-workflow.md`。
-- 支付资金附录读 `product-prd-financial-appendix.md`。
+- 支付资金附录由 `payment-expert` 提供。
 - 运营数据发布附录读 `product-prd-operations-and-data.md`。
 - 通用方法论读 `product-architecture-methodology.md`；产品洞察、资料资产化和机会雷达读 `product-insight-analyst.md`；机会清单、需求池、Backlog 决策、优先级、User Story 或 AC 场景读 `po-backlog-manager.md`。
-- 支付资金和外部规则读 `payment-scenario-routing.md`、`regulatory-baseline.md`。
+- 支付资金和外部规则使用 `payment-expert`。
 
 ## 按任务读取索引
 
@@ -43,7 +43,7 @@
 | 资料洞察转产品机会或 PRD 候选 | PRD 生成门禁，并读 `product-insight-analyst.md` 的机会雷达和证据推理链 | 不从资料摘要直接生成 PRD |
 | 机会清单/需求池转 Backlog、User Story 或 AC | PRD 生成门禁、用户故事写法、验收标准，并读 `po-backlog-manager.md` | 不把每个机会点都写成 P0 |
 | 快速生成产品方案 | 输出格式约定、PRD 生成门禁、产品方案结构、PRD 最小必备项、验收标准 | 符合性评审细则 |
-| 模糊需求澄清 | PRD 生成门禁、PRD 连环追问与原型反推、产品语义门禁 | 完整模板正文 |
+| 从零构思 / 优化已有 PRD / 既有产品增量需求 | PRD 生成门禁、PRD 连环追问与原型反推、产品语义门禁 | 不新建概念 PRD 或平行版本，不进入技术设计 |
 | AI 生成方案 / 产品大师 / MAGI / 多视角合议评审 | PRD 生成门禁、符合性评审模式，并读 `product-deliberation-workflow.md` | 不把外部多 Agent 工具和平台专属流程写入 PRD |
 | 原型/HTML/页面截图/交互稿反推 PRD | PRD 连环追问与原型反推、产品方案结构、页面/交互说明、验收标准 | 支付资金专项，除非命中资金场景 |
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | PRD 文档质量治理、PRD 生成门禁、符合性评审模式，并读 `product-prd-quality-gates.md` | 不把完整模板机械展开 |
@@ -51,7 +51,7 @@
 | PRD 补全 | PRD 生成补全模式、PRD 最小必备项、状态机、规则矩阵、运营后台、数据报表 | 完整模板正文，除非需要重写 |
 | PRD 符合性评审 | PRD 生成门禁、符合性评审模式、评审清单，并读 `product-prd-quality-gates.md` | 生成模板占位说明 |
 | PRD / 需求评审会前预扫描 | 符合性评审模式，并读 `product-prd-quality-gates.md` 的“AI 预扫描四维度” | 不把 AI 疑似问题当已确认缺陷 |
-| 支付资金 PRD | PRD 生成门禁、验收标准，并读 `product-prd-financial-appendix.md` 和支付专项 reference | 非资金运营细节 |
+| 支付资金 PRD | 通用 PRD 生成门禁与验收标准，并协同 `payment-expert` | 非资金运营细节 |
 | 运营/数据/发布 PRD | 运营后台说明、数据和报表说明、验收标准，并读 `product-prd-operations-and-data.md` | 金融资金附录 |
 
 ## 0. 输出格式约定
@@ -153,6 +153,21 @@ PRD 任务先判断使用者真正要的是生成、补全还是评审：
 ## 0.3 PRD 连环追问与原型反推
 
 PRD 是产品思考结构，不只是文档模板。面对模糊需求，先用连续追问暴露目标、主体、对象、流程、规则、数据和风险缺口，再决定是先出草案还是先补关键事实。
+
+先识别输入模式，模式只决定本轮如何收敛，不建立新的事实源：
+
+- 从零构思：先按用户、业务和可行性约束形成 `product-architecture-methodology.md` 中的需求分析结论卡；owner 确认根源需求、产品定义、目标用户、MVP、非目标和验收种子后，再进入 PRD-Lite 或正式 PRD。
+- 优化已有 PRD：以现有权威文档为主版本，先诊断目标、范围、非目标和产品判断，再补对象、流程、规则、状态和验收缺口；不因追求完整机械重写全文。
+- 既有产品增量需求：复用当前 PRD 和已确认产品上下文，只写受影响产品事实的 `ADDED / MODIFIED / REMOVED` 与影响清单，不重写整份 PRD，也不按固定功能批次扩需求。
+
+需求分析结论卡是进入正式产品文档前的确认载体，不另建“概念 PRD”或第二套模板。正式 PRD 承载产品语义；技术栈、数据库模型和 HTTP / RPC 接口进入系分，Agent 禁行规则、执行门禁和验证命令进入 Spec / Harness 或 `wise-agent` 的工程控制资产。
+
+低摩擦追问纪律：
+
+- 一次只关闭一个关键 blocker；按用户、业务、可行性约束组织问题，但不机械轮询三个视角。
+- 可枚举的问题给 2-3 个选项和建议答案；可从材料合理推断的信息先给默认假设、依据与影响，再请 owner 确认，不把选择题全部抛回用户。
+- 普通低风险场景中，同一问题轴连续 2-3 轮仍未收敛时，给出推荐答案、假设边界和停止条件；资金、合规、安全、隐私、公共契约等高风险事项没有 owner 确认时继续保持 PENDING，不用默认值越过门禁。
+- 问询过程只进入任务计划或评审记录；正式 PRD 只吸收已确认事实、合理假设、待确认项和最终取舍。
 
 用户反馈输入处理：
 

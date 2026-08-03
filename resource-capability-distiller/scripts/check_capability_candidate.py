@@ -18,6 +18,7 @@ from pathlib import Path
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 STATUSES = {"candidate", "accepted", "rejected"}
 READ_STATUSES = {"read", "read-with-limitations", "unavailable"}
+FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
 DESTINATIONS = {"new-skill", "existing-skill", "reference", "script", "asset", "fixture", "task"}
 SOURCE_FIELDS = (
     "source_id",
@@ -212,6 +213,17 @@ def run_self_test() -> int:
     valid = sample()
     if errors := validate(valid):
         failures.append("valid sample failed: " + "; ".join(errors))
+    valid_fixture = FIXTURES / "valid-multisource-forward.json"
+    invalid_fixture = FIXTURES / "invalid-multisource-unread-source.json"
+    if not valid_fixture.is_file() or not invalid_fixture.is_file():
+        failures.append("external positive and negative fixtures are required")
+    else:
+        valid_data = json.loads(valid_fixture.read_text(encoding="utf-8"))
+        if errors := validate(valid_data):
+            failures.append("valid external fixture failed: " + "; ".join(errors))
+        invalid_data = json.loads(invalid_fixture.read_text(encoding="utf-8"))
+        if not any("unavailable source" in item for item in validate(invalid_data)):
+            failures.append("invalid external fixture did not fail on unavailable source")
     invalid = deepcopy(valid)
     invalid["capabilities"][0].pop("branches_and_failures")
     if not any("branches_and_failures" in item for item in validate(invalid)):

@@ -1,0 +1,76 @@
+{
+  "resource_overview": {
+    "purpose": "Demonstrate that an accepted capability cannot rely on an unavailable source.",
+    "structure": "One claimed source and one accepted capability.",
+    "limitations": [
+      "This is an intentional negative fixture."
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "unread-guide",
+      "type": "external-guide",
+      "title_or_path": "unavailable-guide.md",
+      "source_anchor": "unavailable-guide.md#workflow",
+      "version_or_date": "unknown",
+      "read_status": "unavailable",
+      "applicable_scope": "unknown",
+      "license_or_usage_boundary": "unconfirmed",
+      "freshness_risk": "cannot assess without the body",
+      "sensitive_content": "none observed"
+    }
+  ],
+  "capabilities": [
+    {
+      "capability_id": "copy-unread-workflow",
+      "status": "accepted",
+      "stable_responsibility": "Copy a workflow that was not actually read.",
+      "reuse_scope": "unknown tasks",
+      "trigger_signals": [
+        "a title appears relevant"
+      ],
+      "non_trigger_signals": [
+        "the source body is available"
+      ],
+      "preconditions": [
+        "none confirmed"
+      ],
+      "inputs": [
+        "source title"
+      ],
+      "ordered_procedure": [
+        "infer the workflow from the title"
+      ],
+      "tools_and_parameters": [
+        "none"
+      ],
+      "branches_and_failures": [
+        "ignore unavailable body"
+      ],
+      "recovery_or_stop_conditions": [
+        "none"
+      ],
+      "outputs": [
+        "unverified capability"
+      ],
+      "acceptance_evidence": [
+        "title only"
+      ],
+      "source_anchors": [
+        "unread-guide#workflow"
+      ],
+      "version_and_freshness": "unknown",
+      "license_and_privacy_boundary": "unconfirmed",
+      "support_rationale": "The title appears relevant.",
+      "predictive_test": {
+        "passed": true,
+        "rationale": "Claimed without evidence."
+      },
+      "non_obviousness": {
+        "passed": true,
+        "rationale": "Claimed without evidence."
+      },
+      "recommended_destination": "new-skill"
+    }
+  ]
+}

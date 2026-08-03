@@ -17,7 +17,12 @@ from typing import Sequence
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCT_SOURCE_MAP = ROOT / "product-architecture-expert" / "references" / "source-map.md"
 PRODUCT_SKILL_MD = ROOT / "product-architecture-expert" / "SKILL.md"
-PRODUCT_ROUTING = ROOT / "product-architecture-expert" / "references" / "payment-scenario-routing.md"
+PRODUCT_ROUTING = ROOT / "product-architecture-expert" / "references" / "product-scenario-routing.md"
+PAYMENT_SOURCE_MAP = ROOT / "payment-expert" / "references" / "source-map.md"
+PAYMENT_SKILL_MD = ROOT / "payment-expert" / "SKILL.md"
+PAYMENT_ROUTING = ROOT / "payment-expert" / "references" / "payment-scenario-routing.md"
+PAYMENT_METHOD_CARDS = ROOT / "payment-expert" / "references" / "payment-method-cards.md"
+PAYMENT_REFERENCES = ROOT / "payment-expert" / "references"
 SENIOR_SOURCE_MAP = ROOT / "senior-software-architect" / "references" / "source-map.md"
 SENIOR_SKILL_MD = ROOT / "senior-software-architect" / "SKILL.md"
 SENIOR_WORKFLOW = ROOT / "senior-software-architect" / "references" / "workflow.md"
@@ -232,6 +237,29 @@ def audit_current() -> list[str]:
             routing_label=rel(PRODUCT_ROUTING),
             rule_terms=PRODUCT_RULE_TERMS,
             boundary_terms=PRODUCT_BOUNDARY_TERMS,
+            routing_required=False,
+            require_freshness_terms=True,
+            require_product_unverifiable_url=False,
+        )
+    )
+    failures.extend(
+        audit_payment_provenance(read(PAYMENT_SOURCE_MAP), read(PAYMENT_METHOD_CARDS))
+    )
+    failures.extend(
+        audit_payment_reference_attribution(
+            [(rel(path), read(path)) for path in sorted(PAYMENT_REFERENCES.glob("*.md"))]
+        )
+    )
+    failures.extend(
+        audit_text(
+            read(PAYMENT_SOURCE_MAP),
+            source_label=rel(PAYMENT_SOURCE_MAP),
+            skill_text=read(PAYMENT_SKILL_MD),
+            skill_label=rel(PAYMENT_SKILL_MD),
+            routing_text=read(PAYMENT_ROUTING),
+            routing_label=rel(PAYMENT_ROUTING),
+            rule_terms=PRODUCT_RULE_TERMS,
+            boundary_terms=PRODUCT_BOUNDARY_TERMS,
             require_freshness_terms=True,
             require_product_unverifiable_url=True,
         )
@@ -250,6 +278,74 @@ def audit_current() -> list[str]:
             require_freshness_terms=True,
         )
     )
+    product_urls = set(re.findall(r"https?://[^`\s]+", read(PRODUCT_SOURCE_MAP)))
+    payment_urls = set(re.findall(r"https?://[^`\s]+", read(PAYMENT_SOURCE_MAP)))
+    for duplicate in sorted(product_urls & payment_urls):
+        failures.append(f"source ownership duplicated between product and payment: {duplicate}")
+    return failures
+
+
+PAYMENT_EVIDENCE_ID = re.compile(
+    r"`(C\d{2}|S[23]-[A-Z0-9]+-\d{3}|[A-Z][A-Z0-9]+-\d{3})`"
+)
+PAYMENT_UNVERIFIED_ATTRIBUTION = [
+    (
+        "unverified vendor document extraction",
+        re.compile(
+            r"(?is)(?:(?:提炼|整理|抽取|归纳|总结|依据|根据|参考).{0,40}(?:Formance|Highnote).{0,30}(?:官方)?文档|(?:Formance|Highnote).{0,30}(?:官方)?文档.{0,30}(?:提炼|整理|抽取|归纳|总结))"
+        ),
+    ),
+    (
+        "unverified public article extraction",
+        re.compile(
+            r"(?is)(?:(?:参考|依据|根据|提炼|来自).{0,50}(?:陈天宇宙)?公开文章|(?:陈天宇宙)?公开文章.{0,50}(?:提炼|整理|抽取|归纳|总结))"
+        ),
+    ),
+]
+PAYMENT_VENDOR_BOUNDARIES = {
+    "formance-reference-patterns.md": [
+        "D1",
+        "`source-map.md`",
+        "正文读取证据",
+        "不得写成 Formance 官方结论",
+        "## 待核验导航",
+    ],
+    "highnote-reference-patterns.md": [
+        "D1",
+        "`source-map.md`",
+        "正文读取证据",
+        "不得写成 Highnote 官方结论",
+        "## 待核验导航",
+    ],
+}
+
+
+def audit_payment_reference_attribution(references: Sequence[tuple[str, str]]) -> list[str]:
+    failures: list[str] = []
+    for label, text in references:
+        for pattern_name, pattern in PAYMENT_UNVERIFIED_ATTRIBUTION:
+            if pattern.search(text):
+                failures.append(f"{label}: {pattern_name}")
+        for filename, required_terms in PAYMENT_VENDOR_BOUNDARIES.items():
+            if label.endswith(filename):
+                for term in required_terms:
+                    if term not in text:
+                        failures.append(f"{label}: missing pending-source boundary: {term}")
+    return failures
+
+
+def audit_payment_provenance(source_text: str, method_text: str) -> list[str]:
+    failures: list[str] = []
+    for evidence_id in sorted(set(PAYMENT_EVIDENCE_ID.findall(method_text))):
+        if evidence_id.startswith("PT-"):
+            continue
+        if f"`{evidence_id}`" not in source_text:
+            failures.append(
+                f"{rel(PAYMENT_SOURCE_MAP)}: unresolved method-card evidence id {evidence_id}"
+            )
+    for required in ["S1", "S2", "S3", "SHA-256", "冻结快照", "D1", "D2", "D3", "D4"]:
+        if required not in source_text:
+            failures.append(f"{rel(PAYMENT_SOURCE_MAP)}: missing provenance term {required}")
     return failures
 
 
@@ -333,6 +429,35 @@ def fixture_failures(name: str, source_text: str) -> list[str]:
 
 def run_self_test() -> list[str]:
     failures: list[str] = []
+    bad_attribution_probes = [
+        ("fixture:bad-formance-plain", "本文提炼 Formance 文档中的模式"),
+        ("fixture:bad-formance-official", "本文整理 Formance 官方文档中的模式"),
+        ("fixture:bad-highnote", "依据 Highnote 官方文档提炼产品模式"),
+        ("fixture:bad-article", "根据陈天宇宙公开文章总结产品方法"),
+    ]
+    attribution_failures = audit_payment_reference_attribution(bad_attribution_probes)
+    for label, _ in bad_attribution_probes:
+        if not any(label in failure for failure in attribution_failures):
+            failures.append(f"self-test payment attribution: probe passed: {label}")
+    if audit_payment_reference_attribution(
+        [("fixture:valid-payment-reference", "厂商文档正文和版本均为 PENDING，仅作待核验导航")]
+    ):
+        failures.append("self-test payment attribution: valid pending boundary should pass")
+    missing_boundary = audit_payment_reference_attribution(
+        [("payment-expert/references/formance-reference-patterns.md", "Formance 模式候选")]
+    )
+    if not any("missing pending-source boundary" in failure for failure in missing_boundary):
+        failures.append("self-test payment attribution: missing vendor boundary was not detected")
+    provenance_failures = audit_payment_provenance("`C02` `S1` `S2` `S3` SHA-256 冻结快照 D1 D2 D3 D4", "`C02` `PAY-003`")
+    if not any("PAY-003" in failure for failure in provenance_failures):
+        failures.append("self-test payment provenance: unresolved evidence id was not detected")
+    valid_provenance = audit_payment_provenance(
+        "`C02` `PAY-003` `S1` `S2` `S3` SHA-256 冻结快照 D1 D2 D3 D4",
+        "`C02` `PAY-003`",
+    )
+    if valid_provenance:
+        failures.append("self-test payment provenance: valid fixture should pass")
+        failures.extend(valid_provenance)
     valid_failures = audit_text(
         VALID_FIXTURE,
         source_label="fixture:valid",

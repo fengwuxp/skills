@@ -64,6 +64,8 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 单体工作优先。Worker 只处理低耦合子任务，Checker 独立处理高风险或重要准出。跨轮恢复必须读取既有 Goal、确认项、排除项、待确认项和下一动作；需要确定性审计时运行 `scripts/check_state_contract.py`。
 
+跨上下文先正名：`Continue` 从既有状态载体续接同一任务；`Branch` 只为需要干净上下文的独立取证临时分叉并回传。不得按固定 token 阈值创建 Branch，也不得把它混成 Worker、Checker、第二状态源或新的控制机制；需要临时上下文分叉时读取 `references/context-handoff.md`。
+
 ## 工作与授权
 
 - 分析、评审或报告默认只读；构建、修改或修复在明确范围内直接工作并验证。

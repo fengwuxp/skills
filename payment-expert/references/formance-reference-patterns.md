@@ -1,6 +1,6 @@
 # Formance 参考模式
 
-本文提炼 Formance 官方 Wallets、Ledger、Reconciliation、Connectivity、Numscript、Flows 文档中的通用产品与系统设计模式。它只作为支付产品、账务、连接器、流程编排和对账设计参考，不替代监管规则、财务制度、机构接口规范或团队自研架构决策。
+本文整理 Formance 相关产品模式候选。`source-map.md` 尚未登记这些厂商文档的正文读取证据和当前版本，所以下文只作为 D1 提问与检查框架，不得写成 Formance 官方结论，也不替代监管规则、财务制度、机构接口规范或团队自研架构决策。
 
 ## 使用时机
 
@@ -129,7 +129,9 @@ Formance 的模块划分可抽象成三层核心能力和三个支撑能力：
 12. 报表和财务凭证是否来自可追溯明细，而不是不可解释的汇总数。
 13. 监管、财务、税务和外部机构口径是否被列为待确认项。
 
-## 资料来源
+## 待核验导航
+
+以下链接尚未形成正文读取与版本证据，只能用于后续定向核验：
 
 - Formance Wallets Introduction：`https://docs.formance.com/modules/wallets/introduction`
 - Formance Ledger Introduction：`https://docs.formance.com/modules/ledger/introduction`

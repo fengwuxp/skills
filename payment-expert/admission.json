@@ -1,0 +1,11 @@
+{
+  "status": "candidate",
+  "updated_at": "2026-08-02",
+  "blockers": [
+    {
+      "id": "Q-002",
+      "summary": "作者或相应权利人尚未分别确认本机私有使用/安装/私有提交、团队共享/同步、公开发布三个范围；当前仅保留 course-enriched 本地未提交 candidate",
+      "owner": "用户/版权 Owner"
+    }
+  ]
+}

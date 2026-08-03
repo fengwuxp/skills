@@ -24,7 +24,7 @@
 
 - 用户只问工程实现、代码 Review 或测试设计；此时优先使用 `资深架构师`。
 - 用户只给错误截图、日志截图或测试失败截图，并要求定位根因、修复代码或补回归测试；此时优先使用 `资深架构师`，除非用户明确要求反推产品需求或页面流程。
-- 已明确进入支付资金专项时，继续读取 `payment-scenario-routing.md`，但仍保留本文件的产品语义判断。
+- 已明确进入支付资金专项时，使用 `payment-expert`；本文件只在需要通用 PRD 主文档时协同。
 
 ## 读取后必须产出
 
@@ -34,7 +34,7 @@
 
 ## 需要继续读取的 reference
 
-- PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 加读 `product-prd-financial-appendix.md`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后可交给 `document-authoring` 处理同一权威版本的表达和载体，编辑后回本技能重新校验。
+- PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后可交给 `document-authoring` 处理同一权威版本的表达和载体，编辑后回本技能重新校验。
 - AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD / 工程执行准入、Harness/Agent 编排由 `wise-agent` 处理。
 - 复杂 PRD、AI 生成方案、原型候选、多方争议、PM / Reviewer / 产品大师 / MAGI 多视角评审读 `product-deliberation-workflow.md`；它只提供产品合议评审流程，不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
 - 通用产品架构读 `product-architecture-methodology.md`。
@@ -48,7 +48,7 @@
 - 产品阶段、PMF 前后团队能力配比、产品团队不按岗位分工或五类贡献方式诊断时，读 `product-architecture-methodology.md` 的“2.0F 产品阶段与贡献方式诊断”。
 - 概念膨胀、新旧概念并存、需求只加不减、事实源分裂、旧规则退役或旧入口下线时，读 `product-concept-lifecycle.md`。
 - 图形化产品交付读 `diagram-output.md`。
-- 支付资金场景读 `payment-scenario-routing.md` 和 `regulatory-baseline.md`；外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控同样先进入支付资金专项。
+- 支付资金、外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控使用 `payment-expert`。
 
 ## 按任务读取索引
 
@@ -56,6 +56,7 @@
 | --- | --- | --- |
 | 产品场景初判 | 使用方式、产品语义门禁、快速路由表 | 输出路由细节 |
 | PRD/产品方案 | 快速路由表、输出路由，并继续读 PRD reference | 支付资金专项，除非命中资金场景 |
+| 从零构思 / 优化已有 PRD / 既有产品增量需求 | 输出路由，并继续读 `product-design-and-prd.md` 的“PRD 连环追问与原型反推” | 不新建平行 PRD；不把技术栈、数据模型、API 或 Agent 控制规则写入正式 PRD |
 | 原型/HTML/页面截图/交互稿反推 PRD | 使用方式、产品语义门禁、快速路由表，并继续读 PRD reference | 只描述页面控件 |
 | 复杂 PRD / AI 生成方案 / 多视角合议评审 | 快速路由表、产品语义门禁，并继续读 `product-deliberation-workflow.md`、`product-prd-quality-gates.md` | 不新增独立产品大师 Skill，不照搬外部多 Agent 工具 |
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
@@ -74,7 +75,7 @@
 | 业务架构规划 / 战略落项目 / 项目组合治理 | 快速路由表、产品语义门禁，并继续读 `business-architecture-planning.md`；复杂图形化表达加读 `diagram-output.md` | 不画全公司大图，不把部门 / 系统 / 页面当业务能力 |
 | 业务驱动架构交接 / 产品方案交给架构师 | 产品语义门禁、快速路由表、`product-architecture-methodology.md` 的 5/5.1 | 页面控件或技术模块清单 |
 | 图形化交付 | 快速路由表、输出路由，并读 `diagram-output.md` | 支付规则细节 |
-| 支付资金场景 | 使用方式、产品语义门禁、快速路由表，并读 `payment-scenario-routing.md` | 普通产品方法扩写 |
+| 支付资金场景 | 使用 `payment-expert` | 普通产品方法扩写 |
 | 评审/触发验证 | 产品语义门禁、外部规则时效性、产品交付物脚本门禁、输出路由 | 学习路径 |
 
 ## 使用方式
@@ -87,7 +88,7 @@
 4. **风险等级**：资金、合规、隐私、安全、权限、生产运营、跨团队契约、外部机构规则。
 5. **目标产物**：产品架构方案、PRD、能力地图、业务流程图、状态机、规则矩阵、指标口径、运营后台方案、验收标准。
 
-如果涉及支付、账户、账本、清结算、对账、商户结算、分账分润、通道路由、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、ACH/银行转账、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化，再读取 `payment-scenario-routing.md`。
+如果涉及支付、账户、账本、清结算、对账、商户结算、分账分润、通道路由、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、ACH/银行转账、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化，使用 `payment-expert`。
 
 ## 产品语义门禁
 
@@ -105,9 +106,9 @@
 | 风险 | 是否涉及资金、合规、隐私、安全、生产运营、外部规则或跨团队契约。 | 进入专项 reference，并列出专业确认方。 |
 | 验收 | 正常、边界、异常、运营、数据和风险路径是否可测试。 | 正文末尾补验收摘要；详细验收矩阵进入执行计划，无法验收的需求不写成可开发完成。 |
 
-外部规则、政策、通道协议、卡组织/ACH/银行规则、云产品限制、第三方平台 API 或 SDK 版本会随时间变化。产品方案引用这类内容时，必须记录来源、版本或发布日期、适用范围、核验日期和确认方；无法确认最新版本时，只能列为待确认项。涉及真实资金、金融数据或支付网络时，继续读取 `regulatory-baseline.md`。
+外部规则、政策、通道协议、卡组织/ACH/银行规则、云产品限制、第三方平台 API 或 SDK 版本会随时间变化。产品方案引用这类内容时，必须记录来源、版本或发布日期、适用范围、核验日期和确认方；无法确认最新版本时，只能列为待确认项。涉及真实资金、金融数据或支付网络时，继续使用 `payment-expert`。
 
-正式、完整、可评审、提交前或触发验证场景中，涉及外部规则时必须运行 `scripts/check_external_rules.py` 检查本地文本或显式传入的本地文件。该脚本只做完整性检查，不联网、不写文件、不替代规则真实性、适用性或可上线性的专业确认；无法运行时必须说明原因、人工检查结果和残余风险。
+正式、完整、可评审、提交前或触发验证场景中，支付外部规则由 `payment-expert` 运行其完整性检查器；其他外部规则必须记录来源、版本、范围、核验日期和确认方。检查结果不替代规则真实性、适用性或可上线性的专业确认；无法核验时必须说明原因、人工检查结果和残余风险。
 
 正式、完整、可评审、提交前、CR 或触发验证场景中，PRD、业务架构规划、产品架构方案、图形 brief 或产品合议评审报告必须运行 `scripts/check_product_deliverable.py --kind prd`、`--kind business-architecture`、`--kind product-architecture`、`--kind diagram-brief` 或 `--kind product-review`。该脚本只做本地文本完整性检查，不联网、不写文件、不替代产品判断、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
 
@@ -116,8 +117,9 @@
 | 场景信号 | 优先读取 | 典型输出 |
 | --- | --- | --- |
 | 产品方向、业务目标、产品边界不清 | `product-architecture-methodology.md` | 目标、用户、范围、非目标、成功指标、关键风险 |
+| 从零构思、优化已有 PRD、既有产品增量需求 | `product-design-and-prd.md`, `product-architecture-methodology.md` | 需求分析结论卡、PRD-Lite 或既有权威 PRD 的 `ADDED / MODIFIED / REMOVED` 增量；不建立第二事实源 |
 | 业务架构规划、业务 IT 对齐、战略落项目、业务能力地图、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射 | `business-architecture-planning.md`, `product-architecture-methodology.md`；复杂图形化表达加读 `diagram-output.md` | 业务架构准入卡、能力地图、价值流、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划 |
-| 写 PRD、生成 PRD、完善 PRD、补全 PRD、改写 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；支付资金加读 `product-prd-financial-appendix.md`，运营数据发布加读 `product-prd-operations-and-data.md`，提交前自检加读 `product-prd-quality-gates.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
+| 写 PRD、生成 PRD、完善 PRD、补全 PRD、改写 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；支付资金协同 `payment-expert`，运营数据发布加读 `product-prd-operations-and-data.md`，提交前自检加读 `product-prd-quality-gates.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
 | PRD 文档过厚、过薄、未更新、未评审、版本状态不清或过程稿混入正文 | `product-design-and-prd.md`, `product-prd-quality-gates.md` | 文档目标/受众、裁剪建议、必改项、版本状态/过程记录链接和最终正文准出机制 |
 | 需求评审、PRD 评审会前扫描、需求评审 Skill、完整性/一致性/可测试性/二义性检查 | `product-prd-quality-gates.md`, `product-design-and-prd.md` | AI 预扫描疑似问题清单：锚点、维度、影响、建议追问、建议改法、决策状态、owner、验证方式；只做评审前广度扫描，不替代正式评审 |
 | 多 AI、PM/Reviewer、产品大师、MAGI、合议式评审复杂 PRD、AI 生成方案、HTML Demo 或产品方案 | `product-deliberation-workflow.md`, `product-prd-quality-gates.md`，需要正文时再读 `product-prd-template.md` 和 `product-design-and-prd.md` | 合议评审结论：触发原因、阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向 |
@@ -139,7 +141,7 @@
 | 规则体系、额度、计费、审批、风控 | `product-architecture-methodology.md`, `product-design-and-prd.md` | 规则矩阵、优先级、版本、灰度、回滚和验收样例 |
 | 运营后台、人工处理、审批复核 | `product-design-and-prd.md` | 后台功能、权限、审批、复核、日志、导出、告警 |
 | 指标、报表、数据产品、经营分析 | `product-architecture-methodology.md`, `product-design-and-prd.md` | 指标口径、事件埋点、报表模型、数据验收 |
-| 支付、资金、账本、清结算、对账、VCC、ACH、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、争议 | `payment-scenario-routing.md`, `regulatory-baseline.md` | 支付与资金产品架构、账户/账务、资金流、金融红线 |
+| 支付、资金、账本、清结算、对账、VCC、ACH、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、争议 | `payment-expert` | 支付与资金产品架构、账户/账务、资金流、金融红线 |
 | 用户要求学习路径或能力评估 | `skill-tree.md` | 能力树、分级、短板、学习路径 |
 
 ## 通用场景识别问题
@@ -176,14 +178,14 @@
 - **用户要治理概念膨胀、新旧概念并存、需求只加不减或旧规则退役**：读取 `product-architecture-methodology.md` 的“1.3 概念定名与需求止损”和 `product-concept-lifecycle.md`，输出 Concept Lifecycle Card，说明事实源、旧概念关系、收敛/合并/废弃规则、迁移路径、用户/运营/UED 影响、验收种子、下线 owner 和待确认项；产品专家不能只加新名词，也不能把概念退役写成工程删除授权。
 - **用户要消化洞察、机会清单或需求池，做 Backlog 决策、优先级、User Story 或 AC**：读取 `po-backlog-manager.md`，先做输入归一化、BV/EE 和业务/用户/工程三桌校验，再输出 P0/P1/P2、拒绝/延后理由、User Story、AC、技术现实主义风险、owner 和待确认项；不要把洞察清单直接改写成研发任务。
 - **用户要图形化产物**：读取 `diagram-output.md`，先判断图形目标和图形类型；正式图形化交付默认只生成 SVG；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式只在用户明确提出时生成，并报告验证结论。
-- **用户要写作、生成、完善、补全或改写 PRD / 产品需求文档 / 需求说明书 / 模板**：优先读取 `product-prd-template.md`，输出可复制 PRD，覆盖问题背景、用户故事、功能范围、核心概念、业务抽象、业务规则、页面/交互说明、异常处理、埋点报表、权限、非功能和验收标准；提交前自检读取 `product-prd-quality-gates.md`；支付资金 PRD 读取 `product-prd-financial-appendix.md`；运营、通知、数据、发布读取 `product-prd-operations-and-data.md`；信息不足时保留“待确认”，不要只给提纲。用户给原型、HTML、页面截图、交互稿或页面说明时，先反推角色、对象、流程、规则、状态和验收，再生成 PRD；不要只描述页面控件。
+- **用户要写作、生成、完善、补全或改写 PRD / 产品需求文档 / 需求说明书 / 模板**：优先读取 `product-prd-template.md`，输出可复制 PRD，覆盖问题背景、用户故事、功能范围、核心概念、业务抽象、业务规则、页面/交互说明、异常处理、埋点报表、权限、非功能和验收标准；提交前自检读取 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布读取 `product-prd-operations-and-data.md`；信息不足时保留“待确认”，不要只给提纲。用户给原型、HTML、页面截图、交互稿或页面说明时，先反推角色、对象、流程、规则、状态和验收，再生成 PRD；不要只描述页面控件。
 - **用户只要求需求评审、PRD 评审会前扫描或需求评审 Skill 化**：读取 `product-prd-quality-gates.md` 的“AI 预扫描四维度”，按完整性、一致性、可测试性、二义性输出疑似问题、章节锚点、影响、建议追问、建议改法、owner 和验证方式；只做评审前广度扫描和提问准备，不把 AI 结论当成已确认缺陷，也不替代正式评审，不默认重写全文。
 - **用户要多视角、多个 AI、PM/Reviewer、产品大师、MAGI 或合议式评审**：读取 `product-deliberation-workflow.md`，先判断是否需要合议，再输出阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向；需要正式 PRD 时再回到 `product-prd-template.md` 和 `product-design-and-prd.md`，不要新增独立产品大师 Skill。
-- **用户要从模糊想法直接出方案**：先过产品语义门禁，输出关键假设、待确认项和最小可评审结构；不要把假设写成已确认事实。
+- **用户要从零构思、优化已有 PRD 或增加既有产品需求**：先识别输入模式。`从零构思`先形成需求分析结论卡，owner 确认 MVP 与非目标后再进入 PRD-Lite；`优化已有 PRD`以现有权威文档为主版本，先校准目标和范围再补细节；`既有产品增量需求`只写受影响产品事实的 `ADDED / MODIFIED / REMOVED` 和影响清单。三种模式都不新建平行 PRD，不把假设写成事实，也不替架构师决定技术栈、数据模型或 API。
 - **用户要流程**：输出角色、触发条件、主流程、逆向流程、异常流程、人工处理、通知、SLA 和审计。
 - **用户要规则**：输出规则对象、触发条件、计算口径、优先级、版本、灰度、回滚、审批和验收样例。
 - **用户要评审**：优先按目标一致性、边界完整性、对象清晰度、流程闭环、规则可验证、数据可追溯、风险可控排序。
-- **用户要支付或资金方案**：进入 `payment-scenario-routing.md`，补充金融红线、资金流、账务、对账、结算和外部规则时效性。
+- **用户要支付或资金方案**：使用 `payment-expert`，补充金融红线、资金流、账务、对账、结算和外部规则时效性。
 
 ## 路由红线
 

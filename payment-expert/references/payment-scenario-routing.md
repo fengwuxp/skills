@@ -5,12 +5,12 @@
 ## 使用时机
 
 - 用户问题涉及支付、资金、账户、账本、清结算、对账、商户结算、分账分润、支付通道、银行卡/卡组织、ACH/银行转账、收单/发卡、VCC、风控欺诈、争议拒付、跨境支付、稳定币/Web3、AI 代理支付或业财一体化。
-- 已经通过 `product-scenario-routing.md` 判断为支付与资金专项，需要选择最小 reference 集合。
+- 已确认目标涉及真实支付或资金事实，需要选择最小 reference 集合。
 - 需要先判断法域、主体、资金归属、支付轨道、目标产物和待确认项。
 
 ## 不适用场景
 
-- 不涉及真实资金、支付轨道、账户账务或金融数据的普通产品方案；此时优先回到 `product-scenario-routing.md`。
+- 不涉及真实资金、支付轨道、账户账务或金融数据的普通产品方案；此时使用 `product-architecture-expert`。
 - 用户只问工程实现、代码 Review、测试设计或系统架构实现细节；此时优先使用 `资深架构师`，必要时再引用本文做业务语义补充。
 - 用户要求法律、合规、税务、会计、监管或外部机构规则的最终结论；本文只能提供产品架构检查框架和待确认项。
 
@@ -62,7 +62,7 @@
 | 支付术语、清算/结算/备付金口径不清 | `glossary.md`, `regulatory-baseline.md` | 术语定义、主体语境、风险提示 |
 | 收单、支付订单、支付尝试、在线支付 | `payment-methodology.md`, `card-network-and-card-rails.md`, `highnote-reference-patterns.md` | 支付流程、状态机、订单/尝试模型、事件集成 |
 | 清结算、商户结算、分账分润、结算周期 | `clearing-settlement.md`, `payment-design-checklists.md` | 清结算方案、账户科目、账务矩阵、结算规则 |
-| 多业务线清结算全局规划、线下 Excel 核算、财务人工打款、清结算中台 | `clearing-settlement.md`, `payment-design-checklists.md`, `diagram-output.md` | 现状问题盘点、资金路径、五中心能力切分、分期迁移路线、全局规划图 |
+| 多业务线清结算全局规划、线下 Excel 核算、财务人工打款、清结算中台 | `clearing-settlement.md`, `payment-design-checklists.md`；图形交付再调用 `product-architecture-expert` 或专用出图 Skill | 现状问题盘点、资金路径、能力切分、分期迁移路线、全局规划图 |
 | 支付清算生态、网联/银联/央行/银行、备付金、跨机构清算 | `clearing-settlement.md`, `regulatory-baseline.md` | 生态参与者分层、跨机构清算链路、备付金/额度口径、待专业确认项 |
 | 钱包、余额、账本、资金账户、内部转账 | `formance-reference-patterns.md`, `clearing-settlement.md` | 钱包/账本模型、账户关系、账务事件矩阵 |
 | 对账、差错、长短款、批处理、资金到账 | `clearing-settlement.md`, `formance-reference-patterns.md`, `payment-design-checklists.md` | 对账方案、差错生命周期、重跑和核销机制 |
@@ -88,7 +88,7 @@
 - **ACH 争议 / unauthorized return**：读 `payment-rails-ach-and-bank-transfers.md` + `dispute-refund-and-chargeback-operations.md` + `payment-risk-fraud-and-merchant-operations.md`。重点输出 debit authorization evidence、账户验证、return code、NOC、reversal、retry、证据包和用户通知。
 - **VCC 争议 / 企业卡拒付**：读 `virtual-card-and-vcc.md` + `card-network-and-card-rails.md` + `dispute-refund-and-chargeback-operations.md`。重点输出 cardholder、卡、授权控制、清算、退款、争议证据和 PCI 边界。
 - **收单 + 商户结算 + 对账**：读 `payment-methodology.md` + `clearing-settlement.md` + `card-network-and-card-rails.md` + `payment-design-checklists.md`。重点输出支付单据、清分规则、结算批次、通道对账和资金到账对账。
-- **多业务线清结算全局规划**：读 `clearing-settlement.md` + `payment-design-checklists.md` + `diagram-output.md`。重点输出线下线上断点、报表不记账、对账无差错闭环、能力重复建设、五中心能力边界、迁移优先级和全局规划图。
+- **多业务线清结算全局规划**：读 `clearing-settlement.md` + `payment-design-checklists.md`；先稳定支付资金语义，再调用 `product-architecture-expert` 或专用出图 Skill 形成图形交付。重点输出线下线上断点、报表不记账、对账差错闭环、能力重复建设、能力边界、迁移优先级和全局规划图。
 - **多通道收款优化**：读 `payment-channel-routing-and-operations.md` + `payment-risk-fraud-and-merchant-operations.md` + 对应支付轨道文件。重点输出路由决策、健康熔断、成本口径、风险约束和通道对账。
 - **全球支付编排 / 外卡收单升级**：读 `payment-channel-routing-and-operations.md` + `card-network-and-card-rails.md` + `global-payment-emerging.md` + `payment-risk-fraud-and-merchant-operations.md`。重点输出全球覆盖、本地适配、支付方式组合、认证与风控、资金控制、争议治理和运营闭环。
 - **Airwallex 类全球金融平台能力分析**：读 `global-payment-emerging.md` + `payment-methodology.md` + `source-map.md`，涉及真实资金再读 `regulatory-baseline.md`。重点输出能力族群、对象边界、状态事件、报表、沙盒验证、复杂性承接和客户侧确定性，不复制厂商 API 或覆盖清单。

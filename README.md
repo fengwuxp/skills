@@ -6,7 +6,7 @@
 
 ## 项目定位
 
-知止者不是流程路由器，而是统一智能行动主体：先读事实，再判断问题，装载最小能力，完成真实工作，用独立证据验证并归位结果。多 Skill 只为同一 Agent 补充专业上下文，不产生第二人格或重复 Owner。
+知止者不是流程路由器，而是统一智能行动主体：先读事实，再判断问题，装载最小能力，完成真实工作，用独立证据验证并归位结果。多 Skill 只为同一 Agent 补充专业上下文，不产生第二人格或重复 Owner；运行时只读取当前任务必要的 reference。
 
 体系按“体、枢、用、证”归位：`AGENTS.md` 守体，`wise-agent` 持枢，专业 Skill 各安其用，fixtures、validator、测试与人工评审独立作证；上层只声明边界和路由，不复制下层说明书。
 
@@ -133,6 +133,8 @@
 | --- | --- | --- | --- |
 | 跨领域真实工作、目标控制、能力组合、验证和知识演进 | 知止者，ID：`wise-agent`，路径：[wise-agent](./wise-agent) | 目标、事实源、范围、授权、完成证据 | 不限于产研；不获得无限自治或高风险授权 |
 | 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | 产品架构专家，ID：`product-architecture-expert`，路径：[product-architecture-expert](./product-architecture-expert) | 用户、主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
+| 支付、资金账户、支付账本、清结算、对账、原支付退款、通道、卡组织、ACH、VCC、跨境和支付监管产品规则 | 候选支付专家，ID：`payment-expert`，路径：[payment-expert](./payment-expert)；`Q-002` 关闭前不可同步 | 主体、法域、资金归属、原事实、轨道/通道、规则来源、验收 Owner | 不替代法务合规、会计政策、工程实现或生产准入 |
+| 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可同步 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 正式报告、制度、手册、研究说明、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、法律、合规或考据结论 |
@@ -145,11 +147,12 @@
 
 没有 Wind 高置信度信号时不加载 Wind face/impl、API 或模型专项；Wind 项目按实际依赖和上下文补专项入口。普通 Java 源码 CR 由架构师主责，并消费通用 Java 约规。
 
-图形化交付按语义归属：业务架构定能力与投资，产品架构定产品语义，系统架构定工程结构，技术架构定实现支撑；详细路由以 [capability-routing.md](./wise-agent/references/capability-routing.md) 为准。产品流程、状态、资金流和验收视图由产品专家负责；系统模块、接口时序、部署和实现状态由架构师负责。只说“架构图”且材料不足以判断类型时，先确认它用于业务投资、产品语义、系统结构还是技术实现决策。复杂可编辑架构图、代码库结构转图或架构描述转图，应先稳定语义，再按需调用 `$fireworks-tech-graph`。正式图形默认 SVG，PNG 仅在明确要求时导出。
+图形化交付按语义归属：业务架构定能力与投资，产品架构定产品语义，支付资金图先由支付专家稳定资金事实，系统架构定工程结构，技术架构定实现支撑；详细路由以 [capability-routing.md](./wise-agent/references/capability-routing.md) 为准。产品流程、状态和验收视图由产品专家负责，支付四流、账务与清结算语义由支付专家负责，系统模块、接口时序、部署和实现状态由架构师负责。只说“架构图”且材料不足以判断类型时，先确认它用于业务投资、产品语义、支付资金事实、系统结构还是技术实现决策。复杂可编辑架构图、代码库结构转图或架构描述转图，应先稳定语义，再按需调用 `$fireworks-tech-graph`。正式图形默认 SVG，PNG 仅在明确要求时导出。
 
 常见组合仍只保留一个最终 Owner：
 
 - 从 AI 原型到工程化：产品专家稳定对象、流程、规则和验收，架构师完成系分、TDD、源码 CR 和生产验证，知止者持有跨阶段目标。
+- 从支付产品到工程化：支付专家稳定资金事实、支付不变量、外部规则边界和验收种子，架构师完成系统设计、代码、测试和生产证据，知止者只在跨阶段或跨轮时持有 Goal 与 Checker。
 - 从产品事实到可用界面：产品专家稳定业务语义和验收口径，UI 设计专家形成信息架构、交互状态、视觉与可用性契约，架构师实现并验证；Figma 能力只负责工具内执行或既有设计到代码。
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
 - 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，`document-authoring` 只负责成文与载体，不改变证据等级。
@@ -275,7 +278,7 @@ cd skills
 scripts/validate-installed-skills.sh
 ```
 
-同步单个 Skill 使用 `./sync-skills.sh senior-software-architect`；非默认目录使用 `CODEX_HOME=/path/to/codex-home`。同步使用 `rsync --delete`，会先备份已有安装，并按替代关系退役 `wind-project-coding-conventions`、`delivery-collab` 和 `huaxia-wisdom`。完成后重启 Codex 或开启新会话。
+同步单个无依赖 Skill 使用 `./sync-skills.sh document-authoring`；非默认目录使用 `CODEX_HOME=/path/to/codex-home`。有 `admission.json.requires` 的 Skill 必须在同一命令中先列依赖、再列调用方；`all` 会按准入和依赖闭包选择安全批次。同步使用 `rsync --delete`，会先备份已有安装，并按替代关系退役 `wind-project-coding-conventions`、`delivery-collab` 和 `huaxia-wisdom`。完成后重启 Codex 或开启新会话。
 
 ## 验证与同步安全
 
@@ -289,7 +292,17 @@ git diff --check
 
 正式同步后运行 `scripts/validate-installed-skills.sh`。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
 
-`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
+`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。跨 Skill 的 baseline/candidate 对照使用离线行为评测入口；它不调用 Agent 或网络，只准备同题任务、校验同一 runner/model 的成对回答、分离盲评材料与映射密钥，并根据独立评分执行准出门禁：
+
+```bash
+python3 scripts/evaluate-skill-behavior.py prepare --trials 3 --output /tmp/skill-behavior-plan.jsonl
+# 使用同一 runner/model 收集 response JSONL：case_id、trial、condition、response、runner、model
+python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior-responses.jsonl --output /tmp/skill-behavior-judge.jsonl --key-output /tmp/skill-behavior-key.json
+# 独立评分 JSONL：pair_id、label、五项 rubric 分数、blocker、notes
+python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --output /tmp/skill-behavior-report.json
+```
+
+默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke

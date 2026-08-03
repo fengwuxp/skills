@@ -9,6 +9,7 @@ sections to read for common tasks.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REFERENCE_ROOTS = [
     ROOT / "senior-software-architect" / "references",
     ROOT / "product-architecture-expert" / "references",
+    ROOT / "payment-expert" / "references",
     ROOT / "java-service-code-generator" / "references",
     ROOT / "wind-coding-conventions" / "references",
     ROOT / "wise-agent" / "references",
@@ -25,6 +27,7 @@ REQUIRED_INDEX_THRESHOLD = 350
 REQUIRED_HEADING = "## 按任务读取索引"
 REQUIRED_COLUMNS = ["任务", "优先读取", "跳过"]
 ALTERNATIVE_REQUIRED_COLUMNS = ["任务", "主文档保留", "按需展开"]
+LOCAL_MARKDOWN_REF = re.compile(r"`([a-z0-9][a-z0-9._/-]*\.md)`", re.IGNORECASE)
 
 REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/ai-assisted-engineering.md",
@@ -65,31 +68,32 @@ REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/workflow.md",
     "wind-coding-conventions/references/java-coding-conventions.md",
     "wind-coding-conventions/references/wind-architecture-patterns.md",
-    "product-architecture-expert/references/card-network-and-card-rails.md",
-    "product-architecture-expert/references/clearing-settlement.md",
+    "payment-expert/references/card-network-and-card-rails.md",
+    "payment-expert/references/clearing-settlement.md",
     "product-architecture-expert/references/diagram-output.md",
-    "product-architecture-expert/references/dispute-refund-and-chargeback-operations.md",
-    "product-architecture-expert/references/formance-reference-patterns.md",
-    "product-architecture-expert/references/global-payment-emerging.md",
-    "product-architecture-expert/references/glossary.md",
-    "product-architecture-expert/references/highnote-reference-patterns.md",
-    "product-architecture-expert/references/payment-channel-routing-and-operations.md",
-    "product-architecture-expert/references/payment-design-checklists.md",
-    "product-architecture-expert/references/payment-methodology.md",
-    "product-architecture-expert/references/payment-rails-ach-and-bank-transfers.md",
-    "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md",
-    "product-architecture-expert/references/payment-scenario-routing.md",
+    "payment-expert/references/dispute-refund-and-chargeback-operations.md",
+    "payment-expert/references/formance-reference-patterns.md",
+    "payment-expert/references/global-payment-emerging.md",
+    "payment-expert/references/glossary.md",
+    "payment-expert/references/highnote-reference-patterns.md",
+    "payment-expert/references/payment-channel-routing-and-operations.md",
+    "payment-expert/references/payment-design-checklists.md",
+    "payment-expert/references/payment-methodology.md",
+    "payment-expert/references/payment-method-cards.md",
+    "payment-expert/references/payment-rails-ach-and-bank-transfers.md",
+    "payment-expert/references/payment-risk-fraud-and-merchant-operations.md",
+    "payment-expert/references/payment-scenario-routing.md",
     "product-architecture-expert/references/product-architecture-methodology.md",
     "product-architecture-expert/references/product-design-and-prd.md",
     "product-architecture-expert/references/product-prd-template.md",
     "product-architecture-expert/references/product-prd-quality-gates.md",
-    "product-architecture-expert/references/product-prd-financial-appendix.md",
+    "payment-expert/references/product-prd-financial-appendix.md",
     "product-architecture-expert/references/product-prd-operations-and-data.md",
     "product-architecture-expert/references/product-scenario-routing.md",
-    "product-architecture-expert/references/regulatory-baseline.md",
+    "payment-expert/references/regulatory-baseline.md",
     "product-architecture-expert/references/skill-tree.md",
     "product-architecture-expert/references/source-map.md",
-    "product-architecture-expert/references/virtual-card-and-vcc.md",
+    "payment-expert/references/virtual-card-and-vcc.md",
 }
 
 
@@ -107,6 +111,18 @@ def has_task_index(path: Path) -> bool:
         all(column in text for column in REQUIRED_COLUMNS)
         or all(column in text for column in ALTERNATIVE_REQUIRED_COLUMNS)
     )
+
+
+def missing_local_references(path: Path) -> list[str]:
+    missing: list[str] = []
+    text = path.read_text(encoding="utf-8")
+    for reference in sorted(set(LOCAL_MARKDOWN_REF.findall(text))):
+        target = path.parent / reference
+        if reference.startswith("references/"):
+            target = path.parents[1] / reference
+        if not target.exists():
+            missing.append(reference)
+    return missing
 
 
 def main() -> int:
@@ -130,6 +146,11 @@ def main() -> int:
     for rel in sorted(REQUIRED_INDEX_FILES & found_files):
         if not has_task_index(ROOT / rel):
             failures.append(f"{rel}: tracked indexed reference missing {REQUIRED_HEADING}")
+
+    payment_root = ROOT / "payment-expert" / "references"
+    for path in sorted(payment_root.glob("*.md")):
+        for reference in missing_local_references(path):
+            failures.append(f"{relative(path)}: missing local reference {reference}")
 
     for warning in warnings:
         print(warning)

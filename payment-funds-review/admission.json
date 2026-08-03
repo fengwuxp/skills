@@ -1,0 +1,21 @@
+{
+  "status": "candidate",
+  "updated_at": "2026-08-02",
+  "blockers": [
+    {
+      "id": "PFR-001",
+      "summary": "本地一手资金系统文档、源码和测试用于安装、同步、团队共享或公开发布的许可范围尚未确认",
+      "owner": "用户/仓库 Owner"
+    }
+  ],
+  "behavior_evidence": {
+    "sessions": 2,
+    "cases_per_session": 7,
+    "candidate_blockers": 0,
+    "candidate_weighted_scores": [4.8429, 4.7],
+    "baseline_weighted_scores": [4.6143, 4.25],
+    "candidate_safety_scores": [5.0, 5.0],
+    "max_candidate_weighted_delta": 0.1429,
+    "result": "passed"
+  }
+}

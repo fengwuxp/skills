@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Run public-safe fixtures through the product deliverable checkers."""
+"""Run public-safe fixtures through the product deliverable checker."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from check_external_rules import missing_fields
 from check_product_deliverable import missing_groups
 
 
@@ -14,8 +13,6 @@ FIXTURES = ROOT / "fixtures"
 CASES = (
     ("prd", FIXTURES / "prd-valid.md", True),
     ("prd", FIXTURES / "prd-invalid.md", False),
-    ("external-rules", FIXTURES / "external-rules-valid.md", True),
-    ("external-rules", FIXTURES / "external-rules-invalid.md", False),
 )
 
 
@@ -26,7 +23,7 @@ def main() -> int:
             failures.append(f"missing fixture: {path.name}")
             continue
         text = path.read_text(encoding="utf-8")
-        missing = missing_fields(text) if kind == "external-rules" else missing_groups(kind, text)
+        missing = missing_groups(kind, text)
         passed = not missing
         if passed != should_pass:
             failures.append(

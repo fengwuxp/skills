@@ -31,7 +31,7 @@
 - 场景识别和产品语义门禁读 `product-scenario-routing.md`。
 - PRD 和产品方案读 `product-prd-template.md`、`product-design-and-prd.md`。
 - 通用产品架构读 `product-architecture-methodology.md`。
-- 支付资金图读 `payment-scenario-routing.md`、`regulatory-baseline.md`，并按具体场景读取清结算、对账、通道路由、争议或 VCC 专项 reference。
+- 支付资金图先由 `payment-expert` 稳定清结算、对账、通道路由、争议或 VCC 专项语义。
 
 ## 按任务读取索引
 

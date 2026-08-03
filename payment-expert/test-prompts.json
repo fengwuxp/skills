@@ -1,0 +1,170 @@
+[
+  {
+    "id": "PT-001",
+    "kind": "should_trigger",
+    "query": "用户端显示支付成功，但商户还没收到结算款，是否说明支付失败？",
+    "expected": {"skill": "payment-expert", "method": "M01", "decision": "answer", "must_include": ["支付完成证据", "结算状态", "资金对账"]}
+  },
+  {
+    "id": "PT-002",
+    "kind": "should_trigger",
+    "query": "外部渠道订单已经付款，导入后能否只把内部订单改成已支付？",
+    "expected": {"skill": "payment-expert", "method": "M01", "decision": "answer", "must_include": ["外部支付证据", "履约", "清结算", "对账"]}
+  },
+  {
+    "id": "PE-M02-001",
+    "kind": "should_trigger",
+    "query": "比较两个银行通道，抽取稳定资金内核和协议差异。",
+    "expected": {"skill": "payment-expert", "method": "M02", "decision": "pending", "must_include": ["稳定内部事实", "通道差异", "正式契约"]}
+  },
+  {
+    "id": "PT-007",
+    "kind": "should_ask",
+    "query": "原路退款超期后，付款通道只返回受理中，能否把退款单改为成功？",
+    "expected": {"skill": "payment-expert", "method": "M03", "decision": "ask", "must_include": ["原支付", "最终结果", "异常处置"]}
+  },
+  {
+    "id": "PT-032",
+    "kind": "should_stop",
+    "query": "原支付可退 100 元，已成功退款 80 元，再申请退款 30 元能否送往通道？",
+    "expected": {"skill": "payment-expert", "method": "M03", "decision": "stop", "must_include": ["累计可退额", "超额", "外部执行前拒绝"]}
+  },
+  {
+    "id": "PT-033",
+    "kind": "should_stop",
+    "query": "同一外部退款标识先回调成功 20 元，之后又回调成功 30 元，能否按重复通知幂等？",
+    "expected": {"skill": "payment-expert", "method": "M03", "decision": "stop", "must_include": ["语义冲突", "停止自动处理", "冲突事实"]}
+  },
+  {
+    "id": "PT-027",
+    "kind": "should_trigger",
+    "query": "清分批次确认后，商户待清算金额是否已经进入可结算余额？",
+    "expected": {"skill": "payment-expert", "method": "M04", "decision": "answer", "must_include": ["清分快照", "清算候选", "清算确认"]}
+  },
+  {
+    "id": "PT-028",
+    "kind": "should_ask",
+    "query": "只给出商户 T+1 结算，是否足够形成结算产品？",
+    "expected": {"skill": "payment-expert", "method": "M05", "decision": "ask", "must_include": ["T 的定义", "时区", "cutoff", "出款门禁"]}
+  },
+  {
+    "id": "PT-011",
+    "kind": "should_trigger",
+    "query": "客户支付账户余额更新成功，是否说明会计总账已经完成？",
+    "expected": {"skill": "payment-expert", "method": "M06", "decision": "answer", "must_include": ["余额投影", "分录", "总账"]}
+  },
+  {
+    "id": "PT-034",
+    "kind": "should_stop",
+    "query": "posting plan 借方 100 元、贷方 99 元，但余额投影可更新，能否先过账？",
+    "expected": {"skill": "payment-expert", "method": "M06", "decision": "stop", "must_include": ["不平衡", "不得过账", "余额投影"]}
+  },
+  {
+    "id": "PT-035",
+    "kind": "should_stop",
+    "query": "同一过账幂等键第二次请求改了金额或账户，能否返回第一次结果？",
+    "expected": {"skill": "payment-expert", "method": "M06", "decision": "stop", "must_include": ["同键不同语义", "冲突", "余额不变"]}
+  },
+  {
+    "id": "PT-009",
+    "kind": "should_stop",
+    "query": "平台账和银行账差额经调整后为零，能否删除单边记录并自动核销？",
+    "expected": {"skill": "payment-expert", "method": "M07", "decision": "stop", "must_include": ["不可变结果", "核销证据", "重新对账"]}
+  },
+  {
+    "id": "PT-010",
+    "kind": "should_trigger",
+    "query": "四段式对账是不是四种对账？",
+    "expected": {"skill": "payment-expert", "method": "M07", "decision": "answer", "must_include": ["四段数据", "三组核对"]}
+  },
+  {
+    "id": "PT-029",
+    "kind": "should_stop",
+    "query": "财务把差错单手工改成已核销后，能否直接放行出款？",
+    "expected": {"skill": "payment-expert", "method": "M07", "decision": "stop", "must_include": ["追加事实", "新对账运行", "规则化处置证据"]}
+  },
+  {
+    "id": "PT-021",
+    "kind": "should_ask",
+    "query": "课程是否证明 FX 报价必须采用某种舍入和最小交易单位？",
+    "expected": {"skill": "payment-expert", "method": "M08", "decision": "ask", "must_include": ["报价契约", "舍入", "Owner"]}
+  },
+  {
+    "id": "PT-024",
+    "kind": "should_stop",
+    "query": "某项目默认使用 HALF_UP，是否能证明所有 FX 产品都必须这样舍入？",
+    "expected": {"skill": "payment-expert", "method": "M08", "decision": "stop", "must_include": ["不得外推", "目标产品", "币种", "通道规则"]}
+  },
+  {
+    "id": "PT-015",
+    "kind": "should_stop",
+    "query": "只做 PromptPay 生成 QR 和异步通知即可上线吗？",
+    "expected": {"skill": "payment-expert", "method": "M09", "decision": "stop", "must_include": ["正式接口", "退款", "清结算", "对账"]}
+  },
+  {
+    "id": "PT-019",
+    "kind": "should_ask",
+    "query": "单一通道同步请求超时，支付单能否直接置失败？",
+    "expected": {"skill": "payment-expert", "method": "M09", "decision": "ask", "must_include": ["通知或查询收敛", "通道契约", "不能直接判终态"]}
+  },
+  {
+    "id": "PT-025",
+    "kind": "should_stop",
+    "query": "已有 VCC 授权、完成和退款，是否说明完整 VCC 产品能力已经具备？",
+    "expected": {"skill": "payment-expert", "method": "M09", "decision": "stop", "must_include": ["完整生命周期", "issuer", "争议", "PCI"]}
+  },
+  {
+    "id": "PT-030",
+    "kind": "should_stop",
+    "query": "资金底座已有 ACH 资金动作，是否可以跳过银行协议和适配层上线？",
+    "expected": {"skill": "payment-expert", "method": "M09", "decision": "stop", "must_include": ["协议", "文件", "授权", "return 规则"]}
+  },
+  {
+    "id": "PT-031",
+    "kind": "should_ask",
+    "query": "只接一个银行通道，现在要解释它的 return code，应使用稳定资金内核方法吗？",
+    "expected": {"skill": "payment-expert", "method": "M09", "decision": "ask", "must_include": ["单一通道", "M09", "规则版本"]}
+  },
+  {
+    "id": "PE-N01",
+    "kind": "should_not_trigger",
+    "boundary": "generic-refund",
+    "query": "会员取消订单后显示退款申请按钮，请补一条页面验收标准，不涉及原支付、资金账务或通道规则。",
+    "expected": {"skill": "product-architecture-expert", "method": null, "decision": "route", "must_include": []}
+  },
+  {
+    "id": "PE-N02",
+    "kind": "should_not_trigger",
+    "boundary": "generic-account",
+    "query": "设计会员账户的头像、昵称和收货地址管理页面。",
+    "expected": {"skill": "product-architecture-expert", "method": null, "decision": "route", "must_include": []}
+  },
+  {
+    "id": "PE-N03",
+    "kind": "should_not_trigger",
+    "boundary": "inventory-ledger",
+    "query": "设计仓库库存台账的入库、出库和盘点页面，不涉及资金或会计分录。",
+    "expected": {"skill": "product-architecture-expert", "method": null, "decision": "route", "must_include": []}
+  },
+  {
+    "id": "PE-N04",
+    "kind": "should_not_trigger",
+    "boundary": "accounting-advice",
+    "query": "解释一般会计教材里的总账和明细账概念，不涉及支付产品设计。",
+    "expected": {"skill": "product-architecture-expert", "method": null, "decision": "route", "must_include": []}
+  },
+  {
+    "id": "PE-N05",
+    "kind": "should_not_trigger",
+    "boundary": "engineering",
+    "query": "修复 Java 退款回调幂等 Bug 并按 TDD 补测试。",
+    "expected": {"skill": "senior-software-architect", "method": null, "decision": "route", "must_include": []}
+  },
+  {
+    "id": "PE-N06",
+    "kind": "should_not_trigger",
+    "boundary": "generic-order",
+    "query": "设计普通电商订单的创建、改地址和取消流程，不涉及支付、退款、资金账户或账务。",
+    "expected": {"skill": "product-architecture-expert", "method": null, "decision": "route", "must_include": []}
+  }
+]

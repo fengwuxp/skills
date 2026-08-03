@@ -13,7 +13,7 @@
 
 - 用户只是要求完整 PRD、产品方案或模板时，优先读 `product-design-and-prd.md` 与 `product-prd-template.md`。
 - 用户要求系统设计、代码实现、测试或生产排障时，交给 `资深架构师`；本文件只输出产品侧决策和验收口径。
-- 涉及真实资金、清结算、对账、卡组织、ACH、VCC、跨境或监管规则时，必须先读 `payment-scenario-routing.md` 与 `regulatory-baseline.md`。
+- 涉及真实资金、清结算、对账、卡组织、ACH、VCC、跨境或监管规则时，必须先使用 `payment-expert` 确认专业边界。
 - 不用本文把所有机会都包装成研发任务；证据不足、价值不清或工程代价不可控的候选应进入观察、验证、延后或拒绝。
 
 ## 读取后必须产出

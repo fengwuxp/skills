@@ -12,13 +12,13 @@
 - 需要把洞察、机会清单、需求池、销售/客户/老板诉求或路线图候选收敛成可执行 Backlog、User Story、AC 和优先级时，转读 `po-backlog-manager.md`。
 - 需要治理概念膨胀、新旧概念并存、事实源分裂、旧规则退役或旧入口下线时，转读 `product-concept-lifecycle.md`。
 - 需要判断产品当前处于探索、增长还是成熟阶段，或团队缺的是原型验证、真实交付、复杂度清扫、增长放大还是可靠维护时，用本文做产品阶段与贡献方式诊断。
-- 当前问题不属于支付资金专项，或支付资金专项已经通过 `payment-scenario-routing.md` 收敛后，需要补足通用产品架构表达。
+- 当前问题不属于支付资金专项，或 `payment-expert` 已收敛专项事实后需要补足通用产品架构表达。
 
 ## 不适用场景
 
 - 用户已经明确要求写完整 PRD、模板或验收清单时，优先读 `product-design-and-prd.md` 与 PRD 相关 reference。
 - 用户要求架构图、流程图、状态机或能力图等图形化交付时，优先读 `diagram-output.md`，再按本文补齐对象和规则。
-- 用户问题涉及真实资金、支付轨道、清结算、对账、卡组织、VCC、跨境支付或监管合规时，先读 `payment-scenario-routing.md`。
+- 用户问题涉及真实资金、支付轨道、清结算、对账、卡组织、VCC、跨境支付或监管合规时，先使用 `payment-expert`。
 - 用户要求工程实现、代码评审、测试设计或生产排障时，优先交给 `资深架构师`。
 
 ## 读取后必须产出
@@ -31,7 +31,7 @@
 
 - PRD、用户故事、验收标准和产品文档结构读 `product-design-and-prd.md`，需要模板细节再读 `product-prd-template.md`。
 - AI Native Product Builder、业务 dogfooding、MVP/原型 harden、PRD 可执行上下文和产品侧交接读 `ai-native-product-context.md`；端到端 GSD / 工程执行准入与 AI 工具编排交给 `wise-agent`。
-- 支付、资金、清结算、账务、VCC、跨境和金融监管相关问题读 `payment-scenario-routing.md`。
+- 支付、资金、清结算、账务、VCC、跨境和金融监管相关问题使用 `payment-expert`。
 - 图形化交付默认读 `diagram-output.md`，复杂技术图可继续调用 `fireworks-tech-graph`。
 - 产品洞察、资料资产化、客户/竞品/标杆情报分拣、证据推理链和机会雷达读 `product-insight-analyst.md`。
 - PO Backlog 决策、机会清单收敛、BV/EE、P0/P1/P2、User Story 和 AC 读 `po-backlog-manager.md`。

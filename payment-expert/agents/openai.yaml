@@ -1,0 +1,7 @@
+interface:
+  display_name: "支付专家"
+  short_description: "支付、资金、账本、清结算、对账、通道与监管产品设计能力"
+  brand_color: "#0F766E"
+  default_prompt: "Use $payment-expert 基于主体、资金事实、支付轨道和证据边界设计或评审支付资金产品。"
+policy:
+  allow_implicit_invocation: true

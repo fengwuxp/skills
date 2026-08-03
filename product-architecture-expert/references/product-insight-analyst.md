@@ -30,7 +30,7 @@
 - 反馈到问题地图读 `product-architecture-methodology.md` 的“反馈证据与问题地图”。
 - 机会雷达需要进入 Backlog、P0/P1/P2、User Story 或 AC 时，读 `po-backlog-manager.md`。
 - 机会已经明确需要形成 PRD、用户故事、验收标准或评审材料时，读 `product-design-and-prd.md`。
-- 涉及支付资金、合规、外部规则、卡组织、ACH、VCC、跨境或监管时，继续读取支付资金专项 reference 和 `regulatory-baseline.md`。
+- 涉及支付资金、合规、外部规则、卡组织、ACH、VCC、跨境或监管时，继续使用 `payment-expert`。
 
 ## 按任务读取索引
 

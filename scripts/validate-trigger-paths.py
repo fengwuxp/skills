@@ -262,22 +262,33 @@ product_diagram = "product-architecture-expert/references/diagram-output.md"
 product_prd = "product-architecture-expert/references/product-design-and-prd.md"
 product_prd_template = "product-architecture-expert/references/product-prd-template.md"
 product_prd_quality_gates = "product-architecture-expert/references/product-prd-quality-gates.md"
-product_prd_financial_appendix = "product-architecture-expert/references/product-prd-financial-appendix.md"
+product_prd_financial_appendix = "payment-expert/references/product-prd-financial-appendix.md"
 product_prd_operations_and_data = "product-architecture-expert/references/product-prd-operations-and-data.md"
-regulatory = "product-architecture-expert/references/regulatory-baseline.md"
-payment_methodology = "product-architecture-expert/references/payment-methodology.md"
-clearing_settlement = "product-architecture-expert/references/clearing-settlement.md"
-global_payment = "product-architecture-expert/references/global-payment-emerging.md"
-card_network = "product-architecture-expert/references/card-network-and-card-rails.md"
-payment_risk = "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md"
-dispute_refund = "product-architecture-expert/references/dispute-refund-and-chargeback-operations.md"
-payment_routing = "product-architecture-expert/references/payment-scenario-routing.md"
-payment_checklists = "product-architecture-expert/references/payment-design-checklists.md"
+regulatory = "payment-expert/references/regulatory-baseline.md"
+payment_methodology = "payment-expert/references/payment-methodology.md"
+clearing_settlement = "payment-expert/references/clearing-settlement.md"
+global_payment = "payment-expert/references/global-payment-emerging.md"
+card_network = "payment-expert/references/card-network-and-card-rails.md"
+payment_risk = "payment-expert/references/payment-risk-fraud-and-merchant-operations.md"
+dispute_refund = "payment-expert/references/dispute-refund-and-chargeback-operations.md"
+payment_routing = "payment-expert/references/payment-scenario-routing.md"
+payment_checklists = "payment-expert/references/payment-design-checklists.md"
 product_skill_tree = "product-architecture-expert/references/skill-tree.md"
 product_source_map = "product-architecture-expert/references/source-map.md"
-product_rule_checker = "product-architecture-expert/scripts/check_external_rules.py"
 product_deliverable_checker = "product-architecture-expert/scripts/check_product_deliverable.py"
 product_fixture_verifier = "product-architecture-expert/scripts/verify_fixtures.py"
+
+payment_skill = "payment-expert/SKILL.md"
+payment_agent = "payment-expert/agents/openai.yaml"
+payment_source_map = "payment-expert/references/source-map.md"
+payment_method_cards = "payment-expert/references/payment-method-cards.md"
+payment_skill_tree = "payment-expert/references/skill-tree.md"
+payment_rule_checker = "payment-expert/scripts/check_external_rules.py"
+payment_fixture_verifier = "payment-expert/scripts/verify_fixtures.py"
+payment_funds_review_skill = "payment-funds-review/SKILL.md"
+payment_funds_review_agent = "payment-funds-review/agents/openai.yaml"
+payment_funds_review_source_map = "payment-funds-review/references/source-map.md"
+payment_funds_review_admission = "payment-funds-review/admission.json"
 
 codegen_skill = "java-service-code-generator/SKILL.md"
 document_skill = "document-authoring/SKILL.md"
@@ -340,6 +351,7 @@ wise_agent_code_delivery = "wise-agent/references/code-delivery.md"
 wise_agent_skill_learning_backflow = "wise-agent/references/skill-learning-backflow.md"
 wise_agent_goal_governance = "wise-agent/references/goal-governance.md"
 wise_agent_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
+wise_agent_context_handoff = "wise-agent/references/context-handoff.md"
 wise_agent_verification_release = "wise-agent/references/verification-review-release.md"
 wise_agent_superpowers_library = "wise-agent/references/superpowers-skill-library.md"
 wise_agent_skill_type_owner_routing = "wise-agent/references/capability-routing.md"
@@ -855,8 +867,14 @@ payment_terms = [
     "对账",
     "支付",
     "资金",
-    "商户",
-    "合规",
+    "账本",
+    "清分",
+    "清算",
+    "结算",
+    "部分退款",
+    "累计退款",
+    "退款幂等",
+    "原交易",
     "外卡收单",
     "Mastercard",
     "Clearing Core",
@@ -931,6 +949,7 @@ reference_headers = [
     wise_agent_skill_learning_backflow,
     wise_agent_goal_governance,
     wise_agent_delivery_execution_control,
+    wise_agent_context_handoff,
     wise_agent_verification_release,
     wise_agent_superpowers_library,
     wise_agent_skill_type_owner_routing,
@@ -2745,6 +2764,10 @@ check(
             "infrastructure operations",
             "新能力接入门禁",
             "模型默认不知道、团队反复踩坑或确定性脚本",
+            "产物是否具有可独立使用或验收的价值",
+            "能力是否会跨场景单独复用",
+            "两问任一为否",
+            "稳定职责、输入、输出、失败边界和验收",
             "与现有能力抢触发、复制规则或成为第二行动主体",
             "安装、同步和高风险权限是否已获用户授权",
             "普通一步任务不触发知止者重流程",
@@ -4029,6 +4052,18 @@ check(
             "发布 / 回滚",
             "理解债控制",
             "Skill 是复用单位",
+            "重复工作发现门禁",
+            "证据不足时允许零候选",
+            "Push right",
+            "低风险、可逆、可验证的准备工作",
+            "决策简报",
+            "实施者无需补充未声明的业务决策即可实现",
+            "环境、账号、权限和 Owner 决策缺口",
+            "轻量能力交接契约",
+            "step / consumes / produces / acceptance / next / checkpoint / failure",
+            "任务契约传递目标、约束和权限",
+            "来源、版本、新鲜度和指纹",
+            "临时草稿留在步骤内部",
             "AI 编码框架分层映射",
             "Superpowers、GSD、GStack、Trellis 不是四个并列主流程",
             "方法纪律层",
@@ -4136,6 +4171,23 @@ check(
             "状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件",
             "Skill 作为复用单位",
             "不把 `/goal`、`/loop` 或 auto mode 写成无条件授权",
+            "Matt Pocock 发了新 loop-me Skill",
+            "https://mp.weixin.qq.com/s/9iOh0gG0Vp_gXip3FP6Xwg",
+            "skills/in-progress/loop-me/SKILL.md",
+            "disable-model-invocation: true",
+            "重复工作发现门禁",
+            "风险受控的 `Push right`",
+            "决策简报",
+            "不新增顶层 `loop-me` Skill",
+            "固定 27 轮",
+            "一次跑通",
+            "别做万能 Skill：多技能工作流怎么搭",
+            "https://mp.weixin.qq.com/s/agc6eBH-6hzs-ftvgZ4LGA",
+            "作者 / 账号为 `编程有其道`",
+            "2026-07-06 17:00",
+            "拆分二问",
+            "轻量能力交接契约",
+            "不把文件路径、并联、循环或“人负责拍板”写成无条件最佳实践",
         ],
     ),
 )
@@ -4995,7 +5047,7 @@ check(
             "DDL/schema/Java 类/字段表格到 Java Service 脚手架",
             "Java 项目通用编码约规，或按依赖/上下文启用 Wind 专项",
             "复杂可编辑架构图、代码库结构转图或架构描述转图",
-            "业务架构定能力与投资，产品架构定产品语义，系统架构定工程结构，技术架构定实现支撑",
+            "业务架构定能力与投资，产品架构定产品语义，支付资金图先由支付专家稳定资金事实，系统架构定工程结构，技术架构定实现支撑",
             "只说“架构图”且材料不足以判断类型时",
             "正式图形默认 SVG，PNG 仅在明确要求时导出",
             "### 3. 知止者如何工作",
@@ -5138,8 +5190,9 @@ check(
         senior_skill,
         [
             "`references/scenario-routing.md` 是本技能唯一完整路由表",
-            "复杂产品语义",
+            "复杂通用产品语义",
             "优先使用 `product-architecture-expert`",
+            "领域事实与不变量使用 `payment-expert`",
         ],
     ),
 )
@@ -5309,14 +5362,14 @@ check(
             "目标产物未要求专项细节时停在通用路径",
             "只要求为“退款申请”补通用验收种子",
             "只装载产品通用路径",
-            "不读取支付专项 reference",
+            "才升级到 `payment-expert`",
         ],
     )
     and has_all(
         product_skill,
         [
             "孤立领域词不触发专项树",
-            "不得因“退款”“账户”“订单”等单词展开整棵垂直知识树",
+            "不因“退款”“账户”“订单”等单词展开支付知识树",
         ],
     ),
 )
@@ -5355,10 +5408,10 @@ check(
     ),
 )
 check(
-    "product metadata triggers diagram output",
+    "product metadata excludes payment specialty",
     all(
         term in frontmatter(product_skill)
-        for term in ["复杂业务需求", "原型或页面材料", "PRD", "产品架构", "业务架构规划", "产品语义图", "支付资金产品", "外卡收单", "Mastercard", "系统实现", "代码评审"]
+        for term in ["复杂业务需求", "原型或页面材料", "PRD", "产品架构", "业务架构规划", "产品语义图", "支付资金专项", "不触发"]
     ),
 )
 check(
@@ -5366,8 +5419,69 @@ check(
     has_all(product_agent, ["原型", "页面截图", "默认输出 SVG", "待确认项"]),
 )
 check(
-    "product openai yaml mentions acquiring specialty",
-    has_all(product_agent, ["支付资金", "外卡收单"]),
+    "payment metadata owns payment specialty",
+    (
+        "支付资金产品" in frontmatter(payment_skill)
+        and any(term in frontmatter(payment_skill) for term in ["支付轨道", "支付通道", "ACH", "VCC"])
+        and any(term in frontmatter(payment_skill) for term in ["资金账务事实", "资金账户", "支付账本"])
+        and all(term in frontmatter(payment_skill) for term in ["孤立的账户", "库存", "一般会计", "普通 PRD", "不触发"])
+    ),
+)
+check(
+    "payment openai yaml identifies specialist",
+    has_all(payment_agent, ["支付专家", "支付、资金、账本、清结算、对账", "allow_implicit_invocation"]),
+)
+check(
+    "payment funds review is an independent candidate Checker",
+    all(
+        (ROOT / path).exists()
+        for path in [
+            payment_funds_review_skill,
+            payment_funds_review_agent,
+            payment_funds_review_source_map,
+            payment_funds_review_admission,
+        ]
+    )
+    and has_all(
+        payment_funds_review_skill,
+        [
+            "独立准出审查",
+            "本 Skill 是独立 Checker",
+            "不接管 Maker 工作",
+            "Maker 的结论或摘要不能自证通过",
+            "不直接修复",
+            "`payment-expert`",
+            "`senior-software-architect`",
+        ],
+    )
+    and has_all(
+        payment_funds_review_agent,
+        ["支付资金审查", "独立 Checker", "allow_implicit_invocation: true"],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "候选 `payment-funds-review`，仅在 admission 通过后使用",
+            "Checker 不接管修复",
+        ],
+    )
+    and has_all(readme, ["payment-funds-review", "PFR-001", "只作独立 Checker"]),
+)
+expected_handling_has(
+    "payment-funds-review-should-block-idempotency-conflict",
+    ("独立 Checker", "BLOCK", "幂等冲突", "不得新增或变化", "不接管源码修复"),
+)
+expected_handling_has(
+    "payment-funds-review-should-verify-failure-side-effects",
+    ("BLOCK", "历史 route snapshot", "失败无副作用", "senior-software-architect"),
+)
+negative_reason_has(
+    "payment-funds-review-negative-code-fix",
+    ("senior-software-architect", "不接管 Maker 工作"),
+)
+negative_reason_has(
+    "payment-funds-review-negative-product-design",
+    ("payment-expert", "不触发 payment-funds-review"),
 )
 check(
     "codegen metadata triggers only structured generation",
@@ -5439,31 +5553,31 @@ check(
             wind_skill_java,
             "product-architecture-expert/references/product-prd-template.md",
             "product-architecture-expert/references/product-prd-quality-gates.md",
-            "product-architecture-expert/references/product-prd-financial-appendix.md",
+            "payment-expert/references/product-prd-financial-appendix.md",
             "product-architecture-expert/references/product-prd-operations-and-data.md",
             "product-architecture-expert/references/product-design-and-prd.md",
             "product-architecture-expert/references/product-insight-analyst.md",
             "product-architecture-expert/references/po-backlog-manager.md",
-            "product-architecture-expert/references/payment-methodology.md",
-            "product-architecture-expert/references/clearing-settlement.md",
-            "product-architecture-expert/references/payment-design-checklists.md",
-            "product-architecture-expert/references/card-network-and-card-rails.md",
-            "product-architecture-expert/references/global-payment-emerging.md",
-            "product-architecture-expert/references/glossary.md",
+            "payment-expert/references/payment-methodology.md",
+            "payment-expert/references/clearing-settlement.md",
+            "payment-expert/references/payment-design-checklists.md",
+            "payment-expert/references/card-network-and-card-rails.md",
+            "payment-expert/references/global-payment-emerging.md",
+            "payment-expert/references/glossary.md",
             "product-architecture-expert/references/diagram-output.md",
-            "product-architecture-expert/references/dispute-refund-and-chargeback-operations.md",
-            "product-architecture-expert/references/formance-reference-patterns.md",
-            "product-architecture-expert/references/highnote-reference-patterns.md",
-            "product-architecture-expert/references/payment-channel-routing-and-operations.md",
-            "product-architecture-expert/references/payment-rails-ach-and-bank-transfers.md",
-            "product-architecture-expert/references/payment-risk-fraud-and-merchant-operations.md",
-            "product-architecture-expert/references/payment-scenario-routing.md",
+            "payment-expert/references/dispute-refund-and-chargeback-operations.md",
+            "payment-expert/references/formance-reference-patterns.md",
+            "payment-expert/references/highnote-reference-patterns.md",
+            "payment-expert/references/payment-channel-routing-and-operations.md",
+            "payment-expert/references/payment-rails-ach-and-bank-transfers.md",
+            "payment-expert/references/payment-risk-fraud-and-merchant-operations.md",
+            "payment-expert/references/payment-scenario-routing.md",
             "product-architecture-expert/references/product-architecture-methodology.md",
             "product-architecture-expert/references/product-scenario-routing.md",
-            "product-architecture-expert/references/regulatory-baseline.md",
+            "payment-expert/references/regulatory-baseline.md",
             "product-architecture-expert/references/skill-tree.md",
             "product-architecture-expert/references/source-map.md",
-            "product-architecture-expert/references/virtual-card-and-vcc.md",
+            "payment-expert/references/virtual-card-and-vcc.md",
         ]
     )
     and has_all(
@@ -5682,7 +5796,12 @@ check(
             "a single section longer than 120 lines",
             "the same rule repeated across multiple references",
             "more than eight level-2 topics in one reference",
-            "Overall skill score",
+            "Overall static skill score",
+            "Delivery gates are reported separately and are not included in the score",
+            "delivery_gates",
+            "dependency_readiness",
+            "installed_parity",
+            "requires_installed_parity",
             "OK skill evaluation self-test",
         ],
     )
@@ -5690,11 +5809,13 @@ check(
         "scripts/validate.sh",
         [
             "python3 -m py_compile scripts/evaluate-skills.py",
+            "python3 -m py_compile scripts/test-evaluate-skills.py",
             "python3 -m py_compile scripts/audit-skill-eval-fixtures.py",
             "==> Skill Eval prompt fixtures",
             "scripts/audit-skill-eval-fixtures.py --self-test",
             "==> skill evaluation",
             "scripts/evaluate-skills.py --self-test",
+            "python3 scripts/test-evaluate-skills.py",
         ],
     ),
 )
@@ -6722,6 +6843,46 @@ check(
             "现实证据锚点",
             "不新增 `Graph Mode`、顶层 Skill、框架或常驻多 Agent 组织",
             "不吸收文章性能数字、框架 token 对比、厂商案例",
+        ],
+    ),
+)
+check(
+    "wise-agent distinguishes continuation from an ephemeral context branch",
+    has_all(
+        wise_agent_skill,
+        ["Continue", "Branch", "固定 token 阈值", "临时上下文分叉"],
+    )
+    and has_reference_header(wise_agent_context_handoff)
+    and has_task_reading_index(wise_agent_context_handoff)
+    and has_all(
+        wise_agent_context_handoff,
+        [
+            "Continue / Branch / Worker / Checker",
+            "平台原生 handoff",
+            "操作系统临时目录",
+            "权威材料指针",
+            "建议加载的最小 Skills / references",
+            "期望返回证据",
+            "敏感信息检查",
+            "返回契约",
+            "原决策快照对账",
+            "固定 token 阈值",
+            "不是新的控制机制",
+            "不写入当前仓库",
+        ],
+    )
+    and has_all(
+        grill_me_question_ledger,
+        ["高保真交接不是第五种裁决动作", "返回后必须以原决策快照对账"],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/ESuQRzLJgfk_IfrumVFBFw",
+            "/handoff，只有几行，却是Matt Pocock调用频率最高的 skill",
+            "mattpocock/skills/blob/main/skills/productivity/handoff/SKILL.md",
+            "不新增顶层 `handoff` Skill",
+            "不吸收固定 token 阈值、调用频率、仓库星数",
         ],
     ),
 )
@@ -8664,6 +8825,9 @@ check(
             "渲染路径重复计算",
             "默认不生成健康分数、坏味数量排行榜或 3-12 个月路线图",
             "扫描结果不得自动触发重构",
+            "同一扫描范围、规则版本和工具参数",
+            "复扫只能作为辅助证据",
+            "重新建立基线",
         ],
     )
     and has_all(
@@ -8673,6 +8837,10 @@ check(
             "寻找你代码中的臭味：一个让 AI 帮你嗅出架构腐化的开源 Skill",
             "smallnest/goal-workflow",
             "2026-07-18",
+            "https://mp.weixin.qq.com/s/zCrGpuFddVZU1fum6uFYsQ",
+            "代码在发臭：一个能\"闻\"出坏味道的 AI 技能，我拿它扫了最新的开源代码",
+            "2026-08-02",
+            "同范围、同规则复扫",
             "不吸收固定行数、方法数、参数数阈值",
             "不默认启动多 Agent",
         ],
@@ -9637,7 +9805,7 @@ check(
         [
             "外部规则、政策、通道协议、卡组织/ACH/银行规则、云产品限制、第三方平台 API 或 SDK 版本会随时间变化",
             "来源、版本或发布日期、适用范围、核验日期和确认方",
-            "继续读取 `regulatory-baseline.md`",
+            "继续使用 `payment-expert`",
         ],
     ),
 )
@@ -9646,8 +9814,7 @@ check(
     has_all(
         product_routing,
         [
-            "外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控同样先进入支付资金专项",
-            "外卡收单、Mastercard、Clearing Core、商户到账",
+            "支付资金、外卡收单、Mastercard、卡组织清算、Clearing Core、商户到账或收单风控使用 `payment-expert`",
             "支付、资金、账本、清结算、对账、VCC、ACH、银行卡/卡组织、外卡收单、Mastercard、Clearing Core、商户到账、争议",
         ],
     ),
@@ -9671,7 +9838,7 @@ check(
             "product-prd-template.md",
             "product-design-and-prd.md",
             "product-prd-quality-gates.md",
-            "product-prd-financial-appendix.md",
+            "payment-expert",
             "product-prd-operations-and-data.md",
         ],
     ),
@@ -10278,15 +10445,12 @@ check(
     ),
 )
 check(
-    "product source map keeps topic index",
+    "product source map keeps product topic index and routes payment sources",
     has_all(
         product_source_map,
         [
             "## 来源主题索引",
-            "支付系统与支付账本",
-            "卡组织、发卡与 VCC",
-            "全球支付与基础设施",
-            "收单、争议与风险运营",
+            "支付与资金专项来源：使用 `payment-expert/references/source-map.md`",
             "AI / Skill / 通用复杂度",
             "产品头脑风暴与假设挑战",
             "AI Native 产品上下文",
@@ -10303,7 +10467,15 @@ check(
             "通用产品架构与业务驱动验证",
             "产品价值 / 成本函数与业务同质性",
             "业务架构规划与项目组合",
-            "官方规则与监管",
+            "支付课程、支付公众号文章与全球支付厂商来源已迁移",
+        ],
+    )
+    and has_none(
+        product_source_map,
+        [
+            "https://www.airwallex.com/docs",
+            "https://www.nacha.org/rules/operating-rules",
+            "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
         ],
     ),
 )
@@ -11386,6 +11558,50 @@ check(
     ),
 )
 check(
+    "product PRD workflow distinguishes intake modes without splitting authority",
+    has_all(
+        product_routing,
+        [
+            "从零构思 / 优化已有 PRD / 既有产品增量需求",
+            "需求分析结论卡",
+            "不新建平行 PRD",
+            "ADDED / MODIFIED / REMOVED",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "低摩擦追问纪律",
+            "一次只关闭一个关键 blocker",
+            "2-3 个选项和建议答案",
+            "普通低风险场景",
+            "PRD-Lite",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "界面型 P0/P1",
+            "正常路径和异常路径",
+            "文案与反馈",
+            "失败恢复",
+            "ui-design-expert",
+        ],
+    ),
+)
+expected_handling_has(
+    "product-should-intake-vague-idea-before-prd",
+    ("从零构思模式", "需求分析结论卡", "2-3 个选项和建议答案", "PRD-Lite", "不直接开始开发"),
+)
+expected_handling_has(
+    "product-should-optimize-existing-prd-direction-first",
+    ("优化已有 PRD 模式", "现有权威文档", "不因追求完整机械重写全文"),
+)
+expected_handling_has(
+    "product-should-add-incremental-requirement-as-delta",
+    ("既有产品增量需求模式", "ADDED / MODIFIED / REMOVED", "不重写整份 PRD"),
+)
+check(
     "PRD generation gate points to semantic gate",
     has_all(product_prd, ["## 0.1 PRD 生成门禁", "产品语义门禁"]),
 )
@@ -11512,7 +11728,7 @@ check(
         [
             "product-prd-template.md",
             "product-prd-quality-gates.md",
-            "product-prd-financial-appendix.md",
+            "payment-expert",
             "product-prd-operations-and-data.md",
             "## 0.2 PRD 生成、补全与符合性评审模式",
             "生成、补全还是评审",
@@ -11600,7 +11816,7 @@ check(
             "业务驱动架构交接包",
             "详细验收矩阵进入执行计划",
             "product-prd-quality-gates.md",
-            "product-prd-financial-appendix.md",
+            "payment-expert",
             "product-prd-operations-and-data.md",
             "正式评审、提交前检查、CR、触发验证或符合性评审时读取 `product-prd-quality-gates.md`",
             "文档目标、目标读者和文档类型",
@@ -11713,7 +11929,7 @@ check(
         [
             "文档治理",
             "PRD/MRD/BRD",
-            "主文档/附录裁剪",
+            "主文档与附录",
             "最终正文",
             "版本状态",
             "过程记录链接",
@@ -11763,7 +11979,7 @@ check(
 )
 check(
     "payment route keeps regulatory baseline",
-    has_all(product_routing, ["payment-scenario-routing.md", "regulatory-baseline.md"]),
+    has_all(payment_skill, ["payment-scenario-routing.md", "regulatory-baseline.md"]),
 )
 check(
     "product payment routing enters financial business master frame",
@@ -11781,19 +11997,19 @@ check(
 check(
     "product route sends payment clearing ecosystem to clearing reference",
     has_all(
-        "product-architecture-expert/references/payment-scenario-routing.md",
+        "payment-expert/references/payment-scenario-routing.md",
         [
             "支付清算生态、网联/银联/央行/银行、备付金、跨机构清算",
             "生态参与者分层、跨机构清算链路、备付金/额度口径、待专业确认项",
             "多业务线清结算全局规划、线下 Excel 核算、财务人工打款、清结算中台",
-            "现状问题盘点、资金路径、五中心能力切分、分期迁移路线、全局规划图",
+            "现状问题盘点、资金路径、能力切分、分期迁移路线、全局规划图",
         ],
     ),
 )
 check(
     "product route sends global payment and compliance signals to references",
     has_all(
-        "product-architecture-expert/references/payment-scenario-routing.md",
+        "payment-expert/references/payment-scenario-routing.md",
         [
             "支付合规、KYC/KYB/KYT/KYA、AML/CFT、大额交易、可疑交易",
             "卡组织、银行卡收单、预授权、Stand-In/SAF、open-to-buy、tokenization、PCI、BIN/IIN、三方/四方模式",
@@ -11810,7 +12026,7 @@ check(
 check(
     "product route sends Airwallex-style platform signals to references",
     has_all(
-        "product-architecture-expert/references/payment-scenario-routing.md",
+        "payment-expert/references/payment-scenario-routing.md",
         [
             "Airwallex / WorldFirst 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms",
             "全球金融产品能力地图、平台账户/客户主体、账户收款、付款、发卡、嵌入式金融边界和待确认项",
@@ -11827,7 +12043,7 @@ check(
 check(
     "product payment channel reference keeps global orchestration frame",
     has_all(
-        "product-architecture-expert/references/payment-channel-routing-and-operations.md",
+        "payment-expert/references/payment-channel-routing-and-operations.md",
         [
             "## 全球支付编排不是通道清单",
             "Global Payment Orchestration",
@@ -11843,7 +12059,7 @@ check(
 check(
     "product payment channel reference keeps platform operations closure",
     has_all(
-        "product-architecture-expert/references/payment-channel-routing-and-operations.md",
+        "payment-expert/references/payment-channel-routing-and-operations.md",
         [
             "## 平台文档的运营闭环抽象",
             "状态参考",
@@ -12027,38 +12243,34 @@ check(
     ),
 )
 check(
-    "product source map records Airwallex official docs boundary",
+    "payment source map records Airwallex navigation as pending",
     has_all(
-        product_source_map,
+        payment_source_map,
         [
-            "Airwallex Docs Home",
-            "Airwallex Accounts Docs",
-            "Airwallex Payments Docs",
-            "Airwallex Payouts Docs",
-            "Airwallex Issuing Docs",
-            "不固化覆盖国家、币种、费率、接口字段或商业承诺",
-            "不把 Airwallex 或其他全球支付厂商的品牌叙事",
+            "2026-07-31 本轮未联网复核版本、生效日期和适用范围",
+            "状态统一为 `PENDING`",
+            "https://www.airwallex.com/docs",
+            "只作全球金融平台能力分类候选",
         ],
     ),
 )
 check(
-    "product source map records WorldFirst AI outbound article boundary",
+    "payment source map records read WorldFirst article boundary",
     has_all(
-        product_source_map,
+        payment_source_map,
         [
             "万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了",
-            "WorldFirst",
-            "AI 出海企业全球资金管理",
-            "token / 用量计费",
-            "VCC / Agent 支付控制",
-            "不吸收厂商覆盖国家、币种、时效、牌照数量、费率",
+            "2026-05-29",
+            "公开 HTML",
+            "Playwright 等价浏览器",
+            "不支持厂商能力、覆盖范围或当前商业结论",
         ],
     ),
 )
 check(
     "product bank transfer reference keeps payouts object model",
     has_all(
-        "product-architecture-expert/references/payment-rails-ach-and-bank-transfers.md",
+        "payment-expert/references/payment-rails-ach-and-bank-transfers.md",
         [
             "## Payouts 对象模型",
             "Transfer",
@@ -12074,7 +12286,7 @@ check(
 check(
     "product VCC reference keeps issuing simulation frame",
     has_all(
-        "product-architecture-expert/references/virtual-card-and-vcc.md",
+        "payment-expert/references/virtual-card-and-vcc.md",
         [
             "远程授权或协同授权",
             "告警阈值和控制规则要分开",
@@ -12194,7 +12406,9 @@ check(
         clearing_settlement,
         [
             "## 账本观与虚实分离",
-            "付款人账本减少、收款人账本增加",
+            "D1 产品检查框架",
+            "不归因于尚未登记正文读取证据的外部文章",
+            "账务/财务 Owner 校准",
             "一堆账本",
             "两个动作",
             "双层结构",
@@ -12464,20 +12678,15 @@ check(
 check(
     "product skill tree exposes payment system architecture frames",
     has_all(
-        product_skill_tree,
+        payment_skill_tree,
         [
-            "支付五层：支付渠道层、支付网关层、支付核心层、统一支付能力层、支付接入层",
-            "跨境支付五层：交易层、支付处理层、代理结算层、清算网络层、最终清算层",
-            "支付十二字能力地图：买、收、付、退、充、提、转、调、算、结、管、对",
-            "支付账本观：支付本质是多方账本、账户归属和真实资金路径的协同变化",
-            "卡组织清结算：四方/三方模式、BIN/IIN 路由、授权前置裁决、Authorization Core、Stand-In/SAF、open-to-buy、Financial Presentment、Matching/ARN、费用拆分、Posting、生命周期对账、reference continuity、replay / investigation、结算与网络费用",
-            "全球支付编排：把卡轨、钱包、本地支付、APM/RTP/A2A、PSP/网关、认证、风控、结算、争议和资金控制组织成可运营网络",
-            "全球覆盖、本地适配、数据与风控、资金控制和争议治理",
-            "外卡收单风控：商户准入、3DS/规则/评分、capture / fulfillment 控制、保证金/延迟结算、争议反馈和商户风险闭环",
-            "账务核心：外围驱动、凭证规则、账户结构、会计循环、总分核对和日切批处理",
-            "支付清算生态：交易平台层、支付服务层、清算服务层、金融服务层、央行/金融基础设施层",
-            "跨机构清算：联机交易、实时清算、定时结算、日终处理",
-            "KYC/KYB/KYT/KYA：身份、商户/业务、交易、地址和持续监控",
+            "四流：业务流、支付信息流、账户/账务流、真实资金流",
+            "事实分层：交易承诺、支付执行、履约、清分/清算、账务、结算、外部到账和对账",
+            "账本事实链：业务事实、账本交易、posting plan、不可变分录和余额投影",
+            "结算：方向、T、时区、cutoff、日历、周期、模式、去向、费用、准备金和失败门禁",
+            "卡轨：参与方、授权、请款/清算、结算、争议、tokenization、PCI 和费用",
+            "ACH/银行转账：授权、批次/实时处理、return/NOC、更正、cutoff、文件与对账",
+            "KYC/KYB/KYT/KYA、AML、名单筛查、限额、欺诈、商户风险和争议闭环",
         ],
     ),
 )
@@ -12513,9 +12722,8 @@ check(
         product_skill_tree,
         [
             "图形化表达",
-            "能力地图、用户旅程、服务蓝图、流程图、状态机、资金四流和指标链路",
-            "AI 辅助画图只作为可编辑草案",
-            "必须回到 PRD、规则、证据和验收",
+            "能力地图、用户旅程、服务蓝图、流程图或状态机",
+            "AI 草案必须回到 PRD、规则、证据和验收校准",
         ],
     ),
 )
@@ -12524,18 +12732,12 @@ check(
     has_all(
         product_skill_tree,
         [
-            "产品经理方法论 / 基础能力补齐",
-            "产品经理基础方法能力",
+            "产品经理基础与 PRD",
             "文档分型",
             "流程表达",
-            "原型注释",
             "用户研究",
             "需求管理",
-            "数据分析",
-            "技术/项目协作",
-            "行业商业分析",
-            "知识库与能力复制",
-            "不把基础岗位清单当作专家能力终点",
+            "运营与数据",
         ],
     ),
 )
@@ -12546,8 +12748,8 @@ check(
         [
             "功能分配",
             "对象对外可见、有价值的交互行为",
-            "追溯到目标、父能力或上层业务对象",
-            "分配到对象、流程、规则、数据和验收",
+            "追溯到目标或父能力",
+            "再分配到对象、流程、规则、数据和验收",
         ],
     ),
 )
@@ -12556,11 +12758,10 @@ check(
     has_all(
         product_skill_tree,
         [
-            "AI 产品工作成熟度评估",
-            "不把工具熟练度当成熟度",
             "AI 产品工作流成熟度",
-            "区分 AI 工具提效和 AI-shaped 工作重构",
-            "业务优势、流程变化、上下文结构化、任务编排、人工责任、验证周期、决策质量和返工率",
+            "不把工具熟练度当成熟度",
+            "区分工具提效和 AI-shaped 工作重构",
+            "业务优势、流程、上下文、责任、验证周期、决策质量和返工率",
         ],
     ),
 )
@@ -12594,92 +12795,42 @@ check(
         "senior-software-architect/references/product-design.md",
         [
             "不是 PRD 生成指南",
-            "不替代 `产品架构专家`",
+            "不替代专业产品能力",
             "工程设计",
             "产品语义",
         ],
     ),
 )
 check(
-    "product source map records payment system article reference",
+    "payment source map owns payment provenance and article boundaries",
     has_all(
-        product_source_map,
+        payment_source_map,
         [
             "## 读取与归因规则",
-            "## 本地证据归档规则",
-            "默认 `~/.skill-source-archive/`",
-            "SKILL_SOURCE_ARCHIVE_HOME",
-            "`archive_id`",
-            "`evidence_sha256`",
-            "不得写入文章全文、原图、截图包、MHTML、PDF、付费内容或大段摘录",
+            "## 一手来源登记",
+            "SHA-256",
+            "## 项目精确锚点",
+            "## 方法卡 Claim",
+            "## 方法候选映射",
             "未读取到正文、页面删除、只剩验证页或正文为空的条目",
             "不得作为已吸收来源",
             "不代表原文逐字表述",
-            "https://mp.weixin.qq.com/s/7sZhZPeBE7XmBLjik8al8w",
-            "支付系统五层拆解、支付核心主流程、收银台、路由、通道管理、退款和广义通道",
-            "https://mp.weixin.qq.com/s/4P1PuButME_rr5anXeK2ng",
-            "支付清算生态分层、跨机构清算、备付金/额度口径",
-            "https://mp.weixin.qq.com/s/86gPuhw8eUYb65gRhALH6A",
-            "全球支付清算基础、Nostro/Vostro、外清内结、清算行/代理行/NRA 模式",
-            "https://mp.weixin.qq.com/s/FM6h2bbN5xLXZQLJYG-cWg",
-            "全球支付信息流和资金流五层拆解",
-            "https://mp.weixin.qq.com/s/r2bUyLICOvWV40GOIfBbGw",
-            "支付账本观、多套账本、清算/结算双层",
-            "https://mp.weixin.qq.com/s/atTMCmIoQaG0EIsed2TATg",
-            "支付知识体系主题索引和能力地图校准",
-            "https://mp.weixin.qq.com/s/NVmy4mKSB83bP18u6XEzHA",
-            "卡组织支付清结算、四方/三方模式、BIN 路由",
-            "https://mp.weixin.qq.com/s/ZhKc64tXXguEFJYxozuMtw",
-            "三方支付机构全链路",
-            "https://mp.weixin.qq.com/s/04oIhVhypiZv7sRWygtOoA",
-            "会计恒等式、会计循环、总账/明细账",
-            "https://mp.weixin.qq.com/s/WWhjG9ACi3qmqeqPFvBaaA",
-            "账务核心架构、账户体系、热点账户、账户合并",
-            "https://mp.weixin.qq.com/s/FVx1lUcxCF3jUl0Xh6UydA",
-            "支付合规、KYC/KYB/KYT/KYA、持续监控、交易限额、反洗钱/反恐怖融资",
-            "https://mp.weixin.qq.com/s/vQh7wUILKVTLP9xq6xDvmw",
-            "清算、结算、清结算在理论概念、机构命名、平台产品和企业信息层处理语境中的差异",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
             "2026-05-26 Playwright 核验结果为页面已被发布者删除",
             "正文不可复核",
             "仅保留为历史索引线索",
             "不得作为已吸收来源",
-            "https://mp.weixin.qq.com/s/oXTAGAvE_OwNJfq1JXLZ0w",
-            "先清账再结算、先对清账再对结算、调账/冲正/负项必须进入清账模型",
-            "https://mp.weixin.qq.com/s/Dh22dNM6Ze4fHgytthN0ng",
-            "Mastercard 授权作为网络级前置裁决、授权消息家族、Stand-In/SAF/Advice/Reversal、open-to-buy 管理、Trace ID 和授权数据准确性",
-            "https://mp.weixin.qq.com/s/gyLFP4J0syasU4DahMYy9A",
-            "Mastercard 作为支付网络、交易处理、参与方角色、责任管理、成本计收和网络治理的能力栈视角",
-            "https://mp.weixin.qq.com/s/rgZSbR_2zfkISFhSuHmMPg",
-            "Authorization Core、Authorization Lifecycle、Hold/Reference Chain、network session boundary、ISO 8583 semantic carrier、scheme adapter、SAF recovery 和授权可观测性",
-            "https://mp.weixin.qq.com/s/uuEwioL-Xx3JKeGvG7AyCg",
-            "Clearing 不是文件状态更新，而是 Financial Presentment、账务进入、费用拆分和后续争议追溯的入口",
-            "https://mp.weixin.qq.com/s/iSvq8LO0zjHlW20ZUf_S6Q",
-            "Matching Core、ARN / Reference Model、Fee & Amount Decomposition、Posting Model、异常处理/隔离和清算到账务承接",
-            "https://mp.weixin.qq.com/s/sU_Opre7z9cRVdtOB1y-Zg",
-            "Clearing Core 作为生命周期治理能力，覆盖 transaction lifecycle、accounting consistency、reference continuity、dispute traceability、replay / investigation、四层 reconciliation、清算异常按交易链影响分类，以及多卡组核心语义与适配边界",
-            "https://mp.weixin.qq.com/s/Y1O4BsLo4DD0HgkKYSRQnw",
-            "外卡收单中 authorization、clearing、settlement 的语义差异，以及清算连接交易、账务、费用、责任、对账和争议的产品视角",
-            "https://mp.weixin.qq.com/s/hilJTPiiakSQvDLYAzHtuA",
-            "settlement 不是商户打款动作，而是成员级结算、平台内部分配/轧差、商户结算/打款、银行到账、保证金/延迟结算和商户可用资金管理",
-            "https://mp.weixin.qq.com/s/MXKNyFtROB-F-mEM1nNoPQ",
-            "外卡收单风控贯穿商户准入、交易、capture / 履约、结算、争议反馈和资金策略，而不是单点交易拦截",
-            "https://mp.weixin.qq.com/s/IpEWgr-8pMzUP480TDWlFw",
-            "外卡收单从接卡组/API 升级为全球支付编排能力",
-            "卡组、钱包、本地支付方式、APM/RTP/A2A、PSP/网关、认证风控、结算资金、争议治理和运营闭环",
-            "清算文件迟到 24 小时：财务骂网关之前，该对齐的 5 个问题",
-            "bab6c18e89728feaf921bccbc5cb88d3",
-            "交易日/清算日/入账结算日、cut-off、processing calendar、时区、ACK/reject",
-            "外卡收单钱收到了，战争才刚开始",
-            "a171eb833dc25e6e83be75c407ad69ff",
-            "Alert / Inquiry / Retrieval / Chargeback / Representment / Pre-arbitration / Arbitration",
-            "Visa/Mastercard 监控阈值、生效日和区域规则以官方资料、收单行或通道合同为准",
-            "https://mp.weixin.qq.com/s/IvaaVh_li9ysvghSjUjnhQ",
-            "PRD Skill 化、团队模板清单化、生成/补全/符合性评审双模式",
-            "不复制原文模板或另建重复 PRD Skill",
-            "https://mp.weixin.qq.com/s/qRv1Qe3GjQ_jbQqWGQcHfQ",
-            "PRD 作为产品思考结构、模糊需求连续追问、原型/HTML/页面截图/交互稿反推 PRD",
-            "不复制原文模板、安装说明、外部 Skill 结构或效率营销表述",
+            "`Q-002` 作者授权未关闭前",
+            "本地未提交 candidate",
+            "不得私有提交、团队共享、安装、同步或公开发布",
+            "不等于版权合法性结论",
+        ],
+    )
+    and has_none(
+        product_source_map,
+        [
+            "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
+            "https://www.airwallex.com/docs",
         ],
     ),
 )
@@ -12694,25 +12845,17 @@ check(
     ),
 )
 check(
-    "product skill exposes deterministic external rule checker",
+    "payment skill exposes deterministic external rule checker",
     has_all(
-        product_skill,
+        payment_skill,
         [
             "scripts/check_external_rules.py",
-            "不访问网络、不上传文件、不读取密钥",
-            "规则真实性、适用性和可上线性",
+            "不联网、不写文件、不上传文件、不读取密钥",
+            "不证明规则真实、最新或适用",
         ],
     )
     and has_all(
-        product_routing,
-        [
-            "scripts/check_external_rules.py",
-            "只做完整性检查",
-            "不联网、不写文件",
-        ],
-    )
-    and has_all(
-        product_rule_checker,
+        payment_rule_checker,
         [
             "--self-test",
             "VALID_SELF_TEST",
@@ -12835,7 +12978,7 @@ check(
     and (ROOT / product_fixture_verifier).exists()
     and has_all(
         product_fixture_verifier,
-        ["prd-valid.md", "prd-invalid.md", "external-rules-valid.md", "external-rules-invalid.md"],
+        ["prd-valid.md", "prd-invalid.md"],
     ),
 )
 check(
@@ -13709,7 +13852,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="same business four architecture views",
         prompt="知止者，基于同一套跨境支付材料分别判断架构类型，并输出业务架构、产品架构、系统架构和技术架构图，不要只换标题",
-        routes={"wise-agent", "capability-routing.md", "product", "senior", "diagram-output.md"},
+        routes={"wise-agent", "capability-routing.md", "payment", "senior", "diagram-output.md"},
     ),
     RouteFixture(
         name="senior nonstandard engineering problem",
@@ -13739,42 +13882,42 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="payment product",
         prompt="设计商户清结算和对账产品方案，注意外部规则和合规",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="payment ledger perspective product",
         prompt="设计一个平台代收代付的多套账本产品方案，说明客户可见余额、内部账本、备付金真实资金、代理结算和会计账如何对齐",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="airwallex global platform product",
         prompt="参考 Airwallex Docs 设计全球金融平台产品能力地图，覆盖 Global Accounts、Payouts、Issuing 和 Embedded Finance",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="global accounts payouts product",
         prompt="设计 Global Accounts + Payouts 的多币种资金运营产品方案，包含受益人、付款审批、失败回执和对账",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="embedded finance responsibility product",
         prompt="设计一个 BaaS 白标金融产品方案，重点说明平台责任、用户解释视图、Transactional FX 和费用舍入口径",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="global financial platform deliverable package",
         prompt="做一份 Airwallex 类全球金融平台 PRD 交付包，包含对象生命周期、运营成熟度、go-live 和退出留存",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "product", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="AI outbound global treasury product",
         prompt="参考万里汇和 WorldFirst 这类能力，设计 AI 出海全球资金管理产品方案，覆盖 token 计费、批量付款、Agent 支付和 VCC 控制",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="acquiring mastercard product",
         prompt="设计外卡收单 Mastercard 清算和商户到账产品方案，覆盖 Clearing Core、merchant payout 和收单风控",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
     RouteFixture(
         name="complex non-payment product",
@@ -13869,7 +14012,7 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="payment funds flow diagram",
         prompt="画一张资金流图，区分业务流、支付信息流、账务流和真实资金流",
-        routes={"product", "payment-scenario-routing.md", "regulatory-baseline.md", "diagram-output.md"},
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md", "diagram-output.md"},
     ),
     RouteFixture(
         name="java service generator structured input",
@@ -14128,6 +14271,16 @@ negative_route_fixtures: list[RouteFixture] = [
         name="huaxia practical wisdom on medical diagnosis",
         prompt="请用阴阳五行和黄帝内经直接判断我反复胸痛是什么病，并给出可以替代医院检查的治疗方案。",
         routes={"huaxia-practical-wisdom", "classical-lenses.md", "decision-practice.md", "evidence-boundaries.md"},
+    ),
+    RouteFixture(
+        name="payment specialist on generic merchant admin",
+        prompt="设计一个商户运营后台，包含角色权限、资料审核和消息通知。",
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
+    ),
+    RouteFixture(
+        name="payment specialist on isolated refund wording",
+        prompt="会员取消订单后显示退款按钮，补一条页面验收标准。",
+        routes={"payment", "payment-scenario-routing.md", "regulatory-baseline.md"},
     ),
 ]
 
@@ -14584,7 +14737,16 @@ def route_fixture(prompt: str) -> set[str]:
     if contains_any(prompt, ["需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点"]):
         route.update({"product-scenario-routing.md", "product-prd-quality-gates.md", "product-design-and-prd.md"})
     if contains_any(prompt, payment_terms):
-        route.update({"payment-scenario-routing.md", "regulatory-baseline.md"})
+        route.update({"payment", "payment-scenario-routing.md", "regulatory-baseline.md"})
+        if not contains_any(prompt, ["PRD", "产品需求文档", "需求说明书", "通用主文档"]):
+            route.difference_update(
+                {
+                    "product",
+                    "product-scenario-routing.md",
+                    "product-prd-template.md",
+                    "product-design-and-prd.md",
+                }
+            )
     if contains_any(prompt, product_general_route_terms):
         route.update({"product-scenario-routing.md"})
     if contains_any(prompt, ["业务架构规划", "业务 IT 对齐", "业务能力地图", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流"]):
@@ -14702,6 +14864,15 @@ expected_handling_has(
         "回流方式",
         "停止条件",
         "人工决策点",
+        "重复工作发现门禁",
+        "证据不足时允许零候选",
+        "不新增 loop-me Skill",
+        "Push right",
+        "低风险、可逆、可验证的准备工作",
+        "决策简报",
+        "不把原始输出或草稿交给 Owner",
+        "实施者无需补充未声明的业务决策即可实现",
+        "显式标为 PENDING",
         "可复测样例",
         "不得吸收",
         "高频、低风险、有证据",
@@ -14713,6 +14884,11 @@ expected_handling_has(
         "路线图改动",
         "上线审批",
     ),
+)
+behavior_contract_has(
+    "wise-agent-should-reusable-work-asset-loop",
+    ("discovery_gate", "workflow_spec", "checkpoint_policy", "done_gate", "must_not_do"),
+    ("实际重复证据", "允许零候选", "Push right", "外部写入", "决策简报", "未声明的业务决策", "PENDING", "新增 loop-me Skill"),
 )
 
 expected_handling_has(
@@ -14857,6 +15033,30 @@ expected_handling_has(
         "最终由知止者综合一个结果",
         "工具摘要不得替代测试、CR、owner 确认、Git 授权或上线审批",
     ),
+)
+
+expected_handling_has(
+    "wise-agent-should-compose-simple-multi-skill-workflow",
+    (
+        "能力组合与轻量交接路径",
+        "拒绝把全部职责塞进一个万能 Skill",
+        "不把每个流程步骤机械拆成 Skill",
+        "产物是否具有可独立使用或验收的价值",
+        "能力是否会跨场景单独复用",
+        "两问任一为否就不拆顶层 Skill",
+        "稳定职责、输入、输出、失败边界和验收",
+        "简单线性任务不生成 work_graph",
+        "step / consumes / produces / acceptance / next / checkpoint / failure",
+        "任务契约传递目标、约束和权限",
+        "来源、版本、新鲜度和指纹",
+        "临时草稿留在步骤内部",
+        "不把文件路径、并联或循环写成无条件最佳实践",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-compose-simple-multi-skill-workflow",
+    ("split_gate", "simple_handoff", "artifact_policy", "graph_boundary", "must_not_do"),
+    ("独立使用或验收", "跨场景单独复用", "failure", "版本化产物指针", "新鲜度", "指纹", "不生成 work_graph", "机械拆 Skill"),
 )
 
 expected_handling_has(
@@ -17534,6 +17734,30 @@ expected_handling_has(
 expected_handling_has(
     "wise-agent-should-resume-from-state-contract",
     ("D-1", "B 不得复活", "C 不得脑补", "check_state_contract.py", "不靠模型记忆猜测"),
+)
+expected_handling_has(
+    "wise-agent-should-branch-context-for-focused-evidence-and-return",
+    (
+        "临时 Branch",
+        "不是 Continue、Worker、Checker 或新的控制机制",
+        "平台原生 handoff",
+        "操作系统临时目录",
+        "权威材料指针",
+        "建议加载的最小 Skills / references",
+        "期望返回证据",
+        "敏感信息检查",
+        "原决策快照对账",
+        "不扩大 Git、联网、写入或生产授权",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-branch-context-for-focused-evidence-and-return",
+    ("handoff_kind", "outbound_requires", "return_requires", "must_not_do"),
+    ("Branch", "权威材料指针", "敏感信息检查", "新增证据", "原决策快照对账", "复制整段对话", "扩大授权"),
+)
+expected_handling_has(
+    "wise-agent-should-continue-without-branch-on-token-threshold",
+    ("Continue", "不创建 Branch", "固定 token 阈值", "上下文隔离收益", "明确回传目的", "期望返回证据"),
 )
 expected_handling_has(
     "wise-agent-should-select-control-mechanisms-by-evidence",

@@ -12,7 +12,7 @@
 
 - 只做工程删除、数据迁移、公共契约变更、发布回滚或生产下线：交给 `资深架构师` 和对应工程流程。
 - 只做新功能 PRD 且不存在旧概念、旧入口或旧规则影响面：使用 `product-prd-template.md` 和 `product-design-and-prd.md`。
-- 涉及真实资金、外部支付规则、合规或监管口径时，先进入 `payment-scenario-routing.md` 和 `regulatory-baseline.md`。
+- 涉及真实资金、外部支付规则、合规或监管口径时，先使用 `payment-expert`。
 
 ## 读取后必须产出
 

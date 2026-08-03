@@ -60,6 +60,8 @@
 
 能力组合遵循仓库 `AGENTS.md` 的“分层承责，正交合用”：专业 Skill 围绕独立责任、明确契约和可验证结果组合；知止者只编排任务目标、能力输入输出、协作顺序和验证，不成为吞并专项规则的万能业务编排层。
 
+Skill 拆分先做二问：产物是否具有可独立使用或验收的价值，能力是否会跨场景单独复用。两问任一为否，不拆顶层 Skill；两问均为是，仍须确认稳定职责、输入、输出、失败边界和验收能够独立成立。只在当前流程有意义的步骤留在工作流，载体、工具或权限不同不能单独证明需要新 Skill；优先复用既有 Skill、reference、script 或 fixture。
+
 ### 二 A、路由消歧、后置加载与加载扇出
 
 - 遵循先主能力、后协同能力：先按交付物、真实风险和一手材料锁定主能力，只有主能力出现明确缺口时才增加协同能力。
@@ -85,6 +87,8 @@
 
 | 任务信号 | 主能力 | 可选协同能力 | 独立验证 |
 | --- | --- | --- | --- |
+| 支付、资金、账户、账本、清分、清算、结算、对账、退款、争议、通道、卡组织、ACH/银行转账、VCC、跨境支付或支付监管产品规则 | `payment-expert` | 需要通用 PRD 主文档时 `product-architecture-expert`；进入系分、代码、TDD 或生产变更时 `senior-software-architect` | 外部规则检查器、业务/支付/财务/合规 Owner、方法卡盲测、目标项目测试与对账证据 |
+| 支付资金方案、实现证据或测试结果的独立准出审查，且涉及幂等、冻结、授权拒绝、原路退款、出款门禁或失败无副作用 | 候选 `payment-funds-review`，仅在 admission 通过后使用 | 产品事实由 `payment-expert` 提供；实现与测试证据由 `senior-software-architect` 提供 | 原始材料回读、目标项目测试、余额/交易/路由/分录事实快照、支付/财务 Owner；Checker 不接管修复 |
 | PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具 | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
@@ -100,7 +104,7 @@
 
 显式调用专业 Skill 时，不再反向追加无关能力。比如 `$senior-software-architect` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind 证据不得加载 Wind 专项；`$ui-design-expert` 做界面设计时不替产品 Owner 发明业务规则，也不因存在 Figma 工具就自动调用；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。
 
-轻量产品任务同样适用：只要求为“退款申请”补通用验收种子，且没有原交易、支付轨道、资金账务、清结算、法域或合规事实时，只装载产品通用路径，不读取支付专项 reference；需要卡组织退款、ACH return、资金回退或账务处理时再升级。
+轻量产品任务同样适用：只要求为“退款申请”补通用验收种子，且没有原交易、支付轨道、资金账务、清结算、法域或合规事实时，只装载产品通用路径；需要卡组织退款、ACH return、资金回退或账务处理时才升级到 `payment-expert`。
 
 ### 三 A、跨阶段状态契约
 
