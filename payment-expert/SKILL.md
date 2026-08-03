@@ -1,20 +1,20 @@
 ---
 name: payment-expert
 description: |
-  用户要求设计、评审或解释支付资金产品，并有支付轨道或通道（银行卡、ACH、VCC）、资金账务事实、清结算对账关系或跨境规则等明确证据时触发。孤立的账户、订单或退款词，以及库存、一般会计、代码、UI 和普通 PRD 不触发。
+  用户要求设计、评审或解释支付资金产品，并出现跨主体资金责任、异步事件、退款争议、资金账户/支付账本事实、清结算对账、sandbox 证据或支付轨道（银行卡、ACH、VCC）等明确事实时触发。孤立的账户、订单或退款词，以及普通非支付状态机、库存、一般会计、代码、UI 和普通 PRD 不触发。
 ---
 
 # 支付专家
 
 ## 定位
 
-本 Skill 是知止者按需装载的支付与资金专业能力包，负责把支付业务事实转成可评审的主体、对象、流程、状态、规则、资金/账务边界、风险和验收。它不成为第二行动主体，也不替代业务 Owner、法务、合规、财务、持牌机构或工程负责人。
+本 Skill 是知止者按需装载的支付与资金专业能力包，负责把支付业务事实转成可评审的主体、对象、流程、状态、规则、资金/账务边界、风险和验收。跨厂商稳定内核以 Stripe、Airwallex、Highnote 官方公开资料重新蒸馏的来源独立公共核心为准；专项能力仍按来源、版本、适用范围和准入状态逐项使用。它不成为第二行动主体，也不替代业务 Owner、法务、合规、财务、持牌机构或工程负责人。
 
 支付产品判断以“谁的钱、因何业务、沿何轨道、形成何种事实、如何记账结算、由谁最终确认”为主线。同步成功、通道受理、账本过账、外部到账和对账完成是不同事实，不得互相代替。
 
 ## 使用边界
 
-- 普通 PRD、会员、审批、SaaS、运营后台等非资金产品使用 `product-architecture-expert`。
+- 普通 PRD、会员、审批、SaaS、运营后台等非资金产品使用 `product-architecture-expert`。用户显式调用本 Skill 但问题只是简单非支付状态机时，直接按已给业务规则完成最小状态机，并说明不引入支付对象；需要正式 PRD 或复杂产品建模时再路由。
 - 只有“退款”“账户”“订单”等孤立词，没有原交易、资金/账务流、支付轨道、法域或外部规则时，不加载本 Skill。
 - 系统设计、Java/其他语言实现、Bug、TDD、源码 CR 和生产变更以 `senior-software-architect` 为主；本 Skill 只提供支付领域事实、不变量、停止条件和验收种子。
 - 跨产品、工程、验证或多轮任务由 `wise-agent` 持有 Goal、状态、能力组合和 Checker；本 Skill 不定义协调流程或扩大授权。
@@ -29,17 +29,17 @@ description: |
 3. `待确认`：缺少 Owner、法域、规则版本、会计政策、通道契约或完成证据。
 4. `范围外不做`：不据课程或案例生成生产接口、会计分录、监管结论、通道参数或上线承诺。
 
-涉及外部规则时先读 `references/regulatory-baseline.md`。正式、完整、可评审或提交前的材料必须运行 `scripts/check_external_rules.py`；脚本只检查来源、版本/发布日期、适用范围、核验日期和确认方是否齐全，不联网、不写文件、不上传文件、不读取密钥，也不证明规则真实、最新或适用。
+目标厂商为 Stripe、Airwallex 或 Highnote，且需要精确对象、状态、事件、scope、版本或报告形态时，先读 `references/provider-facts.md` 并在目标账户、环境、endpoint 和版本下复核。涉及外部规则时先读 `references/regulatory-baseline.md`。正式、完整、可评审或提交前的材料必须运行 `scripts/check_external_rules.py`；脚本只检查来源、版本/发布日期、适用范围、核验日期和确认方是否齐全，不联网、不写文件、不上传文件、不读取密钥，也不证明规则真实、最新或适用。
 
 ## 核心工作流
 
-1. **定主体与责任**：确认用户、商户、平台、银行/通道、资金所有权、法域、币种、风险与验收 Owner。
-2. **分解事实层**：区分交易承诺、支付执行、履约、清分/清算、账务、结算、外部到账和对账完成证据。
-3. **选择最小方法**：先读 `references/payment-scenario-routing.md`，只加载当前场景需要的 reference 和方法卡。
-4. **建模正逆异常**：覆盖主流程、退款/撤销/冲正/return/拒付、超时、重复、冲突、失败、挂账和人工处理。
-5. **定义资金不变量**：明确金额/币种、可退/可用/冻结口径、幂等语义、账本平衡、不可变事实和对账放行条件。
-6. **形成交付**：输出 Product Context Card、产品方案/PRD 专项附录、规则矩阵、状态机、四流图或验收种子；未知项保持 `PENDING`。
-7. **验证与交接**：执行确定性检查；工程任务把已确认事实和验收种子交给 `senior-software-architect`，高风险结论交独立 Checker 和人类 Owner。
+1. **冻结问题口径**：确认支付轨道、主体、账户/钱包、币种、时区、环境、目标厂商与契约版本，并说明本次是交易追溯、期间余额、payout 还是 settlement 对账。
+2. **分解对象与完成层级**：读取 `references/object-and-completion.md`，区分业务意图、尝试语义、交易/资金事实、退款/争议、财务事件/账务、结算和余额；没有显式 attempt 对象时只记录语义缺口。
+3. **收敛异步事件**：存在 webhook、通知、超时、重放或乱序时读取 `references/event-recovery.md`；先认证和校验 scope，再耐久去重、权威刷新和幂等投影，不承诺 exactly-once。
+4. **厘清责任与对账**：多主体、费用/损失、账户/钱包或对账问题读取 `references/responsibility-reconciliation-evidence.md`；关键证据未知时停止最终定责、自动化资金流和生产结论。
+5. **选择最小专项方法**：读取 `references/payment-scenario-routing.md`，只加载当前场景需要的方法卡和 reference；专项来源或版本未准入时仅形成待确认问题。
+6. **建模正逆异常与不变量**：覆盖退款/撤销/冲正/return/拒付、超时、重复、冲突、失败、挂账和人工处理，明确金额/币种、幂等、账本平衡、不可变事实和对账放行条件。
+7. **形成交付并验证**：输出 Product Context Card、产品方案/PRD 专项附录、责任/规则矩阵、状态机、四流图或验收种子；未知项保持 `PENDING`。执行确定性检查后，把工程事实交给 `senior-software-architect`，高风险结论交独立 Checker 和人类 Owner。
 
 ## 方法路由
 
@@ -59,6 +59,8 @@ description: |
 
 `M02` 只用于两个及以上通道的共同内核比较；单一通道的 `return code`、字段、文件和状态解释进入 `M09`。不得因为“通道路由”一词同时展开两套方法。
 
+VCC/发卡、ACH/银行轨道、FX/多币种、通道路由、清结算/账本、监管与外部规则等专项 reference 仍是候选能力。使用前必须检查 `references/source-map.md` 与 `admission.json`；缺少独立来源、版本、适用范围、许可或行为证据时，不把它写成已准入通则、精确厂商契约或生产承诺。
+
 ## 交付契约
 
 按任务裁剪，至少包含：
@@ -74,6 +76,7 @@ description: |
 
 ## 参考路由
 
+- 来源独立公共核心：`references/object-and-completion.md`、`references/event-recovery.md`、`references/responsibility-reconciliation-evidence.md`、`references/provider-facts.md`。
 - 场景入口：`references/payment-scenario-routing.md`、`references/glossary.md`。
 - 总体方法与可执行方法卡：`references/payment-methodology.md`、`references/payment-method-cards.md`。
 - 清结算、账务与对账：`references/clearing-settlement.md`、`references/payment-design-checklists.md`。
@@ -89,4 +92,5 @@ description: |
 - 不删除或覆盖原交易、原分录、原对账结果来制造一致；修复必须追加可追溯事实。
 - 不把相同标识下的不同金额、币种、账户、posting facts 或结果当成幂等重放。
 - 不从 `T+1`、单一状态码、一个汇率或案例默认值猜测完整产品契约。
+- 不依赖事件到达顺序重建权威资金事实，不把 API 请求、单一事件、sandbox 或模拟结果写成最终到账、生产能力或上线批准。
 - 不以本地测试、课程材料、厂商文档或 Checker 通过宣称监管有效、会计正确、系统可部署或生产可用。

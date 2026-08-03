@@ -130,6 +130,7 @@ python3 -m py_compile document-authoring/scripts/check_document_style.py
 python3 -m py_compile hanzi-philology/scripts/check_philology_evidence.py
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile payment-expert/scripts/check_external_rules.py
+python3 -m py_compile payment-expert/scripts/test_verify_behavior_cases.py
 python3 -m py_compile payment-expert/scripts/verify_behavior_cases.py
 python3 -m py_compile payment-expert/scripts/verify_fixtures.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
@@ -165,6 +166,11 @@ java-service-code-generator/scripts/verify_fixtures.py
 echo "==> payment expert"
 payment-expert/scripts/check_external_rules.py --self-test
 python3 payment-expert/scripts/verify_behavior_cases.py
+python3 payment-expert/scripts/test_verify_behavior_cases.py
+public_core_eval_dir="${tmp_dir}/payment-public-core-eval"
+python3 payment-expert/scripts/verify_behavior_cases.py --prepare-eval-batches "${public_core_eval_dir}"
+python3 scripts/evaluate-skill-behavior.py validate --cases "${public_core_eval_dir}/candidate-comparison.json"
+python3 scripts/evaluate-skill-behavior.py validate --cases "${public_core_eval_dir}/post-merge-forward.json"
 python3 payment-expert/scripts/verify_fixtures.py
 
 echo "==> product deliverable checker"

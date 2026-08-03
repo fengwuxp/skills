@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "description": "来源独立公共核心的长期回归场景；只冻结 prompt 与验收断言，不包含历史模型回答或评分。",
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true
+  },
+  "eval_batches": [
+    {
+      "id": "candidate-comparison",
+      "case_ids": [
+        "object-layers-and-retry-history",
+        "late-payout-failure",
+        "duplicate-out-of-order-events",
+        "multi-party-funds-responsibility",
+        "refund-dispute-double-compensation",
+        "reconciliation-schema-change",
+        "sandbox-production-evidence",
+        "adjacent-non-payment-state"
+      ]
+    },
+    {
+      "id": "post-merge-forward",
+      "case_ids": [
+        "connected-account-scope-mismatch",
+        "report-schema-and-period-balance",
+        "ordinary-content-state",
+        "duplicate-out-of-order-events",
+        "sandbox-production-evidence"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "object-layers-and-retry-history",
+      "provenance": "candidate-comparison",
+      "category": "object-model",
+      "risk": "high",
+      "prompt": "一个订单第一次扣款失败，换卡后第二次成功，三天后发生部分退款。请给出支付领域对象和关联关系，供产品与工程共同评审。",
+      "criteria": [
+        "区分业务意图、两次执行尝试、成功交易、独立退款和账务影响，不覆盖失败历史。",
+        "说明厂商可能没有显式 attempt 对象，不能虚构精确对象或状态。",
+        "保留从退款和账务差异回溯到原订单与原交易的关联。"
+      ]
+    },
+    {
+      "id": "late-payout-failure",
+      "provenance": "candidate-comparison",
+      "category": "asynchronous-outcome",
+      "risk": "high",
+      "prompt": "出款接口返回成功，随后事件显示 PAID，运营准备通知客户资金最终到账；第二天又收到失败和退款记录，退款额还少于原金额。请判断系统与运营应该怎么处理。",
+      "criteria": [
+        "拒绝把接口成功或 PAID 直接当作不可逆最终到账。",
+        "按业务、通道、账务、结算和余额层说明 provisional/final 证据。",
+        "处理迟到失败、退款、费用或汇差，并阻止重复补偿。"
+      ]
+    },
+    {
+      "id": "duplicate-out-of-order-events",
+      "provenance": "candidate-comparison",
+      "category": "event-convergence",
+      "risk": "high",
+      "prompt": "同一支付对象的 settled 事件先到，processing 事件后到，而且 settled 又重复投递了一次。请设计 webhook 消费与恢复策略。",
+      "criteria": [
+        "先在原始载荷边界完成厂商适配的认证与 scope 校验。",
+        "使用 provider、scope、event ID 做耐久去重，重复投递不能重复产生资金副作用。",
+        "事件只触发权威状态刷新，旧事件不能把 settled 投影回退到 processing。",
+        "查询失败或 replay 过期时保留可恢复状态，不宣称 exactly-once。"
+      ]
+    },
+    {
+      "id": "multi-party-funds-responsibility",
+      "provenance": "candidate-comparison",
+      "category": "funds-responsibility",
+      "risk": "high",
+      "prompt": "一个平台、商户子账户和终端用户共同参与收款。产品只写了‘商户账户收款’，现在要确定手续费、负余额、退款、争议损失和 KYC 谁负责。请直接完成资金流设计。",
+      "criteria": [
+        "拒绝仅凭账户标签直接定责，区分对象 owner、钱包、操作权、经济责任和合同责任。",
+        "逐项列出 fee、loss、refund、dispute、KYC 的证据与 Owner。",
+        "关键责任未知时停止最终资金流或上线结论，并把法律判断交给相应 Owner。"
+      ]
+    },
+    {
+      "id": "refund-dispute-double-compensation",
+      "provenance": "candidate-comparison",
+      "category": "reverse-money-path",
+      "risk": "high",
+      "prompt": "一笔 100 元交易先部分退款 30 元，之后用户又对原交易发起全额争议，平台还收到临时贷记，后来临时贷记被撤销。请说明如何建模并防止多退。",
+      "criteria": [
+        "把部分退款、争议、临时贷记及其撤销建成关联原交易但独立演进的资金路径。",
+        "分别记录本金、费用、时点、provisional/final 和最终裁决者。",
+        "计算剩余敞口并设置重复补偿停止条件，不覆盖原交易事实。"
+      ]
+    },
+    {
+      "id": "reconciliation-schema-change",
+      "provenance": "candidate-comparison",
+      "category": "reconciliation",
+      "risk": "high",
+      "prompt": "报表升级后行数变多并新增未知列，其中还混有 pending 记录；运营认为行数不同就是资金丢失。请给出对账结论和最小调查方案。",
+      "criteria": [
+        "先区分期间余额、payout、settlement 或交易追溯口径及对应时间。",
+        "按生命周期、财务事件、币种、费用、净额和批次核对，不按行数、列序或固定列数判平。",
+        "容忍未知新增列；必需金额或关联语义缺失时才阻断。",
+        "把 pending、退款、争议、费用、汇差和迟到事件分桶。"
+      ]
+    },
+    {
+      "id": "sandbox-production-evidence",
+      "provenance": "candidate-comparison",
+      "category": "evidence-gate",
+      "risk": "high",
+      "prompt": "支付 sandbox 的成功、拒绝、退款和 webhook 用例都通过了。负责人要求据此给出‘可直接全量生产上线’结论。请评估。",
+      "criteria": [
+        "拒绝把 sandbox 通过当作真实网络、银行结算、容量、风控和生产控制证据。",
+        "明确 sandbox 已证明的对象、事件、账务与恢复代码路径，以及仍缺的证据等级。",
+        "给出独立生产 gate、Owner 决策和 NO-GO/待验证结论。"
+      ]
+    },
+    {
+      "id": "adjacent-non-payment-state",
+      "provenance": "candidate-comparison",
+      "category": "non-trigger-boundary",
+      "risk": "medium",
+      "prompt": "请为普通电商商品上架设计一个草稿、待审核、已上架、已下架状态机，不涉及支付、账户、资金或结算。",
+      "criteria": [
+        "直接完成商品状态机，不强行引入支付意图、账本、结算、退款或争议。",
+        "保持范围简洁，并指出这不是支付资金专家的主场景。"
+      ]
+    },
+    {
+      "id": "connected-account-scope-mismatch",
+      "provenance": "post-merge-forward",
+      "category": "event-scope",
+      "risk": "high",
+      "prompt": "Stripe Connect webhook 原始载荷验签通过，但事件来自 connected account B；本地消费任务属于 account A，事件 ID 从未见过。能否直接执行 account A 的余额入账？给出处置与恢复路径。",
+      "criteria": [
+        "拒绝因验签通过或 event ID 未见过而跨账户入账。",
+        "校验账户与事件 scope，持久化原始事件并停止账务、余额和结算副作用。",
+        "通过权威查询、修正映射后的定向重放或人工差错单恢复。"
+      ]
+    },
+    {
+      "id": "report-schema-and-period-balance",
+      "provenance": "post-merge-forward",
+      "category": "reconciliation",
+      "risk": "high",
+      "prompt": "Highnote 月度报表新增未知列，行数也比上月多；运营据此判断发生资金损失并要求暂停全部结算。请给最小调查与停止条件。",
+      "criteria": [
+        "先确认报表属于期间余额、交易、payout 或 settlement 口径。",
+        "拒绝以未知列或行数变化直接判断资金损失，按语义列名解析并保留未知列。",
+        "按金额、币种、期间和关联事实对账，只对重大未解释差异的范围局部暂停。"
+      ]
+    },
+    {
+      "id": "ordinary-content-state",
+      "provenance": "post-merge-forward",
+      "category": "non-trigger-boundary",
+      "risk": "medium",
+      "prompt": "内容后台只有 DRAFT、REVIEWING、PUBLISHED、ARCHIVED 四个状态，不涉及支付、资金或账务。请给最小状态机。",
+      "criteria": [
+        "直接给出最小内容状态机及审核驳回路径。",
+        "不引入支付意图、资金账户、账本、结算、退款或争议。"
+      ]
+    }
+  ],
+  "limitations": [
+    "fixture 的版本、逐 case provenance、prompt、断言、rubric、release gate 和批次定义由固定指纹防止静态漂移，不等于真实模型行为通过。",
+    "verify_behavior_cases.py 可物化 8-case 与 5-case evaluator 合法批次，但不会自动收集回答、盲化或评分。",
+    "历史回答、评分、runner/model 和盲化证据继续保存在仓库过程工件中。",
+    "不验证真实厂商 API、账户、结算、合同、法域、合规或生产能力。"
+  ]
+}
