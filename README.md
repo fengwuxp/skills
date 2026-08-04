@@ -133,7 +133,7 @@
 | --- | --- | --- | --- |
 | 跨领域真实工作、目标控制、能力组合、验证和知识演进 | 知止者，ID：`wise-agent`，路径：[wise-agent](./wise-agent) | 目标、事实源、范围、授权、完成证据 | 不限于产研；不获得无限自治或高风险授权 |
 | 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | 产品架构专家，ID：`product-architecture-expert`，路径：[product-architecture-expert](./product-architecture-expert) | 用户、主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
-| 支付、资金账户、支付账本、清结算、对账、原支付退款、通道、卡组织、ACH、VCC、跨境和支付监管产品规则 | 候选支付专家，ID：`payment-expert`，路径：[payment-expert](./payment-expert)；`Q-002` 关闭前不可同步 | 主体、法域、资金归属、原事实、轨道/通道、规则来源、验收 Owner | 不替代法务合规、会计政策、工程实现或生产准入 |
+| 支付、资金账户、支付账本、清结算、对账、原支付退款、通道、卡组织、ACH、VCC、跨境和支付监管产品规则 | 支付专家，ID：`payment-expert`，路径：[payment-expert](./payment-expert)；本机安装已授权，`R-002` 禁止 Git push、团队共享/同步与公开发布 | 主体、法域、资金归属、原事实、轨道/通道、规则来源、验收 Owner | 不替代法务合规、会计政策、工程实现或生产准入 |
 | 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可同步 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |

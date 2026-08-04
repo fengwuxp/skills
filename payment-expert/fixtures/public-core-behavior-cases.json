@@ -179,7 +179,7 @@
   "limitations": [
     "fixture 的版本、逐 case provenance、prompt、断言、rubric、release gate 和批次定义由固定指纹防止静态漂移，不等于真实模型行为通过。",
     "verify_behavior_cases.py 可物化 8-case 与 5-case evaluator 合法批次，但不会自动收集回答、盲化或评分。",
-    "历史回答、评分、runner/model 和盲化证据继续保存在仓库过程工件中。",
+    "历史回答、评分、runner/model 和盲化证据未保留在仓库内，当前不得据此声称真实模型行为或独立 Judge 通过。",
     "不验证真实厂商 API、账户、结算、合同、法域、合规或生产能力。"
   ]
 }

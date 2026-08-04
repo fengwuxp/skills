@@ -50,19 +50,30 @@ def audit_skill(skill_dir: Path) -> tuple[str, list[str]]:
     if not isinstance(blockers, list):
         failures.append(f"{label}: blockers must be an array")
         blockers = []
+    restrictions = data.get("restrictions", [])
+    if not isinstance(restrictions, list):
+        failures.append(f"{label}: restrictions must be an array")
+        restrictions = []
     if status == "candidate" and not blockers:
         failures.append(f"{label}: candidate requires at least one blocker")
     if status == "installable" and blockers:
         failures.append(f"{label}: installable Skill cannot retain blockers")
 
-    for index, blocker in enumerate(blockers, start=1):
-        if not isinstance(blocker, dict):
-            failures.append(f"{label}: blocker[{index}] must be an object")
-            continue
-        for field in ["id", "summary", "owner"]:
-            value = blocker.get(field)
-            if not isinstance(value, str) or not value.strip():
-                failures.append(f"{label}: blocker[{index}].{field} must be non-empty")
+    for item_name, items in [("blocker", blockers), ("restriction", restrictions)]:
+        for index, item in enumerate(items, start=1):
+            if not isinstance(item, dict):
+                failures.append(f"{label}: {item_name}[{index}] must be an object")
+                continue
+            for field in ["id", "summary", "owner"]:
+                value = item.get(field)
+                if not isinstance(value, str) or not value.strip():
+                    failures.append(
+                        f"{label}: {item_name}[{index}].{field} must be non-empty"
+                    )
+            if item_name == "restriction" and item.get("scope") != "distribution":
+                failures.append(
+                    f"{label}: restriction[{index}].scope must be distribution"
+                )
 
     requires = data.get("requires", [])
     if not isinstance(requires, list):

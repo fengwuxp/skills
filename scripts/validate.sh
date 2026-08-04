@@ -243,8 +243,8 @@ fi
 
 echo "==> candidate skill sync guard"
 candidate_home="${tmp_dir}/candidate-home"
-if CODEX_HOME="${candidate_home}" ./sync-skills.sh --dry-run payment-expert >/dev/null 2>&1; then
-  echo "FAIL candidate payment-expert was syncable" >&2
+if CODEX_HOME="${candidate_home}" ./sync-skills.sh --dry-run payment-funds-review >/dev/null 2>&1; then
+  echo "FAIL candidate payment-funds-review was syncable" >&2
   exit 1
 fi
 

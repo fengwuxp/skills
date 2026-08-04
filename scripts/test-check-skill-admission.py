@@ -87,6 +87,79 @@ class SkillAdmissionTests(unittest.TestCase):
 
             self.assertTrue(any("requires unknown skill missing" in item for item in failures))
 
+    def test_installable_allows_valid_non_distribution_restrictions(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_dir = self.write_skill(
+                Path(temp_dir),
+                "restricted-installable",
+                {
+                    "status": "installable",
+                    "blockers": [],
+                    "restrictions": [
+                        {
+                            "id": "R-001",
+                            "scope": "distribution",
+                            "summary": "local install only; distribution is not authorized",
+                            "owner": "rights owner",
+                        }
+                    ],
+                },
+            )
+
+            status, failures = MODULE.audit_skill(skill_dir)
+
+            self.assertEqual("installable", status)
+            self.assertEqual([], failures)
+
+    def test_rejects_incomplete_restriction(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_dir = self.write_skill(
+                Path(temp_dir),
+                "invalid-restriction",
+                {
+                    "status": "installable",
+                    "blockers": [],
+                    "restrictions": [{"id": "R-001"}],
+                },
+            )
+
+            _, failures = MODULE.audit_skill(skill_dir)
+
+            self.assertTrue(
+                any("restriction[1].summary must be non-empty" in item for item in failures)
+            )
+            self.assertTrue(
+                any("restriction[1].owner must be non-empty" in item for item in failures)
+            )
+            self.assertTrue(
+                any("restriction[1].scope must be distribution" in item for item in failures)
+            )
+
+    def test_rejects_unknown_restriction_scope(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_dir = self.write_skill(
+                Path(temp_dir),
+                "invalid-restriction-scope",
+                {
+                    "status": "installable",
+                    "blockers": [],
+                    "restrictions": [
+                        {
+                            "id": "R-001",
+                            "scope": "installation",
+                            "summary": "do not install",
+                            "owner": "safety owner",
+                        }
+                    ],
+                },
+            )
+
+            _, failures = MODULE.audit_skill(skill_dir)
+
+            self.assertTrue(
+                any("restriction[1].scope must be distribution" in item for item in failures)
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

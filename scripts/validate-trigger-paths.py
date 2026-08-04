@@ -12243,14 +12243,48 @@ check(
     ),
 )
 check(
-    "payment source map records Airwallex navigation as pending",
+    "payment source map records Airwallex public-core source boundary",
     has_all(
         payment_source_map,
         [
-            "2026-07-31 本轮未联网复核版本、生效日期和适用范围",
-            "状态统一为 `PENDING`",
+            "2026-08-03 读取并归位到 `provider-facts.md`",
             "https://www.airwallex.com/docs",
-            "只作全球金融平台能力分类候选",
+            "账户日期版本、法域和合同仍需重核",
+        ],
+    ),
+)
+check(
+    "payment public-core evidence stays static-only",
+    has_all(
+        payment_source_map,
+        [
+            "当前仓库只能复核静态 fixture 与 evaluator 契约",
+            "不得据此声称真实模型行为或独立 Judge 通过",
+        ],
+    )
+    and has_none(
+        payment_source_map,
+        [
+            "通过来源静态审查及 8 case x 3 trial 行为门禁",
+            "独立 Judge 结论为 0 blocker / PASS",
+        ],
+    ),
+)
+check(
+    "README records payment expert local-only admission",
+    has_all(
+        readme,
+        [
+            "支付专家，ID：`payment-expert`",
+            "本机安装已授权",
+            "`R-002` 禁止 Git push、团队共享/同步与公开发布",
+        ],
+    )
+    and has_none(
+        readme,
+        [
+            "候选支付专家，ID：`payment-expert`",
+            "`Q-002` 关闭前不可同步",
         ],
     ),
 )
@@ -12820,9 +12854,9 @@ check(
             "正文不可复核",
             "仅保留为历史索引线索",
             "不得作为已吸收来源",
-            "`Q-002` 作者授权未关闭前",
-            "本地未提交 candidate",
-            "不得私有提交、团队共享、安装、同步或公开发布",
+            "`Q-002` 的本机安装 blocker 已关闭",
+            "范围 A：本机私有使用、安装与私有 Git commit 已授权",
+            "范围 B/C：Git push、团队共享/同步与公开发布仍未授权",
             "不等于版权合法性结论",
         ],
     )

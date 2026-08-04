@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -15,14 +16,8 @@ ROOT = Path(__file__).resolve().parents[2]
 PAYMENT_SCRIPT = Path(__file__).with_name("verify_behavior_cases.py")
 EVALUATOR_SCRIPT = ROOT / "scripts" / "evaluate-skill-behavior.py"
 CASES_FILE = ROOT / "payment-expert" / "fixtures" / "public-core-behavior-cases.json"
-HISTORICAL_CASES_FILE = (
-    ROOT
-    / "docs"
-    / "superpowers"
-    / "plans"
-    / "payment-expert-public-sources"
-    / "eval"
-    / "behavior-cases.json"
+HISTORICAL_CANDIDATE_COMPARISON_SHA256 = (
+    "5a1f092b2a596bb6f9c53899f82475717f4b2d6633ef85f73cd6c5f760abd0d0"
 )
 
 
@@ -70,18 +65,29 @@ class PublicCoreBehaviorContractTests(unittest.TestCase):
             EVALUATOR.validate_cases(batch)
 
     def test_candidate_comparison_matches_frozen_history(self) -> None:
-        historical = json.loads(HISTORICAL_CASES_FILE.read_text(encoding="utf-8"))
         fields = ("id", "category", "risk", "prompt", "criteria")
         current_cases = [
             {field: case[field] for field in fields}
             for case in self.data["cases"]
             if case["provenance"] == "candidate-comparison"
         ]
-        historical_cases = [
-            {field: case[field] for field in fields} for case in historical["cases"]
-        ]
+        canonical = json.dumps(
+            current_cases,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
 
-        self.assertEqual(current_cases, historical_cases)
+        self.assertEqual(
+            hashlib.sha256(canonical).hexdigest(),
+            HISTORICAL_CANDIDATE_COMPARISON_SHA256,
+        )
+
+    def test_limitations_do_not_claim_deleted_model_evidence(self) -> None:
+        limitations = "\n".join(self.data["limitations"])
+
+        self.assertIn("未保留在仓库内", limitations)
+        self.assertNotIn("继续保存在仓库过程工件中", limitations)
 
 
 if __name__ == "__main__":

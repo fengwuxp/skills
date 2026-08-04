@@ -29,16 +29,16 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 
 ## 来源独立公共核心
 
-下列四个 reference 由未读取 S1 的独立 Maker 仅依据 Stripe、Airwallex、Highnote 官方公开正文重新蒸馏；其隔离候选快照于 2026-08-03 通过来源静态审查及 8 case x 3 trial 行为门禁：
+下列四个 reference 由未读取 S1 的独立 Maker 仅依据 Stripe、Airwallex、Highnote 官方公开正文重新蒸馏；当前仓库保留其来源边界、11 个冻结场景和 evaluator 契约：
 
 - `object-and-completion.md`：对象与完成层级、逆向资金独立事实。
 - `event-recovery.md`：原始载荷认证、scope、耐久去重、权威刷新与可恢复投影。
 - `responsibility-reconciliation-evidence.md`：责任证据停止、语义对账和 sandbox 证据上限。
 - `provider-facts.md`：三家厂商的官方链接、读取日、版本与目标环境复核边界。
 
-正式归位时，`event-recovery.md` 仅按 Source Checker 的 P2 建议把厂商色彩较强的 `settled` 场景标签改成“已观察到较新权威事实后收到较旧事件”，认证、scope、耐久去重、权威刷新和停止语义未改变；其余三个 reference 与评分快照一致。8 个比较场景和 3 个合并后增量场景的 prompt 与验收断言已进入 [`public-core-behavior-cases.json`](../fixtures/public-core-behavior-cases.json)。`scripts/verify_behavior_cases.py` 以版本、逐 case provenance 和整份契约指纹防止静态漂移，并从单一 fixture 物化 8-case 比较批次及“3 个增量 + 2 个高风险锚点”的 5-case 前向批次；仓库统一校验会用 `scripts/evaluate-skill-behavior.py` 验证两个批次的 evaluator 契约。历史回答、评分、正式 Skill hash 和证据上限仍保存在仓库过程工件 `docs/superpowers/plans/payment-expert-public-sources/eval/`。合并后 3 个样例经独立 Judge 判为 0 blocker / PASS，但未重新执行完整真实模型回归；静态和 harness 通过不等于模型行为通过。
+正式归位时，`event-recovery.md` 仅把厂商色彩较强的 `settled` 场景标签改成“已观察到较新权威事实后收到较旧事件”，认证、scope、耐久去重、权威刷新和停止语义未改变。8 个比较场景和 3 个合并后增量场景的 prompt 与验收断言已进入 [`public-core-behavior-cases.json`](../fixtures/public-core-behavior-cases.json)。`scripts/verify_behavior_cases.py` 以版本、逐 case provenance 和整份契约指纹防止静态漂移，并从单一 fixture 物化 8-case 比较批次及“3 个增量 + 2 个高风险锚点”的 5-case 前向批次；`scripts/test_verify_behavior_cases.py` 另以 SHA-256 冻结最初 8 个比较场景。仓库统一校验会用 `scripts/evaluate-skill-behavior.py` 验证两个 evaluator 批次。研究矩阵、计划、回答和评分已随过程资产删除，不再充当运行时权威；当前仓库只能复核静态 fixture 与 evaluator 契约，不得据此声称真实模型行为或独立 Judge 通过。
 
-这些证据只支持跨厂商稳定内核、已冻结候选行为和上述合并后增量样例，不支持未覆盖的 VCC、ACH、FX、通道路由、清结算/账本或监管专项准入，也不构成安装、发布、合规、会计或生产批准。
+这些证据只支持跨厂商稳定内核、已冻结场景和 evaluator 契约，不支持真实模型行为结论，也不支持未覆盖的 VCC、ACH、FX、通道路由、清结算/账本或监管专项准入，不构成安装、发布、合规、会计或生产批准。
 
 ## 项目精确锚点
 
@@ -116,7 +116,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 - 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端公开 HTML，并使用本机 Chrome headless 作为 Playwright 等价浏览器读取标题、作者、发布时间和正文；公开内容用于参考 AI 出海资金管理的场景问题，不支持厂商能力、覆盖范围或当前商业结论。
 - 微信公众号文章《一笔支付，要记哪些账？搞懂这些分录，秒变账务大师！》：`https://mp.weixin.qq.com/s/XlG7JnJu8Orjmxp4PScgIg`。2026-08-03 已通过 Codex 应用内浏览器 DOM 读取标题、作者“陈天宇宙”、页面显示发布时间“2026年8月3日 08:38”和正文；图片资源读取超时，未将图中未见文本作为证据。公开内容仅用于多主体账簿边界和分阶段证据的 D1 检查，不支持具体分录、会计政策、监管或生产结论。
 
-以下只作官方/厂商导航；2026-07-31 本轮未联网复核版本、生效日期和适用范围，状态统一为 `PENDING`：
+以下为外部来源导航。未标明已读日期的条目在 2026-07-31 未联网复核，状态为 `PENDING`；Stripe、Airwallex、Highnote 的公共核心事实已于 2026-08-03 读取并归位到 `provider-facts.md`，使用时仍须复核目标环境与版本：
 
 | 类别 | 导航 | 使用边界 |
 | --- | --- | --- |
@@ -124,17 +124,17 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 | Visa | `https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf` | 重新核验当前规则文档与目标项目合同 |
 | Mastercard | `https://www.mastercard.us/content/dam/public/mastercardcom/na/global-site/documents/mastercard-rules.pdf` | 重新核验当前规则文档与目标项目合同 |
 | Formance | `https://docs.formance.com/modules/ledger/introduction` | 只作账本产品模式候选，不作行业标准 |
-| Highnote | `https://docs.highnote.com/docs/` | 只作发卡、收单和数据面产品模式候选 |
-| Stripe | `https://docs.stripe.com/disputes/responding` | 只作争议运营候选，时限与责任需重核 |
+| Highnote | `https://docs.highnote.com/docs/` | 2026-08-03 已读公共核心；厂商适配事实见 `provider-facts.md`，时效值与专项能力仍需重核 |
+| Stripe | `https://docs.stripe.com/` | 2026-08-03 已读公共核心；厂商适配事实见 `provider-facts.md`，账户配置、版本和责任仍需重核 |
 | Adyen | `https://docs.adyen.com/risk-management/` | 只作收单风险产品候选 |
 | Marqeta | `https://www.marqeta.com/docs/core-api/cards` | 只作发卡对象和生命周期候选 |
-| Airwallex | `https://www.airwallex.com/docs` | 只作全球金融平台能力分类候选 |
+| Airwallex | `https://www.airwallex.com/docs` | 2026-08-03 已读公共核心；厂商适配事实见 `provider-facts.md`，账户日期版本、法域和合同仍需重核 |
 
 中国监管和数据保护导航集中维护在 `regulatory-baseline.md`；其中未填写真实核验记录的条目只能生成待确认问题。
 
 ## 提炼边界
 
-- `Q-002` 作者授权未关闭前，A. 本机私有使用、安装与私有提交；B. 团队共享与同步；C. 公开发布三个范围均保持未授权。本 Skill 只作为本地未提交 candidate 保留，不得私有提交、团队共享、安装、同步或公开发布；任务范围不等于版权合法性结论。
+- 2026-08-04 用户/版权 Owner 明确确认范围 A：本机私有使用、安装与私有 Git commit 已授权，`Q-002` 的本机安装 blocker 已关闭。范围 B/C：Git push、团队共享/同步与公开发布仍未授权，并作为 `R-002` 非分发限制保留；任务范围不等于版权合法性结论。
 - 来源独立公共核心已由未读取 S1 的独立 Maker 重新蒸馏并归位；它不继承 S1 的授权问题，但仍受官方文档时效、目标环境复核和发布许可边界约束。
 - 其余专项 references 仍是读取 S1 后形成的 `course-enriched local candidate`。S2/S3 可以交叉支持方法行为，但不能反向证明当前表述和能力选择未受 S1 影响；机械删除 S1 页码或课程字样不构成 clean-room，也不得把专项能力改称来源独立版本。
 - 不复制文章正文、课程正文、图片、表格、作者口吻、付费内容或专有案例。
