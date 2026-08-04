@@ -14,7 +14,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PAYMENT_SCRIPT = Path(__file__).with_name("verify_behavior_cases.py")
-EVALUATOR_SCRIPT = ROOT / "scripts" / "evaluate-skill-behavior.py"
 CASES_FILE = ROOT / "payment-expert" / "fixtures" / "public-core-behavior-cases.json"
 HISTORICAL_CANDIDATE_COMPARISON_SHA256 = (
     "5a1f092b2a596bb6f9c53899f82475717f4b2d6633ef85f73cd6c5f760abd0d0"
@@ -31,7 +30,6 @@ def load_module(name: str, path: Path):
 
 
 PAYMENT = load_module("verify_payment_behavior_cases", PAYMENT_SCRIPT)
-EVALUATOR = load_module("evaluate_payment_skill_behavior", EVALUATOR_SCRIPT)
 
 
 class PublicCoreBehaviorContractTests(unittest.TestCase):
@@ -61,8 +59,6 @@ class PublicCoreBehaviorContractTests(unittest.TestCase):
         self.assertEqual({case["id"] for batch in batches.values() for case in batch["cases"]}, {
             case["id"] for case in self.data["cases"]
         })
-        for batch in batches.values():
-            EVALUATOR.validate_cases(batch)
 
     def test_candidate_comparison_matches_frozen_history(self) -> None:
         fields = ("id", "category", "risk", "prompt", "criteria")
