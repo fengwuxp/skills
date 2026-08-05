@@ -3918,6 +3918,32 @@
       "expected_handling": "识别为多源资源到可复用能力资产的提炼任务；先建立来源清单和冲突矩阵，再为每个能力单元写清触发与非触发、前置条件、输入、步骤、失败分支、停止条件、输出、验收和来源锚点；按稳定职责和确定性需求选择最小落点，不默认创建顶层 Skill，不复制原始正文，并给出可复核的候选产物。"
     },
     {
+      "id": "resource-capability-distiller-should-preserve-compression-sensitive-evidence",
+      "skill": "resource-capability-distiller",
+      "query": "这些专家案例、失败样例、复盘记录和写作语料里既有稳定规则，也有只能回看原材料才能判断的细节。请做压缩保真判断，提炼可复用能力，但不要把所有内容压成一份摘要式 Skill。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "进入资源炼技并先执行压缩保真门禁：将稳定不变量、流程和失败边界归为可规则化；将依赖具体专家案例、失败样例、例外、判断过程或表达分布的内容归为需检索保真，保留来源索引与检索契约、选择规则和证据回链；缺少合法来源、检索方式、行为对比或人工验收时归为不可声明已转移，只保留候选。不把原始语料提交到共享仓库，也不扩充候选 schema。"
+    },
+    {
+      "id": "resource-capability-distiller-should-reject-label-only-distillation",
+      "skill": "resource-capability-distiller",
+      "query": "把这个人的文章压成十条风格标签写进 Skill 就行，不保留语料索引，也不用做来源回链或行为对比，直接宣布能力已经蒸馏完成。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "资源炼技必须拒绝把摘要标签当成能力本体；该请求依赖具体表达细节，至少归为需检索保真并保留来源索引、选择规则和证据回链。缺少合法语料、检索契约、同任务行为对比和人工验收时只能保留候选，不得宣布已经完成能力转移；不复制或提交原始文章。"
+    },
+    {
       "id": "resource-capability-distiller-negative-ordinary-article-summary",
       "skill": "resource-capability-distiller",
       "query": "请把我提供的一篇行业文章整理成一页正式中文摘要，保留出处、主要观点和结论，供管理层阅读；不需要设计可复用 Agent 能力。",

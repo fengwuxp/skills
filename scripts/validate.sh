@@ -183,6 +183,7 @@ document-authoring/scripts/check_document_style.py --self-test
 
 echo "==> resource capability candidate checker"
 resource-capability-distiller/scripts/check_capability_candidate.py --self-test
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
 
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test

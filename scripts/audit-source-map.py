@@ -26,6 +26,25 @@ PAYMENT_REFERENCES = ROOT / "payment-expert" / "references"
 SENIOR_SOURCE_MAP = ROOT / "senior-software-architect" / "references" / "source-map.md"
 SENIOR_SKILL_MD = ROOT / "senior-software-architect" / "SKILL.md"
 SENIOR_WORKFLOW = ROOT / "senior-software-architect" / "references" / "workflow.md"
+RESOURCE_DISTILLER_SOURCE_MAP = ROOT / "resource-capability-distiller" / "references" / "source-map.md"
+
+RESOURCE_DISTILLER_SECTION_HEADING = "### Skill 蒸馏与压缩保真"
+RESOURCE_DISTILLER_SECTION_TERMS = [
+    "别再迷信什么蒸馏Skill，你需要的是工程化思维",
+    "https://mp.weixin.qq.com/s/E-fcahXKL3x7zXKnJ5nZ8g",
+    "作者：马佳彬",
+    "发布时间：2026-07-01 18:00 +0800",
+    "读取日期：2026-08-05",
+    "读取状态：标题、作者、发布时间与正文已读取",
+    "Codex 桌面内置浏览器",
+    "https://github.com/majiabin2020/high-fidelity-de-ai-skill",
+]
+RESOURCE_DISTILLER_BOUNDARY_TERMS = [
+    "固定评分阈值",
+    "未把 Markdown harness、evaluator 或责任声明当作可执行测试",
+    "未复制项目代码、数据集、文章原文",
+    "未把来源项目作为运行时依赖",
+]
 
 COMMON_RULE_TERMS = [
     "Playwright 或等价浏览器自动化读取标题、作者、发布时间和正文",
@@ -225,6 +244,20 @@ def audit_text(
     return failures
 
 
+def audit_resource_distiller_source_map(text: str) -> list[str]:
+    failures: list[str] = []
+    start = text.find(RESOURCE_DISTILLER_SECTION_HEADING)
+    end = text.find("\n## 二、", start + 1) if start >= 0 else -1
+    section = text[start:end] if start >= 0 and end >= 0 else ""
+    for term in RESOURCE_DISTILLER_SECTION_TERMS:
+        if term not in section:
+            failures.append(f"resource distiller source entry missing: {term}")
+    for term in RESOURCE_DISTILLER_BOUNDARY_TERMS:
+        if term not in text:
+            failures.append(f"resource distiller source boundary missing: {term}")
+    return failures
+
+
 def audit_current() -> list[str]:
     failures: list[str] = []
     failures.extend(
@@ -242,6 +275,7 @@ def audit_current() -> list[str]:
             require_product_unverifiable_url=False,
         )
     )
+    failures.extend(audit_resource_distiller_source_map(read(RESOURCE_DISTILLER_SOURCE_MAP)))
     failures.extend(
         audit_payment_provenance(read(PAYMENT_SOURCE_MAP), read(PAYMENT_METHOD_CARDS))
     )
@@ -414,6 +448,28 @@ VALID_SENIOR_FIXTURE = f"""# 架构师公开来源与应用记录
 - 对当前不可复核、已删除或只剩索引页的文章，不得继续作为已吸收来源。
 - 外部 API、SDK、云产品、开源组件、法规标准和安全基线具有时效性。引用这类来源时，必须按最新官方来源、项目 lockfile、本地依赖树、合同或专业确认结果复核，并记录核验日期。
 """
+VALID_RESOURCE_DISTILLER_FIXTURE = f"""# 资源炼技来源与吸收边界
+
+{RESOURCE_DISTILLER_SECTION_HEADING}
+
+- 标题：`别再迷信什么蒸馏Skill，你需要的是工程化思维`
+- URL：<https://mp.weixin.qq.com/s/E-fcahXKL3x7zXKnJ5nZ8g>
+- 作者：马佳彬
+- 发布时间：2026-07-01 18:00 +0800
+- 读取日期：2026-08-05
+- 读取状态：标题、作者、发布时间与正文已读取。
+- 读取方式：通过 Codex 桌面内置浏览器读取正文。
+- 关联项目：<https://github.com/majiabin2020/high-fidelity-de-ai-skill>
+
+## 二、官方项目与论文
+
+## 四、未吸收
+
+- 未吸收固定评分阈值。
+- 未把 Markdown harness、evaluator 或责任声明当作可执行测试。
+- 未复制项目代码、数据集、文章原文。
+- 未把来源项目作为运行时依赖。
+"""
 
 
 def fixture_failures(name: str, source_text: str) -> list[str]:
@@ -486,6 +542,17 @@ def run_self_test() -> list[str]:
     if senior_valid_failures:
         failures.append("self-test senior valid fixture should pass")
         failures.extend(senior_valid_failures)
+
+    resource_valid_failures = audit_resource_distiller_source_map(VALID_RESOURCE_DISTILLER_FIXTURE)
+    if resource_valid_failures:
+        failures.append("self-test resource distiller valid fixture should pass")
+        failures.extend(resource_valid_failures)
+    for term in [*RESOURCE_DISTILLER_SECTION_TERMS, *RESOURCE_DISTILLER_BOUNDARY_TERMS]:
+        case_failures = audit_resource_distiller_source_map(
+            VALID_RESOURCE_DISTILLER_FIXTURE.replace(term, "", 1)
+        )
+        if not case_failures:
+            failures.append(f"self-test resource distiller missing term passed: {term}")
 
     negative_cases = [
         (

@@ -301,6 +301,7 @@ resource_distiller_agent = "resource-capability-distiller/agents/openai.yaml"
 resource_distiller_contract = "resource-capability-distiller/references/distillation-contract.md"
 resource_distiller_source_map = "resource-capability-distiller/references/source-map.md"
 resource_distiller_candidate_checker = "resource-capability-distiller/scripts/check_capability_candidate.py"
+resource_distiller_behavior_cases = "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
 ui_design_skill = "ui-design-expert/SKILL.md"
 ui_design_agent = "ui-design-expert/agents/openai.yaml"
 ui_design_workflow = "ui-design-expert/references/design-and-review-workflow.md"
@@ -18007,6 +18008,28 @@ expected_handling_has(
         "不默认创建顶层 Skill",
     ),
 )
+expected_handling_has(
+    "resource-capability-distiller-should-preserve-compression-sensitive-evidence",
+    (
+        "压缩保真门禁",
+        "可规则化",
+        "需检索保真",
+        "不可声明已转移",
+        "来源索引与检索契约",
+        "不把原始语料提交到共享仓库",
+    ),
+)
+expected_handling_has(
+    "resource-capability-distiller-should-reject-label-only-distillation",
+    (
+        "拒绝把摘要标签当成能力本体",
+        "需检索保真",
+        "来源索引",
+        "行为对比",
+        "候选",
+        "不得宣布已经完成能力转移",
+    ),
+)
 negative_reason_has(
     "resource-capability-distiller-negative-ordinary-article-summary",
     ("正式摘要", "document-authoring", "不触发资源炼技"),
@@ -18062,6 +18085,13 @@ check(
             "外推能力",
             "非平庸性",
             "相邻能力混淆",
+            "压缩保真门禁",
+            "可规则化",
+            "需检索保真",
+            "不可声明已转移",
+            "来源索引与检索契约",
+            "静态 fixture 不等于行为证据",
+            "同一 runner/model",
             "Skill",
             "reference",
             "script",
@@ -18081,6 +18111,10 @@ check(
             "https://github.com/microsoft/Resource2Skill",
             "https://arxiv.org/abs/2606.29538",
             "cangjie-skill",
+            "别再迷信什么蒸馏Skill，你需要的是工程化思维",
+            "https://mp.weixin.qq.com/s/E-fcahXKL3x7zXKnJ5nZ8g",
+            "https://github.com/majiabin2020/high-fidelity-de-ai-skill",
+            "固定评分阈值",
             "不作为运行时依赖",
             "2026-07-23",
             "未吸收",
@@ -18091,6 +18125,40 @@ check(
         [
             "python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py",
             "resource-capability-distiller/scripts/check_capability_candidate.py --self-test",
+        ],
+    ),
+)
+check(
+    "resource capability distiller behavior cases use the real comparison contract",
+    (ROOT / resource_distiller_behavior_cases).exists()
+    and has_all(
+        resource_distiller_behavior_cases,
+        [
+            "resource-capability-distiller-should-preserve-compression-sensitive-evidence",
+            "resource-capability-distiller-should-reject-label-only-distillation",
+            "同一 runner/model",
+            "baseline",
+            "candidate",
+            "盲评",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"',
+        ],
+    ),
+)
+check(
+    "resource capability distiller sources use the unified source audit",
+    has_all(
+        source_map_audit,
+        [
+            "RESOURCE_DISTILLER_SOURCE_MAP",
+            "audit_resource_distiller_source_map",
+            "作者：马佳彬",
+            "读取日期：2026-08-05",
+            "Codex 桌面内置浏览器",
         ],
     ),
 )

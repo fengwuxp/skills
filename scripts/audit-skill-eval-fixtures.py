@@ -102,6 +102,19 @@ REQUIRED_PAYMENT_HARD_NEGATIVES = {
 REQUIRED_PAYMENT_POSITIVES = {
     "payment-should-partial-refund-limit": ["部分退款", "原支付", "累计可退"],
 }
+REQUIRED_RESOURCE_DISTILLER_CASES = {
+    "resource-capability-distiller-should-preserve-compression-sensitive-evidence": {
+        "hard_negative": False,
+        "query_terms": ["专家案例", "失败样例", "压缩保真"],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+    "resource-capability-distiller-should-reject-label-only-distillation": {
+        "hard_negative": False,
+        "difficulty": "edge",
+        "query_terms": ["风格标签", "不保留语料索引", "直接宣布能力已经蒸馏完成"],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+}
 
 
 def load_fixture(path: Path = FIXTURE) -> dict[str, Any]:
@@ -244,6 +257,23 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
         if not all(term in query for term in query_terms):
             failures.append(f"{label}: payment positive lost partial-refund semantics {case_id}")
 
+    for case_id, contract in REQUIRED_RESOURCE_DISTILLER_CASES.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required resource distiller case {case_id}")
+            continue
+        if case.get("skill") != "resource-capability-distiller" or case.get("should_trigger") is not True:
+            failures.append(f"{label}: invalid resource distiller routing {case_id}")
+        if case.get("hard_negative") is not contract["hard_negative"]:
+            failures.append(f"{label}: invalid resource distiller pressure contract {case_id}")
+        if "difficulty" in contract and case.get("difficulty") != contract["difficulty"]:
+            failures.append(f"{label}: invalid resource distiller difficulty contract {case_id}")
+        query = str(case.get("query", ""))
+        if not all(term in query for term in contract["query_terms"]):
+            failures.append(f"{label}: resource distiller case lost compression semantics {case_id}")
+        if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
+            failures.append(f"{label}: static prompt case claims behavior evidence {case_id}")
+
     return failures
 
 
@@ -320,6 +350,19 @@ def run_self_test() -> None:
         for case_id in REQUIRED_PAYMENT_POSITIVES
     ):
         raise SystemExit("self-test failed: missing required payment-positive failures")
+
+    invalid = deepcopy(valid)
+    invalid["cases"] = [
+        case
+        for case in invalid["cases"]
+        if case.get("id") not in REQUIRED_RESOURCE_DISTILLER_CASES
+    ]
+    expected = audit_data(invalid, label="invalid-resource-distiller-cases")
+    if not all(
+        any(case_id in item for item in expected)
+        for case_id in REQUIRED_RESOURCE_DISTILLER_CASES
+    ):
+        raise SystemExit("self-test failed: missing required resource-distiller failures")
 
     print("OK skill eval fixture self-test")
 
