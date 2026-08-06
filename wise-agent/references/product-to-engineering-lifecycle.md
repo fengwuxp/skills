@@ -457,6 +457,16 @@ Maker / Checker 分工:
 - 三卡都不是 Execution Grant、测试通过、CR 结论或上线审批。
 - 三卡必须区分事实、推断、待确认和范围外不做；证据不足的内容不能升格为任务、实现或授权。
 
+### 3B. 产品-架构-知止者阶段责任矩阵
+
+`PRD Verify -> Clarification -> 知识路由与影响分析 -> Product Contract Verify -> Architecture Solution Review -> TDD / Implementation -> Requirement-Diff Reconcile -> Independent CR -> Release Plan -> Knowledge Backfill`
+
+| 阶段 | 责任与产物 | 停止条件 |
+| --- | --- | --- |
+| PRD Verify 至 Product Contract Verify | 产品专家裁决产品语义，输出可验收需求切片。 | 关键语义或 Owner 未确认。 |
+| Architecture Solution Review 至 Requirement-Diff Reconcile | 架构师裁决工程设计与实现，输出实施切片和 `done / partial / todo / changed / blocked` 对账。 | `changed / blocked` 未关闭。 |
+| Independent CR 至 Knowledge Backfill / 全程 | 独立 Checker 裁决验证，各 Owner 分别回流产品或工程知识；知止者只维持顺序、状态、Owner、证据和停止条件。 | 证据、发布或回滚条件不足；任何阶段都不自动产生 Execution Grant、测试通过、CR 结论或上线审批。 |
+
 ## 4. 角色协同
 
 | 角色 | AI 时代新增职责 | 不应承担 |

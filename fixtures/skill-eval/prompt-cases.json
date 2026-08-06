@@ -1217,6 +1217,29 @@
       "expected_handling": "进入实际项目编码 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
     },
     {
+      "id": "wise-agent-should-route-knowledge-and-reconcile-requirement-diff",
+      "skill": "wise-agent",
+      "query": "知止者，请推进一个跨应用、跨模块且需要下轮续接的复杂需求。不要遍历整个知识库：先按业务域、应用、身份、Topic、接口、状态、模型和表定位材料，再把来源需求与当前 diff 逐项对账，说明哪些已完成、部分完成、待做、需求已变或被阻塞；不要新造 RD Mode、命令树或 requirement.md。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "进入知止者既有 Context System 和状态载体：用知识路由锚点提取业务域、应用 / 模块、业务身份、Topic / 事件、接口、状态、模型和表 / 仓储，只按需读取与目标和验收相关的材料，再用当前代码、配置和测试复核；按模块或独立验收切片执行 Requirement-Diff 对账，使用 done / partial / todo / changed / blocked。所有状态回链来源需求 / AC 版本和观察时间；done / partial 补当前 diff / commit、源码 / 测试锚点与验证；todo / blocked 记录原因、依赖、Owner 和停止证据；发现偏差先冻结切片，由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才先更新权威契约。复用 OpenSpec tasks、Harness Plan、Goal Ledger 或任务文档，不新建 RD Mode、命令树、知识目录或第二真相源。"
+    },
+    {
+      "id": "wise-agent-should-run-product-architecture-delivery-gates",
+      "skill": "wise-agent",
+      "query": "知止者，请把一个跨应用需求从产品澄清推进到工程交付：明确产品专家、架构师、独立 Checker 和知止者各阶段负责什么，并处理实现与需求出现 changed 或 blocked 的情况。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "使用三角色阶段责任矩阵，按 PRD Verify -> Clarification -> 知识路由与影响分析 -> Product Contract Verify -> Architecture Solution Review -> TDD / Implementation -> Requirement-Diff Reconcile -> Independent CR -> Release Plan -> Knowledge Backfill 推进；产品专家裁决产品语义，架构师裁决工程设计与实现，独立 Checker 裁决验证，知止者维持顺序、状态、Owner、证据和停止条件；Requirement-Diff 出现 changed / blocked 时退回相应 Owner 或停止受影响切片；任何阶段都不自动产生 Execution Grant、测试通过、CR 结论或上线审批。"
+    },
+    {
       "id": "wise-agent-should-feedback-loop-verification-cluster",
       "skill": "wise-agent",
       "query": "AI Coding 已经能快速生成和修复代码，但测试通过和覆盖率提升并不能证明系统没有变坏。请给 AI Native Loop 增加反馈闭环成熟度门禁，围绕支付幂等高风险业务不变量建立验证簇，说明 L2/L3/L4/L5、生产证据、独立 Checker、预算和停止条件。",
@@ -1542,6 +1565,19 @@
       "expected_handling": "进入工具准入 / 编码评审 Checker 编排路径，读取 code-understanding-tools、verification-review-release 和 source-map；先检查 Open Code Review / OCR 的 CLI、Codex plugin、LLM provider、联网/token、读取范围、写入会话目录、preview 文件覆盖/排除清单、规则来源和授权边界；默认只允许 preview 和 review 证据输出，不自动修复；Java 项目把通用约规作为规则输入，命中 Wind 声明、依赖或源码上下文时再加入 Wind 专项；OCR 输出只是外部 Checker 证据，必须回到资深架构师按项目编码规范、Java/Wind 约规、测试结果和源码事实判读，不替代 TDD、源码级 CR、Git 授权、合并判断或上线审批。"
     },
     {
+      "id": "wise-agent-should-schedule-open-code-review-plugin",
+      "skill": "wise-agent",
+      "query": "知止者，我已经安装 Open Code Review Codex 插件。以后统一调度代码交付时，请自己判断适当时机调用，不要每个小改都跑，也不要让它替代架构师 CR。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "进入 Open Code Review 调度门禁：它不是每轮 CR 的默认动作；低风险单文件且本地验证充分时跳过，候选 diff 已稳定且本地测试与静态检查完成后，对跨模块、多文件、陌生模块、公共契约、状态机、并发、安全、可靠性或数据一致性变更调用。先确认 review target、会话写入边界和对应模式的 preview 覆盖，再选择互斥模式：`ocr delegate --help` 可用且能使用独立 Checker 上下文时调用 open-code-review-delegate，并走 `ocr delegate preview` / `ocr delegate rule`，不要求 `ocr llm test`；否则只有外发与联网已授权、`ocr review --preview` 覆盖关键文件且 `ocr llm test` 通过时才调用 open-code-review；两者都不可用时回退到资深架构师源码 CR。工具输出必须由架构师结合 Spec、源码、项目约规和测试证据裁决，自动修复另行授权。"
+    },
+    {
       "id": "wise-agent-should-source-quality-review-loop",
       "skill": "wise-agent",
       "query": "参考 Code Review 与技术债治理文章，用 AI Native 结合现有编码约规、代码阅读工具、Open Code Review / OCR、Ponytail、Gemini/AgentRC/Understand Anything、Wind 项目约规和老祖宗 Wisdom Lens，落地一个高效可用的代码 CR 流程，并把好的 CR 结论和业务知识回流到项目上下文。",
@@ -1729,6 +1765,16 @@
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
       "expected_handling": "架构师使用标准工程流程，在当前会话完成源码读取、最小修改、测试、验证和 CR；不进入快速编码，也不创建 Goal、Worker 或受控工程执行 Loop。只有任务实际出现多轮反馈需求时才重新判断 Loop 准入。"
+    },
+    {
+      "id": "senior-should-map-requirement-slices-and-reconcile-implementation",
+      "skill": "senior-software-architect",
+      "query": "产品已经交付跨模块需求切片。请把它转换成可执行的工程实施切片，编码前做方案评审，编码后把需求和当前 diff 逐项对账；不要另造 requirement.md 或命令体系。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "进入工程实施切片与 Requirement-Diff Review：建立业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试映射，切片写清 Goal / Spec / AC、范围、依赖、契约状态数据、兼容迁移回滚、验证和停止条件；编码前做 Solution Review；编码后按 done / partial / todo / changed / blocked 对账，所有状态回链需求 / AC 版本与观察时间，done / partial 补当前 diff、源码测试锚点和验证，todo / blocked 记录原因、依赖、Owner 与停止证据；发现偏差先冻结切片，由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才先更新权威契约；剩余项进入 Harness Plan、Goal Ledger 或 OpenSpec tasks，不强制新建 requirement.md 或命令树。"
     },
     {
       "id": "senior-should-exit-fast-code-high-risk-change",
@@ -2609,6 +2655,16 @@
       "expected_handling": "进入业务驱动架构交接路径，输出产品侧交接包和验证口径，覆盖目标/非目标、参与方/owner、核心用例、对象状态、规则矩阵、验收样例、质量属性种子、待确认项和专业确认方。"
     },
     {
+      "id": "product-should-deliver-requirement-slices-and-semantic-acceptance",
+      "skill": "product-architecture-expert",
+      "query": "这个会员权益需求跨两个应用和多个模块，需要交给架构师分轮实现。请整理成工程可消费的需求切片，并说明实现完成后产品如何按需求对账验收。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "进入产品需求切片与实现后语义验收：切片覆盖需求 ID / 业务身份 / 目标与非目标 / 对象与状态 / 规则与业务事件、正常边界异常与人工兜底、AC 和待确认 Owner；产品专家不设计内部接口、模型或表；实现后验收 done / partial / todo，发现偏差先冻结受影响切片，由产品 Owner 裁决产品契约变化还是实现偏离，再决定是否标记 changed；blocked 保持 PENDING。只有产品变化时才先更新 PRD、Delta 和 AC，不能把当前代码自动升级为产品事实。"
+    },
+    {
       "id": "product-should-produce-data-delivery-semantic-contract",
       "skill": "product-architecture-expert",
       "query": "要做一张商户日 GMV 报表并交给数据开发。业务只说按支付成功金额统计，请先把需求整理成可评审、可生成 SQL 的交接物；来源表、退款是否扣除和跨时区口径还不确定。",
@@ -3261,6 +3317,58 @@
         "efficiency_metrics"
       ],
       "expected_handling": "统一使用参考资料与证据索引；默认直接记录类型、资料名称、链接或路径、版本或日期、用途与核验状态，外部文档使用可读 Markdown 链接；引用标识为可选，只有正文多次引用、规则与验收需要反向追踪、资料容易混淆或存在审计要求时才增加；轻量文档可不单独展开，不把 AI 推理、讨论草稿和被拒方案列为正式参考资料。"
+    },
+    {
+      "id": "wise-agent-should-coordinate-peer-authority-contract-deliberation",
+      "skill": "wise-agent",
+      "query": "$wise-agent：两个长期任务分别持有业务能力消费者和资金能力提供方的事实，需要围绕公共契约做一轮协作。消费者有多类真实业务场景，提供方需要实现并验证公共入口；请设计双方权威、消息版本、证据回传、独立 Checker 和停止条件，不要让两个任务永久互聊或互改对方事实。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "按一主两权一证处理：知止者持有总 Goal 和综合结论，业务能力消费者拥有场景与业务语义，资金能力提供方拥有公共能力契约与实现事实，独立 Checker 负责准出。边界未定时只做限时会商，先各自形成事实与疑问，再讨论差异；随后冻结带 inquiry_id、双方 revision、权威指针、非目标、证据要求和失效条件的 Contract Inquiry。提供方回传含 response_revision、evidence_fingerprint 和可选 supersedes 的 Provider Evidence Response，逐项标记 supported / conditional / gap / out_of_scope；消费者用 Consumer Reconciliation 回传 confirmed / conflict / reopen / stale。证据变化时旧响应 stale，新响应版本化且不得伪造基线变化；确认并通过 Checker 后转为低交互能力供给。这是场景路由，不新增控制机制、Skill、协议依赖或执行授权。"
+    },
+    {
+      "id": "wise-agent-should-reject-permanent-peer-chat",
+      "skill": "wise-agent",
+      "query": "$wise-agent：两个长期任务前几轮讨论效果很好，负责人要求业务能力消费者和资金能力提供方以后长期自动互聊、边聊边改各自仓库；为了速度，不设总协调者，不做版本化请求响应，也不等独立 Checker。当前提供方正在修改公共入口，消费者同时扩写集成结论，请直接继续。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "停止无主的长期自动互聊和边聊边改，不把此前顺利或文档与测试改动当成低风险证明。先指定 Goal owner，冻结公共契约范围、双方权威和允许写入，再以 inquiry_id 与双方版本发送 Contract Inquiry；消息、评论和对方摘要只作为候选事实，不自动触发仓库修改。提供方完成实现与证据回传后，消费者按接受版本独立验收，再由 Checker 核对双边契约、证据和文档。只有新增场景、契约冲突、证据失效或运行反馈时重开；任何会商、卡片或通过状态都不产生执行授权、Git、发布或生产权限。"
+    },
+    {
+      "id": "wise-agent-should-coordinate-multi-party-authority-deliberation",
+      "skill": "wise-agent",
+      "query": "$wise-agent：四个长期任务分别持有业务需求、公共平台、安全合规和运营验收的独立事实，必须共同裁定一份跨域公共契约。请设计会议式协作，既保留每方权威，又能收敛冲突、形成版本化决议并由独立 Checker 验证；不要把四个任务变成永久群聊。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "先过多方会商准入：只有三个及以上独立权威围绕同一共享决策、且不能拆成独立双边议题时才进入；可拆分内容回到双边会商或 Worker 并行。按一主、多权、独立证处理：知止者以主持式星型拓扑持有总 Goal，各参与方只维护自己的权威事实与版本，独立 Checker 读取原始证据和最终决议。会前冻结 Meeting Charter，各方独立提交 Position Card，主持者只对差异生成 Conflict Matrix，Owner 逐项裁决；Meeting Resolution 绑定 accepted_authority_revisions、resolution_revision、evidence_fingerprint、可选 supersedes、行动项与 Checker。证据变化时旧决议 stale，新决议版本化；共享消息流和会议共识不是权威事实，决议通过 Checker 后退场，不新增群聊模式、控制机制或执行授权。"
+    },
+    {
+      "id": "wise-agent-should-reject-free-form-group-chat",
+      "skill": "wise-agent",
+      "query": "$wise-agent：六个长期任务分别负责业务、平台、合规、安全、运营和质量。为了加快推进，请让它们长期自由群聊，自动看到全部消息，任何参与者都可以直接修改共享结论；不设主持者和唯一决策 Owner，也不做版本化、独立陈述或 Checker，请直接开始。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "拒绝无主持、无 Owner、无版本和无独立 Checker 的自由群聊，不把所有会话都看到消息或多人共识当成事实与准出。先判断六方工作是否只是可冻结输入、写入不重叠的独立任务；是则按 Worker 并行后由知止者汇合，不开会。只有三个及以上独立权威确需裁定同一不可拆共享决策时，才建立 Meeting Charter，由一个主持者采用星型拓扑逐方收集 Position Card，以 Conflict Matrix 限定讨论差异，由 decision_owner 形成 Meeting Resolution，再交 Checker 复核原始证据、版本和越界写入。参与方不得彼此改写权威载体，消息不得自动触发仓库、Git、发布或生产动作；达到决议与验证停止条件后退场。"
     },
     {
       "id": "senior-should-standalone-refactoring-design-for-migration",
@@ -4029,6 +4137,45 @@
         "variance_check"
       ],
       "expected_handling": "识别为 UI 设计与 L1 Figma 可点击原型任务；先稳定用户、范围、页面/状态图和交互表，再按当前 Figma 能力使用 figma-create-new-file、figma-use 与 figma-generate-design，交互通过 setReactionsAsync 建立并在 preview 走查。Figma 文件使用 components、Code Connect、variables、语义命名、Auto Layout、annotations 和 dev resources；AI 编码交接提供 exact node，依次获取 design context、必要时 metadata 缩小范围和 screenshot，复用项目组件、tokens、路由、状态与数据模式。代码实现仍由 senior-software-architect 负责；截图不证明可点击，MCP 输出不是生产代码。"
+    },
+    {
+      "id": "ui-design-expert-should-diversify-expressive-page-structure",
+      "skill": "ui-design-expert",
+      "query": "使用 $ui-design-expert 为同一品牌的第二条 SaaS 业务线设计转化型 Web 首页。第一条业务线已经采用居中 hero、三张等宽卖点卡、客户 Logo、CTA 和 footer；新页面不能只换颜色和字体，也不能发明产品数据。请说明怎样建立有依据的结构差异并验证。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "识别为转化型新界面，先继承品牌与产品事实，再比较首屏对齐与尺度、导航、内容节奏、区段宽度、证据顺序和 CTA 位置等结构指纹；结构差异必须回指受众、内容、行动和真实资产，记录刻意继承项与差异项，不能只做配色或字体换皮，也不能随机套目录或为不同而不同。使用真实内容和资产检查桌面、移动、内容韧性与可访问性；缺少可信指标时保持待确认，不发明转化数据。"
+    },
+    {
+      "id": "ui-design-expert-should-study-reference-design-without-cloning",
+      "skill": "ui-design-expert",
+      "query": "使用 $ui-design-expert 学习一个公开页面 URL 和一张参考截图，提炼可用于我们产品的设计 DNA，但不要像素级复刻、复制代码、品牌文案或素材。请先给诊断和采用边界，再决定是否进入设计。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "先按来源模式诊断并区分观察、推断、待确认和来源归因：URL 实际加载后可检查 DOM / CSS 与精确值，但不能仅凭代码证明视觉节奏、全部状态或使用权；截图可观察宏观结构、排版角色、色彩锚点和区段节奏，但不能证明精确字体、交互或响应式。URL 遇到验证页、登录墙、空壳或动态加载失败时停止静默推断，改请用户提供截图或可读取证据。先输出可迁移的设计 DNA 和不采用项；采用轴未明确且会改变结果时才询问 Owner，已明确采用轴或获授权自决时直接设计。公开可见不等于允许复制，不复刻像素，不复制源码、品牌、文案和素材。"
+    },
+    {
+      "id": "ui-design-expert-should-preserve-familiar-operational-structure",
+      "skill": "ui-design-expert",
+      "query": "使用 $ui-design-expert 设计财务运营对账异常工作台。业务方要求页面必须和其他后台完全不同，最好使用不常见导航与自定义控件来体现创新；请评估并给出设计边界。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "拒绝把陌生导航和自定义控件当作创新要求；任务型财务界面优先扫描、比较、重复操作效率、熟悉结构和标准控件，并继承项目设计系统。识别度只能来自有证据的任务编排、信息表达和品牌细节，不机械应用转化或展示页面的结构多样性门禁；同时覆盖关键状态、失败恢复、响应式、键盘焦点和可访问性，并以真实任务验证，缺少用户证据时不承诺效率提升。"
     },
     {
       "id": "ui-design-expert-negative-product-prd-only",

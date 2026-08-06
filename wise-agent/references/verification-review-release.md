@@ -255,13 +255,25 @@ owner 复述：
 3. **规则装载 / 红线**：先读项目 `AGENTS.md`、邻近代码风格和项目检查命令；Java 项目读取 `wind-coding-conventions` 的通用层，Wind 专项按依赖或上下文启用；源码级判断回 `资深架构师` 的 `coding-review-deep-dive.md` 和 `testing.md`。
 4. **三线评审 / 业务架构裁决**：先守质量底线，再看架构和维护性，最后处理风格噪音。P0/P1 是逻辑错误、安全漏洞、权限越界、数据一致性、公共契约、资金 / 合规 / 发布风险；P2 是架构设计、性能隐患、可维护性、复用质量和测试可信度；P3 是命名、格式和偏好，除非已写入项目规范或会造成误解，否则不阻塞。评审意见必须能回到业务语义、业务不变量、边界方向、契约完整性、失败路径和源码锚点。
 5. **代码坏味道细查**：重点看规则错层、贫血用例、浅模块堆叠、直通包装、隐藏副作用、模糊契约、AI 注释噪声、只为测试变绿的实现和无业务语义的抽象；只给当前目标内可验证整改。
-6. **工具补扫**：Open Code Review / OCR 用于覆盖 diff 和行级候选问题，先跑 preview / LLM 连通 / background；Ponytail 只做过度设计和最小正确实现专项 pass；工具输出都是证据源，不是最终 CR。
+6. **工具补扫**：Open Code Review / OCR 用于覆盖 diff 和行级候选问题；先选择模式并运行对应 preview，只有外部 LLM Mode 才检查 LLM 连通并注入 background。Ponytail 只做过度设计和最小正确实现专项 pass；工具输出都是证据源，不是最终 CR。
 7. **修复验证**：只要求修复阻塞项和当前目标内 P2；修复后跑最小验证命令，输出残余风险、未覆盖范围和下一 owner。
 8. **知识回流收口**：把好的 CR 结论拆成可复用业务事实、项目编码规矩、架构取舍、测试样例、机器门禁或技术债条目；业务知识优先回到项目 `CONTEXT.md` / 模块 reference / ADR / 测试，跨项目方法才回到 Skill，不把一次性意见灌进全局上下文。
 
 技术债只按三类处理：影响稳定、安全、资金、协作效率或正常交付的，立刻还；不影响当前交付但会持续增加修改成本的，进入有 owner 的债务清单、Goal Ledger、ADR 或 issue 后慢慢还；即将废弃、一次性脚本、无真实复用价值的，不还，只标明停止维护或风险边界。CR 不追求“质量越高越好”，只追求当前业务风险下足够高且可验证的质量。
 
 需要经典智慧校准工程取舍时，按需装载 `huaxia-practical-wisdom`；经典镜片不替代源码、规范、测试、CR 或 owner 证据。
+
+### 5A.1 Open Code Review 调度门禁
+
+Open Code Review 只在编码评审阶段充当补充 Checker。知止者按以下条件调度，不因插件已安装就默认调用：
+
+- **调用**：候选 diff 已稳定，本地测试与静态检查已经完成，review target 不混入无关改动；并且变更属于跨模块、多文件或陌生模块，或涉及公共契约、状态机、并发、安全、可靠性或数据一致性。
+- **跳过**：低风险单文件变更已有充分本地验证；关键文件被 preview 排除；Spec、业务背景或项目约规不足；本轮仍在频繁修改，外部 Review 只会消费过期 diff。
+- **停止**：敏感数据、客户代码或生产配置的模型外发边界未确认；CLI、插件或所选模式不可用；所选模式的前置检查未通过，例如外部 LLM 模式的 `ocr llm test` 失败；工作区无法隔离目标差异。
+
+模式选择和命令前置检查以 `code-understanding-tools.md` 为唯一权威：Delegation Mode 可用且能放入独立 Checker 上下文时调用 `open-code-review-delegate`；否则只有模型连通和外发授权成立时调用 `open-code-review`。同一 Maker 在原上下文中的自审不计作独立证据；两种模式都不可用时，回退到资深架构师源码 CR。
+
+工具发现必须由资深架构师结合 Spec、源码、项目约规和测试证据裁决。自动修复另行授权；修复后重新执行测试、静态检查和独立 CR。
 
 最小输出：
 
@@ -341,7 +353,7 @@ AI 代码 Review 优先顺序：
 11. 是否泄露敏感信息、吞异常、隐藏外部调用或扩大依赖。
 12. 是否通过可用性 / 安全性 / 可靠性相关评估，或列出未覆盖范围和人工 owner。
 13. 是否有发布、监控、回滚和人工处理边界。
-14. 是否需要外部 Checker 作为补充证据：Open Code Review / OCR 只能在 CLI 可用、`ocr review --preview` 的 Will review / Excluded 覆盖清单已确认、LLM provider 已通过 `ocr llm test`、读取范围和模型外发边界获授权、并且 Review 背景包含业务目标 / Spec / 项目约规时调用；其输出必须回到架构师按项目编码规范、通用 Java 约规、已命中的 Wind 专项、测试证据和源码事实判读。
+14. 是否需要外部 Checker 作为补充证据：Open Code Review / OCR 先按 `code-understanding-tools.md` 选择 Delegation Mode 或外部 LLM Mode，并确认 CLI、review target、会话写入和对应 preview 覆盖；Delegation Mode 不要求 `ocr llm test`，外部 LLM Mode 必须额外取得联网与模型外发授权并通过 `ocr llm test`。Review 背景包含业务目标 / Spec / 项目约规，输出回到架构师按项目编码规范、通用 Java 约规、已命中的 Wind 专项、测试证据和源码事实判读。
 15. CR 高频问题是否已经沉淀为测试、lint、静态检查、fixture、模板、`.opencodereview/rule.json` 或知识回流计划，而不是继续靠人肉提醒。
 
 AI 生成代码和人工代码使用同一合并标准；不得因为“是 AI 生成”降低 Spec 符合性、测试、性能、安全、发布和可维护性要求。

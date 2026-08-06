@@ -295,7 +295,7 @@ Ponytail 插件准入必须检查：
 
 Open Code Review 适合做“外部代码评审 Checker”，不是新的编码规范来源：
 
-- 对当前 staged / unstaged / untracked diff 做结构化 Review，先用 `ocr review --preview` 看覆盖范围。
+- 对当前 staged / unstaged / untracked diff 做结构化 Review，选择模式后先用对应模式的 preview 看覆盖范围。
 - 对单个 commit 或分支差异做 Review，使用 `--commit` 或 `--from` / `--to`。
 - 用 `--background` 注入业务目标、OpenSpec、验收种子、Wind 约规或架构师 CR 重点，降低泛泛而谈。
 - 用项目级 `.opencodereview/rule.json` 或 `--rule` 引用项目规则；Java 项目可注入通用约规，命中 Wind 信号后再加入 Wind 专项摘要，权威仍是 `wind-coding-conventions` 和项目 `AGENTS.md`。
@@ -306,7 +306,7 @@ Open Code Review 适合做“外部代码评审 Checker”，不是新的编码�
 CLI 是否可用:
 Codex plugin 是否可用:
 版本 / 来源:
-LLM provider 是否配置并通过 ocr llm test:
+LLM provider 是否配置并通过 ocr llm test（仅外部 LLM Mode）:
 是否允许联网 / 调 LLM:
 是否允许上传 diff / 代码片段到模型端:
 读取范围: workspace / commit / from-to / scan path
@@ -318,7 +318,19 @@ LLM provider 是否配置并通过 ocr llm test:
 架构师 CR owner:
 ```
 
-默认调用顺序：
+先选择模式，再执行对应且互斥的调用链。两种模式共用 review target、规则来源和文件覆盖检查；任何 preview / review 可能写入 `~/.opencodereview` 会话前，必须先确认会话写入边界。未获写入授权或目录不可写时不调用 OCR，回退到本地 diff 检查与资深架构师源码 CR。
+
+Delegation Mode：
+
+```text
+ocr delegate --help
+ocr delegate preview
+独立 Checker 调用 open-code-review-delegate；需要规则内容时由该 Skill 使用 ocr delegate rule
+```
+
+Delegation Mode 由独立 Checker 上下文负责推理，不执行 `ocr llm test`，也不调用外部 LLM Mode 的 `ocr review` 链。`ocr delegate --help` 失败、子命令与当前 Skill 契约不一致或无法放入独立上下文时，不猜测命令，转入外部 LLM Mode 准入或回退。
+
+外部 LLM Mode：
 
 ```text
 ocr review --preview
@@ -326,11 +338,20 @@ ocr llm test
 ocr review --audience agent --background "<业务目标 / Spec / 约规 / Review 重点>"
 ```
 
+只有联网、模型外发和会话写入均已授权时才进入外部 LLM Mode。
+
+Codex Skill 模式选择：
+
+1. 先核验 Codex plugin、`ocr` CLI、review target 和会话写入边界；调用 Skill 不自动授权安装、升级、联网、读取 token、外发代码或写会话目录。
+2. `ocr delegate --help` 成功且命令契约匹配当前 Skill 时，可由独立 Checker 上下文调用 `open-code-review-delegate`，让 OCR 只负责文件选择和规则解析；同一 Maker 在原上下文执行它只能形成补充工具证据，不能自证独立 CR。
+3. Delegation Mode 不可用时，只有联网与模型外发已授权、`ocr review --preview` 覆盖关键文件且 `ocr llm test` 通过，才调用 `open-code-review` 执行外部 AI Review。
+4. 两种模式任一前置不成立时，不尝试猜测命令、静默升级或降级权限，直接回退到资深架构师源码 CR，并报告未获得的覆盖证据。
+
 边界：
 
-- `ocr review --preview` 只证明文件选择可预览，不证明 LLM 连通、Review 有效或代码通过。
-- 先检查 `ocr review --preview` 的 Will review / Excluded 清单；被 `unsupported_ext` 或规则过滤排除的 Markdown、Skill 文档、配置、SQL、脚本等关键文件，不能算入 OCR 覆盖证据，必须由架构师或对应 Skill 继续人工 / 脚本 CR。
-- `ocr llm test` 未通过时，不进入 OCR AI Review；只能报告配置缺口和人工替代路径。
+- 对应模式的 preview 只证明文件选择可预览，不证明 Review 有效或代码通过；外部 LLM Mode 的 preview 也不证明 LLM 连通。
+- 先检查 `ocr delegate preview` 或 `ocr review --preview` 的 Will review / Excluded 清单；被 `unsupported_ext` 或规则过滤排除的 Markdown、Skill 文档、配置、SQL、脚本等关键文件，不能算入 OCR 覆盖证据，必须由架构师或对应 Skill 继续人工 / 脚本 CR。
+- 外部 LLM Mode 的 `ocr llm test` 未通过时，不进入外部 AI Review；只能报告配置缺口和人工替代路径。Delegation Mode 不使用该门禁。
 - OCR 输出必须按严重级别、源码锚点、真实性、是否符合项目 / Wind / 架构师约规重新判读；低置信度、定位失败或无上下文建议不得直接采纳。
 - 自动修复必须单独授权，且修复后仍需 TDD / 测试 / 静态检查 / 架构师 CR；不能把 OCR 的 fix 建议当 Execution Grant、Git 授权或合并准出。
 - 对敏感代码、生产配置、密钥、客户数据或禁止外发仓库，必须确认模型端、网关和脱敏边界；不清楚时不调用 OCR。

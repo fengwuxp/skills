@@ -107,6 +107,14 @@ AI Native 交接卡消费结论只需说明：Product Context Card 是否足够�
 
 消费规则：Product Context Card 只提供产品事实和验收种子，缺目标、对象、不变量、流程规则或验收 owner 时退回产品专家或 AI Native；Engineering Handoff Card 缺 Goal、Spec/AC、Wave/Task、写入范围、验证命令、停止条件、失败回写或授权策略时不进入工程执行 Loop；生产交付卡缺状态载体、隔离执行、Maker / Checker、反馈源、独立验证、预算、无进展检测、观测审计、人工接管或发布/回滚时不进入自动循环。三卡都不是 Plan Grant / Execution Grant、测试通过、CR 结论、生产审批或 Git 授权；可消费后再映射为 OpenSpec、领域模型、接口/数据契约、测试矩阵、Harness Plan、GSD Atomic Task、工程执行 Loop 候选、源码级 CR 重点、发布/回滚和残余风险。
 
+## 1E. 工程实施切片与 Requirement-Diff Review
+
+- 从 Product Context Card 或产品需求切片建立 `业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试` 映射，只读取当前切片需要的知识和源码。
+- 工程实施切片至少写清：任务 ID、`Goal / Spec / AC`、读写范围、依赖、契约 / 状态 / 数据、兼容 / 迁移 / 回滚、验证证据和停止条件。
+- 编码前做 Solution Review，检查边界、数据责任、状态与失败路径、兼容迁移、回滚、测试和发布风险；未决产品语义退回产品 Owner，不由工程侧补写。
+- 实现后以 `done / partial / todo / changed / blocked` 对账：所有状态回链来源需求 / AC 的版本与观察时间；`done / partial` 补当前 diff / commit、源码 / 测试锚点和验证结果；`todo / blocked` 记录原因、依赖、Owner 与停止证据；候选 `changed` 记录偏差并冻结受影响切片，由产品 Owner 裁决需求变化还是实现偏离。需求确变时先更新权威需求契约，属于实现偏离时保持需求并修正实现。
+- 未完成项续写到既有 Harness Plan、Goal Ledger 或 OpenSpec tasks，不强制新建 requirement.md 或命令树。稳定工程知识只回流到 ADR、模块 reference、测试或静态门禁，不覆盖产品事实。
+
 ## Codex 运行时协作模式
 
 Codex 的 thread、voice、tool、automation、goal、side panel 和 artifact 能把工程工作从单次问答推进到连续工作流，但它们只改变协作方式，不替代 OpenSpec、Harness Plan、测试、Review 或用户授权。

@@ -1903,6 +1903,12 @@ check(
             "5B. Context System 与知识库治理门禁",
             "先建设 Context System，再评估知识库工具",
             "Context / 知识库准入四问",
+            "知识路由锚点契约",
+            "业务域、应用 / 模块、业务身份、Topic / 事件、接口、状态、模型和表 / 仓储",
+            "任务信号 -> 项目 / 模块索引 -> 职责与边界 -> 按需知识 -> 当前代码 / 配置 / 测试复核",
+            "锚点只负责定位，不能直接充当事实",
+            "记录实际读取、跳过的材料及原因",
+            "不强制新建知识目录",
             "外部知识库、向量库、代码图谱或 Understand Anything 只在 L0/L1 权威材料已经清楚",
             "不得回写：一次性过程草稿、未验证推断",
         ],
@@ -1912,6 +1918,18 @@ check(
         [
             "知识库工具判断",
             "工具摘要不得替代源码、测试、CR 或 owner 结论",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "复杂业务团队的 AI Coding 交付实践：知识库、RD 流程和质量门禁",
+            "https://mp.weixin.qq.com/s/aopO-3KO9lenKF5WHhBD7w",
+            "作者字段为 `寂秋`",
+            "发布时间为 2026-08-05 14:28 Asia/Shanghai",
+            "通过 Codex 桌面内置浏览器读取标题、账号、作者、发布时间和正文",
+            "不把文中约 75% / 95% 的估算接受率写成通用指标",
+            "不新建 RD Mode",
         ],
     ),
 )
@@ -2588,6 +2606,7 @@ check(
         wise_agent_product_to_engineering,
         [
             "3A. 三卡交接协议",
+            "3B. 产品-架构-知止者阶段责任矩阵",
             "Product Context Card / 产品上下文交接卡",
             "Engineering Handoff Card / 工程执行交接卡",
             "生产交付卡 / 生产 Loop 交接卡",
@@ -2596,6 +2615,10 @@ check(
             "同一能力从产品到系分必须保持规范主题和精确路径",
             "三卡都不是 Execution Grant",
             "三卡必须区分事实、推断、待确认和范围外不做",
+            "产品专家裁决产品语义",
+            "架构师裁决工程设计与实现",
+            "独立 Checker 裁决验证",
+            "知止者只维持顺序、状态、Owner、证据和停止条件",
         ],
     )
     and has_all(
@@ -2649,10 +2672,24 @@ check(
         [
             "AI Native 交接卡消费结论",
             "1D. AI Native 交接卡消费协议",
+            "1E. 工程实施切片与 Requirement-Diff Review",
             "Product Context Card",
             "Engineering Handoff Card",
             "生产交付卡",
             "三卡都不是 Plan Grant / Execution Grant、测试通过、CR 结论、生产审批或 Git 授权",
+            "业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试",
+            "done / partial / todo / changed / blocked",
+            "不强制新建 requirement.md 或命令树",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "产品需求切片与实现后语义验收",
+            "需求 ID / 业务身份 / 目标与非目标 / 对象与状态 / 规则与业务事件",
+            "不设计内部接口、模型或表",
+            "产品契约变化还是实现偏离",
+            "不能把当前代码自动升级为产品事实",
         ],
     )
     and has_all(
@@ -3274,6 +3311,43 @@ check(
             "superpowers-skill-library.md",
             "仓库退役 `references/external-superpowers/` 和本地 helper",
             "不再复制上游 Skill",
+        ],
+    ),
+)
+check(
+    "wise agent conditionally schedules the Open Code Review plugin",
+    has_all(
+        wise_agent_skill,
+        [
+            "Open Code Review",
+            "不是每轮 CR 的默认动作",
+            "verification-review-release.md",
+        ],
+    )
+    and has_all(
+        wise_agent_verification_release,
+        [
+            "Open Code Review 调度门禁",
+            "候选 diff 已稳定",
+            "本地测试与静态检查",
+            "低风险单文件",
+            "跨模块、多文件或陌生模块",
+            "公共契约、状态机、并发、安全、可靠性或数据一致性",
+            "无关改动",
+            "open-code-review",
+            "open-code-review-delegate",
+            "自动修复另行授权",
+            "资深架构师",
+        ],
+    )
+    and has_all(
+        wise_agent_code_understanding_tools,
+        [
+            "ocr delegate --help",
+            "open-code-review-delegate",
+            "同一 Maker",
+            "ocr llm test",
+            "open-code-review",
         ],
     ),
 )
@@ -4065,6 +4139,18 @@ check(
             "任务契约传递目标、约束和权限",
             "来源、版本、新鲜度和指纹",
             "临时草稿留在步骤内部",
+            "Requirement-Diff 对账",
+            "跨模块、跨轮或复杂交付",
+            "done / partial / todo / changed / blocked",
+            "来源需求 / AC",
+            "当前 diff / commit",
+            "源码 / 测试锚点",
+            "状态通用证据",
+            "todo / blocked",
+            "产品 Owner",
+            "实现偏离",
+            "只有确认需求变化后",
+            "不强制新建 `requirement.md`",
             "AI 编码框架分层映射",
             "Superpowers、GSD、GStack、Trellis 不是四个并列主流程",
             "方法纪律层",
@@ -5105,6 +5191,85 @@ check(
     and has_none(
         "README.md",
         ["最推荐的指令只有一条", "$wise-agent：我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>"],
+    ),
+)
+check(
+    "README exposes concise deliberation entry points and keeps protocol details in the authority reference",
+    has_all(
+        "README.md",
+        [
+            "### 多任务会商怎么触发",
+            "两方优先使用双边契约会商",
+            "三个及以上独立权威",
+            "不能拆成独立双边议题",
+            "[context-handoff.md](./wise-agent/references/context-handoff.md)",
+            "实际向这些任务发送消息并推进",
+            "任务名称或任务 ID",
+            "不会自动授权创建新任务",
+        ],
+    )
+    and has_none(
+        "README.md",
+        ["Meeting Charter", "Position Card", "Conflict Matrix", "Meeting Resolution"],
+    ),
+)
+check(
+    "Requirement-Diff states use state-specific evidence and Owner adjudication before changed",
+    has_all(
+        "wise-agent/references/delivery-execution-control.md",
+        [
+            "状态通用证据",
+            "done / partial",
+            "todo / blocked",
+            "偏差证据",
+            "产品 Owner",
+            "实现偏离",
+            "权威需求契约",
+        ],
+    ),
+)
+check(
+    "authority deliberation revisions include evidence fingerprints and supersession",
+    has_all(
+        "wise-agent/references/context-handoff.md",
+        [
+            "evidence_fingerprint",
+            "response_revision",
+            "resolution_revision",
+            "supersedes",
+            "旧响应标记为 `stale`",
+            "旧决议标记为 `stale`",
+        ],
+    ),
+)
+check(
+    "Open Code Review chooses an exclusive mode before mode-specific checks",
+    has_all(
+        "wise-agent/references/code-understanding-tools.md",
+        [
+            "先选择模式，再执行对应且互斥的调用链",
+            "选择模式后先用对应模式的 preview",
+            "仅外部 LLM Mode",
+            "Delegation Mode",
+            "ocr delegate preview",
+            "ocr delegate rule",
+            "不执行 `ocr llm test`",
+            "外部 LLM Mode",
+            "ocr review --preview",
+            "ocr llm test",
+            "会话写入边界",
+        ],
+    ),
+)
+check(
+    "UI reference learning proceeds directly when axes are fixed or self-decision is authorized",
+    has_all(
+        "ui-design-expert/SKILL.md",
+        ["采用轴未明确且会改变结果时才询问 Owner", "已明确采用轴或已授权自决时直接推进"],
+    )
+    and has_all(
+        "ui-design-expert/references/visual-style-directions.md",
+        ["采用轴未明确且会改变结果时才询问 Owner", "已明确或已授权自决时直接进入设计"],
     ),
 )
 check(
@@ -6650,6 +6815,13 @@ check(
             "以源仓库内容作为本题规则",
             "approved-product-contract.txt",
             "blocking-data-semantics.txt",
+            "assert_requirement_diff_adjudication",
+            "requirement-diff-adjudication.txt",
+            "assert_authority_evidence_reopen",
+            "authority-evidence-reopen.txt",
+            "assert_ocr_mode_dispatch",
+            "ocr-mode-dispatch.txt",
+            "ocr delegate preview\" not in external",
             "accepted demotion of an approved product contract",
             "accepted SQL construction with blocking semantics unresolved",
             "scripts/validate-superpowers-install.sh",
@@ -6884,6 +7056,29 @@ check(
             "mattpocock/skills/blob/main/skills/productivity/handoff/SKILL.md",
             "不新增顶层 `handoff` Skill",
             "不吸收固定 token 阈值、调用频率、仓库星数",
+        ],
+    ),
+)
+check(
+    "wise-agent admits structured multi-party deliberation without free-form group chat",
+    has_all(
+        wise_agent_skill,
+        ["两个及以上长期上下文", "主持式多方会商", "自由群聊"],
+    )
+    and has_all(
+        wise_agent_context_handoff,
+        [
+            "三个及以上独立权威",
+            "不能拆成独立双边议题",
+            "一主、多权、独立证",
+            "主持式星型拓扑",
+            "Meeting Charter",
+            "Position Card",
+            "Conflict Matrix",
+            "Meeting Resolution",
+            "不强求共识",
+            "共享消息流",
+            "Worker 并行",
         ],
     ),
 )
@@ -15979,6 +16174,73 @@ expected_handling_has(
 )
 
 expected_handling_has(
+    "wise-agent-should-route-knowledge-and-reconcile-requirement-diff",
+    (
+        "Context System",
+        "知识路由锚点",
+        "业务域、应用 / 模块、业务身份、Topic / 事件、接口、状态、模型和表 / 仓储",
+        "按需读取",
+        "当前代码、配置和测试复核",
+        "Requirement-Diff 对账",
+        "done / partial / todo / changed / blocked",
+        "来源需求 / AC",
+        "当前 diff / commit",
+        "源码 / 测试锚点",
+        "todo / blocked 记录原因、依赖、Owner 和停止证据",
+        "发现偏差先冻结切片",
+        "产品 Owner 裁决需求变化还是实现偏离",
+        "只有需求确变才先更新权威契约",
+        "不新建 RD Mode、命令树、知识目录或第二真相源",
+    ),
+)
+
+expected_handling_has(
+    "product-should-deliver-requirement-slices-and-semantic-acceptance",
+    (
+        "产品需求切片与实现后语义验收",
+        "需求 ID / 业务身份 / 目标与非目标 / 对象与状态 / 规则与业务事件",
+        "不设计内部接口、模型或表",
+        "done / partial / todo",
+        "发现偏差先冻结受影响切片",
+        "产品 Owner 裁决产品契约变化还是实现偏离",
+        "blocked 保持 PENDING",
+        "只有产品变化时才先更新 PRD、Delta 和 AC",
+        "不能把当前代码自动升级为产品事实",
+    ),
+)
+
+expected_handling_has(
+    "senior-should-map-requirement-slices-and-reconcile-implementation",
+    (
+        "工程实施切片与 Requirement-Diff Review",
+        "业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试",
+        "Solution Review",
+        "done / partial / todo / changed / blocked",
+        "所有状态回链需求 / AC 版本与观察时间",
+        "done / partial 补当前 diff、源码测试锚点和验证",
+        "todo / blocked 记录原因、依赖、Owner 与停止证据",
+        "发现偏差先冻结切片",
+        "产品 Owner 裁决需求变化还是实现偏离",
+        "Harness Plan、Goal Ledger 或 OpenSpec tasks",
+        "不强制新建 requirement.md 或命令树",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-run-product-architecture-delivery-gates",
+    (
+        "三角色阶段责任矩阵",
+        "PRD Verify -> Clarification -> 知识路由与影响分析 -> Product Contract Verify -> Architecture Solution Review -> TDD / Implementation -> Requirement-Diff Reconcile -> Independent CR -> Release Plan -> Knowledge Backfill",
+        "产品专家裁决产品语义",
+        "架构师裁决工程设计与实现",
+        "独立 Checker 裁决验证",
+        "知止者维持顺序、状态、Owner、证据和停止条件",
+        "changed / blocked",
+        "不自动产生 Execution Grant、测试通过、CR 结论或上线审批",
+    ),
+)
+
+expected_handling_has(
     "wise-agent-should-feedback-loop-verification-cluster",
     (
         "反馈闭环成熟度 / 验证簇准入模式",
@@ -17060,6 +17322,27 @@ expected_handling_has(
         "源码级 CR",
         "Git 授权",
         "上线审批",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-schedule-open-code-review-plugin",
+    (
+        "Open Code Review 调度门禁",
+        "不是每轮 CR 的默认动作",
+        "低风险单文件",
+        "候选 diff 已稳定",
+        "本地测试与静态检查",
+        "跨模块、多文件、陌生模块、公共契约、状态机、并发、安全、可靠性或数据一致性",
+        "对应模式的 preview 覆盖",
+        "ocr delegate --help",
+        "open-code-review-delegate",
+        "ocr delegate preview",
+        "不要求 `ocr llm test`",
+        "ocr llm test",
+        "open-code-review",
+        "资深架构师源码 CR",
+        "自动修复另行授权",
     ),
 )
 
@@ -18184,6 +18467,40 @@ check(
     ),
 )
 
+expected_handling_has(
+    "ui-design-expert-should-diversify-expressive-page-structure",
+    (
+        "转化型新界面",
+        "结构指纹",
+        "结构差异必须回指受众、内容、行动和真实资产",
+        "刻意继承项与差异项",
+        "不能只做配色或字体换皮",
+        "不发明转化数据",
+    ),
+)
+expected_handling_has(
+    "ui-design-expert-should-study-reference-design-without-cloning",
+    (
+        "来源模式诊断",
+        "观察、推断、待确认和来源归因",
+        "URL 实际加载",
+        "截图可观察宏观结构",
+        "停止静默推断",
+        "先输出可迁移的设计 DNA",
+        "公开可见不等于允许复制",
+    ),
+)
+expected_handling_has(
+    "ui-design-expert-should-preserve-familiar-operational-structure",
+    (
+        "拒绝把陌生导航和自定义控件当作创新要求",
+        "任务型财务界面优先扫描、比较、重复操作效率、熟悉结构和标准控件",
+        "继承项目设计系统",
+        "不机械应用转化或展示页面的结构多样性门禁",
+        "关键状态、失败恢复、响应式、键盘焦点和可访问性",
+    ),
+)
+
 check(
     "UI design capability is web-scoped, sourced, routed, and smoke-covered",
     (ROOT / ui_design_skill).exists()
@@ -18208,6 +18525,8 @@ check(
             "响应式",
             "可访问性",
             "视觉方向",
+            "参考页面或截图",
+            "设计 DNA",
             "产品业务语义",
             "references/design-and-review-workflow.md",
             "references/design-foundations.md",
@@ -18290,6 +18609,9 @@ check(
             "响应式",
             "WCAG 2.2",
             "验证证据",
+            "结构指纹",
+            "不能只做配色或字体换皮",
+            "任务型界面不为多样性改造熟悉结构",
         ],
     )
     and has_all(
@@ -18309,6 +18631,12 @@ check(
             "google-labs-code/stitch-skills",
             "jiji262/claude-design-skill",
             "alchaincyf/huashu-design",
+            "Nutlope/hallmark",
+            "https://mp.weixin.qq.com/s/Um3OHfpuBoNwH8qQqIdoeQ",
+            "2026-08-05",
+            "Skill frontmatter `1.1.0`",
+            "数量存在版本漂移",
+            "`.hallmark/log.json`",
             "developers.figma.com/docs/figma-mcp-server/structure-figma-file",
             "developers.figma.com/docs/figma-mcp-server/code-connect-integration",
             "developers.figma.com/docs/figma-mcp-server/mcp-vs-agent",
@@ -18386,6 +18714,14 @@ check(
             "疏密与节律",
             "东方审美不是国风皮肤",
             "不能牺牲任务效率、可访问性和真实内容",
+            "参考设计学习",
+            "来源模式",
+            "观察、推断、待确认和来源归因",
+            "URL 实际加载",
+            "截图",
+            "公开可见不等于允许复制",
+            "采用轴未明确且会改变结果时才询问 Owner",
+            "已明确或已授权自决时直接进入设计",
         ],
     )
     and has_reference_header(ui_design_usability)
@@ -18468,6 +18804,9 @@ check(
             "ui-design-expert-should-use-eastern-aesthetics-with-boundaries",
             "ui-design-expert-negative-locked-system-implementation",
             "ui-design-expert-negative-eastern-aesthetics-report",
+            "ui-design-expert-should-study-reference-design-without-cloning",
+            "assert_ui_reference_axes_direct",
+            "ui-reference-axes-direct.txt",
         ],
     )
 )

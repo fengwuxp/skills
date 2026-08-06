@@ -115,6 +115,48 @@ REQUIRED_RESOURCE_DISTILLER_CASES = {
         "forbidden_dimensions": {"baseline_comparison", "variance_check"},
     },
 }
+REQUIRED_WISE_CONTRACT_CASES = {
+    "wise-agent-should-coordinate-peer-authority-contract-deliberation": {
+        "query_terms": ["业务能力消费者", "资金能力提供方", "公共契约", "独立 Checker"],
+        "expected_terms": [
+            "限时会商",
+            "Contract Inquiry",
+            "Provider Evidence Response",
+            "Consumer Reconciliation",
+            "confirmed / conflict / reopen / stale",
+        ],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+    "wise-agent-should-reject-permanent-peer-chat": {
+        "query_terms": ["长期自动互聊", "边聊边改", "不做版本化", "不等独立 Checker"],
+        "expected_terms": ["停止", "Goal owner", "版本", "Checker", "不产生执行授权"],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+    "wise-agent-should-coordinate-multi-party-authority-deliberation": {
+        "query_terms": ["四个长期任务", "独立事实", "共同裁定", "永久群聊"],
+        "expected_terms": [
+            "一主、多权、独立证",
+            "主持式星型拓扑",
+            "Meeting Charter",
+            "Position Card",
+            "Conflict Matrix",
+            "Meeting Resolution",
+        ],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+    "wise-agent-should-reject-free-form-group-chat": {
+        "query_terms": ["六个长期任务", "长期自由群聊", "不设主持者", "不做版本化"],
+        "expected_terms": [
+            "拒绝",
+            "Worker 并行",
+            "Meeting Charter",
+            "星型拓扑",
+            "Checker",
+            "退场",
+        ],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+}
 
 
 def load_fixture(path: Path = FIXTURE) -> dict[str, Any]:
@@ -274,6 +316,24 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
         if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
             failures.append(f"{label}: static prompt case claims behavior evidence {case_id}")
 
+    for case_id, contract in REQUIRED_WISE_CONTRACT_CASES.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required wise-agent contract case {case_id}")
+            continue
+        if case.get("skill") != "wise-agent" or case.get("should_trigger") is not True:
+            failures.append(f"{label}: invalid wise-agent contract routing {case_id}")
+        if case.get("hard_negative") is not False:
+            failures.append(f"{label}: positive wise-agent pressure case mislabeled hard negative {case_id}")
+        query = str(case.get("query", ""))
+        if not all(term in query for term in contract["query_terms"]):
+            failures.append(f"{label}: wise-agent contract case lost pressure semantics {case_id}")
+        expected = str(case.get("expected_handling", ""))
+        if not all(term in expected for term in contract["expected_terms"]):
+            failures.append(f"{label}: wise-agent contract case lost expected behavior {case_id}")
+        if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
+            failures.append(f"{label}: static wise-agent prompt case claims behavior evidence {case_id}")
+
     return failures
 
 
@@ -363,6 +423,19 @@ def run_self_test() -> None:
         for case_id in REQUIRED_RESOURCE_DISTILLER_CASES
     ):
         raise SystemExit("self-test failed: missing required resource-distiller failures")
+
+    invalid = deepcopy(valid)
+    invalid["cases"] = [
+        case
+        for case in invalid["cases"]
+        if case.get("id") not in REQUIRED_WISE_CONTRACT_CASES
+    ]
+    expected = audit_data(invalid, label="invalid-wise-agent-contract-cases")
+    if not all(
+        any(case_id in item for item in expected)
+        for case_id in REQUIRED_WISE_CONTRACT_CASES
+    ):
+        raise SystemExit("self-test failed: missing required wise-agent contract failures")
 
     print("OK skill eval fixture self-test")
 

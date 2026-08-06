@@ -571,6 +571,66 @@ assert_ui_eastern_report_route() {
   assert_route_owner_and_exclusion "${file}" "document-authoring" "ui-design-expert"
 }
 
+assert_requirement_diff_adjudication() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "冻结" "产品 Owner" "需求变化" "实现偏离" "todo / blocked"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "只有需求确变" "确认需求变化后" || return 1
+  assert_none "${file}" "changed 必须先更新权威需求契约" "直接把当前实现写回 PRD"
+}
+
+assert_authority_evidence_reopen() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "stale" "response_revision" "evidence_fingerprint" "supersedes"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_none "${file}" "伪造 consumer_revision" "伪造 provider_baseline_revision" "覆盖旧响应"
+}
+
+assert_ocr_mode_dispatch() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "Delegation Mode" "ocr delegate preview" "外部 LLM Mode" "ocr review --preview" "ocr llm test" "会话写入" "资深架构师"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  python3 - "${file}" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding="utf-8").replace("`", "")
+delegation_at = text.index("Delegation Mode")
+external_at = text.index("外部 LLM Mode")
+if delegation_at < external_at:
+    delegation = text[delegation_at:external_at]
+    external = text[external_at:]
+else:
+    external = text[external_at:delegation_at]
+    delegation = text[delegation_at:]
+
+valid = (
+    "ocr delegate preview" in delegation
+    and "ocr review --preview" not in delegation
+    and re.search(r"(?:不执行|无需|跳过).{0,12}ocr llm test", delegation)
+    and "ocr review --preview" in external
+    and "ocr llm test" in external
+    and "ocr delegate preview" not in external
+)
+raise SystemExit(0 if valid else 1)
+PY
+}
+
+assert_ui_reference_axes_direct() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  assert_any "${file}" "直接进入设计" "直接推进" "不再确认" || return 1
+  assert_any "${file}" "信息节奏" "排版角色" || return 1
+  assert_none "${file}" "请确认采用轴" "等待确认" "确认后再设计"
+}
+
 run_codex_smoke() {
   local output_file="$1" prompt="$2"
   rm -f "${output_file}"
@@ -695,7 +755,15 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-ui-locked-system-route.txt" \
       "${sample_dir}/bad-ui-locked-system-route-contradictory.txt" \
       "${sample_dir}/ui-eastern-report-route.txt" \
-      "${sample_dir}/bad-ui-eastern-report-route.txt"
+      "${sample_dir}/bad-ui-eastern-report-route.txt" \
+      "${sample_dir}/requirement-diff-adjudication.txt" \
+      "${sample_dir}/bad-requirement-diff-adjudication.txt" \
+      "${sample_dir}/authority-evidence-reopen.txt" \
+      "${sample_dir}/bad-authority-evidence-reopen.txt" \
+      "${sample_dir}/ocr-mode-dispatch.txt" \
+      "${sample_dir}/bad-ocr-mode-dispatch.txt" \
+      "${sample_dir}/ui-reference-axes-direct.txt" \
+      "${sample_dir}/bad-ui-reference-axes-direct.txt"
     rmdir "${sample_dir}"
   }
   trap cleanup_self_test EXIT
@@ -792,6 +860,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' 'Carbon 已锁定，由 senior-software-architect 负责实现，ui-design-expert 不触发；但重新选型交给 ui-design-expert 执行。' > "${sample_dir}/bad-ui-locked-system-route-contradictory.txt"
   printf '%s\n' '东方审美研究报告用于内部文化学习，不涉及 Web 设计；ui-design-expert 不触发，由 document-authoring 负责。' > "${sample_dir}/ui-eastern-report-route.txt"
   printf '%s\n' '东方审美研究报告用于内部文化学习，ui-design-expert 不触发，由 document-authoring 负责；但设计交付转由 ui-design-expert 执行。' > "${sample_dir}/bad-ui-eastern-report-route.txt"
+  printf '%s\n' '先冻结受影响切片。todo / blocked 记录依赖与 Owner；由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才更新权威契约。' > "${sample_dir}/requirement-diff-adjudication.txt"
+  printf '%s\n' 'changed 必须先更新权威需求契约，并直接把当前实现写回 PRD。' > "${sample_dir}/bad-requirement-diff-adjudication.txt"
+  printf '%s\n' '新证据使旧响应 stale；递增 response_revision，生成 evidence_fingerprint，用 supersedes 指向旧响应。' > "${sample_dir}/authority-evidence-reopen.txt"
+  printf '%s\n' '覆盖旧响应，并伪造 provider_baseline_revision 产生第二份裁决。' > "${sample_dir}/bad-authority-evidence-reopen.txt"
+  printf '%s\n' '先确认会话写入边界。Delegation Mode 走 ocr delegate preview 且不执行 ocr llm test；外部 LLM Mode 走 ocr review --preview 和 ocr llm test；都不可用时回退资深架构师。' > "${sample_dir}/ocr-mode-dispatch.txt"
+  printf '%s\n' '先确认会话写入边界。Delegation Mode 同时跑 ocr delegate preview、ocr review --preview 和 ocr llm test，但不执行自动修复；外部 LLM Mode 也跑 ocr review --preview 和 ocr llm test；最后交资深架构师。' > "${sample_dir}/bad-ocr-mode-dispatch.txt"
+  printf '%s\n' '信息节奏与排版角色已明确并授权自决，不再确认，直接进入设计。' > "${sample_dir}/ui-reference-axes-direct.txt"
+  printf '%s\n' '信息节奏与排版角色已明确，但仍请确认采用轴，确认后再设计。' > "${sample_dir}/bad-ui-reference-axes-direct.txt"
   assert_product "${sample_dir}/product.txt"
   assert_engineering "${sample_dir}/engineering.txt"
   assert_huaxia_decision "${sample_dir}/huaxia.txt"
@@ -838,6 +914,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_ui_eastern_aesthetics "${sample_dir}/ui-eastern-aesthetics.txt"
   assert_ui_locked_system_route "${sample_dir}/ui-locked-system-route.txt"
   assert_ui_eastern_report_route "${sample_dir}/ui-eastern-report-route.txt"
+  assert_requirement_diff_adjudication "${sample_dir}/requirement-diff-adjudication.txt"
+  assert_authority_evidence_reopen "${sample_dir}/authority-evidence-reopen.txt"
+  assert_ocr_mode_dispatch "${sample_dir}/ocr-mode-dispatch.txt"
+  assert_ui_reference_axes_direct "${sample_dir}/ui-reference-axes-direct.txt"
   assert_no_eastern_symbol_prescription "${sample_dir}/ui-eastern-symbol-negated.txt"
   assert_no_eastern_symbol_prescription "${sample_dir}/ui-eastern-symbol-negated-variant.txt"
   if assert_product "${sample_dir}/engineering.txt"; then
@@ -1024,6 +1104,22 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL UI design smoke accepted UI ownership for an Eastern-aesthetics report" >&2
     exit 1
   fi
+  if assert_requirement_diff_adjudication "${sample_dir}/bad-requirement-diff-adjudication.txt"; then
+    echo "FAIL Requirement-Diff smoke accepted implementation-led requirement mutation" >&2
+    exit 1
+  fi
+  if assert_authority_evidence_reopen "${sample_dir}/bad-authority-evidence-reopen.txt"; then
+    echo "FAIL authority evidence smoke accepted stale-response overwrite" >&2
+    exit 1
+  fi
+  if assert_ocr_mode_dispatch "${sample_dir}/bad-ocr-mode-dispatch.txt"; then
+    echo "FAIL OCR dispatch smoke accepted a mixed mode chain" >&2
+    exit 1
+  fi
+  if assert_ui_reference_axes_direct "${sample_dir}/bad-ui-reference-axes-direct.txt"; then
+    echo "FAIL UI reference smoke accepted redundant confirmation" >&2
+    exit 1
+  fi
   echo "OK wise-agent behavior smoke self-test"
   exit 0
 fi
@@ -1063,6 +1159,18 @@ if [[ "${MODE}" == "all" || "${MODE}" == "semantic-contract" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/blocking-data-semantics.txt" \
     "只读行为验证。先读取 ${ROOT_DIR}/product-architecture-expert/SKILL.md 和 ${ROOT_DIR}/product-architecture-expert/references/product-prd-operations-and-data.md，以源仓库内容作为本题规则。商户日 GMV 报表准备交给数据开发，但来源表、退款是否扣除和跨时区口径都未确认。请给出当前交接结论，并明确现在能否构造 SQL 或下游输入；不得写文件，控制在 350 字。"
   assert_blocking_data_semantics "${OUTPUT_DIR}/blocking-data-semantics.txt" || { echo "FAIL blocking data semantics behavior smoke: ${OUTPUT_DIR}/blocking-data-semantics.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/requirement-diff-adjudication.txt" \
+    "只读行为验证，对应 fixture wise-agent-should-route-knowledge-and-reconcile-requirement-diff。先读取 ${ROOT_DIR}/wise-agent/references/delivery-execution-control.md、${ROOT_DIR}/product-architecture-expert/references/product-design-and-prd.md 和 ${ROOT_DIR}/senior-software-architect/references/ai-assisted-engineering.md。当前代码与 PRD/AC 不一致，但尚未判断需求变化还是实现偏离；说明 changed 前的状态、Owner、各状态证据和何时更新需求，不写文件，控制在 350 字。"
+  assert_requirement_diff_adjudication "${OUTPUT_DIR}/requirement-diff-adjudication.txt" || { echo "FAIL Requirement-Diff adjudication behavior smoke: ${OUTPUT_DIR}/requirement-diff-adjudication.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/authority-evidence-reopen.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/context-handoff.md。Contract Inquiry 的 inquiry_id、consumer_revision 和 provider_baseline_revision 都未变化，但提供方出现一组推翻旧结论的新测试证据；说明如何合法生成新 Provider Evidence Response、旧响应如何处理、版本键和禁止动作，不写文件，控制在 350 字。"
+  assert_authority_evidence_reopen "${OUTPUT_DIR}/authority-evidence-reopen.txt" || { echo "FAIL authority evidence reopen behavior smoke: ${OUTPUT_DIR}/authority-evidence-reopen.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/ocr-mode-dispatch.txt" \
+    "只读行为验证，对应 fixture wise-agent-should-schedule-open-code-review-plugin。先读取 ${ROOT_DIR}/wise-agent/references/code-understanding-tools.md。候选 diff 已稳定；分别给出 Delegation Mode 和外部 LLM Mode 的互斥调用链、会话写入门禁与两者不可用时的回退，不执行命令、不写文件，控制在 350 字。"
+  assert_ocr_mode_dispatch "${OUTPUT_DIR}/ocr-mode-dispatch.txt" || { echo "FAIL OCR mode dispatch behavior smoke: ${OUTPUT_DIR}/ocr-mode-dispatch.txt" >&2; exit 1; }
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "wind-validation" ]]; then
@@ -1085,6 +1193,10 @@ if [[ "${MODE}" == "all" || "${MODE}" == "ui-design" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/ui-design-mobile-form.txt" \
     "只读行为验证，对应 fixture ui-design-expert-should-redesign-mobile-form-flow。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/ui-design-expert/references/design-and-review-workflow.md，以源仓库内容为规则。一个移动 Web 开户表单让用户在证件上传、校验失败和返回修改时迷路；请给出任务流修正、失败恢复、焦点、弱网、关键状态和验证结论；不写文件，控制在 350 字。"
   assert_ui_design_mobile_form "${OUTPUT_DIR}/ui-design-mobile-form.txt" || { echo "FAIL UI design mobile form behavior smoke: ${OUTPUT_DIR}/ui-design-mobile-form.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/ui-reference-axes-direct.txt" \
+    "只读行为验证，对应 fixture ui-design-expert-should-study-reference-design-without-cloning。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/ui-design-expert/references/visual-style-directions.md。用户已明确只采用参考页的信息节奏与排版角色，并授权你自决推进，其余设计轴均为非目标；判断现在是否仍需确认以及下一步，不写文件，控制在 220 字。"
+  assert_ui_reference_axes_direct "${OUTPUT_DIR}/ui-reference-axes-direct.txt" || { echo "FAIL UI reference axes behavior smoke: ${OUTPUT_DIR}/ui-reference-axes-direct.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/ui-design-product-route.txt" \
     "只读行为验证，对应 fixture ui-design-expert-negative-product-prd-only。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/product-architecture-expert/SKILL.md，以源仓库内容为规则。任务只要求定义退款申请的主体、对象、状态、规则、权限和验收并输出 PRD，明确不做页面、交互或视觉设计。请判断由哪个 Skill 负责以及是否触发 ui-design-expert；不写文件，控制在 180 字。"
