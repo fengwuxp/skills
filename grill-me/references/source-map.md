@@ -32,18 +32,20 @@
 
 ## 公开来源
 
-- [Matt Pocock skills](https://github.com/mattpocock/skills)：2026-07-15 核验上游 `main` 提交 `e9fcdf95b402d360f90f1db8d776d5dd450f9234`、README、`grill-me`、`grilling`、`grill-with-docs` 和 `domain-modeling`。上游当时的 `grill-me` 只调用 `/grilling`，不适合作为本项目安装权威。
+- [Matt Pocock skills](https://github.com/mattpocock/skills)：2026-08-07 核验上游 `main` 的 README、CHANGELOG、`grill-me`、`grilling`、`grill-with-docs` 和 `domain-modeling`；CHANGELOG 当前版本为 `1.2.3`。上游 `grill-me` 仍只调用 `/grilling`，而 `/grilling` 已于 2026-07-16 通过提交 [`a4b2009`](https://github.com/mattpocock/skills/commit/a4b2009a1a3ac9575506c10b4c84f08f9bba7a38) 从一次一问改为每轮询问整个 frontier。
 - 微信文章 [《热门Skill研究：Grill-Me，凭什么火遍整个开发者圈？》](https://mp.weixin.qq.com/s/K4CN1LxsZgFR2FYv7f8Y3w)：2026-07-08 通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文，只吸收一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding。
 - 微信文章 [《如何看待 grill-me（拷问我）这个 Skill？》](https://mp.weixin.qq.com/s/jw7pqTwco_lLGnN_KmExig)：作者 / 账号为 `LastWhisperDev`，页面显示发布时间为 2026-07-10 15:50；2026-07-13 通过本机 Chrome headless 等价浏览器读取标题、作者、发布时间和正文，只吸收 Taste Injection、Shared Context、Issue / PR、Hand-off Prompt 和执行前 Finalize 的可迁移方法。
 - 微信文章 [《grill-me SKILL 的失败模式》](https://mp.weixin.qq.com/s/9keJ9vfryl3RAmhVWTZnFA)：作者 / 账号为 `徐道AI` / `老徐`，页面显示发布时间为 2026-07-24；2026-07-29 通过浏览器读取标题、作者、发布时间和正文，只吸收高保真问题先观察、按独立决策包交接与并行、人与 Agent 共同收敛的可迁移方法。文中约 120k token 的说法只属作者经验，不作为固定阈值或项目事实。
+- 微信文章 [《Grill-Me 史诗级升级！Matt Skills v1.1 彻底解决 AI 编码最大痛点（附最佳配置）》](https://mp.weixin.qq.com/s/_4exXmzaNRbCqPgUFSvnKw)：作者 / 账号为 `MurphyGao` / `程序员MurphyGao`，页面显示发布时间为 2026-08-07 08:00；2026-08-07 通过浏览器读取标题、作者、发布时间和正文。文章关于 v1.1 恢复一次一问的描述与当前上游及其变更历史冲突，只把批量问题过载、过早执行、Facts / Decisions 混淆视为失败类别线索，不把文章当作当前版本权威。
 
 ## 项目吸收结论
 
-自 2026-07-18 起，本仓库维护项目自有独立 `grill-me`。上游与文章只作内容来源，不是安装权威；项目增加问题台账、语义去重、证据自决、红线记录、问题保真度、决策包和决策快照，并由 `wise-agent` 按需装载和消费结果。
+自 2026-07-18 起，本仓库维护项目自有独立 `grill-me`。上游与文章只作内容来源，不是安装权威；项目增加问题台账、语义去重、证据自决、红线记录、问题保真度、决策包和决策快照，并由 `wise-agent` 按需装载和消费结果。上游 `/grilling` 当前按 frontier 批量询问，本项目基于用户可核对性和既有行为契约，仍坚持一次只问一个主 blocker；这是主动分歧，不随上游同步。
 
 ## 不吸收边界
 
 - 不安装上游全仓库，不保留 `/grilling` alias，不运行 npm、Claude plugin、hooks、Trellis、外部任务系统或跳过权限模式。
 - 不复制上游 Skill 或文章原文、图片、示例、作者口吻和传播性结论。
+- 不把文章中的固定五阶段链路、工具排名、模型表现、最佳配置或 TDD 阶段调整设为默认规则。
 - 不把盘问、自决或 shared understanding 写成执行、Git、发布、生产、测试通过、CR 通过或 Owner 授权。
 - 上游版本变化只有形成真实行为差异、失败样例和最小验证路径时才进入升级评审。

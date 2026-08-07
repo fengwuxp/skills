@@ -36,8 +36,55 @@ assert_huaxia_decision() {
   for term in "事实" "待确认" "行动" "止损" "验证"; do
     grep -Fq "${term}" "${file}" || return 1
   done
-  assert_any "${file}" "可逆" "试点" "可回退" "试行" || return 1
-  assert_none "${file}" "保证成功" "必然成功" "替代专业判断"
+  python3 - "${file}" <<'PY' || return 1
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding="utf-8")
+actions = " ".join(
+    clause
+    for clause in re.split(r"[。；;\n]", text)
+    if re.search(r"(?:最小)?行动[：:]", clause)
+)
+if not actions:
+    raise SystemExit(1)
+actions = re.sub(
+    r"(?:并非|並非|不是|并不是|並不是)"
+    r"(?:不可逆|无法回退|無法回退|不能回退)",
+    "",
+    actions,
+)
+actions = re.sub(
+    r"(?:并非|並非|不是|并不是|並不是)"
+    r"(?:没有|沒有|缺乏|缺少)\s*(?:可逆|可回退)(?:性|方案|能力)?",
+    "",
+    actions,
+)
+actions = re.sub(r"不(?:采用|使用|选择|做)?不可逆", "", actions)
+actions = re.sub(
+    r"(?:并非|並非|不是|并不是|並不是)(?:不|未)"
+    r"(?:保留|提供|设置|設置|预留|預留|建立)\s*"
+    r"(?:回退|回滚|回滾|撤回|恢复|恢復)(?:路径|路徑|机制|機制|方案|能力)?",
+    "",
+    actions,
+)
+forbidden = re.compile(
+    r"(?:无需|無需|无须|無須|不必|不需|不用|不采用|不使用|不进行|不做)\s*"
+    r"(?:可逆|可回退|试点|試點|试行|試行)|"
+    r"(?:方案|行动|行動|流程|决策|決策)?\s*(?:没有|沒有|缺乏|缺少)\s*(?:可逆|可回退)|"
+    r"(?:方案|行动|行動|流程|决策|決策)?\s*(?:不可逆|无法回退|無法回退|不能回退)|"
+    r"(?:不|未)(?:保留|提供|设置|設置|预留|預留|建立)\s*(?:回退|回滚|回滾|撤回|恢复|恢復)"
+)
+if forbidden.search(actions):
+    raise SystemExit(1)
+raise SystemExit(0 if re.search(r"可逆|可回退|试点|試點|试行|試行", actions) else 1)
+PY
+  assert_none "${file}" \
+    "不做可逆" "不采用可逆" "不进行试点" "不做试点" "不试点" "无需试点" "不试行" \
+    "不设止损" "无需止损" "无须止损" "止损不用" \
+    "不做验证" "不验证" "无需验证" "无须验证" "验证不用" \
+    "保证成功" "必然成功" "替代专业判断"
 }
 
 assert_any() {
@@ -350,6 +397,18 @@ question_record_count() {
   } END { print count + 0 }' "$1"
 }
 
+has_open_question() {
+  python3 - "$1" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding="utf-8")
+text = re.sub(r'(?:历史问题|原问题|既有问题)[：:]?[“"][^”"]+[”"]', '', text)
+raise SystemExit(0 if re.search(r'[？?]', text) else 1)
+PY
+}
+
 assert_grill_evidence_closed() {
   local file="$1" term
   for term in "confirmed" "D-101"; do
@@ -386,8 +445,12 @@ assert_grill_history_before_handoff() {
   done
   assert_any "${file}" "历史" "决策快照" || return 1
   assert_any "${file}" "复用" "沿用" || return 1
-  assert_any "${file}" "不新建原型、观察交接或决策包" "不得新建原型、观察交接或决策包" "无需新建原型、观察交接或决策包" "无需新增原型、观察交接或决策包" || return 1
-  assert_none "${file}" "随后重新建立原型" "仍然新建原型" "仍需新建原型" "重新创建决策包"
+  assert_any "${file}" "不新建原型、观察交接或决策包" "不得新建原型、观察交接或决策包" "无需新建原型、观察交接或决策包" "无需新增原型、观察交接或决策包" "无需建立新的观察材料" || return 1
+  assert_none "${file}" "ask-owner" "请确认" "本轮问题" "不得不新建" "不能不新建" "并非不新建" "不排除新建" "随后重新建立原型" "仍然新建原型" "仍需新建原型" "重新创建决策包" "还是创建决策包" || return 1
+  if has_open_question "${file}"; then
+    return 1
+  fi
+  [[ "$(question_record_count "${file}")" -eq 0 ]]
 }
 
 assert_grill_decision_packages() {
@@ -590,6 +653,38 @@ assert_authority_evidence_reopen() {
   assert_none "${file}" "伪造 consumer_revision" "伪造 provider_baseline_revision" "覆盖旧响应"
 }
 
+assert_deliberation_information_readiness() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "讨论主题" "decision_questions" "非目标" "事实基线" "Shared Information Matrix" "fact" "evidence" "assumption" "unknown" "dependency" "received" "understood" "disputed" "missing" "Owner" "blocks_current_decision" "Information Readiness Gate" "Position Card"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  python3 - "${file}" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding="utf-8")
+blocked = re.search(r"信息未充分交换|信息未齐|Information Readiness Gate[^。；\n]*(?:blocked|未通过)", text)
+ready = re.search(r"(?:补齐|充分交换|门禁通过|ready)[^。；\n]*(?:后|之后|再)[^。；\n]*独立[^。；\n]*Position Card", text)
+if not blocked or not ready or ready.start() <= blocked.start():
+    raise SystemExit(1)
+
+entry = re.compile(r"(?:进入|开始)[^。；\n]{0,24}(?:Position Card|观点讨论|讨论|决策)")
+has_explicit_block = False
+for match in entry.finditer(text, blocked.start(), ready.start()):
+    prefix = text[max(blocked.start(), match.start() - 8):match.start()].rstrip()
+    double_negative = re.search(r"(?:不得|不能|不应)不$", prefix)
+    negated_entry = re.search(r"(?:不得|不能|不应|不)$", prefix)
+    if negated_entry and not double_negative:
+        has_explicit_block = True
+        continue
+    raise SystemExit(1)
+
+raise SystemExit(0 if has_explicit_block else 1)
+PY
+}
+
 assert_ocr_mode_dispatch() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
@@ -702,6 +797,9 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/huaxia.txt" \
       "${sample_dir}/huaxia-variant.txt" \
       "${sample_dir}/bad-huaxia.txt" \
+      "${sample_dir}/bad-huaxia-negated-reversible.txt" \
+      "${sample_dir}/bad-huaxia-missing-reversibility.txt" \
+      "${sample_dir}/bad-huaxia-no-rollback-path.txt" \
       "${sample_dir}/bad-engineering-huaxia.txt" \
       "${sample_dir}/superpowers-product.txt" \
       "${sample_dir}/superpowers-debugging.txt" \
@@ -747,7 +845,12 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-grill-closed.txt" \
       "${sample_dir}/bad-grill-conflict.txt" \
       "${sample_dir}/grill-history-before-handoff.txt" \
+      "${sample_dir}/grill-history-quoted-question.txt" \
       "${sample_dir}/bad-grill-history-before-handoff.txt" \
+      "${sample_dir}/bad-grill-history-reasks-owner.txt" \
+      "${sample_dir}/bad-grill-history-unlabeled-question.txt" \
+      "${sample_dir}/bad-grill-history-double-negative.txt" \
+      "${sample_dir}/bad-grill-history-contrast.txt" \
       "${sample_dir}/grill-decision-packages.txt" \
       "${sample_dir}/bad-grill-decision-packages.txt" \
       "${sample_dir}/grill-parallel-packages.txt" \
@@ -794,13 +897,23 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-requirement-diff-adjudication.txt" \
       "${sample_dir}/authority-evidence-reopen.txt" \
       "${sample_dir}/bad-authority-evidence-reopen.txt" \
+      "${sample_dir}/deliberation-information-blocked.txt" \
+      "${sample_dir}/bad-deliberation-information-blocked.txt" \
+      "${sample_dir}/bad-deliberation-double-negative.txt" \
+      "${sample_dir}/bad-deliberation-stop-waiting.txt" \
+      "${sample_dir}/bad-deliberation-wrong-negation-target.txt" \
       "${sample_dir}/ocr-mode-dispatch.txt" \
       "${sample_dir}/bad-ocr-mode-dispatch.txt" \
       "${sample_dir}/yinyang-contract.txt" \
       "${sample_dir}/yinyang-split-rejection.txt" \
       "${sample_dir}/bad-yinyang-split.txt" \
       "${sample_dir}/ui-reference-axes-direct.txt" \
-      "${sample_dir}/bad-ui-reference-axes-direct.txt"
+      "${sample_dir}/bad-ui-reference-axes-direct.txt" \
+      "${sample_dir}/bad-huaxia-semantic-reversal.txt" \
+      "${sample_dir}/huaxia-double-negative.txt" \
+      "${sample_dir}/huaxia-double-negative-missing.txt" \
+      "${sample_dir}/huaxia-double-negative-rollback.txt" \
+      "${sample_dir}/huaxia-fact-gap.txt"
     rmdir "${sample_dir}"
   }
   trap cleanup_self_test EXIT
@@ -809,6 +922,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '事实：目标一致。待确认：责任 owner。行动：做可逆试点。止损：责任不清则停止。验证：复盘结果。' > "${sample_dir}/huaxia.txt"
   printf '%s\n' '事实：目标一致。待确认：责任 owner。最小行动：选择可回退流程试行。止损：成本触顶则停止。验证：对照基线。' > "${sample_dir}/huaxia-variant.txt"
   printf '%s\n' '顺其自然即可，必然成功。' > "${sample_dir}/bad-huaxia.txt"
+  printf '%s\n' '事实：目标明确。待确认：责任 owner。行动：无需可逆，直接一次到位。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/bad-huaxia-negated-reversible.txt"
+  printf '%s\n' '事实：目标明确。待确认：责任 owner。行动：方案没有可逆性，直接一次到位。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/bad-huaxia-missing-reversibility.txt"
+  printf '%s\n' '事实：目标明确。待确认：责任 owner。行动：先试点，但不保留回退路径。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/bad-huaxia-no-rollback-path.txt"
+  printf '%s\n' '事实明确，待确认无需。行动不可逆，不设止损，验证不用。' > "${sample_dir}/bad-huaxia-semantic-reversal.txt"
+  printf '%s\n' '事实：目标明确。待确认：责任 owner。行动：并非无法回退，而是先做可回退试点。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/huaxia-double-negative.txt"
+  printf '%s\n' '事实：目标明确。待确认：责任 owner。行动：并非没有可逆性，而是先做可回退试点。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/huaxia-double-negative-missing.txt"
+  printf '%s\n' '事实：目标明确。待确认：责任 owner。行动：并非不保留回退路径，而是已建立回退方案并先试点。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/huaxia-double-negative-rollback.txt"
+  printf '%s\n' '事实：目前缺少可逆方案的量化数据。待确认：责任 owner。行动：先做可回退试点。止损：成本触顶则停止。验证：复盘结果。' > "${sample_dir}/huaxia-fact-gap.txt"
   printf '%s\n' '严重级别：P1。证据：源码。测试：补回归。残余风险：并发。按周易阴阳五行处理。' > "${sample_dir}/bad-engineering-huaxia.txt"
   printf '%s\n' '知止者先用 brainstorming 收敛，关键分叉再用 grill-me；暂不写工程计划。' > "${sample_dir}/superpowers-product.txt"
   printf '%s\n' '知止者采用 systematic-debugging、test-driven-development、verification-before-completion。' > "${sample_dir}/superpowers-debugging.txt"
@@ -853,8 +974,13 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，Java 实现不能定义业务意图；未确认不得执行方案。推荐答案：人工复核。需要 Owner 回答的一个问题：是否确认人工复核？' > "${sample_dir}/grill-conflict-variant.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。请确认？' > "${sample_dir}/bad-grill-closed.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
-  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，不新建原型、观察交接或决策包。' > "${sample_dir}/grill-history-before-handoff.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需建立新的观察材料。' > "${sample_dir}/grill-history-before-handoff.txt"
+  printf '%s\n' 'Q-118：历史问题“审批工作台采用单页还是分步表单？”的决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需建立新的观察材料。' > "${sample_dir}/grill-history-quoted-question.txt"
   printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，不新建原型、观察交接或决策包；但随后重新建立原型、观察交接和决策包。' > "${sample_dir}/bad-grill-history-before-handoff.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需建立新的观察材料。本轮问题：是否仍采用单页？' > "${sample_dir}/bad-grill-history-reasks-owner.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需建立新的观察材料。是否仍采用单页？' > "${sample_dir}/bad-grill-history-unlabeled-question.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，不得不新建原型、观察交接或决策包。' > "${sample_dir}/bad-grill-history-double-negative.txt"
+  printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需新建原型、观察交接或决策包。不过我们还是创建决策包。' > "${sample_dir}/bad-grill-history-contrast.txt"
   printf '%s\n' '拆分决策包：范围、排除项、Owner、输入快照、证据媒介、返回产物、写回位置、预算和停止条件均独立记录；不采用固定 token 阈值，不执行方案。' > "${sample_dir}/grill-decision-packages.txt"
   printf '%s\n' '拆分决策包：范围、排除项、Owner、输入快照、证据媒介、返回产物、写回位置、预算和停止条件均独立记录；不采用固定 token 阈值，决策包不是执行授权；但实际仍采用固定 token 阈值，并将决策包作为执行授权。' > "${sample_dir}/bad-grill-decision-packages.txt"
   printf '%s\n' '决策包只有决策主题、Owner、输入、红线和写回位置均不重叠时才交给 Worker 并行；同一 Owner 的同一决策主题必须串行。每包返回后按决策快照对账。' > "${sample_dir}/grill-parallel-packages.txt"
@@ -901,6 +1027,11 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' 'changed 必须先更新权威需求契约，并直接把当前实现写回 PRD。' > "${sample_dir}/bad-requirement-diff-adjudication.txt"
   printf '%s\n' '新证据使旧响应 stale；递增 response_revision，生成 evidence_fingerprint，用 supersedes 指向旧响应。' > "${sample_dir}/authority-evidence-reopen.txt"
   printf '%s\n' '覆盖旧响应，并伪造 provider_baseline_revision 产生第二份裁决。' > "${sample_dir}/bad-authority-evidence-reopen.txt"
+  printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线版本。建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方记录 received / understood / disputed / missing；缺失信息绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，不得进入 Position Card、观点讨论或决策；补齐并确认同版本后再独立形成 Position Card。' > "${sample_dir}/deliberation-information-blocked.txt"
+  printf '%s\n' '讨论主题、decision_questions、非目标和事实基线暂不确认；Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，但先进入 Position Card、观点讨论和决策，信息以后再补；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-information-blocked.txt"
+  printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线。Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，不得不进入观点讨论或决策；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-double-negative.txt"
+  printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线。Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，停止等待，进入 Position Card 和决策；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-stop-waiting.txt"
+  printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线。Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，不应继续等待，进入观点讨论和决策；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-wrong-negation-target.txt"
   printf '%s\n' '先确认会话写入边界。Delegation Mode 走 ocr delegate preview 且不执行 ocr llm test；外部 LLM Mode 走 ocr review --preview 和 ocr llm test；都不可用时回退资深架构师。' > "${sample_dir}/ocr-mode-dispatch.txt"
   printf '%s\n' '先确认会话写入边界。Delegation Mode 同时跑 ocr delegate preview、ocr review --preview 和 ocr llm test，但不执行自动修复；外部 LLM Mode 也跑 ocr review --preview 和 ocr llm test；最后交资深架构师。' > "${sample_dir}/bad-ocr-mode-dispatch.txt"
   printf '%s\n' '一个行动主体在复杂任务中同时记录约束面：目标、事实、权限、完成证据和停止条件；推进面：当前假设、最小动作、反馈源和下一步。阴阳一体、互用互制，阴制阳、阳制阴，不拆成两个 Agent，不新增 RSI Mode。' > "${sample_dir}/yinyang-contract.txt"
@@ -912,6 +1043,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_engineering "${sample_dir}/engineering.txt"
   assert_huaxia_decision "${sample_dir}/huaxia.txt"
   assert_huaxia_decision "${sample_dir}/huaxia-variant.txt"
+  assert_huaxia_decision "${sample_dir}/huaxia-double-negative.txt"
+  assert_huaxia_decision "${sample_dir}/huaxia-double-negative-missing.txt"
+  assert_huaxia_decision "${sample_dir}/huaxia-double-negative-rollback.txt"
+  assert_huaxia_decision "${sample_dir}/huaxia-fact-gap.txt"
   assert_design_composition_product "${sample_dir}/design-product.txt"
   assert_design_composition_engineering "${sample_dir}/design-engineering.txt"
   assert_design_document_product "${sample_dir}/design-document-product.txt"
@@ -937,6 +1072,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict.txt"
   assert_grill_evidence_conflict "${sample_dir}/grill-conflict-variant.txt"
   assert_grill_history_before_handoff "${sample_dir}/grill-history-before-handoff.txt"
+  assert_grill_history_before_handoff "${sample_dir}/grill-history-quoted-question.txt"
   assert_grill_decision_packages "${sample_dir}/grill-decision-packages.txt"
   assert_grill_parallel_packages "${sample_dir}/grill-parallel-packages.txt"
   assert_approved_product_contract_conflict "${sample_dir}/approved-product-contract.txt"
@@ -956,6 +1092,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_ui_eastern_report_route "${sample_dir}/ui-eastern-report-route.txt"
   assert_requirement_diff_adjudication "${sample_dir}/requirement-diff-adjudication.txt"
   assert_authority_evidence_reopen "${sample_dir}/authority-evidence-reopen.txt"
+  assert_deliberation_information_readiness "${sample_dir}/deliberation-information-blocked.txt"
   assert_ocr_mode_dispatch "${sample_dir}/ocr-mode-dispatch.txt"
   assert_yinyang_contract "${sample_dir}/yinyang-contract.txt"
   assert_yinyang_split_rejection "${sample_dir}/yinyang-split-rejection.txt"
@@ -968,6 +1105,22 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_huaxia_decision "${sample_dir}/bad-huaxia.txt"; then
     echo "FAIL Huaxia smoke accepted slogan-only certainty" >&2
+    exit 1
+  fi
+  if assert_huaxia_decision "${sample_dir}/bad-huaxia-negated-reversible.txt"; then
+    echo "FAIL Huaxia smoke accepted a negated reversible action" >&2
+    exit 1
+  fi
+  if assert_huaxia_decision "${sample_dir}/bad-huaxia-missing-reversibility.txt"; then
+    echo "FAIL Huaxia smoke accepted an action without reversibility" >&2
+    exit 1
+  fi
+  if assert_huaxia_decision "${sample_dir}/bad-huaxia-no-rollback-path.txt"; then
+    echo "FAIL Huaxia smoke accepted an action without a rollback path" >&2
+    exit 1
+  fi
+  if assert_huaxia_decision "${sample_dir}/bad-huaxia-semantic-reversal.txt"; then
+    echo "FAIL Huaxia smoke accepted a semantically reversed decision" >&2
     exit 1
   fi
   if assert_engineering "${sample_dir}/bad-engineering-huaxia.txt"; then
@@ -1052,6 +1205,22 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_grill_history_before_handoff "${sample_dir}/bad-grill-history-before-handoff.txt"; then
     echo "FAIL grill-me history smoke accepted a duplicate handoff" >&2
+    exit 1
+  fi
+  if assert_grill_history_before_handoff "${sample_dir}/bad-grill-history-reasks-owner.txt"; then
+    echo "FAIL grill-me history smoke accepted a repeated question" >&2
+    exit 1
+  fi
+  if assert_grill_history_before_handoff "${sample_dir}/bad-grill-history-unlabeled-question.txt"; then
+    echo "FAIL grill-me history smoke accepted an unlabeled question" >&2
+    exit 1
+  fi
+  if assert_grill_history_before_handoff "${sample_dir}/bad-grill-history-double-negative.txt"; then
+    echo "FAIL grill-me history smoke accepted a double-negative handoff" >&2
+    exit 1
+  fi
+  if assert_grill_history_before_handoff "${sample_dir}/bad-grill-history-contrast.txt"; then
+    echo "FAIL grill-me history smoke accepted a contrasting handoff" >&2
     exit 1
   fi
   if assert_grill_decision_packages "${sample_dir}/bad-grill-decision-packages.txt"; then
@@ -1154,6 +1323,22 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL authority evidence smoke accepted stale-response overwrite" >&2
     exit 1
   fi
+  if assert_deliberation_information_readiness "${sample_dir}/bad-deliberation-information-blocked.txt"; then
+    echo "FAIL deliberation readiness smoke accepted discussion before information exchange" >&2
+    exit 1
+  fi
+  if assert_deliberation_information_readiness "${sample_dir}/bad-deliberation-double-negative.txt"; then
+    echo "FAIL deliberation readiness smoke accepted double-negative discussion admission" >&2
+    exit 1
+  fi
+  if assert_deliberation_information_readiness "${sample_dir}/bad-deliberation-stop-waiting.txt"; then
+    echo "FAIL deliberation readiness smoke accepted stopping evidence wait before discussion" >&2
+    exit 1
+  fi
+  if assert_deliberation_information_readiness "${sample_dir}/bad-deliberation-wrong-negation-target.txt"; then
+    echo "FAIL deliberation readiness smoke accepted negating the wait instead of discussion" >&2
+    exit 1
+  fi
   if assert_ocr_mode_dispatch "${sample_dir}/bad-ocr-mode-dispatch.txt"; then
     echo "FAIL OCR dispatch smoke accepted a mixed mode chain" >&2
     exit 1
@@ -1213,6 +1398,10 @@ if [[ "${MODE}" == "all" || "${MODE}" == "semantic-contract" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/authority-evidence-reopen.txt" \
     "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/context-handoff.md。Contract Inquiry 的 inquiry_id、consumer_revision 和 provider_baseline_revision 都未变化，但提供方出现一组推翻旧结论的新测试证据；说明如何合法生成新 Provider Evidence Response、旧响应如何处理、版本键和禁止动作，不写文件，控制在 350 字。"
   assert_authority_evidence_reopen "${OUTPUT_DIR}/authority-evidence-reopen.txt" || { echo "FAIL authority evidence reopen behavior smoke: ${OUTPUT_DIR}/authority-evidence-reopen.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/deliberation-information-readiness.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/context-handoff.md。四个长期任务需要围绕跨域公共契约会商，但当前讨论主题和非目标未确认，各方材料版本不同，运营事实缺失且没有 Owner。用户要求先让各方提交 Position Card 并开始讨论，信息以后补。请给出当前准入结论、信息交换载体、fact / evidence / assumption / unknown / dependency 分类、逐方状态、缺口 Owner 与 blocks_current_decision、topic_revision / information_revision，以及何时才能进入立场讨论或决策；不写文件，控制在 450 字。"
+  assert_deliberation_information_readiness "${OUTPUT_DIR}/deliberation-information-readiness.txt" || { echo "FAIL deliberation information readiness behavior smoke: ${OUTPUT_DIR}/deliberation-information-readiness.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/ocr-mode-dispatch.txt" \
     "只读行为验证，对应 fixture wise-agent-should-schedule-open-code-review-plugin。先读取 ${ROOT_DIR}/wise-agent/references/code-understanding-tools.md。候选 diff 已稳定；分别给出 Delegation Mode 和外部 LLM Mode 的互斥调用链、会话写入门禁与两者不可用时的回退，不执行命令、不写文件，控制在 350 字。"

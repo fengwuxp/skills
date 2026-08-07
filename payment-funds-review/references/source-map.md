@@ -16,6 +16,7 @@
 
 ## 许可与成熟度
 
-- 当前只保留本地未安装、未同步、未提交的 `candidate`；不得推定团队共享或公开发布许可。
+- 当前是已纳入源仓、但未安装和未同步的本地 `candidate`；不得推定团队共享或公开发布许可。
+- `admission.json` 中两轮评分只保留历史汇总分，缺少原始 responses、blind judgments 和 Judge 指纹，因此不可复算，标记为 `reported_not_reproducible`，不构成行为准入证据。
 - 文档处于设计/Review、源码和测试证据层；目标 MySQL、宿主 IAM/审批/审计、外部通道、监控和 Runbook 另行验证。
 - KYC/KYB/AML、客户资金归属、税务、会计、合同、跨境和外汇规则由专业 Owner 确认。

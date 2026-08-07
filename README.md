@@ -64,8 +64,8 @@
 | --- | --- |
 | 自主推进 | `$wise-agent：读取当前项目事实，自己判断并推进；只在关键决策或高风险授权处问我，完成后给出产物、验证和残余风险。` |
 | 复杂长任务 | `$wise-agent：为这项跨轮工作建立 Goal；存在真实分支、汇合或并行时再附加可校验 work_graph，保持状态并在停止条件命中时交还我。` |
-| 双边契约会商 | `$wise-agent：协调 <消费者任务> 与 <提供方任务>，围绕 <公共契约> 做一次版本化会商、双边对账和独立验证；确认后退场，不长期互聊。` |
-| 主持式多方会商 | `$wise-agent：协调 <任务列表> 围绕 <共享决策> 进入主持式多方会商；各方只维护自己的权威事实，由当前任务收集立场、归并冲突、形成决议并交独立 Checker。` |
+| 双边契约会商 | `$wise-agent：协调 <消费者任务> 与 <提供方任务>，先确认讨论主题并充分交换事实、证据和缺口；信息充分后再围绕 <公共契约> 做版本化会商、双边对账和独立验证。` |
+| 主持式多方会商 | `$wise-agent：协调 <任务列表> 围绕 <共享决策> 进入主持式多方会商；先确认主题和信息覆盖，充分交换后再独立形成立场、归并冲突、形成决议并交 Checker。` |
 | 需求讨论 | `先做能力归位：判断这个需求是在使用、增强、组合还是新增哪项稳定能力；默认审视不等于默认展开。` |
 | 产品设计 | `根据 <访谈/需求/原型> 写一版可评审 PRD；先提炼稳定能力、共性和有证据的特殊性，再展开场景、流程、规则和验收。` |
 | 创见探索 | `$wise-agent：结合华夏经世智慧处理这个原创/非标设想；先保留原始意图和挑战的默认前提，再做最小可逆实验；不要以主流/文献数量单独否决，也不要把新颖直接当成正确。` |
@@ -90,6 +90,7 @@
 
 - 两方优先使用双边契约会商，适合消费者与提供方围绕公共契约做版本对账。
 - 三个及以上独立权威只有必须裁定同一共享决策，且不能拆成独立双边议题时，才进入多方会商。
+- 双边和多方都先确认讨论主题并交换事实、证据、假设、未知项和依赖；信息不足时先补证据，不进入观点讨论或决策。
 - 输入可冻结、写入不重叠的独立任务直接走 Worker 并行后汇合，不需要开会。
 
 仅设计协作协议时可以这样说：
@@ -98,7 +99,7 @@
 $wise-agent：请为以下任务设计多方会商，但不要向其他任务发送消息。
 参与任务与权威：<任务 A：...；任务 B：...；任务 C：...>
 共享决策：<待共同裁定的问题>。
-请先判断是否能拆成双边会商或 Worker；确需会商时，给出版本、冲突裁决、Checker 和停止条件。
+请先判断是否能拆成双边会商或 Worker；确需会商时，先确认主题和信息是否充分，再给出版本、冲突裁决、Checker 和停止条件。
 ```
 
 需要实际推进时，提供可识别的任务名称或任务 ID，并明确要求执行：
@@ -106,7 +107,7 @@ $wise-agent：请为以下任务设计多方会商，但不要向其他任务发
 ```text
 $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式多方会商。
 参与任务与权威：<任务名称或任务 ID + 各自权威>。
-请实际向这些任务发送消息并推进，由当前任务主持，形成版本化决议后交独立 Checker，并在停止条件满足后退场。
+请实际向这些任务发送消息并推进，由当前任务先对齐主题、交换信息并确认信息充分，再主持形成版本化决议、交独立 Checker，并在停止条件满足后退场。
 ```
 
 “协调现有任务”不会自动授权创建新任务；需要新建时应明确说明允许创建哪些任务。联网、Git、同步、部署、生产和其他高风险动作仍分别授权，不因进入会商而自动获得权限。
@@ -164,7 +165,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | 跨领域真实工作、目标控制、能力组合、验证和知识演进 | 知止者，ID：`wise-agent`，路径：[wise-agent](./wise-agent) | 目标、事实源、范围、授权、完成证据 | 不限于产研；不获得无限自治或高风险授权 |
 | 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | 产品架构专家，ID：`product-architecture-expert`，路径：[product-architecture-expert](./product-architecture-expert) | 用户、主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
 | 支付、资金账户、支付账本、清结算、对账、原支付退款、通道、卡组织、ACH、VCC、跨境和支付监管产品规则 | 支付专家，ID：`payment-expert`，路径：[payment-expert](./payment-expert)；本机安装已授权，`R-002` 禁止 Git push、团队共享/同步与公开发布 | 主体、法域、资金归属、原事实、轨道/通道、规则来源、验收 Owner | 不替代法务合规、会计政策、工程实现或生产准入 |
-| 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可同步 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
+| 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可安装、同步、团队共享或公开发布 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 正式报告、制度、手册、研究说明、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、法律、合规或考据结论 |
@@ -324,7 +325,17 @@ git diff --check
 
 正式同步后运行 `scripts/validate-installed-skills.sh`。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
 
-`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。跨 Skill 的 baseline/candidate 对照使用离线行为评测入口；它不调用 Agent 或网络，只准备同题任务、校验同一 runner/model 的成对回答、分离盲评材料与映射密钥，并根据独立评分执行准出门禁：
+`scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。默认检查项目目录；需要核对指定目录时，显式传入来源和路径，递归报告重复 Skill ID、完全重复的 `description` 与无效 metadata，指向同一真实目录的软链接只记为 alias。语义相似不做词法自动裁决；`fixtures/skill-eval/prompt-cases.json` 中同一 `competition_group` 的真实请求只声明并静态校验唯一触发 Owner 和竞争者 hard negative，真实触发行为仍需 live eval / smoke：
+
+```bash
+python3 scripts/evaluate-skills.py \
+  --catalog-root "codex=${CODEX_HOME:-$HOME/.codex}/skills" \
+  --catalog-root "agents=$HOME/.agents/skills"
+```
+
+上例覆盖用户 Skill 与 `.codex/skills/.system`，不覆盖插件缓存。需要供应链候选补扫时可追加 `--catalog-root "plugin-cache=${CODEX_HOME:-$HOME/.codex}/plugins/cache"`；缓存可能包含未启用或多版本插件，不得把扫描结果直接写成当前运行时启用清单。
+
+跨 Skill 的 baseline/candidate 对照使用离线行为评测入口；它不调用 Agent 或网络，只准备同题任务、校验同一 runner/model 的成对回答、分离盲评材料与映射密钥，并根据独立评分执行准出门禁：
 
 ```bash
 python3 scripts/evaluate-skill-behavior.py prepare --trials 3 --output /tmp/skill-behavior-plan.jsonl

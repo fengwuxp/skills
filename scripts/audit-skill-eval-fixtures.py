@@ -119,7 +119,21 @@ REQUIRED_WISE_CONTRACT_CASES = {
     "wise-agent-should-coordinate-peer-authority-contract-deliberation": {
         "query_terms": ["业务能力消费者", "资金能力提供方", "公共契约", "独立 Checker"],
         "expected_terms": [
-            "限时会商",
+            "确认讨论主题",
+            "decision_questions",
+            "Shared Information Matrix",
+            "fact / evidence / assumption / unknown / dependency",
+            "received / understood / disputed / missing",
+            "authority_ref 与版本合并",
+            "Owner、停止条件和 blocks_current_decision",
+            "blocks_current_decision=true 都强制 blocked",
+            "Information Readiness Gate",
+            "信息未充分交换",
+            "不得进入观点讨论或决策",
+            "topic_revision",
+            "information_revision",
+            "accepted_topic_revision",
+            "accepted_information_revision",
             "Contract Inquiry",
             "Provider Evidence Response",
             "Consumer Reconciliation",
@@ -138,6 +152,19 @@ REQUIRED_WISE_CONTRACT_CASES = {
             "一主、多权、独立证",
             "主持式星型拓扑",
             "Meeting Charter",
+            "decision_questions",
+            "Shared Information Matrix",
+            "fact / evidence / assumption / unknown / dependency",
+            "received / understood / disputed / missing",
+            "authority_ref 与版本合并",
+            "Owner、停止条件和 blocks_current_decision",
+            "blocks_current_decision=true 都强制 blocked",
+            "Information Readiness Gate",
+            "信息未充分交换",
+            "不得进入观点讨论或决策",
+            "topic_revision",
+            "information_revision",
+            "accepted_information_revision",
             "Position Card",
             "Conflict Matrix",
             "Meeting Resolution",
@@ -157,6 +184,28 @@ REQUIRED_WISE_CONTRACT_CASES = {
         "forbidden_dimensions": {"baseline_comparison", "variance_check"},
     },
 }
+REQUIRED_COMPETITION_GROUPS = {
+    "payment-product-owner": {
+        "skills": {"payment-expert", "payment-funds-review"},
+        "expected_skill": "payment-expert",
+    },
+    "product-prd-owner": {
+        "skills": {
+            "document-authoring",
+            "product-architecture-expert",
+            "ui-design-expert",
+        },
+        "expected_skill": "product-architecture-expert",
+    },
+    "spring-fix-owner": {
+        "skills": {
+            "java-service-code-generator",
+            "senior-software-architect",
+            "wind-coding-conventions",
+        },
+        "expected_skill": "senior-software-architect",
+    },
+}
 
 
 def load_fixture(path: Path = FIXTURE) -> dict[str, Any]:
@@ -168,25 +217,46 @@ def has_skill_mention(skill: str, query: str) -> bool:
     return any(term.casefold() in folded for term in SKILL_MENTIONS[skill])
 
 
-def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
-    failures: list[str] = []
+def is_non_blank_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
 
-    if data.get("version") != 1:
-        failures.append(f"{label}: version must be 1")
+
+def audit_data(data: Any, *, label: str) -> list[str]:
+    failures: list[str] = []
+    if not isinstance(data, dict):
+        return [f"{label}: root must be an object"]
+
+    version = data.get("version")
+    if type(version) is not int or version != 1:
+        failures.append(f"{label}: version must be integer 1")
 
     source = data.get("source")
     if not isinstance(source, dict):
         failures.append(f"{label}: missing source object")
     else:
         for field in sorted(SOURCE_FIELDS):
-            if not str(source.get(field, "")).strip():
-                failures.append(f"{label}: source missing {field}")
+            if not is_non_blank_string(source.get(field)):
+                failures.append(f"{label}: source {field} must be a non-blank string")
         if source.get("read_status") != "title_author_time_body_read":
             failures.append(f"{label}: source read_status must be title_author_time_body_read")
-        if "mp.weixin.qq.com" in str(source.get("url", "")) and "browser" not in str(source.get("read_method", "")).casefold():
+        if (
+            isinstance(source.get("url"), str)
+            and "mp.weixin.qq.com" in source["url"]
+            and (
+                not isinstance(source.get("read_method"), str)
+                or "browser" not in source["read_method"].casefold()
+            )
+        ):
             failures.append(f"{label}: WeChat source must record browser-based reading")
 
-    dimensions = set(data.get("evaluation_dimensions", []))
+    raw_dimensions = data.get("evaluation_dimensions")
+    if not isinstance(raw_dimensions, list) or not all(
+        isinstance(item, str) for item in raw_dimensions
+    ):
+        failures.append(f"{label}: evaluation_dimensions must be an array of strings")
+        dimensions: set[str] = set()
+    else:
+        dimensions = set(raw_dimensions)
     missing_dimensions = REQUIRED_DIMENSIONS - dimensions
     if missing_dimensions:
         failures.append(f"{label}: missing evaluation dimensions {sorted(missing_dimensions)}")
@@ -198,33 +268,37 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
 
     seen_ids: set[str] = set()
     cases_by_id: dict[str, dict[str, Any]] = {}
+    competition_groups: dict[str, list[dict[str, Any]]] = {}
     used_dimensions: set[str] = set()
     by_skill = {
         skill: {"positive": 0, "negative": 0, "hard_negative": 0, "positive_without_name": 0}
         for skill in SKILLS
     }
-
     for index, case in enumerate(cases):
         case_label = f"{label}:cases[{index}]"
         if not isinstance(case, dict):
             failures.append(f"{case_label}: case must be an object")
             continue
 
-        case_id = str(case.get("id", "")).strip()
+        raw_case_id = case.get("id")
+        case_id = raw_case_id.strip() if isinstance(raw_case_id, str) else ""
         if not case_id:
-            failures.append(f"{case_label}: missing id")
+            failures.append(f"{case_label}: id must be a non-blank string")
         elif case_id in seen_ids:
             failures.append(f"{case_label}: duplicate id {case_id}")
-        seen_ids.add(case_id)
         if case_id:
+            seen_ids.add(case_id)
             cases_by_id.setdefault(case_id, case)
 
         skill = case.get("skill")
-        if skill not in SKILLS:
+        if not is_non_blank_string(skill) or skill not in SKILLS:
             failures.append(f"{case_label}: unknown skill {skill!r}")
             continue
 
-        query = str(case.get("query", "")).strip()
+        raw_query = case.get("query")
+        query = raw_query.strip() if isinstance(raw_query, str) else ""
+        if not query:
+            failures.append(f"{case_label}: query must be a non-blank string")
         if len(query) < 24:
             failures.append(f"{case_label}: query is too short to be realistic")
         if any(term in query.casefold() for term in TRIVIAL_PROMPT_TERMS):
@@ -237,8 +311,27 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
         if not isinstance(should_trigger, bool):
             failures.append(f"{case_label}: should_trigger must be boolean")
             continue
+        if not isinstance(case.get("hard_negative"), bool):
+            failures.append(f"{case_label}: hard_negative must be boolean")
+        if not is_non_blank_string(case.get("difficulty")):
+            failures.append(f"{case_label}: difficulty must be a non-blank string")
 
-        case_dimensions = set(case.get("dimensions", []))
+        raw_competition_group = case.get("competition_group")
+        if raw_competition_group is not None:
+            if not isinstance(raw_competition_group, str) or not raw_competition_group.strip():
+                failures.append(f"{case_label}: competition_group must be a non-blank string")
+            else:
+                competition_group = raw_competition_group.strip()
+                competition_groups.setdefault(competition_group, []).append(case)
+
+        raw_case_dimensions = case.get("dimensions")
+        if not isinstance(raw_case_dimensions, list) or not all(
+            isinstance(item, str) for item in raw_case_dimensions
+        ):
+            failures.append(f"{case_label}: dimensions must be an array of strings")
+            case_dimensions: set[str] = set()
+        else:
+            case_dimensions = set(raw_case_dimensions)
         if not case_dimensions:
             failures.append(f"{case_label}: dimensions must be non-empty")
         if not case_dimensions <= REQUIRED_DIMENSIONS:
@@ -249,17 +342,18 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
             by_skill[skill]["positive"] += 1
             if not has_skill_mention(skill, query):
                 by_skill[skill]["positive_without_name"] += 1
-            if not str(case.get("expected_handling", "")).strip():
-                failures.append(f"{case_label}: positive case missing expected_handling")
+            if not is_non_blank_string(case.get("expected_handling")):
+                failures.append(f"{case_label}: expected_handling must be a non-blank string")
         else:
             by_skill[skill]["negative"] += 1
             if case.get("hard_negative") is True:
                 by_skill[skill]["hard_negative"] += 1
-            if not str(case.get("negative_reason", "")).strip():
-                failures.append(f"{case_label}: negative case missing negative_reason")
+            if not is_non_blank_string(case.get("negative_reason")):
+                failures.append(f"{case_label}: negative_reason must be a non-blank string")
             preferred = case.get("preferred_skill")
-            if preferred is not None and preferred not in SKILLS and preferred != "none":
-                failures.append(f"{case_label}: preferred_skill must be a known skill or none")
+            if preferred is not None:
+                if not is_non_blank_string(preferred) or (preferred not in SKILLS and preferred != "none"):
+                    failures.append(f"{case_label}: preferred_skill must be a known skill or none")
 
     for skill, counts in sorted(by_skill.items()):
         if counts["positive"] < 2:
@@ -274,6 +368,51 @@ def audit_data(data: dict[str, Any], *, label: str) -> list[str]:
     missing_used_dimensions = REQUIRED_DIMENSIONS - used_dimensions
     if missing_used_dimensions:
         failures.append(f"{label}: no cases exercise dimensions {sorted(missing_used_dimensions)}")
+
+    for group_id, group_cases in sorted(competition_groups.items()):
+        group_label = f"{label}: competition group {group_id}"
+        if len(group_cases) < 2:
+            failures.append(f"{group_label} needs at least 2 candidate skills")
+        queries = {str(case.get("query", "")).strip() for case in group_cases}
+        if len(queries) != 1:
+            failures.append(f"{group_label} must reuse the exact same query")
+        skills = [str(case.get("skill", "")) for case in group_cases]
+        if len(skills) != len(set(skills)):
+            failures.append(f"{group_label} contains duplicate candidate skills")
+        winners = [case for case in group_cases if case.get("should_trigger") is True]
+        if len(winners) != 1:
+            failures.append(f"{group_label} must have exactly one triggering owner")
+            continue
+        if winners[0].get("hard_negative") is not False:
+            failures.append(f"{group_label}: triggering owner must not be a hard negative")
+        expected_skill = str(winners[0].get("skill", ""))
+        for case in group_cases:
+            if case is winners[0]:
+                continue
+            if case.get("hard_negative") is not True:
+                failures.append(
+                    f"{group_label}: {case.get('skill')} competitor must be a hard negative"
+                )
+            if case.get("preferred_skill") != expected_skill:
+                failures.append(
+                    f"{group_label}: {case.get('skill')} must prefer {expected_skill}"
+                )
+
+    for group_id, contract in REQUIRED_COMPETITION_GROUPS.items():
+        group_cases = competition_groups.get(group_id)
+        if not group_cases:
+            failures.append(f"{label}: missing required competition group {group_id}")
+            continue
+        skills = {str(case.get("skill", "")) for case in group_cases}
+        if skills != contract["skills"]:
+            failures.append(
+                f"{label}: competition group {group_id} must cover {sorted(contract['skills'])}"
+            )
+        winners = [case for case in group_cases if case.get("should_trigger") is True]
+        if len(winners) == 1 and winners[0].get("skill") != contract["expected_skill"]:
+            failures.append(
+                f"{label}: competition group {group_id} owner must be {contract['expected_skill']}"
+            )
 
     for case_id, query_terms in REQUIRED_PAYMENT_HARD_NEGATIVES.items():
         case = cases_by_id.get(case_id)
@@ -351,12 +490,22 @@ def run_self_test() -> None:
     if has_skill_mention("wise-agent", "请做普通代码 CR，并给出源码证据"):
         raise SystemExit("self-test failed: ordinary task intent was treated as an explicit alias")
 
+    expected = audit_data([], label="invalid-root-type")
+    if not any("root must be an object" in item for item in expected):
+        raise SystemExit("self-test failed: non-object root was accepted")
+
     valid = load_fixture()
     invalid = deepcopy(valid)
     invalid["source"]["read_status"] = "title_only"
     expected = audit_data(invalid, label="invalid-read-status")
     if not any("read_status" in item for item in expected):
         raise SystemExit("self-test failed: missing read_status failure")
+
+    invalid = deepcopy(valid)
+    invalid["source"]["title"] = []
+    expected = audit_data(invalid, label="invalid-source-type")
+    if not any("source title must be a non-blank string" in item for item in expected):
+        raise SystemExit("self-test failed: non-string source metadata was accepted")
 
     invalid = deepcopy(valid)
     invalid["cases"][0]["skill"] = "unknown-skill"
@@ -384,6 +533,113 @@ def run_self_test() -> None:
     expected = audit_data(invalid, label="invalid-sensitive")
     if not any("sensitive" in item for item in expected):
         raise SystemExit("self-test failed: missing sensitive data failure")
+
+    invalid = deepcopy(valid)
+    invalid["cases"][0]["query"] = ["这不是字符串，即使数组内容足够长也必须拒绝"]
+    expected = audit_data(invalid, label="invalid-query-type")
+    if not any("query must be a non-blank string" in item for item in expected):
+        raise SystemExit("self-test failed: non-string query was accepted")
+
+    for field, bad_value, expected_term in (
+        ("id", ["not-a-string"], "id must be a non-blank string"),
+        ("skill", ["not-a-string"], "unknown skill"),
+        ("hard_negative", "false", "hard_negative must be boolean"),
+        ("difficulty", [], "difficulty must be a non-blank string"),
+        ("expected_handling", [], "expected_handling must be a non-blank string"),
+    ):
+        invalid = deepcopy(valid)
+        invalid["cases"][0][field] = bad_value
+        expected = audit_data(invalid, label=f"invalid-{field}-type")
+        if not any(expected_term in item for item in expected):
+            raise SystemExit(f"self-test failed: invalid {field} type was accepted")
+
+    for field, expected_term in (
+        ("negative_reason", "negative_reason must be a non-blank string"),
+        ("preferred_skill", "preferred_skill must be a known skill or none"),
+    ):
+        invalid = deepcopy(valid)
+        negative = next(case for case in invalid["cases"] if case.get("should_trigger") is False)
+        negative[field] = []
+        expected = audit_data(invalid, label=f"invalid-{field}-type")
+        if not any(expected_term in item for item in expected):
+            raise SystemExit(f"self-test failed: invalid {field} type was accepted")
+
+    for invalid_version in (True, 1.0, "1"):
+        invalid = deepcopy(valid)
+        invalid["version"] = invalid_version
+        expected = audit_data(invalid, label="invalid-version-type")
+        if not any("version must be integer 1" in item for item in expected):
+            raise SystemExit("self-test failed: non-integer version was accepted")
+
+    invalid = deepcopy(valid)
+    invalid["evaluation_dimensions"] = None
+    expected = audit_data(invalid, label="invalid-evaluation-dimensions-type")
+    if not any("evaluation_dimensions must be an array" in item for item in expected):
+        raise SystemExit("self-test failed: invalid evaluation_dimensions type was accepted")
+
+    invalid = deepcopy(valid)
+    invalid["cases"][0]["dimensions"] = None
+    expected = audit_data(invalid, label="invalid-case-dimensions-type")
+    if not any("dimensions must be an array" in item for item in expected):
+        raise SystemExit("self-test failed: invalid case dimensions type was accepted")
+
+    invalid = deepcopy(valid)
+    competition_query = "请设计跨境卡支付的授权、清算、退款和对账规则，不做源码实现或独立准出审查。"
+    invalid["cases"].extend(
+        [
+            {
+                "id": "self-test-competition-payment-product",
+                "skill": "payment-expert",
+                "query": competition_query,
+                "should_trigger": True,
+                "difficulty": "edge",
+                "hard_negative": False,
+                "competition_group": "self-test-payment-product-owner",
+                "dimensions": ["trigger_accuracy"],
+                "expected_handling": "由支付专家负责支付产品语义设计。",
+            },
+            {
+                "id": "self-test-competition-payment-review",
+                "skill": "payment-funds-review",
+                "query": competition_query,
+                "should_trigger": True,
+                "difficulty": "edge",
+                "hard_negative": False,
+                "competition_group": "self-test-payment-product-owner",
+                "dimensions": ["trigger_accuracy"],
+                "expected_handling": "由支付资金审查负责独立准出。",
+            },
+        ]
+    )
+    expected = audit_data(invalid, label="invalid-competition-group")
+    if not any("competition group" in item for item in expected):
+        raise SystemExit("self-test failed: missing competition-group failure")
+
+    invalid = deepcopy(valid)
+    winner = next(
+        case
+        for case in invalid["cases"]
+        if case.get("competition_group") == "payment-product-owner"
+        and case.get("should_trigger") is True
+    )
+    winner["hard_negative"] = True
+    expected = audit_data(invalid, label="invalid-competition-winner")
+    if not any("triggering owner must not be a hard negative" in item for item in expected):
+        raise SystemExit("self-test failed: hard-negative competition winner was accepted")
+
+    invalid = deepcopy(valid)
+    missing_group = next(iter(REQUIRED_COMPETITION_GROUPS))
+    invalid["cases"] = [
+        case
+        for case in invalid["cases"]
+        if case.get("competition_group") != missing_group
+    ]
+    expected = audit_data(invalid, label="missing-competition-group")
+    if not any(
+        f"missing required competition group {missing_group}" in item
+        for item in expected
+    ):
+        raise SystemExit("self-test failed: missing required competition-group failure")
 
     invalid = deepcopy(valid)
     invalid["cases"] = [

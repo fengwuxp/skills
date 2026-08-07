@@ -65,7 +65,7 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind Java Service
 - 本仓库维护时，`scripts/verify_fixtures.py` 还必须覆盖关键生成文件 golden hash、Java 关键字 / 保留字 / 受限标识符命名净化，以及负向路径：已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名。
 - Java 类或字段表格输入如果生成 DDL 草案，必须提示用户该 DDL 是推断结果，需要 DBA/架构师确认。
 - 检查 Entity、Request、Query、Service、ServiceImpl、Converter 是否符合 `references/code-generation-rules.md`，并用 `wind-coding-conventions` 做生成后规则审查；源码级 CR 交回 `senior-software-architect`，重点确认 Entity 不外露、服务接口不透传、MapStruct 不夹带业务逻辑。
-- 如果写入真实项目模块，条件允许时运行受影响模块的定向 Maven 编译或测试。
+- 写入真实项目模块必须使用目标项目实际构建工具（Maven / Gradle 等）运行受影响模块的定向编译或测试；未能执行时状态只能是 `PENDING`，不得宣称生成代码已可交付或生产可用。
 - 最终向用户报告生成/修改的文件、关键假设和剩余风险；本仓库 Git 操作默认由用户执行。
 
 生成后交接卡至少包含：

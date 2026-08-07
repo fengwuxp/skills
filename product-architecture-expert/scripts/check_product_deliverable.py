@@ -112,6 +112,7 @@ IMPLEMENTATION_LANGUAGE_TERMS = (
     "Kafka",
     "Redis",
 )
+VALUED_GROUP_KINDS = {"business-architecture", "product-review"}
 
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "business-architecture": (
@@ -279,6 +280,39 @@ def contains_term(text: str, term: str) -> bool:
     return term.casefold() in text.casefold()
 
 
+def valued_group_hits(kind: str, group: RequiredGroup, text: str) -> int:
+    aliases = [alias.casefold() for alias in group.aliases]
+    all_aliases = sorted(
+        {alias.casefold() for candidate in CHECKS[kind] for alias in candidate.aliases},
+        key=len,
+        reverse=True,
+    )
+    valued: set[str] = set()
+    for clause in re.split(r"[。；;\n|]", text):
+        normalized = normalize(clause)
+        hits = [alias for alias in aliases if alias in normalized]
+        if not hits:
+            continue
+        residue = normalized
+        for alias in all_aliases:
+            residue = residue.replace(alias, "")
+        if len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", residue)) >= 2:
+            valued.update(hits)
+    return len(valued)
+
+
+def is_keyword_shell(kind: str, text: str) -> bool:
+    residue = normalize(text)
+    for alias in sorted(
+        {alias.casefold() for group in CHECKS[kind] for alias in group.aliases},
+        key=len,
+        reverse=True,
+    ):
+        residue = residue.replace(alias, "")
+    meaningful = re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", residue)
+    return len(meaningful) < len(CHECKS[kind]) * 2
+
+
 def warning_groups(kind: str, text: str) -> list[str]:
     if kind != "prd":
         return []
@@ -299,6 +333,10 @@ def missing_groups(kind: str, text: str) -> list[str]:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+        elif kind in VALUED_GROUP_KINDS and valued_group_hits(kind, group, text) < group.min_hits:
+            missing.append(f"unvalued_{group.name}")
+    if kind in VALUED_GROUP_KINDS and is_keyword_shell(kind, text):
+        missing.append("keyword_shell")
     if kind == "diagram-brief":
         for label, name in (("业务锚点", "business_anchor"), ("类型语义", "type_semantics")):
             if not has_meaningful_labeled_value(text, label):
@@ -344,6 +382,10 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    for kind in VALUED_GROUP_KINDS:
+        stuffed = " ".join(alias for group in CHECKS[kind] for alias in group.aliases) + " 内容完整"
+        if not missing_groups(kind, stuffed):
+            failures.append(f"{kind}: one valued clause supplied unrelated groups")
     business_architecture_diagram = (
         "图形目标：判断跨境支付哪些能力值得投资；目标读者：业务负责人；架构类型：业务架构；目标态；视图层级：业务域；图形类型：能力地图。"
         "业务锚点：决定跨境支付能力投资次序；类型语义：业务能力、价值流、业务结果、能力 owner 和投资取舍。"

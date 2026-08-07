@@ -13,6 +13,10 @@ FIXTURES = ROOT / "fixtures"
 CASES = (
     ("prd", FIXTURES / "prd-valid.md", True),
     ("prd", FIXTURES / "prd-invalid.md", False),
+    ("business-architecture", FIXTURES / "business-architecture-valid.md", True),
+    ("business-architecture", FIXTURES / "business-architecture-invalid.md", False),
+    ("product-review", FIXTURES / "product-review-valid.md", True),
+    ("product-review", FIXTURES / "product-review-invalid.md", False),
 )
 
 

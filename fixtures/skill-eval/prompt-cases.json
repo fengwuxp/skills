@@ -947,7 +947,7 @@
       }
     },
     {
-      "id": "wise-agent-should-install-mattpocock-grill-me-v1-1",
+      "id": "wise-agent-should-reconcile-upstream-grill-me-request",
       "skill": "wise-agent",
       "query": "$wise-agent 把本地旧 grill-me 和 grilling 移除，从 Mattpocock 最新版本重新安装 grill-me，并调整受影响的 AI Native 路由、source-map、fixture 和 validator。",
       "should_trigger": true,
@@ -958,7 +958,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入 Matt Pocock skills 安装与知止者知识回流路径；读取 superpowers-skill-library 和 source-map，并按 skill-installer 边界执行；核验 GitHub tags 最新发布为 v1.1.0，移除旧本地 `grill-me`，移除旧本地 `grilling` 后只安装 `grill-me`，`grill-me` 是唯一入口，废弃本地 `grilling`；复装或更新后运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh` 或 `scripts/validate-grill-me-install.py` 做安装层校验，未通过不得宣称完成；不安装全仓库，不运行 npm、package scripts、Claude plugin、Trellis 或 hooks；同步把可吸收方法更新为 Facts / Decisions 分流、Facts 自查、Decisions 等 owner、未达成 shared understanding 不执行；更新 source-map、superpowers-skill-library、fixture 和 validator，保持 `grill-me` 不变成知止者的并列流程。"
+      "expected_handling": "进入外部 Skill 请求与项目权威对账路径；读取 grill-me source-map，核验上游当前版本，并指出用户所称‘本地旧 grill-me’与本项目自有独立实现及主动分歧的事实冲突。把上游内容评估、项目能力替换和安装授权分开，先形成退役项目自有权威的影响与迁移决策；若 Owner 尚未在知悉差异后确认退役，只追问这一关键决策，不先删除或重装；若 Owner 明确确认，则按已授权的删除和安装范围推进，但不恢复 `/grilling` alias、不安装上游全仓库，也不运行 npm、package scripts、Claude plugin、Trellis 或 hooks。Git、同步和发布仍分别授权，不因删除或安装请求自动获得。"
     },
     {
       "id": "wise-agent-should-wisdom-lens-loop-scheduling",
@@ -3377,7 +3377,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "按一主两权一证处理：知止者持有总 Goal 和综合结论，业务能力消费者拥有场景与业务语义，资金能力提供方拥有公共能力契约与实现事实，独立 Checker 负责准出。边界未定时只做限时会商，先各自形成事实与疑问，再讨论差异；随后冻结带 inquiry_id、双方 revision、权威指针、非目标、证据要求和失效条件的 Contract Inquiry。提供方回传含 response_revision、evidence_fingerprint 和可选 supersedes 的 Provider Evidence Response，逐项标记 supported / conditional / gap / out_of_scope；消费者用 Consumer Reconciliation 回传 confirmed / conflict / reopen / stale。证据变化时旧响应 stale，新响应版本化且不得伪造基线变化；确认并通过 Checker 后转为低交互能力供给。这是场景路由，不新增控制机制、Skill、协议依赖或执行授权。"
+      "expected_handling": "按一主两权一证处理：知止者持有总 Goal 和综合结论，业务能力消费者拥有场景与业务语义，资金能力提供方拥有公共能力契约与实现事实，独立 Checker 负责准出。先确认讨论主题、decision_questions、非目标、术语和事实基线版本，再建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方标记 received / understood / disputed / missing；重复信息按 authority_ref 与版本合并，缺口绑定 Owner、停止条件和 blocks_current_decision，任何未解决 blocks_current_decision=true 都强制 blocked。Information Readiness Gate 未通过即说明信息未充分交换，不得进入观点讨论或决策；通过后双方才基于同一 topic_revision 和 information_revision 独立形成方案。随后冻结带 inquiry_id、双方 revision、权威指针、topic_revision、information_revision、证据要求和失效条件的 Contract Inquiry。提供方回传绑定 topic_revision、information_revision、response_revision、evidence_fingerprint 和可选 supersedes 的 Provider Evidence Response，逐项标记 supported / conditional / gap / out_of_scope；消费者用 Consumer Reconciliation 接受 accepted_topic_revision 与 accepted_information_revision，并回传 confirmed / conflict / reopen / stale。主题、信息、权威或证据变化时旧响应 stale，新响应版本化且不得伪造基线变化；确认并通过 Checker 后转为低交互能力供给。这是场景路由，不新增控制机制、Skill、协议依赖或执行授权。"
     },
     {
       "id": "wise-agent-should-reject-permanent-peer-chat",
@@ -3403,7 +3403,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "先过多方会商准入：只有三个及以上独立权威围绕同一共享决策、且不能拆成独立双边议题时才进入；可拆分内容回到双边会商或 Worker 并行。按一主、多权、独立证处理：知止者以主持式星型拓扑持有总 Goal，各参与方只维护自己的权威事实与版本，独立 Checker 读取原始证据和最终决议。会前冻结 Meeting Charter，各方独立提交 Position Card，主持者只对差异生成 Conflict Matrix，Owner 逐项裁决；Meeting Resolution 绑定 accepted_authority_revisions、resolution_revision、evidence_fingerprint、可选 supersedes、行动项与 Checker。证据变化时旧决议 stale，新决议版本化；共享消息流和会议共识不是权威事实，决议通过 Checker 后退场，不新增群聊模式、控制机制或执行授权。"
+      "expected_handling": "先过多方会商准入：只有三个及以上独立权威围绕同一共享决策、且不能拆成独立双边议题时才进入；可拆分内容回到双边会商或 Worker 并行。按一主、多权、独立证处理：知止者以主持式星型拓扑持有总 Goal，各参与方只维护自己的权威事实与版本，独立 Checker 读取原始证据和最终决议。会前先确认讨论主题、decision_questions、非目标、术语和事实基线版本，冻结 Meeting Charter；再建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方标记 received / understood / disputed / missing；重复信息按 authority_ref 与版本合并，缺口绑定 Owner、停止条件和 blocks_current_decision，任何未解决 blocks_current_decision=true 都强制 blocked。Information Readiness Gate 未通过即说明信息未充分交换，不得进入观点讨论或决策；通过后各方才基于同一 topic_revision 和 information_revision 独立提交 Position Card。主持者只对差异生成 Conflict Matrix，Owner 逐项裁决；Meeting Resolution 绑定 accepted_information_revision、accepted_authority_revisions、resolution_revision、evidence_fingerprint、可选 supersedes、行动项与 Checker。主题、信息矩阵、参与方权威或证据变化时旧矩阵、卡片与决议都 stale，新决议版本化；共享消息流和会议共识不是权威事实，决议通过 Checker 后退场，不新增群聊模式、控制机制或执行授权。"
     },
     {
       "id": "wise-agent-should-reject-free-form-group-chat",
@@ -3994,7 +3994,7 @@
     {
       "id": "codegen-should-java-class-input",
       "skill": "java-service-code-generator",
-      "query": "根据这个 Java Entity 类补齐 Request、Query、Converter、Service 和 ServiceImpl，包名按相邻模块推断。",
+      "query": "根据这个 Java Entity 类补齐 Request、Query、Converter、Service 和 ServiceImpl，包名按相邻模块推断。这是 Gradle 多模块项目；如果当前环境不能执行 Gradle，不要宣称代码已可交付。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -4003,7 +4003,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入 Java 类输入路径，先确认基础包名和模块唯一性，再生成可评审代码。"
+      "expected_handling": "进入 Java 类输入路径，先确认基础包名和模块唯一性，再生成可评审代码；写入真实模块后使用目标项目实际构建工具 Gradle 运行受影响模块的定向编译或测试。当前环境不能执行时状态保持 PENDING，报告未执行原因，不以生成器 fixture 或结构检查替代目标项目编译证据，也不宣称代码已可交付。"
     },
     {
       "id": "codegen-negative-ddl-review",
@@ -4309,6 +4309,123 @@
         "baseline_comparison"
       ],
       "negative_reason": "这是文化研究材料的正式成文任务，并明确排除界面和设计交付；由 document-authoring 主责，需要古籍证据时协同 hanzi-philology，不触发 UI 设计专家。"
+    },
+    {
+      "id": "competition-payment-product-owner-payment-expert",
+      "skill": "payment-expert",
+      "query": "请设计跨境卡支付的授权、清算、退款和对账规则，先定义参与主体、资金责任和验收标准；本轮不做源码实现，也不做独立准出审查。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "competition_group": "payment-product-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 payment-expert 持有支付产品语义，先定义参与主体、法域、资金责任、支付事实、异步状态、退款与对账规则和验收 Owner；不触发独立准出 Checker，也不进入源码实现。"
+    },
+    {
+      "id": "competition-payment-product-owner-funds-review",
+      "skill": "payment-funds-review",
+      "query": "请设计跨境卡支付的授权、清算、退款和对账规则，先定义参与主体、资金责任和验收标准；本轮不做源码实现，也不做独立准出审查。",
+      "should_trigger": false,
+      "preferred_skill": "payment-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "payment-product-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "用户要求设计支付产品语义，并明确排除独立准出审查；应由 payment-expert 负责，不触发 payment-funds-review。"
+    },
+    {
+      "id": "competition-product-prd-owner-product-architecture",
+      "skill": "product-architecture-expert",
+      "query": "请把用户访谈和现有后台页面整理成会员管理 PRD，重点定义主体、对象、状态、业务规则和验收标准；本轮不做页面交互设计，也不做正式报告排版。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "competition_group": "product-prd-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 product-architecture-expert 持有产品语义，基于访谈和现有页面梳理主体、对象、状态、规则、异常和验收；不转成 UI 设计或正式报告载体任务。"
+    },
+    {
+      "id": "competition-product-prd-owner-document-authoring",
+      "skill": "document-authoring",
+      "query": "请把用户访谈和现有后台页面整理成会员管理 PRD，重点定义主体、对象、状态、业务规则和验收标准；本轮不做页面交互设计，也不做正式报告排版。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "product-prd-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务核心是形成 PRD 产品语义，并明确排除正式报告排版；应由 product-architecture-expert 负责，不触发 document-authoring。"
+    },
+    {
+      "id": "competition-product-prd-owner-ui-design",
+      "skill": "ui-design-expert",
+      "query": "请把用户访谈和现有后台页面整理成会员管理 PRD，重点定义主体、对象、状态、业务规则和验收标准；本轮不做页面交互设计，也不做正式报告排版。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "product-prd-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务明确排除页面交互设计，现有页面只是产品事实输入；应由 product-architecture-expert 负责，不触发 ui-design-expert。"
+    },
+    {
+      "id": "competition-spring-fix-owner-architect",
+      "skill": "senior-software-architect",
+      "query": "请修复这个 Spring Service 的并发幂等缺陷并补 TDD；已有源码和接口，本轮不要生成脚手架，也不要只做编码规范检查。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "competition_group": "spring-fix-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 senior-software-architect 读取真实源码、调用方和失败证据，先用测试复现并修复并发幂等根因，再运行聚焦验证；不生成脚手架，也不把编码规范检查当成缺陷修复。"
+    },
+    {
+      "id": "competition-spring-fix-owner-conventions",
+      "skill": "wind-coding-conventions",
+      "query": "请修复这个 Spring Service 的并发幂等缺陷并补 TDD；已有源码和接口，本轮不要生成脚手架，也不要只做编码规范检查。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "spring-fix-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "用户要求源码缺陷修复和 TDD，并明确排除只做规范检查；应由 senior-software-architect 负责，不触发 wind-coding-conventions。"
+    },
+    {
+      "id": "competition-spring-fix-owner-generator",
+      "skill": "java-service-code-generator",
+      "query": "请修复这个 Spring Service 的并发幂等缺陷并补 TDD；已有源码和接口，本轮不要生成脚手架，也不要只做编码规范检查。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "spring-fix-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "已有源码且任务是缺陷修复和 TDD，并明确排除脚手架生成；应由 senior-software-architect 负责，不触发 java-service-code-generator。"
     }
   ]
 }

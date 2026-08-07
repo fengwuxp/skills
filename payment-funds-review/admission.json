@@ -1,6 +1,6 @@
 {
   "status": "candidate",
-  "updated_at": "2026-08-02",
+  "updated_at": "2026-08-07",
   "blockers": [
     {
       "id": "PFR-001",
@@ -16,6 +16,8 @@
     "baseline_weighted_scores": [4.6143, 4.25],
     "candidate_safety_scores": [5.0, 5.0],
     "max_candidate_weighted_delta": 0.1429,
-    "result": "passed"
+    "reproducible": false,
+    "missing_artifacts": ["responses", "blind_judgments", "judge_fingerprints"],
+    "result": "reported_not_reproducible"
   }
 }

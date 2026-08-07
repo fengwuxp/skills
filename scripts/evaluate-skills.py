@@ -83,6 +83,7 @@ def extract_frontmatter(text: str) -> tuple[dict[str, str], str]:
     frontmatter_text, body = parts[1], parts[2]
     data: dict[str, str] = {}
     current_key: str | None = None
+    current_style: str | None = None
     block_values: list[str] = []
     for raw_line in frontmatter_text.splitlines():
         line = raw_line.rstrip()
@@ -90,21 +91,150 @@ def extract_frontmatter(text: str) -> tuple[dict[str, str], str]:
             block_values.append(line.strip())
             continue
         if current_key:
-            data[current_key] = "\n".join(value for value in block_values if value).strip()
+            separator = " " if current_style == ">" else "\n"
+            data[current_key] = separator.join(value for value in block_values if value).strip()
             current_key = None
+            current_style = None
             block_values = []
         match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line)
         if not match:
             continue
         key, value = match.groups()
-        if value == "|":
+        value = strip_yaml_comment(value).strip()
+        if re.fullmatch(r"[|>][+-]?", value):
             current_key = key
+            current_style = value[0]
             block_values = []
         else:
-            data[key] = value.strip().strip("\"'")
+            data[key] = "" if is_yaml_non_string_scalar(value) else value.strip("\"'")
     if current_key:
-        data[current_key] = "\n".join(value for value in block_values if value).strip()
+        separator = " " if current_style == ">" else "\n"
+        data[current_key] = separator.join(value for value in block_values if value).strip()
     return data, body
+
+
+def strip_yaml_comment(value: str) -> str:
+    quote: str | None = None
+    escaped = False
+    for index, char in enumerate(value):
+        if escaped:
+            escaped = False
+            continue
+        if char == "\\" and quote == '"':
+            escaped = True
+            continue
+        if char in ("'", '"'):
+            if quote is None:
+                quote = char
+            elif quote == char:
+                quote = None
+            continue
+        if char == "#" and quote is None and (index == 0 or value[index - 1].isspace()):
+            return value[:index].rstrip()
+    return value
+
+
+def is_yaml_non_string_scalar(value: str) -> bool:
+    if value[:1] in ("'", '"'):
+        return False
+    folded = value.casefold()
+    return (
+        folded in {"~", "null", "true", "false", ".inf", "+.inf", "-.inf", ".nan"}
+        or bool(
+            re.fullmatch(
+                r"[-+]?(?:\d[\d_]*(?:\.\d[\d_]*)?|\.\d[\d_]+)(?:e[-+]?\d[\d_]*)?",
+                value,
+                re.IGNORECASE,
+            )
+        )
+        or bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}", value))
+        or (value.startswith("[") and value.endswith("]"))
+        or (value.startswith("{") and value.endswith("}"))
+    )
+
+
+def audit_skill_catalog(
+    roots: Sequence[tuple[str, Path]],
+) -> dict[str, Any]:
+    entries: list[dict[str, str]] = []
+    invalid_roots: list[dict[str, str]] = []
+    invalid_skills: list[dict[str, Any]] = []
+    for source, root in roots:
+        if not root.is_dir():
+            invalid_roots.append({"source": source, "path": str(root)})
+            continue
+        skill_files = set(root.rglob("SKILL.md"))
+        skill_files.update(root.glob("*/SKILL.md"))
+        for skill_file in sorted(skill_files):
+            frontmatter, _ = extract_frontmatter(read(skill_file))
+            name = frontmatter.get("name", "").strip()
+            description = re.sub(r"\s+", " ", frontmatter.get("description", "")).strip()
+            missing_fields = [
+                field
+                for field, value in (("name", name), ("description", description))
+                if not value
+            ]
+            if missing_fields:
+                invalid_skills.append(
+                    {
+                        "source": source,
+                        "path": str(skill_file.parent),
+                        "errors": [f"missing {field}" for field in missing_fields],
+                    }
+                )
+            entries.append(
+                {
+                    "name": name,
+                    "source": source,
+                    "path": str(skill_file.parent),
+                    "real_path": str(skill_file.parent.resolve()),
+                    "description": description,
+                }
+            )
+    entries.sort(key=lambda item: (item["source"], item["name"], item["path"]))
+
+    by_name: dict[str, list[dict[str, str]]] = {}
+    by_description: dict[str, list[dict[str, str]]] = {}
+    for entry in entries:
+        if entry["name"]:
+            by_name.setdefault(entry["name"], []).append(entry)
+        normalized_description = entry["description"].casefold()
+        if normalized_description:
+            by_description.setdefault(normalized_description, []).append(entry)
+
+    duplicate_skill_ids: dict[str, list[dict[str, str]]] = {}
+    aliases: dict[str, list[dict[str, str]]] = {}
+    for name, grouped in sorted(by_name.items()):
+        if len(grouped) < 2:
+            continue
+        if len({entry["real_path"] for entry in grouped}) == 1:
+            aliases[name] = grouped
+        else:
+            duplicate_skill_ids[name] = grouped
+    duplicate_descriptions = {
+        description: grouped
+        for description, grouped in sorted(by_description.items())
+        if len(grouped) > 1 and len({entry["name"] for entry in grouped}) > 1
+    }
+    status = (
+        "conflict"
+        if duplicate_skill_ids or duplicate_descriptions or invalid_roots or invalid_skills
+        else "clean"
+    )
+    return {
+        "status": status,
+        "sources": [
+            {"source": source, "path": str(root)}
+            for source, root in roots
+        ],
+        "entries": entries,
+        "duplicate_skill_ids": duplicate_skill_ids,
+        "aliases": aliases,
+        "duplicate_descriptions": duplicate_descriptions,
+        "invalid_roots": invalid_roots,
+        "invalid_skills": invalid_skills,
+        "note": "Exact duplicates are deterministic; semantic overlap is validated by competition fixtures.",
+    }
 
 
 def direct_reference_links(text: str) -> list[str]:
@@ -665,7 +795,9 @@ def evaluate_skill(skill_dir: Path, validate_text: str) -> SkillEvaluation:
     )
 
 
-def evaluate_all() -> dict[str, Any]:
+def evaluate_all(
+    catalog_roots: Sequence[tuple[str, Path]] | None = None,
+) -> dict[str, Any]:
     validate_text = read(ROOT / "scripts" / "validate.sh")
     evaluations = [
         evaluate_skill(ROOT / skill_dir, validate_text)
@@ -674,6 +806,7 @@ def evaluate_all() -> dict[str, Any]:
     overall = round(sum(item.score for item in evaluations) / len(evaluations))
     return {
         "overall_score": overall,
+        "catalog": audit_skill_catalog(catalog_roots or [("project", ROOT)]),
         "skills": [
             {
                 "name": item.name,
@@ -691,6 +824,24 @@ def evaluate_all() -> dict[str, Any]:
 def print_text(report: dict[str, Any]) -> None:
     print(f"Overall static skill score: {report['overall_score']}/100")
     print("Delivery gates are reported separately and are not included in the score.")
+    catalog = report["catalog"]
+    print(f"Catalog audit: {catalog['status']} ({len(catalog['entries'])} skills)")
+    for name, entries in catalog["duplicate_skill_ids"].items():
+        locations = ", ".join(f"{entry['source']}={entry['path']}" for entry in entries)
+        print(f"  - duplicate Skill ID {name}: {locations}")
+    for name, entries in catalog["aliases"].items():
+        locations = ", ".join(f"{entry['source']}={entry['path']}" for entry in entries)
+        print(f"  - Skill alias {name}: {locations}")
+    for entries in catalog["duplicate_descriptions"].values():
+        names = ", ".join(f"{entry['source']}:{entry['name']}" for entry in entries)
+        print(f"  - duplicate description: {names}")
+    for invalid in catalog["invalid_roots"]:
+        print(f"  - invalid catalog root {invalid['source']}={invalid['path']}")
+    for invalid in catalog["invalid_skills"]:
+        print(
+            f"  - invalid Skill metadata {invalid['source']}={invalid['path']}: "
+            + ", ".join(invalid["errors"])
+        )
     for item in report["skills"]:
         print(f"\n== {item['name']} ==")
         print(f"score: {item['score']}/100")
@@ -713,6 +864,8 @@ def print_text(report: dict[str, Any]) -> None:
 
 def run_self_test() -> None:
     report = evaluate_all()
+    if report["catalog"]["status"] != "clean":
+        raise SystemExit(f"project catalog conflicts: {report['catalog']}")
     compact_reference_score, _ = score_references(
         "sample", 1, 200, 1, [], [], 100
     )
@@ -807,13 +960,26 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true", help="print JSON report")
     parser.add_argument("--self-test", action="store_true", help="run deterministic score guard")
+    parser.add_argument(
+        "--catalog-root",
+        action="append",
+        default=[],
+        metavar="SOURCE=PATH",
+        help="audit an explicit Skill catalog root; defaults to the project source",
+    )
     args = parser.parse_args(argv)
 
     if args.self_test:
         run_self_test()
         return 0
 
-    report = evaluate_all()
+    catalog_roots: list[tuple[str, Path]] = []
+    for value in args.catalog_root:
+        source, separator, raw_path = value.partition("=")
+        if not separator or not source.strip() or not raw_path.strip():
+            parser.error("--catalog-root must use SOURCE=PATH")
+        catalog_roots.append((source.strip(), Path(raw_path).expanduser().resolve()))
+    report = evaluate_all(catalog_roots or [("project", ROOT)])
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     else:

@@ -32,7 +32,7 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
     "exegesis": (
         RequiredGroup("passage_and_edition", ("原文", "上下文", "篇章", "底本", "版本", "异文", "異文"), 3),
         RequiredGroup("textual_usage", ("传世文献", "傳世文獻", "同时代", "同時代", "平行用例", "语境", "語境"), 2),
-        RequiredGroup("traditional_glosses", ("尔雅", "爾雅", "说文", "說文", "注疏", "训诂", "訓詁"), 2),
+        RequiredGroup("traditional_glosses", ("传统训释", "傳統訓釋", "尔雅", "爾雅", "说文", "說文", "注疏", "训诂", "訓詁"), 2),
         RequiredGroup("phonology", ("音韵", "音韻", "读音", "讀音", "通假", "假借")),
         RequiredGroup("analysis_and_conflict", ("分析", "支持", "反证", "反證", "争议", "爭議", "异说", "異說"), 2),
         RequiredGroup("conclusion_status", ("结论等级", "結論等級", "材料可证", "材料可證", "传统训释", "傳統訓釋", "现代通说", "現代通說", "争议", "爭議", "待考"), 2),
@@ -57,7 +57,7 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
     ),
     "exegesis": (
         "原文：某句；上下文：前后两句；篇章：《国语》某篇；底本：四部丛刊；异文：另一版本作某。"
-        "传世文献：同时代平行用例；语境：作动词。《尔雅》和《说文》有不同训诂，旧注疏另说。"
+        "传世文献：同时代平行用例；语境：作动词。传统训释：《尔雅》和《说文》有不同训诂，旧注疏另说。"
         "音韵：采用某体系，可能通假。分析：支持甲说；反证：乙说解释异文。结论等级：争议，待考。",
         "原文：某句。《说文》说是这个意思，所以结论确定。",
     ),
@@ -125,7 +125,7 @@ PLACEHOLDER_PREFIXES = (
     "未填写",
     "未填寫",
 )
-FIELD_ASSIGNMENT = re.compile(r"(?:^|[。；;\n|])\s*(?:[-*]\s*)?([^：:]+)[：:]\s*([^。；;\n|]*)")
+FIELD_ASSIGNMENT = re.compile(r"(?:^|[。；;\n|])\s*(?:[-*]\s*)?([^：:。；;\n|]+)[：:]\s*([^。；;\n|]*)")
 NEGATED_EVIDENCE = re.compile(
     r"无需查|無需查|无须查|無須查|不必查|不需查|未查|尚未查|待查|待补|待補|"
     r"未知|不明|不存在|没有(?:材料|证据|记录|相关)?|沒有(?:材料|證據|記錄|相關)?|"
@@ -159,6 +159,39 @@ def has_placeholder_required_field(kind: str, text: str) -> bool:
     return False
 
 
+def uniquely_matches_group(
+    label: str,
+    group: RequiredGroup,
+    groups: tuple[RequiredGroup, ...],
+) -> bool:
+    normalized = normalize(label)
+    found = {
+        alias.casefold()
+        for candidate in groups
+        for alias in candidate.aliases
+        if alias.casefold() in normalized
+    }
+    own = {alias.casefold() for alias in group.aliases}
+    return bool(found & own) and found <= own
+
+
+def valued_hits(
+    group: RequiredGroup,
+    groups: tuple[RequiredGroup, ...],
+    text: str,
+) -> int:
+    aliases = tuple(alias.casefold() for alias in group.aliases)
+    valued: set[str] = set()
+    for field, value in FIELD_ASSIGNMENT.findall(text):
+        if not uniquely_matches_group(field, group, groups):
+            continue
+        if not normalize(value) or is_placeholder_value(value):
+            continue
+        content = normalize(f"{field} {value}")
+        valued.update(alias for alias in aliases if alias in content)
+    return len(valued)
+
+
 def without_negated_clauses(text: str, negation: re.Pattern[str]) -> str:
     clauses = re.split(r"[。；;\n|]", text)
     return " ".join(clause for clause in clauses if not negation.search(clause))
@@ -175,6 +208,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+        elif valued_hits(group, CHECKS[kind], text) < group.min_hits:
+            missing.append(f"unvalued_{group.name}")
     if has_placeholder_required_field(kind, text):
         missing.append("placeholder_required_fields")
     affirmative_claims = normalize(affirmative_claim_text(text))
@@ -218,6 +253,30 @@ def run_self_test() -> int:
     )
     if "placeholder_required_fields" not in missing_groups("character-form", placeholder_variant):
         failures.append("character-form: common placeholder variant unexpectedly passed")
+    keyword_only = "研究对象 所问层次 字形 出土材料 甲骨 合集号 时代 构形 辞例 传统训释 说文 现代研究 学者 支持 反证 结论等级 待考"
+    if not missing_groups("character-form", keyword_only):
+        failures.append("character-form: keyword-only evidence unexpectedly passed")
+    unrelated_values = keyword_only + "；备注：一；说明：二；附录：三；版本：四"
+    if not missing_groups("character-form", unrelated_values):
+        failures.append("character-form: unrelated labeled values bypassed structure guard")
+    partial_values = (
+        "研究对象：某字；所问层次：字形；出土材料：甲骨；合集号：123；时代：商；"
+        "构形 辞例 传统训释 说文 现代研究 学者 支持 反证 结论等级 待考"
+    )
+    if not missing_groups("character-form", partial_values):
+        failures.append("character-form: partially valued groups bypassed structure guard")
+    stuffed_value = (
+        "研究对象：某字；说明：所问层次 字形 出土材料 甲骨 合集号 时代 构形 辞例 "
+        "传统训释 说文 现代研究 学者 支持 反证 结论等级 待考"
+    )
+    if not missing_groups("character-form", stuffed_value):
+        failures.append("character-form: one valued field supplied unrelated groups")
+    stuffed_field = (
+        "研究对象所问层次字形出土材料甲骨合集号时代构形辞例传统训释说文现代研究"
+        "学者支持反证结论等级待考：形成完整证据卡并交人工复核"
+    )
+    if not missing_groups("character-form", stuffed_field):
+        failures.append("character-form: one compound field name supplied unrelated groups")
     safe_boundary = (
         "原文：某句；上下文：前后文；篇章：《国语》某篇；传世文献：本篇；语境：作动词；"
         "《尔雅》有一训；《说文》并非权威，不能据此说本义就是某义；读音：某；分析：甲说较优；"

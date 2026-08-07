@@ -225,5 +225,5 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - 检查 Entity 注解、字段类型、字段注释、`@Schema`、`@Column`、逻辑删除、租户、版本字段是否正确。
 - 检查 Request 校验是否符合创建/更新语义。
 - 先按 `wind-coding-conventions` 检查通用 Java 约规，并根据项目证据叠加 Wind 专项；再交给 `资深架构师` 做源码级 CR：检查公有参数、伪复用、无意义一行方法抽取、空指针处理以及 Lombok/MapStruct 使用边界。
-- 如果写入真实项目模块，条件允许时运行受影响模块的定向 Maven 编译或测试。
+- 写入真实项目模块必须使用目标项目实际构建工具（Maven / Gradle 等）运行受影响模块的定向编译或测试；未能执行时状态只能是 `PENDING`，不得宣称生成代码已可交付或生产可用。评审目录中的 golden hash 和结构检查只证明生成器稳定，不替代目标项目依赖下的编译证据。
 - 最终向用户报告生成/修改的文件、关键假设和剩余风险；本仓库 Git 操作默认由用户执行。

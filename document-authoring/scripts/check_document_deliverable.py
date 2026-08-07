@@ -71,7 +71,7 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "步骤：运行命令。",
     ),
     "research-note": (
-        "研究问题：解释术语变化；范围：指定材料。来源：原始文献；出处和版本已记录。"
+        "研究问题：解释术语变化；范围：指定材料。来源与版本：原始文献，出处已记录。"
         "事实：材料可证；推断：可能存在变化。分析：比较语境；争议：两种观点并存；反证已列出。"
         "结论：暂取通说；局限：材料不足；待考：新增材料；置信度：中。",
         "问题：解释术语。结论：采用常见说法。",
@@ -106,7 +106,11 @@ PLACEHOLDER_PREFIXES = (
     "未提供",
     "未填写",
 )
-FIELD_ASSIGNMENT = re.compile(r"(?:^|[。；;\n|])\s*(?:[-*]\s*)?([^：:]+)[：:]\s*([^。；;\n|]*)")
+FIELD_ASSIGNMENT = re.compile(r"(?:^|[。；;\n|])\s*(?:[-*]\s*)?([^：:。；;\n|]+)[：:]\s*([^。；;\n|]*)")
+MARKDOWN_SECTION = re.compile(r"(?ms)^#{1,6}\s+(.+?)\n(.*?)(?=^#{1,6}\s+|\Z)")
+ALL_ALIASES = tuple(
+    sorted({alias for groups in CHECKS.values() for group in groups for alias in group.aliases}, key=len, reverse=True)
+)
 
 
 def normalize(text: str) -> str:
@@ -127,6 +131,48 @@ def has_placeholder_required_field(kind: str, text: str) -> bool:
     return False
 
 
+def uniquely_matches_group(
+    label: str,
+    group: RequiredGroup,
+    groups: tuple[RequiredGroup, ...],
+) -> bool:
+    normalized = normalize(label)
+    found = {
+        alias.casefold()
+        for candidate in groups
+        for alias in candidate.aliases
+        if alias.casefold() in normalized
+    }
+    own = {alias.casefold() for alias in group.aliases}
+    return bool(found & own) and found <= own
+
+
+def valued_hits(
+    group: RequiredGroup,
+    groups: tuple[RequiredGroup, ...],
+    text: str,
+) -> int:
+    aliases = tuple(alias.casefold() for alias in group.aliases)
+    valued: set[str] = set()
+    for field, value in FIELD_ASSIGNMENT.findall(text):
+        if not uniquely_matches_group(field, group, groups):
+            continue
+        if is_placeholder_value(value) or len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", normalize(value))) < 2:
+            continue
+        content = normalize(f"{field} {value}")
+        valued.update(alias for alias in aliases if alias in content)
+    for heading, body in MARKDOWN_SECTION.findall(text):
+        if not uniquely_matches_group(heading, group, groups):
+            continue
+        residue = normalize(body)
+        for alias in ALL_ALIASES:
+            residue = residue.replace(alias.casefold(), "")
+        if len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", residue)) >= 8:
+            content = normalize(f"{heading} {body}")
+            valued.update(alias for alias in aliases if alias in content)
+    return len(valued)
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
@@ -134,6 +180,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
+        elif valued_hits(group, CHECKS[kind], text) < group.min_hits:
+            missing.append(f"unvalued_{group.name}")
     if re.search(r"\b(?:TBD|TODO)\b|待确认", text, re.IGNORECASE):
         if not any(term in normalized for term in ("owner", "负责人", "确认方")):
             missing.append("placeholder_owner")
@@ -170,6 +218,21 @@ def run_self_test() -> int:
     )
     if "placeholder_required_fields" not in missing_groups("report", placeholder_variant):
         failures.append("report: common placeholder variant unexpectedly passed")
+    keyword_only = "目标 读者 来源 事实 范围 结论 行动 负责人 风险 验证"
+    if not missing_groups("report", keyword_only):
+        failures.append("report: keyword-only structure unexpectedly passed")
+    unrelated_values = keyword_only + "；备注：有值；说明：有值"
+    if not missing_groups("report", unrelated_values):
+        failures.append("report: unrelated labeled values bypassed structure guard")
+    partial_values = "目标：形成交付；读者：项目 owner；来源 事实 范围 结论 行动 负责人 风险 验证"
+    if not missing_groups("report", partial_values):
+        failures.append("report: partially valued groups bypassed structure guard")
+    stuffed_value = "目标：形成交付，来源事实范围结论行动负责人风险验证；读者：项目 owner"
+    if not missing_groups("report", stuffed_value):
+        failures.append("report: one valued field supplied unrelated groups")
+    stuffed_field = "目标读者来源事实范围结论行动下一步负责人风险验证：形成正式报告并交由项目团队执行"
+    if not missing_groups("report", stuffed_field):
+        failures.append("report: one compound field name supplied unrelated groups")
     if failures:
         print("FAIL document deliverable self-test", file=sys.stderr)
         for failure in failures:
