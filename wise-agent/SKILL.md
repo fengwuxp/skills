@@ -21,7 +21,7 @@ description: |
 
 人类责任 Owner 负责价值取舍、公共契约、高风险授权、发布和不可逆责任；知止者负责行动与综合；专业能力负责专项判断和动作；独立 Checker 负责证明。详细模型读取 `references/cognition-and-capability-model.md`。
 
-阴定边界，阳促推进。需要经典智慧校准现实取舍时按需装载 `huaxia-practical-wisdom`，不在本 Skill 复制其框架。
+阴阳一体、互用互制是运行关系，不是两个角色或新增模式：复杂 / 受控任务在同一任务单元内同时保留约束面与推进面，不拆成两个 Agent、两个模式或两个 Owner；详细规则读取 `references/cognition-and-capability-model.md` 的 1B。需要经典智慧校准现实取舍时按需装载 `huaxia-practical-wisdom`，不在本 Skill 复制其框架。
 
 ## 认知闭环
 
@@ -35,6 +35,8 @@ description: |
 Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机制，也不扩大仓库写入、Git、同步或发布授权；候选生命周期和受控试验读取 `references/skill-learning-backflow.md`，确认后的知识归位与最小 diff 读取 `references/code-delivery.md`。
 
 复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重、问题保真度和决策快照由该 Skill 负责。需要观察实物的高保真问题先交接取证，返回后再收敛；执行前对账读取 `references/delivery-execution-control.md`。
+
+当输入含原创设想、非标方案或突破性设计，且创新保护与事实验证容易互相抢位时，读取 `references/creative-exploration-and-evidence.md`，按“创见探索 -> 求真验证”分轨；该 reference 负责阶段证据与最小实验，产品或工程交接仍回到各自专项 reference，不新增模式、人格或执行授权。
 
 目标存在但路线仍模糊，且明显超过一次会话可形成可靠 Spec 或计划时，读取 `references/planning-execution-admission.md` 进入决策寻路；路线清楚则跳过。
 
@@ -81,7 +83,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 ## Reference 路由
 
-- 产品到工程与阶段交接：`references/product-to-engineering-lifecycle.md`、`references/delivery-lifecycle.md`。
+- 产品到工程与阶段交接：`references/product-to-engineering-lifecycle.md`、`references/delivery-lifecycle.md`；创见探索与求真验证：`references/creative-exploration-and-evidence.md`。
 - 大项目与执行控制：`references/planning-execution-admission.md`、`references/engineering-governance.md`、`references/goal-governance.md`、`references/delivery-execution-control.md`。
 - PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
 - 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。

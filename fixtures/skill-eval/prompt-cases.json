@@ -1202,6 +1202,54 @@
       "expected_handling": "进入非标问题模式，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；输出非标问题处理包，覆盖问题主体、影响面、已知事实、关键不确定性、现有替代方案/绕行方式、研究/证据路径、候选方案、最小可逆实验、决策标准、owner/下一步和停止条件；产品侧缺口路由产品架构专家，工程侧缺口路由资深架构师，不能把无标准答案问题拆成机械执行清单。"
     },
     {
+      "id": "wise-agent-should-protect-original-idea-before-evidence-hardening",
+      "skill": "wise-agent",
+      "query": "知止者，结合华夏经世智慧评估一个还没有主流文献支持的原创产品设想：先保护原始意图、识别它挑战的默认前提，再设计可证伪的最小实验；不要因为不主流就否决，也不要把新颖直接当成正确。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "知止者把当前输入定位为探索期而非交付期，并按需装载华夏经世智慧；先正名保留原始意图，审时区分探索、决策和交付时位，权衡时不把主流共识、文献数量或模型置信表达当成真理，也不把新颖当成正确；创见探索输出原始命题、可能突破的默认前提、最强版本、替代解释、反例、关键未知和最小可逆实验，求真验证再回到一手证据、可证伪结果与独立复核；价值与原创性取舍由人类 Owner 决定，只有形成可验证结论后才进入产品上下文、Spec 或工程交付；这只是察辨谋行验化中的阶段路由，不新增模式、人格或执行授权。"
+    },
+    {
+      "id": "wise-agent-should-model-yinyang-as-mutual-use-control",
+      "skill": "wise-agent",
+      "query": "$wise-agent：按照阴阳一体、互用互制重构这套 Skills；阴不是单独的审查 Agent，阳也不是单独的执行 Agent，请说明两者如何在同一行动中互相成就、互相约束，并落到最小动作和验证证据。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "知止者保持一个行动主体，不把阴阳拆成两个 Agent、两个模式或两个 Owner；按需装载 huaxia-practical-wisdom，把阴落实为目标、事实、边界、权限、证据和止损，把阳落实为假设、取舍、动作、反馈和交付；阴阳一体、互用互制：阴为阳定向和收敛，阳为阴提供行动反馈和新证据，阴制阳防止越权、臆测和过度推进，阳制阴防止无限分析、规则堆积和以审代行；每个原子动作同时写清约束面与推进面，并在材料不足时停止或询问、目标清楚且边界满足时推进；经典镜片只校准取舍，不替代事实、测试、Checker、授权或发布审批，不新增 RSI Mode 或并列流程。"
+    },
+    {
+      "id": "wise-agent-should-reject-yinyang-agent-split",
+      "skill": "wise-agent",
+      "query": "$wise-agent：请把阴拆成一个只会审查和阻止的 Agent，把阳拆成一个只会执行和推进的 Agent，再让它们互相投票决定是否交付。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "识别这是把运行关系误写成多 Agent 拆分；保留知止者一个行动主体和一个目标契约，拒绝建立阴 Agent、阳 Agent、投票流程或第二 Owner；改为在同一任务单元内记录约束面与推进面，说明互用互制、材料不足时的停止 / 询问和证据满足后的推进；Checker 仍是独立验证主体，不因阴阳类比获得新的授权。",
+      "behavior_contract": {
+        "action_subject": "知止者只有一个行动主体；阴阳是同一任务的两面，不是两个 Agent",
+        "must_not": "不得新增阴 Agent、阳 Agent、投票流程、第二 Owner 或 RSI Mode"
+      }
+    },
+    {
       "id": "wise-agent-should-practical-coding-loop",
       "skill": "wise-agent",
       "query": "进入实际项目编码 Loop：这个 GSD Wave 里有一个明确 Task ID，需要在真实代码库持续推进，请给 Coding Loop Contract，包含写入范围、只读范围、失败测试或验收样例、TDD 顺序、验证命令、独立 Checker、状态回写位置、提交切片、回滚方式和停止条件。",

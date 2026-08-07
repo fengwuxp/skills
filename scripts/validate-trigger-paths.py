@@ -342,6 +342,7 @@ professional_skill_files = sorted(
 wise_agent_cognition_model = "wise-agent/references/cognition-and-capability-model.md"
 wise_agent_delivery_lifecycle = "wise-agent/references/delivery-lifecycle.md"
 wise_agent_product_to_engineering = "wise-agent/references/product-to-engineering-lifecycle.md"
+wise_agent_creative_exploration = "wise-agent/references/creative-exploration-and-evidence.md"
 wise_agent_prd_system_design_review = "wise-agent/references/prd-system-design-review.md"
 wise_agent_engineering_governance = "wise-agent/references/engineering-governance.md"
 wise_agent_planning_execution_admission = "wise-agent/references/planning-execution-admission.md"
@@ -4286,7 +4287,8 @@ check(
         [
             "混一总纲",
             "以真实交付为体，以证据闭环为用",
-            "阴定边界，阳促推进",
+            "阴阳双面按",
+            "cognition-and-capability-model.md",
             "随事取最小可验证路径",
             "体不清则不动",
             "用无证则不收",
@@ -4296,6 +4298,83 @@ check(
             "不把它们写成并列菜单",
         ],
     ),
+)
+check(
+    "wise agent treats yinyang as one action with mutual use and restraint",
+    has_all(
+        agents_rules,
+        [
+            "阴阳一体，互用互制",
+            "不拆成两个 Agent、两个模式或两个 Owner",
+            "约束面",
+            "推进面",
+        ],
+    )
+    and has_all(
+        wise_agent_skill,
+        [
+            "阴阳一体",
+            "互用互制",
+            "不拆成两个 Agent、两个模式或两个 Owner",
+            "约束面与推进面",
+        ],
+    )
+    and has_all(
+        wise_agent_cognition_model,
+        [
+            "## 1B. 阴阳一体、互用互制",
+            "阴为阳定向和收敛",
+            "阳为阴提供行动反馈和新证据",
+            "阴制阳",
+            "阳制阴",
+            "不能自证",
+        ],
+    )
+    and has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "阴阳双面按 `cognition-and-capability-model.md` 的 1B 执行",
+            "随事取最小可验证路径",
+        ],
+    )
+    and has_all(
+        huaxia_classical_lenses,
+        [
+            "阴阳一体、互用互制",
+            "边界为行动提供方向",
+            "行动为边界带来反馈",
+            "约束防止冒进",
+            "推进防止拖延",
+        ],
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-model-yinyang-as-mutual-use-control",
+    (
+        "一个行动主体",
+        "阴阳一体、互用互制",
+        "阴为阳定向和收敛",
+        "阳为阴提供行动反馈和新证据",
+        "阴制阳",
+        "阳制阴",
+        "约束面与推进面",
+        "不新增 RSI Mode",
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-reject-yinyang-agent-split",
+    (
+        "一个行动主体",
+        "拒绝建立阴 Agent、阳 Agent、投票流程或第二 Owner",
+        "约束面与推进面",
+        "互用互制",
+        "Checker 仍是独立验证主体",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-reject-yinyang-agent-split",
+    ("action_subject", "must_not"),
+    ("阴阳是同一任务的两面", "不得新增阴 Agent、阳 Agent、投票流程、第二 Owner 或 RSI Mode"),
 )
 check(
     "agent and skills keep one body, one coordinator, focused capabilities, and independent proof",
@@ -4440,6 +4519,38 @@ check(
             "知识表达门禁",
             "实际项目编码 Loop 契约",
             "不得让 Loop 在缺少失败测试 / 验收样例、写入范围、验证命令、独立 Checker 和状态回写位置时修改生产代码",
+        ],
+    ),
+)
+check(
+    "wise agent protects original ideas before evidence hardening",
+    has_all(
+        wise_agent_skill,
+        [
+            "创见探索",
+            "求真验证",
+            "不新增模式、人格或执行授权",
+        ],
+    )
+    and has_all(
+        wise_agent_creative_exploration,
+        [
+            "Round 0G：创见保护与求真分轨门禁",
+            "先护其意，后校其理",
+            "原始意图",
+            "不把主流共识、文献数量或模型置信表达当成真理",
+            "不把新颖当成正确",
+            "最小可逆实验",
+            "人类 Owner",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "AI正在扼杀人类的创造性",
+            "https://mp.weixin.qq.com/s/ExWGTCDLZiCH8MiBbp5yZg",
+            "创见保护",
+            "不把文章的宏观结论或“只统计频率”写成已证事实",
         ],
     ),
 )
@@ -5011,6 +5122,8 @@ check(
             "wise-agent-should-production-sdd-source-of-truth",
             "wise-agent-should-knowledge-expression-gate",
             "wise-agent-should-nonstandard-problem-mode",
+            "wise-agent-should-model-yinyang-as-mutual-use-control",
+            "wise-agent-should-reject-yinyang-agent-split",
             "wise-agent-should-practical-coding-loop",
             "wise-agent-should-feedback-loop-verification-cluster",
             "wise-agent-should-spec-template-practices",
@@ -13650,6 +13763,11 @@ scenario_fixtures: list[RouteFixture] = [
         routes={"wise-agent", "product-to-engineering-lifecycle.md", "engineering-governance.md", "product", "product-scenario-routing.md"},
     ),
     RouteFixture(
+        name="AI Native creative protection and wisdom lens",
+        prompt="知止者结合华夏经世智慧评估一个尚无主流文献支持的原创产品设想：先保护原始意图，识别挑战的默认前提，再做可证伪的最小实验；不要因为不主流就否决，也不要把新颖当成正确",
+        routes={"wise-agent", "creative-exploration-and-evidence.md", "huaxia-practical-wisdom", "source-map.md"},
+    ),
+    RouteFixture(
         name="AI Native development standards gate",
         prompt="AI Native 研发流程补需求 / 设计 / 编码标准门禁：系统需求或产品需求未确认时，不进入 SDD、测试、代码或 CAD；输出需求基线稳定性、需求条目质量、HLR/LLR 设计追踪、编码规则原因示例验证方式和防御式编程检查",
         routes={"wise-agent", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "spec-template-practices.md", "verification-review-release.md"},
@@ -14403,6 +14521,11 @@ negative_route_fixtures: list[RouteFixture] = [
         routes={"wise-agent"},
     ),
     RouteFixture(
+        name="wise agent pure engineering default assumption does not route creative product lane",
+        prompt="$wise-agent 对一个 Java Service 做纯工程架构 CR：当前实现挑战一个默认前提，只看源码、接口契约和测试，不扩展需求语义，也不进入产品或创见探索流程",
+        routes={"product-to-engineering-lifecycle.md", "creative-exploration-and-evidence.md"},
+    ),
+    RouteFixture(
         name="wise agent on product judgment action chain only",
         prompt="参考 pm-skills 把产品判断成流程：我们有访谈、工单、竞品、路线图、PRD 和发布材料，请用产品判断动作链判断现在做什么、为什么做、先不做什么、下一产物和 owner",
         routes={"wise-agent"},
@@ -14757,7 +14880,15 @@ def route_fixture(prompt: str) -> set[str]:
                     "source-map.md",
                 }
             )
-        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "业务架构规划", "业务能力地图", "战略到项目组合", "项目组合治理", "能力-项目-系统映射", "知识库回流", "需求分析", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "发布复盘", "增长实验", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物", "/office-hours", "/plan-ceo-review", "Office Hours", "CEO Review", "产品思考", "范围收敛", "MVP"]):
+        creative_exploration_terms = ["创见保护", "创见探索", "原创设想", "原创产品设想", "默认前提"]
+        creative_context_terms = ["原创产品设想", "产品创新", "产品原始意图"]
+        product_lifecycle_context_terms = ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务目标", "PRD", "Backlog", "客户访谈", "产品设计", "产品方案", "验收种子", "工程交接"]
+        if contains_any(prompt, creative_exploration_terms) and contains_any(prompt, creative_context_terms):
+            route.add("creative-exploration-and-evidence.md")
+        if contains_any(prompt, ["AI 原型/eval", "PRD-Lite", "产品上下文", "产品上下文包", "dogfooding", "业务", "业务目标", "PRD", "Backlog", "客户访谈", "产品架构专家", "产品专家", "业务架构规划", "业务能力地图", "战略到项目组合", "项目组合治理", "能力-项目-系统映射", "知识库回流", "需求分析", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "发布复盘", "增长实验", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "问题主体", "影响面", "关键不确定性", "候选方案", "最小可逆实验", "创见保护", "创见探索", "原创设想", "原创产品设想", "默认前提", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "产品 / 系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "原始需求", "用户问题", "第一性原理", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "边界坐标", "上下游分工", "产品设计", "方案确认", "验收种子", "验收标准", "交接物", "/office-hours", "/plan-ceo-review", "Office Hours", "CEO Review", "产品思考", "范围收敛", "MVP"]) and (
+            not contains_any(prompt, creative_exploration_terms)
+            or contains_any(prompt, product_lifecycle_context_terms)
+        ):
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "边界坐标", "需求 CR", "CR 需求", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "CEO Review", "Eng Review", "Design Review", "工程评审", "交互评审"]):
             route.add("prd-system-design-review.md")

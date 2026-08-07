@@ -623,6 +623,40 @@ raise SystemExit(0 if valid else 1)
 PY
 }
 
+assert_yinyang_contract() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "一个行动主体" "约束面" "推进面" "互用互制" "阴制阳" "阳制阴"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  python3 - "${file}" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding="utf-8").replace("`", "")
+surfaces = (
+    re.search(r"约束面[^。；\n]{0,180}(?:目标|事实)[^。；\n]{0,180}(?:证据|停止)", text)
+    and re.search(r"推进面[^。；\n]{0,180}(?:假设|最小动作)[^。；\n]{0,180}(?:反馈|下一步)", text)
+)
+active_split_patterns = (
+    r"(?<!不)(?<!不得)(?<!不能)(?<!禁止)(?<!拒绝)(?<!请勿)(?:建立|新增|拆成|分成)\s*(?:阴|阳) Agent",
+    r"(?<!不)(?<!不得)(?<!不能)(?<!禁止)(?<!拒绝)(?<!请勿)(?:阴|阳) Agent[^。；\n]{0,20}(?:负责|执行)",
+    r"让(?:阴|阳) Agent[^。；\n]{0,30}投票",
+)
+valid = surfaces and not any(re.search(pattern, text) for pattern in active_split_patterns)
+raise SystemExit(0 if valid else 1)
+PY
+}
+
+assert_yinyang_split_rejection() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  assert_yinyang_contract "${file}" || return 1
+  assert_any "${file}" "拒绝" "不得" "不能" "不应" || return 1
+  assert_any "${file}" "Checker" "独立验证" || return 1
+}
+
 assert_ui_reference_axes_direct() {
   local file="$1"
   [[ -s "${file}" ]] || return 1
@@ -762,6 +796,9 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-authority-evidence-reopen.txt" \
       "${sample_dir}/ocr-mode-dispatch.txt" \
       "${sample_dir}/bad-ocr-mode-dispatch.txt" \
+      "${sample_dir}/yinyang-contract.txt" \
+      "${sample_dir}/yinyang-split-rejection.txt" \
+      "${sample_dir}/bad-yinyang-split.txt" \
       "${sample_dir}/ui-reference-axes-direct.txt" \
       "${sample_dir}/bad-ui-reference-axes-direct.txt"
     rmdir "${sample_dir}"
@@ -866,6 +903,9 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '覆盖旧响应，并伪造 provider_baseline_revision 产生第二份裁决。' > "${sample_dir}/bad-authority-evidence-reopen.txt"
   printf '%s\n' '先确认会话写入边界。Delegation Mode 走 ocr delegate preview 且不执行 ocr llm test；外部 LLM Mode 走 ocr review --preview 和 ocr llm test；都不可用时回退资深架构师。' > "${sample_dir}/ocr-mode-dispatch.txt"
   printf '%s\n' '先确认会话写入边界。Delegation Mode 同时跑 ocr delegate preview、ocr review --preview 和 ocr llm test，但不执行自动修复；外部 LLM Mode 也跑 ocr review --preview 和 ocr llm test；最后交资深架构师。' > "${sample_dir}/bad-ocr-mode-dispatch.txt"
+  printf '%s\n' '一个行动主体在复杂任务中同时记录约束面：目标、事实、权限、完成证据和停止条件；推进面：当前假设、最小动作、反馈源和下一步。阴阳一体、互用互制，阴制阳、阳制阴，不拆成两个 Agent，不新增 RSI Mode。' > "${sample_dir}/yinyang-contract.txt"
+  printf '%s\n' '一个行动主体拒绝拆分阴阳：约束面记录目标、事实、权限、证据和停止条件；推进面记录假设、最小动作、反馈源和下一步。拒绝阴 Agent、阳 Agent 或投票决定交付；Checker 保持独立验证，阴阳互用互制，阴制阳、阳制阴。' > "${sample_dir}/yinyang-split-rejection.txt"
+  printf '%s\n' '一个行动主体表面上记录约束面与推进面，但建立阴 Agent负责审查、阳 Agent负责执行并投票决定交付；不新增 RSI Mode。' > "${sample_dir}/bad-yinyang-split.txt"
   printf '%s\n' '信息节奏与排版角色已明确并授权自决，不再确认，直接进入设计。' > "${sample_dir}/ui-reference-axes-direct.txt"
   printf '%s\n' '信息节奏与排版角色已明确，但仍请确认采用轴，确认后再设计。' > "${sample_dir}/bad-ui-reference-axes-direct.txt"
   assert_product "${sample_dir}/product.txt"
@@ -917,6 +957,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_requirement_diff_adjudication "${sample_dir}/requirement-diff-adjudication.txt"
   assert_authority_evidence_reopen "${sample_dir}/authority-evidence-reopen.txt"
   assert_ocr_mode_dispatch "${sample_dir}/ocr-mode-dispatch.txt"
+  assert_yinyang_contract "${sample_dir}/yinyang-contract.txt"
+  assert_yinyang_split_rejection "${sample_dir}/yinyang-split-rejection.txt"
   assert_ui_reference_axes_direct "${sample_dir}/ui-reference-axes-direct.txt"
   assert_no_eastern_symbol_prescription "${sample_dir}/ui-eastern-symbol-negated.txt"
   assert_no_eastern_symbol_prescription "${sample_dir}/ui-eastern-symbol-negated-variant.txt"
@@ -1116,6 +1158,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL OCR dispatch smoke accepted a mixed mode chain" >&2
     exit 1
   fi
+  if assert_yinyang_contract "${sample_dir}/bad-yinyang-split.txt"; then
+    echo "FAIL yinyang smoke accepted a split-agent execution chain" >&2
+    exit 1
+  fi
   if assert_ui_reference_axes_direct "${sample_dir}/bad-ui-reference-axes-direct.txt"; then
     echo "FAIL UI reference smoke accepted redundant confirmation" >&2
     exit 1
@@ -1171,6 +1217,14 @@ if [[ "${MODE}" == "all" || "${MODE}" == "semantic-contract" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/ocr-mode-dispatch.txt" \
     "只读行为验证，对应 fixture wise-agent-should-schedule-open-code-review-plugin。先读取 ${ROOT_DIR}/wise-agent/references/code-understanding-tools.md。候选 diff 已稳定；分别给出 Delegation Mode 和外部 LLM Mode 的互斥调用链、会话写入门禁与两者不可用时的回退，不执行命令、不写文件，控制在 350 字。"
   assert_ocr_mode_dispatch "${OUTPUT_DIR}/ocr-mode-dispatch.txt" || { echo "FAIL OCR mode dispatch behavior smoke: ${OUTPUT_DIR}/ocr-mode-dispatch.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/yinyang-contract.txt" \
+    "只读行为验证，对应 fixture wise-agent-should-model-yinyang-as-mutual-use-control。先读取 ${ROOT_DIR}/wise-agent/SKILL.md、${ROOT_DIR}/wise-agent/references/cognition-and-capability-model.md 和 ${ROOT_DIR}/wise-agent/references/delivery-execution-control.md。请用一个行动主体说明复杂任务如何同时记录约束面与推进面、如何互用互制，以及材料不足和证据满足时分别怎么做；不得新增阴 Agent、阳 Agent、RSI Mode 或第二 Owner，不写文件，控制在 350 字。"
+  assert_yinyang_contract "${OUTPUT_DIR}/yinyang-contract.txt" || { echo "FAIL yinyang contract behavior smoke: ${OUTPUT_DIR}/yinyang-contract.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/yinyang-split-rejection.txt" \
+    "只读行为验证，对应 fixture wise-agent-should-reject-yinyang-agent-split。先读取 ${ROOT_DIR}/wise-agent/SKILL.md、${ROOT_DIR}/wise-agent/references/cognition-and-capability-model.md 和 ${ROOT_DIR}/wise-agent/references/delivery-execution-control.md。用户要求把阴拆成只审查的 Agent、阳拆成只执行的 Agent 并投票交付；请拒绝这种拆分，改写为一个行动主体内的约束面与推进面，并说明 Checker 的独立性；不写文件，控制在 350 字。"
+  assert_yinyang_split_rejection "${OUTPUT_DIR}/yinyang-split-rejection.txt" || { echo "FAIL yinyang split-rejection behavior smoke: ${OUTPUT_DIR}/yinyang-split-rejection.txt" >&2; exit 1; }
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "wind-validation" ]]; then
