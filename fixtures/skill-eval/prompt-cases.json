@@ -4648,6 +4648,21 @@
       "negative_reason": "任务主产物是小说正文，并明确排除现实决策建议；应由 novelist 主责，huaxia-practical-wisdom 只按依赖契约返回叙事校准卡，不成为故事 Owner。"
     },
     {
+      "id": "wise-agent-negative-single-domain-fiction-drafting",
+      "skill": "wise-agent",
+      "query": "请直接写一篇约三千字的现代短篇小说：一名社区调解员发现最守规矩的住户正在替邻居隐瞒违规。重点写人物选择、关系变化、制度约束和行动代价，不需要现实决策建议、正式报告或设定集整理。",
+      "should_trigger": false,
+      "preferred_skill": "novelist",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "fiction-drafting-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是边界清楚的单次、单一小说创作任务，应直接由 novelist 持有故事语义并完成正文；huaxia-practical-wisdom 只按必要依赖返回叙事校准卡，不额外触发 wise-agent。"
+    },
+    {
       "id": "novelist-should-not-own-fiction-term-evidence",
       "skill": "novelist",
       "query": "小说里准备把一个海雾古族命名为‘汐岚氏’。请只从汐、岚、氏的古文用例、形音义、时代语感和可能误读提供创作证据，不测吉凶，也不要替作者决定是否采用。",

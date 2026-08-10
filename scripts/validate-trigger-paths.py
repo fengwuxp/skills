@@ -18492,6 +18492,9 @@ check(
             '"competition_group": "fiction-project-document-owner"',
             '"competition_group": "fiction-term-evidence-owner"',
             '"id": "novelist-should-draft-short-fiction"',
+            '"id": "wise-agent-negative-single-domain-fiction-drafting"',
+            "单次、单一小说创作任务",
+            "不额外触发 wise-agent",
         ],
     )
     and has_all(
@@ -18507,7 +18510,24 @@ check(
         [
             "短篇小说、长篇小说、连载小说",
             "`novelist`",
-            "`huaxia-practical-wisdom` 为核心校准",
+            "必要校准依赖 `huaxia-practical-wisdom`",
+            "单次构思、正文、重写或评审",
+            "不额外加载 `wise-agent`",
+            "跨轮长篇、多稿权威、状态恢复",
+            "`novelist` 仍是故事主能力",
+            "普通创作只消费最小叙事校准卡",
+        ],
+    )
+    and has_all(
+        readme,
+        [
+            "小说构思、正文或单次评审",
+            "跨轮长篇小说",
+            "创作设定集",
+            "创作用字考据",
+            "小说发布适配",
+            "普通小说任务不需要默认加 `$wise-agent`",
+            "跨轮、多稿权威、状态恢复",
         ],
     )
     and has_all(

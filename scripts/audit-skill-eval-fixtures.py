@@ -193,9 +193,10 @@ REQUIRED_COMPETITION_GROUPS = {
             "document-authoring",
             "huaxia-practical-wisdom",
             "novelist",
+            "wise-agent",
         },
         "expected_skill": "novelist",
-        "sha256": "6853155cefa59453b66eca44fbd5894aaff10e655d02a71b0faf4027a6a96ece",
+        "sha256": "854f029d75e3f249d019ff68d4bf3d04f2dbfe8fc753505db15509fcdefe82d0",
     },
     "fiction-project-document-owner": {
         "skills": {"document-authoring", "novelist"},

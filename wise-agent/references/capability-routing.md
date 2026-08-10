@@ -92,7 +92,7 @@ Skill 拆分先做二问：产物是否具有可独立使用或验收的价值�
 | PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具 | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
-| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 以 `huaxia-practical-wisdom` 为核心校准；创作用字考据用 `hanzi-philology`；设定集和正式载体用 `document-authoring` | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
+| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；设定集和正式载体用 `document-authoring` | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | `document-authoring` | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
 | 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
 | 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 正式报告按需用 `document-authoring`；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
@@ -114,6 +114,8 @@ Skill 拆分先做二问：产物是否具有可独立使用或验收的价值�
 ### 三 B、小说、文档与训诂能力组合
 
 - 小说故事语义、人物弧光、世界构建、卷章设计、正文和连续性由 `novelist` 主责；`huaxia-practical-wisdom` 只以察实、正名、审时、权衡、行验、化校准人情事势、制度、代价和反馈，不替作者决定，不把经典框架直接写成故事。
+- 单次构思、正文、重写或评审直接由 `novelist` 完成，不额外加载 `wise-agent`；跨轮长篇、多稿权威、状态恢复或需要组合两项以上专业能力时，才由 `wise-agent` 持有目标和状态，`novelist` 仍是故事主能力。
+- `huaxia-practical-wisdom` 是 `novelist` 的必要校准依赖，不是并列主能力；普通创作只消费最小叙事校准卡，复杂主线、群像、制度冲突或兴衰取舍才扩展 1-3 个镜片，均不输出经世决策卡。
 - 专业文档撰写由 `document-authoring` 提供，领域事实仍由产品、工程、法律、合规或其它专项能力负责；成稿后重新运行产品或架构交付物检查。
 - 汉字学与训诂由 `hanzi-philology` 提供，正式结论形成训诂证据卡，不设单一权威书。
 - 小说人物名、地名、称号、器物名和拟古语言只有出现真实形音义、训诂或时代语感问题时才装载 `hanzi-philology`；它只返回创作用字证据卡。设定集、人物档案、时间线和决策台账只有需要权威整理或正式载体时才装载 `document-authoring`；两者都不得升级候选设定或续写正文。
