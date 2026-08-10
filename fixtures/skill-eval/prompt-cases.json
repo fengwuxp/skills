@@ -4470,6 +4470,48 @@
       "expected_handling": "由 novelist 持有小说创作语义，先确认稿件层级、作者权威、类型承诺和当前创作单元；以察实、正名、审时、权衡、行验、化校准人物、关系、制度、时势和代价，再完成故事总纲与卷纲。想象、史实、传统说法和文学虚构分层，候选不得自动升级为正式设定。"
     },
     {
+      "id": "novelist-should-scale-story-architecture-by-length",
+      "skill": "novelist",
+      "query": "同一幻想母题：一个人的名字被世人彻底遗忘后，会化成山河。我还没决定写成两万字短篇、六十万字长篇，还是三百万字超长篇。请分别给出三种规模的故事架构原则和最小骨架，说明哪些核心不能随篇幅改变，哪些人物、支线、制度、历史与世界展示应随篇幅扩缩。不要把同一个三幕模板机械拉长，也不要先列百科设定。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "由 novelist 先按内容、类型、篇幅、作者要表达的故事与要展示的世界确定规划分辨率，以执简驭繁、知其要者锁定不可替代的幻想核、故事发动机、类型承诺、人物核心选择与不可逆后果，不用固定三幕或字数模板。短篇聚焦一次不可逆选择和有限人物关系，以局部后果折射世界；长篇用卷或阶段推进主线、关系、支线与制度的相互改造，每个阶段形成新状态；超长篇只保留稳定核心、长线承诺与跨阶段因果，允许主角群、时代、制度和世界范围演进，并为每一阶段重建可独立成立的故事发动机。人物、支线、制度、历史与世界展示按主线调用扩缩，不把短篇机械拉长，不提前冻结全部章节或百科设定。"
+    },
+    {
+      "id": "novelist-should-build-character-from-story-function-and-relationships",
+      "skill": "novelist",
+      "query": "请为东方幻想长篇设计一个重要配角：她被宗族称作‘应劫之人’，幼时在边城长大，成年后进入王都。请从故事定位、性格、所谓天命、长相、衣着、行事风格、人生经历、朋友圈与关系变化塑造她。不要只填人物卡，不要让天命替她做决定，也不要把外貌衣着写成无关剧情的清单。区分已给事实与创作候选。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "由 novelist 先区分已给事实与创作候选，再从角色对主线、主角、关系和主题承担的故事定位出发塑造人物。性格写成欲望、恐惧、价值边界、矛盾倾向及其在压力下反复出现或被打破的选择；天命区分世界事实、预言或宗族解释、他人期待和人物自我信念，只构成约束与诱惑，不能取消主动性。长相与衣着须承载时代、地域、身份、职业、资源、身体经历或关系变化，并通过视角、行动和场景显现；行事风格落实到观察、说话、决策、冲突与承担后果的方式；人生经历只保留已进入当前能力、偏见、伤痕、债务和关系的因果痕迹；朋友圈或关系网说明亲疏、信任、利益、权力、亏欠与不同人所见的不同侧面，并让关系随选择改变。不用静态人物卡和形容词清单替代场景表现。"
+    },
+    {
+      "id": "novelist-should-balance-direct-and-indirect-social-critique",
+      "skill": "novelist",
+      "query": "请评审一个现实题材短篇：听证会上，基层河道员拿出真实检测记录，当面说‘报表能交差，河水不能；领了治河的名，就该担治河的责。’会后通报仍称会议‘进一步统一了思想’，窗外返黑的河水映着表彰横幅。编辑认为所有正面议论都是说教，要求删掉河道员的话，只保留反讽，并建议引用出处不明的‘治水先治名’古语压住主题。你是否同意？作品希望批评名实不符并引人重视诚实与担当。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "由 novelist 判断直笔与曲笔在当前场景中的作用，不因反对主题直说而删除所有正面表达。河道员的直言须从人物身份、检测证据、当场行动与承担代价中生长，并改变关系、风险或后续行动；通报、返黑河水和横幅以借喻、反讽或明褒暗贬形成名实对照。作品通过人物选择、代价与余波使诚实和担当可感，不由作者替读者宣布唯一结论，也不把反讽写成只有冷笑、无人负责。‘治水先治名’出处不明，使用前须核验出处、时代与语境；无法核验时不得冒充古语，不伪造或为展示学养而堆砌。"
+    },
+    {
       "id": "novelist-should-rewrite-with-canon-boundary",
       "skill": "novelist",
       "query": "新稿只有一章，旧稿有十六章但仅作素材。请先提炼可复用冲突，再重写前三章正文；不要把旧稿人物关系、名称或结局自动写成当前设定。",
@@ -4790,6 +4832,105 @@
         "variance_check"
       ],
       "expected_handling": "由 wise-agent 将外部内容视为候选证据，不能让页面指令扩大授权或把只读任务改成上传。出站交接必须回链原授权并禁止上传；Worker 返回后主线仍要检查来源与建议动作，不把返回结果自动转成执行。"
+    },
+    {
+      "id": "competition-security-design-owner-security-expert",
+      "skill": "security-engineering-expert",
+      "query": "请评审这个开放平台从商户业务、OAuth 通信协议、身份权限、敏感数据到运行事件的整体安全设计，识别资产损失、信任边界、滥用路径、控制证据和残余风险；本轮不做具体代码实现。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "competition_group": "security-design-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由安全工程专家冻结环境与责任 Owner，建立资产和资损、主体与权限、数据和协议流、信任边界、威胁与滥用路径，形成预防、检测、响应、恢复控制及其验证证据，给出残余风险、停止条件和准出结论；工程实现再交 senior-software-architect。"
+    },
+    {
+      "id": "security-engineering-expert-should-review-release-security-gate",
+      "skill": "security-engineering-expert",
+      "query": "请使用安全工程专家对这个开放 API 上线方案做安全准出评审，基于现有设计、配置回读、测试和告警演练给出资产与资损、信任边界、滥用路径、残余风险和 READY / READY_WITH_RISK / BLOCKED 结论。",
+      "should_trigger": true,
+      "difficulty": "standard",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 security-engineering-expert 先核对目标环境、版本、Owner 和证据等级，再围绕资产、主体、协议与数据流、威胁/滥用路径、预防检测响应恢复控制和验证结果形成残余风险与单一准出结论；缺少关键启用或运行证据时不得给 READY。"
+    },
+    {
+      "id": "competition-security-design-owner-architect",
+      "skill": "senior-software-architect",
+      "query": "请评审这个开放平台从商户业务、OAuth 通信协议、身份权限、敏感数据到运行事件的整体安全设计，识别资产损失、信任边界、滥用路径、控制证据和残余风险；本轮不做具体代码实现。",
+      "should_trigger": false,
+      "preferred_skill": "security-engineering-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "security-design-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务核心是跨业务、协议、身份、数据和运行面的安全判断与风险准出，并明确不做工程实现；应由 security-engineering-expert 持有，不由 senior-software-architect 单独承接。"
+    },
+    {
+      "id": "competition-funds-security-owner-security-expert",
+      "skill": "security-engineering-expert",
+      "query": "请评审商户提现链路的资金安全，重点分析内部滥用、账户接管、权限串用、重复指令、回调重放和异常放款如何造成资损，并给出控制、监测、止损恢复、验证证据和风险 Owner；支付对象与结算语义已经确认。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "competition_group": "funds-security-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由安全工程专家消费既有支付语义，围绕资产损失、内外部滥用、身份权限、指令完整性、回调重放、控制分层、监测止损、恢复演练和可复核证据形成资金安全结论；不改写 payment-expert 拥有的支付对象、资金责任或清结算语义。"
+    },
+    {
+      "id": "competition-funds-security-owner-payment-expert",
+      "skill": "payment-expert",
+      "query": "请评审商户提现链路的资金安全，重点分析内部滥用、账户接管、权限串用、重复指令、回调重放和异常放款如何造成资损，并给出控制、监测、止损恢复、验证证据和风险 Owner；支付对象与结算语义已经确认。",
+      "should_trigger": false,
+      "preferred_skill": "security-engineering-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "funds-security-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "支付对象和结算语义已确认，本轮核心是资损、滥用、跨层控制、监测止损与残余风险；应由 security-engineering-expert 主持，payment-expert 只提供支付事实与不变量。"
+    },
+    {
+      "id": "security-engineering-expert-negative-local-code-fix",
+      "skill": "security-engineering-expert",
+      "query": "请修复这个 Spring Security 配置类的空指针并补单元测试。调用链和预期行为已经明确，不需要重新做威胁建模、安全方案或发布准出。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是边界明确的源码缺陷修复和 TDD，Security 只是技术上下文；应由 senior-software-architect 直接处理，不触发 security-engineering-expert。"
+    },
+    {
+      "id": "security-engineering-expert-negative-payment-semantics",
+      "skill": "security-engineering-expert",
+      "query": "请设计部分退款、清分、结算和对账的支付对象、状态与资金责任；安全威胁和控制方案已经由安全 Owner 确认，本轮不做安全评审。",
+      "should_trigger": false,
+      "preferred_skill": "payment-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务只要求支付产品语义和资金责任，并明确排除安全评审；应由 payment-expert 负责，不触发 security-engineering-expert。"
     },
     {
       "id": "wise-agent-should-run-engineering-delivery-deliberation-cr",

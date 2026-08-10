@@ -2,7 +2,7 @@
 
 ## 使用时机
 
-当知止者需要判断“当前任务应直接完成、装载哪个专业 Skill、是否调用 Worker、由谁独立验证”时读取。本文是能力选择与责任路由的唯一权威来源；其它 reference 只引用路由结果，不重复定义能力 owner。本文不是角色转交表，也不限制未来新增的安全能力。
+当知止者需要判断“当前任务应直接完成、装载哪个专业 Skill、是否调用 Worker、由谁独立验证”时读取。本文是能力选择与责任路由的唯一权威来源；其它 reference 只引用路由结果，不重复定义能力 owner。本文不是角色转交表。
 
 ## 不适用场景
 
@@ -34,6 +34,7 @@
 | 新增、安装或吸收 Skill | `六、新能力接入门禁`、`七、回流与验证` | 未审查前不安装、不写默认能力 |
 | 从多源材料提炼复用能力 | `三、已知能力地图`、`六、新能力接入门禁` | 不默认创建顶层 Skill，不跳过逐项归位 |
 | UI 设计或可用性评审 | `三、已知能力地图` | 不让产品能力代替交互设计，不让工程工具改写设计目标 |
+| 跨业务与系统边界的安全设计、评审或准出 | `三、已知能力地图` | 不用代码扫描替代安全判断，不让安全能力改写产品、支付或工程事实 |
 | 消解能力歧义或检查加载扇出 | `二 A、路由消歧、后置加载与加载扇出` | 不预加载全部能力和 reference |
 | 产品到工程跨阶段状态 | `三 A、跨阶段状态契约`，再读生命周期 references | 不把状态卡当角色人格或执行授权 |
 | 小说创作、创作文档与训诂组合 | `三 B、小说、文档与训诂能力组合` | 不让成文或考据能力改写作者正典 |
@@ -89,6 +90,7 @@ Skill 拆分先做二问：产物是否具有可独立使用或验收的价值�
 | --- | --- | --- | --- |
 | 支付、资金、账户、账本、清分、清算、结算、对账、退款、争议、通道、卡组织、ACH/银行转账、VCC、跨境支付或支付监管产品规则 | `payment-expert` | 需要通用 PRD 主文档时 `product-architecture-expert`；进入系分、代码、TDD 或生产变更时 `senior-software-architect` | 外部规则检查器、业务/支付/财务/合规 Owner、方法卡盲测、目标项目测试与对账证据 |
 | 支付资金方案、实现证据或测试结果的独立准出审查，且涉及幂等、冻结、授权拒绝、原路退款、出款门禁或失败无副作用 | 候选 `payment-funds-review`，仅在 admission 通过后使用 | 产品事实由 `payment-expert` 提供；实现与测试证据由 `senior-software-architect` 提供 | 原始材料回读、目标项目测试、余额/交易/路由/分录事实快照、支付/财务 Owner；Checker 不接管修复 |
+| 业务、资金、身份权限、数据、协议、软件供应链、系统架构或运行事件的安全设计、评审、威胁/滥用分析与风险准出 | `security-engineering-expert` | 产品事实用 `product-architecture-expert`；支付事实用 `payment-expert`；实现与修复用 `senior-software-architect`；仓库/path、diff、finding 验证与仓库威胁模型使用精确 `codex-security:*` 能力 | 资产与资损、信任边界、攻击/滥用路径、控制与恢复、验证证据、残余风险及人类风险 Owner |
 | PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具 | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
@@ -106,6 +108,8 @@ Skill 拆分先做二问：产物是否具有可独立使用或验收的价值�
 显式调用专业 Skill 时，不再反向追加无关能力。比如 `$senior-software-architect` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind 证据不得加载 Wind 专项；`$ui-design-expert` 做界面设计时不替产品 Owner 发明业务规则，也不因存在 Figma 工具就自动调用；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。
 
 轻量产品任务同样适用：只要求为“退款申请”补通用验收种子，且没有原交易、支付轨道、资金账务、清结算、法域或合规事实时，只装载产品通用路径；需要卡组织退款、ACH return、资金回退或账务处理时才升级到 `payment-expert`。
+
+安全任务按交付物消歧：跨业务、协议、身份、数据、资金与运行层形成安全不变量、控制证据和残余风险时，由 `security-engineering-expert` 主责；普通安全代码修复仍由 `senior-software-architect` 承接，修复已验证或可信 finding 时加载 `codex-security:fix-finding` 作为方法能力。仓库/path 标准扫描用 `codex-security:security-scan`，Git-backed diff 用 `codex-security:security-diff-scan`，候选 finding 验证用 `codex-security:validation`，仓库威胁模型用 `codex-security:threat-model`，基于扫描证据的系统性加固建议用 `codex-security:propose-security-hardening`。支付对象、资金责任与清结算语义仍由 `payment-expert` 提供；出现“安全”“权限”或“加密”单词本身不触发跨层安全评审。
 
 ### 三 A、跨阶段状态契约
 

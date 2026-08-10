@@ -76,6 +76,8 @@
 | 小说发布适配 | `$novelist：面向 <法域/平台/载体/受众> 核验当前生效规则，保留可恢复母稿并另建发布适配稿；区分官方规则、平台规则和专项行动，不承诺绝对合规。` |
 | UI 设计 / 可用性 CR | `$ui-design-expert：基于 <需求/页面/源码/截图> 设计或评审 Web 界面，输出信息架构、交互状态、响应式、可访问性和验证证据；需要时比较设计系统、UI 库或东方视觉方向；已有 Figma 定稿只做还原时直接走工程实现。` |
 | UI 可用性验证 / Design QA | `$ui-design-expert：按证据等级验证 <目标用户与关键任务>；设计契约或截图只作 E1 静态评审，可操作原型作 E2，真实实现作 E3 Design QA，目标用户测试或运行观测才作 E4；不得跨等级声称完成。` |
+| 跨层安全设计 / 评审 | `$security-engineering-expert：基于 <业务/架构/协议/代码/运行证据> 评审 <范围>；从资产与资损、主体与信任边界、威胁和滥用路径出发，形成预防、检测、响应、恢复控制、验证证据与残余风险结论。` |
+| 资金安全专项 | `$security-engineering-expert：消费已确认的支付对象与资金责任，评审 <交易/提现/退款/结算链路> 的账户接管、内部滥用、权限串用、指令冲突、回调重放、异常放款、监测止损和恢复证据；不改写支付语义。` |
 | 系分设计 | `基于 <产品文档> 和 <源码/接口/DDL> 编写系分；先说明能力归位、共同对象与不变量，有真实变化轴才拆模块、策略或适配器。` |
 | 只读 CR | `我有 PRD 和代码路径，只做只读 CR，不改代码；请给出源码证据、严重级别、测试缺口和残余风险。` |
 | 工程交付 | `基于 <PRD/系分/源码> 完成 <Bug/TDD/重构/代码>，写入范围是 <路径>，验证命令是 <命令>。` |
@@ -174,6 +176,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | 支付、资金账户、支付账本、清结算、对账、原支付退款、通道、卡组织、ACH、VCC、跨境和支付监管产品规则 | 支付专家，ID：`payment-expert`，路径：[payment-expert](./payment-expert)；本机安装已授权，`R-002` 禁止 Git push、团队共享/同步与公开发布 | 主体、法域、资金归属、原事实、轨道/通道、规则来源、验收 Owner | 不替代法务合规、会计政策、工程实现或生产准入 |
 | 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可安装、同步、团队共享或公开发布 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
+| 业务、资金、身份权限、数据、通信协议、软件供应链、系统架构与运行事件的安全设计、评审和准出 | 安全工程专家，ID：`security-engineering-expert`，路径：[security-engineering-expert](./security-engineering-expert) | 目标环境、资产与资损、主体、真实流程、信任边界、现有控制、证据与风险 Owner | 不替代产品/支付事实、代码实现、精确的 `codex-security:*` 能力、法律合规判断或生产授权 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事/卷/章设计、正文、重写和连续性审查 | 小说家，ID：`novelist`，路径：[novelist](./novelist) | 类型承诺、当前创作单元、稿件权威、设定状态、允许改变范围、作者验收 | 以华夏经世智慧校准人情事势；不把旧稿、考据结论或创作候选自动升级为正典 |
 | 正式报告、制度、手册、研究说明、创作设定集、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、小说、法律、合规或考据结论，不负责小说正文 |
@@ -367,9 +370,10 @@ scripts/smoke-wise-agent-behavior.sh --mode huaxia --runs 3 --output-dir /tmp/hu
 scripts/smoke-wise-agent-behavior.sh --mode wind-validation --output-dir /tmp/wind-validation-smoke
 scripts/smoke-wise-agent-behavior.sh --mode spring-bean --output-dir /tmp/spring-bean-smoke
 scripts/smoke-wise-agent-behavior.sh --mode ui-design --output-dir /tmp/ui-design-smoke
+scripts/smoke-wise-agent-behavior.sh --mode security --output-dir /tmp/security-routing-smoke
 ```
 
-`all` 覆盖产品、工程、设计分层与文档主线、Superpowers 协同、轻量治理、状态恢复、学习回流、`grill-me`、华夏决策校准、Wind Service validation、Spring Bean 注册和 Web UI 设计路由；`--runs 3` 用于观察方差。真实 smoke 仍只证明样例行为满足契约。维护者更新项目自有 `grill-me` 后可运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；更新官方 Superpowers 插件后可运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
+`all` 覆盖产品、工程、设计分层与文档主线、Superpowers 协同、轻量治理、状态恢复、学习回流、`grill-me`、华夏决策校准、Wind Service validation、Spring Bean 注册、Web UI 设计路由，以及安全设计、资金安全、代码修复、仓库扫描和 finding 路由；`--runs 3` 用于观察方差。真实 smoke 仍只证明样例行为满足契约。维护者更新项目自有 `grill-me` 后可运行 `VALIDATE_GRILL_ME_INSTALL=1 ./scripts/validate.sh`；更新官方 Superpowers 插件后可运行 `VALIDATE_SUPERPOWERS_INSTALL=1 ./scripts/validate.sh`。普通使用这些能力不需要运行安装校验。
 
 ## 维护者入口
 

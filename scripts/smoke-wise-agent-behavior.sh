@@ -539,6 +539,60 @@ assert_spring_bean_registration() {
   assert_none "${file}" "OrderAssembler 使用 @Service" "接口使用 @Service" "DTO 使用 @Component" "没有 Lombok 也必须新增" "所有类都使用 @Service"
 }
 
+assert_security_design_route() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "资产与资损" "信任边界" "滥用路径" "预防" "检测" "响应" "恢复" "验证证据" "残余风险"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_route_owner_and_exclusion "${file}" "security-engineering-expert" "senior-software-architect"
+}
+
+assert_security_funds_route() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "资产与资损" "账户接管" "内部滥用" "指令" "止损" "恢复" "payment-expert"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_route_owner_and_exclusion "${file}" "security-engineering-expert" "payment-expert"
+}
+
+assert_security_code_fix_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  assert_any "${file}" "测试" "TDD" || return 1
+  assert_route_owner_and_exclusion "${file}" "senior-software-architect" "security-engineering-expert"
+}
+
+assert_security_scan_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "codex-security:security-scan" "${file}" || return 1
+  assert_route_owner_and_exclusion "${file}" "codex-security:security-scan" "security-engineering-expert"
+}
+
+assert_security_finding_fix_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "codex-security:fix-finding" "${file}" || return 1
+  assert_any "${file}" "方法能力" "专项方法" "按需加载" || return 1
+  assert_route_owner_and_exclusion "${file}" "senior-software-architect" "security-engineering-expert"
+}
+
+assert_security_threat_model_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "codex-security:threat-model" "${file}" || return 1
+  assert_route_owner_and_exclusion "${file}" "codex-security:threat-model" "security-engineering-expert"
+}
+
+assert_security_hardening_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "codex-security:propose-security-hardening" "${file}" || return 1
+  assert_route_owner_and_exclusion "${file}" "codex-security:propose-security-hardening" "security-engineering-expert"
+}
+
 assert_ui_design() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
@@ -880,6 +934,16 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-wind-service-validation-entry-negated.txt" \
       "${sample_dir}/spring-bean-registration.txt" \
       "${sample_dir}/bad-spring-bean-registration.txt" \
+      "${sample_dir}/security-design-route.txt" \
+      "${sample_dir}/security-funds-route.txt" \
+      "${sample_dir}/security-code-fix-route.txt" \
+      "${sample_dir}/security-scan-route.txt" \
+      "${sample_dir}/security-finding-fix-route.txt" \
+      "${sample_dir}/security-threat-model-route.txt" \
+      "${sample_dir}/security-hardening-route.txt" \
+      "${sample_dir}/bad-security-design-route.txt" \
+      "${sample_dir}/bad-security-scan-route.txt" \
+      "${sample_dir}/bad-security-finding-fix-route.txt" \
       "${sample_dir}/ui-design-dashboard.txt" \
       "${sample_dir}/bad-ui-design-dashboard.txt" \
       "${sample_dir}/ui-design-mobile-form.txt" \
@@ -937,6 +1001,16 @@ if [[ "${1:-}" == "--self-test" ]]; then
   trap cleanup_self_test EXIT
   printf '%s\n' '事实：访谈。推断：有需求。待确认：owner。验收：场景通过。' > "${sample_dir}/product.txt"
   printf '%s\n' '严重级别：P1。证据：源码。测试：补回归。残余风险：并发。' > "${sample_dir}/engineering.txt"
+  printf '%s\n' '由 security-engineering-expert 主责整体安全评审，输出资产与资损、信任边界、滥用路径、预防、检测、响应、恢复、验证证据和残余风险；senior-software-architect 不负责本轮整体安全准出。' > "${sample_dir}/security-design-route.txt"
+  printf '%s\n' '由 security-engineering-expert 主责资金安全，覆盖资产与资损、账户接管、内部滥用、指令冲突、监测止损和恢复；payment-expert 只提供已确认支付事实，不负责本轮安全准出。' > "${sample_dir}/security-funds-route.txt"
+  printf '%s\n' '由 senior-software-architect 主责局部代码修复和测试；security-engineering-expert 不触发，也不负责这次已明确边界的实现。' > "${sample_dir}/security-code-fix-route.txt"
+  printf '%s\n' '由 codex-security:security-scan 主责仓库标准单次扫描；security-engineering-expert 不触发，也不负责只读漏洞扫描。' > "${sample_dir}/security-scan-route.txt"
+  printf '%s\n' '由 senior-software-architect 主责工程交付和测试，按需加载 codex-security:fix-finding 作为专项方法能力；security-engineering-expert 不负责局部 finding 修复。' > "${sample_dir}/security-finding-fix-route.txt"
+  printf '%s\n' '由 codex-security:threat-model 主责仓库范围威胁模型；security-engineering-expert 不触发，也不负责纯仓库 threat model。' > "${sample_dir}/security-threat-model-route.txt"
+  printf '%s\n' '由 codex-security:propose-security-hardening 主责基于扫描 finding 的系统性加固建议；security-engineering-expert 不触发，也不负责未跨入业务资损和风险接受的仓库方案。' > "${sample_dir}/security-hardening-route.txt"
+  printf '%s\n' '由 senior-software-architect 主责整体跨层安全准出；security-engineering-expert 不触发。' > "${sample_dir}/bad-security-design-route.txt"
+  printf '%s\n' '由 security-engineering-expert 主责仓库漏洞扫描，codex-security:security-scan 只提供命令。' > "${sample_dir}/bad-security-scan-route.txt"
+  printf '%s\n' '由 codex-security:fix-finding 主责修复并交付，senior-software-architect 不触发；security-engineering-expert 不负责。' > "${sample_dir}/bad-security-finding-fix-route.txt"
   printf '%s\n' '事实：目标一致。待确认：责任 owner。行动：做可逆试点。止损：责任不清则停止。验证：复盘结果。' > "${sample_dir}/huaxia.txt"
   printf '%s\n' '事实：目标一致。待确认：责任 owner。最小行动：选择可回退流程试行。止损：成本触顶则停止。验证：对照基线。' > "${sample_dir}/huaxia-variant.txt"
   printf '%s\n' '顺其自然即可，必然成功。' > "${sample_dir}/bad-huaxia.txt"
@@ -1102,6 +1176,13 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_wind_service_validation "${sample_dir}/wind-service-validation.txt"
   assert_wind_service_validation "${sample_dir}/wind-service-validation-variant.txt"
   assert_spring_bean_registration "${sample_dir}/spring-bean-registration.txt"
+  assert_security_design_route "${sample_dir}/security-design-route.txt"
+  assert_security_funds_route "${sample_dir}/security-funds-route.txt"
+  assert_security_code_fix_route "${sample_dir}/security-code-fix-route.txt"
+  assert_security_scan_route "${sample_dir}/security-scan-route.txt"
+  assert_security_finding_fix_route "${sample_dir}/security-finding-fix-route.txt"
+  assert_security_threat_model_route "${sample_dir}/security-threat-model-route.txt"
+  assert_security_hardening_route "${sample_dir}/security-hardening-route.txt"
   assert_ui_design "${sample_dir}/ui-design-dashboard.txt"
   assert_ui_design_mobile_form "${sample_dir}/ui-design-mobile-form.txt"
   assert_ui_design_product_route "${sample_dir}/ui-design-product-route.txt"
@@ -1278,6 +1359,18 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL Spring Bean registration smoke accepted mechanical stereotypes or forced Lombok" >&2
     exit 1
   fi
+  if assert_security_design_route "${sample_dir}/bad-security-design-route.txt"; then
+    echo "FAIL security design smoke accepted engineering ownership" >&2
+    exit 1
+  fi
+  if assert_security_scan_route "${sample_dir}/bad-security-scan-route.txt"; then
+    echo "FAIL security scan smoke accepted cross-layer security ownership" >&2
+    exit 1
+  fi
+  if assert_security_finding_fix_route "${sample_dir}/bad-security-finding-fix-route.txt"; then
+    echo "FAIL security finding fix smoke accepted plugin ownership of engineering delivery" >&2
+    exit 1
+  fi
   if assert_ui_design "${sample_dir}/bad-ui-design-dashboard.txt"; then
     echo "FAIL UI design smoke accepted a marketing-only operational interface" >&2
     exit 1
@@ -1400,8 +1493,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${MODE}" in
-  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia|semantic-contract|wind-validation|spring-bean|ui-design) ;;
-  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, huaxia, semantic-contract, wind-validation, spring-bean, or ui-design" >&2; exit 2 ;;
+  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia|semantic-contract|wind-validation|spring-bean|ui-design|security) ;;
+  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, huaxia, semantic-contract, wind-validation, spring-bean, ui-design, or security" >&2; exit 2 ;;
 esac
 if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
   echo "--runs must be a positive integer" >&2
@@ -1409,7 +1502,7 @@ if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 cd "${ROOT_DIR}"
-if [[ "${MODE}" != "semantic-contract" && "${MODE}" != "wind-validation" && "${MODE}" != "spring-bean" && "${MODE}" != "ui-design" ]]; then
+if [[ "${MODE}" != "semantic-contract" && "${MODE}" != "wind-validation" && "${MODE}" != "spring-bean" && "${MODE}" != "ui-design" && "${MODE}" != "security" ]]; then
   scripts/validate-installed-skills.sh
 fi
 if [[ "${MODE}" == "all" || "${MODE}" == "superpowers" ]]; then
@@ -1503,6 +1596,36 @@ if [[ "${MODE}" == "all" || "${MODE}" == "ui-design" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/ui-eastern-report-route.txt" \
     "只读行为验证，对应 fixture ui-design-expert-negative-eastern-aesthetics-report。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/document-authoring/SKILL.md，以源仓库内容为规则。任务只要求整理东方审美研究报告，讨论留白、虚实、疏密和器物精神，供内部文化学习；明确不涉及 Web 页面、交互或设计交付。判断主责 Skill 以及是否触发 ui-design-expert；控制在 180 字。"
   assert_ui_eastern_report_route "${OUTPUT_DIR}/ui-eastern-report-route.txt" || { echo "FAIL UI Eastern-aesthetics report routing behavior smoke: ${OUTPUT_DIR}/ui-eastern-report-route.txt" >&2; exit 1; }
+fi
+
+if [[ "${MODE}" == "all" || "${MODE}" == "security" ]]; then
+  run_codex_smoke "${OUTPUT_DIR}/security-design-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/SKILL.md、${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md 和 ${ROOT_DIR}/wise-agent/references/capability-routing.md，以源仓库内容为规则。评审开放平台从商户业务、OAuth、身份权限、敏感数据到运行事件的整体安全，识别资产与资损、信任边界、滥用路径、控制证据和残余风险，本轮不做代码实现。判断主责 Skill 和架构师边界，控制在 260 字。"
+  assert_security_design_route "${OUTPUT_DIR}/security-design-route.txt" || { echo "FAIL security design routing behavior smoke: ${OUTPUT_DIR}/security-design-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-funds-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/SKILL.md、${ROOT_DIR}/payment-expert/SKILL.md 和 ${ROOT_DIR}/wise-agent/references/capability-routing.md，以源仓库内容为规则。支付对象、资金责任和结算语义已经确认；本轮只评审提现链路的账户接管、内部滥用、权限串用、重复指令、回调重放、异常放款、监测止损和恢复。判断主责 Skill 与 payment-expert 的边界，控制在 260 字。"
+  assert_security_funds_route "${OUTPUT_DIR}/security-funds-route.txt" || { echo "FAIL funds security routing behavior smoke: ${OUTPUT_DIR}/security-funds-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-code-fix-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/SKILL.md 和 ${ROOT_DIR}/senior-software-architect/SKILL.md，以源仓库内容为规则。修复一个边界明确的 Spring Security 配置空指针并补测试，不需要威胁模型、安全方案或发布准出。判断主责 Skill 和是否触发 security-engineering-expert，控制在 180 字。"
+  assert_security_code_fix_route "${OUTPUT_DIR}/security-code-fix-route.txt" || { echo "FAIL security code-fix routing behavior smoke: ${OUTPUT_DIR}/security-code-fix-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-scan-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md，以源仓库内容为规则。用户只要求对整个仓库做一次标准单次漏洞扫描，没有 Git diff、跨层安全设计或代码修复。给出精确主能力，并说明是否触发 security-engineering-expert，控制在 180 字。"
+  assert_security_scan_route "${OUTPUT_DIR}/security-scan-route.txt" || { echo "FAIL security scan routing behavior smoke: ${OUTPUT_DIR}/security-scan-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-finding-fix-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/SKILL.md、${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md 和 ${ROOT_DIR}/senior-software-architect/SKILL.md，以源仓库内容为规则。一个可信的越权 finding 已有源码证据，用户要求最小修复、测试和验证。判断工程主责、应加载的精确 codex-security 方法能力，以及是否触发跨层安全评审，控制在 220 字。"
+  assert_security_finding_fix_route "${OUTPUT_DIR}/security-finding-fix-route.txt" || { echo "FAIL security finding-fix routing behavior smoke: ${OUTPUT_DIR}/security-finding-fix-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-threat-model-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md，以源仓库内容为规则。用户只要求基于当前仓库源码建立并持久化 repository-scoped threat model，不做业务资金安全准出。给出精确主能力，并说明是否触发 security-engineering-expert，控制在 180 字。"
+  assert_security_threat_model_route "${OUTPUT_DIR}/security-threat-model-route.txt" || { echo "FAIL security threat-model routing behavior smoke: ${OUTPUT_DIR}/security-threat-model-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-hardening-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md，以源仓库内容为规则。已有仓库扫描 findings，用户只要求形成源码和架构层的系统性加固选项、权衡和迁移建议，不涉及业务资损、资金责任或风险接受。给出精确主能力，并说明是否触发 security-engineering-expert，控制在 180 字。"
+  assert_security_hardening_route "${OUTPUT_DIR}/security-hardening-route.txt" || { echo "FAIL security hardening routing behavior smoke: ${OUTPUT_DIR}/security-hardening-route.txt" >&2; exit 1; }
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "product" ]]; then

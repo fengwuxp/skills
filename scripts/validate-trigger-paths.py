@@ -325,6 +325,12 @@ ui_design_prototype = "ui-design-expert/references/prototype-output.md"
 ui_design_checker = "ui-design-expert/scripts/check_ui_design_deliverable.py"
 ui_design_source_checker = "ui-design-expert/scripts/check_ui_source.py"
 ui_design_fixture_verifier = "ui-design-expert/scripts/verify_fixtures.py"
+security_skill = "security-engineering-expert/SKILL.md"
+security_agent = "security-engineering-expert/agents/openai.yaml"
+security_scenarios = "security-engineering-expert/references/security-scenario-routing.md"
+security_method = "security-engineering-expert/references/security-risk-control-and-evidence.md"
+security_source_map = "security-engineering-expert/references/source-map.md"
+security_checker = "security-engineering-expert/scripts/check_security_deliverable.py"
 hanzi_skill = "hanzi-philology/SKILL.md"
 hanzi_agent = "hanzi-philology/agents/openai.yaml"
 hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
@@ -2820,7 +2826,7 @@ check(
             "独立 Checker",
             "最小装载算法",
             "一个主能力",
-            "不限制未来新增的安全能力",
+            "安全任务按交付物消歧",
             "product verification",
             "code quality and review",
             "CI/CD and deployment",
@@ -18377,6 +18383,9 @@ check(
         [
             "短篇小说",
             "长篇小说",
+            "超长篇小说",
+            "执简驭繁",
+            "人物刻画",
             "发布载体与叙事语体",
             "作者确认，或在作者明确授予的自决范围内由 `novelist` 确认",
             "交接时一并传递授权范围、逐项设定状态与确认证据 / 权威指针",
@@ -18418,6 +18427,7 @@ check(
             "不得以续作、神秘感或读者想象遮掩",
             "已建立的读者承诺",
             "不刻意制造金句",
+            "直笔与曲笔",
             "创作判断与发布准入分轨",
             "公开传播与内容治理",
             "创作母稿",
@@ -18534,6 +18544,24 @@ check(
         novelist_story,
         [
             "故事发动机",
+            "故事架构：执简驭繁",
+            "知其要者",
+            "内容、类型、篇幅、作者要表达的故事与要展示的世界",
+            "短篇",
+            "长篇",
+            "超长篇",
+            "规划分辨率",
+            "人物刻画：从故事定位到关系网",
+            "故事定位",
+            "性格",
+            "天命",
+            "长相",
+            "衣着",
+            "行事风格",
+            "人生经历",
+            "朋友圈 / 关系网",
+            "不能取消人物主动性",
+            "不用静态人物卡和形容词清单替代场景表现",
             "经世叙事校准",
             "三层真实与戏剧许可",
             "意外而可回望",
@@ -18562,6 +18590,14 @@ check(
             "悬念",
             "已交付读者的硬承诺",
             "真情、可读与去 AI 味",
+            "立意、直笔与曲笔",
+            "心怀天下",
+            "博古通今",
+            "身份、证据、行动与代价",
+            "借喻、反讽、用典、明褒暗贬",
+            "不替读者宣布唯一结论",
+            "核验出处、时代与语境",
+            "不为展示学养堆砌典故",
             "节奏、氛围、人物声音、视角质感、幽默",
             "连载读者视角",
         ],
@@ -18610,6 +18646,89 @@ check(
     and has_none(skill_eval_prompt_fixture, ["候潮氏", "守潮古族", "轮回若红尘", "帝殇"]),
 )
 
+expected_handling_has(
+    "novelist-should-scale-story-architecture-by-length",
+    (
+        "内容、类型、篇幅、作者要表达的故事与要展示的世界",
+        "规划分辨率",
+        "执简驭繁、知其要者",
+        "幻想核",
+        "故事发动机",
+        "类型承诺",
+        "不可逆后果",
+        "短篇",
+        "长篇",
+        "超长篇",
+        "每一阶段重建可独立成立的故事发动机",
+        "按主线调用扩缩",
+        "不把短篇机械拉长",
+        "不提前冻结全部章节或百科设定",
+    ),
+)
+expected_handling_lacks(
+    "novelist-should-scale-story-architecture-by-length",
+    (
+        "统一套用三幕结构",
+        "只按字数倍数扩写",
+        "先列完整百科",
+        "提前锁死全部章节",
+    ),
+)
+expected_handling_has(
+    "novelist-should-build-character-from-story-function-and-relationships",
+    (
+        "已给事实与创作候选",
+        "故事定位",
+        "欲望、恐惧、价值边界、矛盾倾向",
+        "世界事实、预言或宗族解释、他人期待和人物自我信念",
+        "不能取消主动性",
+        "长相与衣着",
+        "视角、行动和场景",
+        "行事风格",
+        "人生经历",
+        "朋友圈或关系网",
+        "不同人所见的不同侧面",
+        "关系随选择改变",
+        "不用静态人物卡和形容词清单替代场景表现",
+    ),
+)
+expected_handling_lacks(
+    "novelist-should-build-character-from-story-function-and-relationships",
+    (
+        "天命替她决定",
+        "外貌衣着清单",
+        "人物卡即完成",
+        "所有关系始终不变",
+    ),
+)
+expected_handling_has(
+    "novelist-should-balance-direct-and-indirect-social-critique",
+    (
+        "直笔与曲笔",
+        "不因反对主题直说而删除所有正面表达",
+        "人物身份",
+        "检测证据",
+        "当场行动",
+        "承担代价",
+        "借喻、反讽或明褒暗贬",
+        "名实对照",
+        "人物选择、代价与余波",
+        "不由作者替读者宣布唯一结论",
+        "‘治水先治名’出处不明",
+        "核验出处、时代与语境",
+        "无法核验时不得冒充古语",
+        "不伪造或为展示学养而堆砌",
+    ),
+)
+expected_handling_lacks(
+    "novelist-should-balance-direct-and-indirect-social-critique",
+    (
+        "所有正面议论都是说教",
+        "只保留反讽",
+        "作者直接宣布正确答案",
+        "可以伪造典故",
+    ),
+)
 expected_handling_has(
     "novelist-should-separate-myth-design-from-canon",
     (
@@ -19921,6 +20040,151 @@ check(
             "ui-reference-axes-direct.txt",
         ],
     )
+)
+
+check(
+    "security expert package exists",
+    all(
+        (ROOT / path).exists()
+        for path in [
+            security_skill,
+            security_agent,
+            security_scenarios,
+            security_method,
+            security_source_map,
+            security_checker,
+        ]
+    ),
+)
+if (ROOT / security_skill).exists():
+    check(
+        "security expert owns cross-layer risk and evidence without taking implementation",
+        has_all(
+            security_skill,
+            [
+                "资产与资损",
+                "信任边界",
+                "滥用路径",
+                "预防、检测、响应、恢复",
+                "残余风险",
+                "senior-software-architect",
+                "payment-expert",
+                "codex-security",
+            ],
+        ),
+    )
+    check(
+        "security expert applies practical wisdom as evidence discipline",
+        has_all(
+            security_skill,
+            ["名实", "先为不可胜", "治未病", "审时", "不替代事实"],
+        ),
+    )
+if (ROOT / security_scenarios).exists():
+    check(
+        "security scenarios cover business funds identity data protocol software runtime",
+        has_all(
+            security_scenarios,
+            ["业务安全", "资金安全", "身份与权限", "数据与信息", "协议与集成", "软件与供应链", "运行与事件"],
+        ),
+    )
+if (ROOT / security_method).exists():
+    check(
+        "security method closes risk control evidence and recovery",
+        has_all(
+            security_method,
+            ["资产", "资损", "主体", "信任边界", "威胁", "滥用", "预防", "检测", "响应", "恢复", "验证证据", "残余风险", "Owner", "停止条件"],
+        ),
+    )
+if (ROOT / security_source_map).exists():
+    check(
+        "security sources distinguish public standards from applicability decisions",
+        has_all(
+            security_source_map,
+            ["NIST CSF 2.0", "NIST SP 800-218", "OWASP ASVS 5.0.0", "OWASP API Security Top 10 2023", "PCI DSS v4.0.1", "RFC 8446", "RFC 9700", "不替代"],
+        ),
+    )
+if (ROOT / security_agent).exists():
+    check(
+        "security agent explicitly invokes only itself",
+        has_all(security_agent, ["$security-engineering-expert"])
+        and has_none(security_agent, ["$wise-agent", "$huaxia-practical-wisdom", "$payment-expert", "$senior-software-architect"]),
+    )
+if (ROOT / security_checker).exists():
+    check(
+        "security deliverable checker is in unified validation",
+        has_all("scripts/validate.sh", ["security-engineering-expert/scripts/check_security_deliverable.py --self-test"]),
+    )
+check(
+    "security expert is routed in user guide and wise-agent",
+    has_all(readme, ["安全工程专家", "security-engineering-expert", "信任边界", "残余风险"])
+    and has_all(
+        "wise-agent/references/capability-routing.md",
+        ["security-engineering-expert", "codex-security", "资产与资损", "残余风险"],
+    ),
+)
+check(
+    "security routing maps exact codex-security capabilities without losing engineering ownership",
+    has_all(
+        security_skill,
+        ["codex-security:fix-finding", "senior-software-architect"],
+    )
+    and has_all(
+        security_scenarios,
+        [
+            "codex-security:security-scan",
+            "codex-security:security-diff-scan",
+            "codex-security:validation",
+            "codex-security:fix-finding",
+            "codex-security:threat-model",
+            "codex-security:propose-security-hardening",
+        ],
+    )
+    and has_all(
+        "wise-agent/references/capability-routing.md",
+        ["codex-security:security-scan", "codex-security:fix-finding", "codex-security:threat-model"],
+    ),
+)
+check(
+    "senior architect consumes cross-layer security decisions without competing for ownership",
+    has_all(
+        senior_skill,
+        ["由 `security-engineering-expert` 主责", "负责系统设计、代码、测试和生产落地"],
+    )
+    and has_all(
+        senior_routing,
+        ["系统实现范围内的安全架构", "残余风险准出交 `security-engineering-expert`"],
+    ),
+)
+check(
+    "security routing competition fixtures remain present",
+    has_all(
+        skill_eval_prompt_fixture,
+        [
+            '"competition_group": "security-design-owner"',
+            '"competition_group": "funds-security-owner"',
+            '"security-engineering-expert-negative-local-code-fix"',
+            '"security-engineering-expert-negative-payment-semantics"',
+        ],
+    ),
+)
+check(
+    "security routing has behavior smoke coverage",
+    has_all(
+        "scripts/smoke-wise-agent-behavior.sh",
+        [
+            "assert_security_design_route",
+            "assert_security_funds_route",
+            "assert_security_code_fix_route",
+            "assert_security_scan_route",
+            "assert_security_finding_fix_route",
+            "assert_security_threat_model_route",
+            "assert_security_hardening_route",
+            "--mode must be all",
+            "security)",
+        ],
+    )
+    and has_all(readme, ["--mode security", "安全设计、资金安全、代码修复、仓库扫描和 finding 路由"]),
 )
 
 check(

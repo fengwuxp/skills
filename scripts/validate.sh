@@ -136,6 +136,7 @@ python3 -m py_compile payment-expert/scripts/verify_fixtures.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
 python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
+python3 -m py_compile security-engineering-expert/scripts/check_security_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
@@ -197,6 +198,9 @@ echo "==> UI design deliverable checker"
 python3 ui-design-expert/scripts/check_ui_design_deliverable.py --self-test
 python3 ui-design-expert/scripts/check_ui_source.py --self-test
 python3 ui-design-expert/scripts/verify_fixtures.py
+
+echo "==> security engineering deliverable checker"
+python3 security-engineering-expert/scripts/check_security_deliverable.py --self-test
 
 echo "==> wind convention guard"
 wind-coding-conventions/scripts/check_wind_conventions.py --self-test

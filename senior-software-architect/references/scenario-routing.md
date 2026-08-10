@@ -67,7 +67,7 @@
 | 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md` | 业务不变量、事务边界、幂等、去重、补偿、对账、告警和一致性窗口。 |
 | 遗留系统改造 / 迁移 | `refactoring-design-template.md`、`evolutionary-architecture.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 先判断独立重构设计准入，再固定行为不变量、MIG 切片、契约测试、双写/回填/切流、灰度、回滚和下线标准；局部行为保持重构只用任务卡和测试保护。 |
 | 架构腐朽 / 排熵 / 可删除性评审 / 不敢删 / 承重 bug | `evolutionary-architecture.md`、`coding-review-deep-dive.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、下线候选和最小排熵计划。 |
-| 安全架构 / 权限 / 租户 / 敏感数据 / Spring Security | `security-architecture.md`、`negative-constraints.md` | 资产、主体、边界、威胁、认证授权、隔离、密钥、审计和安全测试；Spring 项目追加 SecurityFilterChain、方法级授权、CSRF、CORS、代理头、限流和错误响应检查。 |
+| 系统实现范围内的安全架构 / 权限 / 租户 / 敏感数据 / Spring Security | `security-architecture.md`、`negative-constraints.md` | 消费既有安全不变量，落地认证授权、隔离、密钥、审计和安全测试；Spring 项目追加 SecurityFilterChain、方法级授权、CSRF、CORS、代理头、限流和错误响应检查。跨业务、资金、协议、身份、数据与运行层的安全判断和残余风险准出交 `security-engineering-expert`。 |
 | 生产变更 / 上线评审 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | 影响范围、灰度、开关、监控、应急、回滚、审计、验收。 |
 | 生产现象 / 线上异常 / 故障排查 | `debugging-diagnosis.md`、`production-readiness.md`、`negative-constraints.md` | 先定影响面、时间线、止血和只读证据，再做根因假设、最小修复、回滚和复盘。 |
 | 数据库迁移 / 修数 / 回填 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | dry-run、备份、分批、校验、审计、回滚和新旧版本兼容。 |

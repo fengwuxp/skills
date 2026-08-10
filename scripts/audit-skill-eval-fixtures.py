@@ -33,6 +33,7 @@ SKILLS = {
     "payment-funds-review",
     "product-architecture-expert",
     "resource-capability-distiller",
+    "security-engineering-expert",
     "senior-software-architect",
     "ui-design-expert",
     "wind-coding-conventions",
@@ -62,6 +63,7 @@ SKILL_MENTIONS = {
         "资源炼技",
         "多源材料提炼",
     ],
+    "security-engineering-expert": ["security-engineering-expert", "安全工程专家"],
     "senior-software-architect": ["资深架构师", "senior-software-architect"],
     "ui-design-expert": ["ui-design-expert", "UI 设计专家"],
     "wind-coding-conventions": ["wind-coding-conventions", "Wind 编码约规"],
@@ -219,6 +221,16 @@ REQUIRED_COMPETITION_GROUPS = {
             "ui-design-expert",
         },
         "expected_skill": "product-architecture-expert",
+    },
+    "security-design-owner": {
+        "skills": {"security-engineering-expert", "senior-software-architect"},
+        "expected_skill": "security-engineering-expert",
+        "sha256": "0c7a76c055096847d11ca92bdbb456087c20ebd0934dd7b4d87f232e9de04a14",
+    },
+    "funds-security-owner": {
+        "skills": {"payment-expert", "security-engineering-expert"},
+        "expected_skill": "security-engineering-expert",
+        "sha256": "2173747bdcc729dfa2887b25a836e81146507594f28acc4c3d23597487ae5527",
     },
     "spring-fix-owner": {
         "skills": {
@@ -447,7 +459,7 @@ def audit_data(data: Any, *, label: str) -> list[str]:
             actual_sha256 = hashlib.sha256(payload).hexdigest()
             if actual_sha256 != expected_sha256:
                 failures.append(
-                    f"{label}: fiction competition contract sha256 mismatch {group_id}: "
+                    f"{label}: competition contract sha256 mismatch {group_id}: "
                     f"expected {expected_sha256}, got {actual_sha256}"
                 )
 
@@ -679,16 +691,17 @@ def run_self_test() -> None:
         raise SystemExit("self-test failed: missing required competition-group failure")
 
     invalid = deepcopy(valid)
+    protected_groups = {
+        group_id
+        for group_id, contract in REQUIRED_COMPETITION_GROUPS.items()
+        if contract.get("sha256")
+    }
     for case in invalid["cases"]:
-        if case.get("competition_group") in {
-            "fiction-drafting-owner",
-            "fiction-project-document-owner",
-            "fiction-term-evidence-owner",
-        }:
+        if case.get("competition_group") in protected_groups:
             case["query"] = "请设计一个后台管理页面，包含侧边栏、筛选器、数据表格和分页，并适配移动端。"
-    expected = audit_data(invalid, label="invalid-fiction-competition-contract")
-    if not any("fiction competition contract sha256 mismatch" in item for item in expected):
-        raise SystemExit("self-test failed: fiction competition contract drift was accepted")
+    expected = audit_data(invalid, label="invalid-protected-competition-contract")
+    if not any("competition contract sha256 mismatch" in item for item in expected):
+        raise SystemExit("self-test failed: protected competition contract drift was accepted")
 
     invalid = deepcopy(valid)
     invalid["cases"] = [
