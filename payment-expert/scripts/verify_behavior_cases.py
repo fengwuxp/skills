@@ -20,7 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 CASES_FILE = ROOT / "test-prompts.json"
 PUBLIC_CORE_CASES_FILE = ROOT / "fixtures" / "public-core-behavior-cases.json"
 METHOD_CARDS = ROOT / "references" / "payment-method-cards.md"
-METHODS = {f"M{index:02d}" for index in range(1, 10)}
+METHODS = {f"M{index:02d}" for index in range(1, 11)}
+REQUIRED_M10_CASE_IDS = {f"PT-{index:03d}" for index in range(36, 44)}
+M10_CONTRACT_SHA256 = "e92d21e721fe0d462e79f1f549576513b96ddf177be141e7439fbdc85db56149"
 KINDS = {"should_trigger", "should_ask", "should_stop", "should_not_trigger"}
 DECISIONS = {"answer", "ask", "stop", "pending", "route"}
 PUBLIC_CORE_VERSION = 1
@@ -108,7 +110,7 @@ def audit_cases(data: object) -> list[str]:
             if skill != "payment-expert":
                 failures.append(f"{label}: payment behavior case must select payment-expert")
             if method not in METHODS:
-                failures.append(f"{label}: expected.method must be M01-M09")
+                failures.append(f"{label}: expected.method must be M01-M10")
             else:
                 covered_methods.add(method)
             if not isinstance(must_include, list) or not must_include or not all(
@@ -119,6 +121,35 @@ def audit_cases(data: object) -> list[str]:
     missing_methods = sorted(METHODS - covered_methods)
     if missing_methods:
         failures.append("missing method coverage: " + ", ".join(missing_methods))
+    method_cards_text = METHOD_CARDS.read_text(encoding="utf-8")
+    missing_method_cards = sorted(
+        method for method in METHODS if f"## {method} " not in method_cards_text
+    )
+    if missing_method_cards:
+        failures.append("missing method cards: " + ", ".join(missing_method_cards))
+    missing_m10_cases = sorted(REQUIRED_M10_CASE_IDS - seen_ids)
+    if missing_m10_cases:
+        failures.append("missing M10 acquiring cases: " + ", ".join(missing_m10_cases))
+    m10_cases = sorted(
+        (
+            case
+            for case in data
+            if isinstance(case, dict) and case.get("id") in REQUIRED_M10_CASE_IDS
+        ),
+        key=lambda case: case["id"],
+    )
+    m10_payload = json.dumps(
+        m10_cases,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    actual_m10_sha256 = hashlib.sha256(m10_payload).hexdigest()
+    if actual_m10_sha256 != M10_CONTRACT_SHA256:
+        failures.append(
+            "M10 acquiring contract sha256 mismatch: "
+            f"expected {M10_CONTRACT_SHA256}, got {actual_m10_sha256}"
+        )
     for required_route in ["product-architecture-expert", "senior-software-architect"]:
         if required_route not in negative_routes:
             failures.append(f"missing hard-negative route: {required_route}")
@@ -131,9 +162,7 @@ def audit_cases(data: object) -> list[str]:
     ]:
         if required_boundary not in negative_boundaries:
             failures.append(f"missing hard-negative boundary: {required_boundary}")
-    referenced_pressure_tests = set(
-        re.findall(r"`(PT-\d{3})`", METHOD_CARDS.read_text(encoding="utf-8"))
-    )
+    referenced_pressure_tests = set(re.findall(r"`(PT-\d{3})`", method_cards_text))
     missing_pressure_tests = sorted(referenced_pressure_tests - seen_ids)
     if missing_pressure_tests:
         failures.append("unresolved method-card pressure tests: " + ", ".join(missing_pressure_tests))

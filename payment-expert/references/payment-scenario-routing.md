@@ -60,6 +60,7 @@
 | 场景信号 | 优先读取 | 典型输出 |
 | --- | --- | --- |
 | 支付术语、清算/结算/备付金口径不清 | `glossary.md`, `regulatory-baseline.md` | 术语定义、主体语境、风险提示 |
+| 完整收单平台、Payment API 完整性、商户入网到银行到账 | `payment-method-cards.md` 的 `M10`, `payment-design-checklists.md`, `regulatory-baseline.md`，再按轨道读取专项 reference | 收单完整层级、能力交集、准入 Gate、Owner、缺口和验收证据 |
 | 收单、支付订单、支付尝试、在线支付 | `payment-methodology.md`, `card-network-and-card-rails.md`, `highnote-reference-patterns.md` | 支付流程、状态机、订单/尝试模型、事件集成 |
 | 清结算、商户结算、分账分润、结算周期 | `clearing-settlement.md`, `payment-design-checklists.md` | 清结算方案、账户科目、账务矩阵、结算规则 |
 | 多业务线清结算全局规划、线下 Excel 核算、财务人工打款、清结算中台 | `clearing-settlement.md`, `payment-design-checklists.md`；图形交付再调用 `product-architecture-expert` 或专用出图 Skill | 现状问题盘点、资金路径、能力切分、分期迁移路线、全局规划图 |
@@ -85,6 +86,7 @@
 
 ## 组合场景路由
 
+- **完整收单平台 / Payment API 能力体检**：先用 `M10` 判断 API 切片、业务可用试点或生产可用，再按缺口读取商户风控、卡/ACH 等轨道、退款争议、清结算对账和监管 reference；不把一个总状态机或能力笛卡尔积当完整性证明。
 - **ACH 争议 / unauthorized return**：读 `payment-rails-ach-and-bank-transfers.md` + `dispute-refund-and-chargeback-operations.md` + `payment-risk-fraud-and-merchant-operations.md`。重点输出 debit authorization evidence、账户验证、return code、NOC、reversal、retry、证据包和用户通知。
 - **VCC 争议 / 企业卡拒付**：读 `virtual-card-and-vcc.md` + `card-network-and-card-rails.md` + `dispute-refund-and-chargeback-operations.md`。重点输出 cardholder、卡、授权控制、清算、退款、争议证据和 PCI 边界。
 - **收单 + 商户结算 + 对账**：读 `payment-methodology.md` + `clearing-settlement.md` + `card-network-and-card-rails.md` + `payment-design-checklists.md`。重点输出支付单据、清分规则、结算批次、通道对账和资金到账对账。

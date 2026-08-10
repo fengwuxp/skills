@@ -24,6 +24,8 @@
 | `S2` | `订单域冻结快照@2ac2c22bedbd72f5cc419009c8ddb12b6c06d59f` | 原支付关联、累计退款额度和外部退款事实幂等 | 行业通用规则、未提交工作区或生产运行结果 |
 | `S3` | `资金域冻结快照@371b02470f6755ead5f309069a6046355c928970` | 账本、清结算、对账、FX、VCC 和通道资金边界 | 目标项目会计政策、部署、外部协议或生产可用性 |
 | `S4` | 微信公众号文章《一笔支付，要记哪些账？搞懂这些分录，秒变账务大师！》；2026-08-03 通过浏览器 DOM 读取 | 多主体账簿边界和分阶段证据的 D1 产品检查候选 | 具体分录、科目/借贷方向、会计政策、监管或生产结论 |
+| `S5` | 微信公众号文章《一套真正的收单平台，到底应该包含什么？》；作者 Scott 薛；页面显示 2026-08-08 20:08；2026-08-08 通过 Codex 应用内浏览器 DOM 读取标题、作者、发布时间和正文 | Payment API 与完整收单产品的区别、商户准入、能力三轴和多控制面完整性问题的 D1 候选 | 通用 Merchant/Store/MID 关系、当前厂商成熟度、法域/法律/会计规则、卡组织精确规则或生产可用性 |
+| `S6` | 2026-08-10 读取 [Stripe capabilities](https://docs.stripe.com/connect/account-capabilities)、[Stripe onboarding](https://docs.stripe.com/connect/onboarding)、[Adyen onboarding](https://docs.adyen.com/platforms/onboard-users)、[Adyen payment reconciliation](https://docs.adyen.com/platforms/reconciliation-use-cases/reconcile-payments)、[Adyen payout reconciliation](https://docs.adyen.com/platforms/payout-reconciliation)、[EMV 3DS](https://www.emvco.com/emv-technologies/3d-secure/) 与 [PCI DSS](https://www.pcisecuritystandards.org/standards/pci-dss/) 官方正文 | 商户验证与能力激活、Hosted/API 入网责任、卡非面对面认证、支付与 payout 对账证据的 D1 对齐 | 厂商对象/状态/报表通则、目标账户 capability、PCI 适用范围、法域责任或生产准入 |
 
 S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取或泄露客户数据、密钥、生产配置和未提交工作区。
 
@@ -74,6 +76,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 | `XBD-004` | FX 显式记录源/目标币种、价格类型、快照和舍入，具体取值是产品契约 | `[S1:p172-p173;p217]` + `S3-FX-001`，D2 |
 | `XBD-005` | 跨境收付区分受理、在途、到账、失败和退汇；无有效 quote 不静默入可用余额 | `[S1:p156-p173;p207-p219]` + `S3-XBD-001`，D2 |
 | `CHN-004` | 外部协议、文件和状态由业务/适配层解释，资金底座只承接可审计资金事实 | `[S1:p193-p222]` + `S3-CHANNEL-001`，D2 |
+| `ACQ-001` | 完整收单产品不能由 Payment API、单一资金测试、结算批次或账本余额单独证明；应分层核对商户、有效能力、接受、处理、资金和治理证据 | `S5` + `S6` + `PAY-003` + `STL-001` + `REC-001`，D1/D2 组合候选 |
 
 ## 方法候选映射
 
@@ -89,6 +92,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 | `C11` 不可变对账与追加修复 | `M07` | D2 |
 | `C12` FX 显式报价契约 | `M08` | D2 |
 | `C13` 通道解释与资金承接边界 | `M09` | D2 |
+| `C14` 收单平台完整性与准入门禁 | `M10` | D1/D2 组合候选 |
 
 方法卡中的 `PT-*` 压测编号必须在 `test-prompts.json` 中解析并由 `scripts/verify_behavior_cases.py` 检查；它们不是来源等级。
 
@@ -115,6 +119,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 - 微信公众号文章《头部大厂，怎么做清结算全局规划，分享一个真实案例！》：`https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q`。2026-05-26 Playwright 核验结果为页面已被发布者删除，正文不可复核；仅保留为历史索引线索，不得作为已吸收来源。
 - 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端公开 HTML，并使用本机 Chrome headless 作为 Playwright 等价浏览器读取标题、作者、发布时间和正文；公开内容用于参考 AI 出海资金管理的场景问题，不支持厂商能力、覆盖范围或当前商业结论。
 - 微信公众号文章《一笔支付，要记哪些账？搞懂这些分录，秒变账务大师！》：`https://mp.weixin.qq.com/s/XlG7JnJu8Orjmxp4PScgIg`。2026-08-03 已通过 Codex 应用内浏览器 DOM 读取标题、作者“陈天宇宙”、页面显示发布时间“2026年8月3日 08:38”和正文；图片资源读取超时，未将图中未见文本作为证据。公开内容仅用于多主体账簿边界和分阶段证据的 D1 检查，不支持具体分录、会计政策、监管或生产结论。
+- 微信公众号文章《一套真正的收单平台，到底应该包含什么？》：`https://mp.weixin.qq.com/s/xZzHwaiOztu0QjUJbuK9Aw`。作者 Scott 薛，页面显示发布时间 2026-08-08 20:08；2026-08-08 已通过 Codex 应用内浏览器 DOM 读取标题、作者、发布时间和正文。公开内容仅用于收单产品完整性问题、能力维度和准入检查的 D1 候选；文章中的 Source URL 共享和不设置 Store 属特定产品设计，不作为通用 Merchant/Store/MID 模型，也不支持厂商成熟度、法律、会计、卡组织规则或生产结论。
 
 以下为外部来源导航。未标明已读日期的条目在 2026-07-31 未联网复核，状态为 `PENDING`；Stripe、Airwallex、Highnote 的公共核心事实已于 2026-08-03 读取并归位到 `provider-facts.md`，使用时仍须复核目标环境与版本：
 

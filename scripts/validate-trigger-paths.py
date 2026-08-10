@@ -12457,6 +12457,50 @@ check(
     ),
 )
 check(
+    "payment expert keeps acquiring completeness gate and hard boundaries",
+    has_all(
+        payment_skill,
+        [
+            "`M10` 收单平台完整性与准入门禁",
+            "商业模式、法域、商户责任、轨道、有效能力状态、资金映射或完成证据不全",
+        ],
+    )
+    and has_all(
+        payment_method_cards,
+        [
+            "## M10 收单平台完整性与准入门禁",
+            "API 切片 / 业务可用试点 / 生产可用",
+            "不是三个轴的笛卡尔积",
+            "账本与对账横切各轴",
+            "Network Settlement",
+            "Merchant Allocation / Payable",
+            "M01/M03/M05/M07/M09",
+            "capability 已激活",
+            "三类对账证据是完整性检查框架",
+            "`PT-036` 至 `PT-043`",
+        ],
+    )
+    and has_all(
+        payment_checklists,
+        [
+            "## 收单平台完整性与事件集成门禁",
+            "Hosted Checkout / Direct API",
+            "gross-to-net",
+            "sandbox 可调用不等于生产已激活",
+            "卡非面对面场景的 3DS",
+            "三类对账证据",
+            "不是通用一对一",
+        ],
+    )
+    and has_all(
+        payment_routing,
+        [
+            "完整收单平台、Payment API 完整性、商户入网到银行到账",
+            "先用 `M10` 判断 API 切片、业务可用试点或生产可用",
+        ],
+    ),
+)
+check(
     "product route sends Airwallex-style platform signals to references",
     has_all(
         "payment-expert/references/payment-scenario-routing.md",

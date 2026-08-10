@@ -26,7 +26,7 @@
 | 支付方案总检 | 金融业务专家总检、PRD 检查、资金安全检查、外部规则时效性检查 | 专项轨道补充，除非命中场景 |
 | 全球/跨境/多币种 | 全球金融平台交付包检查、生命周期与运营成熟度检查、FX 费用和舍入补充、跨境与多币种补充 | VCC 专项 |
 | 清结算/账务/对账 | 清结算方案检查、对账方案检查、账务核心检查、输出模板：清结算方案 | 收单风控补充 |
-| 收单/卡组织/ACH | 通道与路由治理补充、卡产品补充、ACH 与银行转账补充、卡组织与卡支付轨道补充 | 新支付形态补充 |
+| 收单/卡组织/ACH | 收单平台完整性与事件集成门禁、通道与路由治理补充、卡产品补充、ACH 与银行转账补充、卡组织与卡支付轨道补充 | 新支付形态补充 |
 | 风控/争议/运营 | 风控欺诈与商户运营补充、争议退款与拒付运营补充、报表与数据面补充 | 银行核心账务扩写 |
 | 技术实现交接 | 技术实现检查、外部规则时效性检查、资金安全检查 | 纯业务背景段落 |
 
@@ -235,12 +235,20 @@
 - 报表是否支持异步生成、状态查询、下载、过期和失败重试。
 - 报表是否能用事件级字段关联交易、资金事件和分录，而不是只靠交易主单号。
 
-## 收单与事件集成补充
+## 收单平台完整性与事件集成门禁
 
-- 是否区分支付订单、支付尝试、网络事件、资金入账和商户结算。
-- 是否明确 tokenization、敏感支付信息隔离、PCI 边界和商户前后端责任分工。
-- webhook 是否支持幂等、重试、乱序容忍、补拉和状态回查。
-- 平台事件、账务事件、运营事件和报表事件是否按语义分层，而不是混在一个通道里。
+- 是否先确认收单商业模式、法律主体、法域、Merchant / payer 关系、持牌或合作方角色、资金归属和责任 Owner。
+- 商户准入是否覆盖 KYB、渠道入网、持续复核、capability 激活/限制、限额、费率/结算策略、暂停与退出，而不是只有 Merchant 表。
+- Integration Method、Payment Method、Transaction Capability 是否按法域、持续准入、目标生产账户有效能力、渠道、轨道、风控和安全边界求能力交集，而不是直接做笛卡尔积。
+- 是否明确 capability 已请求、已配置或 sandbox 可调用不等于生产已激活，并保留待审、受限、暂停及重新核验路径。
+- Hosted Checkout / Direct API 是否分别说明前后端责任、tokenization、敏感支付信息隔离、PCI、卡非面对面场景的 3DS、密钥、脚本安全和 webhook 验签边界。
+- 是否把 Merchant、Payment Intent / Attempt / Operation、Network Clearing / Settlement、Merchant Allocation / Payable、payout / bank arrival 和各轨道逆向作为正交事实轴；账本与对账横切各轴，不串成一个总状态机。
+- API 和 webhook 是否有幂等、重试、乱序容忍、query/补拉与 Unknown 恢复；平台、账务、运营和报表事件是否按语义分层。
+- 首期是否至少覆盖 refund，以及与目标轨道匹配的人工 dispute / chargeback / return 闭环；不把卡流程直接套给 ACH、钱包或 APM。
+- gross-to-net 是否能回链 capture/principal、fee、refund、dispute、reserve、adjustment 和 merchant payable；settlement、payout submitted、银行终态回单保持分层。
+- 是否闭合交易与通道、Network Clearing / Settlement、银行资金与内部账务三类对账证据，并按目标 provider / rail 的实际报告、稳定关联标识和终态回单向商户解释差异，而不是把“三层”当成厂商通用报告层数。
+- 是否具备权限、审批、审计、监控、告警、Runbook、人工接管、回滚和证据留存；缺少这些只能标为 API 切片或受控试点。
+- Source URL、Store、MID、Merchant Account 与法律商户主体是否按目标合同和渠道建模，而不是通用一对一。
 
 ## ACH 与银行转账补充
 

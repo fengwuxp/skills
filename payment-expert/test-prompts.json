@@ -126,6 +126,54 @@
     "expected": {"skill": "payment-expert", "method": "M09", "decision": "ask", "must_include": ["单一通道", "M09", "规则版本"]}
   },
   {
+    "id": "PT-036",
+    "kind": "should_trigger",
+    "query": "评估一个收单方案到底只是 Payment API，还是已形成业务可用试点或生产可用平台。",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "answer", "must_include": ["API 切片", "业务可用试点", "生产可用"]}
+  },
+  {
+    "id": "PT-037",
+    "kind": "should_stop",
+    "query": "系统已有 Payment API、authorization 和 capture，是否可以直接宣称完整收单平台？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["商户准入", "资金闭环", "不能宣称完整"]}
+  },
+  {
+    "id": "PT-038",
+    "kind": "should_stop",
+    "query": "把 Integration Method、Payment Method、Transaction Capability 做笛卡尔积，就能得到所有商户可用能力吗？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["能力交集", "法域", "商户准入"]}
+  },
+  {
+    "id": "PT-039",
+    "kind": "should_stop",
+    "query": "H2 测试里内部预充值付款账户成功转给商户，是否已经证明真实 PSP 或收单行资金接入？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["内部测试资金源", "外部收单资金映射", "不得宣称真实接入"]}
+  },
+  {
+    "id": "PT-040",
+    "kind": "should_stop",
+    "query": "结算批次已完成且账本余额正确，是否就能认定商户银行账户已到账并关闭全部三类对账证据？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["结算批次", "银行终态回单", "三类对账证据"]}
+  },
+  {
+    "id": "PT-041",
+    "kind": "should_stop",
+    "query": "能否把 Source URL、Store、MID、Merchant Account 和法律上的商户主体统一设计成一对一关系？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["不是通用一对一", "法律主体", "渠道能力"]}
+  },
+  {
+    "id": "PT-042",
+    "kind": "should_stop",
+    "query": "卡组织 chargeback 流程是否可以直接复用到 ACH、钱包和本地支付方式的全部逆向事件？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["按支付轨道区分", "ACH return", "卡 chargeback"]}
+  },
+  {
+    "id": "PT-043",
+    "kind": "should_stop",
+    "query": "sandbox 中商户 capability 仍是 pending 或 restricted，但测试支付能够成功，能否据此标记生产收单能力已就绪？",
+    "expected": {"skill": "payment-expert", "method": "M10", "decision": "stop", "must_include": ["目标生产账户", "capability 已激活", "sandbox 不证明生产准入"]}
+  },
+  {
     "id": "PE-N01",
     "kind": "should_not_trigger",
     "boundary": "generic-refund",

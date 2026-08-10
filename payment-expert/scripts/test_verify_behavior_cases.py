@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 PAYMENT_SCRIPT = Path(__file__).with_name("verify_behavior_cases.py")
 CASES_FILE = ROOT / "payment-expert" / "fixtures" / "public-core-behavior-cases.json"
+METHOD_CASES_FILE = ROOT / "payment-expert" / "test-prompts.json"
 HISTORICAL_CANDIDATE_COMPARISON_SHA256 = (
     "5a1f092b2a596bb6f9c53899f82475717f4b2d6633ef85f73cd6c5f760abd0d0"
 )
@@ -84,6 +85,41 @@ class PublicCoreBehaviorContractTests(unittest.TestCase):
 
         self.assertIn("未保留在仓库内", limitations)
         self.assertNotIn("继续保存在仓库过程工件中", limitations)
+
+
+class MethodBehaviorContractTests(unittest.TestCase):
+    def test_rejects_missing_m10_acquiring_case(self) -> None:
+        data = json.loads(METHOD_CASES_FILE.read_text(encoding="utf-8"))
+        changed = [case for case in data if case["id"] != "PT-042"]
+
+        self.assertIn(
+            "missing M10 acquiring cases: PT-042",
+            PAYMENT.audit_cases(changed),
+        )
+
+    def test_requires_sandbox_capability_negative(self) -> None:
+        data = json.loads(METHOD_CASES_FILE.read_text(encoding="utf-8"))
+        changed = [case for case in data if case["id"] != "PT-043"]
+
+        self.assertIn(
+            "missing M10 acquiring cases: PT-043",
+            PAYMENT.audit_cases(changed),
+        )
+
+    def test_rejects_m10_hard_negative_contract_drift(self) -> None:
+        data = json.loads(METHOD_CASES_FILE.read_text(encoding="utf-8"))
+        changed = deepcopy(data)
+        for case in changed:
+            if case["id"] in {f"PT-{index:03d}" for index in range(37, 44)}:
+                case["kind"] = "should_trigger"
+                case["expected"]["decision"] = "answer"
+
+        self.assertTrue(
+            any(
+                "M10 acquiring contract sha256 mismatch" in failure
+                for failure in PAYMENT.audit_cases(changed)
+            )
+        )
 
 
 if __name__ == "__main__":
