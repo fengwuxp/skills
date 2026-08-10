@@ -734,12 +734,26 @@ surfaces = (
     re.search(r"约束面[^。；\n]{0,180}(?:目标|事实)[^。；\n]{0,180}(?:证据|停止)", text)
     and re.search(r"推进面[^。；\n]{0,180}(?:假设|最小动作)[^。；\n]{0,180}(?:反馈|下一步)", text)
 )
-active_split_patterns = (
-    r"(?<!不)(?<!不得)(?<!不能)(?<!禁止)(?<!拒绝)(?<!请勿)(?:建立|新增|拆成|分成)\s*(?:阴|阳) Agent",
-    r"(?<!不)(?<!不得)(?<!不能)(?<!禁止)(?<!拒绝)(?<!请勿)(?:阴|阳) Agent[^。；\n]{0,20}(?:负责|执行)",
+split_patterns = (
+    r"(?:建立|新增|拆成|分成)\s*(?:阴|阳) Agent",
+    r"(?:阴|阳) Agent[^。；\n]{0,20}(?:负责|执行)",
     r"让(?:阴|阳) Agent[^。；\n]{0,30}投票",
+    r"实际(?:拆成|分成)两个 Agent[^。；\n]{0,120}阴[^。；\n]{0,30}(?:审查|约束|检查)[^。；\n]{0,120}阳[^。；\n]{0,30}(?:执行|推进|行动)",
 )
-valid = surfaces and not any(re.search(pattern, text) for pattern in active_split_patterns)
+negation_tail = re.compile(r"(?:并非|不是|不会|不要|不得|不能|禁止|拒绝|请勿|不应|不)\s*(?:实际\s*)?(?:让\s*)?$")
+negated_split_context = re.compile(
+    r"(?:并非|不是|不会|不要|不得|不能|禁止|拒绝|请勿|不应|不)"
+    r"[^。；\n]{0,40}(?:建立|新增|拆成|分成|让)[^。；\n]{0,120}$"
+)
+
+def is_active_split(pattern):
+    for match in re.finditer(pattern, text):
+        context = re.split(r"[。；\n]|(?:但是|然而|不过|反而|但|却)", text[:match.start()])[-1]
+        if not negation_tail.search(context) and not negated_split_context.search(context):
+            return True
+    return False
+
+valid = surfaces and not any(is_active_split(pattern) for pattern in split_patterns)
 raise SystemExit(0 if valid else 1)
 PY
 }
@@ -906,7 +920,11 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-ocr-mode-dispatch.txt" \
       "${sample_dir}/yinyang-contract.txt" \
       "${sample_dir}/yinyang-split-rejection.txt" \
+      "${sample_dir}/yinyang-natural-negation.txt" \
       "${sample_dir}/bad-yinyang-split.txt" \
+      "${sample_dir}/bad-yinyang-role-assignment.txt" \
+      "${sample_dir}/bad-yinyang-two-agent-vote.txt" \
+      "${sample_dir}/bad-yinyang-two-agent-divide.txt" \
       "${sample_dir}/ui-reference-axes-direct.txt" \
       "${sample_dir}/bad-ui-reference-axes-direct.txt" \
       "${sample_dir}/bad-huaxia-semantic-reversal.txt" \
@@ -1035,8 +1053,12 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '先确认会话写入边界。Delegation Mode 走 ocr delegate preview 且不执行 ocr llm test；外部 LLM Mode 走 ocr review --preview 和 ocr llm test；都不可用时回退资深架构师。' > "${sample_dir}/ocr-mode-dispatch.txt"
   printf '%s\n' '先确认会话写入边界。Delegation Mode 同时跑 ocr delegate preview、ocr review --preview 和 ocr llm test，但不执行自动修复；外部 LLM Mode 也跑 ocr review --preview 和 ocr llm test；最后交资深架构师。' > "${sample_dir}/bad-ocr-mode-dispatch.txt"
   printf '%s\n' '一个行动主体在复杂任务中同时记录约束面：目标、事实、权限、完成证据和停止条件；推进面：当前假设、最小动作、反馈源和下一步。阴阳一体、互用互制，阴制阳、阳制阴，不拆成两个 Agent，不新增 RSI Mode。' > "${sample_dir}/yinyang-contract.txt"
-  printf '%s\n' '一个行动主体拒绝拆分阴阳：约束面记录目标、事实、权限、证据和停止条件；推进面记录假设、最小动作、反馈源和下一步。拒绝阴 Agent、阳 Agent 或投票决定交付；Checker 保持独立验证，阴阳互用互制，阴制阳、阳制阴。' > "${sample_dir}/yinyang-split-rejection.txt"
+  printf '%s\n' '一个行动主体拒绝拆分阴阳：约束面记录目标、事实、权限、证据和停止条件；推进面记录假设、最小动作、反馈源和下一步。不得实际拆成两个 Agent，让阴只审查、阳只执行或投票决定交付；Checker 保持独立验证，阴阳互用互制，阴制阳、阳制阴。' > "${sample_dir}/yinyang-split-rejection.txt"
+  printf '%s\n' '一个行动主体拒绝拆分阴阳：约束面记录目标、事实、权限、证据和停止条件；推进面记录假设、最小动作、反馈源和下一步。并非实际拆成两个 Agent，不会让阴只审查、阳只执行或投票交付；不应分成阴 Agent负责审查、阳 Agent执行并投票交付；Checker 保持独立验证，阴阳互用互制，阴制阳、阳制阴。' > "${sample_dir}/yinyang-natural-negation.txt"
   printf '%s\n' '一个行动主体表面上记录约束面与推进面，但建立阴 Agent负责审查、阳 Agent负责执行并投票决定交付；不新增 RSI Mode。' > "${sample_dir}/bad-yinyang-split.txt"
+  printf '%s\n' '一个行动主体记录约束面：目标、事实与停止证据；推进面：假设、最小动作与反馈。阴阳一体、互用互制，阴制阳、阳制阴；最终安排为阴 Agent负责审查、阳 Agent执行并投票交付。' > "${sample_dir}/bad-yinyang-role-assignment.txt"
+  printf '%s\n' '一个行动主体记录约束面：目标、事实与停止证据；推进面：假设、最小动作与反馈。阴阳一体、互用互制，阴制阳、阳制阴；实际拆成两个 Agent：阴只审查，阳只执行，最后投票交付。' > "${sample_dir}/bad-yinyang-two-agent-vote.txt"
+  printf '%s\n' '一个行动主体记录约束面：目标、事实与停止证据；推进面：假设、最小动作与反馈。阴阳一体、互用互制，阴制阳、阳制阴；实际分成两个 Agent：阴只审查，阳只执行，最后投票交付。' > "${sample_dir}/bad-yinyang-two-agent-divide.txt"
   printf '%s\n' '信息节奏与排版角色已明确并授权自决，不再确认，直接进入设计。' > "${sample_dir}/ui-reference-axes-direct.txt"
   printf '%s\n' '信息节奏与排版角色已明确，但仍请确认采用轴，确认后再设计。' > "${sample_dir}/bad-ui-reference-axes-direct.txt"
   assert_product "${sample_dir}/product.txt"
@@ -1096,6 +1118,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_ocr_mode_dispatch "${sample_dir}/ocr-mode-dispatch.txt"
   assert_yinyang_contract "${sample_dir}/yinyang-contract.txt"
   assert_yinyang_split_rejection "${sample_dir}/yinyang-split-rejection.txt"
+  assert_yinyang_split_rejection "${sample_dir}/yinyang-natural-negation.txt"
   assert_ui_reference_axes_direct "${sample_dir}/ui-reference-axes-direct.txt"
   assert_no_eastern_symbol_prescription "${sample_dir}/ui-eastern-symbol-negated.txt"
   assert_no_eastern_symbol_prescription "${sample_dir}/ui-eastern-symbol-negated-variant.txt"
@@ -1345,6 +1368,18 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_yinyang_contract "${sample_dir}/bad-yinyang-split.txt"; then
     echo "FAIL yinyang smoke accepted a split-agent execution chain" >&2
+    exit 1
+  fi
+  if assert_yinyang_contract "${sample_dir}/bad-yinyang-role-assignment.txt"; then
+    echo "FAIL yinyang smoke accepted an active role-assignment chain" >&2
+    exit 1
+  fi
+  if assert_yinyang_contract "${sample_dir}/bad-yinyang-two-agent-vote.txt"; then
+    echo "FAIL yinyang smoke accepted a two-agent voting chain" >&2
+    exit 1
+  fi
+  if assert_yinyang_contract "${sample_dir}/bad-yinyang-two-agent-divide.txt"; then
+    echo "FAIL yinyang smoke accepted a divided two-agent voting chain" >&2
     exit 1
   fi
   if assert_ui_reference_axes_direct "${sample_dir}/bad-ui-reference-axes-direct.txt"; then

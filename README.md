@@ -168,9 +168,10 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可安装、同步、团队共享或公开发布 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
-| 正式报告、制度、手册、研究说明、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、法律、合规或考据结论 |
+| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事/卷/章设计、正文、重写和连续性审查 | 小说家，ID：`novelist`，路径：[novelist](./novelist) | 类型承诺、当前创作单元、稿件权威、设定状态、允许改变范围、作者验收 | 以华夏经世智慧校准人情事势；不把旧稿、考据结论或创作候选自动升级为正典 |
+| 正式报告、制度、手册、研究说明、创作设定集、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、小说、法律、合规或考据结论，不负责小说正文 |
 | 教程、视频、代码、文档、规范和产物到可复用能力候选 | 资源炼技，ID：`resource-capability-distiller`，路径：[resource-capability-distiller](./resource-capability-distiller) | 可读取材料、复用目标、目标环境、许可与验收方式 | 先提炼能力单元并逐项归位；不默认创建新 Skill，不自动安装、同步、提交或晋升 |
-| 汉字学、训诂、字源、甲骨文、金文、小篆、通假和异体 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只是证据之一；不用于测字起名或普通工程命名 |
+| 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体及创作名称的时代语感证据 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只是证据之一；不测字吉凶、不替作者起名、不负责普通工程命名 |
 | 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | 华夏经世智慧，ID：`huaxia-practical-wisdom`，路径：[huaxia-practical-wisdom](./huaxia-practical-wisdom) | 事实、目标、约束、主体、时限、最坏损失 | 不作医学诊疗、占卜命理或古籍训诂，不替代专业结论 |
 | 方案、计划或设计的关键分叉、历史去重和决策快照 | `grill-me`，路径：[grill-me](./grill-me) | 方案、材料、历史决策、Owner、风险边界 | 未达到 shared understanding 不执行；自决不扩大授权 |
 | DDL/schema/Java 类/字段表格到 Java Service 脚手架 | `java-service-code-generator`，路径：[java-service-code-generator](./java-service-code-generator) | 结构化输入、表名、模块、输出目录、覆盖授权 | 不从纯自然语言直接生成生产代码；生成后仍要编译、测试和源码 CR |
@@ -187,6 +188,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 - 从产品事实到可用界面：产品专家稳定业务语义和验收口径，UI 设计专家形成信息架构、交互状态、视觉与可用性契约，架构师实现并验证；Figma 能力只负责工具内执行或既有设计到代码。
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
 - 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，`document-authoring` 只负责成文与载体，不改变证据等级。
+- 从小说创见到长篇交付：`novelist` 持有故事与正文，以 `huaxia-practical-wisdom` 校准人情事势；确有字词证据问题时调用 `hanzi-philology`，设定稳定且需要权威整理或正式载体时调用 `document-authoring`。
 - 从普通图到复杂图：先由产品专家或架构师稳定语义，再决定是否使用专用出图能力。
 - 官方 Superpowers 插件只补 brainstorming、TDD、调试、CR、验证等方法缺口，不替代产品或工程主能力，也不扩大 Git、worktree、subagent 或安装授权。
 

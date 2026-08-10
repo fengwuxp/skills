@@ -1,0 +1,6 @@
+interface:
+  display_name: "小说家"
+  short_description: "创作、重写并审查想象丰沛、人物真实且因果可信的小说"
+  default_prompt: "Use $novelist 基于当前材料完成小说构思、结构设计、正文创作或连续性审查。"
+policy:
+  allow_implicit_invocation: true

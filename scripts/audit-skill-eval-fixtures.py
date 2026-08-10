@@ -10,6 +10,7 @@ truth.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from copy import deepcopy
@@ -27,6 +28,7 @@ SKILLS = {
     "hanzi-philology",
     "huaxia-practical-wisdom",
     "java-service-code-generator",
+    "novelist",
     "payment-expert",
     "payment-funds-review",
     "product-architecture-expert",
@@ -51,6 +53,7 @@ SKILL_MENTIONS = {
         "老祖宗智慧",
     ],
     "java-service-code-generator": ["java-service-code-generator"],
+    "novelist": ["novelist", "小说家"],
     "payment-expert": ["payment-expert", "支付专家"],
     "payment-funds-review": ["payment-funds-review", "支付资金审查"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
@@ -185,6 +188,25 @@ REQUIRED_WISE_CONTRACT_CASES = {
     },
 }
 REQUIRED_COMPETITION_GROUPS = {
+    "fiction-drafting-owner": {
+        "skills": {
+            "document-authoring",
+            "huaxia-practical-wisdom",
+            "novelist",
+        },
+        "expected_skill": "novelist",
+        "sha256": "6853155cefa59453b66eca44fbd5894aaff10e655d02a71b0faf4027a6a96ece",
+    },
+    "fiction-project-document-owner": {
+        "skills": {"document-authoring", "novelist"},
+        "expected_skill": "document-authoring",
+        "sha256": "2c4c56975165c998903602fb4df5569ffb2ca2aefaa7ce740dd0bc0a06bb872b",
+    },
+    "fiction-term-evidence-owner": {
+        "skills": {"hanzi-philology", "novelist"},
+        "expected_skill": "hanzi-philology",
+        "sha256": "c3e90a710d7d747381e77e9473a44d0ba6128b39f64e7bedb51d594d5aee5d43",
+    },
     "payment-product-owner": {
         "skills": {"payment-expert", "payment-funds-review"},
         "expected_skill": "payment-expert",
@@ -413,6 +435,20 @@ def audit_data(data: Any, *, label: str) -> list[str]:
             failures.append(
                 f"{label}: competition group {group_id} owner must be {contract['expected_skill']}"
             )
+        expected_sha256 = contract.get("sha256")
+        if expected_sha256:
+            payload = json.dumps(
+                sorted(group_cases, key=lambda case: str(case.get("id", ""))),
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+            actual_sha256 = hashlib.sha256(payload).hexdigest()
+            if actual_sha256 != expected_sha256:
+                failures.append(
+                    f"{label}: fiction competition contract sha256 mismatch {group_id}: "
+                    f"expected {expected_sha256}, got {actual_sha256}"
+                )
 
     for case_id, query_terms in REQUIRED_PAYMENT_HARD_NEGATIVES.items():
         case = cases_by_id.get(case_id)
@@ -640,6 +676,18 @@ def run_self_test() -> None:
         for item in expected
     ):
         raise SystemExit("self-test failed: missing required competition-group failure")
+
+    invalid = deepcopy(valid)
+    for case in invalid["cases"]:
+        if case.get("competition_group") in {
+            "fiction-drafting-owner",
+            "fiction-project-document-owner",
+            "fiction-term-evidence-owner",
+        }:
+            case["query"] = "请设计一个后台管理页面，包含侧边栏、筛选器、数据表格和分页，并适配移动端。"
+    expected = audit_data(invalid, label="invalid-fiction-competition-contract")
+    if not any("fiction competition contract sha256 mismatch" in item for item in expected):
+        raise SystemExit("self-test failed: fiction competition contract drift was accepted")
 
     invalid = deepcopy(valid)
     invalid["cases"] = [

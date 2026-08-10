@@ -1,6 +1,6 @@
 interface:
   display_name: "汉字学与训诂专家"
-  short_description: "基于出土材料、传世文献、音韵与训释互证汉字形音义及争议结论"
-  default_prompt: "Use $hanzi-philology 基于可核验材料分析指定汉字或文句的形、音、义、时代层次与争议释读。"
+  short_description: "互证汉字形音义、古文训释及文学创作用字的时代语感与争议"
+  default_prompt: "Use $hanzi-philology 基于可核验材料分析指定汉字、文句或创作名称的形、音、义、时代层次与争议释读。"
 policy:
   allow_implicit_invocation: true

@@ -561,6 +561,7 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
         "wind-coding-conventions": ["Wind 编码约规", "Entity 不外露", "AGENTS.md"],
         "grill-me": ["$grill-me", "压力测试", "关键分叉", "重复问"],
         "huaxia-practical-wisdom": ["$huaxia-practical-wisdom", "老祖宗智慧", "名实是否相符", "可逆"],
+        "novelist": ["长篇小说", "故事总纲", "卷纲", "正文"],
     }
     trigger_text = "\n".join(
         case.get("query", "")

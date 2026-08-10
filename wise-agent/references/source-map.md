@@ -144,6 +144,8 @@
 - 微信文章 [《私以为：Graph 只是补强，RSI 才是 Loop 工程的下一个版本》](https://mp.weixin.qq.com/s/njxz6jV2j0NOS9do7eUu4g)：作者 / 账号为 `摇摇摆摆的碎碎念`，页面显示发布时间为 2026-07-22 18:59；2026-07-29 通用网页读取无法打开，随后通过 Codex in-app Browser 读取标题、作者、发布时间和正文。本文用于补强失败归因、受控改进试验、任务级价值判断卡和人类 Owner 裁决，并落实到 `AGENTS.md`、`skill-learning-backflow.md`、README、行为 fixture 与 validator；不新增 `RSI Mode`、顶层 Skill 或 Agent，不复制原文、图片和作者表达，不吸收文章项目效果、性能数字或外部案例，也不让一次性个人偏好、文章观点或经典镜片替代现实证据、自动修改、晋升、Git、同步或发布授权。
 - 微信文章 [《AI正在扼杀人类的创造性》](https://mp.weixin.qq.com/s/ExWGTCDLZiCH8MiBbp5yZg)：作者 / 账号为 `悟懂了内经的老李`，页面显示发布时间为 2026-08-07 09:01；2026-08-07 `web.open` 未取得正文，随后通过移动端微信 UA `curl` 读取公开 HTML、标题、作者、页面时间字段和 `#js_content` 正文。本仓库只吸收“创见保护与求真验证分轨、保留原始意图、用最小可逆实验推进、人类 Owner 保留价值与原创性裁决”的可迁移门禁，并结合 `huaxia-practical-wisdom` 落到正名、审时、权衡、行验、化；不把文章的宏观结论或“只统计频率”写成已证事实，不复制原文、案例、作者表达或标题传播话术，也不新增模式、人格、自动执行或授权。
 
+- 微信文章 [《“写代码从来都不是难点”，这是对全世界所有程序员的严重侮辱》](https://mp.weixin.qq.com/s/iHkp_etOIUGVO1mTVpz5Og)：作者 `Tina`，账号 `InfoQ`，页面显示发布时间为 2026-08-10 13:18；2026-08-10 通用网页读取未取得正文，随后通过 Codex in-app Browser 读取标题、作者、发布时间和正文，并核验 Anthropic 官方 [Claude Code Auto mode](https://www.anthropic.com/engineering/claude-code-auto-mode) 工程说明。官方页面的评估数字为权限批准率 `93%`，真实过度执行样本漏报率 `17%`，与文章中的二手数字不一致。本仓库只吸收“编码与问题定义都需要专业判断”、按动作真实影响核验授权、输入信任 / 动作授权双门禁、拒绝后的安全改道与有界重试、跨上下文出站 / 返回复核，并落实到 `delivery-execution-control.md`、`context-handoff.md`、行为 fixture 与 validator；不复制原文、图片、译文或作者表达，不吸收文中的薪资、招聘和排期信息、二手评估数字、固定重试阈值、通用 Auto Mode 或默认执行授权，也不以自动分类替代高风险人工复核。
+
 ## 提炼边界
 
 - 可以吸收 AI Native 产品研发流程、Agentic Engineering、OpenSpec/Harness/GSD/CAD、验证矩阵、CR、发布和复盘方法。

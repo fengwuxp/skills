@@ -62,6 +62,7 @@
 | 角色协作门禁 | `3A. 角色协作验证顺序`、`5. CR 顺序`、`7. 发布门禁` | 不把 GSD / 工程执行 / Goal 当主流程 |
 | 设计 AI 代码 CR | `4. 代码库理解 / 影响可视化门禁`、`5. CR 顺序`、`6. AI 产物风险` | 不写普通风格检查清单 |
 | 源码质量评审 Loop | `4. 代码库理解 / 影响可视化门禁`、`5A. 源码质量评审 Loop`、`5. CR 顺序`，必要时读 `code-understanding-tools.md`；用户明确要求经典视角时装载 `huaxia-practical-wisdom` | 不把工具或经典框架当最终裁决 |
+| 工程交付合议 CR | `5A.2 工程交付合议 CR`，再读 `context-handoff.md` 的 `4.1`、`4.2`、`4.5`、`4.6` | 不把角色扮演或多人共识当独立准出 |
 | AI bug report / AI patch 门禁 | `5B. AI bug / 补丁门禁`、`5A. 源码质量评审 Loop`；需要取舍反偏时可装载 `huaxia-practical-wisdom` | 不让 AI bug report、AI patch 或经典类比自证完成 |
 | 接入 Open Code Review / OCR | 先读 `code-understanding-tools.md` 的 OCR 准入，再读 `5. CR 顺序` | 不把外部 Checker 输出当架构师 CR 结论 |
 | 评估最终代码交付能力 | 先读 `code-delivery.md`，再读 `1. 验证矩阵`、`5. CR 顺序`、`9. 复盘闭环` | 不只看 Agent 是否生成代码 |
@@ -304,6 +305,13 @@ CR 结论：
 - 不把“请老祖宗做 CR”写成文化化评语；只保留取舍问题、严重级别、证据和修复优先级。
 - 不把每条 CR 评论都回流成项目知识；只有已验证、可复用、有 owner、能进入权威载体的结论才回写。
 
+### 5A.2 工程交付合议 CR
+只有候选 diff 已稳定、本地验证已完成，且三个及以上独立事实权威必须裁定同一不可拆共享决策、不能拆成普通单方 CR 时才准入；低风险单文件变更回到资深架构师普通源码 CR。
+会议协议只读 `context-handoff.md` 的 `4.1`、`4.2`、`4.5`、`4.6`，复用 `Meeting Charter / Shared Information Matrix / Position Card / Conflict Matrix / Meeting Resolution`，不新增会议模式、角色人格或事实源。
+工程基线映射为 `candidate_revision / diff_fingerprint`、Spec / AC revision 和验证证据 fingerprint；候选 diff、议题或证据变化时旧卡片、finding 与决议标记 `stale`，冻结新基线后只重新复核受影响范围。
+知止者只主持与综合；Maker 只答疑、不参与准出；业务 / 契约、架构 / 代码、测试 / 可靠性按实际风险加入，最终由一个独立 Checker 给门禁。同一 AI 的多角色输出只算审查视角，不能充当独立 Checker。
+工程 finding 字段：`finding_id / P0-P3`；源码锚点；违反的 AC / 不变量；真实后果；所需修复；Owner；验证命令；blocking / conditional / non-blocking；状态。
+`Meeting Resolution` 逐项记录 `accepted / rejected / pending`、行动项与 Checker，最终只输出一个 `Delivery Gate: ready / blocked / stale`；合议、修复建议和 Checker 结论均不产生自动修复、Git、发布或生产授权。
 ## 5B. AI bug / 补丁门禁
 
 AI 发现 bug 或生成补丁时，先做 triage，再决定是否进入修复、CR 或合并判断。
