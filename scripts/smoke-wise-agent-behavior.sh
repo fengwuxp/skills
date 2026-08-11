@@ -571,6 +571,20 @@ assert_security_scan_route() {
   assert_route_owner_and_exclusion "${file}" "codex-security:security-scan" "security-engineering-expert"
 }
 
+assert_security_diff_scan_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "codex-security:security-diff-scan" "${file}" || return 1
+  assert_route_owner_and_exclusion "${file}" "codex-security:security-diff-scan" "security-engineering-expert"
+}
+
+assert_security_finding_validation_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  grep -Fq "codex-security:validation" "${file}" || return 1
+  assert_route_owner_and_exclusion "${file}" "codex-security:validation" "security-engineering-expert"
+}
+
 assert_security_finding_fix_route() {
   local file="$1"
   [[ -s "${file}" ]] || return 1
@@ -938,11 +952,15 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/security-funds-route.txt" \
       "${sample_dir}/security-code-fix-route.txt" \
       "${sample_dir}/security-scan-route.txt" \
+      "${sample_dir}/security-diff-scan-route.txt" \
+      "${sample_dir}/security-finding-validation-route.txt" \
       "${sample_dir}/security-finding-fix-route.txt" \
       "${sample_dir}/security-threat-model-route.txt" \
       "${sample_dir}/security-hardening-route.txt" \
       "${sample_dir}/bad-security-design-route.txt" \
       "${sample_dir}/bad-security-scan-route.txt" \
+      "${sample_dir}/bad-security-diff-scan-route.txt" \
+      "${sample_dir}/bad-security-finding-validation-route.txt" \
       "${sample_dir}/bad-security-finding-fix-route.txt" \
       "${sample_dir}/ui-design-dashboard.txt" \
       "${sample_dir}/bad-ui-design-dashboard.txt" \
@@ -1005,11 +1023,15 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '由 security-engineering-expert 主责资金安全，覆盖资产与资损、账户接管、内部滥用、指令冲突、监测止损和恢复；payment-expert 只提供已确认支付事实，不负责本轮安全准出。' > "${sample_dir}/security-funds-route.txt"
   printf '%s\n' '由 senior-software-architect 主责局部代码修复和测试；security-engineering-expert 不触发，也不负责这次已明确边界的实现。' > "${sample_dir}/security-code-fix-route.txt"
   printf '%s\n' '由 codex-security:security-scan 主责仓库标准单次扫描；security-engineering-expert 不触发，也不负责只读漏洞扫描。' > "${sample_dir}/security-scan-route.txt"
+  printf '%s\n' '由 codex-security:security-diff-scan 主责 Git-backed diff 安全评审；security-engineering-expert 不触发，也不负责这个限定变更集的扫描。' > "${sample_dir}/security-diff-scan-route.txt"
+  printf '%s\n' '由 codex-security:validation 主责候选 finding 的真伪和严重度验证；security-engineering-expert 不触发，也不负责这次 finding 验证。' > "${sample_dir}/security-finding-validation-route.txt"
   printf '%s\n' '由 senior-software-architect 主责工程交付和测试，按需加载 codex-security:fix-finding 作为专项方法能力；security-engineering-expert 不负责局部 finding 修复。' > "${sample_dir}/security-finding-fix-route.txt"
   printf '%s\n' '由 codex-security:threat-model 主责仓库范围威胁模型；security-engineering-expert 不触发，也不负责纯仓库 threat model。' > "${sample_dir}/security-threat-model-route.txt"
   printf '%s\n' '由 codex-security:propose-security-hardening 主责基于扫描 finding 的系统性加固建议；security-engineering-expert 不触发，也不负责未跨入业务资损和风险接受的仓库方案。' > "${sample_dir}/security-hardening-route.txt"
   printf '%s\n' '由 senior-software-architect 主责整体跨层安全准出；security-engineering-expert 不触发。' > "${sample_dir}/bad-security-design-route.txt"
   printf '%s\n' '由 security-engineering-expert 主责仓库漏洞扫描，codex-security:security-scan 只提供命令。' > "${sample_dir}/bad-security-scan-route.txt"
+  printf '%s\n' '由 security-engineering-expert 主责 Git diff 安全扫描，codex-security:security-diff-scan 只提供命令。' > "${sample_dir}/bad-security-diff-scan-route.txt"
+  printf '%s\n' '由 security-engineering-expert 主责候选 finding 验证，codex-security:validation 只提供命令。' > "${sample_dir}/bad-security-finding-validation-route.txt"
   printf '%s\n' '由 codex-security:fix-finding 主责修复并交付，senior-software-architect 不触发；security-engineering-expert 不负责。' > "${sample_dir}/bad-security-finding-fix-route.txt"
   printf '%s\n' '事实：目标一致。待确认：责任 owner。行动：做可逆试点。止损：责任不清则停止。验证：复盘结果。' > "${sample_dir}/huaxia.txt"
   printf '%s\n' '事实：目标一致。待确认：责任 owner。最小行动：选择可回退流程试行。止损：成本触顶则停止。验证：对照基线。' > "${sample_dir}/huaxia-variant.txt"
@@ -1180,6 +1202,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_security_funds_route "${sample_dir}/security-funds-route.txt"
   assert_security_code_fix_route "${sample_dir}/security-code-fix-route.txt"
   assert_security_scan_route "${sample_dir}/security-scan-route.txt"
+  assert_security_diff_scan_route "${sample_dir}/security-diff-scan-route.txt"
+  assert_security_finding_validation_route "${sample_dir}/security-finding-validation-route.txt"
   assert_security_finding_fix_route "${sample_dir}/security-finding-fix-route.txt"
   assert_security_threat_model_route "${sample_dir}/security-threat-model-route.txt"
   assert_security_hardening_route "${sample_dir}/security-hardening-route.txt"
@@ -1365,6 +1389,14 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_security_scan_route "${sample_dir}/bad-security-scan-route.txt"; then
     echo "FAIL security scan smoke accepted cross-layer security ownership" >&2
+    exit 1
+  fi
+  if assert_security_diff_scan_route "${sample_dir}/bad-security-diff-scan-route.txt"; then
+    echo "FAIL security diff-scan smoke accepted cross-layer security ownership" >&2
+    exit 1
+  fi
+  if assert_security_finding_validation_route "${sample_dir}/bad-security-finding-validation-route.txt"; then
+    echo "FAIL security finding-validation smoke accepted cross-layer security ownership" >&2
     exit 1
   fi
   if assert_security_finding_fix_route "${sample_dir}/bad-security-finding-fix-route.txt"; then
@@ -1614,6 +1646,14 @@ if [[ "${MODE}" == "all" || "${MODE}" == "security" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/security-scan-route.txt" \
     "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md，以源仓库内容为规则。用户只要求对整个仓库做一次标准单次漏洞扫描，没有 Git diff、跨层安全设计或代码修复。给出精确主能力，并说明是否触发 security-engineering-expert，控制在 180 字。"
   assert_security_scan_route "${OUTPUT_DIR}/security-scan-route.txt" || { echo "FAIL security scan routing behavior smoke: ${OUTPUT_DIR}/security-scan-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-diff-scan-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md，以源仓库内容为规则。用户只要求评审当前 Git 工作树 diff 的安全风险，不做完整仓库扫描、跨层安全设计或代码修复。给出精确主能力，并说明是否触发 security-engineering-expert，控制在 180 字。"
+  assert_security_diff_scan_route "${OUTPUT_DIR}/security-diff-scan-route.txt" || { echo "FAIL security diff-scan routing behavior smoke: ${OUTPUT_DIR}/security-diff-scan-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/security-finding-validation-route.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md，以源仓库内容为规则。扫描器已经给出一个候选越权 finding，用户只要求核验真伪与严重度，不修代码、不做跨层安全准出。给出精确主能力，并说明是否触发 security-engineering-expert，控制在 180 字。"
+  assert_security_finding_validation_route "${OUTPUT_DIR}/security-finding-validation-route.txt" || { echo "FAIL security finding-validation routing behavior smoke: ${OUTPUT_DIR}/security-finding-validation-route.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/security-finding-fix-route.txt" \
     "只读行为验证。先读取 ${ROOT_DIR}/security-engineering-expert/SKILL.md、${ROOT_DIR}/security-engineering-expert/references/security-scenario-routing.md 和 ${ROOT_DIR}/senior-software-architect/SKILL.md，以源仓库内容为规则。一个可信的越权 finding 已有源码证据，用户要求最小修复、测试和验证。判断工程主责、应加载的精确 codex-security 方法能力，以及是否触发跨层安全评审，控制在 220 字。"

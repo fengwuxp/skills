@@ -20146,6 +20146,29 @@ check(
     ),
 )
 check(
+    "product and payment capabilities hand cross-layer security to the security expert",
+    has_all(
+        product_skill,
+        ["security-engineering-expert", "跨业务、协议、身份、数据或运行层"],
+    )
+    and has_all(
+        payment_skill,
+        ["security-engineering-expert", "资金安全、账户接管、内部滥用"],
+    ),
+)
+check(
+    "security behavior smoke covers diff scan and finding validation routes",
+    has_all(
+        "scripts/smoke-wise-agent-behavior.sh",
+        [
+            "assert_security_diff_scan_route",
+            "codex-security:security-diff-scan",
+            "assert_security_finding_validation_route",
+            "codex-security:validation",
+        ],
+    ),
+)
+check(
     "senior architect consumes cross-layer security decisions without competing for ownership",
     has_all(
         senior_skill,
