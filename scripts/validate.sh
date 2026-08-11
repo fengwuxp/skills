@@ -124,6 +124,9 @@ wise-agent/scripts/check_dirty_worktree_commit.sh --self-test
 echo "==> wise-agent skill learning ledger"
 python3 wise-agent/scripts/skill-learning-ledger.py --self-test
 
+echo "==> wise-agent user collaboration profile"
+python3 wise-agent/scripts/user-context-ledger.py --self-test
+
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
@@ -146,6 +149,7 @@ python3 -m py_compile ui-design-expert/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
+python3 -m py_compile wise-agent/scripts/user-context-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/check-skill-admission.py
 python3 -m py_compile scripts/test-check-skill-admission.py
@@ -186,6 +190,9 @@ echo "==> resource capability candidate checker"
 resource-capability-distiller/scripts/check_capability_candidate.py --self-test
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
 
+echo "==> novelist behavior cases"
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
+
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test
 
@@ -201,6 +208,7 @@ python3 ui-design-expert/scripts/verify_fixtures.py
 
 echo "==> security engineering deliverable checker"
 python3 security-engineering-expert/scripts/check_security_deliverable.py --self-test
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/security-engineering-behavior-cases.json"
 
 echo "==> wind convention guard"
 wind-coding-conventions/scripts/check_wind_conventions.py --self-test

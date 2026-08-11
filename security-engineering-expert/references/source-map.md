@@ -23,7 +23,9 @@
 
 | 来源 | 版本/日期 | 本 Skill 吸收 | 边界 |
 | --- | --- | --- | --- |
+| [NICE Workforce Framework for Cybersecurity](https://www.nist.gov/itl/applied-cybersecurity/nice/nice-framework-resource-center/nice-framework-current-versions) | NICE Framework Components v2.2.0，2025-04-28 | 以工作责任而非职位名区分安全架构、控制评估、系统授权、实现与运行 | 工作角色可组合，不是组织职位、人员资质或授权证明 |
 | [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework) | NIST CSF 2.0，2024 | Govern、Identify、Protect、Detect、Respond、Recover 的完整治理闭环 | 自愿框架，不替代组织风险责任或监管判断 |
+| [NIST Engineering Trustworthy Secure Systems](https://csrc.nist.gov/pubs/sp/800/160/v1/r1/final) | NIST SP 800-160 Vol. 1 Rev. 1，2022 | 保护需求、安全要求、系统架构、验证与 assurance evidence 的全生命周期追踪 | 系统安全工程方法，不替代项目事实、独立评估或授权决定 |
 | [NIST Secure Software Development Framework](https://csrc.nist.gov/pubs/sp/800/218/final) | NIST SP 800-218 v1.1，2022 | 安全开发、供应链、构建制品和缺陷响应基线 | 需映射到项目 SDLC 和真实工具证据 |
 | [OWASP SAMM](https://owaspsamm.org/model/) | v2，持续维护 | 软件安全治理、设计、实现、验证与运营能力模型 | 成熟度模型不证明单个系统安全 |
 | [OWASP ASVS](https://github.com/OWASP/ASVS/releases/tag/v5.0.0) | OWASP ASVS 5.0.0，2025-05-30 | Web 应用与服务的可验证安全要求 | 按应用类型和风险裁剪，不机械全量套用 |
@@ -34,4 +36,4 @@
 | [RFC 9700](https://www.rfc-editor.org/rfc/rfc9700) | OAuth 2.0 Security Best Current Practice，2025 | OAuth 威胁模型、弃用不安全模式和客户端/授权服务器安全建议 | 需结合实际 grant、客户端类型、部署与 provider 契约 |
 | [CISA Secure by Design](https://www.cisa.gov/securebydesign) | 持续维护 | 默认安全、产品责任和减少用户安全负担 | 原则性倡议，不替代项目控制实现与验证 |
 
-以上公开来源于 2026-08-10 核验索引与版本。时效性来源在正式交付前重新核验；任何来源都不替代安全、法务、合规、隐私、支付、财务或生产 Owner 的适用性决定。
+以上公开来源于 2026-08-11 核验索引与版本。时效性来源在正式交付前重新核验；任何来源都不替代安全、法务、合规、隐私、支付、财务或生产 Owner 的适用性决定。

@@ -1,6 +1,6 @@
 ---
 name: document-authoring
-description: Use when 用户要把分散材料或已稳定的领域结论整理、审校为正式报告、制度、手册、研究说明、总结、DOCX/PDF，或治理小说创作项目的设定集、人物档案、时间线和决策台账；小说正文、普通 PRD、系分内容设计与汉字训诂考据不触发。
+description: Use when 用户要把分散材料或已稳定的领域结论整理、审校为正式报告、制度、手册、研究说明、总结、培训材料、课程讲义、讲师手册、情景演练手册、DOCX/PDF，或治理小说创作项目的设定集、人物档案、时间线和决策台账；小说正文、普通 PRD、系分内容设计与汉字训诂考据不触发。
 ---
 
 # 专业文档撰写
@@ -26,6 +26,7 @@ description: Use when 用户要把分散材料或已稳定的领域结论整理�
 - PRD、产品方案、产品验收：由 `product-architecture-expert` 主责，本技能只处理结构、表达、引用和载体。
 - 系分、ADR、技术方案、代码 Review、生产变更：由 `senior-software-architect` 主责，本技能只处理结构、表达、引用和载体。
 - 汉字学、字源、训诂、甲骨文、金文、小篆：交给 `hanzi-philology`，本技能只消费其证据卡。
+- 专业培训材料、课程讲义、讲师手册、桌面推演与情景演练手册：本技能负责读者、学习路径、案例结构、练习、讲师提示、答案边界和载体；领域事实、规则和专业结论必须先由对应领域 Skill 或 Owner 稳定，缺失时停止补写。
 - 小说正文、故事总纲、卷纲、章卡、叙事语体和连续性判断：由 `novelist` 主责；本技能只在相关故事事实及其状态已由作者确认，或在作者明确授予的自决范围内由 `novelist` 确认后，整理设定集、人物档案、时间线、伏笔/承诺台账、出版提案、编辑梗概、读者附录和正式载体。交接时一并传递授权范围、逐项设定状态与确认证据 / 权威指针；缺失或冲突的条目保持待确认，不写入正典。
 - 一句话润色、简单翻译或格式微调：直接完成，不加载完整工作流。
 
@@ -36,7 +37,7 @@ description: Use when 用户要把分散材料或已稳定的领域结论整理�
 3. **写入证据**：读取 `references/citation-and-traceability.md`，让关键结论能回到材料、链接、版本、记录或领域证据卡。
 4. **评审与修订**：读取 `references/review-and-revision.md`，区分评审、改写、合并和最终版收口；未经授权不重写全文。
 5. **生成载体**：所有正式文档读取 `references/format-and-rendering.md`；需要 DOCX、PDF、PPTX 或表格时调用对应文档工具，工具不可用时交付 Markdown 并说明限制。
-6. **验证准出**：本技能主责的报告、制度、手册和研究说明在正式、完整、提交前或用户要求验证时，运行 `scripts/check_document_deliverable.py --kind <kind> --file <path>`。Markdown、HTML、文本或 DOCX 产物再运行 `scripts/check_document_style.py --file <path>`；PDF、PPTX 和其它载体逐页渲染检查。PRD、系分等领域文档不套用本技能的结构检查器，编辑后重新运行领域 Skill 的交付物检查，再检查实际派生载体。
+6. **验证准出**：本技能主责的报告、制度、手册和研究说明在正式、完整、提交前或用户要求验证时，运行 `scripts/check_document_deliverable.py --kind <kind> --file <path>`；培训材料、课程讲义、讲师手册和情景演练手册复用 `--kind manual`，并由领域 Owner 复核专业事实、由训练验收方复核可观察行为。Markdown、HTML、文本或 DOCX 产物再运行 `scripts/check_document_style.py --file <path>`；PDF、PPTX 和其它载体逐页渲染检查。PRD、系分等领域文档不套用本技能的结构检查器，编辑后重新运行领域 Skill 的交付物检查，再检查实际派生载体。
 
 创作项目文档不套用报告结构检查器；运行样式检查后，由 `novelist` 或作者复核设定状态、作者本真 / 人物所知 / 读者所知、阅读进度、剧透等级和故事连续性。
 

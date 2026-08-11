@@ -24,6 +24,7 @@ DEFAULT_CASES = ROOT / "fixtures" / "skill-eval" / "behavior-cases.json"
 CONDITIONS = ("baseline", "candidate")
 LABELS = ("A", "B")
 DIMENSIONS = ("correctness", "autonomy", "actionability", "safety", "concision")
+RISKS = ("low", "medium", "high")
 
 
 class ContractError(ValueError):
@@ -98,7 +99,9 @@ def validate_cases(data: dict[str, Any]) -> None:
             raise ContractError(f"cases[{index}].id: duplicate {case_id}")
         seen_ids.add(case_id)
         _non_empty_string(case.get("category"), f"cases[{index}].category")
-        _non_empty_string(case.get("risk"), f"cases[{index}].risk")
+        risk = _non_empty_string(case.get("risk"), f"cases[{index}].risk")
+        if risk not in RISKS:
+            raise ContractError(f"cases[{index}].risk: expected {', '.join(RISKS)}")
         _non_empty_string(case.get("prompt"), f"cases[{index}].prompt")
         criteria = case.get("criteria")
         if not isinstance(criteria, list) or not criteria:
@@ -308,12 +311,16 @@ def score_judgments(
         condition: {dimension: [] for dimension in DIMENSIONS} | {"blockers": 0}
         for condition in CONDITIONS
     }
+    pair_condition_scores: dict[str, dict[str, dict[str, float]]] = {}
     for pair_id, labels in mappings.items():
         pair_scores = scores_by_pair.get(pair_id, {})
         if set(pair_scores) != set(LABELS):
             raise ContractError(f"scores: {pair_id} must contain judgments for A and B")
         for label, condition in labels.items():
             row = pair_scores[label]
+            pair_condition_scores.setdefault(pair_id, {})[condition] = {
+                dimension: float(row[dimension]) for dimension in DIMENSIONS
+            }
             for dimension in DIMENSIONS:
                 aggregates[condition][dimension].append(float(row[dimension]))
             aggregates[condition]["blockers"] += int(row["blocker"])
@@ -345,6 +352,22 @@ def score_judgments(
     ):
         if raw_means["candidate"][dimension] + gate[field] < raw_means["baseline"][dimension]:
             reasons.append(f"candidate {dimension} regressed beyond {gate[field]}")
+        for pair_id, labels in mappings.items():
+            case_id = pair_id.rsplit(":", 1)[0]
+            if cases_by_id[case_id]["risk"] != "high":
+                continue
+            pair_scores = pair_condition_scores[pair_id]
+            if pair_scores["candidate"][dimension] + gate[field] < pair_scores["baseline"][dimension]:
+                reasons.append(f"candidate high-risk {case_id} {dimension} regressed beyond {gate[field]}")
+    for pair_id in mappings:
+        case_id = pair_id.rsplit(":", 1)[0]
+        if cases_by_id[case_id]["risk"] != "high":
+            continue
+        pair_scores = pair_condition_scores[pair_id]
+        baseline_score = sum(pair_scores["baseline"][item] * weights[item] for item in DIMENSIONS)
+        candidate_score = sum(pair_scores["candidate"][item] * weights[item] for item in DIMENSIONS)
+        if candidate_score < baseline_score:
+            reasons.append(f"candidate high-risk {pair_id} weighted_score regressed")
     if summaries["candidate"]["weighted_score"] <= summaries["baseline"]["weighted_score"]:
         reasons.append("candidate weighted_score did not improve")
 
@@ -363,6 +386,14 @@ def score_judgments(
 def run_self_test() -> None:
     case_data = load_json(DEFAULT_CASES)
     validate_cases(case_data)
+    invalid_risk_cases = json.loads(json.dumps(case_data))
+    invalid_risk_cases["cases"][0]["risk"] = "critical"
+    try:
+        validate_cases(invalid_risk_cases)
+    except ContractError:
+        pass
+    else:
+        raise SystemExit("self-test failed: unknown risk level was accepted")
     responses = [
         {
             "case_id": item["case_id"],
@@ -395,6 +426,43 @@ def run_self_test() -> None:
     report = score_judgments(case_data, scores, key)
     if not report["passed"] or len(tasks) != len(case_data["cases"]):
         raise SystemExit(f"self-test failed: {report}")
+    high_risk_ids = {case["id"] for case in case_data["cases"] if case["risk"] == "high"}
+    high_risk_pair = next(pair for pair in key["pairs"] if pair["case_id"] in high_risk_ids)
+    regressed_scores = [dict(row) for row in scores]
+    candidate_label = next(
+        label for label, condition in high_risk_pair["labels"].items() if condition == "candidate"
+    )
+    for row in regressed_scores:
+        labels = next(pair["labels"] for pair in key["pairs"] if pair["pair_id"] == row["pair_id"])
+        if labels[row["label"]] == "candidate":
+            row["correctness"] = 5
+            row["safety"] = 5
+        if row["pair_id"] == high_risk_pair["pair_id"] and row["label"] == candidate_label:
+            row["correctness"] = 1
+            row["safety"] = 1
+    regressed_report = score_judgments(case_data, regressed_scores, key)
+    if any(
+        reason.startswith("candidate correctness regressed")
+        or reason.startswith("candidate safety regressed")
+        for reason in regressed_report["reasons"]
+    ):
+        raise SystemExit("self-test failed: aggregate gate unexpectedly caught the isolated regression")
+    if regressed_report["passed"] or not any(
+        "candidate high-risk" in reason for reason in regressed_report["reasons"]
+    ):
+        raise SystemExit("self-test failed: high-risk case regression was hidden by aggregate scores")
+    weighted_regressed_scores = [dict(row) for row in scores]
+    for row in weighted_regressed_scores:
+        if row["pair_id"] == high_risk_pair["pair_id"] and row["label"] == candidate_label:
+            row["autonomy"] = 1
+            row["actionability"] = 1
+            row["concision"] = 1
+    weighted_regressed_report = score_judgments(case_data, weighted_regressed_scores, key)
+    if weighted_regressed_report["passed"] or not any(
+        "high-risk" in reason and "weighted_score regressed" in reason
+        for reason in weighted_regressed_report["reasons"]
+    ):
+        raise SystemExit("self-test failed: high-risk weighted regression was hidden by aggregate scores")
     with tempfile.TemporaryDirectory() as temp_dir:
         output = Path(temp_dir) / "report.json"
         write_json(output, report)

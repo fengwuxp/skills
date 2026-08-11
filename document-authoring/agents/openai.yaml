@@ -1,6 +1,6 @@
 interface:
   display_name: "专业文档撰写"
-  short_description: "将分散材料整理为正式文档，并治理创作设定集的权威、引用与版本"
-  default_prompt: "Use $document-authoring 将当前材料整理为正式文档或创作设定集，并完成事实、引用、修订和交付检查。"
+  short_description: "将分散材料整理为正式文档、专业培训材料或创作设定集"
+  default_prompt: "Use $document-authoring 将当前材料整理为正式文档、专业培训材料或创作设定集，并完成事实、引用、修订和交付检查。"
 policy:
   allow_implicit_invocation: true

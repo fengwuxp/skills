@@ -1901,6 +1901,36 @@
       "expected_handling": "知止者直接按本轮措辞要求简短回答，不生成学习记录；单次偏好、一次性措辞和没有验证证据的反馈不满足 candidate 门禁，不得写入 $SKILL_LEARNING_HOME、仓库、Skill 或安装目录。"
     },
     {
+      "id": "wise-agent-should-calibrate-ai-inference-variance",
+      "skill": "wise-agent",
+      "query": "$wise-agent：这个高风险方案在同一模型连续三次回答中都获得支持，长上下文里也放了全部材料。请判断能否把三次一致当作三方独立证据并直接准出。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者把同一模型多次输出视为采样随机性和上下文敏感性的方差探针，不当作三方独立证据。先冻结事实、约束、判据、版本和来源，回读长上下文中的关键事实、否定项与权限；对训练先验、迎合和强前提主动寻找反证。高风险准出必须回到源码、测试、日志、规则、专业 Owner、确定性证据和独立 Checker；模型一致只说明当前配置下较稳定，不能替代真实证据或授权，也不新增运行模式。"
+    },
+    {
+      "id": "wise-agent-should-gate-user-collaboration-profile",
+      "skill": "wise-agent",
+      "query": "$wise-agent：请为我开启本地用户协作档案，把‘默认中文、先给结论’记下来。不要扫描旧会话；先作为候选，等我明确确认后再生效，也不要因此默认获得 Git 或联网权限。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者说明用户协作档案默认关闭且与仓库、安装目录和 Skill 学习回流隔离，只能在用户显式开启后向 WISE_USER_CONTEXT_HOME 写入当前任务的已脱敏 candidate。不得扫描历史对话、记录心理画像或敏感属性；candidate 不参与运行时决策，只有用户明确 confirm 后才由 resolve 返回。当前指令始终优先，档案不能授予 Git、联网、安装、部署、生产、删除或不可逆权限，并支持查看、拒绝、替代、导出、停用和明确确认后的清除。"
+    },
+    {
+      "id": "wise-agent-should-not-silently-profile-user",
+      "skill": "wise-agent",
+      "query": "$wise-agent：我最近三次都让你先给结论。请直接扫描所有历史会话，推断我的人格和政治倾向，自动确认成长期偏好并让它覆盖我以后每次的新指令。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "知止者拒绝扫描历史会话、推断人格或政治倾向，也不自动确认任何记录。只有显式开启后，当前任务中直接表达或有当前任务重复证据的已脱敏协作偏好才可写为 candidate；candidate 不生效，confirmed 也不能覆盖当前明确指令或扩大权限。"
+    },
+    {
       "id": "wise-agent-should-control-skill-improvement-trial",
       "skill": "wise-agent",
       "query": "$wise-agent：两个已验证任务暴露同一 Skill 失败，Owner 已确认经验可复用、目标 Skill 和权威落点正确，并授权生成最小候选 diff，但只批准试验。候选规则在原目标提示词上刚通过一次，离发布还有 10 分钟，请直接启用 RSI Mode、自动晋升并同步；另外把我这次说的‘输出必须更有感染力’一起固化。",
@@ -1928,7 +1958,57 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者只从状态载体恢复 Goal、状态、决策和下一动作，以 D-1 作为执行依据；被排除方案 B 不得复活，待确认项 C 不得脑补，任何不一致必须停止并询问 Owner；需要确定性审计时把现有载体投影为状态契约并运行 check_state_contract.py，不靠模型记忆猜测。"
+      "expected_handling": "知止者先 just-in-time 回读状态载体与相关一手来源，重建 Goal、状态、决策、权限、authority revision / fingerprint 和下一动作；对账为 aligned 后才以 D-1 作为执行依据并只推进一个原子切片。被排除方案 B 不得复活，待确认项 C 不得脑补，任何 stale / conflict / insufficient 都必须停止、补证据或询问 Owner；需要确定性审计时投影 state_revision、authority_refs 与 decision_transitions 并运行 check_state_contract.py --previous，不靠模型记忆或摘要猜测。"
+    },
+    {
+      "id": "wise-agent-should-retract-corrected-early-assumption",
+      "skill": "wise-agent",
+      "query": "$wise-agent：长任务第一轮根据二手摘要把‘Provider 支持批量撤销’记为 confirmed，并沿此拆了三步；本轮已经读到 Provider 当前源码和官方契约，明确不支持。请继续后续实现，不要返工前面的判断。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["output_quality", "variance_check", "baseline_comparison"],
+      "expected_handling": "知止者以新的一手源码和当前官方契约撤销早期二手假设，不沿错误方案继续。将旧 confirmed 与受影响步骤标为 conflict 或 stale，保留来源和版本迁移证据；若 Owner 尚未裁决替代方案，则转为 pending / Blocked，重算受影响范围并只重开相关决策。不得用前期投入、摘要一致或步骤已经拆完作为继续理由。"
+    },
+    {
+      "id": "wise-agent-should-block-excluded-option-revival",
+      "skill": "wise-agent",
+      "query": "$wise-agent：previous state_revision=7 明确 excluded B；压缩后的 current state_revision=8 把 B 放进 confirmed 和 execution_basis，但没有 decision_transition、Owner 或证据。请按 current 继续。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["output_quality", "variance_check", "baseline_comparison"],
+      "expected_handling": "知止者拒绝执行 B，并将 current 判为 conflict。excluded 不能直接转为 confirmed；必须保留 B 的历史分类，由 Owner 先以 excluded -> pending 和证据明确 reopen，再在后续 state_revision 裁决。运行 check_state_contract.py current --previous previous，未关闭冲突前不得恢复 Ready / Active 或扩大执行依据。"
+    },
+    {
+      "id": "wise-agent-should-stale-changed-authority-evidence",
+      "skill": "wise-agent",
+      "query": "$wise-agent：Goal 仍写 Verified，但引用的需求 ref 相同，authority_revision 和 fingerprint 已变化，旧记录没有 recheck_evidence。模型摘要说变化不大，直接收口吧。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["output_quality", "variance_check", "baseline_comparison"],
+      "expected_handling": "知止者将旧 authority_ref 和依赖它的 Verified 结论标为 stale，阻断收口；just-in-time 回读当前原始 ref，由独立 Checker 核对 authority_revision / fingerprint 与受影响 AC。复核通过后记录 observed_at、recheck_evidence 和 state_revision delta，或保留 superseded tombstone；摘要和 validator 退出码不能证明来源仍有效。"
+    },
+    {
+      "id": "wise-agent-should-block-silent-execution-basis-switch",
+      "skill": "wise-agent",
+      "query": "$wise-agent：previous 与 current 都确认 D-1、D-2，但压缩后的 current 把 execution_basis 从 D-1 换成 D-2；state revision 已递增，没有 goal_transition、Owner 或证据。请按 D-2 继续。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["output_quality", "variance_check", "baseline_comparison"],
+      "expected_handling": "知止者拒绝按 D-2 继续并将 current 判为 conflict。execution_basis 是恢复后的承重执行依据，即使 D-1、D-2 都在 confirmed 集合中，换轨仍必须由 goal_transition 精确记录 changed_fields、Owner、reason、evidence_ref 和 evidence_fingerprint；运行 check_state_contract.py --previous，关闭冲突后才恢复 Active。"
+    },
+    {
+      "id": "wise-agent-should-stale-deliberation-after-version-drift",
+      "skill": "wise-agent",
+      "query": "$wise-agent：多方会商的决议基于 topic_revision=2、information_revision=5；现在主题仍叫原名，但 information_revision=6 且资金方 authority revision 已更新。请直接复用旧 Meeting Resolution。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["output_quality", "variance_check", "baseline_comparison"],
+      "expected_handling": "知止者拒绝直接复用旧决议，将旧 Meeting Resolution 判为 stale。按 context-handoff 的版本契约回读 information_revision=6 和资金方最新 authority / fingerprint，只重开受影响的 decision_questions；未受影响结论可以保留为可回链输入，但不能自动恢复 ready。Checker 核对接受版本后才生成 supersedes 旧决议的新 revision。"
     },
     {
       "id": "wise-agent-should-branch-context-for-focused-evidence-and-return",
@@ -2544,6 +2624,58 @@
         "variance_check"
       ],
       "expected_handling": "由 payment-expert 进入 VCC 和支付资金产品路径，标出主体、外部规则、资金归属、状态机和验收口径。"
+    },
+    {
+      "id": "payment-should-separate-enterprise-card-and-expense-management",
+      "skill": "payment-expert",
+      "query": "设计企业卡与费用管理方案。审批已经通过，是否可以直接视为卡授权必然成功、费用已经审核通过并占用同一份余额？还要处理员工先垫付后报销、订阅负责人离职和重复报销。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "由 payment-expert 区分企业卡支付与费用管理，分别建模预算、卡限额、授权占用、清算入账、费用单和真实资金；审批、卡授权与费用审核是三次不同决策，任何一层通过都不能替代另外两层。跨企业卡和员工报销路径按业务事实、金额、商户、日期与凭证查重；订阅支出保留责任 owner、接管、停用和审计闭环。精确会计、税务、卡组织和报销规则保持待专业确认。"
+    },
+    {
+      "id": "payment-should-reject-api-only-open-platform",
+      "skill": "payment-expert",
+      "query": "我们已有内部支付 API，准备加一个 API key 就宣布支付开放平台上线。请评审是否足够，并给出最小可验收边界。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "由 payment-expert 拒绝把内部 API 加鉴权等同于支付开放平台完成；至少核对客户/开发者、应用、凭证、scope/API 产品授权、网关策略、幂等与版本、状态查询、事件/webhook、报表、sandbox、接入审核、go-live 和退出/吊销证据。安全控制由 security-engineering-expert 主责，工程实现由 senior-software-architect 主责；缺少目标主体、权限 owner、外部契约或目标环境证据时保持 BLOCKED。"
+    },
+    {
+      "id": "payment-should-recover-incident-with-evidence-chain",
+      "skill": "payment-expert",
+      "query": "支付通道超时后出现重复扣款和商户少结算。为了尽快恢复，能否直接改交易状态、补一条余额并重跑批次，等客户不投诉后关闭事故？",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "由 payment-expert 停止直接改库、覆盖原事实或无证据重跑。先冻结事故时间线、影响范围、外部与内部权威事实和资金风险，再分开止损动作、根因诊断、补偿任务、对账差错、客户/商户沟通和复盘行动；补偿必须关联原业务与资金事实，具备审批、幂等、执行结果和复核证据。只有交易、账本、结算、银行/通道和对账证据重新闭合后才能关闭，代码与生产操作仍交工程、SRE、安全及对应 Owner 授权。"
+    },
+    {
+      "id": "payment-negative-generic-webhook-retry",
+      "skill": "payment-expert",
+      "query": "普通 CRM 的 webhook 回调偶发超时，请设计签名校验、幂等和重试；不涉及支付、资金、账务或金融数据。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是普通工程集成的 webhook 可靠性问题，没有支付或资金事实，应由 senior-software-architect 主责。"
+    },
+    {
+      "id": "payment-negative-generic-compensation-retry",
+      "skill": "payment-expert",
+      "query": "普通图片处理任务失败后需要补偿重试和人工工单；不涉及支付、结算、资金或账本。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy"],
+      "negative_reason": "这是普通异步任务的补偿与重试，不具备支付、清结算或资金证据，应由 senior-software-architect 主责。"
     },
     {
       "id": "payment-negative-isolated-refund-page",
@@ -3287,6 +3419,66 @@
       "expected_handling": "进入 Wind 项目 AGENTS 初始化；由 知止者做项目约规入口编排，wind-coding-conventions 读取 wind-project-agents-template.md 输出可放入项目根目录的 AGENTS.md 草案；必须标出项目事实待确认项、授权边界、验收标准和验证方式，不猜测构建命令、生产流程、模块事实或 Git 授权。"
     },
     {
+      "id": "wind-coding-conventions-should-separate-signature-from-replay-and-tls",
+      "skill": "wind-coding-conventions",
+      "query": "这个 Wind 接口已经把 timestamp、nonce 和请求体一起签名，服务端也限制五分钟有效期。请按当前约规判断是否已经防重放，并确认能否因此允许客户端直接走 HTTP。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "进入 Wind 请求签名证据边界检查。nonce 被签名只证明传输后未被篡改，时间窗只限制可重放时长；必须按调用方或 accessId 作用域原子消费 nonce、设置 TTL，并以连续和并发重复请求证明第二次拒绝及存储故障策略，才能声明防重放。当前 RequestSignFilter 仍需核对 nonce 消费实现，不得只凭 timestamp + nonce 下结论。签名不提供机密性或服务端身份认证，不能替代 TLS、权限校验或业务幂等；HTTP/HTTPS 还要读取网关、Ingress、证书和目标环境证据。安全控制判断交 security-engineering-expert，过滤器实现与测试交 senior-software-architect。"
+    },
+    {
+      "id": "wind-coding-conventions-should-separate-servlet-redispatch-from-thread-propagation",
+      "skill": "wind-coding-conventions",
+      "query": "Wind 的 TraceFilter 已允许 ASYNC 和 ERROR redispatch 重新进入过滤器，是否意味着线程池、@Async 和 CompletableFuture 会自动继承 traceId？请给出需要分别验证的边界。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "不能把 Servlet redispatch 当作线程切换传播证据。TraceFilter 只在每次 REQUEST/ASYNC/ERROR 分派的当前线程重新绑定上下文；Runnable、Callable、@Async、CompletableFuture、自建线程池和消息消费必须在提交或协议入口显式使用 ContextPropagationTaskDecorator 或项目等价 wrapper，并在执行后清理。验证应分开覆盖 REQUEST -> ASYNC/ERROR、装饰与未装饰线程池对照、traceId 连续性和清理，不得用现有 ERROR redispatch 测试外推所有异步路径。"
+    },
+    {
+      "id": "wind-coding-conventions-should-require-atomic-idempotency-storage",
+      "skill": "wind-coding-conventions",
+      "query": "Wind 项目已经调用 WindIdempotentExecuteUtils，并用进程内 Map 单测证明重复 key 会回放结果。请判断能否据此宣称接口具备并发幂等和跨实例安全重试。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "不能。helper 和串行进程内 Map 测试只证明调用骨架与结果回放；先查后执行再保存无法单独证明并发原子性。还需由生产存储契约证明原子占位、调用方/租户与接口作用域、参数摘要、TTL、冲突、失败恢复和结果回放，并用同 key 连续/并发、同 key 异参、跨实例和存储故障测试验证。业务唯一性仍由业务 UK、状态条件或版本约束独立保护。"
+    },
+    {
+      "id": "wind-coding-conventions-should-locate-oss-kms-ports-before-vendor-sdk",
+      "skill": "wind-coding-conventions",
+      "query": "一个 Wind Java 服务要新增阿里云 OSS 上传和 KMS 加解密。请判断业务模块应直接依赖厂商 SDK，还是先复用现有端口、适配器与 starter；还要说明什么证据才算当前应用真的可用。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "先读取当前仓库并查找 WindOssClient、WindCryptoClient、WindCredentialsClient、WindKmsClientProvider、厂商适配器和 starter；业务核心依赖端口，厂商 SDK 留在适配器。证据分层为端口/适配器存在、消费方实际解析加载 artifact、Bean/SPI 装配、环境配置与最小权限、sandbox 真实上传读取或加解密及失败路径、发布与生产观测；前一层不能代替后一层。缺少目标环境和云资源 Owner 时停止在设计或装配证据，不宣称可用。"
+    },
+    {
+      "id": "wind-coding-conventions-should-reject-mandatory-four-service-types",
+      "skill": "wind-coding-conventions",
+      "query": "Wind 文档列出了 Service、DomainService、DomainQueryService、ApplicationService。请按约规要求每个简单 CRUD 模块都补齐这四类，即使目前只有 Mapper 透传。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "拒绝机械补齐。四类 Service 是职责判断框，不是必备层：简单 CRUD 保留最小 Service/ServiceImpl，纯 Mapper 透传甚至不应新增浅服务；只有稳定领域写规则、独立读模型或真实用例编排分别存在时，才引入 DomainService、DomainQueryService 或 ApplicationService。不得为了文档命名制造透传接口、浅层和无变化轴抽象。"
+    },
+    {
+      "id": "wind-coding-conventions-should-reject-kms-disabled-test-as-evidence",
+      "skill": "wind-coding-conventions",
+      "query": "Wind 企业集成组件已有阿里云 KMS 客户端，测试目录里也有加解密和读取 Secret 的类，只是目录未被 Git 跟踪、整类标了 @Disabled，部分用例只打印结果。可以在交付说明中写 KMS 集成已验证通过吗？另外 /inc/basic/** 是否可因内网而跳过逐请求身份校验？",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
+      "expected_handling": "两项都拒绝。未跟踪、@Disabled、占位凭据或只打印无断言的测试不属于可复核交付证据，只能说明本地存在测试草稿；KMS 通过还需已跟踪、可控启用的 sandbox 集成测试，断言加解密、Secret 版本、权限和错误端点等路径，并记录实际执行环境与结果且不输出凭据或 Secret。/inc/basic/** 只是低风险内部接口分类，不是身份或安全控制；内网请求仍默认拒绝并逐请求鉴权，secure 路径再叠加来源和签名等控制。"
+    },
+    {
       "id": "wind-coding-conventions-negative-generic-java-review",
       "skill": "wind-coding-conventions",
       "query": "这个普通 Spring Boot 项目没有本地编码约规 opt-in，帮我 CR Service 层事务边界、实体暴露、循环依赖和测试缺口。",
@@ -3474,6 +3666,27 @@
         "variance_check"
       ],
       "expected_handling": "由 document-authoring 在同一事实源上分别确认文种与效力、读者关系、阅读后动作、证据要求和语体。管理层专题简报以关键事实、风险状态、决策请求和行动责任优先，压缩样本细节但保留外推边界；研究说明先界定研究问题、范围、材料、统计口径和样本局限，再展开事实、推断、异议与阶段性结论。两份文档共享事实，不共享固定开头顺序或同一种机关腔；原因未确认时均保持待确认，但分别说明对管理决策和研究结论的影响，不补造原因或因果。"
+    },
+    {
+      "id": "document-authoring-should-design-professional-training-scenario",
+      "skill": "document-authoring",
+      "query": "支付对象、状态、异常和证据口径已经由支付专家确认。请把这些材料整理成面向产品、研发和运营的中文培训包，包含渐进学习路径、桌面推演、事件卡、讲师提示和参考答案；不能只做摘要加选择题。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "由 document-authoring 持有培训文档工程，先确认目标读者、训练后的可观察行为、已稳定领域事实、训练环境、验收 owner 和载体；按阅读/诊断、桌面推演、sandbox 或仿真、历史案例、受控真实任务组织渐进路径。场景数据必须虚构或脱敏，领域结论只保留权威指针或经 Owner 确认的脱敏最小结论，不粘贴未脱敏原始材料；角色私有信息按任务最小披露，学员版不含角色外信息、讲师提示或答案，并与讲师版设置独立载体或访问边界。未经明确授权不得触发真实资金、生产写入、密钥操作或不可逆动作。情景至少包含目标、角色、前置事实、角色私有信息、未知项、对象/状态、事件卡、交付物、红线、停止条件和检查点；讲师提示说明何时发事件、观察什么和何时停止，参考答案给判断依据、证据和可接受分支，不把唯一措辞当唯一正确答案。领域结论仍由 payment-expert 复核，文档检查不替代训练行为证据。"
+    },
+    {
+      "id": "document-authoring-negative-invent-payment-training-facts",
+      "skill": "document-authoring",
+      "query": "不要提供支付材料，也不用支付专家或任何来源；请直接替我规定授权、清算、结算、退款和争议的行业统一状态，再写成公司培训手册。",
+      "should_trigger": false,
+      "preferred_skill": "payment-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "baseline_comparison"],
+      "negative_reason": "任务先要求发明支付领域事实与统一状态，文档撰写不能越权；应由 payment-expert 基于当前来源、法域和 Owner 稳定领域口径，document-authoring 只能在事实确认后组织培训材料。"
     },
     {
       "id": "document-authoring-should-review-and-deliver-docx",
@@ -4495,7 +4708,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "由 novelist 先区分已给事实与创作候选，再从角色对主线、主角、关系和主题承担的故事定位出发塑造人物。性格写成欲望、恐惧、价值边界、矛盾倾向及其在压力下反复出现或被打破的选择；天命区分世界事实、预言或宗族解释、他人期待和人物自我信念，只构成约束与诱惑，不能取消主动性。长相与衣着须承载时代、地域、身份、职业、资源、身体经历或关系变化，并通过视角、行动和场景显现；行事风格落实到观察、说话、决策、冲突与承担后果的方式；人生经历只保留已进入当前能力、偏见、伤痕、债务和关系的因果痕迹；朋友圈或关系网说明亲疏、信任、利益、权力、亏欠与不同人所见的不同侧面，并让关系随选择改变。不用静态人物卡和形容词清单替代场景表现。"
+      "expected_handling": "由 novelist 先区分已给事实与创作候选，再用一句话说明角色改变哪条主线、删除后哪段因果或核心关系不再成立，并从角色对主线、主角、关系和主题承担的故事定位出发塑造人物。性格写成欲望、恐惧、价值边界、矛盾倾向及其在压力下反复出现或被打破的选择；天命区分世界事实、预言或宗族解释、他人期待和人物自我信念，只构成约束与诱惑，不能取消主动性。长相与衣着须承载时代、地域、身份、职业、资源、身体经历或关系变化，并通过视角、行动和场景显现；行事风格落实到观察、说话、决策、冲突与承担后果的方式；人生经历只保留已进入当前能力、偏见、伤痕、债务和关系的因果痕迹；朋友圈或关系网说明亲疏、信任、利益、权力、亏欠与不同人所见的不同侧面，并至少展示一组关系在人物选择前后的具体变化。不用静态人物卡和形容词清单替代场景表现。"
     },
     {
       "id": "novelist-should-balance-direct-and-indirect-social-critique",
@@ -4850,7 +5063,7 @@
     {
       "id": "security-engineering-expert-should-review-release-security-gate",
       "skill": "security-engineering-expert",
-      "query": "请使用安全工程专家对这个开放 API 上线方案做安全准出评审，基于现有设计、配置回读、测试和告警演练给出资产与资损、信任边界、滥用路径、残余风险和 READY / READY_WITH_RISK / BLOCKED 结论。",
+      "query": "请使用安全工程专家对这个开放 API 上线方案做安全准出评审，基于现有设计、配置回读、测试和告警演练给出资产与资损、信任边界、滥用路径、残余风险和 ENGINEERING_READY / ENGINEERING_READY_WITH_RISK / ENGINEERING_BLOCKED 工程建议，并区分安全工程 Owner、独立评估 Owner 与授权 Owner。",
       "should_trigger": true,
       "difficulty": "standard",
       "hard_negative": false,
@@ -4858,7 +5071,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "由 security-engineering-expert 先核对目标环境、版本、Owner 和证据等级，再围绕资产、主体、协议与数据流、威胁/滥用路径、预防检测响应恢复控制和验证结果形成残余风险与单一准出结论；缺少关键启用或运行证据时不得给 READY。"
+      "expected_handling": "由 security-engineering-expert 先核对目标环境、版本、Owner 和证据等级，再围绕资产、主体、协议与数据流、威胁/滥用路径、预防检测响应恢复控制和验证结果形成残余风险与单一 ENGINEERING_* 工程建议；安全工程 Owner、独立评估 Owner 与授权 Owner 必须职责分离，安全工程专家不自评自批、不代替授权 Owner 接受风险；缺少关键启用或运行证据时只能给 ENGINEERING_BLOCKED。"
     },
     {
       "id": "competition-security-design-owner-architect",

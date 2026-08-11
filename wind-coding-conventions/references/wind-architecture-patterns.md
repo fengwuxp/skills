@@ -36,6 +36,8 @@
 | API 和契约风格 | `2. API 设计风格` | 不绕过统一响应、traceId、错误码和空值契约 |
 | 编码风格和公共模型 | `3. 编码风格提炼` | 不替代 `java-coding-conventions.md` |
 | 端口适配和 Starter 模式 | `4. 架构模式提炼` | 不让业务代码直接依赖厂商 SDK |
+| Trace、签名、幂等与脱敏 | `4.4 上下文传播模式`、`4.6 安全域模式`、`4.8 脱敏副作用` | 不把模块或 helper 存在当成安全与并发证据 |
+| OSS / KMS 集成证据 | `4.7 企业集成模式` | 不把 disabled、未跟踪或无断言测试当成集成通过 |
 | Java/Wind 落地 Review | `6. Wind 落地要求`、`7. 可复用检查清单` | 不重复造已有基础能力 |
 
 ## 1. 总体架构定位
@@ -124,7 +126,9 @@
 
 ### 4.4 上下文传播模式
 
-- `WindTracer` / `WindTraceContext`、`TraceFilter`、`ContextPropagationTaskDecorator` 承接 traceId/spanId/context；入口创建或接收，出口返回，异步任务、线程池、消息消费、日志、指标、响应和错误处理都要显式传播，不在业务代码散落魔法 key。
+- `TraceFilter` 负责在 HTTP 入口和后续 Servlet redispatch 的当前线程绑定上下文；允许 `ASYNC` / `ERROR` redispatch 重新进入 Filter，不会自动把上下文带入 `Runnable`、`Callable`、`@Async`、`CompletableFuture` 或任意线程池。
+- 线程切换必须在提交点使用已装配的 `ContextPropagationTaskDecorator` 或项目等价 wrapper，并在执行后清理；MQ、定时任务和其他协议入口也要分别建立上下文。
+- 验证要分开覆盖入口绑定、`REQUEST -> ASYNC/ERROR` redispatch、装饰与未装饰线程池对照、traceId 连续性和执行后清理，任一层通过都不能替其他层作证。
 
 ### 4.5 查询与分页模式
 
@@ -134,9 +138,23 @@
 
 - JWT、Token 状态、RBAC、验证码和 MFA 分层建模；Token 不只校验签名，还要考虑撤销、设备隔离和刷新令牌；安全动作必须有流控、防重放、失败次数控制、审计和错误收敛。
 
+请求签名核对当前项目源码与配置，不照搬历史文档头名。当前 `SignatureHttpHeaderNames` 默认生成 `Wind-Nonce`、`Wind-Timestamp`、`Wind-Access-Id`、`Wind-Secret-Version`、`Wind-Sign`；自定义前缀或后续版本必须重新读取。
+
+- nonce 进入签名文本只证明完整性，不等于被服务端唯一消费。时间窗也只能限制重放窗口；防重放还要按调用方/访问标识作用域原子占用 nonce、设置 TTL，并用连续与并发重复请求证明第二次拒绝及存储故障策略。
+- 请求签名不替代 TLS、服务端身份认证、权限校验或业务幂等。HTTP 是否被拒绝、HTTPS 终止、证书校验、mTLS/HSTS 等必须读取目标部署配置和运行证据。
+- 威胁、控制与残余风险交 `security-engineering-expert`；过滤器实现和契约测试交 `senior-software-architect`。
+
 ### 4.7 企业集成模式
 
 - OSS/KMS/Email/DingTalk/IM/Office/Workflow 先定义业务端口再接具体实现；跨系统任务考虑幂等、重试、串行、限速、上下文和补偿；环境隔离、租户隔离、资源定义成为模型契约；内网接口有明确前缀和安全边界。
+- 结论按“端口/适配器存在 -> 消费方解析并加载 artifact -> Bean/SPI 装配 -> 环境配置与权限 -> sandbox 真实操作 -> 发布/生产”分层。源码存在只能证明设计入口，不能跨级声明可用。
+- OSS 当前可先找 `WindOssClient`、厂商适配器和 starter；KMS 可先找 `WindCryptoClient`、`WindCredentialsClient`、`WindKmsClientProvider` 与凭据入口。凭据片段和 secret 内容不得进入日志或测试输出。
+- 未跟踪、`@Disabled`、占位凭据、只打印无断言的云测试不构成集成通过；真实集成测试需可控启用，使用 sandbox，断言成功与权限/端点失败路径，并记录实际命令、环境和测试结果。
+- 幂等 helper 存在只证明调用入口；并发安全仍需存储契约证明原子占位、调用方/接口作用域、参数摘要、TTL、冲突和结果回放，详细规则读 `wind-coding-conventions.md`。
+
+### 4.8 脱敏副作用
+
+- 使用对象脱敏能力前读取当前实现契约。当前 `MapObjectMasker` 会原地修改输入 `Map`，调用方需要在共享对象、后续持久化或重复使用前复制数据；不得把“返回脱敏结果”误解为无副作用转换。
 
 ## 5. 模块治理提炼
 

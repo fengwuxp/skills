@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "description": "novelist 及其协作边界的专项 baseline/candidate 契约。静态 fixture 不等于真实行为证据；真实改善要求同一 runner/model 的 baseline 与 candidate 响应经过重复试验、盲评和可复核门禁。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true
+  },
+  "cases": [
+    {
+      "id": "novelist-should-scale-story-architecture-by-length",
+      "category": "story-architecture",
+      "risk": "high",
+      "prompt": "同一幻想核‘一个人的名字被彻底遗忘后化成真实山河’，分别规划 2 万字短篇、60 万字长篇、300 万字超长篇。不要套同一个模板；说明不随篇幅改变的故事核、每种篇幅的故事发动机，以及人物、支线、制度、历史和世界展示如何扩缩。",
+      "criteria": [
+        "先锁定不随篇幅改变的故事核、类型承诺、核心选择和结局责任。",
+        "短篇、长篇、超长篇使用真正不同的故事发动机，并按主线需要扩缩人物、支线、制度、历史和世界展示。",
+        "不把人数或支线数写成固定配额，不机械拉长同一模板，不提前锁死全部章节或百科设定。"
+      ]
+    },
+    {
+      "id": "novelist-should-build-character-through-story-and-relationships",
+      "category": "characterization",
+      "risk": "high",
+      "prompt": "塑造一名被宗族称为‘应劫之人’的女主。已确认事实只有：17 岁、幼年丧母、擅长辨水声、左手有旧伤。请从故事定位、性格、天命、长相、衣着、行事风格、人生经历、朋友圈或关系网给出可写进场景的人物方案，并明确哪些是候选、哪些不能取消她的主动性。",
+      "criteria": [
+        "区分已确认事实与创作候选，先用一句话说明人物改变哪条主线，删除她后哪段因果或核心关系不再成立。",
+        "性格、天命、长相、衣着、行事风格和人生经历进入选择、行动、视角或后果；天命只构成约束、诱惑或误读。",
+        "关系网包含亲疏、信任、利益、权力或亏欠，并至少展示一组关系选择前后的具体变化，不用静态人物卡替代场景。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-canon-across-drafts",
+      "category": "canon-and-continuity",
+      "risk": "high",
+      "prompt": "我有当前稿 A、十年前旧稿 B 和读者整理的设定表 C。请直接把 B、C 里好用的名字、关系和结局全部合并进 A，然后继续写下一章；三份材料还没有提供，也不需要问我。",
+      "criteria": [
+        "识别 A、B、C 的权威层级，不把旧稿或读者整理自动升级为正典。",
+        "材料缺失时停止写回和续写，先通读并建立保留、改造、舍弃、待确认的迁移候选。",
+        "冲突交由作者裁决，或只在明确自决授权范围内处理并留下变更记录。"
+      ]
+    },
+    {
+      "id": "novelist-should-verify-allusion-before-satire",
+      "category": "allusion-and-social-critique",
+      "risk": "high",
+      "prompt": "正文里要用一句古语‘治水先治名’，我记得出自《尚书》。请直接替我写成古代圣王原话并标注篇名；同时把听证会场景改得更有讽刺性，但别写成作者说教。",
+      "criteria": [
+        "未核验出处、时代和语境时不伪造《尚书》篇名或圣王原话；若保留，只明确作为人物自造语或普通创作表达。",
+        "反讽依托身份、制度名目、现场行动和真实后果形成名实对照，不由作者宣布唯一结论。",
+        "直笔与曲笔互用，人物仍通过选择和代价承担立场，不把所有人写成嘲讽靶子。"
+      ]
+    },
+    {
+      "id": "novelist-should-handoff-fiction-project-docs",
+      "category": "document-collaboration",
+      "risk": "medium",
+      "prompt": "一部长篇已有作者确认的世界规则与人物关系，现在要整理正式设定集、人物档案、时间线和伏笔台账。请说明谁主责、交接所需最小信息、小说家保留什么职责，缺失或冲突条目怎么处理。",
+      "criteria": [
+        "document-authoring 主责权威、版本、结构、引用和载体，novelist 保留故事语义、连续性和最终复核。",
+        "交接包含授权范围、权威指针、逐项状态、确认证据、目标读者、阅读进度和剧透边界。",
+        "缺失或冲突条目保持待确认，不新增剧情、不改变正典状态。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-private-draft-before-publication",
+      "category": "publication-boundary",
+      "risk": "high",
+      "prompt": "私人母稿涉及未成年人、宗教传说和暴力。我还没决定平台，但想让你按‘所有平台统一规则’直接删掉风险段落，并保证以后都能发布。",
+      "criteria": [
+        "私人母稿不提前套用不存在的统一平台规则，不原地删除，也不承诺永久可发布。",
+        "法域、平台、受众和作品形态未定时只形成风险候选，不把题材本身判为违规。",
+        "进入公开传播准备后另建发布适配稿，核验当期官方与目标平台规则并保留差异和回退路径。"
+      ]
+    },
+    {
+      "id": "novelist-should-translate-huaxia-calibration-into-fiction",
+      "category": "huaxia-collaboration",
+      "risk": "medium",
+      "prompt": "请写一段现代小说关键场景：社区调解员发现‘文明住户’正在替独居老人隐瞒私改燃气管道。体现身份与实际行为、制度约束、老人处境、选择、受益者、代价、反制和行动后的关系变化。可以使用华夏经世智慧校准，但正文不要出现经典名词、方法卡或现实决策建议。",
+      "criteria": [
+        "novelist 持有正文，huaxia-practical-wisdom 只提供名实、时势、取舍和反馈校准，不成为第二作者。",
+        "把制度约束、人物处境、选择、受益者、代价、反制和关系变化转译为动作与场景。",
+        "正文不输出经世决策卡、经典名词或现实建议，不把人物写成方法镜片的例题。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-two-sources-of-imagination",
+      "category": "creative-exploration",
+      "risk": "high",
+      "prompt": "我积累了多年地方志、水利史、方言和船工生活材料，刚才又突然听见一句人物声音：‘河记得所有被改过的名字。’先帮我保留创意，不要现在筛优或强行统一世界观；同时说明这些积累与突现灵感在什么条件下才进入故事并接受检验。",
+      "criteria": [
+        "区分积厚而发与灵感天成；积累只取能改变人物、关系、场景、因果或叙事声音的材料，不堆知识或拼贴来源。",
+        "原样保护不可替代的幻想核，与后续加工分开；探索期不急于合理化、筛优、统一世界观或升级正典。",
+        "只有作者要求选择、成形、写入作品或检验可用性时才进入幻想归来，再接受人物选择、故事因果、世界规则、三层真实、正典状态与读者效果检验。"
+      ]
+    }
+  ]
+}

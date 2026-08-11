@@ -87,6 +87,21 @@ DIAGRAM_TYPE_CHECKS: dict[str, list[RequiredGroup]] = {
 PLACEHOLDER_FIELD = re.compile(r"〈[^〉\n]+〉")
 EMPTY_LABELED_VALUES = {"", "-", "无", "暂无", "待定", "待确认", "n/a", "na", "null", "none"}
 HEADING_PATTERN = re.compile(r"(?m)^#{2,6}\s+(.+?)\s*$")
+SCENARIO_HEADING_PATTERN = re.compile(
+    r"(?i)(?:\b(?:SCN|UC)-[A-Z0-9-]+\b|(?:业务)?场景(?:契约|设计)?\s*[：:]\s*\S+)"
+)
+SCENARIO_ID_PATTERN = re.compile(r"(?i)\b(?:SCN|UC)-[A-Z0-9-]+\b")
+SCENARIO_FIELD_GROUPS = (
+    ("business_problem", ("业务问题与期望结果", "业务问题", "真实问题")),
+    ("participants", ("参与者与责任", "参与者", "业务主体")),
+    ("trigger_context", ("触发与前置事实", "触发条件", "前置事实", "前置条件")),
+    ("main_path", ("主路径与状态变化", "主路径", "状态变化", "能力编排")),
+    ("rule_scope", ("适用规则", "规则引用")),
+    ("observable_result", ("完成证据与验收种子", "完成证据", "可观察结果", "完成定义")),
+    ("exception_closure", ("逆向、异常与停止", "异常与人工兜底", "异常处理")),
+)
+PRD_STRENGTHS = {"轻量", "标准", "增强"}
+SCENARIO_CONTRACT_STRENGTHS = {"标准", "增强"}
 PRD_SECTION_ORDER = [
     ("section_background", ("背景与问题",)),
     ("section_goal", ("目标与非目标",)),
@@ -126,6 +141,7 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "战略意图：提升效率。业务能力地图：客户管理。",
     ),
     "prd": (
+        "文档强度：标准。\n"
         "## 阅读摘要\n当前结论：统一审核入口；产品定义 / 产品视图：为运营提供可追踪的审核能力；主链路：提交、审核、通知；核心对象与边界：申请单由平台管理，不改变交易订单。\n"
         "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
         "## 二、目标与非目标\n目标：提升运营效率；非目标：不改结算规则。\n"
@@ -133,13 +149,21 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "## 四、概要设计\n概要设计：核心方案是统一审核入口和能力布局，并说明总体流程。\n"
         "核心名相：审核任务；定义：等待运营判断的申请；不是什么：交易订单；归属主体：平台。"
         "用户：运营；主体：平台；角色：审核员；验收方：产品和运营。\n"
-        "## 五、详细设计\n详细设计：场景和功能围绕申请单；对象状态为待审、通过、驳回；生命周期从创建到关闭。\n"
+        "## 五、详细设计\n以下场景说明申请单如何形成可追踪的审核结论。\n"
+        "### SCN-001 运营审核申请\n"
+        "业务问题与期望结果：审核员需要在统一入口完成判断，申请单最终形成可追踪结论。\n"
+        "参与者与责任：审核员处理，平台持有申请事实，产品和运营负责验收。\n"
+        "触发与前置事实：申请已提交且材料来源可信，状态为待审。\n"
+        "主路径与状态变化：审核员核对材料并裁决，申请单由待审变为通过或驳回。\n"
+        "适用规则：跨场景不变量和审批规则适用于裁决步骤。\n"
+        "完成证据与验收种子：审核结论、操作者和时间可查询，重复处理不改变终态。\n"
+        "逆向、异常与停止：材料不足时驳回补充，外部来源不可用时停止裁决并转人工处理。\n"
         "## 六、关键流程\n主流程：提交、审核、通知；异常流程：重复提交；人工处理：补录；流程图：审核路径。\n"
         "## 七、业务规则与接口抽象\n"
-        "规则：权限、审批、版本和验收样例。产品接口抽象说明业务契约、输入、输出和失败语义。\n"
+        "规则性质：场景裁决规则。适用场景 / 步骤：SCN-001 / 审核裁决。触发与判断条件：只有待审申请可裁决；审批结论必须记录版本和验收样例。产品接口抽象说明业务契约、输入、输出和失败语义。\n"
         "## 八、数据与风险\n数据：指标、报表、审计和追溯。"
         "风险：外部依赖待确认，确认方为业务，影响范围是审核上线。\n"
-        "## 九、验收摘要\n验收摘要：业务结果可观察，验收标准覆盖关键边界和红线。",
+        "## 九、验收摘要\n对应场景：SCN-001。正常结果：通过或驳回结论、操作者和时间可查询；关键边界：重复裁决不改变终态；异常与兜底：来源不可用时停止并转人工；红线：不得生成无审计记录的结论。",
         "目标：提升效率。",
     ),
     "product-architecture": (
@@ -274,6 +298,170 @@ def has_keyword_only_section(text: str) -> bool:
     return False
 
 
+def scenario_blocks(text: str) -> list[tuple[str, str]]:
+    headings = list(re.finditer(r"(?m)^(#{3,6})\s+(.+?)\s*$", text))
+    blocks: list[tuple[str, str]] = []
+    for index, heading in enumerate(headings):
+        title = heading.group(2)
+        if not SCENARIO_HEADING_PATTERN.search(title):
+            continue
+        level = len(heading.group(1))
+        end = len(text)
+        for following in headings[index + 1 :]:
+            if len(following.group(1)) <= level:
+                end = following.start()
+                break
+        blocks.append((title, text[heading.end() : end]))
+    return blocks
+
+
+def has_meaningful_alias_value(text: str, aliases: tuple[str, ...]) -> bool:
+    return any(has_meaningful_labeled_value(text, alias) for alias in aliases)
+
+
+def labeled_values(text: str, label: str) -> list[str]:
+    values: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("|"):
+            cells = [cell.strip().strip("`*_").strip() for cell in stripped.strip("|").split("|")]
+            if len(cells) >= 2 and normalize(cells[0]) == normalize(label):
+                values.append(cells[1])
+    pattern = re.compile(
+        rf"(?m)^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*"
+        rf"(?:\*\*|__|`)?\s*[：:]\s*([^；;。\n|]+)",
+        re.IGNORECASE,
+    )
+    values.extend(match.group(1).strip().strip("`*_").strip() for match in pattern.finditer(text))
+    return values
+
+
+def meaningful_values(values: list[str]) -> list[str]:
+    return [
+        value
+        for value in values
+        if normalize(value) not in EMPTY_LABELED_VALUES and not PLACEHOLDER_FIELD.search(value)
+    ]
+
+
+def field_values(text: str, label: str) -> list[str]:
+    values = labeled_values(text, label)
+    first = labeled_value(text, label)
+    if first is not None and first not in values:
+        values.append(first)
+    return meaningful_values(values)
+
+
+def table_column_values(text: str, aliases: tuple[str, ...]) -> list[str]:
+    lines = text.splitlines()
+    normalized_aliases = {normalize(alias) for alias in aliases}
+    for index, line in enumerate(lines):
+        if not line.strip().startswith("|"):
+            continue
+        headers = [cell.strip().strip("`*_").strip() for cell in line.strip().strip("|").split("|")]
+        column = next(
+            (position for position, header in enumerate(headers) if normalize(header) in normalized_aliases),
+            None,
+        )
+        if column is None:
+            continue
+        values: list[str] = []
+        for row in lines[index + 1 :]:
+            if not row.strip().startswith("|"):
+                break
+            cells = [cell.strip().strip("`*_").strip() for cell in row.strip().strip("|").split("|")]
+            if all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+                continue
+            if column < len(cells):
+                values.append(cells[column])
+        return meaningful_values(values)
+    return []
+
+
+def scenario_contract_issues(text: str) -> list[str]:
+    blocks = scenario_blocks(section_body(text, ("详细设计",)))
+    if not blocks:
+        return ["scenario_contract_missing"]
+    scenario_ids = [match.group(0).upper() for title, _ in blocks if (match := SCENARIO_ID_PATTERN.search(title))]
+    issues: list[str] = []
+    if len(scenario_ids) != len(set(scenario_ids)):
+        issues.append("duplicate_scenario_ids")
+    if any(
+        not all(has_meaningful_alias_value(body, aliases) for _, aliases in SCENARIO_FIELD_GROUPS)
+        for _, body in blocks
+    ):
+        issues.append("scenario_contract_incomplete")
+    return issues
+
+
+def section_body(text: str, aliases: tuple[str, ...]) -> str:
+    headings = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", text))
+    for index, heading in enumerate(headings):
+        title = heading.group(2)
+        if not any(alias.casefold() in title.casefold() for alias in aliases):
+            continue
+        level = len(heading.group(1))
+        end = len(text)
+        for following in headings[index + 1 :]:
+            if len(following.group(1)) <= level:
+                end = following.start()
+                break
+        return text[heading.end() : end]
+    return ""
+
+
+def declared_prd_strength(text: str) -> str | None:
+    value = labeled_value(text, "文档强度")
+    if value is None:
+        return None
+    normalized = normalize(value)
+    return normalized if normalized in PRD_STRENGTHS else "invalid"
+
+
+def has_rule_scope(text: str) -> bool:
+    rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
+    rule_types = field_values(rules, "规则性质") or table_column_values(rules, ("规则性质",))
+    scopes = (
+        field_values(rules, "适用场景 / 步骤")
+        + field_values(rules, "适用场景/步骤")
+        + field_values(rules, "适用场景")
+    ) or table_column_values(rules, ("适用场景 / 步骤", "适用场景/步骤", "适用场景"))
+    return bool(rule_types and scopes)
+
+
+def defined_scenario_ids(text: str) -> set[str]:
+    return {
+        match.group(0).upper()
+        for title, _ in scenario_blocks(section_body(text, ("详细设计",)))
+        if (match := SCENARIO_ID_PATTERN.search(title))
+    }
+
+
+def rule_scenario_issues(text: str) -> list[str]:
+    rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
+    referenced_ids = {match.group(0).upper() for match in SCENARIO_ID_PATTERN.finditer(rules)}
+    return ["undefined_rule_scenario_reference"] if referenced_ids - defined_scenario_ids(text) else []
+
+
+def acceptance_scenario_issues(text: str) -> list[str]:
+    acceptance = section_body(text, ("验收摘要",))
+    values = field_values(acceptance, "对应场景")
+    if not values:
+        return ["acceptance_scenario_missing"]
+    referenced_ids = {
+        match.group(0).upper()
+        for value in values
+        for match in SCENARIO_ID_PATTERN.finditer(value)
+    }
+    defined_ids = defined_scenario_ids(text)
+    issues: list[str] = []
+    if referenced_ids - defined_ids:
+        issues.append("undefined_scenario_reference")
+    if defined_ids - referenced_ids:
+        issues.append("uncovered_scenarios")
+    return issues
+
+
 def contains_term(text: str, term: str) -> bool:
     if term.isascii() and term.replace("@", "").isalnum():
         return bool(re.search(rf"(?i)(?<![a-z0-9_]){re.escape(term)}(?![a-z0-9_])", text))
@@ -353,9 +541,25 @@ def missing_groups(kind: str, text: str) -> list[str]:
     if PLACEHOLDER_FIELD.search(text):
         missing.append("placeholder_fields")
     if kind == "prd":
-        missing.extend(missing_ordered_sections(text, PRD_SECTION_ORDER))
+        strength = declared_prd_strength(text)
+        if strength is None:
+            missing.append("document_strength_missing")
+        elif strength == "invalid":
+            missing.append("document_strength_invalid")
+        if strength != "轻量":
+            missing.extend(missing_ordered_sections(text, PRD_SECTION_ORDER))
+        elif len(re.findall(r"(?m)^##\s+", text)) < 5:
+            missing.append("lightweight_sections_missing")
         if has_keyword_only_section(text):
             missing.append("keyword_only_section")
+        if strength == "轻量" and is_keyword_shell("prd", text):
+            missing.append("keyword_shell")
+        if strength in SCENARIO_CONTRACT_STRENGTHS:
+            missing.extend(scenario_contract_issues(text))
+            if not has_rule_scope(text):
+                missing.append("rule_scope_missing")
+            missing.extend(rule_scenario_issues(text))
+            missing.extend(acceptance_scenario_issues(text))
     return missing
 
 
@@ -459,6 +663,97 @@ def run_self_test() -> int:
     )
     if "keyword_only_section" not in missing_groups("prd", keyword_only_prd):
         failures.append("prd: keyword-only sections unexpectedly passed")
+    abstract_prd = re.sub(
+        r"(?ms)^### SCN-001.*?(?=^## 六、关键流程)",
+        "详细设计：申请单场景覆盖用户、对象、状态、功能和生命周期。\n",
+        SELF_TESTS["prd"][0],
+    )
+    if "scenario_contract_missing" not in missing_groups("prd", abstract_prd):
+        failures.append("prd: abstract complete document unexpectedly passed without a scenario contract")
+    light_prd = (
+        "文档强度：轻量。\n"
+        "## 一、背景、问题与目标\n背景：审核积压；问题：处理路径不清；目标：缩短时长；非目标：不改交易。\n"
+        "## 二、定性、范围与概要\n产品定性：流程治理；总体判断：统一入口；范围和产品边界为后台审核。"
+        "概要设计采用统一入口；方案概述说明申请如何流转。核心名相为审核任务，定义是待处理申请。"
+        "用户为运营，角色是审核员，责任边界不变。\n"
+        "## 三、详细设计与业务场景\n详细设计：审核员处理申请单场景；功能围绕对象状态和生命周期提供审核反馈。\n"
+        "## 四、流程、规则与产品接口\n主流程是提交、审核、通知；异常流程处理重复请求和人工处理。"
+        "规则覆盖权限和审批。产品接口抽象说明业务契约、输入、输出和失败语义。\n"
+        "## 五、数据、风险与待确认\n数据包括指标、报表和审计。风险和依赖待确认，确认方为业务，影响范围为上线。\n"
+        "## 六、验收摘要\n验收摘要覆盖业务结果、关键边界、红线和验收标准。"
+    )
+    if missing_groups("prd", light_prd):
+        failures.append("prd: merged lightweight document unexpectedly failed")
+    flat_light_prd = (
+        "文档强度：轻量。\n"
+        + " ".join(alias for group in CHECKS["prd"] for alias in group.aliases)
+        + " 内容完整。"
+    )
+    flat_light_missing = set(missing_groups("prd", flat_light_prd))
+    if not {"lightweight_sections_missing", "keyword_shell"}.issubset(flat_light_missing):
+        failures.append("prd: flat lightweight keyword shell unexpectedly passed")
+    missing_strength_prd = SELF_TESTS["prd"][0].replace("文档强度：标准。\n", "", 1)
+    if "document_strength_missing" not in missing_groups("prd", missing_strength_prd):
+        failures.append("prd: missing document strength unexpectedly passed")
+    invalid_strength_prd = SELF_TESTS["prd"][0].replace("文档强度：标准", "文档强度：非标准", 1)
+    if "document_strength_invalid" not in missing_groups("prd", invalid_strength_prd):
+        failures.append("prd: non-enum document strength unexpectedly passed")
+    named_scenario_prd = (
+        SELF_TESTS["prd"][0]
+        .replace("### SCN-001 运营审核申请", "### 业务场景：运营审核申请", 1)
+        .replace("SCN-001 / 审核裁决", "运营审核申请 / 审核裁决", 1)
+        .replace("对应场景：SCN-001", "对应场景：运营审核申请", 1)
+    )
+    if missing_groups("prd", named_scenario_prd):
+        failures.append("prd: named scenario without an id unexpectedly failed")
+    duplicate_scenario_prd = SELF_TESTS["prd"][0].replace(
+        "## 六、关键流程",
+        "### SCN-001 重复场景\n业务问题与期望结果：重复定义用于验证。\n\n## 六、关键流程",
+        1,
+    )
+    if "duplicate_scenario_ids" not in missing_groups("prd", duplicate_scenario_prd):
+        failures.append("prd: duplicate scenario ids unexpectedly passed")
+    dangling_acceptance_prd = SELF_TESTS["prd"][0].replace("对应场景：SCN-001", "对应场景：SCN-999", 1)
+    if "undefined_scenario_reference" not in missing_groups("prd", dangling_acceptance_prd):
+        failures.append("prd: undefined acceptance scenario unexpectedly passed")
+    unbound_rule_prd = SELF_TESTS["prd"][0].replace(
+        "规则性质：场景裁决规则。适用场景 / 步骤：SCN-001 / 审核裁决。",
+        "规则说明：相关规则见场景中的跨场景不变量说明。",
+        1,
+    )
+    if "rule_scope_missing" not in missing_groups("prd", unbound_rule_prd):
+        failures.append("prd: rule scope outside the rule section unexpectedly passed")
+    matrix_rule_prd = SELF_TESTS["prd"][0].replace(
+        "规则性质：场景裁决规则。适用场景 / 步骤：SCN-001 / 审核裁决。触发与判断条件：只有待审申请可裁决；审批结论必须记录版本和验收样例。产品接口抽象说明业务契约、输入、输出和失败语义。\n",
+        "| 规则编号 | 规则名称 | 规则性质 | 适用场景 / 步骤 | 触发条件 | 判断逻辑 | 验收样例 |\n"
+        "| --- | --- | --- | --- | --- | --- | --- |\n"
+        "| R-001 | 审核裁决 | 场景裁决规则 | SCN-001 / 审核裁决 | 申请待审 | 记录结论版本 | 重复审批不改变终态 |\n"
+        "产品接口抽象说明业务契约、输入、输出和失败语义。\n",
+        1,
+    )
+    if missing_groups("prd", matrix_rule_prd):
+        failures.append("prd: rule matrix with scenario scope unexpectedly failed")
+    dangling_rule_prd = SELF_TESTS["prd"][0].replace(
+        "适用场景 / 步骤：SCN-001 / 审核裁决",
+        "适用场景 / 步骤：SCN-999 / 审核裁决",
+        1,
+    )
+    if "undefined_rule_scenario_reference" not in missing_groups("prd", dangling_rule_prd):
+        failures.append("prd: undefined rule scenario unexpectedly passed")
+    first_scenario = re.search(r"(?ms)^### SCN-001.*?(?=^## 六、关键流程)", SELF_TESTS["prd"][0])
+    if first_scenario is None:
+        failures.append("prd: self-test scenario block missing")
+    else:
+        multi_scenario_prd = SELF_TESTS["prd"][0].replace(
+            "## 六、关键流程",
+            first_scenario.group(0).replace("SCN-001", "SCN-002") + "## 六、关键流程",
+            1,
+        )
+        if "uncovered_scenarios" not in missing_groups("prd", multi_scenario_prd):
+            failures.append("prd: scenario without acceptance coverage unexpectedly passed")
+    appendix_uc_prd = SELF_TESTS["prd"][0] + "\n### UC-LEGACY 历史索引\n历史编号仅用于来源追溯。"
+    if missing_groups("prd", appendix_uc_prd):
+        failures.append("prd: appendix use-case heading unexpectedly treated as a scenario contract")
     warning_checker = globals().get("warning_groups")
     if not callable(warning_checker):
         failures.append("prd: warning analyzer missing")

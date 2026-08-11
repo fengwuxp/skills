@@ -289,6 +289,19 @@ python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py disable
 
 `candidate` 只是待审证据，不代表 Skill 已改进。Owner 确认复用范围、目标 Skill 和权威落点后，人工评审结论为 `confirmed`，candidate 账本文件仍保持 `candidate`；受控试验在该状态内执行，不新增 `RSI Mode` 或其他生命周期状态。独立 Checker 复核后，由 Owner 作 `promote / reject / supersede` 裁决并留在任务证据中。学习模式只控制 candidate 账本写入；Skill 源仓库修改、Git、同步和发布分别需要对应授权。
 
+需要跨任务保留已确认的沟通、工作流或证据偏好时，可另行显式开启“用户协作档案”。它默认关闭，不扫描历史对话，和 Skill 学习回流完全隔离；新记录先进入 candidate，candidate 不会生效，只有用户确认后才可读取。当前指令始终优先，档案也不能授予 Git、联网、安装、部署、生产或删除权限：
+
+```bash
+python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py enable
+python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py status
+python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py record --category communication --scope global --statement '默认使用中文并先给结论' --evidence-kind direct-user --evidence-ref task:current
+python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py confirm UC-0001 --confirmation-ref user:current
+python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py resolve --scope global
+python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py disable
+```
+
+查看、拒绝、替代、导出与清除使用 `list / reject / supersede / export / purge`；其中 `purge` 需要明确确认口令，并会清空协作数据、停用档案但保留权限收紧的空壳目录。未显式执行 `enable` 和 `record` 时，知止者不会为用户创建任何本地档案。
+
 遇到“更专业”“更有感染力”等主观要求时，可直接给出本次任务级价值判断：`期望效果 / 正向参照 / 不期望效果 / 可接受取舍 / 最终 Owner`。它只约束当前交付，不会把一次措辞偏好写成长期 Skill 规则。
 
 ### 4. 编写文档的友好指令

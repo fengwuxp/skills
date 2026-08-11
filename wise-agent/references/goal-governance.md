@@ -143,6 +143,8 @@ Owner:
 下一复核点:
 ```
 
+跨轮、压缩恢复或多方会商 Goal 另在同一状态载体保存 `state_revision`、确认 / 排除 / 待确认项、`authority_refs`、决策迁移和恢复入口；不为普通单轮 Goal 增加空字段。具体迁移与新鲜度门禁以 `delivery-execution-control.md` 的认知完整性门禁为准。
+
 写作要求：
 
 - 先写 3-5 行摘要：当前目标、状态、能否继续、下一 owner 和阻塞点。
@@ -347,6 +349,8 @@ Goal ID:
 下一动作:
 复盘 / 知识回流位置:
 ```
+
+若本次更新跨越上下文、模型 / 工具配置或权威来源版本，Ledger delta 还要记录上一 `state_revision`、命中的 `recheck_on`、受影响决策、来源 fingerprint、复核结果和 stale / conflict / insufficient 的处置；不得重写未变化的历史状态。
 
 触发更新：
 

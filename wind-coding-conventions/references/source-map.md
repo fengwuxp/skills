@@ -46,12 +46,14 @@
 - 采纳边界：只吸收能补足通用 Java 规则且可形成 Review / 测试证据的命令与查询分离、FIRST 测试质量和第三方依赖学习 / 兼容测试；源码级审美、重构与架构裁决仍归 `senior-software-architect`。
 - 不吸收：不复制原文、示例、作者口吻或完整目录；不把每个测试一个断言、统一未检查异常、全面禁止 null、固定函数 / 类行数或顺手清理所有旧代码升级成机械强制规则。
 
-## Wind 项目族公开样本
+## Wind 知识库与项目族公开样本
 
-- 来源：[wind-middleware](https://github.com/fengwuxp/wind-middleware)、[wind-security](https://github.com/fengwuxp/wind-security)及本地复核过的 Wind 企业集成组件。
-- 读取状态：历史提炼已落入 `wind-architecture-patterns.md`，原始读取日期和 commit/tag 未留存；2026-07-17 本轮只复核本地提炼与来源链接，未重新读取公开仓库。涉及当前目录、API、依赖版本或实现事实时，必须重新读取并记录 commit/tag。
-- 采纳边界：只提炼端口适配、Starter、Trace、安全和企业集成等稳定模式；具体规则见 `wind-architecture-patterns.md`。
-- 不吸收：不复制实现，不把公开仓库的历史目录、依赖版本或临时实现写成当前项目必须照搬的事实。
+- 来源：[Wind 语雀知识库](https://www.yuque.com/suiyuerufeng-akjad/wind)（book id `37135667`）、[wind-middleware](https://github.com/fengwuxp/wind-middleware)、Wind 企业集成组件和[wind-security](https://github.com/fengwuxp/wind-security)。
+- 知识库读取状态：2026-08-11 已通过 Codex 应用内浏览器逐页读取 `article#content`；目录 63 篇，63/63 正文非空且标题匹配。页面公开可读但未声明再分发许可，本仓库只保留来源、读取状态、结构化提炼和冲突，不保存正文、图片或大段摘录。
+- 源码证据规则：公开样本可按当前版本复核；本地对照源码只在当前任务明确授权内读取，历史授权不得外推。只有已跟踪源码和有效断言测试可作为局部证据，未提交工作区不作为稳定契约。
+- 采纳边界：知识库用于理解项目意图、用法和团队约规，当前源码与已跟踪测试用于核对 API 和局部行为；只提炼端口适配、Starter、Trace、请求签名、安全和企业集成等可迁移模式，具体见 `wind-architecture-patterns.md`。
+- 证据边界：模块、接口、适配器或单元测试存在，不等于当前消费方已解析、装配、启用或通过真实环境集成，更不等于已发布或生产可用。未跟踪、`@Disabled`、占位凭据或只打印无断言的测试不作为通过证据。
+- 不吸收：不复制实现、正文或厂商操作手册；不把固定 JVM、容器、K8s、云效参数或历史目录写成稳定规则；不吸收“timestamp + nonce 已防重放”“签名可替代 TLS”“内网路径等于可信身份”“四类 Service 必须全部存在”等与当前证据冲突的结论。
 
 ## 本地业务项目源码样本
 

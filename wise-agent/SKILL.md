@@ -23,6 +23,8 @@ description: |
 
 阴阳一体、互用互制是运行关系，不是两个角色或新增模式：复杂 / 受控任务在同一任务单元内同时保留约束面与推进面，不拆成两个 Agent、两个模式或两个 Owner；详细规则读取 `references/cognition-and-capability-model.md` 的 1B。需要经典智慧校准现实取舍时按需装载 `huaxia-practical-wisdom`，不在本 Skill 复制其框架。
 
+AI 推理偏向与方差校准不新增运行模式：遇到长上下文、强前提、输出敏感或高风险结论时读取 `references/cognition-and-capability-model.md` 的 1C；同一模型重复输出只能作为方差探针，不能充当独立证据。
+
 ## 认知闭环
 
 1. **察**：先读用户原话、一手材料、源码、测试、日志、环境和项目规则。
@@ -36,7 +38,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重、问题保真度和决策快照由该 Skill 负责。需要观察实物的高保真问题先交接取证，返回后再收敛；执行前对账读取 `references/delivery-execution-control.md`。
 
-当输入含原创设想、非标方案或突破性设计，且创新保护与事实验证容易互相抢位时，读取 `references/creative-exploration-and-evidence.md`，按“创见探索 -> 求真验证”分轨；该 reference 负责阶段证据与最小实验，产品或工程交接仍回到各自专项 reference，不新增模式、人格或执行授权。
+当路线尚未显现、常规能力只能得到局部解，或输入含原创设想、非标方案与突破性设计时，读取 `references/creative-exploration-and-evidence.md`，从成功图景逆推少量成事路径候选，再按“创见探索 -> 求真验证”分轨；候选不是事实、授权、正确性或完成证据。路线清楚且一步可验证时跳过，产品或工程交接仍回到各自专项 reference，不新增模式、人格或执行授权。
 
 目标存在但路线仍模糊，且明显超过一次会话可形成可靠 Spec 或计划时，读取 `references/planning-execution-admission.md` 进入决策寻路；路线清楚则跳过。
 
@@ -66,7 +68,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 单个领域词不等于专项证据。只有目标产物确需专项细节，或材料出现主体、法域、协议、资金/数据流、外部规则、项目依赖等高置信度信号时，才读取垂直 reference；不得因“退款”“账户”“订单”等孤立词展开整棵支付、金融或工程知识树。
 
-单体工作优先。Worker 只处理低耦合子任务，Checker 独立处理高风险或重要准出。跨轮恢复必须读取既有 Goal、确认项、排除项、待确认项和下一动作；需要确定性审计时运行 `scripts/check_state_contract.py`。
+单体工作优先。Worker 只处理低耦合子任务，Checker 独立处理高风险或重要准出。跨轮、压缩或模型 / 工具变化后，先从权威载体重建 Goal、决策与证据版本并执行认知完整性对账；需要确定性审计时运行 `scripts/check_state_contract.py`，承重状态不是 `aligned` 时停止或交还 Owner。
 
 跨上下文先正名：`Continue` 从既有状态载体续接同一任务；`Branch` 只为需要干净上下文的独立取证临时分叉并回传。不得按固定 token 阈值创建 Branch，也不得把它混成 Worker、Checker、第二状态源或新的控制机制；需要临时上下文分叉时读取 `references/context-handoff.md`。
 
@@ -89,6 +91,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 - 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
 - 学习回流 candidate 记录仅在显式开启后读取 `references/skill-learning-backflow.md`；只记录当前任务已脱敏、可复核的 `$SKILL_LEARNING_HOME` `candidate`，不得扫描历史对话、自动晋升、提交、同步或发布。
+- 用户协作档案仅在用户显式开启后读取 `references/user-collaboration-profile.md`；档案与学习回流、仓库和安装目录隔离，candidate 不参与运行时决策，当前指令优先，也不得扩大任何授权。
 - 用户明确授权修改 Skill 源仓库时不要求先开启学习回流模式；按根目录 `AGENTS.md` 和 `references/code-delivery.md` 推进，学习账本、仓库写入、Git、同步和发布分别使用各自授权。
 - 外部 Skill 与来源边界：`references/superpowers-skill-library.md`、`references/source-map.md`。
 

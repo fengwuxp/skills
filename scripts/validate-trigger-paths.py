@@ -8,6 +8,7 @@ Keep checks focused on durable invariants that should survive wording changes.
 """
 
 import json
+import re
 from typing import NamedTuple
 from pathlib import Path
 
@@ -85,6 +86,11 @@ def has_all(path: str, texts: list[str]) -> bool:
 def has_none(path: str, texts: list[str]) -> bool:
     body = read(path)
     return all(text not in body for text in texts)
+
+
+def marked_line_lacks(path: str, marker: str, patterns: tuple[str, ...]) -> bool:
+    line = next((item for item in read(path).splitlines() if marker in item), "")
+    return bool(line) and all(re.search(pattern, line) is None for pattern in patterns)
 
 
 def frontmatter(path: str) -> str:
@@ -277,6 +283,9 @@ regulatory = "payment-expert/references/regulatory-baseline.md"
 payment_methodology = "payment-expert/references/payment-methodology.md"
 clearing_settlement = "payment-expert/references/clearing-settlement.md"
 global_payment = "payment-expert/references/global-payment-emerging.md"
+virtual_card_vcc = "payment-expert/references/virtual-card-and-vcc.md"
+payment_channel_operations = "payment-expert/references/payment-channel-routing-and-operations.md"
+payment_scenario_routing = "payment-expert/references/payment-scenario-routing.md"
 card_network = "payment-expert/references/card-network-and-card-rails.md"
 payment_risk = "payment-expert/references/payment-risk-fraud-and-merchant-operations.md"
 dispute_refund = "payment-expert/references/dispute-refund-and-chargeback-operations.md"
@@ -306,6 +315,7 @@ document_checker = "document-authoring/scripts/check_document_deliverable.py"
 document_style_checker = "document-authoring/scripts/check_document_style.py"
 document_routing = "document-authoring/references/scenario-routing.md"
 document_contract = "document-authoring/references/document-contract.md"
+document_writing = "document-authoring/references/writing-and-structure.md"
 resource_distiller_skill = "resource-capability-distiller/SKILL.md"
 resource_distiller_agent = "resource-capability-distiller/agents/openai.yaml"
 resource_distiller_contract = "resource-capability-distiller/references/distillation-contract.md"
@@ -331,6 +341,7 @@ security_scenarios = "security-engineering-expert/references/security-scenario-r
 security_method = "security-engineering-expert/references/security-risk-control-and-evidence.md"
 security_source_map = "security-engineering-expert/references/source-map.md"
 security_checker = "security-engineering-expert/scripts/check_security_deliverable.py"
+security_behavior_cases = "fixtures/skill-eval/security-engineering-behavior-cases.json"
 hanzi_skill = "hanzi-philology/SKILL.md"
 hanzi_agent = "hanzi-philology/agents/openai.yaml"
 hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
@@ -349,6 +360,7 @@ novelist_story = "novelist/references/story-design-and-drafting.md"
 novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
+novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
 grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
 grill_me_question_ledger = "grill-me/references/question-ledger.md"
@@ -357,6 +369,7 @@ wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
 wise_agent_global_kernel = "wise-agent/assets/codex-global-agents.md"
 wise_agent_learning_ledger = "wise-agent/scripts/skill-learning-ledger.py"
+wise_agent_user_context_ledger = "wise-agent/scripts/user-context-ledger.py"
 professional_skill_files = sorted(
     path.relative_to(ROOT).as_posix()
     for path in ROOT.glob("*/SKILL.md")
@@ -374,6 +387,7 @@ wise_agent_domain_expert_distillation = "wise-agent/references/domain-expert-dis
 wise_agent_spec_template_practices = "wise-agent/references/spec-template-practices.md"
 wise_agent_code_delivery = "wise-agent/references/code-delivery.md"
 wise_agent_skill_learning_backflow = "wise-agent/references/skill-learning-backflow.md"
+wise_agent_user_collaboration_profile = "wise-agent/references/user-collaboration-profile.md"
 wise_agent_goal_governance = "wise-agent/references/goal-governance.md"
 wise_agent_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
 wise_agent_context_handoff = "wise-agent/references/context-handoff.md"
@@ -1224,7 +1238,16 @@ check(
             "采纳边界",
             "不吸收",
             "`testXxx` 是团队规则，不归因于该手册",
+            "只有已跟踪源码和有效断言测试可作为局部证据",
+            "未提交工作区不作为稳定契约",
+            "本地对照源码只在当前任务明确授权内读取",
+            "历史授权不得外推",
         ],
+    )
+    and marked_line_lacks(
+        wind_skill_source_map,
+        "源码证据规则：",
+        (r"\b[0-9a-f]{40}\b", r"(?:/Users/|/home/|[A-Za-z]:\\)"),
     ),
 )
 
@@ -4560,6 +4583,9 @@ check(
         [
             "创见探索",
             "求真验证",
+            "成事路径候选",
+            "候选不是事实、授权、正确性或完成证据",
+            "路线清楚且一步可验证时跳过",
             "不新增模式、人格或执行授权",
         ],
     )
@@ -4571,8 +4597,21 @@ check(
             "原始意图",
             "不把主流共识、文献数量或模型置信表达当成真理",
             "不把新颖当成正确",
+            "真正成功后可观察到什么",
+            "类比迁移、反事实、要素重组或约束反转",
+            "不按关键词加载全部 Skills",
+            "连续发散不再增加实质差异",
             "最小可逆实验",
             "人类 Owner",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "创见探索产生候选后",
+            "一个主能力、必要时一个协同能力",
+            "不加载项、输入、输出、验证和停止条件",
+            "不得触发全量装载",
         ],
     )
     and has_all(
@@ -7112,9 +7151,9 @@ check(
     and has_all(
         wise_agent_cognition_model,
         [
-            "状态契约",
-            "被排除方案不得复活",
-            "待确认项不得脑补",
+            "JSON 投影仍不是第二真相源",
+            "已确认 / 被排除 / 待确认项",
+            "不靠摘要补写缺失事实",
         ],
     )
     and has_all(
@@ -7150,6 +7189,56 @@ check(
         wise_agent_verification_release,
         [
             "验证矩阵、独立 Checker、CR 准出、发布证据和复盘规则的唯一权威来源",
+        ],
+    ),
+)
+check(
+    "wise-agent gates long-task cognitive integrity without a second truth source",
+    has_all(
+        wise_agent_skill,
+        ["认知完整性对账", "承重状态不是 `aligned`", "停止或交还 Owner"],
+    )
+    and has_all(
+        wise_agent_cognition_model,
+        [
+            "just-in-time 回读",
+            "aligned / stale / conflict / insufficient",
+            "只回写本轮 delta",
+            "不是第二真相源",
+        ],
+    )
+    and has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "## 2B.1 认知完整性门禁",
+            "不新增 `Drift Mode`、记忆库、向量库或第二真相源",
+            "state_revision / authority_refs / decision_transitions / goal_transition?",
+            "excluded 不得直接变 confirmed",
+            "execution_basis 换轨属于承重 Goal 变化，必须有 goal_transition",
+            "recheck_evidence",
+            "严格晚于旧时刻的 `observed_at`",
+            "superseded_by / supersedes",
+            "整个 entry 跨版不可改写",
+            "Ready / Active / Verified / Closed",
+            "pass^k",
+            "早期错误假设被新一手证据撤回",
+            "会商 topic / information / authority revision 变化后旧决议失效",
+        ],
+    )
+    and has_all(
+        "wise-agent/scripts/check_state_contract.py",
+        [
+            "state_revision must increment previous revision by one",
+            "load-bearing Goal fields changed without goal_transition",
+            "must not disappear across state revisions",
+            "cannot move directly from excluded to confirmed",
+            "changed without recheck_evidence or stale status",
+            "cannot move from stale to current without fresh recheck_evidence and later observed_at",
+            "superseded tombstone must remain immutable",
+            "cannot proceed with stale authority_refs",
+            '"execution_basis"',
+            "Owner-backed pending decision promotion rejected",
+            "authority supersession tombstone rejected",
         ],
     ),
 )
@@ -12968,6 +13057,25 @@ check(
     ),
 )
 check(
+    "payment source map records local learning corpus as bounded D1 evidence",
+    has_all(
+        payment_source_map,
+        [
+            "`S7`",
+            "用户显式提供的本地支付知识库",
+            "read-with-limitations",
+            "不复制正文、图表、练习答案、人物故事线或作者表达",
+            "不能支持当前监管、合同、厂商能力、目标项目契约或生产事实",
+            "当前读取授权不外推为 Git、同步、共享或公开发布授权",
+        ],
+    )
+    and marked_line_lacks(
+        payment_source_map,
+        "`S7`",
+        (r"\b[0-9a-f]{40}\b", r"完成\s+\d+\s+个 Markdown"),
+    ),
+)
+check(
     "payment public-core evidence stays static-only",
     has_all(
         payment_source_map,
@@ -13043,6 +13151,78 @@ check(
             "验收时应设计交易仿真或沙盒用例",
         ],
     ),
+)
+check(
+    "payment VCC separates enterprise card payment from expense management",
+    has_all(
+        virtual_card_vcc,
+        [
+            "企业卡与费用管理不能坍缩为一层",
+            "审批、卡授权和费用审核",
+            "预算、卡限额、授权占用、清算入账、费用单和真实资金",
+            "企业卡支付与员工报销",
+            "订阅责任",
+        ],
+    ),
+)
+check(
+    "payment global reference keeps open-platform delivery boundary",
+    has_all(
+        global_payment,
+        [
+            "## 支付开放平台交付闭环",
+            "内部 API 加鉴权不等于支付开放平台",
+            "Application / 应用",
+            "Credential / 凭证",
+            "Scope / API Product",
+            "Event / Webhook",
+            "Sandbox / 仿真",
+            "Report / 报表",
+            "Onboarding / Go-live",
+            "吊销",
+        ],
+    ),
+)
+check(
+    "payment top-level routing reaches open-platform and incident references",
+    has_all(
+        payment_scenario_routing,
+        [
+            "支付开放平台、对外支付 API",
+            "`global-payment-emerging.md`, `payment-design-checklists.md`",
+            "支付事故、重复扣款、少结算、资金差错恢复、补偿与关单",
+            "`payment-channel-routing-and-operations.md`, `clearing-settlement.md`, `payment-design-checklists.md`",
+        ],
+    ),
+)
+check(
+    "payment channel operations keeps incident and compensation evidence chain",
+    has_all(
+        payment_channel_operations,
+        [
+            "## 支付事故与补偿证据链",
+            "影响快照",
+            "止损动作",
+            "补偿任务",
+            "对账差错",
+            "客户/商户沟通",
+            "事故复盘",
+            "不得直接改库",
+            "重跑不是恢复证据",
+        ],
+    ),
+)
+expected_handling_has(
+    "payment-should-separate-enterprise-card-and-expense-management",
+    ("审批、卡授权与费用审核", "员工报销", "订阅支出", "待专业确认"),
+)
+expected_handling_has(
+    "payment-should-reject-api-only-open-platform",
+    ("内部 API 加鉴权", "应用", "scope/API 产品", "sandbox", "BLOCKED"),
+)
+expected_handling_has(
+    "payment-should-recover-incident-with-evidence-chain",
+    ("停止直接改库", "补偿任务", "对账差错", "复核证据", "才能关闭"),
 )
 check(
     "product checklist keeps embedded finance responsibility and FX checks",
@@ -13568,11 +13748,14 @@ check(
             "正文不可复核",
             "仅保留为历史索引线索",
             "不得作为已吸收来源",
-            "`Q-002` 的本机安装 blocker 已关闭",
-            "范围 A：本机私有使用、安装与私有 Git commit 已授权",
-            "范围 B/C：Git push、团队共享/同步与公开发布仍未授权",
-            "不等于版权合法性结论",
+            "本地使用、安装、Git、同步、团队共享与公开发布分别按当前任务授权判断",
+            "历史任务的读取或本地使用授权不得外推",
+            "任务范围也不等于版权合法性结论",
         ],
+    )
+    and has_none(
+        payment_source_map,
+        ["`Q-002` 的本机安装 blocker 已关闭", "范围 A：本机私有使用、安装与私有 Git commit 已授权"],
     )
     and has_none(
         product_source_map,
@@ -18410,6 +18593,9 @@ check(
             "反常识不等于不真实",
             "不以常识替代证据",
             "保护不可替代的幻想核",
+            "积厚而发",
+            "灵感天成",
+            "原始核，与后续加工分开",
             "天马行空与幻想归来",
             "只发散、不选择、不落地",
             "不把幻想归来反向变成探索门禁",
@@ -18544,6 +18730,12 @@ check(
         novelist_story,
         [
             "故事发动机",
+            "想象的两种来路",
+            "积厚而发",
+            "灵感天成",
+            "不堆知识，也不拼贴来源",
+            "不急于合理化、筛优或统一世界观",
+            "验证服务于成形，不能反向改写或扼杀探索期的原始核",
             "故事架构：执简驭繁",
             "知其要者",
             "内容、类型、篇幅、作者要表达的故事与要展示的世界",
@@ -18561,6 +18753,11 @@ check(
             "人生经历",
             "朋友圈 / 关系网",
             "不能取消人物主动性",
+            "人物方案不得把功能留给读者推断",
+            "故事定位：此人改变",
+            "删除后",
+            "关系变化：A 与 B 由",
+            "进入正文后则用场景表现",
             "不用静态人物卡和形容词清单替代场景表现",
             "经世叙事校准",
             "三层真实与戏剧许可",
@@ -18646,6 +18843,40 @@ check(
     and has_none(skill_eval_prompt_fixture, ["候潮氏", "守潮古族", "轮回若红尘", "帝殇"]),
 )
 
+check(
+    "novelist behavior cases cover domain capability and collaboration boundaries",
+    (ROOT / novelist_behavior_cases).exists()
+    and has_all(
+        novelist_behavior_cases,
+        [
+            "novelist-should-scale-story-architecture-by-length",
+            "novelist-should-build-character-through-story-and-relationships",
+            "novelist-should-preserve-canon-across-drafts",
+            "novelist-should-verify-allusion-before-satire",
+            "novelist-should-handoff-fiction-project-docs",
+            "novelist-should-preserve-private-draft-before-publication",
+            "novelist-should-translate-huaxia-calibration-into-fiction",
+            "novelist-should-preserve-two-sources-of-imagination",
+            "同一 runner/model",
+            "baseline",
+            "candidate",
+            "盲评",
+            "静态 fixture 不等于真实行为证据",
+            "改变哪条主线",
+            "关系选择前后",
+            "积厚而发与灵感天成",
+            "原样保护不可替代的幻想核",
+            "只有作者要求选择、成形、写入作品或检验可用性时才进入幻想归来",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
+        ],
+    ),
+)
+
 expected_handling_has(
     "novelist-should-scale-story-architecture-by-length",
     (
@@ -18679,6 +18910,8 @@ expected_handling_has(
     (
         "已给事实与创作候选",
         "故事定位",
+        "角色改变哪条主线",
+        "删除后哪段因果或核心关系不再成立",
         "欲望、恐惧、价值边界、矛盾倾向",
         "世界事实、预言或宗族解释、他人期待和人物自我信念",
         "不能取消主动性",
@@ -18688,7 +18921,7 @@ expected_handling_has(
         "人生经历",
         "朋友圈或关系网",
         "不同人所见的不同侧面",
-        "关系随选择改变",
+        "一组关系在人物选择前后的具体变化",
         "不用静态人物卡和形容词清单替代场景表现",
     ),
 )
@@ -18919,6 +19152,69 @@ expected_handling_has(
         "不共享固定开头顺序或同一种机关腔",
         "不补造原因或因果",
     ),
+)
+check(
+    "document authoring routes professional training and scenario drills",
+    has_all(
+        document_skill,
+        ["培训材料", "课程讲义", "情景演练手册"],
+    )
+    and has_all(
+        document_routing,
+        ["专业培训材料、课程讲义、讲师手册、桌面推演与情景演练手册", "领域事实 owner"],
+    )
+    and has_all(
+        document_writing,
+        [
+            "## 专业培训与情景演练",
+            "训练后的可观察行为",
+            "阅读/诊断 -> 桌面推演 -> sandbox/仿真 -> 历史案例 -> 受控真实任务",
+            "角色私有信息",
+            "场景包默认使用虚构或脱敏数据",
+            "角色私有信息按角色与任务最小披露",
+            "领域结论使用权威指针或经 Owner 确认的脱敏最小结论",
+            "不逐条粘贴未脱敏原始材料",
+            "学员版不携带角色外信息、讲师提示和参考答案",
+            "分别设置载体或访问边界",
+            "未获明确授权不得触发真实资金、生产写入、密钥操作或不可逆动作",
+            "事件卡",
+            "停止条件",
+            "参考答案",
+            "不把摘要加选择题当成能力训练",
+        ],
+    ),
+)
+expected_handling_has(
+    "document-authoring-should-design-professional-training-scenario",
+    (
+        "训练后的可观察行为",
+        "桌面推演",
+        "虚构或脱敏",
+        "权威指针",
+        "脱敏最小结论",
+        "不粘贴未脱敏原始材料",
+        "按任务最小披露",
+        "学员版",
+        "讲师版",
+        "独立载体或访问边界",
+        "真实资金",
+        "生产写入",
+        "角色私有信息",
+        "事件卡",
+        "行为证据",
+    ),
+)
+negative_reason_has(
+    "payment-negative-generic-webhook-retry",
+    ("普通工程集成", "没有支付或资金事实", "senior-software-architect"),
+)
+negative_reason_has(
+    "payment-negative-generic-compensation-retry",
+    ("普通异步任务", "不具备支付、清结算或资金证据", "senior-software-architect"),
+)
+negative_reason_has(
+    "document-authoring-negative-invent-payment-training-facts",
+    ("发明支付领域事实", "payment-expert", "事实确认后"),
 )
 expected_handling_lacks(
     "document-authoring-should-distinguish-chinese-document-genres",
@@ -19282,7 +19578,40 @@ expected_handling_has(
 )
 expected_handling_has(
     "wise-agent-should-resume-from-state-contract",
-    ("D-1", "B 不得复活", "C 不得脑补", "check_state_contract.py", "不靠模型记忆猜测"),
+    (
+        "just-in-time 回读",
+        "authority revision / fingerprint",
+        "aligned",
+        "D-1",
+        "B 不得复活",
+        "C 不得脑补",
+        "stale / conflict / insufficient",
+        "state_revision",
+        "authority_refs",
+        "decision_transitions",
+        "check_state_contract.py --previous",
+        "不靠模型记忆或摘要猜测",
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-retract-corrected-early-assumption",
+    ("新的一手源码", "撤销早期二手假设", "conflict 或 stale", "pending / Blocked", "不沿错误方案继续"),
+)
+expected_handling_has(
+    "wise-agent-should-block-excluded-option-revival",
+    ("拒绝执行 B", "excluded -> pending", "后续 state_revision", "check_state_contract.py current --previous previous"),
+)
+expected_handling_has(
+    "wise-agent-should-stale-changed-authority-evidence",
+    ("Verified 结论标为 stale", "authority_revision / fingerprint", "recheck_evidence", "superseded tombstone", "摘要和 validator 退出码不能证明"),
+)
+expected_handling_has(
+    "wise-agent-should-block-silent-execution-basis-switch",
+    ("拒绝按 D-2 继续", "execution_basis", "goal_transition", "changed_fields", "check_state_contract.py --previous"),
+)
+expected_handling_has(
+    "wise-agent-should-stale-deliberation-after-version-drift",
+    ("Meeting Resolution 判为 stale", "information_revision=6", "只重开受影响", "不能自动恢复 ready", "supersedes"),
 )
 expected_handling_has(
     "wise-agent-should-branch-context-for-focused-evidence-and-return",
@@ -19406,6 +19735,133 @@ check(
             "不自动读取历史对话",
         ],
     ),
+)
+
+check(
+    "wise-agent calibrates model variance without inventing a runtime mode",
+    has_all(
+        wise_agent_skill,
+        ["AI 推理偏向与方差校准", "不新增运行模式", "同一模型重复输出"],
+    )
+    and has_all(
+        wise_agent_cognition_model,
+        [
+            "采样随机性",
+            "长上下文与位置敏感",
+            "训练先验",
+            "迎合",
+            "上下文压缩与模型漂移",
+            "方差探针",
+            "独立证据",
+            "确定性证据",
+            "独立 Checker",
+        ],
+    )
+    and has_all(
+        "scripts/smoke-wise-agent-behavior.sh",
+        ["assert_ai_inference_calibration", "AI inference calibration", "同一模型重复输出"],
+    ),
+)
+
+check(
+    "wise-agent user collaboration profile is opt-in private and candidate-gated",
+    (ROOT / wise_agent_user_collaboration_profile).exists()
+    and (ROOT / wise_agent_user_context_ledger).exists()
+    and has_all(
+        wise_agent_skill,
+        ["用户协作档案", "显式开启", "candidate 不参与运行时决策", "当前指令优先"],
+    )
+    and has_reference_header(wise_agent_user_collaboration_profile)
+    and has_task_reading_index(wise_agent_user_collaboration_profile)
+    and has_all(
+        wise_agent_user_collaboration_profile,
+        [
+            "默认关闭",
+            "不扫描历史对话",
+            "candidate",
+            "confirmed",
+            "当前用户明确指令始终优先",
+            "心理画像",
+            "Git、联网、安装、部署、生产、删除",
+            "0700",
+            "0600",
+            "skill-learning-backflow",
+            "在锁内原位清空偏好与审计",
+            "保留权限收紧的空壳目录",
+            "不按路径删除文件",
+        ],
+    )
+    and has_all(
+        wise_agent_user_context_ledger,
+        [
+            "WISE_USER_CONTEXT_HOME",
+            "candidate",
+            "confirmed",
+            "DELETE-USER-CONTEXT",
+            "history_scan",
+            "0o700",
+            "0o600",
+            "must not be inside a Git repository",
+            "psychological",
+            "手机号",
+        ],
+    )
+    and has_all(
+        agents_rules,
+        ["用户协作档案", "专用本地目录", "不得扫描历史对话", "不得扩大授权"],
+    )
+    and has_all(
+        readme,
+        ["用户协作档案", "user-context-ledger.py enable", "user-context-ledger.py confirm", "candidate 不会生效"],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        ["user-context-ledger.py --self-test", "py_compile wise-agent/scripts/user-context-ledger.py"],
+    ),
+)
+
+check(
+    "wise-agent source map records AI calibration and privacy boundaries",
+    has_all(
+        wise_agent_source_map,
+        [
+            "Reproducible outputs with the seed parameter",
+            "Lost in the Middle",
+            "Expanding on what we missed with sycophancy",
+            "NIST Privacy Framework",
+            "purpose limitation",
+            "不构成组织合规结论",
+        ],
+    ),
+)
+check(
+    "wise-agent source map bounds long-task drift research",
+    has_all(
+        wise_agent_source_map,
+        [
+            "LLMs Get Lost In Multi-Turn Conversation",
+            "`pass^k`",
+            "Effective context engineering for AI agents",
+            "Effective harnesses for long-running agents",
+            "Demystifying evals for AI agents",
+            "LLMs Corrupt Your Documents When You Delegate",
+            "2026 年预印本",
+            "VeriTrail",
+            "不把论文平均结果写成所有模型、任务或轮数的固定退化阈值",
+        ],
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-calibrate-ai-inference-variance",
+    ("方差探针", "不当作三方独立证据", "确定性证据", "独立 Checker", "不新增运行模式"),
+)
+expected_handling_has(
+    "wise-agent-should-gate-user-collaboration-profile",
+    ("默认关闭", "candidate", "confirm", "当前指令始终优先", "不能授予 Git"),
+)
+expected_handling_has(
+    "wise-agent-should-not-silently-profile-user",
+    ("拒绝扫描历史会话", "人格", "政治倾向", "不自动确认", "candidate 不生效"),
 )
 negative_reason_has(
     "wise-agent-negative-single-domain-system-design",
@@ -20115,6 +20571,37 @@ if (ROOT / security_checker).exists():
         "security deliverable checker is in unified validation",
         has_all("scripts/validate.sh", ["security-engineering-expert/scripts/check_security_deliverable.py --self-test"]),
     )
+expected_handling_has(
+    "security-engineering-expert-should-review-release-security-gate",
+    (
+        "ENGINEERING_*",
+        "安全工程 Owner、独立评估 Owner 与授权 Owner 必须职责分离",
+        "不自评自批",
+        "不代替授权 Owner 接受风险",
+        "ENGINEERING_BLOCKED",
+    ),
+)
+check(
+    "security behavior cases cover role gates traceability and secure by design",
+    (ROOT / security_behavior_cases).exists()
+    and has_all(
+        security_behavior_cases,
+        [
+            "role-separation-under-release-pressure",
+            "design-d1-relative-ready",
+            "production-target-with-design-only-evidence",
+            "risk-control-evidence-semantic-mismatch",
+            "runtime-ready-with-residual-risk",
+            "software-product-secure-by-design",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/security-engineering-behavior-cases.json"',
+        ],
+    ),
+)
 check(
     "security expert is routed in user guide and wise-agent",
     has_all(readme, ["安全工程专家", "security-engineering-expert", "信任边界", "残余风险"])

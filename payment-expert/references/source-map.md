@@ -26,6 +26,7 @@
 | `S4` | 微信公众号文章《一笔支付，要记哪些账？搞懂这些分录，秒变账务大师！》；2026-08-03 通过浏览器 DOM 读取 | 多主体账簿边界和分阶段证据的 D1 产品检查候选 | 具体分录、科目/借贷方向、会计政策、监管或生产结论 |
 | `S5` | 微信公众号文章《一套真正的收单平台，到底应该包含什么？》；作者 Scott 薛；页面显示 2026-08-08 20:08；2026-08-08 通过 Codex 应用内浏览器 DOM 读取标题、作者、发布时间和正文 | Payment API 与完整收单产品的区别、商户准入、能力三轴和多控制面完整性问题的 D1 候选 | 通用 Merchant/Store/MID 关系、当前厂商成熟度、法域/法律/会计规则、卡组织精确规则或生产可用性 |
 | `S6` | 2026-08-10 读取 [Stripe capabilities](https://docs.stripe.com/connect/account-capabilities)、[Stripe onboarding](https://docs.stripe.com/connect/onboarding)、[Adyen onboarding](https://docs.adyen.com/platforms/onboard-users)、[Adyen payment reconciliation](https://docs.adyen.com/platforms/reconciliation-use-cases/reconcile-payments)、[Adyen payout reconciliation](https://docs.adyen.com/platforms/payout-reconciliation)、[EMV 3DS](https://www.emvco.com/emv-technologies/3d-secure/) 与 [PCI DSS](https://www.pcisecuritystandards.org/standards/pci-dss/) 官方正文 | 商户验证与能力激活、Hosted/API 入网责任、卡非面对面认证、支付与 payout 对账证据的 D1 对齐 | 厂商对象/状态/报表通则、目标账户 capability、PCI 适用范围、法域责任或生产准入 |
+| `S7` | 用户显式提供的本地支付知识库；2026-08-11 完成结构扫描与相关专题详读；`read-with-limitations` | 企业卡与费用管理分层、支付开放平台交付面、支付事故/补偿证据链及专业培训情景设计的 D1 候选 | 不能支持当前监管、合同、厂商能力、目标项目契约或生产事实；不复制正文、图表、练习答案、人物故事线或作者表达；当前读取授权不外推为 Git、同步、共享或公开发布授权 |
 
 S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取或泄露客户数据、密钥、生产配置和未提交工作区。
 
@@ -139,7 +140,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 
 ## 提炼边界
 
-- 2026-08-04 用户/版权 Owner 明确确认范围 A：本机私有使用、安装与私有 Git commit 已授权，`Q-002` 的本机安装 blocker 已关闭。范围 B/C：Git push、团队共享/同步与公开发布仍未授权，并作为 `R-002` 非分发限制保留；任务范围不等于版权合法性结论。
+- 本地使用、安装、Git、同步、团队共享与公开发布分别按当前任务授权判断；历史任务的读取或本地使用授权不得外推，任务范围也不等于版权合法性结论。
 - 来源独立公共核心已由未读取 S1 的独立 Maker 重新蒸馏并归位；它不继承 S1 的授权问题，但仍受官方文档时效、目标环境复核和发布许可边界约束。
 - 其余专项 references 仍是读取 S1 后形成的 `course-enriched local candidate`。S2/S3 可以交叉支持方法行为，但不能反向证明当前表述和能力选择未受 S1 影响；机械删除 S1 页码或课程字样不构成 clean-room，也不得把专项能力改称来源独立版本。
 - 不复制文章正文、课程正文、图片、表格、作者口吻、付费内容或专有案例。

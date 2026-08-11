@@ -68,6 +68,8 @@
 | 钱包、余额、账本、资金账户、内部转账 | `formance-reference-patterns.md`, `clearing-settlement.md` | 钱包/账本模型、账户关系、账务事件矩阵 |
 | 对账、差错、长短款、批处理、资金到账 | `clearing-settlement.md`, `formance-reference-patterns.md`, `payment-design-checklists.md` | 对账方案、差错生命周期、重跑和核销机制 |
 | 多 PSP/多银行/多支付方式、通道路由、降级 | `payment-channel-routing-and-operations.md` | 通道路由方案、通道健康、熔断、成本/成功率口径 |
+| 支付开放平台、对外支付 API、应用/凭证/scope、webhook、sandbox、客户接入上线 | `global-payment-emerging.md`, `payment-design-checklists.md` | 应用与权限、网关契约、事件、报表、仿真、go-live、退出吊销和专业协同边界 |
+| 支付事故、重复扣款、少结算、资金差错恢复、补偿与关单 | `payment-channel-routing-and-operations.md`, `clearing-settlement.md`, `payment-design-checklists.md` | 影响快照、止损、补偿任务、对账差错、沟通、复盘和关闭证据 |
 | 全球支付接受能力、Global Payment Orchestration、外卡收单 + 钱包 + 本地支付方式 + APM/RTP/A2A、多国家收款编排 | `payment-channel-routing-and-operations.md`, `card-network-and-card-rails.md`, `global-payment-emerging.md`, `payment-risk-fraud-and-merchant-operations.md` | 全球支付编排方案，覆盖卡轨、钱包轨、本地轨、认证、风控、结算、争议、资金控制和运营治理 |
 | Airwallex / WorldFirst 类全球金融平台、Global Accounts、Connected Accounts、Global Treasury、BaaS、Payments for Platforms | `global-payment-emerging.md`, `payment-methodology.md`, `regulatory-baseline.md`, `source-map.md` | 全球金融产品能力地图、平台账户/客户主体、账户收款、付款、发卡、嵌入式金融边界和待确认项 |
 | AI 出海、全球资金管理、token / 用量计费、全球订阅、AI Agent 支付、VCC 控制、平台白标金融 | `global-payment-emerging.md`, `payment-methodology.md`, `virtual-card-and-vcc.md`, `regulatory-baseline.md` | AI 企业收、管、付、控方案，覆盖全球收款、多币种财资、批量付款、Agent 授权、VCC 控制、对账和待确认项 |

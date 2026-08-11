@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 from collections import defaultdict, deque
 import copy
+from datetime import datetime
 import json
 import sys
 from pathlib import Path, PurePosixPath
@@ -33,6 +34,22 @@ EVIDENCE_REF_TYPES = {
 }
 NON_VALIDATOR_EVIDENCE_REF_TYPES = EVIDENCE_REF_TYPES - {"validator"}
 EVIDENCE_REF_FIELDS = {"ref", "fingerprint", "method", "result", "observed_at"}
+AUTHORITY_REF_STATUSES = {"current", "stale", "superseded"}
+DECISION_STATES = {"new", "confirmed", "excluded", "pending"}
+LOAD_BEARING_GOAL_FIELDS = {
+    "objective",
+    "success_criteria",
+    "non_goals",
+    "write_scope",
+    "state_carrier",
+    "checker",
+    "stop_conditions",
+    "recovery_entry",
+    "residual_risk_owner",
+    "max_iterations",
+    "no_progress_limit",
+    "execution_basis",
+}
 STRING_FIELDS = {
     "goal_id",
     "objective",
@@ -56,6 +73,273 @@ LIST_FIELDS = {
 
 def is_string_list(value: Any) -> bool:
     return isinstance(value, list) and all(isinstance(item, str) and item.strip() for item in value)
+
+
+def parse_timestamp(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return parsed if parsed.tzinfo is not None else None
+    except ValueError:
+        return None
+
+
+def is_timestamp(value: Any) -> bool:
+    return parse_timestamp(value) is not None
+
+
+def is_later_timestamp(current: Any, previous: Any) -> bool:
+    current_timestamp = parse_timestamp(current)
+    previous_timestamp = parse_timestamp(previous)
+    return (
+        current_timestamp is not None
+        and previous_timestamp is not None
+        and current_timestamp > previous_timestamp
+    )
+
+
+def validate_authority_refs(value: Any, required: bool) -> tuple[list[str], dict[str, dict[str, Any]]]:
+    if value is None and not required:
+        return [], {}
+    if not isinstance(value, list) or not value:
+        return ["authority_refs must be a non-empty list"], {}
+
+    errors: list[str] = []
+    refs: dict[str, dict[str, Any]] = {}
+    for index, authority_ref in enumerate(value):
+        prefix = f"authority_refs[{index}]"
+        if not isinstance(authority_ref, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        ref = authority_ref.get("ref")
+        if not isinstance(ref, str) or not ref.strip():
+            errors.append(f"{prefix} ref must be a non-empty string")
+            continue
+        if ref in refs:
+            errors.append(f"authority_ref {ref} must be unique")
+            continue
+        refs[ref] = authority_ref
+        for field in ("authority_revision", "fingerprint"):
+            if not isinstance(authority_ref.get(field), str) or not authority_ref[field].strip():
+                errors.append(f"{prefix} {field} must be a non-empty string")
+        if not is_timestamp(authority_ref.get("observed_at")):
+            errors.append(f"{prefix} observed_at must be an ISO-8601 timestamp with timezone")
+        recheck_on = authority_ref.get("recheck_on")
+        if not is_string_list(recheck_on) or not recheck_on:
+            errors.append(f"{prefix} recheck_on must be a non-empty list of strings")
+        status = authority_ref.get("status")
+        if status not in AUTHORITY_REF_STATUSES:
+            errors.append(f"{prefix} status must be one of {sorted(AUTHORITY_REF_STATUSES)}")
+        for field in ("recheck_evidence", "supersedes", "superseded_by"):
+            if field in authority_ref and (
+                not isinstance(authority_ref[field], str) or not authority_ref[field].strip()
+            ):
+                errors.append(f"{prefix} {field} must be a non-empty string")
+
+    for ref, authority_ref in refs.items():
+        status = authority_ref.get("status")
+        superseded_by = authority_ref.get("superseded_by")
+        if status == "superseded":
+            replacement = refs.get(superseded_by) if isinstance(superseded_by, str) else None
+            if replacement is None or replacement.get("supersedes") != ref:
+                errors.append(
+                    f"authority_ref {ref} superseded status requires a reciprocal superseded_by reference"
+                )
+        supersedes = authority_ref.get("supersedes")
+        if isinstance(supersedes, str):
+            previous = refs.get(supersedes)
+            if previous is None or previous.get("status") != "superseded":
+                errors.append(
+                    f"authority_ref {ref} supersedes must reference a retained superseded authority_ref"
+                )
+    return errors, refs
+
+
+def decision_states(data: dict[str, Any]) -> dict[str, str]:
+    states: dict[str, str] = {}
+    for field, state in (
+        ("confirmed_decisions", "confirmed"),
+        ("excluded_options", "excluded"),
+        ("pending_items", "pending"),
+    ):
+        value = data.get(field)
+        if is_string_list(value):
+            states.update((decision, state) for decision in value)
+    return states
+
+
+def validate_decision_transitions(
+    data: dict[str, Any], previous_contract: dict[str, Any] | None
+) -> list[str]:
+    transitions = data.get("decision_transitions", [])
+    if not isinstance(transitions, list):
+        return ["decision_transitions must be a list"]
+
+    errors: list[str] = []
+    indexed: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for index, transition in enumerate(transitions):
+        prefix = f"decision_transitions[{index}]"
+        if not isinstance(transition, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        for field in ("decision", "owner", "evidence_ref", "evidence_fingerprint"):
+            if not isinstance(transition.get(field), str) or not transition[field].strip():
+                errors.append(f"{prefix} {field} must be a non-empty string")
+        source = transition.get("from")
+        target = transition.get("to")
+        if not isinstance(source, str) or source not in DECISION_STATES:
+            errors.append(f"{prefix} from must be one of {sorted(DECISION_STATES)}")
+        if not isinstance(target, str) or target not in DECISION_STATES - {"new"}:
+            errors.append(f"{prefix} to must be confirmed, excluded, or pending")
+        decision = transition.get("decision")
+        if (
+            isinstance(decision, str)
+            and isinstance(source, str)
+            and source in DECISION_STATES
+            and isinstance(target, str)
+            and target in DECISION_STATES
+        ):
+            key = (decision, source, target)
+            if key in indexed:
+                errors.append(f"decision transition {decision} {source}->{target} must be unique")
+            indexed[key] = transition
+
+    if not isinstance(previous_contract, dict):
+        return errors
+
+    previous = decision_states(previous_contract)
+    current = decision_states(data)
+    expected: set[tuple[str, str, str]] = set()
+    for decision in sorted(set(previous) | set(current)):
+        source = previous.get(decision, "new")
+        target = current.get(decision)
+        if source == target:
+            continue
+        if target is None:
+            errors.append(f"decision {decision} must not disappear across state revisions")
+            continue
+        if source == "new" and target == "pending":
+            continue
+        if source == "excluded" and target == "confirmed":
+            errors.append(f"decision {decision} cannot move directly from excluded to confirmed")
+            continue
+        key = (decision, source, target)
+        expected.add(key)
+        if key not in indexed:
+            errors.append(
+                f"decision {decision} changed from {source} to {target} without Owner evidence"
+            )
+    for decision, source, target in sorted(set(indexed) - expected):
+        errors.append(f"decision transition {decision} {source}->{target} does not match a state change")
+    return errors
+
+
+def validate_state_migration(
+    data: dict[str, Any],
+    previous_contract: dict[str, Any] | None,
+    require_state_integrity: bool,
+    require_previous: bool,
+) -> list[str]:
+    errors: list[str] = []
+    revision = data.get("state_revision")
+    if revision is None and not require_state_integrity:
+        return errors
+    if not isinstance(revision, int) or isinstance(revision, bool) or revision < 1:
+        return ["state_revision must be a positive integer"]
+    if require_previous and revision > 1 and not isinstance(previous_contract, dict):
+        errors.append("state_revision > 1 requires previous contract validation")
+    if not isinstance(previous_contract, dict):
+        return errors
+
+    previous_revision = previous_contract.get("state_revision")
+    if previous_revision is not None and (
+        not isinstance(previous_revision, int)
+        or isinstance(previous_revision, bool)
+        or previous_revision < 1
+    ):
+        errors.append("previous state_revision must be a positive integer")
+        return errors
+    expected_revision = 1 if previous_revision is None else previous_revision + 1
+    if revision != expected_revision:
+        errors.append("state_revision must increment previous revision by one")
+
+    changed_fields = sorted(
+        field for field in LOAD_BEARING_GOAL_FIELDS if data.get(field) != previous_contract.get(field)
+    )
+    transition = data.get("goal_transition")
+    if changed_fields:
+        if not isinstance(transition, dict):
+            errors.append("load-bearing Goal fields changed without goal_transition")
+        else:
+            for field in ("owner", "reason", "evidence_ref", "evidence_fingerprint"):
+                if not isinstance(transition.get(field), str) or not transition[field].strip():
+                    errors.append(f"goal_transition {field} must be a non-empty string")
+            transition_fields = transition.get("changed_fields")
+            if not is_string_list(transition_fields) or not transition_fields:
+                errors.append("goal_transition changed_fields must exactly match changed Goal fields")
+            elif len(transition_fields) != len(set(transition_fields)):
+                errors.append("goal_transition changed_fields must not contain duplicates")
+            elif set(transition_fields) != set(changed_fields):
+                errors.append("goal_transition changed_fields must exactly match changed Goal fields")
+    elif transition is not None:
+        errors.append("goal_transition must describe an actual load-bearing Goal change")
+    return errors
+
+
+def validate_authority_migration(
+    current_refs: dict[str, dict[str, Any]], previous_refs: dict[str, dict[str, Any]]
+) -> list[str]:
+    errors: list[str] = []
+    for ref, previous in previous_refs.items():
+        current = current_refs.get(ref)
+        if current is None:
+            errors.append(f"authority_ref {ref} must not disappear across state revisions")
+            continue
+        changed = any(
+            current.get(field) != previous.get(field)
+            for field in ("authority_revision", "fingerprint")
+        )
+        previous_recheck = previous.get("recheck_evidence")
+        current_recheck = current.get("recheck_evidence")
+        if (
+            changed
+            and current.get("status") == "current"
+            and (
+                not current_recheck
+                or current_recheck == previous_recheck
+                or not is_later_timestamp(current.get("observed_at"), previous.get("observed_at"))
+            )
+        ):
+            errors.append(
+                f"authority_ref {ref} changed without recheck_evidence or stale status; "
+                "current status requires fresh recheck_evidence and later observed_at"
+            )
+        previous_status = previous.get("status")
+        current_status = current.get("status")
+        if (
+            previous_status == "stale"
+            and current_status == "current"
+            and (
+                not current.get("recheck_evidence")
+                or current.get("recheck_evidence") == previous.get("recheck_evidence")
+                or not is_later_timestamp(current.get("observed_at"), previous.get("observed_at"))
+            )
+        ):
+            errors.append(
+                f"authority_ref {ref} cannot move from stale to current without fresh recheck_evidence and later observed_at"
+            )
+        if previous_status == "current" and current_status == "superseded":
+            expected_tombstone = dict(previous)
+            expected_tombstone["status"] = "superseded"
+            expected_tombstone["superseded_by"] = current.get("superseded_by")
+            if current != expected_tombstone:
+                errors.append(
+                    f"authority_ref {ref} first supersession must preserve the previous entry"
+                )
+        if previous_status == "superseded" and current != previous:
+            errors.append(f"authority_ref {ref} superseded tombstone must remain immutable")
+    return errors
 
 
 def validate_evidence_refs(node_id: str, value: Any) -> list[str]:
@@ -158,6 +442,8 @@ def validate_work_graph(
     state_inputs = graph.get("state_inputs", [])
     if not is_string_list(state_inputs):
         errors.append("work_graph state_inputs must be a list of non-empty strings")
+    elif len(state_inputs) != len(set(state_inputs)):
+        errors.append("work_graph state_inputs must contain unique keys")
 
     nodes: dict[str, dict[str, Any]] = {}
     for index, node in enumerate(raw_nodes):
@@ -430,15 +716,45 @@ def validate_work_graph(
 
     if isinstance(previous_graph, dict):
         previous_revision = previous_graph.get("revision")
-        if (
+        previous_nodes = previous_graph.get("nodes")
+        previous_nodes_by_id = {
+            node["id"]: node
+            for node in previous_nodes
+            if isinstance(node, dict)
+            and isinstance(node.get("id"), str)
+            and node["id"].strip()
+        } if isinstance(previous_nodes, list) else {}
+        nodes_changed = nodes != previous_nodes_by_id
+        previous_state_inputs = previous_graph.get("state_inputs", [])
+        state_inputs_changed = (
+            is_string_list(state_inputs)
+            and is_string_list(previous_state_inputs)
+            and set(state_inputs) != set(previous_state_inputs)
+        )
+        graph_semantics_changed = nodes_changed or state_inputs_changed
+        valid_revisions = (
             isinstance(revision, int)
             and not isinstance(revision, bool)
             and isinstance(previous_revision, int)
             and not isinstance(previous_revision, bool)
-            and revision != previous_revision + 1
+        )
+        if graph_semantics_changed:
+            if valid_revisions and revision != previous_revision + 1:
+                errors.append("work_graph revision must increment previous revision by one")
+            if (
+                not isinstance(revision_reason, str)
+                or not revision_reason.strip()
+                or not is_string_list(revision_evidence)
+                or not revision_evidence
+            ):
+                errors.append(
+                    "work_graph node or state_inputs changes require revision_reason and revision_evidence"
+                )
+        elif any(
+            graph.get(field) != previous_graph.get(field)
+            for field in ("revision", "revision_reason", "revision_evidence")
         ):
-            errors.append("work_graph revision must increment previous revision by one")
-        previous_nodes = previous_graph.get("nodes")
+            errors.append("work_graph revision metadata must remain unchanged when nodes are unchanged")
         if isinstance(previous_nodes, list):
             for previous_node in previous_nodes:
                 if not isinstance(previous_node, dict) or previous_node.get("status") != "Cancelled":
@@ -530,11 +846,36 @@ def validate(
     previous_contract: dict[str, Any] | None = None,
     require_previous: bool = True,
     strict_verified_evidence: bool = True,
+    require_state_integrity: bool = True,
 ) -> list[str]:
     errors: list[str] = []
+    errors.extend(
+        validate_state_migration(
+            data,
+            previous_contract,
+            require_state_integrity,
+            require_previous,
+        )
+    )
+
+    authority_errors, authority_refs = validate_authority_refs(
+        data.get("authority_refs"), require_state_integrity
+    )
+    errors.extend(authority_errors)
+    previous_authority_refs: dict[str, dict[str, Any]] = {}
+    if isinstance(previous_contract, dict):
+        _, previous_authority_refs = validate_authority_refs(
+            previous_contract.get("authority_refs"), False
+        )
+        errors.extend(validate_authority_migration(authority_refs, previous_authority_refs))
+
     status = data.get("status")
     if not isinstance(status, str) or status not in STATUSES:
         errors.append(f"status must be one of {sorted(STATUSES)}")
+    elif status in {"Ready", "Active", "Verified", "Closed"} and any(
+        authority_ref.get("status") == "stale" for authority_ref in authority_refs.values()
+    ):
+        errors.append(f"{status} cannot proceed with stale authority_refs")
 
     for field in sorted(STRING_FIELDS):
         if not isinstance(data.get(field), str) or not data[field].strip():
@@ -568,6 +909,7 @@ def validate(
             errors.append("confirmed, excluded, and pending decisions must be disjoint")
         if not basis <= confirmed:
             errors.append("execution_basis must contain confirmed decisions only")
+    errors.extend(validate_decision_transitions(data, previous_contract))
 
     next_action = data.get("next_action")
     if (not isinstance(status, str) or status not in {"Closed", "Superseded"}) and (
@@ -618,6 +960,7 @@ def validate_previous_contract(data: dict[str, Any]) -> list[str]:
         data,
         require_previous=False,
         strict_verified_evidence=False,
+        require_state_integrity=False,
     )
 
 
@@ -627,6 +970,212 @@ def run_self_test() -> None:
     valid_errors = validate(valid_contract)
     if valid_errors:
         raise SystemExit(f"valid fixture rejected: {valid_errors}")
+
+    stale_authority = copy.deepcopy(valid_contract)
+    stale_authority["authority_refs"][0]["status"] = "stale"
+    stale_error = "Active cannot proceed with stale authority_refs"
+    if stale_error not in validate(stale_authority):
+        raise SystemExit("Active Goal accepted stale authority evidence")
+
+    silent_goal_change = copy.deepcopy(valid_contract)
+    silent_goal_change["state_revision"] = 2
+    silent_goal_change["objective"] = "被摘要悄悄改写的目标"
+    goal_change_error = "load-bearing Goal fields changed without goal_transition"
+    if goal_change_error not in validate(silent_goal_change, valid_contract):
+        raise SystemExit("Goal objective changed without an explicit Owner transition")
+
+    revived_exclusion = copy.deepcopy(valid_contract)
+    revived_exclusion["state_revision"] = 2
+    revived_exclusion["excluded_options"] = []
+    revived_exclusion["confirmed_decisions"].append("B")
+    revived_exclusion["execution_basis"].append("B")
+    revival_error = "decision B cannot move directly from excluded to confirmed"
+    if revival_error not in validate(revived_exclusion, valid_contract):
+        raise SystemExit("excluded option silently revived as an execution basis")
+
+    promoted_pending = copy.deepcopy(valid_contract)
+    promoted_pending["state_revision"] = 2
+    promoted_pending["pending_items"] = []
+    promoted_pending["confirmed_decisions"].append("C")
+    promotion_error = "decision C changed from pending to confirmed without Owner evidence"
+    if promotion_error not in validate(promoted_pending, valid_contract):
+        raise SystemExit("pending decision became confirmed without Owner evidence")
+
+    changed_authority = copy.deepcopy(valid_contract)
+    changed_authority["state_revision"] = 2
+    changed_authority["authority_refs"][0]["authority_revision"] = "G-17-r2"
+    changed_authority["authority_refs"][0]["fingerprint"] = "sha256:fixture-goal-ledger-r2"
+    authority_change_error = (
+        "authority_ref docs/goal-ledger.md#G-17 changed without recheck_evidence or stale status; "
+        "current status requires fresh recheck_evidence and later observed_at"
+    )
+    if authority_change_error not in validate(changed_authority, valid_contract):
+        raise SystemExit("changed authority source stayed current without recheck evidence")
+
+    removed_exclusion = copy.deepcopy(valid_contract)
+    removed_exclusion["state_revision"] = 2
+    removed_exclusion["excluded_options"] = []
+    disappearance_error = "decision B must not disappear across state revisions"
+    if disappearance_error not in validate(removed_exclusion, valid_contract):
+        raise SystemExit("excluded option disappeared without a transition tombstone")
+
+    valid_promotion = copy.deepcopy(valid_contract)
+    valid_promotion["state_revision"] = 2
+    valid_promotion["pending_items"] = []
+    valid_promotion["confirmed_decisions"].append("C")
+    valid_promotion["execution_basis"].append("C")
+    valid_promotion["decision_transitions"] = [
+        {
+            "decision": "C",
+            "from": "pending",
+            "to": "confirmed",
+            "owner": "product owner",
+            "evidence_ref": "docs/goal-ledger.md#G-17/decision-C",
+            "evidence_fingerprint": "sha256:fixture-decision-C",
+        }
+    ]
+    valid_promotion["goal_transition"] = {
+        "changed_fields": ["execution_basis"],
+        "owner": "goal owner",
+        "reason": "将已确认 C 纳入执行依据",
+        "evidence_ref": "docs/goal-ledger.md#G-17/decision-C",
+        "evidence_fingerprint": "sha256:fixture-decision-C",
+    }
+    if errors := validate(valid_promotion, valid_contract):
+        raise SystemExit(f"Owner-backed pending decision promotion rejected: {errors}")
+
+    valid_goal_change = copy.deepcopy(valid_contract)
+    valid_goal_change["state_revision"] = 2
+    valid_goal_change["objective"] = "按 Owner 新裁决修复长任务恢复能力"
+    valid_goal_change["goal_transition"] = {
+        "changed_fields": ["objective"],
+        "owner": "goal owner",
+        "reason": "Owner 收窄目标",
+        "evidence_ref": "docs/goal-ledger.md#G-17/goal-transition-r2",
+        "evidence_fingerprint": "sha256:fixture-goal-transition-r2",
+    }
+    if errors := validate(valid_goal_change, valid_contract):
+        raise SystemExit(f"Owner-backed Goal transition rejected: {errors}")
+
+    valid_recheck = copy.deepcopy(changed_authority)
+    valid_recheck["authority_refs"][0]["observed_at"] = "2026-01-02T00:00:00Z"
+    valid_recheck["authority_refs"][0]["recheck_evidence"] = "Checker readback V-2"
+    if errors := validate(valid_recheck, valid_contract):
+        raise SystemExit(f"rechecked authority revision rejected: {errors}")
+
+    valid_supersession = copy.deepcopy(valid_contract)
+    valid_supersession["state_revision"] = 2
+    old_authority = valid_supersession["authority_refs"][0]
+    old_authority["status"] = "superseded"
+    old_authority["superseded_by"] = "docs/goal-ledger.md#G-17-r2"
+    valid_supersession["authority_refs"].append(
+        {
+            "ref": "docs/goal-ledger.md#G-17-r2",
+            "authority_revision": "G-17-r2",
+            "fingerprint": "sha256:fixture-goal-ledger-r2",
+            "observed_at": "2026-01-02T00:00:00Z",
+            "recheck_on": ["source revision or fingerprint changes"],
+            "status": "current",
+            "supersedes": "docs/goal-ledger.md#G-17",
+        }
+    )
+    if errors := validate(valid_supersession, valid_contract):
+        raise SystemExit(f"authority supersession tombstone rejected: {errors}")
+
+    rewritten_first_supersession = copy.deepcopy(valid_supersession)
+    rewritten_first_supersession["authority_refs"][0]["authority_revision"] = "rewritten-r0"
+    rewritten_first_supersession["authority_refs"][0]["fingerprint"] = (
+        "sha256:rewritten-r0"
+    )
+    rewritten_first_supersession["authority_refs"][0]["observed_at"] = (
+        "2026-01-02T00:00:00Z"
+    )
+    first_supersession_error = (
+        "authority_ref docs/goal-ledger.md#G-17 first supersession must preserve the previous entry"
+    )
+    if first_supersession_error not in validate(
+        rewritten_first_supersession, valid_contract
+    ):
+        raise SystemExit("first authority supersession rewrote the retained tombstone")
+
+    stale_previous = copy.deepcopy(valid_contract)
+    stale_previous["status"] = "Blocked"
+    stale_previous["authority_refs"][0]["status"] = "stale"
+    stale_reactivated = copy.deepcopy(stale_previous)
+    stale_reactivated["state_revision"] = 2
+    stale_reactivated["status"] = "Active"
+    stale_reactivated["authority_refs"][0]["status"] = "current"
+    stale_reactivation_error = (
+        "authority_ref docs/goal-ledger.md#G-17 cannot move from stale to current without fresh recheck_evidence and later observed_at"
+    )
+    if stale_reactivation_error not in validate(stale_reactivated, stale_previous):
+        raise SystemExit("stale authority returned to current without recheck evidence")
+    valid_stale_recheck = copy.deepcopy(stale_reactivated)
+    valid_stale_recheck["authority_refs"][0]["observed_at"] = "2026-01-02T00:00:00Z"
+    valid_stale_recheck["authority_refs"][0]["recheck_evidence"] = "Checker readback V-2"
+    if errors := validate(valid_stale_recheck, stale_previous):
+        raise SystemExit(f"rechecked stale authority could not return to current: {errors}")
+    stale_with_old_recheck = copy.deepcopy(stale_previous)
+    stale_with_old_recheck["authority_refs"][0]["recheck_evidence"] = "old readback V-0"
+    replayed_recheck = copy.deepcopy(stale_reactivated)
+    replayed_recheck["authority_refs"][0]["recheck_evidence"] = "old readback V-0"
+    if stale_reactivation_error not in validate(replayed_recheck, stale_with_old_recheck):
+        raise SystemExit("stale authority replayed previous recheck evidence")
+    older_observation = copy.deepcopy(stale_reactivated)
+    older_observation["authority_refs"][0]["recheck_evidence"] = "new readback V-2"
+    older_observation["authority_refs"][0]["observed_at"] = "2025-12-31T23:59:59Z"
+    if stale_reactivation_error not in validate(older_observation, stale_previous):
+        raise SystemExit("stale authority used an older observed_at as fresh evidence")
+    equivalent_observation = copy.deepcopy(stale_reactivated)
+    equivalent_observation["authority_refs"][0]["recheck_evidence"] = "new readback V-2"
+    equivalent_observation["authority_refs"][0]["observed_at"] = "2026-01-01T00:00:00+00:00"
+    if stale_reactivation_error not in validate(equivalent_observation, stale_previous):
+        raise SystemExit("stale authority rewrote the same observed_at instant")
+
+    revived_tombstone = copy.deepcopy(valid_supersession)
+    revived_tombstone["state_revision"] = 3
+    revived_tombstone["authority_refs"][0]["status"] = "current"
+    revived_tombstone["authority_refs"][0].pop("superseded_by")
+    revived_tombstone["authority_refs"][1].pop("supersedes")
+    tombstone_revival_error = (
+        "authority_ref docs/goal-ledger.md#G-17 superseded tombstone must remain immutable"
+    )
+    if tombstone_revival_error not in validate(revived_tombstone, valid_supersession):
+        raise SystemExit("superseded authority tombstone was revived")
+    rewritten_tombstone = copy.deepcopy(valid_supersession)
+    rewritten_tombstone["state_revision"] = 3
+    rewritten_tombstone["authority_refs"][0]["authority_revision"] = "rewritten-r0"
+    rewritten_tombstone["authority_refs"][0]["fingerprint"] = "sha256:rewritten-r0"
+    rewritten_tombstone["authority_refs"][0]["observed_at"] = "2026-01-03T00:00:00Z"
+    rewritten_tombstone["authority_refs"][0]["recheck_evidence"] = "rewrite V-3"
+    if tombstone_revival_error not in validate(rewritten_tombstone, valid_supersession):
+        raise SystemExit("superseded authority tombstone history was rewritten")
+
+    previous_basis = copy.deepcopy(valid_contract)
+    previous_basis["confirmed_decisions"].append("D-2")
+    changed_basis = copy.deepcopy(previous_basis)
+    changed_basis["state_revision"] = 2
+    changed_basis["execution_basis"] = ["D-2"]
+    if goal_change_error not in validate(changed_basis, previous_basis):
+        raise SystemExit("execution_basis changed without an explicit Goal transition")
+
+    malformed_transition = copy.deepcopy(valid_contract)
+    malformed_transition["decision_transitions"] = [
+        {
+            "decision": "C",
+            "from": [],
+            "to": "confirmed",
+            "owner": "owner",
+            "evidence_ref": "decision-C",
+            "evidence_fingerprint": "sha256:C",
+        }
+    ]
+    try:
+        malformed_transition_errors = validate(malformed_transition)
+    except TypeError as exc:
+        raise SystemExit(f"malformed decision transition raised TypeError: {exc}") from exc
+    if not any(error.startswith("decision_transitions[0] from must be one of") for error in malformed_transition_errors):
+        raise SystemExit("malformed decision transition missed type error")
     without_graph = dict(valid_contract)
     without_graph.pop("work_graph")
     if errors := validate(without_graph):
@@ -747,6 +1296,7 @@ def run_self_test() -> None:
     if errors := validate_previous_contract(legacy_previous):
         raise SystemExit(f"legacy previous contract cannot be migrated: {errors}")
     migrated_current = copy.deepcopy(valid_contract)
+    migrated_current["state_revision"] = 2
     migrated_current["work_graph"]["revision"] = 2
     migrated_current["work_graph"]["revision_reason"] = "补充结构化证据引用"
     migrated_current["work_graph"]["revision_evidence"] = ["Migration M-1"]
@@ -828,18 +1378,19 @@ def run_self_test() -> None:
         raise SystemExit(f"malformed root contract missed type errors: {malformed_root_errors}")
 
     valid_next_revision = copy.deepcopy(valid_contract)
-    valid_next_revision["work_graph"]["revision"] = 2
-    valid_next_revision["work_graph"]["revision_reason"] = "根据验证证据推进拓扑"
-    valid_next_revision["work_graph"]["revision_evidence"] = ["Verification V-2"]
+    valid_next_revision["state_revision"] = 2
     if errors := validate(valid_next_revision, valid_contract):
-        raise SystemExit(f"valid work_graph revision transition rejected: {errors}")
+        raise SystemExit(f"valid state-only revision rejected: {errors}")
     skipped_revision = copy.deepcopy(valid_next_revision)
     skipped_revision["work_graph"]["revision"] = 3
-    skipped_revision_error = "work_graph revision must increment previous revision by one"
+    skipped_revision_error = (
+        "work_graph revision metadata must remain unchanged when nodes are unchanged"
+    )
     if skipped_revision_error not in validate(skipped_revision, valid_contract):
-        raise SystemExit("work_graph allowed a skipped revision")
+        raise SystemExit("work_graph allowed revision metadata to change without node changes")
 
     previous_revision = copy.deepcopy(valid_contract)
+    previous_revision["state_revision"] = 2
     previous_revision["work_graph"]["revision"] = 2
     previous_revision["work_graph"]["revision_reason"] = "Owner 取消 B"
     previous_revision["work_graph"]["revision_evidence"] = ["Decision D-2"]
@@ -847,6 +1398,7 @@ def run_self_test() -> None:
     previous_revision["work_graph"]["nodes"][1]["status_reason"] = "Owner 取消 B"
     previous_revision["work_graph"]["nodes"][1]["evidence"] = ["Decision D-2"]
     revived_revision = copy.deepcopy(previous_revision)
+    revived_revision["state_revision"] = 3
     revived_revision["work_graph"]["revision"] = 3
     revived_revision["work_graph"]["revision_reason"] = "重新启用 B"
     revived_revision["work_graph"]["revision_evidence"] = ["Agent note"]
@@ -880,6 +1432,168 @@ def run_self_test() -> None:
         raise SystemExit(f"malformed Closed work_graph raised TypeError: {exc}") from exc
     if "work_graph node B status must be one of" not in "\n".join(malformed_closed_errors):
         raise SystemExit(f"malformed Closed work_graph missed type errors: {malformed_closed_errors}")
+
+    regression_failures: list[str] = []
+
+    revision_two_previous = copy.deepcopy(valid_contract)
+    revision_two_previous["state_revision"] = 2
+    if errors := validate_previous_contract(revision_two_previous):
+        regression_failures.append(
+            f"revision-two previous snapshot rejected without its predecessor: {errors}"
+        )
+
+    previous_with_recheck = copy.deepcopy(valid_contract)
+    previous_with_recheck["authority_refs"][0]["recheck_evidence"] = "Checker readback V-1"
+    replayed_authority_recheck = copy.deepcopy(previous_with_recheck)
+    replayed_authority_recheck["state_revision"] = 2
+    replayed_authority_recheck["authority_refs"][0]["authority_revision"] = "G-17-r2"
+    replayed_authority_recheck["authority_refs"][0]["fingerprint"] = (
+        "sha256:fixture-goal-ledger-r2"
+    )
+    fresh_authority_error = (
+        "authority_ref docs/goal-ledger.md#G-17 changed without recheck_evidence or stale status; "
+        "current status requires fresh recheck_evidence and later observed_at"
+    )
+    if fresh_authority_error not in validate(
+        replayed_authority_recheck, previous_with_recheck
+    ):
+        regression_failures.append(
+            "changed current authority accepted replayed recheck evidence and observed_at"
+        )
+
+    stale_changed_authority = copy.deepcopy(valid_contract)
+    stale_changed_authority["state_revision"] = 2
+    stale_changed_authority["status"] = "Blocked"
+    stale_changed_authority["authority_refs"][0]["authority_revision"] = "G-17-r2"
+    stale_changed_authority["authority_refs"][0]["fingerprint"] = (
+        "sha256:fixture-goal-ledger-r2"
+    )
+    stale_changed_authority["authority_refs"][0]["status"] = "stale"
+    if errors := validate(stale_changed_authority, valid_contract):
+        regression_failures.append(
+            f"stale changed authority incorrectly required recheck evidence: {errors}"
+        )
+
+    state_only_revision = copy.deepcopy(valid_contract)
+    state_only_revision["state_revision"] = 2
+    if errors := validate(state_only_revision, valid_contract):
+        regression_failures.append(
+            f"state-only revision rejected unchanged work_graph revision: {errors}"
+        )
+
+    reordered_nodes = copy.deepcopy(valid_contract)
+    reordered_nodes["state_revision"] = 2
+    reordered_nodes["work_graph"]["nodes"].reverse()
+    if errors := validate(reordered_nodes, valid_contract):
+        regression_failures.append(
+            f"node ordering was mistaken for work_graph semantic change: {errors}"
+        )
+
+    reordered_state_inputs = copy.deepcopy(valid_contract)
+    reordered_state_inputs["state_revision"] = 2
+    reordered_state_inputs["work_graph"]["state_inputs"] = [
+        "secondary_context",
+        "goal_ledger",
+    ]
+    previous_state_inputs = copy.deepcopy(valid_contract)
+    previous_state_inputs["work_graph"]["state_inputs"] = [
+        "goal_ledger",
+        "secondary_context",
+    ]
+    if errors := validate(reordered_state_inputs, previous_state_inputs):
+        regression_failures.append(
+            f"state_inputs ordering was mistaken for work_graph semantic change: {errors}"
+        )
+
+    duplicate_state_inputs = copy.deepcopy(valid_contract)
+    duplicate_state_inputs["work_graph"]["state_inputs"] = ["goal_ledger", "goal_ledger"]
+    duplicate_state_inputs_error = "work_graph state_inputs must contain unique keys"
+    if duplicate_state_inputs_error not in validate(duplicate_state_inputs):
+        regression_failures.append("work_graph state_inputs accepted duplicate keys")
+
+    added_state_input_without_revision = copy.deepcopy(valid_contract)
+    added_state_input_without_revision["state_revision"] = 2
+    added_state_input_without_revision["work_graph"]["state_inputs"].append(
+        "secondary_context"
+    )
+    added_state_input_errors = set(
+        validate(added_state_input_without_revision, valid_contract)
+    )
+    required_state_input_change_errors = {
+        "work_graph revision must increment previous revision by one",
+        "work_graph node or state_inputs changes require revision_reason and revision_evidence",
+    }
+    if not required_state_input_change_errors <= added_state_input_errors:
+        regression_failures.append(
+            "state_inputs semantic change did not require graph revision, reason, and evidence"
+        )
+
+    added_state_input_with_revision = copy.deepcopy(added_state_input_without_revision)
+    added_state_input_with_revision["work_graph"]["revision"] = 2
+    added_state_input_with_revision["work_graph"]["revision_reason"] = (
+        "增加恢复所需初始状态"
+    )
+    added_state_input_with_revision["work_graph"]["revision_evidence"] = [
+        "Goal recovery contract r2"
+    ]
+    if errors := validate(added_state_input_with_revision, valid_contract):
+        regression_failures.append(
+            f"valid state_inputs graph revision rejected: {errors}"
+        )
+
+    changed_node_without_revision = copy.deepcopy(valid_contract)
+    changed_node_without_revision["state_revision"] = 2
+    changed_node_without_revision["work_graph"]["nodes"][1]["objective"] = (
+        "修改后的节点目标"
+    )
+    changed_node_errors = set(validate(changed_node_without_revision, valid_contract))
+    required_graph_change_errors = {
+        "work_graph revision must increment previous revision by one",
+        "work_graph node or state_inputs changes require revision_reason and revision_evidence",
+    }
+    if not required_graph_change_errors <= changed_node_errors:
+        regression_failures.append(
+            "node semantic change did not require graph revision, reason, and evidence"
+        )
+
+    unordered_goal_change = copy.deepcopy(valid_contract)
+    unordered_goal_change["state_revision"] = 2
+    unordered_goal_change["objective"] = "收窄后的恢复目标"
+    unordered_goal_change["confirmed_decisions"].append("D-2")
+    unordered_goal_change["execution_basis"] = ["D-2"]
+    unordered_goal_change["decision_transitions"] = [
+        {
+            "decision": "D-2",
+            "from": "new",
+            "to": "confirmed",
+            "owner": "goal owner",
+            "evidence_ref": "docs/goal-ledger.md#G-17/decision-D-2",
+            "evidence_fingerprint": "sha256:fixture-decision-D-2",
+        }
+    ]
+    unordered_goal_change["goal_transition"] = {
+        "changed_fields": ["objective", "execution_basis"],
+        "owner": "goal owner",
+        "reason": "Owner 同时收窄目标并切换执行依据",
+        "evidence_ref": "docs/goal-ledger.md#G-17/goal-transition-r2",
+        "evidence_fingerprint": "sha256:fixture-goal-transition-r2",
+    }
+    exact_goal_fields_error = (
+        "goal_transition changed_fields must exactly match changed Goal fields"
+    )
+    if exact_goal_fields_error in validate(unordered_goal_change, valid_contract):
+        regression_failures.append("goal_transition changed_fields was order-sensitive")
+
+    duplicate_goal_fields = copy.deepcopy(unordered_goal_change)
+    duplicate_goal_fields["goal_transition"]["changed_fields"].append("objective")
+    duplicate_goal_fields_error = (
+        "goal_transition changed_fields must not contain duplicates"
+    )
+    if duplicate_goal_fields_error not in validate(duplicate_goal_fields, valid_contract):
+        regression_failures.append("goal_transition changed_fields accepted duplicates")
+
+    if regression_failures:
+        raise SystemExit("regression failures: " + "; ".join(regression_failures))
     print("OK wise-agent state contract self-test")
 
 

@@ -11,18 +11,23 @@ from check_product_deliverable import missing_groups
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "fixtures"
 CASES = (
-    ("prd", FIXTURES / "prd-valid.md", True),
-    ("prd", FIXTURES / "prd-invalid.md", False),
-    ("business-architecture", FIXTURES / "business-architecture-valid.md", True),
-    ("business-architecture", FIXTURES / "business-architecture-invalid.md", False),
-    ("product-review", FIXTURES / "product-review-valid.md", True),
-    ("product-review", FIXTURES / "product-review-invalid.md", False),
+    ("prd", FIXTURES / "prd-valid.md", True, set()),
+    (
+        "prd",
+        FIXTURES / "prd-invalid.md",
+        False,
+        {"scenario_contract_missing", "rule_scope_missing", "acceptance_scenario_missing"},
+    ),
+    ("business-architecture", FIXTURES / "business-architecture-valid.md", True, set()),
+    ("business-architecture", FIXTURES / "business-architecture-invalid.md", False, set()),
+    ("product-review", FIXTURES / "product-review-valid.md", True, set()),
+    ("product-review", FIXTURES / "product-review-invalid.md", False, set()),
 )
 
 
 def main() -> int:
     failures: list[str] = []
-    for kind, path, should_pass in CASES:
+    for kind, path, should_pass, expected_missing in CASES:
         if not path.exists():
             failures.append(f"missing fixture: {path.name}")
             continue
@@ -33,6 +38,11 @@ def main() -> int:
             failures.append(
                 f"fixture expectation failed: {path.name}: "
                 f"expected {'pass' if should_pass else 'fail'}, missing={','.join(missing) or 'none'}"
+            )
+        elif not expected_missing.issubset(set(missing)):
+            failures.append(
+                f"fixture failure reason mismatch: {path.name}: "
+                f"expected={','.join(sorted(expected_missing))}, missing={','.join(missing) or 'none'}"
             )
         else:
             print(f"OK product fixture {path.name}")

@@ -1,5 +1,6 @@
 {
   "goal_id": "G-17",
+  "state_revision": 1,
   "status": "Active",
   "objective": "修复知止者的长任务恢复能力",
   "success_criteria": [
@@ -38,6 +39,21 @@
   "residual_risk_owner": "repository maintainer",
   "max_iterations": 6,
   "no_progress_limit": 2,
+  "authority_refs": [
+    {
+      "ref": "docs/goal-ledger.md#G-17",
+      "authority_revision": "G-17-r1",
+      "fingerprint": "sha256:fixture-goal-ledger-r1",
+      "observed_at": "2026-01-01T00:00:00Z",
+      "recheck_on": [
+        "source revision or fingerprint changes",
+        "context is compressed or restored",
+        "model or tool configuration changes"
+      ],
+      "status": "current"
+    }
+  ],
+  "decision_transitions": [],
   "work_graph": {
     "revision": 1,
     "revision_reason": "",
