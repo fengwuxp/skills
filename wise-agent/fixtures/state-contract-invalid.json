@@ -1,5 +1,5 @@
 {
-  "goal_id": "G-18",
+  "execution_id": "EXEC-18",
   "status": "Active",
   "objective": "错误地恢复长任务",
   "success_criteria": [
@@ -21,11 +21,13 @@
     "B",
     "C"
   ],
+  "current_slice": "SLICE-UNAUTHORIZED",
   "next_action": "按 B 和 C 继续",
+  "authorization": "仅在 write_scope 内执行本地读取、修改与验证",
   "write_scope": [
     "wise-agent"
   ],
-  "state_carrier": "docs/goal-ledger.md",
+  "state_carrier": "docs/execution-spec.md",
   "verification_evidence": [],
   "checker": "check_state_contract.py",
   "stop_conditions": [

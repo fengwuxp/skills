@@ -32,7 +32,7 @@
 
 ## 用户使用指南
 
-**适用对象**：希望让 Codex 完成分析、设计、实现、评审、文档或 Skill 维护任务的使用者；不要求预先理解 Skill、Goal、Loop 或 Checker。
+**适用对象**：希望让 Codex 完成分析、设计、实现、评审、文档或 Skill 维护任务的使用者；不要求预先理解 Skill、项目执行规范、Loop 或 Checker。
 
 **前置条件**：已在 Codex 中打开任务材料或项目目录；需要使用本仓库能力但尚未安装时，先按[安装](#安装)操作。只读问答可以直接开始；普通且边界清楚的修改请求本身允许在目标范围内写入，联网、安装、Git、同步、部署等外部或高风险动作仍需明确授权。
 
@@ -63,7 +63,7 @@
 | 任务 | 友好指令 |
 | --- | --- |
 | 自主推进 | `$wise-agent：读取当前项目事实，自己判断并推进；只在关键决策或高风险授权处问我，完成后给出产物、验证和残余风险。` |
-| 复杂长任务 | `$wise-agent：为这项跨轮工作建立 Goal；存在真实分支、汇合或并行时再附加可校验 work_graph，保持状态并在停止条件命中时交还我。` |
+| 长任务执行规范 | `$wise-agent：把这项跨轮工作落入项目已有 OpenSpec / Spec / Issue / 任务计划，不创建运行时 Goal；一次只推进一个当前切片，记录验证证据、停止条件和下一入口。` |
 | 双边契约会商 | `$wise-agent：协调 <消费者任务> 与 <提供方任务>，先确认讨论主题并充分交换事实、证据和缺口；信息充分后再围绕 <公共契约> 做版本化会商、双边对账和独立验证。` |
 | 主持式多方会商 | `$wise-agent：协调 <任务列表> 围绕 <共享决策> 进入主持式多方会商；先确认主题和信息覆盖，充分交换后再独立形成立场、归并冲突、形成决议并交 Checker。` |
 | 需求讨论 | `先做能力归位：判断这个需求是在使用、增强、组合还是新增哪项稳定能力；默认审视不等于默认展开。` |
@@ -96,6 +96,8 @@
 ### 多任务会商怎么触发
 
 最可靠的触发方式是使用 `$wise-agent`，同时写清参与任务、各自权威、共同议题和执行意图。具体协议以 [context-handoff.md](./wise-agent/references/context-handoff.md) 为准：
+
+项目内跨模块定位与边界讨论可简写为：`$wise-agent 模块合议：<项目或边界议题>`。
 
 - 两方优先使用双边契约会商，适合消费者与提供方围绕公共契约做版本对账。
 - 三个及以上独立权威只有必须裁定同一共享决策，且不能拆成独立双边议题时，才进入多方会商。
@@ -161,7 +163,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 
 “仅编码”只表示当前阶段编码先行，不表示永久跳过测试。代码写完但验证尚未完成时，只能视为“实现已完成，测试与验证待补”；涉及公共契约、数据库、资金、权限、租户、安全、生产操作、新依赖或跨模块调整时不会默认走快速路径。
 
-`CAD` 现在只作为内部文件路由标识，不需要用户选择。简单局部任务走快速编码，普通一次性交付走标准工程流程；只有单个任务已选定、关键决策冻结，状态载体、反馈源、验证者、写入与验证边界、预算、停止条件和适用授权齐备，且明显需要多轮反馈时，才进入受控工程执行 Loop。适用授权是覆盖当前任务的 Plan Grant，或单任务 Execution Grant；不要求重复授权，也不新增状态或授权类型。Goal 仍只使用 `Draft / Ready / Active / Blocked / Verified / Closed / Superseded`。
+`CAD` 现在只作为内部文件路由标识，不需要用户选择。简单局部任务走快速编码，普通一次性交付走标准工程流程；只有单个当前切片已选定、关键决策冻结，状态载体、反馈源、验证者、写入与验证边界、预算、停止条件和适用授权齐备，且明显需要多轮反馈时，才进入受控工程执行 Loop。适用授权是覆盖当前任务的 Plan Grant，或单任务 Execution Grant；不要求重复授权，也不新增状态或授权类型。项目执行规范只保存跨轮承重事实，切片内部由 Agent 选择最短可验证路径。
 
 需要让所有仓库默认继承知止者的最小行动原则时，可在明确授权后，把[全局行动内核](./wise-agent/assets/codex-global-agents.md)合并到 `$CODEX_HOME/AGENTS.md`。它不会强制每轮加载完整 `$wise-agent`；已有规则不得直接覆盖。
 
@@ -194,7 +196,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 常见组合仍只保留一个最终 Owner：
 
 - 从 AI 原型到工程化：产品专家稳定对象、流程、规则和验收，架构师完成系分、TDD、源码 CR 和生产验证，知止者持有跨阶段目标。
-- 从支付产品到工程化：支付专家稳定资金事实、支付不变量、外部规则边界和验收种子，架构师完成系统设计、代码、测试和生产证据，知止者只在跨阶段或跨轮时持有 Goal 与 Checker。
+- 从支付产品到工程化：支付专家稳定资金事实、支付不变量、外部规则边界和验收种子，架构师完成系统设计、代码、测试和生产证据，知止者只在跨阶段或跨轮时持有项目执行规范与 Checker。
 - 从产品事实到可用界面：产品专家稳定业务语义和验收口径，UI 设计专家形成信息架构、交互状态、视觉与可用性契约，架构师实现并验证；Figma 能力只负责工具内执行或既有设计到代码。
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
 - 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，`document-authoring` 只负责成文与载体，不改变证据等级。
@@ -210,7 +212,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 
 复杂问题按“阴阳一体、互用互制”校准：阴是目标、事实、边界、权限、证据和止损，阳是假设、取舍、行动、反馈和交付；两者在同一行动主体和任务单元中互相成就、互相约束，不拆成两个 Agent 或并列模式。简单任务直接完成，不强制输出双面卡。可直接说：`$wise-agent：按阴阳一体、互用互制处理这个问题，同时给出约束面、推进面、最小动作和验证证据。`
 
-简单任务直接完成；复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker。专业能力按需渐进加载，无论内部用了多少能力，对用户只形成一个综合结论。
+简单任务直接完成；复杂任务才使用计划、SDLC、项目执行规范、Loop、Worker 或 Checker。专业能力按需渐进加载，无论内部用了多少能力，对用户只形成一个综合结论。
 
 四类场景视图只用于强调当前边界，不是并列流程：
 
@@ -221,29 +223,29 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 
 常用短句：`进入知止者`、`进入只读理解视图`、`做质量门禁`、`做源码质量评审`、`做生产交付审查`、`进入知识回流视图`。
 
-#### 3.1 什么时候启用 SDLC、Goal、Loop、Worker、Checker
+#### 3.1 什么时候启用 SDLC、项目执行规范、Loop、Worker、Checker
 
 五者不是固定流水线。默认直接完成，再按真实证据增加控制：
 
 | 机制 | 何时启用 | 不该启用 | 友好指令 |
 | --- | --- | --- | --- |
 | SDLC | 跨产品、设计、工程、验证、发布或运行阶段，需要阶段门禁和交接 | 单阶段或一步任务 | `按完整 SDLC 覆盖这个需求到发布，但只展开当前需要的阶段。` |
-| Goal | 跨会话、跨 Wave，需要保存成功标准、状态、预算和停止线 | 当前会话能闭环 | `为这项工作建立 Goal 并持续推进，成功标准是 <...>，停止条件是 <...>。` |
-| Loop | 同一 Goal 需要反复执行、观察和验证，且有状态载体与轮次边界 | 一次执行即可完成 | `允许进入 Loop，最多 <N> 轮；连续 <N> 轮无进展就停止。` |
+| 项目执行规范 | 跨会话、跨 Wave，需要保存成功标准、状态、预算和停止线 | 当前会话能闭环 | `为这项工作建立项目执行规范并持续推进，成功标准是 <...>，停止条件是 <...>。` |
+| Loop | 同一项目执行规范需要反复执行、观察和验证，且有状态载体与轮次边界 | 一次执行即可完成 | `允许进入 Loop，最多 <N> 轮；连续 <N> 轮无进展就停止。` |
 | Worker | 子任务输入可冻结、写入不重叠、低耦合，并行收益明确 | 同一文件、强耦合调用链 | `这些子任务互不依赖，可并行时再派 Worker；共享文件串行。` |
 | Checker | 高风险、公共契约、重要交付、发布准出或需要独立 CR | 低风险任务已有回读或测试 | `增加独立 Checker，直接读取原始产物和证据，不只审 Maker 摘要。` |
 
-SDLC 是阶段地图，Goal 是跨轮目标契约，Loop 是反复执行契约，Worker 是执行拓扑，Checker 是独立验证机制。Worker 与 Checker 不是顺序阶段，可以只用 Checker 而不派 Worker。
+SDLC 是阶段地图，项目执行规范是跨轮目标契约，Loop 是反复执行契约，Worker 是执行拓扑，Checker 是独立验证机制。Worker 与 Checker 不是顺序阶段，可以只用 Checker 而不派 Worker。
 
 ##### 3.1.1 复杂工作图怎么用
 
-工作拓扑投影不是新的 `Graph Mode`，也不是另一份任务真相源。简单、线性、单文件或一次可完成的任务直接执行；只有两项同时满足，才在现有 Goal 状态契约中附加 `work_graph`：上下文隔离、并行、专业化交接或断点恢复有明确收益；至少三个节点存在分支、汇合、并行或跨 Wave 交接。
+工作拓扑投影不是新的 `Graph Mode`，也不是另一份任务真相源。简单、线性、单文件或一次可完成的任务直接执行；只有两项同时满足，才在现有 执行状态契约中附加 `work_graph`：上下文隔离、并行、专业化交接或断点恢复有明确收益；至少三个节点存在分支、汇合、并行或跨 Wave 交接。
 
 用户不需要手写节点字段、迁移规则或检查命令，直接说明为什么需要工作图、写入边界和完成证据：
 
 ```text
-$wise-agent：这个 Goal 存在 <分支 / 汇合 / 并行 / 跨 Wave>，
-请基于现有 Goal Ledger 投影可校验的 work_graph。
+$wise-agent：这个 项目执行规范 存在 <分支 / 汇合 / 并行 / 跨 Wave>，
+请基于现有 项目执行规范 投影可校验的 work_graph。
 保持现有写入和执行授权，高风险节点增加独立 Checker；
 不要创建第二份真相源，结构校验通过也不能替代真实任务证据。
 ```
@@ -275,7 +277,7 @@ $wise-agent：这个 Goal 存在 <分支 / 汇合 / 并行 / 跨 Wave>，
 | --- | --- | --- |
 | 稳定知识 | 概念、责任边界、核心流程、长期不变量、证据规则 | 进入项目约规、领域知识库或 ADR；变更时清除旧值并说明影响 |
 | 时效知识 | 工具版本、平台限制、外部规范、近期策略 | 记录来源、核验日期、适用范围和复核条件 |
-| 任务知识 | 本轮材料、计划、验证、临时判断、待确认项 | 默认留在 Issue、Goal Ledger、评审或任务记录，验证后再晋升 |
+| 任务知识 | 本轮材料、计划、验证、临时判断、待确认项 | 默认留在 Issue、项目执行规范、评审或任务记录，验证后再晋升 |
 
 需要把上下文治理、知识库、技术早报、培训、代码库教程、调研沉淀变成可维护资产时，可说 `进入知识生产`；产物必须形成可检索、可更新、可验证的上下文资产，而不是一次性长文。
 
@@ -316,7 +318,7 @@ python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py disable
 - `更新 <既有文档路径>，保持文件名和已确认结论；只补本轮变化。`
 - `把 <权威 Markdown> 整理成 <DOCX/PDF>；不改变产品或工程语义，并检查目录、分页、表格、图片和中文字体。`
 
-已有正式文档默认原路径更新，不因模板升级另建“新版”“最终版”或日期副本。正式 PRD、系分、ADR 和 OpenSpec/SDD 只保留当前结论；讨论过程进入评审报告、Decision Log、Goal Ledger 或任务记录。
+已有正式文档默认原路径更新，不因模板升级另建“新版”“最终版”或日期副本。正式 PRD、系分、ADR 和 OpenSpec/SDD 只保留当前结论；讨论过程进入评审报告、Decision Log、项目执行规范 或任务记录。
 
 ### 5. 边界与授权
 
@@ -370,13 +372,14 @@ python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior
 python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --output /tmp/skill-behavior-report.json
 ```
 
-默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
+默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke
 scripts/smoke-wise-agent-behavior.sh --mode design-composition --runs 3 --output-dir /tmp/wise-agent-design-smoke
 scripts/smoke-wise-agent-behavior.sh --mode superpowers --output-dir /tmp/wise-agent-superpowers-smoke
 scripts/smoke-wise-agent-behavior.sh --mode governance --output-dir /tmp/wise-agent-governance-smoke
+scripts/smoke-wise-agent-behavior.sh --mode module-deliberation --output-dir /tmp/wise-agent-module-deliberation-smoke
 scripts/smoke-wise-agent-behavior.sh --mode self-improvement --runs 3 --output-dir /tmp/wise-agent-self-improvement-smoke
 scripts/smoke-wise-agent-behavior.sh --mode grill-me --runs 3 --output-dir /tmp/grill-me-smoke
 scripts/smoke-wise-agent-behavior.sh --mode huaxia --runs 3 --output-dir /tmp/huaxia-wisdom-smoke

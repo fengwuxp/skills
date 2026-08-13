@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a portable wise-agent Goal, recovery, and optional work graph contract.
+"""Validate a portable wise-agent execution, recovery, and optional work graph contract.
 
 Input: one JSON file explicitly supplied by the caller.
 Output: validation result on stdout/stderr. Writes: none. Network: none.
@@ -36,7 +36,7 @@ NON_VALIDATOR_EVIDENCE_REF_TYPES = EVIDENCE_REF_TYPES - {"validator"}
 EVIDENCE_REF_FIELDS = {"ref", "fingerprint", "method", "result", "observed_at"}
 AUTHORITY_REF_STATUSES = {"current", "stale", "superseded"}
 DECISION_STATES = {"new", "confirmed", "excluded", "pending"}
-LOAD_BEARING_GOAL_FIELDS = {
+LOAD_BEARING_EXECUTION_FIELDS = {
     "objective",
     "success_criteria",
     "non_goals",
@@ -49,10 +49,15 @@ LOAD_BEARING_GOAL_FIELDS = {
     "max_iterations",
     "no_progress_limit",
     "execution_basis",
+    "current_slice",
+    "next_action",
+    "authorization",
 }
 STRING_FIELDS = {
-    "goal_id",
+    "execution_id",
     "objective",
+    "current_slice",
+    "authorization",
     "state_carrier",
     "checker",
     "recovery_entry",
@@ -265,25 +270,25 @@ def validate_state_migration(
         errors.append("state_revision must increment previous revision by one")
 
     changed_fields = sorted(
-        field for field in LOAD_BEARING_GOAL_FIELDS if data.get(field) != previous_contract.get(field)
+        field for field in LOAD_BEARING_EXECUTION_FIELDS if data.get(field) != previous_contract.get(field)
     )
-    transition = data.get("goal_transition")
+    transition = data.get("execution_transition")
     if changed_fields:
         if not isinstance(transition, dict):
-            errors.append("load-bearing Goal fields changed without goal_transition")
+            errors.append("load-bearing execution fields changed without execution_transition")
         else:
             for field in ("owner", "reason", "evidence_ref", "evidence_fingerprint"):
                 if not isinstance(transition.get(field), str) or not transition[field].strip():
-                    errors.append(f"goal_transition {field} must be a non-empty string")
+                    errors.append(f"execution_transition {field} must be a non-empty string")
             transition_fields = transition.get("changed_fields")
             if not is_string_list(transition_fields) or not transition_fields:
-                errors.append("goal_transition changed_fields must exactly match changed Goal fields")
+                errors.append("execution_transition changed_fields must exactly match changed execution fields")
             elif len(transition_fields) != len(set(transition_fields)):
-                errors.append("goal_transition changed_fields must not contain duplicates")
+                errors.append("execution_transition changed_fields must not contain duplicates")
             elif set(transition_fields) != set(changed_fields):
-                errors.append("goal_transition changed_fields must exactly match changed Goal fields")
+                errors.append("execution_transition changed_fields must exactly match changed execution fields")
     elif transition is not None:
-        errors.append("goal_transition must describe an actual load-bearing Goal change")
+        errors.append("execution_transition must describe an actual load-bearing execution change")
     return errors
 
 
@@ -849,6 +854,14 @@ def validate(
     require_state_integrity: bool = True,
 ) -> list[str]:
     errors: list[str] = []
+    if "goal_id" in data:
+        errors.append("goal_id is legacy input only; use execution_id and optional origin_goal_id")
+    if "goal_transition" in data:
+        errors.append("goal_transition is legacy input only; use execution_transition")
+    if "origin_goal_id" in data and (
+        not isinstance(data["origin_goal_id"], str) or not data["origin_goal_id"].strip()
+    ):
+        errors.append("origin_goal_id must be a non-empty string when present")
     errors.extend(
         validate_state_migration(
             data,
@@ -923,8 +936,10 @@ def validate(
 
     work_graph = data.get("work_graph")
     previous_graph = previous_contract.get("work_graph") if isinstance(previous_contract, dict) else None
-    if isinstance(previous_contract, dict) and previous_contract.get("goal_id") != data.get("goal_id"):
-        errors.append("previous contract goal_id must match current goal_id")
+    if isinstance(previous_contract, dict) and previous_contract.get("execution_id") != data.get("execution_id"):
+        errors.append("previous contract execution_id must match current execution_id")
+    if isinstance(previous_contract, dict) and previous_contract.get("origin_goal_id") != data.get("origin_goal_id"):
+        errors.append("origin_goal_id is historical provenance and must remain immutable")
     if isinstance(previous_graph, dict) and not isinstance(work_graph, dict):
         errors.append("current contract must retain work_graph from previous revision")
     errors.extend(
@@ -971,18 +986,56 @@ def run_self_test() -> None:
     if valid_errors:
         raise SystemExit(f"valid fixture rejected: {valid_errors}")
 
+    legacy_goal_contract = copy.deepcopy(valid_contract)
+    legacy_goal_contract["goal_id"] = legacy_goal_contract.pop("execution_id", "EXEC-17")
+    legacy_goal_error = (
+        "goal_id is legacy input only; use execution_id and optional origin_goal_id"
+    )
+    if legacy_goal_error not in validate(legacy_goal_contract):
+        raise SystemExit("legacy goal_id was accepted as the current execution identity")
+
+    legacy_goal_transition = copy.deepcopy(valid_contract)
+    legacy_goal_transition["goal_transition"] = {
+        "owner": "Owner-A",
+        "reason": "legacy runtime transition",
+        "evidence_ref": "docs/goal-ledger.md#G-17",
+    }
+    if "goal_transition is legacy input only; use execution_transition" not in validate(
+        legacy_goal_transition
+    ):
+        raise SystemExit("legacy goal_transition was accepted as a current state transition")
+
+    changed_origin_goal = copy.deepcopy(valid_contract)
+    changed_origin_goal["state_revision"] = 2
+    changed_origin_goal["origin_goal_id"] = "G-99"
+    if "origin_goal_id is historical provenance and must remain immutable" not in validate(
+        changed_origin_goal, valid_contract
+    ):
+        raise SystemExit("historical Goal provenance changed across execution revisions")
+
     stale_authority = copy.deepcopy(valid_contract)
     stale_authority["authority_refs"][0]["status"] = "stale"
     stale_error = "Active cannot proceed with stale authority_refs"
     if stale_error not in validate(stale_authority):
-        raise SystemExit("Active Goal accepted stale authority evidence")
+        raise SystemExit("Active execution accepted stale authority evidence")
 
-    silent_goal_change = copy.deepcopy(valid_contract)
-    silent_goal_change["state_revision"] = 2
-    silent_goal_change["objective"] = "被摘要悄悄改写的目标"
-    goal_change_error = "load-bearing Goal fields changed without goal_transition"
-    if goal_change_error not in validate(silent_goal_change, valid_contract):
-        raise SystemExit("Goal objective changed without an explicit Owner transition")
+    silent_execution_change = copy.deepcopy(valid_contract)
+    silent_execution_change["state_revision"] = 2
+    silent_execution_change["objective"] = "被摘要悄悄改写的目标"
+    execution_change_error = "load-bearing execution fields changed without execution_transition"
+    if execution_change_error not in validate(silent_execution_change, valid_contract):
+        raise SystemExit("execution objective changed without an explicit Owner transition")
+
+    for field, value in (
+        ("current_slice", "SLICE-UNAUTHORIZED"),
+        ("next_action", "按未准入切片继续"),
+        ("authorization", "扩大到未授权的 Git 与联网操作"),
+    ):
+        silent_slice_change = copy.deepcopy(valid_contract)
+        silent_slice_change["state_revision"] = 2
+        silent_slice_change[field] = value
+        if execution_change_error not in validate(silent_slice_change, valid_contract):
+            raise SystemExit(f"{field} changed without an explicit Owner transition")
 
     revived_exclusion = copy.deepcopy(valid_contract)
     revived_exclusion["state_revision"] = 2
@@ -1003,10 +1056,10 @@ def run_self_test() -> None:
 
     changed_authority = copy.deepcopy(valid_contract)
     changed_authority["state_revision"] = 2
-    changed_authority["authority_refs"][0]["authority_revision"] = "G-17-r2"
-    changed_authority["authority_refs"][0]["fingerprint"] = "sha256:fixture-goal-ledger-r2"
+    changed_authority["authority_refs"][0]["authority_revision"] = "EXEC-17-r2"
+    changed_authority["authority_refs"][0]["fingerprint"] = "sha256:fixture-execution-spec-r2"
     authority_change_error = (
-        "authority_ref docs/goal-ledger.md#G-17 changed without recheck_evidence or stale status; "
+        "authority_ref docs/execution-spec.md#EXEC-17 changed without recheck_evidence or stale status; "
         "current status requires fresh recheck_evidence and later observed_at"
     )
     if authority_change_error not in validate(changed_authority, valid_contract):
@@ -1030,15 +1083,15 @@ def run_self_test() -> None:
             "from": "pending",
             "to": "confirmed",
             "owner": "product owner",
-            "evidence_ref": "docs/goal-ledger.md#G-17/decision-C",
+            "evidence_ref": "docs/execution-spec.md#EXEC-17/decision-C",
             "evidence_fingerprint": "sha256:fixture-decision-C",
         }
     ]
-    valid_promotion["goal_transition"] = {
+    valid_promotion["execution_transition"] = {
         "changed_fields": ["execution_basis"],
-        "owner": "goal owner",
+        "owner": "execution owner",
         "reason": "将已确认 C 纳入执行依据",
-        "evidence_ref": "docs/goal-ledger.md#G-17/decision-C",
+        "evidence_ref": "docs/execution-spec.md#EXEC-17/decision-C",
         "evidence_fingerprint": "sha256:fixture-decision-C",
     }
     if errors := validate(valid_promotion, valid_contract):
@@ -1047,15 +1100,15 @@ def run_self_test() -> None:
     valid_goal_change = copy.deepcopy(valid_contract)
     valid_goal_change["state_revision"] = 2
     valid_goal_change["objective"] = "按 Owner 新裁决修复长任务恢复能力"
-    valid_goal_change["goal_transition"] = {
+    valid_goal_change["execution_transition"] = {
         "changed_fields": ["objective"],
-        "owner": "goal owner",
+        "owner": "execution owner",
         "reason": "Owner 收窄目标",
-        "evidence_ref": "docs/goal-ledger.md#G-17/goal-transition-r2",
-        "evidence_fingerprint": "sha256:fixture-goal-transition-r2",
+        "evidence_ref": "docs/execution-spec.md#EXEC-17/execution-transition-r2",
+        "evidence_fingerprint": "sha256:fixture-execution-transition-r2",
     }
     if errors := validate(valid_goal_change, valid_contract):
-        raise SystemExit(f"Owner-backed Goal transition rejected: {errors}")
+        raise SystemExit(f"Owner-backed execution transition rejected: {errors}")
 
     valid_recheck = copy.deepcopy(changed_authority)
     valid_recheck["authority_refs"][0]["observed_at"] = "2026-01-02T00:00:00Z"
@@ -1067,16 +1120,16 @@ def run_self_test() -> None:
     valid_supersession["state_revision"] = 2
     old_authority = valid_supersession["authority_refs"][0]
     old_authority["status"] = "superseded"
-    old_authority["superseded_by"] = "docs/goal-ledger.md#G-17-r2"
+    old_authority["superseded_by"] = "docs/execution-spec.md#EXEC-17-r2"
     valid_supersession["authority_refs"].append(
         {
-            "ref": "docs/goal-ledger.md#G-17-r2",
-            "authority_revision": "G-17-r2",
-            "fingerprint": "sha256:fixture-goal-ledger-r2",
+            "ref": "docs/execution-spec.md#EXEC-17-r2",
+            "authority_revision": "EXEC-17-r2",
+            "fingerprint": "sha256:fixture-execution-spec-r2",
             "observed_at": "2026-01-02T00:00:00Z",
             "recheck_on": ["source revision or fingerprint changes"],
             "status": "current",
-            "supersedes": "docs/goal-ledger.md#G-17",
+            "supersedes": "docs/execution-spec.md#EXEC-17",
         }
     )
     if errors := validate(valid_supersession, valid_contract):
@@ -1091,7 +1144,7 @@ def run_self_test() -> None:
         "2026-01-02T00:00:00Z"
     )
     first_supersession_error = (
-        "authority_ref docs/goal-ledger.md#G-17 first supersession must preserve the previous entry"
+        "authority_ref docs/execution-spec.md#EXEC-17 first supersession must preserve the previous entry"
     )
     if first_supersession_error not in validate(
         rewritten_first_supersession, valid_contract
@@ -1106,7 +1159,7 @@ def run_self_test() -> None:
     stale_reactivated["status"] = "Active"
     stale_reactivated["authority_refs"][0]["status"] = "current"
     stale_reactivation_error = (
-        "authority_ref docs/goal-ledger.md#G-17 cannot move from stale to current without fresh recheck_evidence and later observed_at"
+        "authority_ref docs/execution-spec.md#EXEC-17 cannot move from stale to current without fresh recheck_evidence and later observed_at"
     )
     if stale_reactivation_error not in validate(stale_reactivated, stale_previous):
         raise SystemExit("stale authority returned to current without recheck evidence")
@@ -1138,7 +1191,7 @@ def run_self_test() -> None:
     revived_tombstone["authority_refs"][0].pop("superseded_by")
     revived_tombstone["authority_refs"][1].pop("supersedes")
     tombstone_revival_error = (
-        "authority_ref docs/goal-ledger.md#G-17 superseded tombstone must remain immutable"
+        "authority_ref docs/execution-spec.md#EXEC-17 superseded tombstone must remain immutable"
     )
     if tombstone_revival_error not in validate(revived_tombstone, valid_supersession):
         raise SystemExit("superseded authority tombstone was revived")
@@ -1156,8 +1209,8 @@ def run_self_test() -> None:
     changed_basis = copy.deepcopy(previous_basis)
     changed_basis["state_revision"] = 2
     changed_basis["execution_basis"] = ["D-2"]
-    if goal_change_error not in validate(changed_basis, previous_basis):
-        raise SystemExit("execution_basis changed without an explicit Goal transition")
+    if execution_change_error not in validate(changed_basis, previous_basis):
+        raise SystemExit("execution_basis changed without an explicit execution transition")
 
     malformed_transition = copy.deepcopy(valid_contract)
     malformed_transition["decision_transitions"] = [
@@ -1218,12 +1271,12 @@ def run_self_test() -> None:
 
     closed_with_pending = copy.deepcopy(valid_contract)
     closed_with_pending["status"] = "Closed"
-    closed_with_pending["verification_evidence"] = ["Goal summary"]
+    closed_with_pending["verification_evidence"] = ["execution summary"]
     expected_closed_error = (
         "Closed requires every work_graph node to be Verified or Cancelled; non-terminal: B, C, D"
     )
     if expected_closed_error not in validate(closed_with_pending):
-        raise SystemExit("Closed Goal allowed unfinished work_graph nodes")
+        raise SystemExit("Closed execution allowed unfinished work_graph nodes")
 
     verified_before_dependency = copy.deepcopy(valid_contract)
     graph_nodes = verified_before_dependency["work_graph"]["nodes"]
@@ -1365,7 +1418,7 @@ def run_self_test() -> None:
         "work_graph node D failure_policy max_attempts must not exceed contract max_iterations"
     )
     if retry_budget_error not in validate(oversized_retry):
-        raise SystemExit("work_graph retry policy exceeded the Goal iteration budget")
+        raise SystemExit("work_graph retry policy exceeded the execution iteration budget")
 
     malformed_root = copy.deepcopy(valid_contract)
     malformed_root["status"] = []
@@ -1424,7 +1477,7 @@ def run_self_test() -> None:
 
     malformed_closed = copy.deepcopy(valid_contract)
     malformed_closed["status"] = "Closed"
-    malformed_closed["verification_evidence"] = ["Goal summary"]
+    malformed_closed["verification_evidence"] = ["execution summary"]
     malformed_closed["work_graph"]["nodes"][1]["status"] = []
     try:
         malformed_closed_errors = validate(malformed_closed)
@@ -1446,12 +1499,12 @@ def run_self_test() -> None:
     previous_with_recheck["authority_refs"][0]["recheck_evidence"] = "Checker readback V-1"
     replayed_authority_recheck = copy.deepcopy(previous_with_recheck)
     replayed_authority_recheck["state_revision"] = 2
-    replayed_authority_recheck["authority_refs"][0]["authority_revision"] = "G-17-r2"
+    replayed_authority_recheck["authority_refs"][0]["authority_revision"] = "EXEC-17-r2"
     replayed_authority_recheck["authority_refs"][0]["fingerprint"] = (
-        "sha256:fixture-goal-ledger-r2"
+        "sha256:fixture-execution-spec-r2"
     )
     fresh_authority_error = (
-        "authority_ref docs/goal-ledger.md#G-17 changed without recheck_evidence or stale status; "
+        "authority_ref docs/execution-spec.md#EXEC-17 changed without recheck_evidence or stale status; "
         "current status requires fresh recheck_evidence and later observed_at"
     )
     if fresh_authority_error not in validate(
@@ -1464,9 +1517,9 @@ def run_self_test() -> None:
     stale_changed_authority = copy.deepcopy(valid_contract)
     stale_changed_authority["state_revision"] = 2
     stale_changed_authority["status"] = "Blocked"
-    stale_changed_authority["authority_refs"][0]["authority_revision"] = "G-17-r2"
+    stale_changed_authority["authority_refs"][0]["authority_revision"] = "EXEC-17-r2"
     stale_changed_authority["authority_refs"][0]["fingerprint"] = (
-        "sha256:fixture-goal-ledger-r2"
+        "sha256:fixture-execution-spec-r2"
     )
     stale_changed_authority["authority_refs"][0]["status"] = "stale"
     if errors := validate(stale_changed_authority, valid_contract):
@@ -1493,11 +1546,11 @@ def run_self_test() -> None:
     reordered_state_inputs["state_revision"] = 2
     reordered_state_inputs["work_graph"]["state_inputs"] = [
         "secondary_context",
-        "goal_ledger",
+        "execution_spec",
     ]
     previous_state_inputs = copy.deepcopy(valid_contract)
     previous_state_inputs["work_graph"]["state_inputs"] = [
-        "goal_ledger",
+        "execution_spec",
         "secondary_context",
     ]
     if errors := validate(reordered_state_inputs, previous_state_inputs):
@@ -1506,7 +1559,7 @@ def run_self_test() -> None:
         )
 
     duplicate_state_inputs = copy.deepcopy(valid_contract)
-    duplicate_state_inputs["work_graph"]["state_inputs"] = ["goal_ledger", "goal_ledger"]
+    duplicate_state_inputs["work_graph"]["state_inputs"] = ["execution_spec", "execution_spec"]
     duplicate_state_inputs_error = "work_graph state_inputs must contain unique keys"
     if duplicate_state_inputs_error not in validate(duplicate_state_inputs):
         regression_failures.append("work_graph state_inputs accepted duplicate keys")
@@ -1534,7 +1587,7 @@ def run_self_test() -> None:
         "增加恢复所需初始状态"
     )
     added_state_input_with_revision["work_graph"]["revision_evidence"] = [
-        "Goal recovery contract r2"
+        "execution recovery contract r2"
     ]
     if errors := validate(added_state_input_with_revision, valid_contract):
         regression_failures.append(
@@ -1566,31 +1619,31 @@ def run_self_test() -> None:
             "decision": "D-2",
             "from": "new",
             "to": "confirmed",
-            "owner": "goal owner",
-            "evidence_ref": "docs/goal-ledger.md#G-17/decision-D-2",
+            "owner": "execution owner",
+            "evidence_ref": "docs/execution-spec.md#EXEC-17/decision-D-2",
             "evidence_fingerprint": "sha256:fixture-decision-D-2",
         }
     ]
-    unordered_goal_change["goal_transition"] = {
+    unordered_goal_change["execution_transition"] = {
         "changed_fields": ["objective", "execution_basis"],
-        "owner": "goal owner",
+        "owner": "execution owner",
         "reason": "Owner 同时收窄目标并切换执行依据",
-        "evidence_ref": "docs/goal-ledger.md#G-17/goal-transition-r2",
-        "evidence_fingerprint": "sha256:fixture-goal-transition-r2",
+            "evidence_ref": "docs/execution-spec.md#EXEC-17/execution-transition-r2",
+            "evidence_fingerprint": "sha256:fixture-execution-transition-r2",
     }
     exact_goal_fields_error = (
-        "goal_transition changed_fields must exactly match changed Goal fields"
+        "execution_transition changed_fields must exactly match changed execution fields"
     )
     if exact_goal_fields_error in validate(unordered_goal_change, valid_contract):
-        regression_failures.append("goal_transition changed_fields was order-sensitive")
+        regression_failures.append("execution_transition changed_fields was order-sensitive")
 
     duplicate_goal_fields = copy.deepcopy(unordered_goal_change)
-    duplicate_goal_fields["goal_transition"]["changed_fields"].append("objective")
+    duplicate_goal_fields["execution_transition"]["changed_fields"].append("objective")
     duplicate_goal_fields_error = (
-        "goal_transition changed_fields must not contain duplicates"
+        "execution_transition changed_fields must not contain duplicates"
     )
     if duplicate_goal_fields_error not in validate(duplicate_goal_fields, valid_contract):
-        regression_failures.append("goal_transition changed_fields accepted duplicates")
+        regression_failures.append("execution_transition changed_fields accepted duplicates")
 
     if regression_failures:
         raise SystemExit("regression failures: " + "; ".join(regression_failures))

@@ -98,13 +98,13 @@ Superpowers 不成为第二 Owner。知止者保持统一行动主体，专业 S
 | 能力层 | 代表 | 归位 |
 | --- | --- | --- |
 | 方法纪律 | Superpowers | 澄清、计划、TDD、调试、CR 和验证。 |
-| 上下文 / Spec / 状态 | GSD | Goal、Spec、Wave、任务状态和恢复入口。 |
+| 上下文 / Spec / 状态 | GSD | 项目执行规范、Spec、Wave、任务状态和恢复入口。 |
 | 角色链审查 | GStack | 产品、设计、工程、QA、安全和发布视角。 |
 | 仓库级记忆 | Trellis | 仅在现有状态载体反复失效且有证据时试点。 |
 
 它们都不是知止者之外的新主流程，也不自动成为依赖、任务系统或授权来源。
 
-`Trellis` 是仓库级 Agent Harness 候选。只有现有 `AGENTS.md`、Issue、Spec、Goal Ledger 和知识库反复失效且有重复失败证据时，才在非关键任务试点；安装 `@mindfoldhq/trellis` 前必须显式授权，并审查 AGPL-3.0、`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`、hooks、subagent、worktree 和 Git 写入边界。
+`Trellis` 是仓库级 Agent Harness 候选。只有现有 `AGENTS.md`、Issue、Spec、项目执行规范 和知识库反复失效且有重复失败证据时，才在非关键任务试点；安装 `@mindfoldhq/trellis` 前必须显式授权，并审查 AGPL-3.0、`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`、hooks、subagent、worktree 和 Git 写入边界。
 
 ## 6. Matt Pocock 与 grill-me
 
@@ -112,6 +112,17 @@ Superpowers 不成为第二 Owner。知止者保持统一行动主体，专业 S
 - `brainstorming` 负责探索目标、约束和备选；`grill-me` 只在关键分叉未决、回答含糊或连续返工时升级，二者不得重复问同一问题。
 - 当前 `grill-me` 是项目自有独立 Skill，保留 Matt Pocock 版本的一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding 核心，并增加问题台账、历史去重、自决边界、红线与决策快照；上游只作来源参考，不安装全仓库，不运行 npm、Claude plugin、hooks 或外部任务系统。
 - 上游 `wayfinder` 只作为决策寻路方法来源：知止者持有 Destination 与低分辨率地图，`grill-me` 只关闭单个决策，路线清晰后再进入 Spec 或最小计划。项目不安装 `wayfinder`，也不继承其默认 Issue、分支、subagent 或外部 tracker 操作。
+
+外部命令名只作为方法入口，项目真正需要的是结构化工程容器：
+
+| 外部表达 | 本项目已有能力 | 交付边界 |
+| --- | --- | --- |
+| 编码前拷问 | `grill-me` + 产品 / 架构事实读取 | 设计澄清只关闭真正影响方向的 Decision，不追求问题数量，不把盘问写成执行授权。 |
+| `/tdd` | `senior-software-architect/references/testing.md` + `test-driven-development` | 测试反馈先建立一个正确失败的行为信号，再做最小实现；测试通过不是 CR 或发布准出。 |
+| `/diagnose` | `senior-software-architect/references/debugging-diagnosis.md` + `systematic-debugging` | 诊断反馈先复现并建立 pass / fail 信号，再形成和证伪根因假设；不靠猜测连续改代码。 |
+| `/to-issues` | `senior-software-architect/references/workflow.md` 的可交付竖切任务契约 | 按用户可观察结果竖切，任务标注 `HITL / AFK`、验证与停止条件；Issue 创建、GitHub 写入和 Git 仍需授权。 |
+
+领域语言属于 Context System：复用项目已有 `AGENTS.md`、Spec、ADR、模块 reference、测试或等价载体，按任务读取并以来源和 revision 管理；不默认创建或塞满一份 `CONTEXT.md`。Skill 存在不等于能力成立，静态规则通过也不等于真实工程行为提升；至少需要真实任务产物、失败反馈、验证证据和独立 Review 才能声称能力可用。
 
 ## 调度结论格式
 

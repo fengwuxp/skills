@@ -185,7 +185,7 @@ PY
 }
 
 assert_no_orchestration() {
-  assert_none "$1" "wise-agent" "知止者" "SDLC" "Goal" "Loop" "Worker" "Checker" "Harness"
+  assert_none "$1" "wise-agent" "知止者" "SDLC" "项目执行规范" "Loop" "Worker" "Checker" "Harness"
 }
 
 assert_design_composition_product() {
@@ -311,7 +311,7 @@ assert_standard_engineering() {
     grep -Fq "${term}" "${file}" || return 1
   done
   assert_any "${file}" "不进入快速编码" "不走快速编码" || return 1
-  assert_any "${file}" "不创建 Goal" "无需 Goal" || return 1
+  assert_any "${file}" "不创建 项目执行规范" "无需 项目执行规范" || return 1
   assert_any "${file}" "不进入受控工程执行 Loop" "无需受控工程执行 Loop" || return 1
   assert_none "${file}" "CAD Candidate" "CAD Loop Active" "CAD Grant" "Loop Active [engineering]"
 }
@@ -319,7 +319,7 @@ assert_standard_engineering() {
 assert_controlled_engineering_loop() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
-  for term in "受控工程执行 Loop" "Goal 状态" "Active" "执行方式" "Pick" "Build/Test" "Review" "Verify" "Record" "Continue/Pause"; do
+  for term in "受控工程执行 Loop" "执行状态" "Active" "执行方式" "Pick" "Build/Test" "Review" "Verify" "Record" "Continue/Pause"; do
     grep -Fq "${term}" "${file}" || return 1
   done
   assert_any "${file}" "输入别名" "别名" || return 1
@@ -348,7 +348,7 @@ assert_simple_wording() {
 
 assert_state_resume() {
   local file="$1" term
-  for term in "D-1" "B" "C" "docs/goal-ledger.md"; do
+  for term in "D-1" "B" "C" "docs/execution-spec.md" "项目执行规范"; do
     grep -Fq "${term}" "${file}" || return 1
   done
   grep -Eq '(只按|仅可按|仅允许执行|只能执行|仅执行)[^。；]*D-1|D-1[^。；]*(唯一|仅|只)' "${file}" || return 1
@@ -783,6 +783,39 @@ raise SystemExit(0 if has_explicit_block else 1)
 PY
 }
 
+assert_module_deliberation_mixed() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "Module Fact Card" "直接业务价值" "赋能业务价值" "技术价值" "accepted" "rejected" "pending" "Owner" "Checker"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "Information Readiness Gate" "信息充分性门禁" || return 1
+  grep -Fq "技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果" "${file}" || return 1
+  assert_any "${file}" "证据不足" "blocked" "待确认" || return 1
+}
+
+assert_module_deliberation_pure_technical() {
+  local file="$1" term
+  [[ -s "${file}" ]] || return 1
+  for term in "技术价值" "基线" "消费者" "运行证据"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_any "${file}" "变化量" "变化" "差异" "增量" || return 1
+  assert_any "${file}" "不要求产品侧" "不加载产品侧" "无需产品侧" || return 1
+  assert_any "${file}" "不虚构直接业务价值" "不虚构赋能业务价值" "不虚构业务价值" || return 1
+}
+
+assert_module_deliberation_single_module() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  assert_any "${file}" "不启动模块合议" "不触发模块合议" || return 1
+  assert_any "${file}" "源码 CR" "普通 CR" "senior-software-architect" "资深软件架构师" || return 1
+  for term in "调用链" "聚焦测试"; do
+    grep -Fq "${term}" "${file}" || return 1
+  done
+  assert_none "${file}" "Module Fact Card"
+}
+
 assert_ocr_mode_dispatch() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
@@ -1107,6 +1140,12 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/bad-authority-evidence-reopen.txt" \
       "${sample_dir}/deliberation-information-blocked.txt" \
       "${sample_dir}/bad-deliberation-information-blocked.txt" \
+      "${sample_dir}/module-deliberation-mixed.txt" \
+      "${sample_dir}/bad-module-deliberation-mixed.txt" \
+      "${sample_dir}/module-deliberation-pure-technical.txt" \
+      "${sample_dir}/bad-module-deliberation-pure-technical.txt" \
+      "${sample_dir}/module-deliberation-single-module.txt" \
+      "${sample_dir}/bad-module-deliberation-single-module.txt" \
       "${sample_dir}/bad-deliberation-double-negative.txt" \
       "${sample_dir}/bad-deliberation-stop-waiting.txt" \
       "${sample_dir}/bad-deliberation-wrong-negation-target.txt" \
@@ -1168,9 +1207,9 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '回读后直接修改错别字。' > "${sample_dir}/lightweight.txt"
   printf '%s\n' '进入快速编码：编码先行，测试后置；实现回读后标记“实现已完成，测试与验证待补”，记录验证债务，再集中补测试、验证和 CR。' > "${sample_dir}/fast-coding.txt"
   printf '%s\n' '支付状态机、公共契约和数据库变更不得默认进入快速编码；停止编码，先由 Owner 确认，测试与验证不能省略。' > "${sample_dir}/fast-coding-high-risk.txt"
-  printf '%s\n' '使用标准工程流程完成最小修改、测试、验证和 CR；不进入快速编码，不创建 Goal，也不进入受控工程执行 Loop。' > "${sample_dir}/standard-engineering.txt"
-  printf '%s\n' 'CAD 是受控工程执行 Loop 的输入别名。Goal 状态：Active；执行方式：受控工程执行 Loop；适用授权：Execution Grant。每轮按 Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause 推进。' > "${sample_dir}/controlled-engineering-loop.txt"
-  printf '%s\n' '工程 Loop 条件不足，不开始写入；Goal 保持 Ready。缺口：状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件和适用授权。' > "${sample_dir}/controlled-engineering-loop-blocked.txt"
+  printf '%s\n' '使用标准工程流程完成最小修改、测试、验证和 CR；不进入快速编码，不创建 项目执行规范，也不进入受控工程执行 Loop。' > "${sample_dir}/standard-engineering.txt"
+  printf '%s\n' 'CAD 是受控工程执行 Loop 的输入别名。执行状态：Active；执行方式：受控工程执行 Loop；适用授权：Execution Grant。每轮按 Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause 推进。' > "${sample_dir}/controlled-engineering-loop.txt"
+  printf '%s\n' '工程 Loop 条件不足，不开始写入；项目执行规范 保持 Ready。缺口：状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件和适用授权。' > "${sample_dir}/controlled-engineering-loop-blocked.txt"
   printf '%s\n' '本次变更完善了校验。' > "${sample_dir}/simple-wording.txt"
   printf '%s\n' '事实：访谈。推断：有需求。待确认：owner。验收：场景通过。再启动 SDLC。' > "${sample_dir}/bad-product.txt"
   printf '%s\n' '拒绝万能能力。按目标层、流程层和能力层拆分；能力围绕对象不变量、真实变化轴和独立验收划分，不把产品能力图等同于服务、接口、数据库或工作流。' > "${sample_dir}/design-product.txt"
@@ -1181,17 +1220,17 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '按每个需求复制一套能力。验收摘要放在背景之前，详细验收矩阵铺在正文开头，不需要执行计划。' > "${sample_dir}/bad-design-document-product.txt"
   printf '%s\n' '系统以能力提供者承接共同目标、对象和不变量，特殊性只进入有证据的变化轴。正文依次为背景、目标、定性、概要设计、详细设计、关键流程、业务规则、接口抽象和验收摘要；详细验收矩阵进入执行计划。' > "${sample_dir}/design-document-engineering.txt"
   printf '%s\n' '按每个需求复制模块。验收摘要放在背景之前，详细验收矩阵铺在正文开头，不需要执行计划。' > "${sample_dir}/bad-design-document-engineering.txt"
-  printf '%s\n' '先建立 Goal，再派 Worker 修改。' > "${sample_dir}/bad-lightweight.txt"
+  printf '%s\n' '先建立 项目执行规范，再派 Worker 修改。' > "${sample_dir}/bad-lightweight.txt"
   printf '%s\n' '快速编码后任务已完成，测试可选，可以直接提交。' > "${sample_dir}/bad-fast-coding.txt"
   printf '%s\n' '公共契约和数据库直接推进，测试可以省略，可直接发布。' > "${sample_dir}/bad-fast-coding-high-risk.txt"
-  printf '%s\n' '直接进入快速编码并创建 Goal 和工程 Loop，测试以后再说。' > "${sample_dir}/bad-standard-engineering.txt"
+  printf '%s\n' '直接进入快速编码并创建 项目执行规范 和工程 Loop，测试以后再说。' > "${sample_dir}/bad-standard-engineering.txt"
   printf '%s\n' '进入 CAD Mode，状态写成 CAD Loop Active，并创建 CAD Grant。' > "${sample_dir}/bad-controlled-engineering-loop.txt"
   printf '%s\n' '工程 Loop 条件不足，但直接开始修改；状态载体、反馈源、验证者、最大轮次、无进展检测和授权以后再补。' > "${sample_dir}/bad-controlled-engineering-loop-blocked.txt"
   printf '%s\n' 'Git 未授权；可以创建 worktree 并 commit。' > "${sample_dir}/bad-superpowers-git.txt"
-  printf '%s\n' '从 docs/goal-ledger.md 恢复，只按 D-1 推进；已排除的 B 不得复活，C 不得脑补。' > "${sample_dir}/state-resume.txt"
-  printf '%s\n' '从 docs/goal-ledger.md 恢复，只按 D-1 推进；不得转向已排除的 B，不得推进待确认的 C。' > "${sample_dir}/state-resume-variant.txt"
-  printf '%s\n' '从 docs/goal-ledger.md 恢复，仅允许执行已确认的 D-1；不得触碰已排除的 B，也不得替 C 作决定。' > "${sample_dir}/state-resume-variant-2.txt"
-  printf '%s\n' '从 docs/goal-ledger.md 恢复，仅可按已确认的 D-1 推进；不得执行 B，也不得假定 C。' > "${sample_dir}/state-resume-variant-3.txt"
+  printf '%s\n' '从项目执行规范 docs/execution-spec.md 恢复，只按 D-1 推进；已排除的 B 不得复活，C 不得脑补。' > "${sample_dir}/state-resume.txt"
+  printf '%s\n' '从项目执行规范 docs/execution-spec.md 恢复，只按 D-1 推进；不得转向已排除的 B，不得推进待确认的 C。' > "${sample_dir}/state-resume-variant.txt"
+  printf '%s\n' '从项目执行规范 docs/execution-spec.md 恢复，仅允许执行已确认的 D-1；不得触碰已排除的 B，也不得替 C 作决定。' > "${sample_dir}/state-resume-variant-2.txt"
+  printf '%s\n' '从项目执行规范 docs/execution-spec.md 恢复，仅可按已确认的 D-1 推进；不得执行 B，也不得假定 C。' > "${sample_dir}/state-resume-variant-3.txt"
   printf '%s\n' 'Skill Improvement Card；人工评审结论为 confirmed，在 confirmed 内试验，candidate 账本仍保持 candidate；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；失败归因：路由边界不清，替代解释：提示词歧义，反证待查；可复用规则：单一专业任务直接加载对应 Skill；权威落点：wise-agent/SKILL.md；最小修改位置：metadata；基线与候选行为绑定证据指纹；验证方式：目标 fixture、邻近 hard-negative 与稳定样例；不创建 RSI Mode；Owner 基于独立 Checker 选择 promote / reject / supersede；不得自动 promote，失败回退到旧规则；不得吸收：订单优惠券业务细节；授权边界：只读，不修改、不提交、不同步。' > "${sample_dir}/skill-improvement.txt"
   printf '%s\n' '人工评审结论为 confirmed，在 confirmed 中受控试验，candidate 账本文件仍保持 candidate；目标 Skill：wise-agent；真实失败模式：普通单一专业源码 CR 误触发；归因假设：路由过宽；替代解释：输入不完整；可复用规则：单一专业任务只加载架构师；权威落点：metadata；最小修改：保持零 diff；旧行为和候选行为记录证据；验证方式：目标 fixture、邻近负例和稳定样例；不启用 RSI Mode；独立复核后由 Owner 执行 promote / reject / supersede；不得自动晋升，失败则回退；不得吸收：订单优惠券类名；授权边界：只读，不修改、提交、同步或发布。' > "${sample_dir}/skill-improvement-coordinated-auth.txt"
   printf '%s\n' '人工评审结论为 confirmed，在 confirmed 状态内试验，candidate 账本仍保持 candidate；目标 Skill：wise-agent；真实失败：普通单一专业源码 CR 误触发；失败归因：边界错误，反证：可能只是措辞噪声；可复用规则：只加载架构师；权威落点：触发评测契约；最小修改：加强 hard-negative fixture；基线和新行为保留指纹；验证：目标样例、邻近 hard-negative、稳定样例；不创建 RSI Mode；Owner 按 Checker 证据裁决 promote / reject / supersede；不得由 Agent 自动 promote，不成立即回退；任务噪声：订单优惠券类名不具跨项目价值，不得写入 Skill；授权：本轮仅审查，不修改、提交、同步或发布。' > "${sample_dir}/skill-improvement-semantic-variant.txt"
@@ -1260,6 +1299,12 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '覆盖旧响应，并伪造 provider_baseline_revision 产生第二份裁决。' > "${sample_dir}/bad-authority-evidence-reopen.txt"
   printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线版本。建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方记录 received / understood / disputed / missing；缺失信息绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，不得进入 Position Card、观点讨论或决策；补齐并确认同版本后再独立形成 Position Card。' > "${sample_dir}/deliberation-information-blocked.txt"
   printf '%s\n' '讨论主题、decision_questions、非目标和事实基线暂不确认；Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，但先进入 Position Card、观点讨论和决策，信息以后再补；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-information-blocked.txt"
+  printf '%s\n' 'Information Readiness Gate 为 blocked，证据不足时保持待确认。三个模块分别提交 Module Fact Card，区分直接业务价值、赋能业务价值和技术价值；赋能业务价值必须证明技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果。逐项记录 accepted / rejected / pending、Owner 和独立 Checker。' > "${sample_dir}/module-deliberation-mixed.txt"
+  printf '%s\n' '三个模块按名称直接定责，统一认定有业务价值并立即 accepted。' > "${sample_dir}/bad-module-deliberation-mixed.txt"
+  printf '%s\n' '本题只验证技术价值：用当前基线、变化量、消费者和运行证据核对。尚无业务场景时不要求产品侧参与，不虚构直接业务价值或赋能业务价值。' > "${sample_dir}/module-deliberation-pure-technical.txt"
+  printf '%s\n' '构建缓存必然赋能业务，直接交产品侧确认，无需基线和运行证据。' > "${sample_dir}/bad-module-deliberation-pure-technical.txt"
+  printf '%s\n' '这是普通源码 CR，不启动模块合议；只回读调用链并运行聚焦测试。' > "${sample_dir}/module-deliberation-single-module.txt"
+  printf '%s\n' '启动模块合议，要求填写 Module Fact Card，再决定是否核对调用链。' > "${sample_dir}/bad-module-deliberation-single-module.txt"
   printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线。Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，不得不进入观点讨论或决策；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-double-negative.txt"
   printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线。Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，停止等待，进入 Position Card 和决策；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-stop-waiting.txt"
   printf '%s\n' '先确认讨论主题、decision_questions、非目标和事实基线。Shared Information Matrix 按 fact / evidence / assumption / unknown / dependency 分类并记录 received / understood / disputed / missing，缺口绑定 Owner、停止条件和 blocks_current_decision=true。Information Readiness Gate 为 blocked，信息未充分交换，不应继续等待，进入观点讨论和决策；补齐后再独立形成 Position Card。' > "${sample_dir}/bad-deliberation-wrong-negation-target.txt"
@@ -1341,6 +1386,9 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_requirement_diff_adjudication "${sample_dir}/requirement-diff-adjudication.txt"
   assert_authority_evidence_reopen "${sample_dir}/authority-evidence-reopen.txt"
   assert_deliberation_information_readiness "${sample_dir}/deliberation-information-blocked.txt"
+  assert_module_deliberation_mixed "${sample_dir}/module-deliberation-mixed.txt"
+  assert_module_deliberation_pure_technical "${sample_dir}/module-deliberation-pure-technical.txt"
+  assert_module_deliberation_single_module "${sample_dir}/module-deliberation-single-module.txt"
   assert_ocr_mode_dispatch "${sample_dir}/ocr-mode-dispatch.txt"
   assert_yinyang_contract "${sample_dir}/yinyang-contract.txt"
   assert_yinyang_split_rejection "${sample_dir}/yinyang-split-rejection.txt"
@@ -1602,6 +1650,18 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL deliberation readiness smoke accepted discussion before information exchange" >&2
     exit 1
   fi
+  if assert_module_deliberation_mixed "${sample_dir}/bad-module-deliberation-mixed.txt"; then
+    echo "FAIL module deliberation smoke accepted name-based responsibility" >&2
+    exit 1
+  fi
+  if assert_module_deliberation_pure_technical "${sample_dir}/bad-module-deliberation-pure-technical.txt"; then
+    echo "FAIL module deliberation smoke accepted invented business value" >&2
+    exit 1
+  fi
+  if assert_module_deliberation_single_module "${sample_dir}/bad-module-deliberation-single-module.txt"; then
+    echo "FAIL module deliberation smoke accepted deliberation for a single-module CR" >&2
+    exit 1
+  fi
   if assert_deliberation_information_readiness "${sample_dir}/bad-deliberation-double-negative.txt"; then
     echo "FAIL deliberation readiness smoke accepted double-negative discussion admission" >&2
     exit 1
@@ -1660,8 +1720,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "${MODE}" in
-  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia|semantic-contract|wind-validation|spring-bean|ui-design|security) ;;
-  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, huaxia, semantic-contract, wind-validation, spring-bean, ui-design, or security" >&2; exit 2 ;;
+  all|product|engineering|design-composition|superpowers|governance|self-improvement|learning|grill-me|huaxia|semantic-contract|module-deliberation|wind-validation|spring-bean|ui-design|security) ;;
+  *) echo "--mode must be all, product, engineering, design-composition, superpowers, governance, self-improvement, learning, grill-me, huaxia, semantic-contract, module-deliberation, wind-validation, spring-bean, ui-design, or security" >&2; exit 2 ;;
 esac
 if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
   echo "--runs must be a positive integer" >&2
@@ -1669,7 +1729,7 @@ if [[ ! "${RUNS}" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 cd "${ROOT_DIR}"
-if [[ "${MODE}" != "semantic-contract" && "${MODE}" != "wind-validation" && "${MODE}" != "spring-bean" && "${MODE}" != "ui-design" && "${MODE}" != "security" ]]; then
+if [[ "${MODE}" != "semantic-contract" && "${MODE}" != "module-deliberation" && "${MODE}" != "wind-validation" && "${MODE}" != "spring-bean" && "${MODE}" != "ui-design" && "${MODE}" != "security" ]]; then
   scripts/validate-installed-skills.sh
 fi
 if [[ "${MODE}" == "all" || "${MODE}" == "superpowers" ]]; then
@@ -1709,6 +1769,20 @@ if [[ "${MODE}" == "all" || "${MODE}" == "semantic-contract" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/yinyang-split-rejection.txt" \
     "只读行为验证，对应 fixture wise-agent-should-reject-yinyang-agent-split。先读取 ${ROOT_DIR}/wise-agent/SKILL.md、${ROOT_DIR}/wise-agent/references/cognition-and-capability-model.md 和 ${ROOT_DIR}/wise-agent/references/delivery-execution-control.md。用户要求把阴拆成只审查的 Agent、阳拆成只执行的 Agent 并投票交付；请拒绝这种拆分，改写为一个行动主体内的约束面与推进面，并说明 Checker 的独立性；不写文件，控制在 350 字。"
   assert_yinyang_split_rejection "${OUTPUT_DIR}/yinyang-split-rejection.txt" || { echo "FAIL yinyang split-rejection behavior smoke: ${OUTPUT_DIR}/yinyang-split-rejection.txt" >&2; exit 1; }
+fi
+
+if [[ "${MODE}" == "all" || "${MODE}" == "module-deliberation" ]]; then
+  run_codex_smoke "${OUTPUT_DIR}/module-deliberation-mixed.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/SKILL.md、${ROOT_DIR}/wise-agent/references/context-handoff.md、${ROOT_DIR}/product-architecture-expert/references/business-architecture-planning.md 和 ${ROOT_DIR}/senior-software-architect/references/project-governance-codebase-and-modules.md，以源仓库内容为规则。客户业务应用、客户公共能力和消息中间件只有模块文档与源码线索；请执行模块合议，给出信息门禁、Module Fact Card 最小字段、三类价值、赋能链、逐项裁决、Owner、Checker 和停止条件，不改文件，控制在 500 字。"
+  assert_module_deliberation_mixed "${OUTPUT_DIR}/module-deliberation-mixed.txt" || { echo "FAIL mixed module deliberation behavior smoke: ${OUTPUT_DIR}/module-deliberation-mixed.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/module-deliberation-pure-technical.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/context-handoff.md 和 ${ROOT_DIR}/senior-software-architect/references/project-governance-codebase-and-modules.md。评审构建缓存与运行观测两个基础设施模块；尚无业务场景，只有构建耗时、故障恢复时间和资源成本证据。说明价值验证、参与能力和不得虚构的内容，不写文件，控制在 300 字。"
+  assert_module_deliberation_pure_technical "${OUTPUT_DIR}/module-deliberation-pure-technical.txt" || { echo "FAIL pure technical module deliberation behavior smoke: ${OUTPUT_DIR}/module-deliberation-pure-technical.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/module-deliberation-single-module.txt" \
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/context-handoff.md 和 ${ROOT_DIR}/senior-software-architect/SKILL.md。任务只评审 order-service 中一个已定位的空值修复，核对调用链和聚焦测试，不涉及跨模块共享决策。判断是否启动模块合议以及应走什么路径，不写文件，控制在 180 字。"
+  assert_module_deliberation_single_module "${OUTPUT_DIR}/module-deliberation-single-module.txt" || { echo "FAIL single-module routing behavior smoke: ${OUTPUT_DIR}/module-deliberation-single-module.txt" >&2; exit 1; }
 fi
 
 if [[ "${MODE}" == "all" || "${MODE}" == "wind-validation" ]]; then
@@ -1875,7 +1949,7 @@ if [[ "${MODE}" == "all" || "${MODE}" == "governance" ]]; then
   assert_simple_wording "${OUTPUT_DIR}/simple-wording.txt" || { echo "FAIL simple wording behavior smoke: ${OUTPUT_DIR}/simple-wording.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/state-resume.txt" \
-    '长任务上下文已经压缩。允许的状态载体 docs/goal-ledger.md 记录：Goal G-17=Active，确认 D-1，排除 B，C 待确认，下一动作只允许执行 D-1。请在 200 字内判断恢复后能做什么以及何时停止；只读判断。'
+    '长任务上下文已经压缩。旧 Goal Ledger 只作来源线索；当前状态载体 docs/execution-spec.md 记录：Execution EXEC-17=Active，确认 D-1，排除 B，C 待确认，下一动作只允许执行 D-1。请在 200 字内判断恢复后能做什么以及何时停止；只读判断。'
   assert_state_resume "${OUTPUT_DIR}/state-resume.txt" || { echo "FAIL state resume behavior smoke: ${OUTPUT_DIR}/state-resume.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/standard-engineering.txt" \
@@ -1883,11 +1957,11 @@ if [[ "${MODE}" == "all" || "${MODE}" == "governance" ]]; then
   assert_standard_engineering "${OUTPUT_DIR}/standard-engineering.txt" || { echo "FAIL standard engineering behavior smoke: ${OUTPUT_DIR}/standard-engineering.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/controlled-engineering-loop.txt" \
-    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/planning-execution-admission.md 和 ${ROOT_DIR}/senior-software-architect/references/cad-mode.md，以源仓库内容作为规则。单个任务已选定，决策冻结，状态载体、反馈源、验证者、三轮预算、停止条件和 Execution Grant 齐备；用户说按 CAD 连续推进。请给出别名解释、Goal 状态、执行方式和每轮动作；不写文件，控制在 300 字。"
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/planning-execution-admission.md 和 ${ROOT_DIR}/senior-software-architect/references/cad-mode.md，以源仓库内容作为规则。单个任务已选定，决策冻结，状态载体、反馈源、验证者、三轮预算、停止条件和 Execution Grant 齐备；用户说按 CAD 连续推进。请给出别名解释、执行状态、执行方式和每轮动作；不写文件，控制在 300 字。"
   assert_controlled_engineering_loop "${OUTPUT_DIR}/controlled-engineering-loop.txt" || { echo "FAIL controlled engineering behavior smoke: ${OUTPUT_DIR}/controlled-engineering-loop.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/controlled-engineering-loop-blocked.txt" \
-    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/planning-execution-admission.md 和 ${ROOT_DIR}/senior-software-architect/references/cad-mode.md，以源仓库内容作为规则。用户只说按 CAD 连续推进，但没有状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件或 Plan Grant / Execution Grant。请判断能否开始写入、Goal 保持什么状态并列出缺口；不写文件，控制在 300 字。"
+    "只读行为验证。先读取 ${ROOT_DIR}/wise-agent/references/planning-execution-admission.md 和 ${ROOT_DIR}/senior-software-architect/references/cad-mode.md，以源仓库内容作为规则。用户只说按 CAD 连续推进，但没有状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件或 Plan Grant / Execution Grant。请判断能否开始写入、项目执行规范 保持什么状态并列出缺口；不写文件，控制在 300 字。"
   assert_controlled_engineering_loop_blocked "${OUTPUT_DIR}/controlled-engineering-loop-blocked.txt" || { echo "FAIL controlled engineering blocked behavior smoke: ${OUTPUT_DIR}/controlled-engineering-loop-blocked.txt" >&2; exit 1; }
 fi
 

@@ -106,7 +106,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者的产研交付视图；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先判断当前阶段、输入成熟度和交接缺口，再输出 Goal、State、Plan、AI Maker/Checker、验证矩阵，并路由产品专家与架构师分工；GSD/CAD/Goal 作为内部层，不要求用户手动选择多个模式。"
+      "expected_handling": "进入知止者的产研交付视图；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；先判断当前阶段、输入成熟度和交接缺口，再输出 项目执行规范、State、Plan、AI Maker/Checker、验证矩阵，并路由产品专家与架构师分工；GSD/CAD/项目执行规范 作为内部层，不要求用户手动选择多个模式。"
     },
     {
       "id": "wise-agent-should-gsd-cad-handoff",
@@ -166,7 +166,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者评估；按默认最小输出给出结论、主能力域、协同域、当前阶段、owner、交接物、授权策略、验证与停止条件；本场景以交付编排为主能力域，以工程治理为协同域；明确知止者是稳定主入口，交付编排、工程治理、知识演进是稳定能力域；SDLC 只作为构想、开发、运行支持、维护演进和退役的生命周期覆盖框架，安全、权限、风险、可追溯性和知识回流横贯各阶段；Loop 只是阶段内和跨阶段的反馈机制，规划、执行、评估只是受控执行机制；Agentic DevOps、GSD、CAD、Goal、Harness 和新行业概念只映射到能力域、阶段、owner、交接物、验证与停止条件，不新增并列流程、不再次改名。"
+      "expected_handling": "进入知止者评估；按默认最小输出给出结论、主能力域、协同域、当前阶段、owner、交接物、授权策略、验证与停止条件；本场景以交付编排为主能力域，以工程治理为协同域；明确知止者是稳定主入口，交付编排、工程治理、知识演进是稳定能力域；SDLC 只作为构想、开发、运行支持、维护演进和退役的生命周期覆盖框架，安全、权限、风险、可追溯性和知识回流横贯各阶段；Loop 只是阶段内和跨阶段的反馈机制，规划、执行、评估只是受控执行机制；Agentic DevOps、GSD、CAD、项目执行规范、Harness 和新行业概念只映射到能力域、阶段、owner、交接物、验证与停止条件，不新增并列流程、不再次改名。"
     },
     {
       "id": "wise-agent-should-default-lightweight-lifecycle-routing",
@@ -196,7 +196,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者的产研交付视图 Plan-to-Goal 桥接路径，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；明确 Plan-to-Goal 不是新增场景视图或独立流程，而是把计划成熟度、成功标准、假设、执行步骤、验证证据和阻塞项桥接到 Goal / Plan Grant；用户要求确认后创建 Goal 时，先只输出可确认计划，确认后再创建运行时 Goal 或 Goal 卡；只有 Plan Grant 字段齐备且低风险本地范围明确时才按计划推进；关闭时必须用验证证据对照成功标准，不把步骤执行完等同于 Goal Verified / Closed。"
+      "expected_handling": "进入知止者的 Plan-to-Execution 桥接路径，把用户的 Goal 输入正名为项目执行规范，不新增流程，也不创建或恢复运行时 Goal。默认最小输出包含结论、当前阶段、owner、交接物、授权策略、验证与停止条件。先输出可确认计划；确认后更新项目已有 OpenSpec / Spec / Issue / 任务计划，写清成功标准、非目标、授权、当前切片、验证和停止条件。只有 Plan Grant 字段齐备且低风险本地范围明确时才按计划推进；关闭时必须用真实证据对照成功标准，不把步骤执行完等同于 Verified / Closed。"
     },
     {
       "id": "wise-agent-should-demand-analysis-collaboration-gate",
@@ -378,7 +378,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入最终文档准出模式，区分正式 PRD/系分/Spec 正文与过程资产；正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接；讨论过程、迭代草稿、AI 推理轨迹、被拒方案、MAGI 争论和完整 Goal Ledger 流水外置到评审报告、Decision Log、Goal Ledger、ADR 或任务计划，并按需要路由产品专家或资深架构师修正文档。"
+      "expected_handling": "进入最终文档准出模式，区分正式 PRD/系分/Spec 正文与过程资产；正文只保留当前有效目标、范围、规则、设计取舍、风险、待确认、验收、版本状态和过程记录链接；讨论过程、迭代草稿、AI 推理轨迹、被拒方案、MAGI 争论和完整 项目执行规范 流水外置到评审报告、Decision Log、项目执行规范、ADR 或任务计划，并按需要路由产品专家或资深架构师修正文档。"
     },
     {
       "id": "wise-agent-should-keep-design-docs-human-readable",
@@ -549,7 +549,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者的产研交付视图 Goal 目标层，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 goal-governance 和 planning-execution-admission，输出 Goal 卡、生产可用能力锚点、GSD Wave / Goal 映射、工程执行 Loop 关联、Spec / AC 映射、验证矩阵、状态更新、预算 / 时间盒、交接节奏和复盘回流；明确 Goal 不等于 Execution Grant，也不自动创建运行时 Goal。"
+      "expected_handling": "把 GSD + Goal 输入迁移到 execution-specification 与 planning-execution-admission。默认最小输出包含结论、当前阶段、owner、交接物、授权策略、验证与停止条件；复用项目已有 OpenSpec / Spec / Issue / 任务计划，输出生产可用能力锚点、GSD Wave / Execution ID 映射、当前切片、Spec / AC 映射、验证矩阵、预算 / 时间盒、停止条件和下一入口。明确项目执行规范不等于 Execution Grant，不创建或恢复运行时 Goal。"
     },
     {
       "id": "wise-agent-should-delivery-execution-control",
@@ -564,7 +564,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control、goal-governance、planning-execution-admission 和 code-delivery，输出 Loop 准入结论、内部层映射、Engineering Handoff Card、关联 Goal、状态载体、反馈源、验证者、自我验证方式、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、停止条件、授权策略、交接物和知识回流位置；明确 GSD/CAD/Goal 是 Loop 内部层，/goal、/loop、auto mode 或后台 Agent 只作为运行方式，不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
+      "expected_handling": "进入 Agent Loop Engineering，默认最小输出包含结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control、execution-specification、planning-execution-admission 和 code-delivery，把 /goal 识别为旧输入，不调用 Goal 模式。Loop 只能约束一个当前切片，并写清状态载体、反馈源、验证者、自我验证、Plan Grant + Loop 预算绑定、预算 / 最大轮次、无进展检测、失败回写、知识回流位置和停止条件；/loop、auto mode 或后台 Agent 不能替代项目执行规范、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批。"
     },
     {
       "id": "wise-agent-should-agent-loop-maturity-diagnosis",
@@ -609,7 +609,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Agent Loop Engineering / 可复用工作资产 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control 和 source-map；先做重复工作发现门禁，用实际重复证据确认稳定触发、输入、产物、重复频率、可预测部分、变化决策、失败代价和可验证收益，证据不足时允许零候选，不为自动化而自动化；需要关闭工作流决策时复用 grill-me，一次只问一个主问题并给推荐答案，不新增 loop-me Skill；输出工作资产 Loop 卡，覆盖流程名称、事件 / 定时触发器、输入、动作、产物、质量证据 / 评测样例、记忆 / 保存位置、回流方式、失败 / 回退、权限 / 外部副作用、停止条件、人工决策点、决策简报、可复测样例和不得吸收；Push right 只把低风险、可逆、可验证的准备工作前置，在外部写入、资金、权限、发布或不可逆动作前停止；决策简报只交付已产出内容、原因、证据、风险、建议和产物链接，不把原始输出或草稿交给 Owner；完成标准是实施者无需补充未声明的业务决策即可实现，环境、账号、权限和 Owner 决策缺口必须显式标为 PENDING；从高频、低风险、有证据的工作资产开始；输出变差时修规则、样例、证据或状态载体，不临时加长 Prompt；记忆位置必须版本化或可复核，例如 Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库；不得把一次性偏好、未核验业务知识、外部文章表达、工具宣传、战略取舍、客户承诺、路线图改动或上线审批交给 Loop 自行决定。",
+      "expected_handling": "进入 Agent Loop Engineering / 可复用工作资产 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；读取 delivery-execution-control 和 source-map；先做重复工作发现门禁，用实际重复证据确认稳定触发、输入、产物、重复频率、可预测部分、变化决策、失败代价和可验证收益，证据不足时允许零候选，不为自动化而自动化；需要关闭工作流决策时复用 grill-me，一次只问一个主问题并给推荐答案，不新增 loop-me Skill；输出工作资产 Loop 卡，覆盖流程名称、事件 / 定时触发器、输入、动作、产物、质量证据 / 评测样例、记忆 / 保存位置、回流方式、失败 / 回退、权限 / 外部副作用、停止条件、人工决策点、决策简报、可复测样例和不得吸收；Push right 只把低风险、可逆、可验证的准备工作前置，在外部写入、资金、权限、发布或不可逆动作前停止；决策简报只交付已产出内容、原因、证据、风险、建议和产物链接，不把原始输出或草稿交给 Owner；完成标准是实施者无需补充未声明的业务决策即可实现，环境、账号、权限和 Owner 决策缺口必须显式标为 PENDING；从高频、低风险、有证据的工作资产开始；输出变差时修规则、样例、证据或状态载体，不临时加长 Prompt；记忆位置必须版本化或可复核，例如 Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、项目执行规范 或项目知识库；不得把一次性偏好、未核验业务知识、外部文章表达、工具宣传、战略取舍、客户承诺、路线图改动或上线审批交给 Loop 自行决定。",
       "behavior_contract": {
         "discovery_gate": "用实际重复证据确认稳定触发、输入、产物、重复频率、可预测部分、变化决策、失败代价和可验证收益；证据不足时允许零候选",
         "workflow_spec": ["事件 / 定时触发器", "输入", "动作", "产物", "质量证据", "失败 / 回退", "权限 / 外部副作用", "人工决策点", "决策简报", "停止条件"],
@@ -706,7 +706,7 @@
         "efficiency_metrics",
         "variance_check"
       ],
-      "expected_handling": "进入知止者的决策寻路路径，而不是直接生成 Spec、Goal Ready、Wave 或实施计划；先命名 Destination 并判断是否真的存在跨轮迷雾，没有迷雾就立即退出寻路；复用项目已有 Issue、Goal Ledger、Spec、Decision Log 或任务状态作为权威载体，未授权时只在当前任务输出，不自动创建外部任务系统；地图只作索引，按 Decisions so far、Frontier、Not yet specified、Out of scope 和 Next decision 保存低分辨率状态，每个决策正文只保留一个权威位置；Frontier 只包含已经能准确表述且未关闭、未阻塞、未占用的决策；每轮最多关闭一个决策，按需把节点路由为 grill-me、research、prototype 或 prerequisite task，决策全部清晰后才交给 Spec / 最小计划，寻路阶段不执行最终方案。",
+      "expected_handling": "进入知止者的决策寻路路径，而不是直接生成 Spec、项目执行规范 Ready、Wave 或实施计划；先命名 Destination 并判断是否真的存在跨轮迷雾，没有迷雾就立即退出寻路；复用项目已有 Issue、项目执行规范、Spec、Decision Log 或任务状态作为权威载体，未授权时只在当前任务输出，不自动创建外部任务系统；地图只作索引，按 Decisions so far、Frontier、Not yet specified、Out of scope 和 Next decision 保存低分辨率状态，每个决策正文只保留一个权威位置；Frontier 只包含已经能准确表述且未关闭、未阻塞、未占用的决策；每轮最多关闭一个决策，按需把节点路由为 grill-me、research、prototype 或 prerequisite task，决策全部清晰后才交给 Spec / 最小计划，寻路阶段不执行最终方案。",
       "behavior_contract": {
         "entry_gate": "目标大致存在、到达目标的路线仍模糊、且工作超过一次会话可可靠承载时才进入决策寻路；没有迷雾时跳过。",
         "map_must_include": [
@@ -743,7 +743,7 @@
         "output_quality",
         "efficiency_metrics"
       ],
-      "expected_handling": "仍由知止者持有目标和授权边界，但跳过决策寻路；已有 Spec 与实施计划已经关闭关键分叉且当前会话可完成，应按现有工程交付路径执行和验证，不创建 Destination 地图、Frontier、Not yet specified、Issue 或新的 Goal，也不重新进入 grill-me。"
+      "expected_handling": "仍由知止者持有目标和授权边界，但跳过决策寻路；已有 Spec 与实施计划已经关闭关键分叉且当前会话可完成，应按现有工程交付路径执行和验证，不创建 Destination 地图、Frontier、Not yet specified、Issue 或新的 项目执行规范，也不重新进入 grill-me。"
     },
     {
       "id": "wise-agent-should-questioning-repair",
@@ -988,7 +988,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者混一总纲并按需装载 huaxia-practical-wisdom；读取 delivery-execution-control、code-delivery、verification-review-release 和 source-map，把多套模式收敛为一个入口、一个契约、一个准出；以真实交付为体，以证据闭环为用，经典镜片只校准边界、推进、名实和最小有效组合；GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；不把阴阳、神用无方、华夏经世智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入知止者混一总纲并按需装载 huaxia-practical-wisdom；读取 delivery-execution-control、code-delivery、verification-review-release 和 source-map，把多套模式收敛为一个入口、一个契约、一个准出；以真实交付为体，以证据闭环为用，经典镜片只校准边界、推进、名实和最小有效组合；GSD、CAD、项目执行规范、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位，不作为并列工作流外显；不把阴阳、神用无方、华夏经世智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批。"
     },
     {
       "id": "wise-agent-should-classic-wisdom-lens-supplement",
@@ -1262,7 +1262,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入实际项目编码 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，输出 Coding Loop Contract，覆盖任务 ID/关联 Goal/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
+      "expected_handling": "进入实际项目编码 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；读取 delivery-execution-control，输出 Coding Loop Contract，覆盖任务 ID/关联项目执行规范/Wave、代码写入范围、只读范围、失败测试/验收样例、TDD 顺序、实现限制、验证命令、独立 Checker、状态回写位置、提交切片、回滚/撤销方式和停止条件；具体代码设计、TDD、实现、验证和源码级 CR 路由资深架构师，缺失败测试/验收样例、验证命令或 Checker 时只做只读侦察或补上下文。"
     },
     {
       "id": "wise-agent-should-route-knowledge-and-reconcile-requirement-diff",
@@ -1275,7 +1275,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "进入知止者既有 Context System 和状态载体：用知识路由锚点提取业务域、应用 / 模块、业务身份、Topic / 事件、接口、状态、模型和表 / 仓储，只按需读取与目标和验收相关的材料，再用当前代码、配置和测试复核；按模块或独立验收切片执行 Requirement-Diff 对账，使用 done / partial / todo / changed / blocked。所有状态回链来源需求 / AC 版本和观察时间；done / partial 补当前 diff / commit、源码 / 测试锚点与验证；todo / blocked 记录原因、依赖、Owner 和停止证据；发现偏差先冻结切片，由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才先更新权威契约。复用 OpenSpec tasks、Harness Plan、Goal Ledger 或任务文档，不新建 RD Mode、命令树、知识目录或第二真相源。"
+      "expected_handling": "进入知止者既有 Context System 和状态载体：用知识路由锚点提取业务域、应用 / 模块、业务身份、Topic / 事件、接口、状态、模型和表 / 仓储，只按需读取与目标和验收相关的材料，再用当前代码、配置和测试复核；按模块或独立验收切片执行 Requirement-Diff 对账，使用 done / partial / todo / changed / blocked。所有状态回链来源需求 / AC 版本和观察时间；done / partial 补当前 diff / commit、源码 / 测试锚点与验证；todo / blocked 记录原因、依赖、Owner 和停止证据；发现偏差先冻结切片，由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才先更新权威契约。复用 OpenSpec tasks、Harness Plan、项目执行规范 或任务文档，不新建 RD Mode、命令树、知识目录或第二真相源。"
     },
     {
       "id": "wise-agent-should-run-product-architecture-delivery-gates",
@@ -1465,7 +1465,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 Trellis 可选载体准入判断；读取 superpowers-skill-library、delivery-execution-control 和 source-map；把 Trellis 定位为仓库级 Agent Harness / 记忆与任务状态载体，不是新的产研主流程；先审查现有 AGENTS.md、Issue、Spec、Goal Ledger 和知识库是否已经形成事实源，并要求跨会话上下文反复丢失、多 Agent 状态冲突或 Spec / 任务状态散落的真实证据；当前缺少重复失败证据，继续使用现有状态载体，不安装 Trellis；只有现有载体确实失效时才用一个非关键任务做隔离试点；安装或 trellis init 前必须显式授权，并审查 @mindfoldhq/trellis、Node.js、Python、AGPL-3.0、.trellis/spec、.trellis/tasks、.trellis/workspace、平台接入文件、hooks、subagent、worktree 和 Git 写入边界。"
+      "expected_handling": "进入 Trellis 可选载体准入判断；读取 superpowers-skill-library、delivery-execution-control 和 source-map；把 Trellis 定位为仓库级 Agent Harness / 记忆与任务状态载体，不是新的产研主流程；先审查现有 AGENTS.md、Issue、Spec、项目执行规范 和知识库是否已经形成事实源，并要求跨会话上下文反复丢失、多 Agent 状态冲突或 Spec / 任务状态散落的真实证据；当前缺少重复失败证据，继续使用现有状态载体，不安装 Trellis；只有现有载体确实失效时才用一个非关键任务做隔离试点；安装或 trellis init 前必须显式授权，并审查 @mindfoldhq/trellis、Node.js、Python、AGPL-3.0、.trellis/spec、.trellis/tasks、.trellis/workspace、平台接入文件、hooks、subagent、worktree 和 Git 写入边界。"
     },
     {
       "id": "wise-agent-should-map-gstack-role-chain-template",
@@ -1510,7 +1510,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入验证发布视图 / 生产生效验证门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；停止条件包括缺少版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认、工单 / Goal 回写或高风险 owner 确认。读取 delivery-lifecycle、verification-review-release、code-delivery 和 source-map；区分代码变更、配置 / 开关 / prompt 变更、文档 / Skill-only 变更和高风险变更；代码变更按版本回读 -> 配置回读 -> 冒烟验证 -> 业务场景模拟验收 -> 观测确认 -> 工单 / Goal 回写形成生产生效验证卡；业务场景优先来自 PRD、验收种子、客户反馈、工单、历史事故、owner 问询和项目材料，公开资料、业内共识或行业标准规范只能作为补偿场景来源并标注来源、读取日期和适用边界；配置变更可跳过部署但不能跳过配置回读、冒烟、业务场景模拟验收和观测；文档或 Skill-only 变更用仓库校验、diff check、安装态同步或人工审查作为生效证据；资金、权限、安全、公共契约或生产数据变更必须有 owner 人工确认；不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批。"
+      "expected_handling": "进入验证发布视图 / 生产生效验证门禁，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补证据边界和残余风险；停止条件包括缺少版本回读、配置回读、冒烟验证、业务场景模拟验收、观测确认、工单 / 项目执行规范 回写或高风险 owner 确认。读取 delivery-lifecycle、verification-review-release、code-delivery 和 source-map；区分代码变更、配置 / 开关 / prompt 变更、文档 / Skill-only 变更和高风险变更；代码变更按版本回读 -> 配置回读 -> 冒烟验证 -> 业务场景模拟验收 -> 观测确认 -> 工单 / 项目执行规范 回写形成生产生效验证卡；业务场景优先来自 PRD、验收种子、客户反馈、工单、历史事故、owner 问询和项目材料，公开资料、业内共识或行业标准规范只能作为补偿场景来源并标注来源、读取日期和适用边界；配置变更可跳过部署但不能跳过配置回读、冒烟、业务场景模拟验收和观测；文档或 Skill-only 变更用仓库校验、diff check、安装态同步或人工审查作为生效证据；资金、权限、安全、公共契约或生产数据变更必须有 owner 人工确认；不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批。"
     },
     {
       "id": "wise-agent-should-unify-production-ready-workflow-with-wisdom-lens",
@@ -1782,7 +1782,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics"],
-      "expected_handling": "知止者在当前工作区直接完成指定的一处低风险修改并回读；不展开完整 SDLC，不装载 Superpowers，不派 Worker，不创建 Goal、worktree、commit、push 或 PR，不输出能力菜单和流程表演。"
+      "expected_handling": "知止者在当前工作区直接完成指定的一处低风险修改并回读；不展开完整 SDLC，不装载 Superpowers，不派 Worker，不创建 项目执行规范、worktree、commit、push 或 PR，不输出能力菜单和流程表演。"
     },
     {
       "id": "senior-should-fast-code-simple-local-change",
@@ -1792,7 +1792,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "架构师进入快速编码模式：先读取相关源码、调用方、测试和项目约规，合并轻量 Clarify / Design / Plan 后编码先行，不要求先写失败测试或每次编辑后跑全量测试；实现回读后明确“实现已完成，测试与验证待补”，记录已修改行为、待补测试、待运行验证和待确认风险，再集中补测试、验证和 CR。测试后置不等于测试可选；验证债务清零前不得声称任务完成或可交付，不创建 Goal、Worker 或工程执行 Loop。"
+      "expected_handling": "架构师进入快速编码模式：先读取相关源码、调用方、测试和项目约规，合并轻量 Clarify / Design / Plan 后编码先行，不要求先写失败测试或每次编辑后跑全量测试；实现回读后明确“实现已完成，测试与验证待补”，记录已修改行为、待补测试、待运行验证和待确认风险，再集中补测试、验证和 CR。测试后置不等于测试可选；验证债务清零前不得声称任务完成或可交付，不创建 项目执行规范、Worker 或工程执行 Loop。"
     },
     {
       "id": "senior-should-confirm-fast-code-bounded-change",
@@ -1812,7 +1812,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "架构师使用标准工程流程，在当前会话完成源码读取、最小修改、测试、验证和 CR；不进入快速编码，也不创建 Goal、Worker 或受控工程执行 Loop。只有任务实际出现多轮反馈需求时才重新判断 Loop 准入。"
+      "expected_handling": "架构师使用标准工程流程，在当前会话完成源码读取、最小修改、测试、验证和 CR；不进入快速编码，也不创建 项目执行规范、Worker 或受控工程执行 Loop。只有任务实际出现多轮反馈需求时才重新判断 Loop 准入。"
     },
     {
       "id": "senior-should-map-requirement-slices-and-reconcile-implementation",
@@ -1822,7 +1822,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality"],
-      "expected_handling": "进入工程实施切片与 Requirement-Diff Review：建立业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试映射，切片写清 Goal / Spec / AC、范围、依赖、契约状态数据、兼容迁移回滚、验证和停止条件；编码前做 Solution Review；编码后按 done / partial / todo / changed / blocked 对账，所有状态回链需求 / AC 版本与观察时间，done / partial 补当前 diff、源码测试锚点和验证，todo / blocked 记录原因、依赖、Owner 与停止证据；发现偏差先冻结切片，由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才先更新权威契约；剩余项进入 Harness Plan、Goal Ledger 或 OpenSpec tasks，不强制新建 requirement.md 或命令树。"
+      "expected_handling": "进入工程实施切片与 Requirement-Diff Review：建立业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试映射，切片写清 项目执行规范 / Spec / AC、范围、依赖、契约状态数据、兼容迁移回滚、验证和停止条件；编码前做 Solution Review；编码后按 done / partial / todo / changed / blocked 对账，所有状态回链需求 / AC 版本与观察时间，done / partial 补当前 diff、源码测试锚点和验证，todo / blocked 记录原因、依赖、Owner 与停止证据；发现偏差先冻结切片，由产品 Owner 裁决需求变化还是实现偏离，只有需求确变才先更新权威契约；剩余项进入 Harness Plan、项目执行规范 或 OpenSpec tasks，不强制新建 requirement.md 或命令树。"
     },
     {
       "id": "senior-should-exit-fast-code-high-risk-change",
@@ -1842,7 +1842,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "把 CAD 识别为受控工程执行 Loop 的输入别名，不创建独立模式、CAD Candidate、CAD Loop Active 或 CAD Grant。消费既有 Goal / Task、状态载体和覆盖当前任务的 Execution Grant，按 Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause 推进；测试顺序按任务策略选择，不机械要求每轮 Red-first。连续两轮无新增证据、验证失败不可解释、范围或风险升级、预算耗尽或用户中断时停止；回写 Goal 状态为 Active / Blocked / Verified，执行方式为受控工程执行 Loop，并记录状态原因与恢复条件。"
+      "expected_handling": "把 CAD 识别为受控工程执行 Loop 的输入别名，不创建独立模式、CAD Candidate、CAD Loop Active 或 CAD Grant。消费既有 项目执行规范 / Task、状态载体和覆盖当前任务的 Execution Grant，按 Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause 推进；测试顺序按任务策略选择，不机械要求每轮 Red-first。连续两轮无新增证据、验证失败不可解释、范围或风险升级、预算耗尽或用户中断时停止；回写 执行状态为 Active / Blocked / Verified，执行方式为受控工程执行 Loop，并记录状态原因与恢复条件。"
     },
     {
       "id": "wise-agent-should-block-cad-alias-without-loop-contract",
@@ -1852,7 +1852,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "把 CAD 识别为受控工程执行 Loop 的输入别名，但判定工程 Loop 条件不足，不开始写入。列出状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件和适用授权缺口；用户只表达连续推进意图不能替代 Plan Grant 或 Execution Grant。Goal 保持 Draft / Ready，不创建 CAD Candidate、CAD Loop Active 或 CAD Grant，也不脑补授权。"
+      "expected_handling": "把 CAD 识别为受控工程执行 Loop 的输入别名，但判定工程 Loop 条件不足，不开始写入。列出状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件和适用授权缺口；用户只表达连续推进意图不能替代 Plan Grant 或 Execution Grant。项目执行规范 保持 Draft / Ready，不创建 CAD Candidate、CAD Loop Active 或 CAD Grant，也不脑补授权。"
     },
     {
       "id": "wise-agent-should-commit-verified-change",
@@ -1958,7 +1958,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者先 just-in-time 回读状态载体与相关一手来源，重建 Goal、状态、决策、权限、authority revision / fingerprint 和下一动作；对账为 aligned 后才以 D-1 作为执行依据并只推进一个原子切片。被排除方案 B 不得复活，待确认项 C 不得脑补，任何 stale / conflict / insufficient 都必须停止、补证据或询问 Owner；需要确定性审计时投影 state_revision、authority_refs 与 decision_transitions 并运行 check_state_contract.py --previous，不靠模型记忆或摘要猜测。"
+      "expected_handling": "旧 Goal Ledger 只能作为来源线索，不能直接恢复运行时 Goal。知止者先定位项目当前 OpenSpec / Spec / Issue / 任务计划，just-in-time 回读一手来源并迁移为 Execution ID；对账 objective、confirmed / excluded / pending、授权、authority revision / fingerprint、execution_basis 和 current_slice。只有 aligned 后才以 D-1 推进一个当前切片；B 不得复活，C 不得脑补，任何 stale / conflict / insufficient 都必须停止。需要确定性审计时投影 state_revision、authority_refs 与 decision_transitions 并运行 check_state_contract.py --previous，不靠模型记忆或摘要猜测。"
     },
     {
       "id": "wise-agent-should-retract-corrected-early-assumption",
@@ -1998,7 +1998,7 @@
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": ["output_quality", "variance_check", "baseline_comparison"],
-      "expected_handling": "知止者拒绝按 D-2 继续并将 current 判为 conflict。execution_basis 是恢复后的承重执行依据，即使 D-1、D-2 都在 confirmed 集合中，换轨仍必须由 goal_transition 精确记录 changed_fields、Owner、reason、evidence_ref 和 evidence_fingerprint；运行 check_state_contract.py --previous，关闭冲突后才恢复 Active。"
+      "expected_handling": "知止者拒绝按 D-2 继续并将 current 判为 conflict。execution_basis 是恢复后的承重执行依据，即使 D-1、D-2 都在 confirmed 集合中，换轨仍必须由 execution_transition 精确记录 changed_fields、Owner、reason、evidence_ref 和 evidence_fingerprint；运行 check_state_contract.py --previous，关闭冲突后才恢复 Active。"
     },
     {
       "id": "wise-agent-should-stale-deliberation-after-version-drift",
@@ -2018,7 +2018,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者把本次交接正名为临时 Branch，而不是 Continue、Worker、Checker 或新的控制机制；冻结主线 Goal 和决策快照，只为独立取证创建短期上下文。优先使用平台原生 handoff；没有原生能力时才把脱敏 Markdown 放到操作系统临时目录，不写入仓库。出站交接只保留目的与非目标、权威材料指针、已确认事实与 red_lines、建议加载的最小 Skills / references、允许与禁止动作、期望返回证据、原问题写回位置、预算 / 停止 / 失效条件和敏感信息检查，不复制 Spec、Plan、ADR、Issue、Commit、Diff 或整段对话。返回时只带新增证据、改变的判断、未决阻塞、产物锚点和验证结果，并与原决策快照对账；Branch 不改变 Owner 决策，不扩大 Git、联网、写入或生产授权。",
+      "expected_handling": "知止者把本次交接正名为临时 Branch，而不是 Continue、Worker、Checker 或新的控制机制；冻结主线 项目执行规范 和决策快照，只为独立取证创建短期上下文。优先使用平台原生 handoff；没有原生能力时才把脱敏 Markdown 放到操作系统临时目录，不写入仓库。出站交接只保留目的与非目标、权威材料指针、已确认事实与 red_lines、建议加载的最小 Skills / references、允许与禁止动作、期望返回证据、原问题写回位置、预算 / 停止 / 失效条件和敏感信息检查，不复制 Spec、Plan、ADR、Issue、Commit、Diff 或整段对话。返回时只带新增证据、改变的判断、未决阻塞、产物锚点和验证结果，并与原决策快照对账；Branch 不改变 Owner 决策，不扩大 Git、联网、写入或生产授权。",
       "behavior_contract": {
         "handoff_kind": "Branch",
         "outbound_requires": ["目的与非目标", "权威材料指针", "已确认事实与 red_lines", "建议加载的最小 Skills / references", "允许与禁止动作", "期望返回证据", "写回位置", "预算 / 停止 / 失效条件", "敏感信息检查"],
@@ -2034,7 +2034,7 @@
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者把该场景正名为 Continue：直接从既有 Goal Ledger、决策集合、恢复入口和下一动作续接，不创建 Branch、新交接文档、Worker、work_graph 或第二状态源。固定 token 阈值和外部经验不能代替上下文隔离收益与明确回传目的；只有独立子问题需要干净上下文且能说明期望返回证据时才使用临时 Branch。"
+      "expected_handling": "知止者把该场景正名为 Continue：先把旧 Goal Ledger 迁入或映射到项目当前 OpenSpec / Spec / Issue / 任务计划，再从项目执行规范、决策集合、恢复入口和下一动作续接；不恢复运行时 Goal，也不创建 Branch、新交接文档、Worker、work_graph 或第二状态源。固定 token 阈值不能代替上下文隔离收益与明确回传目的；只有独立子问题需要干净上下文且能说明期望返回证据时才使用临时 Branch。"
     },
     {
       "id": "wise-agent-should-select-control-mechanisms-by-evidence",
@@ -2044,7 +2044,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者把 SDLC 作为跨阶段地图，把 Goal 作为跨轮目标与完成线；只有状态载体、反馈源、预算、无进展检测和停止条件齐备时才启用 Loop；三个模块输入可冻结、写入不重叠且低耦合时才派 Worker；公共契约和发布风险需要独立 Checker。Worker 与 Checker 不是顺序阶段，也不因任务复杂就机械启用全部机制。"
+      "expected_handling": "知止者把 SDLC 作为跨阶段地图，把项目执行规范作为跨轮目标与完成线，把用户的 Goal 输入转换为项目执行规范，不创建运行时 Goal；只有当前切片确需重复反馈，且状态载体、反馈源、预算、无进展检测和停止条件齐备时才启用 Loop；三个模块输入可冻结、写入不重叠且低耦合时才派 Worker；公共契约和发布风险需要独立 Checker。Worker 与 Checker 不是顺序阶段，也不机械启用全部机制。"
     },
     {
       "id": "wise-agent-should-project-complex-work-topology",
@@ -2054,7 +2054,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者不新增 Graph Mode，只在现有 Goal 状态契约中生成可选工作拓扑投影；记录 A -> B/C -> D 的节点、依赖、状态、写入范围和证据。B、C 写入范围冲突，不能作为同一 parallel_group 并行，必须改为串行或重新切分；D 绑定独立 Checker，只消费原始产物、Goal / AC 和源证据，不以 Maker 推理轨迹或摘要为唯一输入。Verified 节点绑定结构化 evidence_refs 现实锚点；Loop 只留在需要反复执行的节点内，并用 check_state_contract.py 校验依赖、并行写入和状态证据。"
+      "expected_handling": "知止者不新增 Graph Mode，只在现有 执行状态契约中生成可选工作拓扑投影；记录 A -> B/C -> D 的节点、依赖、状态、写入范围和证据。B、C 写入范围冲突，不能作为同一 parallel_group 并行，必须改为串行或重新切分；D 绑定独立 Checker，只消费原始产物、项目执行规范 / AC 和源证据，不以 Maker 推理轨迹或摘要为唯一输入。Verified 节点绑定结构化 evidence_refs 现实锚点；Loop 只留在需要反复执行的节点内，并用 check_state_contract.py 校验依赖、并行写入和状态证据。"
     },
     {
       "id": "wise-agent-should-reject-self-reported-work-graph-verification",
@@ -2064,7 +2064,7 @@
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": ["trigger_accuracy", "output_quality", "variance_check"],
-      "expected_handling": "知止者撤回 D 的 Verified 并阻塞准出；旧 validator 退出码为 0 只证明旧结构放行，Maker 自述和同一 Maker 兼任 Checker 不构成独立证据。要求节点声明不同的 maker / checker，并补充结构化 evidence_refs，至少记录允许的证据类型、原始 ref、fingerprint、检查 method、result 和 observed_at；validator 不能作为唯一现实证据，高风险 Verified 还必须有 independent_review。独立 Checker 只消费原始产物、Goal / AC 和源证据，不以 Maker 推理轨迹或摘要为唯一输入。可回滚和交付压力不能替代现实证据或 Owner 责任。"
+      "expected_handling": "知止者撤回 D 的 Verified 并阻塞准出；旧 validator 退出码为 0 只证明旧结构放行，Maker 自述和同一 Maker 兼任 Checker 不构成独立证据。要求节点声明不同的 maker / checker，并补充结构化 evidence_refs，至少记录允许的证据类型、原始 ref、fingerprint、检查 method、result 和 observed_at；validator 不能作为唯一现实证据，高风险 Verified 还必须有 independent_review。独立 Checker 只消费原始产物、项目执行规范 / AC 和源证据，不以 Maker 推理轨迹或摘要为唯一输入。可回滚和交付压力不能替代现实证据或 Owner 责任。"
     },
     {
       "id": "wise-agent-should-not-project-work-topology-for-simple-task",
@@ -2074,7 +2074,7 @@
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "知止者直接完成这个一步、单文件、线性任务并回读验证；不新增 Graph Mode，不生成 work_graph，不创建 Goal、Loop 或 Worker。只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且复杂任务出现三个以上节点以及分支 / 汇合依赖、并行 Worker、跨 Wave 交接或动态取消 / 重排时，才使用可选工作拓扑投影。"
+      "expected_handling": "知止者直接完成这个一步、单文件、线性任务并回读验证；不新增 Graph Mode，不生成 work_graph，不创建 项目执行规范、Loop 或 Worker。只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且复杂任务出现三个以上节点以及分支 / 汇合依赖、并行 Worker、跨 Wave 交接或动态取消 / 重排时，才使用可选工作拓扑投影。"
     },
     {
       "id": "wise-agent-should-avoid-worker-for-coupled-task",
@@ -3569,7 +3569,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "按一主两权一证处理：知止者持有总 Goal 和综合结论，业务能力消费者拥有场景与业务语义，资金能力提供方拥有公共能力契约与实现事实，独立 Checker 负责准出。先确认讨论主题、decision_questions、非目标、术语和事实基线版本，再建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方标记 received / understood / disputed / missing；重复信息按 authority_ref 与版本合并，缺口绑定 Owner、停止条件和 blocks_current_decision，任何未解决 blocks_current_decision=true 都强制 blocked。Information Readiness Gate 未通过即说明信息未充分交换，不得进入观点讨论或决策；通过后双方才基于同一 topic_revision 和 information_revision 独立形成方案。随后冻结带 inquiry_id、双方 revision、权威指针、topic_revision、information_revision、证据要求和失效条件的 Contract Inquiry。提供方回传绑定 topic_revision、information_revision、response_revision、evidence_fingerprint 和可选 supersedes 的 Provider Evidence Response，逐项标记 supported / conditional / gap / out_of_scope；消费者用 Consumer Reconciliation 接受 accepted_topic_revision 与 accepted_information_revision，并回传 confirmed / conflict / reopen / stale。主题、信息、权威或证据变化时旧响应 stale，新响应版本化且不得伪造基线变化；确认并通过 Checker 后转为低交互能力供给。这是场景路由，不新增控制机制、Skill、协议依赖或执行授权。"
+      "expected_handling": "按一主两权一证处理：知止者持有总 项目执行规范 和综合结论，业务能力消费者拥有场景与业务语义，资金能力提供方拥有公共能力契约与实现事实，独立 Checker 负责准出。先确认讨论主题、decision_questions、非目标、术语和事实基线版本，再建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方标记 received / understood / disputed / missing；重复信息按 authority_ref 与版本合并，缺口绑定 Owner、停止条件和 blocks_current_decision，任何未解决 blocks_current_decision=true 都强制 blocked。Information Readiness Gate 未通过即说明信息未充分交换，不得进入观点讨论或决策；通过后双方才基于同一 topic_revision 和 information_revision 独立形成方案。随后冻结带 inquiry_id、双方 revision、权威指针、topic_revision、information_revision、证据要求和失效条件的 Contract Inquiry。提供方回传绑定 topic_revision、information_revision、response_revision、evidence_fingerprint 和可选 supersedes 的 Provider Evidence Response，逐项标记 supported / conditional / gap / out_of_scope；消费者用 Consumer Reconciliation 接受 accepted_topic_revision 与 accepted_information_revision，并回传 confirmed / conflict / reopen / stale。主题、信息、权威或证据变化时旧响应 stale，新响应版本化且不得伪造基线变化；确认并通过 Checker 后转为低交互能力供给。这是场景路由，不新增控制机制、Skill、协议依赖或执行授权。"
     },
     {
       "id": "wise-agent-should-reject-permanent-peer-chat",
@@ -3582,7 +3582,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "停止无主的长期自动互聊和边聊边改，不把此前顺利或文档与测试改动当成低风险证明。先指定 Goal owner，冻结公共契约范围、双方权威和允许写入，再以 inquiry_id 与双方版本发送 Contract Inquiry；消息、评论和对方摘要只作为候选事实，不自动触发仓库修改。提供方完成实现与证据回传后，消费者按接受版本独立验收，再由 Checker 核对双边契约、证据和文档。只有新增场景、契约冲突、证据失效或运行反馈时重开；任何会商、卡片或通过状态都不产生执行授权、Git、发布或生产权限。"
+      "expected_handling": "停止无主的长期自动互聊和边聊边改，不把此前顺利或文档与测试改动当成低风险证明。先指定 execution steward，冻结公共契约范围、双方权威和允许写入，再以 inquiry_id 与双方版本发送 Contract Inquiry；消息、评论和对方摘要只作为候选事实，不自动触发仓库修改。提供方完成实现与证据回传后，消费者按接受版本独立验收，再由 Checker 核对双边契约、证据和文档。只有新增场景、契约冲突、证据失效或运行反馈时重开；任何会商、卡片或通过状态都不产生执行授权、Git、发布或生产权限。"
     },
     {
       "id": "wise-agent-should-coordinate-multi-party-authority-deliberation",
@@ -3595,7 +3595,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "先过多方会商准入：只有三个及以上独立权威围绕同一共享决策、且不能拆成独立双边议题时才进入；可拆分内容回到双边会商或 Worker 并行。按一主、多权、独立证处理：知止者以主持式星型拓扑持有总 Goal，各参与方只维护自己的权威事实与版本，独立 Checker 读取原始证据和最终决议。会前先确认讨论主题、decision_questions、非目标、术语和事实基线版本，冻结 Meeting Charter；再建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方标记 received / understood / disputed / missing；重复信息按 authority_ref 与版本合并，缺口绑定 Owner、停止条件和 blocks_current_decision，任何未解决 blocks_current_decision=true 都强制 blocked。Information Readiness Gate 未通过即说明信息未充分交换，不得进入观点讨论或决策；通过后各方才基于同一 topic_revision 和 information_revision 独立提交 Position Card。主持者只对差异生成 Conflict Matrix，Owner 逐项裁决；Meeting Resolution 绑定 accepted_information_revision、accepted_authority_revisions、resolution_revision、evidence_fingerprint、可选 supersedes、行动项与 Checker。主题、信息矩阵、参与方权威或证据变化时旧矩阵、卡片与决议都 stale，新决议版本化；共享消息流和会议共识不是权威事实，决议通过 Checker 后退场，不新增群聊模式、控制机制或执行授权。"
+      "expected_handling": "先过多方会商准入：只有三个及以上独立权威围绕同一共享决策、且不能拆成独立双边议题时才进入；可拆分内容回到双边会商或 Worker 并行。按一主、多权、独立证处理：知止者以主持式星型拓扑持有总 项目执行规范，各参与方只维护自己的权威事实与版本，独立 Checker 读取原始证据和最终决议。会前先确认讨论主题、decision_questions、非目标、术语和事实基线版本，冻结 Meeting Charter；再建立 Shared Information Matrix，信息项按 fact / evidence / assumption / unknown / dependency 分类，逐方标记 received / understood / disputed / missing；重复信息按 authority_ref 与版本合并，缺口绑定 Owner、停止条件和 blocks_current_decision，任何未解决 blocks_current_decision=true 都强制 blocked。Information Readiness Gate 未通过即说明信息未充分交换，不得进入观点讨论或决策；通过后各方才基于同一 topic_revision 和 information_revision 独立提交 Position Card。主持者只对差异生成 Conflict Matrix，Owner 逐项裁决；Meeting Resolution 绑定 accepted_information_revision、accepted_authority_revisions、resolution_revision、evidence_fingerprint、可选 supersedes、行动项与 Checker。主题、信息矩阵、参与方权威或证据变化时旧矩阵、卡片与决议都 stale，新决议版本化；共享消息流和会议共识不是权威事实，决议通过 Checker 后退场，不新增群聊模式、控制机制或执行授权。"
     },
     {
       "id": "wise-agent-should-reject-free-form-group-chat",
@@ -3899,7 +3899,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入历史去重路径；从现有问题台账、决策快照、Issue、Goal、Spec、ADR、文档和知识库恢复已确认、已排除、待确认和红线；按决策主题检查语义重复，已确认问题不得复问；只有证据变化、结论冲突或风险升级才重开并说明原因。"
+      "expected_handling": "进入历史去重路径；从现有问题台账、决策快照、Issue、项目执行规范、Spec、ADR、文档和知识库恢复已确认、已排除、待确认和红线；按决策主题检查语义重复，已确认问题不得复问；只有证据变化、结论冲突或风险升级才重开并说明原因。"
     },
     {
       "id": "grill-me-should-not-rephrase-confirmed-question",
@@ -5322,6 +5322,125 @@
       "expected_handling": "由 wise-agent 选择 adversarial-review 为主策略、scenario-simulation 为挑战策略，围绕同一 decision_questions 和 evidence baseline 检查失败、故障、重放与回滚。按 cross_examination_budget 只交换最强反证、被低估约束和改变立场所需证据；没有新增事实、风险或综合候选时停止，不展开全部策略。"
     },
     {
+      "id": "senior-software-architect-should-slice-engineering-work-by-deliverable",
+      "skill": "senior-software-architect",
+      "query": "把新的用户通知能力拆成数据库、Service、API、前端四个 Issue，前三个都交给 Agent AFK 做完，最后一起联调测试；领域词各层先按自己的叫法写，后面再统一。请给实施拆解。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 senior-software-architect 拒绝按技术层横切后到最后才集成；改为按用户可观察结果做可交付竖切，每个任务片同时包含场景与验收、跨层最小实现、失败测试或等价 pass/fail 信号、验证证据和回滚/停止条件。任务卡必须标明领域术语与权威来源、写入范围、依赖和 HITL / AFK 交互方式；HITL / AFK 标签不授予权限，AFK 只能消费当前任务已有的用户授权、Plan Grant 或 Execution Grant，且仅用于决策冻结、边界清楚、低风险、可逆、验证可自动执行的片段；高风险授权、公共契约或事实冲突必须 HITL。横向基础工作只能作为被竖切引用的前置能力，不能单独冒充已交付价值；不自动创建 GitHub Issue、分支或提交。",
+      "behavior_contract": {
+        "slice_gate": "按用户可观察结果竖切；每片贯穿必要层并可独立验证",
+        "task_card_must_include": [
+          "场景与验收",
+          "领域术语与权威来源",
+          "写入范围与依赖",
+          "失败测试或等价 pass/fail 信号",
+          "验证证据",
+          "回滚或停止条件",
+          "HITL / AFK"
+        ],
+        "interaction_gate": "AFK 只用于决策冻结、低风险、可逆且可自动验证的任务；否则 HITL",
+        "authorization_gate": "HITL / AFK 标签不授予权限；AFK 只能消费当前任务已有的用户授权、Plan Grant 或 Execution Grant",
+        "must_not_do": [
+          "按数据库、Service、API、前端横切后到最后才集成",
+          "把技术层完成写成业务价值交付",
+          "自动创建 Issue、分支或提交"
+        ]
+      }
+    },
+    {
+      "id": "wise-agent-should-govern-project-domain-language-context",
+      "skill": "wise-agent",
+      "query": "这个长期项目里同一个业务对象被产品叫委托、后端叫任务、数据库叫 job，AI 每轮都重新解释还经常混用。请让知止者按 Context System 完善上下文能力，统一语言后直接开始改名。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 wise-agent 先读取项目已有 AGENTS、Spec、ADR、模块文档、代码和测试，确认这是语言冲突而不是天然不同的限界上下文；复用现有项目上下文载体建立最小领域语言资产，至少记录规范术语、定义与对象 owner、来源和 revision、适用范围、别名/废弃名、禁止混同项、代码/文档/测试锚点及 PENDING / conflict。只有 Owner 确认且证据闭合的术语可进入稳定上下文；当前代码不能自动成为业务真相。任务执行只按需读取相关词条，不把整份知识库塞入上下文；未获授权不创建 CONTEXT.md，不因统一语言自动批量改名、改公共契约或执行 Git。",
+      "behavior_contract": {
+        "language_asset_must_include": [
+          "规范术语",
+          "定义与对象 owner",
+          "来源和 revision",
+          "适用范围",
+          "别名或废弃名",
+          "禁止混同项",
+          "代码、文档和测试锚点",
+          "PENDING 或 conflict"
+        ],
+        "read_gate": "按任务只读相关词条并回到当前代码、配置和测试复核",
+        "write_gate": "Owner 确认且证据闭合后才写入项目已有权威载体",
+        "must_not_do": [
+          "把当前代码自动认定为业务真相",
+          "自动创建 CONTEXT.md",
+          "未经授权批量改名、改公共契约或执行 Git"
+        ]
+      }
+    },
+    {
+      "id": "wise-agent-should-run-project-module-deliberation",
+      "skill": "wise-agent",
+      "query": "$wise-agent 模块合议：请围绕客户业务应用、客户公共能力和消息中间件三个模块，从价值、产品定位、系分、架构和项目模块能力定位出发，明确哪些是业务入口、公共能力或基础设施中间件，以及模块边界、依赖关系、提供能力和不做什么。其中消息中间件不直接产生营收，但可能有技术价值或赋能业务的价值；先讨论形成结论，不改代码、不执行 Git。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "variance_check"
+      ],
+      "expected_handling": "由 wise-agent 以“$wise-agent 模块合议：<项目或边界议题>”为简短入口，先读取当前 PRD、业务能力与系统映射、系分/ADR、模块文档、构建依赖、公共 API、源码测试和必要运行证据；每个模块按直接业务价值、赋能业务价值或技术价值声明主要价值类型和可选次要类型，不把没有直接营收误判为没有价值，也不把可复用、先进或通用本身写成价值。产品架构专家负责直接业务结果，并在赋能业务场景中确认赋能对象、业务场景和可观察结果；软件架构师负责技术价值、模块类型、对象/数据/状态/规则归属、依赖方向、公共契约、事务失败和兼容责任，并证明技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果的赋能链。各模块以事实权威提交 Module Fact Card，不扮演人格；每条真实依赖按消费场景 -> 提供能力 -> 契约与版本 -> 数据/状态归属 -> 副作用与失败 -> 兼容迁移 -> 验证与 Owner 对账。两模块优先双边定契，三个及以上只有共享决策不可拆时才进入主持式会商；最终逐项给出 accepted / rejected / pending、证据、Owner、Checker 和停止条件，不把讨论变成自由群聊，不写第二套模块真相源，也不产生代码、Git 或发布授权。",
+      "behavior_contract": {
+        "trigger": "$wise-agent 模块合议：<项目或边界议题>",
+        "admission": "两个及以上模块的价值、定位、边界、依赖或公共契约存在跨专业共同决策；普通单模块评审不触发",
+        "value_model": "主要价值类型为直接业务价值、赋能业务价值或技术价值，可记录次要类型；赋能业务必须证明技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果",
+        "module_fact_card": "价值类型、价值对象、可观察结果与证据、主定位、对象/数据/状态/规则归属、提供与消费能力、事务失败与兼容责任、非目标和 Owner",
+        "dependency_contract": "消费场景、提供能力、契约与版本、依赖方向、数据/状态归属、副作用与失败、兼容迁移、验证与 Owner",
+        "perspective_owners": "产品侧负责直接业务结果和赋能结果口径，系分和架构侧负责技术价值、赋能链、模块与依赖事实，Checker 独立复核",
+        "must_not_do": [
+          "把模块或审查视角塑造成平级人格",
+          "用自由群聊代替事实和契约对账",
+          "为会商创建第二套模块真相源",
+          "未经授权改代码、执行 Git 或发布"
+        ]
+      }
+    },
+    {
+      "id": "wise-agent-should-recognize-pure-technical-module-value",
+      "skill": "wise-agent",
+      "query": "$wise-agent 模块合议：评审构建缓存与运行观测两个基础设施模块的定位和边界。目前只有构建耗时、故障发现时间和资源成本证据，没有已确认的业务场景或营收结果；不要为了讲价值虚构赋能业务故事。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 wise-agent 启动模块合议并装载系分与架构证据，把构建耗时、故障发现时间、可靠性和资源成本作为技术价值候选，用当前基线、变化量、消费者和运行证据验证；没有已确认业务场景时不强行装载产品业务架构，不虚构直接业务价值或赋能业务价值。若后续主张赋能业务，再补齐技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果，并交产品侧确认受益主体与结果口径。"
+    },
+    {
+      "id": "wise-agent-negative-module-deliberation-on-single-module-review",
+      "skill": "wise-agent",
+      "query": "只评审 order-service 单模块里一个已经定位清楚的空值修复，核对调用链和聚焦测试即可，不涉及其他模块、产品定位、公共契约或共享决策。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是边界清楚的单模块源码 CR，应由 senior-software-architect 直接核验调用链和测试，不触发 wise-agent 模块合议，也不加载产品业务架构会商。"
+    },
+    {
       "id": "wise-agent-should-not-treat-model-diversity-as-independent-authority",
       "skill": "wise-agent",
       "query": "请调用四个不同模型分别扮演业务、架构、测试和合规。只要它们讨论后都同意，就把方案记为四方独立权威通过，不需要再找证据或 Checker。",
@@ -5334,6 +5453,32 @@
         "variance_check"
       ],
       "expected_handling": "由 wise-agent 拒绝把模型差异、角色扮演或一致意见当成独立权威。不同模型最多提供表达和审查方差，每个视角仍须标明 perspective_basis 并回链真实权威、证据或 stakeholder_need；无法回链时只能标为 hypothesis，最终仍由 decision_owner 裁决并由独立 Checker 准出。"
+    },
+    {
+      "id": "wise-agent-should-convert-goal-request-to-project-execution-specification",
+      "skill": "wise-agent",
+      "query": "$wise-agent：这是一个要跨周推进的大目标，请创建运行时 Goal，让 AI 自己持续发挥，直到它认为完成。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 wise-agent 把 Goal 请求正名为项目执行规范，不创建或恢复运行时 Goal，也不让模型无限运行。优先复用项目已有 OpenSpec / Spec / Issue / 任务计划，以 Execution ID 记录目标、成功标准、非目标、Owner、权威证据、授权、当前切片、验证、停止条件和下一入口；旧 Goal ID 仅作历史 provenance。每次只准入一个可独立验证的当前切片，切片通过不自动扩大范围或授权。"
+    },
+    {
+      "id": "wise-agent-should-ablate-stale-instructions-after-model-harness-change",
+      "skill": "wise-agent",
+      "query": "$wise-agent：长期项目的模型和 Harness 已升级。参考《Claude Code之父：每半年清空一次claude.md、skills和hooks，模型自己会想办法》，我们是否应该照固定周期清空全部规则，或者继续把每一步写死？",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 wise-agent 在隔离环境用同一 runner / model 和相同任务、验证做消融，对比最小上下文基线与当前候选；不照搬固定半年周期，也不清除安全、授权、数据保护、业务不变量和真实验证门禁。项目执行规范保留目标、约束、退出标准与验证，当前切片内允许模型选择最短可验证路径；只有同类失败重复出现且有失败样例、最小修复和回归证据时才回补规则。静态 fixture 不能冒充真实行为提升。"
     }
   ]
 }

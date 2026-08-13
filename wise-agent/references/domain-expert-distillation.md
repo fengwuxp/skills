@@ -174,7 +174,7 @@ knowledge-base/
 | API、事件、表、字段、测试和数据事实 | `接口事件与数据.md` |
 | owner 追认包、D3 门禁和 test-prompts | `待确认与压测.md` |
 
-每条关键结论最少保存为 `claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file`。`maturity` 只用 D0 / D1 / D2 / D3，不用“已完成”这类模糊状态。进度、授权、预算和停止条件留在执行计划或 Goal Ledger，不塞进知识库正文。
+每条关键结论最少保存为 `claim / evidence / source_id / owner / domain_or_module / maturity / updated_at / target_file`。`maturity` 只用 D0 / D1 / D2 / D3，不用“已完成”这类模糊状态。进度、授权、预算和停止条件留在项目执行规范或任务计划，不塞进知识库正文。
 
 ## 6. 答题协议
 

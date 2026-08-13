@@ -15,7 +15,7 @@ description: |
 ## 一体多能
 
 - **体**：用户目标、业务对象、生产边界、风险责任、验收和授权；体不清则不动。
-- **枢**：知止者维持一个入口、一个目标契约、一个准出结论，按 **察 -> 辨 -> 谋 -> 行 -> 验 -> 化** 收口。
+- **枢**：知止者维持一个入口、一个项目执行契约、一个准出结论，按 **察 -> 辨 -> 谋 -> 行 -> 验 -> 化** 收口。
 - **用**：专业能力来源包括 Skills、references、scripts 和工具；默认只加载一个主能力，确有缺口才加协同能力。
 - **证**：Checker 独立于 Maker；测试、validator、回读、CR、观测或人工确认用于循名责实，用无证则不收。
 
@@ -51,12 +51,12 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 | 机制 | 只在何时增加 | 详细规则 |
 | --- | --- | --- |
 | SDLC | 跨产品、设计、工程、验证、发布、运行或退役阶段 | `references/delivery-lifecycle.md` |
-| Goal | 跨轮，需要保存成功标准、状态、预算和停止线 | `references/goal-governance.md` |
-| Loop | 同一 Goal 需反复行动、观察和验证 | `references/delivery-execution-control.md` |
+| 项目执行规范 | 跨轮，需要保存成功标准、状态、授权、当前切片和停止线 | `references/execution-specification.md` |
+| Loop | 当前切片需反复行动、观察和验证 | `references/delivery-execution-control.md` |
 | Worker | 子任务输入可冻结、写入不重叠且并行收益明确 | `references/engineering-governance.md` |
 | Checker | 高风险、公共契约、重要交付或发布准出 | `references/verification-review-release.md` |
 
-先判断 SDLC，再判断 Goal，确需反复运行才增加 Loop；Worker 与 Checker 是正交判断。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有 Goal 上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
+先判断 SDLC，再判断是否需要项目执行规范，确需在当前切片反复运行才增加 Loop；Worker 与 Checker 是正交判断。用户提出 Goal、长任务或持续推进时，不创建或恢复运行时 Goal，转为更新项目已有 `OpenSpec / Spec / Issue / 任务计划`。执行规范固定目标、约束、退出标准、验证、授权和当前切片；切片内部由模型自行选择最短可验证路径。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有项目执行规范上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
 
 ## 能力装载
 
@@ -68,11 +68,11 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 单个领域词不等于专项证据。只有目标产物确需专项细节，或材料出现主体、法域、协议、资金/数据流、外部规则、项目依赖等高置信度信号时，才读取垂直 reference；不得因“退款”“账户”“订单”等孤立词展开整棵支付、金融或工程知识树。
 
-单体工作优先。Worker 只处理低耦合子任务，Checker 独立处理高风险或重要准出。跨轮、压缩或模型 / 工具变化后，先从权威载体重建 Goal、决策与证据版本并执行认知完整性对账；需要确定性审计时运行 `scripts/check_state_contract.py`，承重状态不是 `aligned` 时停止或交还 Owner。
+单体工作优先。Worker 只处理低耦合子任务，Checker 独立处理高风险或重要准出。跨轮、压缩或模型 / 工具变化后，先从项目执行规范重建目标、当前切片、决策与证据版本并执行认知完整性对账；需要确定性审计时运行 `scripts/check_state_contract.py`，承重状态不是 `aligned` 时停止或交还 Owner。
 
 跨上下文先正名：`Continue` 从既有状态载体续接同一任务；`Branch` 只为需要干净上下文的独立取证临时分叉并回传。不得按固定 token 阈值创建 Branch，也不得把它混成 Worker、Checker、第二状态源或新的控制机制；需要临时上下文分叉时读取 `references/context-handoff.md`。
 
-两个及以上长期上下文分别持有独立事实权威，并需要围绕公共契约或共享决策短期会商、版本对账和验证时，也读取 `references/context-handoff.md`。两方优先双边契约会商；三个及以上只有共享决策不可拆且权威确实独立时才进入主持式多方会商。会商前先确认讨论主题并完成信息充分性门禁，未通过不得进入立场讨论或决策；不得把会商变成自由群聊、互改权威事实或形成多个 Goal owner。
+两个及以上长期上下文分别持有独立事实权威，或同一项目中两个以上模块需要围绕直接业务价值、赋能业务价值、技术价值、模块定位、能力边界、依赖或公共契约共同裁决时，也读取 `references/context-handoff.md`。项目级简短入口为 `$wise-agent 模块合议：<项目或边界议题>`；模块只是事实权威，不是平级人格。两方优先双边契约会商；三个及以上只有共享决策不可拆且权威确实独立时才进入主持式多方会商。会商前先确认讨论主题并完成信息充分性门禁，未通过不得进入立场讨论或决策；不得把会商变成自由群聊、互改权威事实或形成多个执行状态 owner。
 
 ## 工作与授权
 
@@ -86,7 +86,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 ## Reference 路由
 
 - 产品到工程与阶段交接：`references/product-to-engineering-lifecycle.md`、`references/delivery-lifecycle.md`；创见探索与求真验证：`references/creative-exploration-and-evidence.md`。
-- 大项目与执行控制：`references/planning-execution-admission.md`、`references/engineering-governance.md`、`references/goal-governance.md`、`references/delivery-execution-control.md`。
+- 大项目与执行控制：`references/planning-execution-admission.md`、`references/engineering-governance.md`、`references/execution-specification.md`、`references/delivery-execution-control.md`；旧 Goal 输入兼容才读取 `references/goal-governance.md`。
 - PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
 - 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。

@@ -5,7 +5,7 @@
 ## 使用时机
 
 - 用户明确有中大型项目、长任务、上下文衰减、多 Agent / Wave 编排、GSD-like 工作流或 CAD 自动推进诉求。
-- 用户要求把 GSD、CAD、Goal 多个工作模式统一压缩进 Loop，但仍需要保留大项目分波和原子执行能力。
+- 用户要求把 GSD、CAD、项目执行规范 多个工作模式统一压缩进 Loop，但仍需要保留大项目分波和原子执行能力。
 - 产品上下文包、PRD-Lite、OpenSpec 草案、AI 原型/eval 或 dogfooding 反馈已经出现，需要判断能否进入工程侧 GSD Round 0。
 - 用户要求“结合 GSD 与 CAD”“自动推进哪些任务”“默认授权哪些任务”“按什么顺序交给架构师或 Agent”“任务阶段是否提交代码”“Execution Grant 还缺什么”。
 - 用户希望减少每个任务审批，希望在 GSD/CAD 模式下默认授权、自动推进，或提到 Codex 的“替我审批”模式。
@@ -25,16 +25,16 @@
 ## 读取后必须产出
 
 - 知止者的产研交付视图准入结论：轻量执行、进入 GSD Round 0、只做只读侦察、可形成工程执行 Loop 候选，或必须停止补上下文。
-- Goal 状态与当前阶段：Goal 状态只使用 `Draft / Ready / Active / Blocked / Verified / Closed / Superseded`；另说明当前处于 Round 0、GSD Candidate、Wave Plan、工程执行 Loop 或验证收口阶段。
+- 执行状态与当前阶段：执行状态只使用 `Draft / Ready / Active / Blocked / Verified / Closed / Superseded`；另说明当前处于 Round 0、GSD Candidate、Wave Plan、工程执行 Loop 或验证收口阶段。
 - GSD Round 0 缺口：目标、非目标、对象/规则、OpenSpec、owner、写入范围、验证命令、风险确认方和停止条件。
-- 决策寻路结论：是否需要建图、当前 Destination、低分辨率地图、Next decision 和进入 Spec / Goal Ready 的阻断项。
+- 决策寻路结论：是否需要建图、当前 Destination、低分辨率地图、Next decision 和进入 Spec / 项目执行规范 Ready 的阻断项。
 - Wave / Atomic Task 候选：只给候选形态、依赖顺序、owner、写入/只读边界、生产可用能力锚点、事实/推断/待确认边界和验证证据，不写成执行授权。
 - Superpowers 方法门禁：当前 GSD 是否需要参考 brainstorming、writing-plans、test-driven-development、requesting/receiving-code-review、verification-before-completion 等外部 skill，以及对应的 TDD、CR 和完成前验证要求。
 - AI 产品工程化准入卡：业务 context、真实工作流、用户收益/负担、权限与责任、旧系统接入、灰度止损、成本稳定性和事实边界是否足够。
 - 工程执行 Loop 候选缺口：Task ID、写入范围、验证命令、工作区状态、Execution Grant、人工确认点和风险阻断项。
 - 授权策略卡：当前适合只读、计划内低风险执行、Plan Grant、Wave Grant、Execution Grant、Codex 替我审批通道，Git 策略是仅建议提交还是验证后阶段提交，还是必须显式确认。
-- Agent Loop 准入卡：Loop 是否有 Goal、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、授权策略和交接物；缺失时只输出补齐项，不进入自动循环。
-- Engineering Handoff Card：跨知止者、GSD、Loop 和工程执行 profile 交接时固定包含 Goal ID、Wave/Task ID、状态载体、写入范围、验证命令、反馈源、停止条件、Git 策略和下一 owner。
+- Agent Loop 准入卡：Loop 是否有 项目执行规范、状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件、授权策略和交接物；缺失时只输出补齐项，不进入自动循环。
+- Engineering Handoff Card：跨知止者、GSD、Loop 和工程执行 profile 交接时固定包含 Execution ID、Wave/Task ID、状态载体、写入范围、验证命令、反馈源、停止条件、Git 策略和下一 owner。
 - 三卡交接结论：Product Context Card 是否足以支撑工程，Engineering Handoff Card 是否足以交给架构师，生产交付卡是否足以进入生产可用 Loop；缺失时说明回退 owner。
 - 下一步 owner：产品专家、资深架构师、代码生成器、人类 owner 或当前流程继续补齐。
 
@@ -91,29 +91,29 @@ GSD 与工程执行在知止者中分五层：
 - Agent Loop 决定“每轮如何读取状态、执行动作、吸收反馈、验证和停止”。
 - Plan Grant / Execution Grant 决定“本轮实际允许做什么”。
 
-授权策略不是让每个任务都重新问一次，也不是让所有动作无条件通过。GSD / 工程执行应把授权前移到 Goal 任务计划、Wave 或 Execution Grant 层：用户明确说 `GSD + Goal 按任务计划推进`、`按任务计划自动推进` 或等价意图时，如果任务计划已经列清目标、写入范围、验证命令、停止条件和显式确认边界，可以形成 Plan Grant；在 Plan Grant 有效期内，低风险原子任务直接推进，不再逐任务索要 Execution Grant。一旦越过范围、触发高风险动作或验证失败，必须停止并升级确认。
+授权策略不是让每个任务都重新问一次，也不是让所有动作无条件通过。GSD / 工程执行应把授权前移到 项目执行规范 任务计划、Wave 或 Execution Grant 层：用户明确说 `GSD + 项目执行规范 按任务计划推进`、`按任务计划自动推进` 或等价意图时，如果任务计划已经列清目标、写入范围、验证命令、停止条件和显式确认边界，可以形成 Plan Grant；在 Plan Grant 有效期内，低风险原子任务直接推进，不再逐任务索要 Execution Grant。一旦越过范围、触发高风险动作或验证失败，必须停止并升级确认。
 
 Codex 的“替我审批”只能作为当前会话已经由用户开启的运行时审批模式：它可以承接低风险、可回滚、范围内的工具审批噪音，但不能被 Skill 自行开启，也不能绕过项目规则、sandbox、用户授权、Git/联网/生产等硬门禁。
 
-Agent Loop 只能建立在 Goal、GSD、Harness 和授权策略之上。`/goal`、`/loop`、auto mode、后台 Agent 或多 Agent 监督若没有状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件，只能作为待补齐的 Loop 候选，不能进入自动推进。
+Agent Loop 只能建立在 项目执行规范、GSD、Harness 和授权策略之上。`/goal`、`/loop`、auto mode、后台 Agent 或多 Agent 监督若没有状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件，只能作为待补齐的 Loop 候选，不能进入自动推进。
 
 Superpowers 在 GSD 中只作为方法纪律层：它回答“怎么高质量地做”，例如澄清、计划、TDD、Review、完成前验证和分支收尾检查；不回答“能不能做”“能改哪里”“是否授权”。官方插件可以独立安装并由知止者按需调度，但启用状态不能成为运行脚本、创建 worktree、启动 subagent、采用外部 Git 默认动作或扩大项目写入的授权。
 
-### 1A. Goal 状态与当前阶段
+### 1A. 执行状态与当前阶段
 
-Goal 状态沿用 `goal-governance.md` 和 `check_state_contract.py` 的唯一词表，不为 GSD、Loop 或工程 profile 新建第二套状态。Round 0、Wave Plan、工程执行 Loop 只是当前阶段或执行方式：
+执行状态沿用 `execution-specification.md` 和 `check_state_contract.py` 的唯一词表，不为 GSD、Loop 或工程 profile 新建第二套状态。Round 0、Wave Plan、工程执行 Loop 只是当前阶段或执行方式：
 
-| Goal 状态 | 当前阶段示例 | 处理规则 |
+| 执行状态 | 当前阶段示例 | 处理规则 |
 | --- | --- | --- |
 | `Draft` | Round 0、GSD Candidate | 补目标、主体、证据、边界、验收或风险。 |
 | `Ready` | Wave Plan、工程执行 Loop 准入检查 | 计划与任务可执行，但尚未进入行动。 |
 | `Active` | GSD Wave、受控工程执行 Loop | 在有效授权、预算和停止条件内推进。 |
 | `Blocked` | 用户暂停、风险升级、授权不足、验证异常 | 在 `status_reason` 或交接卡记录原因、下一 owner 和恢复入口。 |
-| `Verified` | 当前 Goal 成功标准已有证据 | 可进入交接、提交建议或关闭准备。 |
+| `Verified` | 当前项目执行规范成功标准已有证据 | 可进入交接、提交建议或关闭准备。 |
 | `Closed` | 验证、交接和残余风险处理完成 | 不再继续执行。 |
 | `Superseded` | 目标被替代 | 记录替代原因和迁移关系。 |
 
-`Plan Grant Active` 是授权状态，不是 Goal 状态；工程执行 Loop 候选是准入结论，不是可写状态。阶段变化必须通过 `Engineering Handoff Card` 交接。没有交接卡时只能补齐当前缺口，不能从 GSD 直接跳到工程执行，也不能把 Loop 当作授权。
+`Plan Grant Active` 是授权状态，不是 执行状态；工程执行 Loop 候选是准入结论，不是可写状态。阶段变化必须通过 `Engineering Handoff Card` 交接。没有交接卡时只能补齐当前缺口，不能从 GSD 直接跳到工程执行，也不能把 Loop 当作授权。
 
 ## 2. 准入分级
 
@@ -126,15 +126,15 @@ Goal 状态沿用 `goal-governance.md` 和 `check_state_contract.py` 的唯一�
 | 产品上下文包 / OpenSpec 草案 | 可进入 GSD Round 0 候选。 | 输出 GSD Round 0 缺口和架构师交接要求。 |
 | OpenSpec + Harness 摘要 | 可形成 Wave / Atomic Task 候选。 | 输出 Wave 顺序、任务候选、验证矩阵草案。 |
 | 单个原子任务 + 验证命令 + 授权缺口清楚 | 可标记工程执行 Loop 候选。 | 交给资深架构师检查工程 profile 和授权策略。 |
-| GSD + Goal 任务计划 + 验证命令 + 低风险写入范围 + 停止条件清楚 | 可形成 Plan Grant。 | 按任务计划推进范围内低风险本地任务，命中硬门禁时停止。 |
+| GSD + 项目执行规范 任务计划 + 验证命令 + 低风险写入范围 + 停止条件清楚 | 可形成 Plan Grant。 | 按任务计划推进范围内低风险本地任务，命中硬门禁时停止。 |
 | 单个原子任务 + 验证命令 + 低风险写入范围 + 停止条件清楚 | 可形成 Execution Grant 候选。 | 在 Grant 有效期内默认推进低风险动作，命中硬门禁时停止。 |
-| Goal + 状态载体 + 反馈源 + 验证者 + 预算/最大轮次 + 无进展检测 + 停止条件 | 可形成 Agent Loop 候选。 | 只在授权范围内循环推进，达到停止条件或硬门禁时交接。 |
+| 项目执行规范 + 状态载体 + 反馈源 + 验证者 + 预算/最大轮次 + 无进展检测 + 停止条件 | 可形成 Agent Loop 候选。 | 只在授权范围内循环推进，达到停止条件或硬门禁时交接。 |
 
 GSD 规划还必须给出提交切片：每个 Wave / Task 完成验证后应如何组成一个可独立理解、验证和回滚的提交单元。默认 Git 策略为 `summary_only`，只输出建议提交单元和建议 commit message；只有用户明确要求“阶段提交 / 任务提交 / 自动提交本地 commit”，且 Grant 写清 Git 范围时，才可进入 `commit_after_verified_task`。
 
 ## 2A. 决策寻路准入
 
-决策寻路不是新的 Skill、Goal 或执行流程，而是 `Round 0 / Goal Draft` 中消除不确定性的临时工作方式。只有同时满足以下条件才进入：
+决策寻路不是新的 Skill、项目执行规范 或执行流程，而是 `Round 0 / 项目执行规范 Draft` 中消除不确定性的临时工作方式。只有同时满足以下条件才进入：
 
 - 能用一两句话命名 Destination，即完成寻路后应得到的 Spec、决策或可计划状态。
 - 通往 Destination 的关键路线仍模糊，当前不能可靠写成 Spec 或最小计划。
@@ -142,7 +142,7 @@ GSD 规划还必须给出提交切片：每个 Wave / Task 完成验证后应如
 
 只有可查 Facts、路线已经清楚、当前会话可闭环，或用户已提供确认过的 Spec / 计划时，跳过决策寻路，直接进入对应专业交付与验证。
 
-优先复用用户指定位置或项目已有 Issue、Goal Ledger、Spec、Decision Log、任务状态。没有获准载体时只在当前任务输出；不得自动创建 Issue、分支、Worker 或外部任务系统。地图只作索引，每个决策正文只保留一个权威位置，地图只写名称、状态、摘要和链接：
+优先复用用户指定位置或项目已有 Issue、项目执行规范、Spec、Decision Log、任务状态。没有获准载体时只在当前任务输出；不得自动创建 Issue、分支、Worker 或外部任务系统。地图只作索引，每个决策正文只保留一个权威位置，地图只写名称、状态、摘要和链接：
 
 ```text
 Destination: 寻路完成后应达到的清晰状态。
@@ -151,7 +151,7 @@ Frontier: 已能准确表述，且未关闭、未阻塞、未占用的决策。
 Not yet specified: 已知在前方，但当前还无法准确表述的问题区域。
 Out of scope: 与本轮 Destination 无关，不会自动复活的内容。
 Next decision: 当前只选择一个最高价值 Frontier 决策。
-Handoff condition: 何时可进入 Spec、最小计划或 Goal Ready。
+Handoff condition: 何时可进入 Spec、最小计划或 项目执行规范 Ready。
 ```
 
 `Frontier` 与 `Not yet specified` 的分界不是能否回答，而是现在能否准确写出待裁决命题；不能准确表述的迷雾不得预拆成任务。决策关闭后才把新近可表述的内容提升到 Frontier；若新结论使旧节点失效、越界或重新阻塞，应更新、关闭或移入 Out of scope，不保留僵尸任务。
@@ -165,7 +165,7 @@ Handoff condition: 何时可进入 Spec、最小计划或 Goal Ready。
 | 需要低成本具体产物才能判断行为或形态 | `prototype`：路由产品或工程主能力 | 原型只服务决策，不冒充最终交付。 |
 | 必须先获取账号、环境、数据或人工操作结果 | `prerequisite task` | 只完成解锁决策所需动作，仍服从联网、权限和写入授权。 |
 
-地图存在开放 Frontier，或 Not yet specified 中仍有阻断 Destination 的迷雾时，Goal 保持 `Draft`，不得生成完整 Spec、Wave、Atomic Task、Plan Grant 或执行方案。路线清晰后才进入 Spec、最小计划或 Goal Ready；若初始梳理没有迷雾，立即停止建图并回到当前任务的最短交付路径。
+地图存在开放 Frontier，或 Not yet specified 中仍有阻断 Destination 的迷雾时，项目执行规范 保持 `Draft`，不得生成完整 Spec、Wave、Atomic Task、Plan Grant 或执行方案。路线清晰后才进入 Spec、最小计划或 项目执行规范 Ready；若初始梳理没有迷雾，立即停止建图并回到当前任务的最短交付路径。
 
 ## 3. GSD Round 0 判断
 
@@ -253,9 +253,9 @@ Atomic Task 候选至少描述：
 Wave Loop 与工程执行 Loop 的差异：
 
 - `Wave Loop` 负责状态推进、任务分派、验证矩阵更新、提交切片建议和 owner 交接；默认不直接改业务代码。
-- Goal 为 `Active` 且当前执行方式为受控工程执行 Loop 时，只覆盖一个已选定原子任务的代码 / 测试 / 文档小步变更，必须由资深架构师按 `cad-mode.md` 执行。
+- 项目执行规范 为 `Active` 且当前执行方式为受控工程执行 Loop 时，只覆盖一个已选定原子任务的代码 / 测试 / 文档小步变更，必须由资深架构师按 `cad-mode.md` 执行。
 - Wave Loop 发现两个任务共享写入范围、公共契约、状态机或测试夹具时，必须拆顺序或暂停，不能并行推进。
-- 工程执行 Loop 完成后必须把验证证据、残余风险、文件范围和下一步状态回写给 Wave Loop 或 Goal Ledger。
+- 工程执行 Loop 完成后必须把验证证据、残余风险、文件范围和下一步状态回写给 Wave Loop 或 项目执行规范。
 
 ## 5. 工程执行 Loop 候选缺口
 
@@ -286,8 +286,8 @@ Wave Loop 与工程执行 Loop 的差异：
 | --- | --- | --- | --- |
 | 只读侦察 | 仅读取工作区和公开项目文件，形成理解包。 | 读仓库、查引用、运行只读检查。 | 读取无关私有目录、联网、写文件。 |
 | 计划内低风险执行 | 用户已要求推进，且任务在当前工作区、低风险、可回滚、有验证命令。 | 编辑已声明范围内文件、运行本地测试/校验、记录结果。 | 改范围外文件、覆盖用户改动、验证失败后继续扩张。 |
-| Plan Grant | 用户明确要求按任务计划推进，且 Goal、任务计划、写入范围、验证命令、停止条件和显式确认边界已列明。 | 任务计划内低风险本地读写、测试、lint、文档/Skill/业务代码小步修改、Ledger/状态更新。 | Git 提交、联网、依赖安装、生产/密钥/部署/不可逆操作、高风险业务、计划外写入、验证失败。 |
-| Wave Grant | 用户批准一组 Wave / Goal 的写入范围、验证矩阵和停止条件。 | Wave 内互不冲突的低风险 Atomic Task。 | 公共契约变更、跨 Wave 写入、高风险业务、Git/联网。 |
+| Plan Grant | 用户明确要求按任务计划推进，且 项目执行规范、任务计划、写入范围、验证命令、停止条件和显式确认边界已列明。 | 任务计划内低风险本地读写、测试、lint、文档/Skill/业务代码小步修改、Ledger/状态更新。 | Git 提交、联网、依赖安装、生产/密钥/部署/不可逆操作、高风险业务、计划外写入、验证失败。 |
+| Wave Grant | 用户批准一组 Wave / 项目执行规范 的写入范围、验证矩阵和停止条件。 | Wave 内互不冲突的低风险 Atomic Task。 | 公共契约变更、跨 Wave 写入、高风险业务、Git/联网。 |
 | Execution Grant | 用户批准一个原子任务的写入范围、验证命令、停止条件和失败恢复。 | 工程执行 Loop 内的本地低风险动作。 | Grant 外写入、测试持续失败、任务目标漂移、需要外部权限。 |
 | 显式确认 | 高风险或超出默认策略的动作。 | 无。 | 必须等待用户、项目 owner 或专业确认。 |
 
@@ -300,12 +300,12 @@ Plan Grant / Grant 最小字段：
 - Git 策略：是否允许 `git add` / `git commit`，不含 push、PR、merge 或部署；未说明时 Git 默认需要显式确认。
 - 提交切片：按 Wave / Task ID 输出建议提交单元、包含文件、验证证据和建议 commit message；未授权 Git 时只建议不执行。
 - Loop 预算：状态载体、反馈源、验证者、预算 / 时间盒、最大轮次、无进展检测和预算耗尽后的停止动作；缺失时不得进入自动循环。
-- 失败回写：验证失败、需求不清、边界冲突、授权不足、连续无进展时分别回写 Spec / AC、产品上下文、OpenSpec、Grant 或 Goal Ledger。
+- 失败回写：验证失败、需求不清、边界冲突、授权不足、连续无进展时分别回写 Spec / AC、产品上下文、OpenSpec、Grant 或 项目执行规范。
 - 外部访问：是否允许联网、安装依赖、启动服务、访问外部 API。
 - 禁止事项：生产数据、密钥、真实支付/资金通道、不可逆操作。
 - 停止条件：何时暂停、何时交还用户、何时回滚或转人工。
 
-如果用户只说“继续”“按建议推进”“自动跑起来”，只能视为流程意向，最多进入计划内低风险执行候选。若用户明确说 `GSD + Goal 按任务计划推进`、`不希望每个任务手动授权`、`直接按照任务计划推进` 或等价表达，并且任务计划已经列明写入范围、验证命令、停止条件和显式确认边界，则可升级为 Plan Grant；之后范围内低风险任务不再因缺少逐任务 Execution Grant 停止。
+如果用户只说“继续”“按建议推进”“自动跑起来”，只能视为流程意向，最多进入计划内低风险执行候选。若用户明确说 `GSD + 项目执行规范 按任务计划推进`、`不希望每个任务手动授权`、`直接按照任务计划推进` 或等价表达，并且任务计划已经列明写入范围、验证命令、停止条件和显式确认边界，则可升级为 Plan Grant；之后范围内低风险任务不再因缺少逐任务 Execution Grant 停止。
 
 ### 6A. Codex 替我审批通道
 
@@ -323,12 +323,12 @@ Skill 只能识别和利用已经存在的审批模式，不负责打开或伪�
 
 ### 6B. Plan Grant 计划授权
 
-Plan Grant 是为了避免 GSD + Goal 每个任务都卡在 `Execution Grant：xxx`。它不是无条件授权，而是把授权锚定到已确认任务计划：
+Plan Grant 是为了避免 GSD + 项目执行规范 每个任务都卡在 `Execution Grant：xxx`。它不是无条件授权，而是把授权锚定到已确认任务计划：
 
 ```text
 Plan Grant:
-触发语: GSD + Goal 按任务计划推进 / 按任务计划自动推进 / 不希望每个任务手动授权
-适用 Goal:
+触发语: GSD + 项目执行规范 按任务计划推进 / 按任务计划自动推进 / 不希望每个任务手动授权
+适用 项目执行规范:
 任务计划: Wave / Task ID / 顺序 / owner
 允许写入:
 允许验证:
@@ -360,12 +360,12 @@ Loop 预算: 状态载体 / 反馈源 / 验证者 / 最大轮次 / 无进展检�
 
 ```text
 Engineering Handoff Card:
-Goal 状态: Draft / Ready / Active / Blocked / Verified / Closed / Superseded
+执行状态: Draft / Ready / Active / Blocked / Verified / Closed / Superseded
 当前阶段: Round 0 / GSD Candidate / Wave Plan / 工程执行 Loop / 验证收口
 执行方式: 直接执行 / 受控工程执行 Loop
 状态原因 / 恢复条件:
 输入成熟度:
-Goal ID:
+Execution ID:
 Wave / Task ID:
 状态载体:
 是否需要 GSD:
@@ -406,7 +406,7 @@ Superpowers 方法门禁:
 `Engineering Handoff Card` 是工程执行交接卡，但它必须能追溯另外两张卡：
 
 - 上游必须有 Product Context Card：业务目标、对象、规则、不变量、验收种子和待确认项清楚；缺失时回 `产品架构专家`，不得由架构师或 Agent 猜测业务事实。
-- 当前必须有 Engineering Handoff Card：Goal、Wave/Task、写入范围、验证命令、授权策略、失败回写和停止条件清楚；缺失时停在知止者，不进入工程执行 Loop。
+- 当前必须有 Engineering Handoff Card：项目执行规范、Wave/Task、写入范围、验证命令、授权策略、失败回写和停止条件清楚；缺失时停在知止者，不进入工程执行 Loop。
 - 若要求 Loop、auto mode、后台 Agent 或持续推进，必须有 生产交付卡：状态载体、自动化心跳、隔离执行、Maker / Checker、反馈源、独立验证、预算、无进展检测、观测审计、人工接管和发布/回滚清楚；缺失时只标记 Loop Candidate。
 
 消费规则：

@@ -2,6 +2,6 @@ interface:
   display_name: "知止者"
   short_description: "理解事实，知所止而后行动，按需掌握能力并完成验证与知识演进"
   brand_color: "#7C3AED"
-  default_prompt: "使用 $wise-agent 作为统一行动主体：先定目标、权限、完成证据和停止条件，读取事实，装载最小专业能力，以独立证据验证并交付结果。默认直接完成，只按真实需要增加 SDLC、Goal、Loop、Worker 或 Checker，不扩大用户授权；默认使用中文响应，用户明确要求其他语言时除外，代码、命令、协议字段、专有名词和原文引用保持原样。"
+  default_prompt: "使用 $wise-agent 作为统一行动主体：默认使用中文响应，用户明确要求其他语言时除外；代码、命令、协议字段、专有名词和原文引用保持原样。先定目标、权限、完成证据和停止条件，读取事实，装载最小专业能力，以独立证据验证并交付结果。默认直接完成；跨轮时把状态落入项目执行规范，不创建运行时 Goal，只按真实需要增加 SDLC、Loop、Worker 或 Checker，不扩大用户授权。"
 policy:
   allow_implicit_invocation: true

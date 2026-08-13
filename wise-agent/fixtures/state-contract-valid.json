@@ -1,5 +1,6 @@
 {
-  "goal_id": "G-17",
+  "execution_id": "EXEC-17",
+  "origin_goal_id": "G-17",
   "state_revision": 1,
   "status": "Active",
   "objective": "修复知止者的长任务恢复能力",
@@ -22,28 +23,30 @@
   "execution_basis": [
     "D-1"
   ],
+  "current_slice": "SLICE-STATE-CONTRACT-VALIDATION",
   "next_action": "只按 D-1 运行状态契约验证",
+  "authorization": "仅在 write_scope 内执行本地读取、修改与验证，不含 Git、联网或同步",
   "write_scope": [
     "wise-agent",
     "scripts",
-    "docs/goal-ledger.md"
+    "docs/execution-spec.md"
   ],
-  "state_carrier": "docs/goal-ledger.md",
+  "state_carrier": "docs/execution-spec.md",
   "verification_evidence": [],
   "checker": "check_state_contract.py",
   "stop_conditions": [
     "执行依据与确认决策不一致",
     "连续两轮无新增证据"
   ],
-  "recovery_entry": "docs/goal-ledger.md#G-17",
+  "recovery_entry": "docs/execution-spec.md#EXEC-17",
   "residual_risk_owner": "repository maintainer",
   "max_iterations": 6,
   "no_progress_limit": 2,
   "authority_refs": [
     {
-      "ref": "docs/goal-ledger.md#G-17",
-      "authority_revision": "G-17-r1",
-      "fingerprint": "sha256:fixture-goal-ledger-r1",
+      "ref": "docs/execution-spec.md#EXEC-17",
+      "authority_revision": "EXEC-17-r1",
+      "fingerprint": "sha256:fixture-execution-spec-r1",
       "observed_at": "2026-01-01T00:00:00Z",
       "recheck_on": [
         "source revision or fingerprint changes",
@@ -59,7 +62,7 @@
     "revision_reason": "",
     "revision_evidence": [],
     "state_inputs": [
-      "goal_ledger"
+      "execution_spec"
     ],
     "nodes": [
       {
@@ -68,24 +71,24 @@
         "status": "Verified",
         "depends_on": [],
         "consumes": [
-          "goal_ledger"
+          "execution_spec"
         ],
         "produces": [
           "decision_snapshot"
         ],
-        "writeback": "docs/goal-ledger.md#G-17/decision-snapshot",
+        "writeback": "docs/execution-spec.md#EXEC-17/decision-snapshot",
         "write_scope": [
-          "docs/goal-ledger.md"
+          "docs/execution-spec.md"
         ],
         "risk": "low",
         "checker": "",
         "evidence": [
-          "Goal G-17 决策快照"
+          "Execution EXEC-17 决策快照"
         ],
         "evidence_refs": [
           {
             "type": "source",
-            "ref": "docs/goal-ledger.md#G-17/decision-snapshot",
+            "ref": "docs/execution-spec.md#EXEC-17/decision-snapshot",
             "fingerprint": "sha256:fixture-decision-snapshot",
             "method": "source readback",
             "result": "confirmed",
@@ -155,7 +158,7 @@
         "produces": [
           "validation_result"
         ],
-        "writeback": "docs/goal-ledger.md#G-17/verification",
+        "writeback": "docs/execution-spec.md#EXEC-17/verification",
         "transitions": [
           {
             "when": "validation_passed",
@@ -171,7 +174,7 @@
           "on_exhausted": "human"
         },
         "write_scope": [
-          "docs/goal-ledger.md"
+          "docs/execution-spec.md"
         ],
         "risk": "high",
         "checker": "check_state_contract.py",

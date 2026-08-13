@@ -17,13 +17,13 @@
 
 ## 读取后必须产出
 
-- 准入结论：`直接执行 / 工程 Loop 条件不足 / 可进入工程 Loop / 已验证`；Goal 状态仍使用统一词表。
-- 本任务消费的 Goal / Task、写入范围、验证方式、适用授权、预算、无进展检测和停止条件；适用授权须说明是 Plan Grant 覆盖当前任务，还是单任务 Execution Grant。
+- 准入结论：`直接执行 / 工程 Loop 条件不足 / 可进入工程 Loop / 已验证`；跨轮执行状态仍使用统一词表。
+- 本任务消费的 Execution ID / Task、写入范围、验证方式、适用授权、预算、无进展检测和停止条件；适用授权须说明是 Plan Grant 覆盖当前任务，还是单任务 Execution Grant。
 - 每轮完成内容、验证证据、失败或跳过原因、残余风险和状态回写位置。
 
 ## 权威边界
 
-- Goal、成功标准、预算和跨轮交接读取 `wise-agent/references/goal-governance.md`。
+- 项目执行规范、成功标准、预算和跨轮交接读取 `wise-agent/references/execution-specification.md`。
 - Loop 状态、反馈、无进展检测、执行前对账和恢复读取 `wise-agent/references/delivery-execution-control.md`。
 - 适用授权、Git 与高风险授权策略读取 `wise-agent/references/planning-execution-admission.md` 和项目授权规则。
 - 工程生命周期、验证命令和 Git 基础规约读取 `workflow.md`。
@@ -48,7 +48,7 @@
 2. 业务与架构决策已冻结；待确认项不会影响当前实现。
 3. 写入范围、只读范围、验证命令和工作区状态清楚，能区分用户已有改动。
 4. 预计至少需要两轮实现、反馈、修正或验证；一次可完成时回到快速编码或标准工程流程。
-5. Goal / Task、Loop 状态载体、反馈源、验证者、预算、无进展检测、停止条件和适用授权已齐备；适用授权是覆盖当前任务的 Plan Grant，或单任务 Execution Grant，不要求两者并存。不需要跨轮 Goal 时可使用当前任务状态，但不能只靠模型记忆。
+5. Execution ID / Task、Loop 状态载体、反馈源、验证者、预算、无进展检测、停止条件和适用授权已齐备；适用授权是覆盖当前任务的 Plan Grant，或单任务 Execution Grant，不要求两者并存。不需要跨轮项目执行规范时可使用当前任务状态，但不能只靠模型记忆。
 
 准入缺失时只列阻断项，并回到对应权威位置补齐；不得另建 CAD 前缀的状态或授权类型。
 
@@ -93,8 +93,8 @@ Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause
 每轮最小回写：
 
 ```text
-关联 Goal / Task:
-Goal 状态: Active / Blocked / Verified
+关联 Execution ID / Task:
+执行状态: Active / Blocked / Verified
 执行方式: 受控工程执行 Loop
 状态原因 / 恢复条件:
 本轮目标:
@@ -108,4 +108,4 @@ Goal 状态: Active / Blocked / Verified
 回写位置:
 ```
 
-大项目任务回写 Stage / Wave 状态、验证矩阵和 handoff；跨轮任务回写 Goal Ledger 或等价状态载体；当前会话可闭环的任务只需交付摘要。`Verified` 只表示当前 Task 的工程证据满足成功标准，不等于整个 Goal 关闭、Git 已授权或生产可发布。
+大项目任务回写 Stage / Wave 状态、验证矩阵和 handoff；跨轮任务回写项目执行规范；当前会话可闭环的任务只需交付摘要。`Verified` 只表示当前 Task 的工程证据满足成功标准，不等于整个项目执行规范关闭、Git 已授权或生产可发布。

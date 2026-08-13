@@ -280,6 +280,7 @@ project_governance_refs = [
     "senior-software-architect/references/project-governance-data-security-quality.md",
     "senior-software-architect/references/project-governance-delivery-and-platform.md",
 ]
+senior_project_modules = "senior-software-architect/references/project-governance-codebase-and-modules.md"
 testing_practice_refs = [
     "senior-software-architect/references/testing-practices-java-spring-common.md",
     "senior-software-architect/references/testing-practices-java-unit-db.md",
@@ -375,6 +376,7 @@ security_method = "security-engineering-expert/references/security-risk-control-
 security_source_map = "security-engineering-expert/references/source-map.md"
 security_checker = "security-engineering-expert/scripts/check_security_deliverable.py"
 security_behavior_cases = "fixtures/skill-eval/security-engineering-behavior-cases.json"
+wise_agent_module_behavior_cases = "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"
 hanzi_skill = "hanzi-philology/SKILL.md"
 hanzi_agent = "hanzi-philology/agents/openai.yaml"
 hanzi_checker = "hanzi-philology/scripts/check_philology_evidence.py"
@@ -429,7 +431,7 @@ wise_agent_spec_template_practices = "wise-agent/references/spec-template-practi
 wise_agent_code_delivery = "wise-agent/references/code-delivery.md"
 wise_agent_skill_learning_backflow = "wise-agent/references/skill-learning-backflow.md"
 wise_agent_user_collaboration_profile = "wise-agent/references/user-collaboration-profile.md"
-wise_agent_goal_governance = "wise-agent/references/goal-governance.md"
+wise_agent_execution_specification = "wise-agent/references/execution-specification.md"
 wise_agent_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
 wise_agent_context_handoff = "wise-agent/references/context-handoff.md"
 wise_agent_verification_release = "wise-agent/references/verification-review-release.md"
@@ -537,10 +539,10 @@ wise_agent_terms = [
     "原子执行",
     "原子执行候选",
     "GSD",
-    "GSD + Goal",
-    "Goal",
-    "Goal 组合",
-    "Goal 卡",
+    "GSD + 项目执行规范",
+    "项目执行规范",
+    "项目执行规范 组合",
+    "项目执行规范 卡",
     "目标驱动",
     "持续推进",
     "Agent Loop",
@@ -1027,7 +1029,7 @@ reference_headers = [
     wise_agent_spec_template_practices,
     wise_agent_code_delivery,
     wise_agent_skill_learning_backflow,
-    wise_agent_goal_governance,
+    wise_agent_execution_specification,
     wise_agent_delivery_execution_control,
     wise_agent_context_handoff,
     wise_agent_verification_release,
@@ -1127,7 +1129,7 @@ check(
     )
     and has_all(
         wise_agent_skill,
-        ["同一 Agent", "不切换人格", "一个目标契约"],
+        ["同一 Agent", "不切换人格", "一个项目执行契约"],
     )
     and has_all(
         wise_agent_agent,
@@ -1834,7 +1836,7 @@ check(
         [
             "正式 PRD、系分、OpenSpec/SDD 等交付文档以最终标准版本为主",
             "不保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案展开",
-            "过程内容进入任务计划、评审报告、Decision Log、Goal Ledger、ADR 或中间任务文档",
+            "过程内容进入任务计划、评审报告、Decision Log、项目执行规范、ADR 或中间任务文档",
         ],
     ),
 )
@@ -2180,7 +2182,7 @@ check(
     has_all(
         grill_me_skill,
         [
-            "优先恢复已有问题台账、决策快照、Issue、Goal、Spec、ADR、PRD、源码、测试、日志、项目约规和知识库",
+            "优先恢复已有问题台账、决策快照、Issue、项目执行规范、Spec、ADR、PRD、源码、测试、日志、项目约规和知识库",
             "没有获准的持久载体时",
             "每次裁决和实际问题都写入问题台账",
             "退出时",
@@ -2188,7 +2190,7 @@ check(
     )
     and has_all(
         grill_me_question_ledger,
-        ["Issue / Goal Ledger / Spec / Decision Log", "当前任务中维护并在退出前输出", "不得为了台账自动创建"],
+        ["Issue / 项目执行规范 / Spec / Decision Log", "当前任务中维护并在退出前输出", "不得为了台账自动创建"],
     )
     and has_all(
         grill_me_source_map,
@@ -2838,15 +2840,12 @@ check(
             "prototype",
             "prerequisite task",
             "不得自动创建 Issue、分支、Worker 或外部任务系统",
-            "路线清晰后才进入 Spec、最小计划或 Goal Ready",
+            "路线清晰后才进入 Spec、最小计划或 项目执行规范 Ready",
         ],
     )
     and has_all(
-        wise_agent_goal_governance,
-        [
-            "决策寻路尚未完成",
-            "不能从 `Draft` 进入 `Ready`",
-        ],
+        wise_agent_execution_specification,
+        ["路线仍模糊", "planning-execution-admission.md", "Draft / Ready / Active / Blocked / Verified / Closed / Superseded"],
     )
     and has_all(
         wise_agent_product_to_engineering,
@@ -3028,7 +3027,7 @@ check(
             "角色 Loop 场景视图：只读理解 / 产研交付 / 验证发布 / 知识回流（不是并列入口）",
             "当前阶段：设计 / 设计评审 / TDD-测试设计 / 编码实现 / 编码评审 / 可用性-安全性-可靠性评估 / 发布复盘",
             "角色视角：主责角色 / 协作角色 / AI Maker / AI Checker / 人工 owner",
-            "Loop Contract：Goal / State / Plan / Action / Observe / Decide / 决策澄清门禁 / Verify / 停止交接",
+            "Loop Contract：项目执行规范 / State / Plan / Action / Observe / Decide / 决策澄清门禁 / Verify / 停止交接",
             "自我问询：已知问题 / 可自答问题 / 需 owner 问题",
             "自我回答：答案 / 证据来源 / 置信度 / 进入下一阶段理由",
             "小闭环决策澄清门禁：自决推进 / 询问 owner / 继续收敛 / 停止交接",
@@ -3167,7 +3166,7 @@ check(
             "工程执行 profile 决定“当前选中的原子任务如何执行、验证、回写和停止”",
             "Execution Grant 决定“本轮实际允许做什么”",
             "授权策略不是让每个任务都重新问一次，也不是让所有动作无条件通过",
-            "把授权前移到 Goal 任务计划、Wave 或 Execution Grant 层",
+            "把授权前移到 项目执行规范 任务计划、Wave 或 Execution Grant 层",
             "Skill 自行开启",
             "Superpowers 在 GSD 中只作为方法纪律层",
             "官方插件可以独立安装并由知止者按需调度",
@@ -3318,7 +3317,7 @@ check(
             "配置回读",
             "冒烟验证",
             "观测确认",
-            "工单 / Goal 回写",
+            "工单 / 项目执行规范 回写",
             "观测和回滚",
             "复盘闭环",
             "当前可信度判断",
@@ -3535,7 +3534,7 @@ check(
             "不表示每个任务都必须加载它",
             "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
             "简单任务直接完成",
-            "复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker",
+            "复杂任务才使用计划、SDLC、项目执行规范、Loop、Worker 或 Checker",
             "专业能力按需渐进加载",
             "无论内部用了多少能力，对用户只形成一个综合结论",
         ],
@@ -3619,7 +3618,7 @@ check(
             "公开资料、业内共识、行业标准规范",
             "版本回读证据",
             "配置回读证据",
-            "工单 / Goal 回写",
+            "工单 / 项目执行规范 回写",
             "Ready / Not Ready / Human Approval Required",
             "Git/PR/merge/部署授权",
             "P0 blockers",
@@ -3906,7 +3905,7 @@ check(
         [
             "`Trellis` 是仓库级 Agent Harness",
             "`@mindfoldhq/trellis`",
-            "现有 `AGENTS.md`、Issue、Spec、Goal Ledger",
+            "现有 `AGENTS.md`、Issue、Spec、项目执行规范",
             "重复失败证据",
             "`.trellis/spec/`、`.trellis/tasks/`、`.trellis/workspace/`",
             "AGPL-3.0",
@@ -4056,96 +4055,78 @@ check(
     ),
 )
 check(
-    "wise agent keeps goal governance gate",
-    has_reference_header(wise_agent_goal_governance)
-    and has_task_reading_index(wise_agent_goal_governance)
+    "wise agent keeps project execution specification gate",
+    has_reference_header(wise_agent_execution_specification)
+    and has_task_reading_index(wise_agent_execution_specification)
     and has_all(
-        wise_agent_goal_governance,
+        wise_agent_execution_specification,
         [
-            "# 目标治理",
-            "Goal 是显式目标管理和持续推进契约",
-            "对外统一归入知止者",
-            "Goal 是目标层",
-            "GSD 是分波计划层",
-            "受控工程执行是 Loop 的工程 profile",
-            "当前任务使用了哪些内部层",
-            "GSD + Goal",
-            "工程执行 Loop + Goal",
-            "Spec + Goal",
-            "CR/发布 + Goal",
-            "Goal 卡",
-            "Goal ID",
+            "# 项目执行规范",
+            "不创建或恢复运行时 Goal",
+            "OpenSpec / Spec / Issue / 任务计划",
+            "Execution ID",
             "成功标准",
-            "预算 / 时间盒",
+            "current_slice / next_entry",
+            "authorization",
+            "validation / evidence",
             "停止条件",
-            "Goal Ledger",
             "Draft / Ready / Active / Blocked / Verified / Closed / Superseded",
-            "Goal 不会自动创建运行时 Goal",
-            "只有在用户明确要求按任务计划推进且 Plan Grant 字段齐备时",
-            "GSD / 工程执行的默认授权收敛到 Goal / Plan Grant / Wave / Execution Grant",
-            "Goal 可以挂接 Plan Grant、Wave Grant 或 Execution Grant",
-            "GSD 规划必须给出阶段/任务提交切片",
-            "每个 Wave 的授权策略",
-            "每个 Wave 的提交切片",
-            "Plan Grant 用来把 `GSD + Goal` 从目标管理变成可推进的低风险执行边界",
-            "Plan Grant: Draft / Active / Suspended",
-            "建议 commit message",
-            "范围内低风险本地任务按计划推进",
-            "Wave Grant 只能覆盖该 Wave 内互不冲突、低风险、可验证、可回滚的任务",
-            "Codex 替我审批只可作为当前 Execution Grant 范围内低风险工具审批通道",
-            "用 Goal、Wave 状态或 Codex 替我审批扩大默认授权范围",
-            "GSD 管 Wave 和任务顺序，Goal 管目标、成功标准、状态、预算、停止条件、验证证据和交接节奏",
-            "在 GSD 场景中，Goal 的完成线必须是生产可用能力",
-            "真实业务入口、生产边界、验收种子、验证证据、发布/回滚条件和责任 owner",
-            "生产可用能力:",
-            "demo 可跑",
-            "mock 已通",
+            "一次只选择一个可独立验证的当前切片",
+            "切片内部保留方法自由",
+            "execution_transition",
+            "just-in-time 回读",
+            "消融与回补",
+            "察实",
+            "正名",
+            "审时",
+            "行验",
+            "知止",
         ],
     )
     and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_product_to_engineering,
         [
-            "goal-governance.md",
-            "是否需要 Goal 组合",
-            "Goal 卡、GSD Wave / Goal 映射",
+            "execution-specification.md",
+            "是否需要 `GSD + 项目执行规范`",
+            "项目执行规范、GSD Wave / Execution ID 映射",
         ],
     )
     and has_all(
         wise_agent_engineering_governance,
         [
-            "goal-governance.md",
-            "Goal ID",
-            "Goal 状态",
-            "Goal Ledger 更新",
-            "不把 Goal 写成 Execution Grant",
+            "execution-specification.md",
+            "Execution ID",
+            "执行状态",
+            "项目执行规范更新",
+            "不把 项目执行规范 写成 Execution Grant",
         ],
     )
     and has_all(
         wise_agent_spec_template_practices,
         [
-            "goal-governance.md",
-            "关联 Goal",
-            "Goal 成功标准",
-            "Goal / AC 映射",
+            "execution-specification.md",
+            "关联项目执行规范",
+            "项目执行规范成功标准",
+            "项目执行规范 / AC 映射",
         ],
     )
     and has_all(
         wise_agent_code_delivery,
         [
-            "goal-governance.md",
-            "Goal 交付闭环",
-            "Goal 追踪",
+            "execution-specification.md",
+            "项目执行规范 交付闭环",
+            "项目执行规范追踪",
             "目标闭环",
         ],
     )
     and has_all(
         wise_agent_verification_release,
         [
-            "goal-governance.md",
-            "Goal 完成度判断",
-            "Goal ID / 成功标准",
-            "是否可以把 Goal 标记为 Verified 或 Closed",
+            "execution-specification.md",
+            "项目执行规范 完成度判断",
+            "Execution ID / 成功标准",
+            "是否可以把 项目执行规范 标记为 Verified 或 Closed",
         ],
     )
     and has_all(
@@ -4168,7 +4149,7 @@ check(
         [
             "# 交付执行控制",
             "Loop 不是更长的 Prompt",
-            "Goal -> State -> Plan -> Act -> Observe -> Decide -> Verify -> Stop / Handoff",
+            "项目执行规范 -> State -> Plan -> Act -> Observe -> Decide -> Verify -> Stop / Handoff",
             "角色 Loop 场景视图",
             "四类场景视图",
             "真实项目编码 Loop 额外字段",
@@ -4200,7 +4181,7 @@ check(
             "独立 Checker",
             "状态回写位置",
             "提交切片",
-            "GSD + Goal + Loop",
+            "GSD + 项目执行规范 + Loop",
             "反馈与验证",
             "预算和停止条件",
             "最大轮次",
@@ -4297,16 +4278,8 @@ check(
         ],
     )
     and has_all(
-        wise_agent_goal_governance,
-        [
-            "GSD + Goal + Loop",
-            "Loop ID",
-            "状态载体",
-            "反馈源",
-            "验证者",
-            "无进展检测",
-            "Loop 完成只代表某轮循环达到停止条件",
-        ],
+        wise_agent_execution_specification,
+        ["当前切片是一次可独立验证的工作单元", "Loop 只是切片内部的有界反馈循环"],
     )
     and has_all(
         wise_agent_code_delivery,
@@ -4316,7 +4289,7 @@ check(
             "生产可用 Loop 准出判断",
             "Loop 是否具备隔离执行、可复现状态、Maker / Checker 解耦、观测审计、人工接管和发布/回滚",
             "生产生效验证卡",
-            "版本回读、配置回读、冒烟验证、观测确认、工单 / Goal 回写",
+            "版本回读、配置回读、冒烟验证、观测确认、工单 / 项目执行规范 回写",
             "连续两轮没有新增证据",
             "Loop 稳定性",
         ],
@@ -4325,15 +4298,15 @@ check(
         wise_agent_planning_execution_admission,
         [
             "Agent Loop 准入卡",
-            "Goal 状态与当前阶段",
+            "执行状态与当前阶段",
             "Engineering Handoff Card",
             "Plan Grant Active",
-            "Goal 状态沿用 `goal-governance.md` 和 `check_state_contract.py` 的唯一词表",
+            "执行状态沿用 `execution-specification.md` 和 `check_state_contract.py` 的唯一词表",
             "工程执行 Loop 候选是准入结论，不是可写状态",
             "Wave Loop 与工程执行 Loop 的差异",
             "Loop 预算",
             "失败回写",
-            "Goal + 状态载体 + 反馈源 + 验证者 + 预算/最大轮次 + 无进展检测 + 停止条件",
+            "项目执行规范 + 状态载体 + 反馈源 + 验证者 + 预算/最大轮次 + 无进展检测 + 停止条件",
             "只能作为待补齐的 Loop 候选",
         ],
     )
@@ -4488,7 +4461,7 @@ check(
         wise_agent_skill,
         [
             "## 一体多能",
-            "一个入口、一个目标契约、一个准出结论",
+            "一个入口、一个项目执行契约、一个准出结论",
             "`references/cognition-and-capability-model.md`",
             "`references/capability-routing.md` 是能力 owner 与装载规则的唯一权威",
         ],
@@ -5267,6 +5240,8 @@ check(
             "wise-agent-should-not-record-one-off-learning-noise",
             "wise-agent-should-resume-from-state-contract",
             "wise-agent-should-select-control-mechanisms-by-evidence",
+            "wise-agent-should-convert-goal-request-to-project-execution-specification",
+            "wise-agent-should-ablate-stale-instructions-after-model-harness-change",
             "wise-agent-should-project-complex-work-topology",
             "wise-agent-should-not-project-work-topology-for-simple-task",
             "wise-agent-should-avoid-worker-for-coupled-task",
@@ -5400,7 +5375,7 @@ check(
             "路径：[wise-agent](./wise-agent)",
             "不限于产研",
             "产品、架构、文档、考据、生成和约规不是平级角色",
-            "复杂任务才使用计划、SDLC、Goal、Loop、Worker 或 Checker",
+            "复杂任务才使用计划、SDLC、项目执行规范、Loop、Worker 或 Checker",
             "从 AI 原型到工程化",
             "## 安装",
             "## 验证与同步安全",
@@ -7253,9 +7228,9 @@ check(
         [
             "## 2B.1 认知完整性门禁",
             "不新增 `Drift Mode`、记忆库、向量库或第二真相源",
-            "state_revision / authority_refs / decision_transitions / goal_transition?",
+            "state_revision / authority_refs / decision_transitions / execution_transition?",
             "excluded 不得直接变 confirmed",
-            "execution_basis 换轨属于承重 Goal 变化，必须有 goal_transition",
+            "execution_basis 换轨属于承重 项目执行规范 变化，必须有 execution_transition",
             "recheck_evidence",
             "严格晚于旧时刻的 `observed_at`",
             "superseded_by / supersedes",
@@ -7270,7 +7245,7 @@ check(
         "wise-agent/scripts/check_state_contract.py",
         [
             "state_revision must increment previous revision by one",
-            "load-bearing Goal fields changed without goal_transition",
+            "load-bearing execution fields changed without execution_transition",
             "must not disappear across state revisions",
             "cannot move directly from excluded to confirmed",
             "changed without recheck_evidence or stale status",
@@ -7301,7 +7276,7 @@ check(
             "上下文隔离、并行、专业化交接或断点恢复有明确收益",
             "至少三个节点",
             "两项同时满足",
-            "Goal 定义整体完成线",
+            "项目执行规范 定义整体完成线",
             "Loop 只在需要反复行动和反馈的节点内运行",
             "同一 `parallel_group` 的写入范围必须不重叠",
             "高风险 `Verified` 还必须声明不同的 `maker / checker`",
@@ -7341,10 +7316,7 @@ check(
             "--previous",
         ],
     )
-    and has_all(
-        wise_agent_goal_governance,
-        ["反证条件或护栏指标", "指标上升不能单独证明 Goal 达成"],
-    ),
+    ,
 )
 check(
     "wise-agent records the Graph Engineering source without adding a mode",
@@ -7511,6 +7483,129 @@ check(
         ],
     ),
 )
+check(
+    "wise-agent exposes project module deliberation across product and architecture authorities",
+    has_all(
+        wise_agent_skill,
+        ["$wise-agent 模块合议：<项目或边界议题>", "模块只是事实权威"],
+    )
+    and has_all(
+        wise_agent_context_handoff,
+        [
+            "项目内模块合议",
+            "业务价值与产品语义",
+            "系分与架构",
+            "Module Fact Card",
+            "直接业务价值",
+            "赋能业务价值",
+            "技术价值",
+            "技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果",
+            "可复用、先进或通用本身不是价值证据",
+            "纯技术价值",
+            "不要求产品侧参与",
+            "business-entry",
+            "domain-capability",
+            "shared-platform",
+            "infrastructure-middleware",
+            "assembly-adapter",
+            "消费场景 -> 提供能力 -> 契约与版本",
+            "第二套模块真相源",
+        ],
+    )
+    and has_all(
+        senior_project_modules,
+        [
+            "模块主定位",
+            "业务入口 / 应用编排",
+            "领域 / 公共业务能力",
+            "共享平台能力",
+            "基础设施 / 中间件适配",
+            "组合根 / 交付适配",
+            "没有直接营收不等于没有价值",
+            "技术价值",
+        ],
+    )
+    and has_all(
+        product_business_architecture,
+        ["模块合议", "直接业务价值", "赋能业务价值", "业务入口", "可复用业务能力", "不裁定代码依赖方向"],
+    )
+    and has_all(
+        "README.md",
+        ["$wise-agent 模块合议：<项目或边界议题>"],
+    ),
+)
+check(
+    "wise-agent module deliberation has comparison cases and source behavior smoke",
+    (ROOT / wise_agent_module_behavior_cases).exists()
+    and has_all(
+        wise_agent_module_behavior_cases,
+        [
+            "mixed-value-module-deliberation",
+            "ascii-colon-module-deliberation",
+            "pure-technical-module-value",
+            "technical-capability-claims-business-enablement",
+            "single-module-review-does-not-deliberate",
+            "同一 runner/model",
+            "静态 fixture 不等于真实行为证据",
+            "Module Fact Card",
+            "赋能链未闭合前",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"',
+        ],
+    )
+    and has_all(
+        "scripts/smoke-wise-agent-behavior.sh",
+        [
+            "module-deliberation",
+            "assert_module_deliberation_mixed",
+            "assert_module_deliberation_pure_technical",
+            "assert_module_deliberation_single_module",
+        ],
+    )
+    and has_all(
+        readme,
+        ["scripts/smoke-wise-agent-behavior.sh --mode module-deliberation"],
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-run-project-module-deliberation",
+    (
+        "$wise-agent 模块合议：<项目或边界议题>",
+        "Module Fact Card",
+        "直接业务价值、赋能业务价值或技术价值",
+        "技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果",
+        "不把没有直接营收误判为没有价值",
+        "产品架构专家",
+        "软件架构师",
+        "消费场景 -> 提供能力 -> 契约与版本",
+        "两模块优先双边定契",
+        "accepted / rejected / pending",
+        "第二套模块真相源",
+    ),
+)
+expected_handling_has(
+    "wise-agent-should-recognize-pure-technical-module-value",
+    (
+        "技术价值候选",
+        "当前基线、变化量、消费者和运行证据",
+        "不强行装载产品业务架构",
+        "不虚构直接业务价值或赋能业务价值",
+        "技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果",
+    ),
+)
+behavior_contract_has(
+    "wise-agent-should-run-project-module-deliberation",
+    ("trigger", "admission", "value_model", "module_fact_card", "dependency_contract", "perspective_owners", "must_not_do"),
+    ("$wise-agent 模块合议：<项目或边界议题>", "直接业务价值、赋能业务价值或技术价值", "技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果", "把模块或审查视角塑造成平级人格", "未经授权改代码、执行 Git 或发布"),
+)
+negative_reason_has(
+    "wise-agent-negative-module-deliberation-on-single-module-review",
+    ("单模块源码 CR", "不触发 wise-agent 模块合议", "不加载产品业务架构会商"),
+)
 expected_handling_has(
     "wise-agent-should-coordinate-peer-authority-contract-deliberation",
     (
@@ -7600,7 +7695,7 @@ negative_reason_has(
 )
 negative_reason_lacks(
     "wise-agent-negative-simple-local-engineering-cr",
-    ("同时触发 wise-agent", "需要工程交付合议", "必须建立 Goal"),
+    ("同时触发 wise-agent", "需要工程交付合议", "必须建立 项目执行规范"),
 )
 expected_handling_has(
     "wise-agent-should-reject-self-certified-roleplay-cr",
@@ -7694,7 +7789,7 @@ check(
             "## 控制强度",
             "默认直接工作",
             "| SDLC |",
-            "| Goal |",
+            "| 项目执行规范 |",
             "| Loop |",
             "| Worker |",
             "| Checker |",
@@ -7711,9 +7806,9 @@ check(
     and has_all(
         "README.md",
         [
-            "#### 3.1 什么时候启用 SDLC、Goal、Loop、Worker、Checker",
+            "#### 3.1 什么时候启用 SDLC、项目执行规范、Loop、Worker、Checker",
             "按完整 SDLC 覆盖",
-            "建立 Goal 并持续推进",
+            "为这项工作建立项目执行规范并持续推进",
             "允许进入 Loop",
             "可并行时再派 Worker",
             "增加独立 Checker",
@@ -7723,7 +7818,7 @@ check(
         wise_agent_agent,
         [
             "默认直接完成",
-            "SDLC、Goal、Loop、Worker 或 Checker",
+            "SDLC、Loop、Worker 或 Checker",
         ],
     ),
 )
@@ -8909,7 +9004,7 @@ check(
             "Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause",
             "不机械要求每轮都先 Red",
             "用户在任意时点提出暂停或修改约束都立即生效",
-            "Goal 状态: Active / Blocked / Verified",
+            "执行状态: Active / Blocked / Verified",
             "执行方式: 受控工程执行 Loop",
             "覆盖当前任务的 Plan Grant，或单任务 Execution Grant",
         ],
@@ -8990,7 +9085,7 @@ check(
             "单个 Task ID 或阶段切片已经选定",
             "业务与架构决策已冻结",
             "预计至少需要两轮实现、反馈、修正或验证",
-            "Goal / Task、Loop 状态载体、反馈源、验证者、预算、无进展检测、停止条件和适用授权已齐备",
+            "Execution ID / Task、Loop 状态载体、反馈源、验证者、预算、无进展检测、停止条件和适用授权已齐备",
             "不要求两者并存",
             "本文只定义工程 profile 的准入、轮内动作、工程停止条件和回写",
             "大项目任务回写 Stage / Wave 状态、验证矩阵和 handoff",
@@ -9112,11 +9207,12 @@ check(
             "Codex 持续协作边界",
             "Thread automation",
             "Scheduled automation",
-            "Goal",
+            "项目执行规范",
             "Side panel / artifact",
             "Shared written context",
-            "必须包含 outcome、success criterion、verifier、停止条件和失败处理",
-            "不把 automation、goal 或 queue 当成 Git、联网、外部消息、桌面 GUI、生产操作或长期记忆授权",
+            "不创建、恢复、续期或绑定 runtime Goal",
+            "切片准入只认项目执行规范、当前授权和验证证据",
+            "不把 automation、queue 或历史 Goal 记录当成 Git、联网、外部消息、桌面 GUI、生产操作或长期记忆授权",
             "外部 GSD 来源边界",
             "Codex 官方团队文章来源边界",
             "不作为 OpenAI 官方当前产品能力、模型、工具可用性或路线图承诺依据",
@@ -9498,8 +9594,8 @@ check(
         wise_agent_spec_template_practices,
         [
             "Spec / SDD / OpenSpec 是当前实现约束，不是评审过程记录",
-            "讨论过程、迭代草稿、AI 推理轨迹、被拒方案和 Goal Ledger 流水只作为过程资产链接，不复制进正文",
-            "是否把讨论过程、迭代草稿、AI 推理轨迹、被拒方案或完整 Goal Ledger 流水写进 Spec 正文",
+            "讨论过程、迭代草稿、AI 推理轨迹、被拒方案和 项目执行规范 流水只作为过程资产链接，不复制进正文",
+            "是否把讨论过程、迭代草稿、AI 推理轨迹、被拒方案或完整 项目执行规范 流水写进 Spec 正文",
             "不要把过程记录回流成最终交付正文",
         ],
     ),
@@ -10111,7 +10207,7 @@ check(
     and has_all(
         "README.md",
         [
-            "`semantic-contract` 与 `wind-validation` 单独模式直接读取源仓库规则",
+            "`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则",
             "Wind Service validation",
         ],
     )
@@ -14163,6 +14259,51 @@ check(
 
 scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="project module deliberation accepts ASCII colon trigger",
+        prompt="$wise-agent 模块合议: 讨论构建缓存与运行观测两个基础设施模块的边界、依赖、能力和非目标。",
+        routes={
+            "wise-agent",
+            "context-handoff.md",
+            "senior",
+            "project-governance-codebase-and-modules.md",
+            "system-analysis-design.md",
+        },
+    ),
+    RouteFixture(
+        name="pure technical module deliberation keeps product authority optional",
+        prompt=skill_eval_cases_by_id["wise-agent-should-recognize-pure-technical-module-value"]["query"],
+        routes={
+            "wise-agent",
+            "context-handoff.md",
+            "senior",
+            "project-governance-codebase-and-modules.md",
+            "system-analysis-design.md",
+        },
+    ),
+    RouteFixture(
+        name="project module deliberation combines product and architecture facts",
+        prompt=skill_eval_cases_by_id["wise-agent-should-run-project-module-deliberation"]["query"],
+        routes={
+            "wise-agent",
+            "context-handoff.md",
+            "product",
+            "business-architecture-planning.md",
+            "senior",
+            "project-governance-codebase-and-modules.md",
+            "system-analysis-design.md",
+        },
+    ),
+    RouteFixture(
+        name="engineering work is sliced by deliverable outcome",
+        prompt=skill_eval_cases_by_id["senior-software-architect-should-slice-engineering-work-by-deliverable"]["query"],
+        routes={"senior", "workflow.md"},
+    ),
+    RouteFixture(
+        name="wise-agent governs long-lived domain language context",
+        prompt=skill_eval_cases_by_id["wise-agent-should-govern-project-domain-language-context"]["query"],
+        routes={"wise-agent", "code-delivery.md", "product"},
+    ),
+    RouteFixture(
         name="simple local change takes fast coding path",
         prompt="这个局部代码调整行为已经明确，请快速编码，先完成最小实现，测试和 CR 最后集中补。",
         routes={"senior", "workflow.md"},
@@ -14459,7 +14600,7 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native final PRD system design document gate",
-        prompt="整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、Goal Ledger 或任务计划，只保留当前有效结论和验收",
+        prompt="整理最终 PRD / 系分：正式交付文档不要保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案，把过程内容迁移到评审报告、Decision Log、项目执行规范 或任务计划，只保留当前有效结论和验收",
         routes={"wise-agent", "product-to-engineering-lifecycle.md", "prd-system-design-review.md", "spec-template-practices.md", "verification-review-release.md"},
     ),
     RouteFixture(
@@ -14474,23 +14615,23 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native goal target plan composition",
-        prompt="做 Goal + 目标计划组合：这个中大型项目需要持续推进，把业务目标、生产可用能力、成功标准、计划分波、原子执行候选、验证证据、预算时间盒、停止条件、Goal 状态和交接节奏串起来，不要把 Goal 当 Execution Grant",
-        routes={"wise-agent", "product-to-engineering-lifecycle.md", "engineering-governance.md", "planning-execution-admission.md", "goal-governance.md", "verification-review-release.md"},
+        prompt="做 项目执行规范 + 目标计划组合：这个中大型项目需要持续推进，把业务目标、生产可用能力、成功标准、计划分波、原子执行候选、验证证据、预算时间盒、停止条件、执行状态和交接节奏串起来，不要把 项目执行规范 当 Execution Grant",
+        routes={"wise-agent", "product-to-engineering-lifecycle.md", "engineering-governance.md", "planning-execution-admission.md", "execution-specification.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native goal plan grant",
-        prompt="使用 Goal + 目标计划按任务计划推进，不希望每个任务都被 Execution Grant 阻塞；形成 Plan Grant，低风险本地任务直接推进，Git 默认只给提交切片和建议 commit message，联网、生产和高风险业务仍显式确认",
-        routes={"wise-agent", "engineering-governance.md", "planning-execution-admission.md", "goal-governance.md", "verification-review-release.md"},
+        prompt="使用 项目执行规范 + 目标计划按任务计划推进，不希望每个任务都被 Execution Grant 阻塞；形成 Plan Grant，低风险本地任务直接推进，Git 默认只给提交切片和建议 commit message，联网、生产和高风险业务仍显式确认",
+        routes={"wise-agent", "engineering-governance.md", "planning-execution-admission.md", "execution-specification.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native goal staged commits",
-        prompt="使用 Goal + 目标计划按任务计划推进，并在每个已验证任务阶段提交代码；形成提交切片和 commit_after_verified_task，但不要 push、不要联网、不要生产操作",
-        routes={"wise-agent", "engineering-governance.md", "planning-execution-admission.md", "goal-governance.md", "verification-review-release.md"},
+        prompt="使用 项目执行规范 + 目标计划按任务计划推进，并在每个已验证任务阶段提交代码；形成提交切片和 commit_after_verified_task，但不要 push、不要联网、不要生产操作",
+        routes={"wise-agent", "engineering-governance.md", "planning-execution-admission.md", "execution-specification.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native agent loop engineering",
         prompt="参考 Loop Engineering：用 /goal 或 /loop 持续推进目标计划，但必须有状态载体、反馈源、自我验证、最大轮次、无进展检测、预算上限、停止条件和交接物，不能把 auto mode 当无条件授权",
-        routes={"wise-agent", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "code-delivery.md", "verification-review-release.md"},
+        routes={"wise-agent", "engineering-governance.md", "delivery-execution-control.md", "execution-specification.md", "planning-execution-admission.md", "code-delivery.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native production ready agent loop",
@@ -14524,8 +14665,8 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native target plan atomic handoff state machine",
-        prompt="进入知止者的目标计划和原子执行协同流程：Goal 状态只使用 Draft/Ready/Active/Blocked/Verified/Closed/Superseded，另记录 Round 0、Wave Plan、工程执行 Loop 等当前阶段，并输出 Engineering Handoff Card、Plan Grant + Loop 预算绑定、失败回写和下一 owner",
-        routes={"wise-agent", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "code-delivery.md", "verification-review-release.md"},
+        prompt="进入知止者的目标计划和原子执行协同流程：执行状态只使用 Draft/Ready/Active/Blocked/Verified/Closed/Superseded，另记录 Round 0、Wave Plan、工程执行 Loop 等当前阶段，并输出 Engineering Handoff Card、Plan Grant + Loop 预算绑定、失败回写和下一 owner",
+        routes={"wise-agent", "engineering-governance.md", "delivery-execution-control.md", "execution-specification.md", "planning-execution-admission.md", "code-delivery.md", "verification-review-release.md"},
     ),
     RouteFixture(
         name="AI Native routes Superpowers skills library",
@@ -14574,8 +14715,8 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="AI Native unifies production ready workflow with wisdom lens",
-        prompt="如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、Goal、Harness 和工具链收成一个入口、一个契约、一个准出。",
-        routes={"wise-agent", "delivery-lifecycle.md", "engineering-governance.md", "delivery-execution-control.md", "goal-governance.md", "planning-execution-admission.md", "superpowers-skill-library.md", "code-delivery.md", "huaxia-practical-wisdom", "verification-review-release.md", "source-map.md"},
+        prompt="如何混一 AI 工作流，使其更加生产可用，结合老祖宗智慧看看：把 GSD、CAD、GStack、项目执行规范、Harness 和工具链收成一个入口、一个契约、一个准出。",
+        routes={"wise-agent", "delivery-lifecycle.md", "engineering-governance.md", "delivery-execution-control.md", "execution-specification.md", "planning-execution-admission.md", "superpowers-skill-library.md", "code-delivery.md", "huaxia-practical-wisdom", "verification-review-release.md", "source-map.md"},
     ),
     RouteFixture(
         name="AI Native reusable work asset loop",
@@ -14614,8 +14755,18 @@ scenario_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="wise agent control mechanism selection",
-        prompt="知止者判断这个跨阶段、跨轮项目是否需要 SDLC、Goal、Loop、Worker 和 Checker：三个模块低耦合可并行，但公共契约和发布风险要独立验证，不要机械启用全部机制",
-        routes={"wise-agent", "delivery-lifecycle.md", "goal-governance.md", "delivery-execution-control.md", "capability-routing.md", "engineering-governance.md", "verification-review-release.md"},
+        prompt="知止者判断这个跨阶段、跨轮项目是否需要 SDLC、项目执行规范、Loop、Worker 和 Checker：三个模块低耦合可并行，但公共契约和发布风险要独立验证，不要机械启用全部机制",
+        routes={"wise-agent", "delivery-lifecycle.md", "execution-specification.md", "delivery-execution-control.md", "capability-routing.md", "engineering-governance.md", "verification-review-release.md"},
+    ),
+    RouteFixture(
+        name="wise agent converts runtime goal request to project execution specification",
+        prompt=skill_eval_cases_by_id["wise-agent-should-convert-goal-request-to-project-execution-specification"]["query"],
+        routes={"wise-agent", "execution-specification.md"},
+    ),
+    RouteFixture(
+        name="wise agent ablates stale instructions after model harness change",
+        prompt=skill_eval_cases_by_id["wise-agent-should-ablate-stale-instructions-after-model-harness-change"]["query"],
+        routes={"wise-agent", "execution-specification.md", "source-map.md"},
     ),
     RouteFixture(
         name="wise agent checker without worker",
@@ -15076,6 +15227,26 @@ scenario_fixtures: list[RouteFixture] = [
 
 negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
+        name="negated business value claim keeps pure technical module deliberation",
+        prompt="$wise-agent 模块合议：评审构建缓存与运行观测模块。尚无业务场景，只有技术指标和运行证据；不要虚构直接业务价值或赋能业务价值。",
+        routes={"product", "business-architecture-planning.md"},
+    ),
+    RouteFixture(
+        name="pure technical module deliberation synonym does not force product business architecture",
+        prompt="$wise-agent 模块合议：评审构建缓存与运行观测两个基础设施模块。尚无业务场景，只依据构建耗时、故障恢复时间和资源成本。",
+        routes={"product", "business-architecture-planning.md"},
+    ),
+    RouteFixture(
+        name="pure technical module deliberation does not force product business architecture",
+        prompt=skill_eval_cases_by_id["wise-agent-should-recognize-pure-technical-module-value"]["query"],
+        routes={"product", "business-architecture-planning.md"},
+    ),
+    RouteFixture(
+        name="single module review does not start module deliberation",
+        prompt=skill_eval_cases_by_id["wise-agent-negative-module-deliberation-on-single-module-review"]["query"],
+        routes={"context-handoff.md", "business-architecture-planning.md"},
+    ),
+    RouteFixture(
         name="ambiguous architecture view does not preselect owner",
         prompt="知止者，判断这张架构图应该归业务架构、产品架构、系统架构还是技术架构；现有材料没有说明用于哪类决策",
         routes={"product", "senior"},
@@ -15280,6 +15451,80 @@ def routes_codegen(prompt: str) -> bool:
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
     route: set[str] = set()
+    if "$wise-agent" in prompt and "模块合议" in prompt:
+        route.update(
+            {
+                "wise-agent",
+                "context-handoff.md",
+                "senior",
+                "project-governance-codebase-and-modules.md",
+                "system-analysis-design.md",
+            }
+        )
+        business_value_claimed = (
+            contains_any(
+                prompt,
+                [
+                    "直接业务价值",
+                    "赋能业务价值",
+                    "主张赋能业务",
+                    "声称赋能业务",
+                    "声称可以赋能",
+                    "如何赋能",
+                    "评估赋能",
+                    "论证赋能",
+                    "产品定位",
+                    "产品语义",
+                    "客户业务应用",
+                    "客户公共能力",
+                    "业务入口",
+                    "业务能力",
+                    "受益主体",
+                    "结果口径",
+                ],
+            )
+            and not contains_any(
+                prompt,
+                [
+                    "不要虚构直接业务价值或赋能业务价值",
+                    "不虚构直接业务价值或赋能业务价值",
+                    "不主张直接业务价值或赋能业务价值",
+                ],
+            )
+        )
+        pure_technical_scope = (
+            contains_any(
+                prompt,
+                [
+                    "没有已确认的业务场景",
+                    "没有业务场景",
+                    "尚无业务场景",
+                    "暂无业务场景",
+                    "无业务场景",
+                    "不涉及业务场景",
+                    "仅讨论技术价值",
+                    "只讨论技术价值",
+                    "不主张业务价值",
+                ],
+            )
+            and contains_any(
+                prompt,
+                [
+                    "构建耗时",
+                    "故障发现时间",
+                    "故障恢复时间",
+                    "可靠性",
+                    "性能",
+                    "资源成本",
+                    "可观测性",
+                    "技术指标",
+                    "运行证据",
+                ],
+            )
+            and not business_value_claimed
+        )
+        if not pure_technical_scope:
+            route.update({"product", "business-architecture-planning.md"})
     architecture_view_ambiguous = contains_any(
         prompt,
         ["业务架构、产品架构、系统架构还是技术架构", "哪类架构", "哪种架构"],
@@ -15465,7 +15710,7 @@ def route_fixture(prompt: str) -> set[str]:
                 "verification-review-release.md",
             }
         )
-    if not wise_agent_opt_out and contains_any(prompt, wise_agent_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "补足", "规范化", "重构", "精简", "工程取舍", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "上下文治理", "上下文治理视图", "Context System", "知识库治理", "业务专家蒸馏", "蒸馏业务专家", "领域专家 Skill Pack", "可追溯业务专家", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "决策澄清门禁", "自决推进", "询问 owner", "继续收敛", "停止交接", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "Goal", "Goal 组合", "Goal + 目标计划", "目标计划", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "目标驱动", "持续推进", "Goal 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "生产可用 Loop", "生产可用门禁", "生产可用混一模型", "混一", "一个入口", "一个契约", "一个准出", "生产可用准出卡", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "grill-me", "轻量问询", "问询修复", "问询推进修复", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "AI 编码框架", "框架分层"]):
+    if not wise_agent_opt_out and contains_any(prompt, wise_agent_terms) and contains_any(prompt, ["流程", "编排", "交接", "评估", "评审", "判断", "检查", "分派", "路由", "成熟度", "owner", "停止条件", "验证矩阵", "升级", "版本", "补足", "规范化", "重构", "精简", "工程取舍", "知识表达门禁", "意图可执行", "Knowledge-to-Execution", "非标问题模式", "实际项目编码 Loop", "Coding Loop Contract", "架构排熵", "架构排熵 Loop", "腐朽门禁", "可删除性", "承重 bug", "承重行为", "废弃 API", "治理自腐", "守卫自检", "Architecture Entropy Card", "需求分析协同门禁", "需求分析结论卡", "问题核心诊断", "问题核心诊断门禁", "抓住问题的核心", "需求无止境", "概念定名", "需求止损", "价值 / 意义边界", "定向", "定性", "定位", "定量", "整体 / 系统 / 科学", "病 / 证 / 症", "产品 / 系统 DNA 门禁", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "功能先行、规则后补", "根源需求", "产品定义", "产品边界", "产品判断动作链", "产品判断 Loop", "产品判断成流程", "产品动作链", "pm-skills", "路线图取舍", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "设计模式的本质", "边界坐标", "上下游分工", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "理解门禁", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "ACCEPT/REJECT/PENDING", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "发布复盘", "职责边界", "安装", "调用", "下载", "接入", "加入", "阅读", "分析代码", "设计-代码对齐", "对齐设计", "AI-readiness", "上下文漂移", "上下文治理", "上下文治理视图", "Context System", "知识库治理", "业务专家蒸馏", "蒸馏业务专家", "领域专家 Skill Pack", "可追溯业务专家", "生产不稳", "Demo 可用", "四层嵌套", "L1-L4", "Prompt Engineering", "Context Engineering", "Harness Engineering", "交付闭环", "Spec 强度", "事实来源", "生产级代码", "结构化契约", "五支柱验证", "回写 Spec", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "自我挖掘", "自主交付控制卡", "人工确认边界", "必须人工确认", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "自动问询", "自动决策", "决策澄清门禁", "自决推进", "询问 owner", "继续收敛", "停止交接", "一次通过率", "返工率", "缺陷密度", "模板最佳实践", "五段式骨架", "AC 覆盖", "spec-lint", "漂移检查", "Given-When-Then", "项目执行规范", "项目执行规范 组合", "项目执行规范 + 目标计划", "目标计划", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "目标驱动", "持续推进", "持续发挥", "项目执行规范 卡", "目标状态", "预算时间盒", "预算 / 时间盒", "Loop", "Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "生产可用 Loop", "生产可用门禁", "生产可用混一模型", "混一", "一个入口", "一个契约", "一个准出", "生产可用准出卡", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "/goal", "/loop", "auto mode", "后台 Agent", "多 Agent 监督", "自我验证", "最大轮次", "无进展检测", "预算上限", "Ponytail", "最小正确实现", "过度设计 CR", "Matt Pocock", "mattpocock/skills", "grill-me", "轻量问询", "问询修复", "问询推进修复", "盘问", "一次一个问题", "建议答案", "任务树", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "AI 编码框架", "框架分层"]):
         route.add("wise-agent")
         if contains_any(prompt, ["生产交付审查", "发布前评审", "forcing questions", "交付生产", "能不能上线"]):
             route.update(
@@ -15522,10 +15767,10 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("product-to-engineering-lifecycle.md")
         if contains_any(prompt, ["PRD/系分合议预审", "系分预审", "PRD / 系分预审", "合议预审", "MAGI 三角色", "A2A 虚拟评审", "IPD 式互审", "review_task", "evaluation_task", "reporting_task", "ACCEPT/REJECT/PENDING", "接受项", "分歧项", "风险清单", "PRD 评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "疑似问题", "追问点", "整理最终 PRD", "整理最终", "最终文档准出", "正式交付文档", "讨论过程", "迭代草稿", "过程资产", "过程记录链接", "被拒方案", "需求分析协同门禁", "需求分析结论卡", "根源需求", "产品定义", "产品边界", "稳定点/变化点", "稳定点 / 变化点", "真实变化轴", "找到变化", "封装变化", "边界坐标", "需求 CR", "CR 需求", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "CEO Review", "Eng Review", "Design Review", "工程评审", "交互评审"]):
             route.add("prd-system-design-review.md")
-        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "/plan-eng-review", "/review", "Eng Review", "工程评审", "开发", "源码 CR", "问题核心诊断", "抓住问题的核心", "病机", "病 / 证 / 症", "定向", "定性", "定位", "定量", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "真实变化轴", "找到变化", "封装变化", "设计模式", "接口", "策略", "工厂", "规则层", "配置化", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "不知道就问", "没要求的不写", "只改被要求的范围", "路径是否最短", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "Goal", "Goal 组合", "Goal + 目标计划", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "目标驱动", "持续推进"]):
+        if contains_any(prompt, ["OpenSpec", "Superpowers", "Harness", "GSD", "CAD", "Execution Grant", "权限边界", "Agentic Engineering", "代码 CR", "Spring Boot", "资深架构师", "架构师", "系分设计", "编码", "TDD", "/plan-eng-review", "/review", "Eng Review", "工程评审", "开发", "源码 CR", "问题核心诊断", "抓住问题的核心", "病机", "病 / 证 / 症", "定向", "定性", "定位", "定量", "系统 DNA", "产品 / 系统 DNA", "不变量", "状态流转", "演化规则", "真实变化轴", "找到变化", "封装变化", "设计模式", "接口", "策略", "工厂", "规则层", "配置化", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量门禁", "测试矩阵", "验证顺序", "多文件 diff", "重构计划", "快速阅读代码库", "代码库理解结论包", "图形化理解", "架构描述转图", "入口路径", "源码锚点", "调用关系", "边界变化", "SDD", "规范驱动开发", "生产级代码", "Spec 强度", "事实来源", "五支柱验证", "交付闭环", "独立验证", "CR 减负", "知识回流", "经验回流", "Skill 自我改进", "经验归位", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "不知道就问", "没要求的不写", "只改被要求的范围", "路径是否最短", "模板最佳实践", "AC 与测试映射", "spec-lint", "AC 覆盖", "漂移检查", "项目执行规范", "项目执行规范 组合", "项目执行规范 + 目标计划", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "目标驱动", "持续推进"]):
             route.add("engineering-governance.md")
-        if contains_any(prompt, ["GSD + Goal", "Goal + 目标计划", "Goal 组合", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行候选", "Goal 卡", "CAD + Goal", "Spec + Goal", "目标驱动", "持续推进", "目标状态", "Goal 状态", "预算时间盒", "预算 / 时间盒", "Goal Ledger"]):
-            route.add("goal-governance.md")
+        if contains_any(prompt, ["GSD + 项目执行规范", "项目执行规范 + 目标计划", "项目执行规范 组合", "目标计划组合", "目标计划按任务计划推进", "计划分波", "原子执行候选", "项目执行规范 卡", "CAD + 项目执行规范", "Spec + 项目执行规范", "目标驱动", "持续推进", "目标状态", "执行状态", "预算时间盒", "预算 / 时间盒", "项目执行规范", "大目标", "运行时 Goal", "固定周期清空"]):
+            route.add("execution-specification.md")
         if contains_any(prompt, ["Agent Loop", "Loop Engineering", "Agent 闭环工程", "三层反馈 Loop", "三层反馈节奏", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "吴恩达", "Andrew Ng", "实际项目编码 Loop", "Coding Loop Contract", "反馈闭环成熟度", "验证簇", "不变量验证簇", "L1-L4", "四层嵌套", "Prompt Engineering", "Context Engineering", "Harness Engineering", "Agent 生产不稳", "生产不稳", "Demo 可用", "L2/L3/L4/L5", "L2 / L3 / L4 / L5", "架构排熵", "架构排熵 Loop", "腐朽门禁", "Architecture Entropy Card", "可删除性", "承重 bug", "承重行为", "废弃 API", "dead path", "治理自腐", "守卫自检", "人工 triage", "写 Loop", "Loop", "/goal", "/loop", "auto mode", "后台 Agent", "持续编排", "多 Agent 监督", "自我挖掘", "自主交付控制卡", "人工确认边界", "任务结束责任闭环", "交付责任自检", "交付内容负责", "任务结束", "下一任务计划问询", "最小计划草案", "自动问询", "自动决策", "决策澄清门禁", "自决推进", "询问 owner", "继续收敛", "停止交接", "自我验证", "最大轮次", "无进展检测", "预算上限", "Loop 停止条件", "状态载体", "反馈源", "验证者", "生产可用 Loop", "生产可用门禁", "自动化心跳", "状态落盘", "可复现状态", "隔离执行", "Maker / Checker", "独立 Checker", "观测审计", "人工接管", "发布回滚", "发布/回滚", "理解债", "认知投降", "任务树", "Task Tree", "Trellis", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "角色链审查", "AI 编码框架", "框架分层", "Matt Pocock", "mattpocock/skills", "grill-me", "轻量问询", "问询修复", "问询推进修复", "一次一个问题", "建议答案"]):
             route.add("delivery-execution-control.md")
             route.add("engineering-governance.md")
@@ -15534,8 +15779,8 @@ def route_fixture(prompt: str) -> set[str]:
                 route.update({"senior", "evolutionary-architecture.md", "coding-review-deep-dive.md"})
             if contains_any(prompt, ["GSD", "CAD", "Plan Grant", "Wave", "Atomic Task", "Atomic Candidate", "Execution Grant", "Task ID", "目标计划", "计划分波", "原子执行", "原子执行候选", "提交切片"]):
                 route.add("planning-execution-admission.md")
-            if contains_any(prompt, ["Goal", "GSD + Goal", "Goal + 目标计划", "目标计划", "目标", "Goal Ledger"]):
-                route.add("goal-governance.md")
+            if contains_any(prompt, ["项目执行规范", "GSD + 项目执行规范", "项目执行规范 + 目标计划", "目标计划", "目标", "项目执行规范"]):
+                route.add("execution-specification.md")
             if contains_any(prompt, ["交付", "代码", "CR", "测试", "失败测试", "TDD", "Spec", "回写", "返工", "缺陷", "验证", "验证命令", "状态回写", "生产可用", "能上线", "发布回滚", "发布/回滚", "观测审计", "人工接管"]):
                 route.add("code-delivery.md")
         if contains_any(prompt, ["CDD", "Capability Discovery", "Capability-Driven Development", "能力发现", "先找能力，再写代码"]):
@@ -15568,7 +15813,7 @@ def route_fixture(prompt: str) -> set[str]:
                     "senior",
                 }
             )
-        if not contains_any(prompt, ["不调用外部代码评审工具", "没有要求 Open Code Review", "不需要外部 Checker 工具"]) and contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "代码评审工具", ".opencodereview", "rule.json", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "代码阅读理解", "阅读理解代码", "上下文工程", "上下文治理", "Context System", "知识库治理", "知识库工具", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
+        if not contains_any(prompt, ["不调用外部代码评审工具", "没有要求 Open Code Review", "不需要外部 Checker 工具"]) and contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "代码评审工具", ".opencodereview", "rule.json", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "代码阅读理解", "阅读理解代码", "上下文工程", "上下文治理", "知识库治理", "知识库工具", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
         if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 插件", "superpowers@openai-api-curated", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.1", "上游 release", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grill-me", "Wayfinder", "wayfinder", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
@@ -15585,11 +15830,11 @@ def route_fixture(prompt: str) -> set[str]:
                 route.add("engineering-governance.md")
             if contains_any(prompt, ["Checker", "独立验证机制"]):
                 route.add("verification-review-release.md")
-        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "Execution Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + Goal", "需求分析协同门禁", "需求分析结论卡", "决策寻路", "决策地图", "Wayfinder", "wayfinder", "目标大致明确", "路线仍很模糊", "不是一次会话", "Destination", "Frontier", "Not yet specified"]):
+        if contains_any(prompt, ["GSD/CAD 编排准入", "GSD/CAD 准入", "Harness/GSD/CAD 准入", "GSD Round 0", "Atomic Task", "GSD Wave", "CAD 原子任务", "CAD 候选缺口", "Execution Grant", "Execution Grant 缺口", "Plan Grant", "目标计划", "目标计划按任务计划推进", "计划分波", "原子执行", "原子执行候选", "三卡交接", "Engineering Handoff Card", "工程执行交接卡", "生产交付卡", "生产 Loop 交接卡", "产品 / 系统 DNA", "系统 DNA", "产品 DNA", "业务不变量", "状态流转", "演化规则", "默认授权", "授权策略", "自动推进", "替我审批", "审批", "自动通过", "Wave Grant", "Execution Grant", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "产研协同研发流程", "中大型项目", "大项目", "Wave/Atomic Task", "GSD + 项目执行规范", "需求分析协同门禁", "需求分析结论卡", "决策寻路", "决策地图", "Wayfinder", "wayfinder", "目标大致明确", "路线仍很模糊", "不是一次会话", "Destination", "Frontier", "Not yet specified"]):
             route.add("planning-execution-admission.md")
-        if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "/qa", "/ship", "QA Lead", "Release Engineer", "QA 验证", "发布准出", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "Goal", "Goal 状态", "成功标准", "目标状态"]):
+        if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "/qa", "/ship", "QA Lead", "Release Engineer", "QA 验证", "发布准出", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "项目执行规范", "执行状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "设计模式的本质", "找到变化", "封装变化", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent", "GStack", "Trellis", "四大 AI 编码框架", "四大AI编码框架", "渐进式 SDD", "Spec Coding", "PrismSpec", "Lattice Harness", "吴恩达", "Andrew Ng", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "设计模式的本质", "找到变化", "封装变化", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent", "GStack", "Trellis", "四大 AI 编码框架", "四大AI编码框架", "渐进式 SDD", "Spec Coding", "PrismSpec", "Lattice Harness", "吴恩达", "Andrew Ng", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "Claude Code之父", "固定周期清空"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -15783,6 +16028,12 @@ def route_fixture(prompt: str) -> set[str]:
 for fixture in scenario_fixtures:
     expected_subset(fixture.name, route_fixture(fixture.prompt), fixture.routes)
 
+expected_absent(
+    "domain language context avoids code understanding tools",
+    route_fixture(skill_eval_cases_by_id["wise-agent-should-govern-project-domain-language-context"]["query"]),
+    {"code-understanding-tools.md"},
+)
+
 for fixture in negative_route_fixtures:
     expected_absent(fixture.name, route_fixture(fixture.prompt), fixture.routes)
 
@@ -15868,7 +16119,7 @@ expected_handling_has(
         "不得吸收",
         "高频、低风险、有证据",
         "不临时加长 Prompt",
-        "Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、Goal Ledger 或项目知识库",
+        "Skill、reference、fixture、脚本、AGENTS / CONTEXT、ADR、项目执行规范 或项目知识库",
         "未核验业务知识",
         "战略取舍",
         "客户承诺",
@@ -16216,7 +16467,7 @@ expected_handling_has(
         "Trellis 可选载体准入判断",
         "仓库级 Agent Harness / 记忆与任务状态载体",
         "不是新的产研主流程",
-        "现有 AGENTS.md、Issue、Spec、Goal Ledger 和知识库",
+        "现有 AGENTS.md、Issue、Spec、项目执行规范 和知识库",
         "真实证据",
         "不安装 Trellis",
         "非关键任务做隔离试点",
@@ -16300,7 +16551,7 @@ expected_handling_has(
         "冒烟验证",
         "业务场景模拟验收",
         "观测确认",
-        "工单 / Goal 回写",
+        "工单 / 项目执行规范 回写",
         "生产生效验证卡",
         "公开资料、业内共识或行业标准规范只能作为补偿场景来源",
         "不把已部署、已推配置、测试通过、页面能打开、接口能调用、公开资料或 Agent 自述写成预发 OK、生产 OK、CR 结论、Git 授权或上线审批",
@@ -16555,7 +16806,7 @@ expected_handling_has(
         "跳过决策寻路",
         "当前会话可完成",
         "按现有工程交付路径执行和验证",
-        "不创建 Destination 地图、Frontier、Not yet specified、Issue 或新的 Goal",
+        "不创建 Destination 地图、Frontier、Not yet specified、Issue 或新的 项目执行规范",
         "不重新进入 grill-me",
     ),
 )
@@ -16828,6 +17079,117 @@ expected_handling_has(
     ),
 )
 
+expected_handling_has(
+    "senior-software-architect-should-slice-engineering-work-by-deliverable",
+    (
+        "用户可观察结果",
+        "可交付竖切",
+        "失败测试或等价 pass/fail 信号",
+        "HITL / AFK",
+        "标签不授予权限",
+        "用户授权、Plan Grant 或 Execution Grant",
+        "横向基础工作",
+        "不自动创建 GitHub Issue、分支或提交",
+    ),
+)
+
+behavior_contract_has(
+    "senior-software-architect-should-slice-engineering-work-by-deliverable",
+    ("slice_gate", "task_card_must_include", "interaction_gate", "authorization_gate", "must_not_do"),
+    (
+        "场景与验收",
+        "领域术语与权威来源",
+        "失败测试或等价 pass/fail 信号",
+        "验证证据",
+        "回滚或停止条件",
+        "HITL / AFK",
+        "标签不授予权限",
+        "用户授权、Plan Grant 或 Execution Grant",
+        "自动创建 Issue、分支或提交",
+    ),
+)
+
+expected_handling_has(
+    "wise-agent-should-govern-project-domain-language-context",
+    (
+        "语言冲突",
+        "限界上下文",
+        "最小领域语言资产",
+        "规范术语",
+        "对象 owner",
+        "来源和 revision",
+        "禁止混同项",
+        "PENDING / conflict",
+        "未获授权不创建 CONTEXT.md",
+    ),
+)
+
+behavior_contract_has(
+    "wise-agent-should-govern-project-domain-language-context",
+    ("language_asset_must_include", "read_gate", "write_gate", "must_not_do"),
+    (
+        "定义与对象 owner",
+        "来源和 revision",
+        "适用范围",
+        "别名或废弃名",
+        "禁止混同项",
+        "代码、文档和测试锚点",
+        "PENDING 或 conflict",
+        "自动创建 CONTEXT.md",
+    ),
+)
+
+check(
+    "engineering work uses deliverable vertical slices and explicit interaction gates",
+    has_all(
+        "senior-software-architect/references/workflow.md",
+        [
+            "可交付竖切任务契约",
+            "用户可观察结果",
+            "失败测试或等价 pass/fail 信号",
+            "HITL",
+            "AFK",
+            "不授予执行权限",
+            "Plan Grant",
+            "Execution Grant",
+            "横向基础工作",
+            "不自动创建 GitHub Issue",
+        ],
+    ),
+)
+
+check(
+    "context system governs a minimal authoritative domain language asset",
+    has_all(
+        "wise-agent/references/code-delivery.md",
+        [
+            "领域语言资产",
+            "规范术语",
+            "对象 owner",
+            "来源 revision",
+            "适用范围",
+            "禁止混同",
+            "PENDING / conflict",
+            "不强制创建 `CONTEXT.md`",
+        ],
+    ),
+)
+
+check(
+    "external coding methods map to existing design build diagnose and slicing capabilities",
+    has_all(
+        "wise-agent/references/superpowers-skill-library.md",
+        [
+            "结构化工程容器",
+            "设计澄清",
+            "测试反馈",
+            "诊断反馈",
+            "可交付竖切",
+            "Skill 存在不等于能力成立",
+        ],
+    ),
+)
+
 behavior_contract_has(
     "wise-agent-should-assetize-grill-me-handoff",
     (
@@ -16920,7 +17282,7 @@ expected_handling_has(
         "实际项目编码 Loop",
         "delivery-execution-control",
         "Coding Loop Contract",
-        "任务 ID/关联 Goal/Wave",
+        "任务 ID/关联项目执行规范/Wave",
         "代码写入范围",
         "只读范围",
         "失败测试/验收样例",
@@ -16982,7 +17344,7 @@ expected_handling_has(
         "todo / blocked 记录原因、依赖、Owner 与停止证据",
         "发现偏差先冻结切片",
         "产品 Owner 裁决需求变化还是实现偏离",
-        "Harness Plan、Goal Ledger 或 OpenSpec tasks",
+        "Harness Plan、项目执行规范 或 OpenSpec tasks",
         "不强制新建 requirement.md 或命令树",
     ),
 )
@@ -17050,19 +17412,14 @@ expected_handling_has(
 expected_handling_has(
     "wise-agent-should-plan-to-goal-bridge-without-new-flow",
     (
-        "Plan-to-Goal",
-        "不是新增场景视图或独立流程",
-        "计划成熟度",
+        "Plan-to-Execution",
+        "不新增流程",
+        "不创建或恢复运行时 Goal",
         "成功标准",
-        "假设",
-        "执行步骤",
-        "验证证据",
-        "阻塞项",
-        "Goal / Plan Grant",
-        "确认后创建 Goal",
+        "当前切片",
         "Plan Grant 字段齐备",
-        "验证证据对照成功标准",
-        "不把步骤执行完等同于 Goal Verified / Closed",
+        "真实证据对照成功标准",
+        "不把步骤执行完等同于 Verified / Closed",
     ),
 )
 
@@ -17390,10 +17747,8 @@ expected_handling_has(
     (
         "Agent Loop Engineering",
         "delivery-execution-control",
-        "Loop 准入结论",
-        "内部层映射",
-        "Engineering Handoff Card",
-        "关联 Goal",
+        "不调用 Goal 模式",
+        "一个当前切片",
         "状态载体",
         "反馈源",
         "验证者",
@@ -17409,7 +17764,7 @@ expected_handling_has(
         "/goal",
         "/loop",
         "auto mode",
-        "不能替代 Goal、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批",
+        "不能替代项目执行规范、Harness、Plan Grant、Execution Grant、测试、CR 或上线审批",
     ),
 )
 
@@ -17494,7 +17849,7 @@ expected_handling_has(
         "source-map",
         "以真实交付为体，以证据闭环为用",
         "经典镜片只校准边界、推进、名实和最小有效组合",
-        "GSD、CAD、Goal、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位",
+        "GSD、CAD、项目执行规范、Harness、SDD、Loop、Checker 和知识回流只作为内部用法归位",
         "不作为并列工作流外显",
         "不把阴阳、神用无方、华夏经世智慧或任何外部工作流写成事实证据、测试通过、CR 结论、Git 授权或上线审批",
     ),
@@ -20298,7 +20653,7 @@ negative_reason_has(
 )
 expected_handling_has(
     "wise-agent-should-direct-lightweight-local-edit",
-    ("直接完成", "不展开完整 SDLC", "不装载 Superpowers", "不派 Worker", "不创建 Goal"),
+    ("直接完成", "不展开完整 SDLC", "不装载 Superpowers", "不派 Worker", "不创建 项目执行规范"),
 )
 expected_handling_has(
     "senior-should-fast-code-simple-local-change",
@@ -20310,7 +20665,7 @@ expected_handling_has(
         "已修改行为、待补测试、待运行验证和待确认风险",
         "测试后置不等于测试可选",
         "验证债务清零前不得声称任务完成或可交付",
-        "不创建 Goal、Worker 或工程执行 Loop",
+        "不创建 项目执行规范、Worker 或工程执行 Loop",
     ),
 )
 expected_handling_has(
@@ -20329,7 +20684,7 @@ expected_handling_has(
         "使用标准工程流程",
         "源码读取、最小修改、测试、验证和 CR",
         "不进入快速编码",
-        "不创建 Goal、Worker 或受控工程执行 Loop",
+        "不创建 项目执行规范、Worker 或受控工程执行 Loop",
         "出现多轮反馈需求时才重新判断 Loop 准入",
     ),
 )
@@ -20350,7 +20705,7 @@ expected_handling_has(
         "受控工程执行 Loop 的输入别名",
         "不创建独立模式、CAD Candidate、CAD Loop Active 或 CAD Grant",
         "Pick -> Build/Test -> Review -> Verify -> Record -> Continue/Pause",
-        "Goal 状态为 Active / Blocked / Verified",
+        "执行状态为 Active / Blocked / Verified",
         "执行方式为受控工程执行 Loop",
         "状态原因与恢复条件",
     ),
@@ -20362,7 +20717,7 @@ expected_handling_has(
         "不开始写入",
         "状态载体、反馈源、验证者、最大轮次、无进展检测、停止条件和适用授权缺口",
         "不能替代 Plan Grant 或 Execution Grant",
-        "Goal 保持 Draft / Ready",
+        "项目执行规范 保持 Draft / Ready",
         "不创建 CAD Candidate、CAD Loop Active 或 CAD Grant",
         "不脑补授权",
     ),
@@ -20444,7 +20799,7 @@ expected_handling_has(
 )
 expected_handling_has(
     "wise-agent-should-block-silent-execution-basis-switch",
-    ("拒绝按 D-2 继续", "execution_basis", "goal_transition", "changed_fields", "check_state_contract.py --previous"),
+    ("拒绝按 D-2 继续", "execution_basis", "execution_transition", "changed_fields", "check_state_contract.py --previous"),
 )
 expected_handling_has(
     "wise-agent-should-stale-deliberation-after-version-drift",
@@ -20476,7 +20831,7 @@ expected_handling_has(
 )
 expected_handling_has(
     "wise-agent-should-select-control-mechanisms-by-evidence",
-    ("SDLC 作为跨阶段地图", "Goal 作为跨轮目标", "状态载体", "低耦合时才派 Worker", "独立 Checker", "不是顺序阶段"),
+    ("SDLC 作为跨阶段地图", "项目执行规范作为跨轮目标", "不创建运行时 Goal", "当前切片", "低耦合时才派 Worker", "独立 Checker", "不是顺序阶段"),
 )
 expected_handling_has(
     "wise-agent-should-project-complex-work-topology",
@@ -20488,7 +20843,7 @@ expected_handling_has(
 )
 expected_handling_has(
     "wise-agent-should-not-project-work-topology-for-simple-task",
-    ("直接完成", "不生成 work_graph", "不创建 Goal、Loop 或 Worker", "上下文隔离", "三个以上节点"),
+    ("直接完成", "不生成 work_graph", "不创建 项目执行规范、Loop 或 Worker", "上下文隔离", "三个以上节点"),
 )
 expected_handling_has(
     "wise-agent-should-avoid-worker-for-coupled-task",
@@ -21592,6 +21947,64 @@ check(
             "Store",
             "Registry",
             "Assembler",
+        ],
+    ),
+)
+
+check(
+    "wise-agent converts long-task Goal requests into a bounded project execution specification",
+    has_all(
+        wise_agent_skill,
+        [
+            "不创建或恢复运行时 Goal",
+            "项目执行规范",
+            "当前切片",
+            "切片内部",
+        ],
+    )
+    and (ROOT / wise_agent_execution_specification).exists()
+    and has_all(
+        wise_agent_execution_specification,
+        [
+            "目标、约束、退出标准和验证",
+            "OpenSpec / Spec / Issue / 任务计划",
+            "Goal 只作为输入别名或历史来源",
+            "模型在切片内自行选择最短可验证路径",
+            "重复失败",
+            "消融",
+            "察实",
+            "正名",
+            "审时",
+            "行验",
+            "知止",
+        ],
+    )
+    and has_all(
+        readme,
+        [
+            "长任务执行规范",
+            "不创建运行时 Goal",
+            "当前切片",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/MEUMv2mJGNcS-rGl48f5FA",
+            "Claude Code之父：每半年清空一次claude.md、skills和hooks，模型自己会想办法",
+            "Tina",
+            "InfoQ",
+            "2026-07-31 11:28",
+            "受控消融",
+            "不吸收固定半年周期",
+        ],
+    )
+    and has_all(
+        "wise-agent/scripts/check_state_contract.py",
+        [
+            "goal_id is legacy input only",
+            "goal_transition is legacy input only",
+            "origin_goal_id is historical provenance and must remain immutable",
         ],
     ),
 )

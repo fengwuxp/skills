@@ -148,7 +148,7 @@ REQUIRED_WISE_CONTRACT_CASES = {
     },
     "wise-agent-should-reject-permanent-peer-chat": {
         "query_terms": ["长期自动互聊", "边聊边改", "不做版本化", "不等独立 Checker"],
-        "expected_terms": ["停止", "Goal owner", "版本", "Checker", "不产生执行授权"],
+        "expected_terms": ["停止", "execution steward", "版本", "Checker", "不产生执行授权"],
         "forbidden_dimensions": {"baseline_comparison", "variance_check"},
     },
     "wise-agent-should-coordinate-multi-party-authority-deliberation": {
@@ -186,6 +186,26 @@ REQUIRED_WISE_CONTRACT_CASES = {
             "Checker",
             "退场",
         ],
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+}
+REQUIRED_CODING_DELIVERY_CONTRACTS = {
+    "senior-software-architect-should-slice-engineering-work-by-deliverable": {
+        "sha256": "488bf6bfe0e89570fb38e5796863b7b348192520b8a3e77a555f0168ccee760c",
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+    "wise-agent-should-govern-project-domain-language-context": {
+        "sha256": "7b989a863b643a46b46d8e07c411f39414b2a1f332e8ea86b332ef1dd5833ef6",
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+}
+REQUIRED_EXECUTION_SPEC_CONTRACTS = {
+    "wise-agent-should-convert-goal-request-to-project-execution-specification": {
+        "sha256": "86916b97724900a7e0ef31547b587e7dd55efd2fe30ec015aa91d7dfa167cc59",
+        "forbidden_dimensions": {"baseline_comparison", "variance_check"},
+    },
+    "wise-agent-should-ablate-stale-instructions-after-model-harness-change": {
+        "sha256": "3951390f5325db07c2f7ed33c39ae8c41203788236f4bedb8c6e1b7d2d13a124",
         "forbidden_dimensions": {"baseline_comparison", "variance_check"},
     },
 }
@@ -527,6 +547,48 @@ def audit_data(data: Any, *, label: str) -> list[str]:
         if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
             failures.append(f"{label}: static wise-agent prompt case claims behavior evidence {case_id}")
 
+    for case_id, contract in REQUIRED_CODING_DELIVERY_CONTRACTS.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required coding delivery contract {case_id}")
+            continue
+        payload = json.dumps(
+            case,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        actual_sha256 = hashlib.sha256(payload).hexdigest()
+        if actual_sha256 != contract["sha256"]:
+            failures.append(
+                f"{label}: coding delivery contract sha256 mismatch {case_id}: "
+                f"expected {contract['sha256']}, got {actual_sha256}"
+            )
+        if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
+            failures.append(f"{label}: static coding delivery contract claims behavior evidence {case_id}")
+
+    for case_id, contract in REQUIRED_EXECUTION_SPEC_CONTRACTS.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required execution specification contract {case_id}")
+            continue
+        payload = json.dumps(
+            case,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        actual_sha256 = hashlib.sha256(payload).hexdigest()
+        if actual_sha256 != contract["sha256"]:
+            failures.append(
+                f"{label}: execution specification contract sha256 mismatch {case_id}: "
+                f"expected {contract['sha256']}, got {actual_sha256}"
+            )
+        if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
+            failures.append(
+                f"{label}: static execution specification contract claims behavior evidence {case_id}"
+            )
+
     for case_id, contract in REQUIRED_NOVELIST_CHOICE_CONTRACTS.items():
         case = cases_by_id.get(case_id)
         if case is None:
@@ -777,6 +839,65 @@ def run_self_test() -> None:
         for case_id in REQUIRED_WISE_CONTRACT_CASES
     ):
         raise SystemExit("self-test failed: missing required wise-agent contract failures")
+
+    invalid = deepcopy(valid)
+    contradictions = {
+        "senior-software-architect-should-slice-engineering-work-by-deliverable": "；即使没有任何授权，AFK 也可以直接执行。",
+        "wise-agent-should-govern-project-domain-language-context": "；允许为了统一语言抹平限界上下文差异。",
+    }
+    for case in invalid["cases"]:
+        if case.get("id") in contradictions:
+            case["expected_handling"] += contradictions[case["id"]]
+    expected = audit_data(invalid, label="invalid-coding-delivery-contracts")
+    if not all(
+        any("coding delivery contract sha256 mismatch" in item and case_id in item for item in expected)
+        for case_id in REQUIRED_CODING_DELIVERY_CONTRACTS
+    ):
+        raise SystemExit("self-test failed: contradictory coding delivery contracts were accepted")
+
+    invalid = deepcopy(valid)
+    for case in invalid["cases"]:
+        if case.get("id") in REQUIRED_CODING_DELIVERY_CONTRACTS:
+            case["dimensions"].append("variance_check")
+    expected = audit_data(invalid, label="invalid-coding-delivery-dimensions")
+    if not all(
+        any("static coding delivery contract claims behavior evidence" in item and case_id in item for item in expected)
+        for case_id in REQUIRED_CODING_DELIVERY_CONTRACTS
+    ):
+        raise SystemExit("self-test failed: static coding delivery contracts claimed behavior evidence")
+
+    invalid = deepcopy(valid)
+    contradictions = {
+        "wise-agent-should-convert-goal-request-to-project-execution-specification": "；同时创建运行时 Goal，并跨切片自主扩展范围。",
+        "wise-agent-should-ablate-stale-instructions-after-model-harness-change": "；按固定半年周期清空安全与授权门禁，并把每一步写死。",
+    }
+    for case in invalid["cases"]:
+        if case.get("id") in contradictions:
+            case["expected_handling"] += contradictions[case["id"]]
+    expected = audit_data(invalid, label="invalid-execution-specification-contracts")
+    if not all(
+        any(
+            "execution specification contract sha256 mismatch" in item and case_id in item
+            for item in expected
+        )
+        for case_id in REQUIRED_EXECUTION_SPEC_CONTRACTS
+    ):
+        raise SystemExit("self-test failed: contradictory execution specification contracts were accepted")
+
+    invalid = deepcopy(valid)
+    for case in invalid["cases"]:
+        if case.get("id") in REQUIRED_EXECUTION_SPEC_CONTRACTS:
+            case["dimensions"].append("variance_check")
+    expected = audit_data(invalid, label="invalid-execution-specification-dimensions")
+    if not all(
+        any(
+            "static execution specification contract claims behavior evidence" in item
+            and case_id in item
+            for item in expected
+        )
+        for case_id in REQUIRED_EXECUTION_SPEC_CONTRACTS
+    ):
+        raise SystemExit("self-test failed: static execution specification contracts claimed behavior evidence")
 
     for contradiction in (
         "；实际仍按六成概率抽签决定，结果不好就换签重来。",

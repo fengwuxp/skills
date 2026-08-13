@@ -1,11 +1,11 @@
 # 工程治理
 
-本文定义外部方法和 AI 工具进入产研协同时的治理方式：OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。跨轮或中大型任务再叠加 Goal：定义为什么持续推进、做到什么算完成、状态如何更新、预算 / 时间盒如何约束、何时停止和如何交接。
+本文定义外部方法和 AI 工具进入产研协同时的治理方式：OpenSpec 定义做什么，Superpowers 定义怎么高质量地做，Harness 定义谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。跨轮或中大型任务再叠加 项目执行规范：定义为什么持续推进、做到什么算完成、状态如何更新、预算 / 时间盒如何约束、何时停止和如何交接。
 
 ## 使用时机
 
 - 用户要求设计 AI 编码流程、Agentic Engineering、OpenSpec、Harness、GSD、CAD 或多 Agent 协作。
-- 用户要求 GSD + Goal、CAD + Goal、目标驱动推进、持续推进、目标状态、预算 / 时间盒、停止条件或跨轮交接。
+- 用户要求 GSD + 项目执行规范、CAD + 项目执行规范、目标驱动推进、持续推进、目标状态、预算 / 时间盒、停止条件或跨轮交接。
 - 用户要求设计 Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、持续编排、多 Agent 监督、自我验证或 Loop 停止条件。
 - 用户希望 GSD/CAD 自动推进、计划内授权、减少每个任务审批，或希望用 Codex “替我审批”模式承接低风险工具审批。
 - 产品上下文包已经形成，需要进入系统设计、任务拆分、Agent 执行或工程执行 Loop 准入判断。
@@ -22,7 +22,7 @@
 - 当前任务属于轻量执行、OpenSpec、Harness/GSD、工程执行 Loop 候选还是只读评审。
 - AI 原生工具职责、权限边界、写入范围、验证方式和停止条件。
 - 需要架构师继续生成的 OpenSpec、完整 Harness Plan、验证矩阵或 Execution Grant 缺口。
-- 若任务跨轮推进，一份 Goal 组合判断：Goal ID、成功标准、状态、预算 / 时间盒、验证证据、停止条件和 GSD Wave / 工程执行 Loop 关联。
+- 若任务跨轮推进，一份 项目执行规范 组合判断：Execution ID、成功标准、状态、预算 / 时间盒、验证证据、停止条件和 GSD Wave / 工程执行 Loop 关联。
 - 一份授权策略判断：当前适合只读、计划内低风险执行、Plan Grant、Wave Grant、Execution Grant、Codex 替我审批通道，还是必须显式确认。
 - 一份可执行性判断：当前材料能否让 Agent 开始写、只能只读侦察，还是必须先补规格。
 - 一份事实边界判断：已知事实、合理推断、待确认事项和范围外不做；无根据猜测或超出用户目标的实现扩张必须被标记为停止条件。
@@ -35,7 +35,7 @@
 - 产品交接和 PRD-Lite 读 `product-to-engineering-lifecycle.md`。
 - PRD / 系分合议预审、多视角评审、MAGI 三角色或 IPD 式互审读 `prd-system-design-review.md`。
 - GSD / 工程执行编排准入、GSD Round 0、Wave/Atomic Task 候选、工程执行 Loop 缺口和 Execution Grant 缺口读 `planning-execution-admission.md`。
-- Goal 组合、GSD + Goal、工程执行 Loop + Goal、状态机、Ledger、预算 / 时间盒和跨轮交接读 `goal-governance.md`。
+- 项目执行规范 组合、GSD + 项目执行规范、工程执行 Loop + 项目执行规范、状态机、Ledger、预算 / 时间盒和跨轮交接读 `execution-specification.md`。
 - Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督和循环停止条件读 `delivery-execution-control.md`。
 - 验证、CR、发布和复盘读 `verification-review-release.md`。
 - Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、测试映射、spec-lint、AC 覆盖和漂移检查读 `spec-template-practices.md`。
@@ -51,7 +51,7 @@
 | 调度 Superpowers skills | `2. OpenSpec / Superpowers / Harness`，再读 `superpowers-skill-library.md` | 已安装不等于执行授权 |
 | 升级 SDD / Superpowers / Harness 版本 | `2. OpenSpec / Superpowers / Harness`、`2A. 交付执行契约 v3`，再读 `superpowers-skill-library.md` 和 `code-delivery.md` | 不把上游 release、插件版本和内部契约混为一体 |
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `3. Harness 最小契约` | 不复制外部 ASD/SSD Harness |
-| 做 GSD + Goal / Goal 组合 | 先读 `goal-governance.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不把 Goal 写成 Execution Grant |
+| 做 GSD + 项目执行规范 / 项目执行规范 组合 | 先读 `execution-specification.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不把 项目执行规范 写成 Execution Grant |
 | 设计 Agent Loop / `/goal` / `/loop` | 先读 `delivery-execution-control.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把 Loop 当自动授权 |
 | 设计计划内授权 / 自动推进 | 先读 `planning-execution-admission.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把所有审批自动通过 |
 | 多 Agent / GSD 编排 | 先读 `planning-execution-admission.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不直接进入工程执行 Loop |
@@ -84,9 +84,9 @@
 | Superpowers | 怎么高质量地做。 | TDD、Review、Refactor、最小变更、编码红线、测试门禁。 |
 | Harness | 谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Task ID、owner、写入范围、只读范围、依赖、验证命令、停止条件、交接。 |
 
-Goal 是跨层目标契约，不替代三层责任：它把目标、成功标准、状态、预算 / 时间盒、验证证据和交接节奏挂到 GSD Wave、工程执行 Loop、Spec、CR 和发布复盘上。
+项目执行规范是跨层目标契约，不替代三层责任：它把目标、成功标准、状态、预算 / 时间盒、验证证据和交接节奏挂到 GSD Wave、工程执行 Loop、Spec、CR 和发布复盘上。
 
-Loop 是运行循环契约，不替代三层责任和 Goal：它只回答每一轮如何读取状态、选择动作、吸收反馈、验证结果、判断继续或停止。Loop 必须依附 Goal、Harness 和授权策略；没有反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件时，不应进入自动循环。
+Loop 是运行循环契约，不替代三层责任和 项目执行规范：它只回答每一轮如何读取状态、选择动作、吸收反馈、验证结果、判断继续或停止。Loop 必须依附 项目执行规范、Harness 和授权策略；没有反馈源、验证者、预算 / 最大轮次、无进展检测和停止条件时，不应进入自动循环。
 
 Superpowers 通过官方 Codex 插件独立提供，调度入口读 `superpowers-skill-library.md`。知止者保持统一行动主体，产品判断回产品架构专家，工程判断回资深架构师；Superpowers 只补 brainstorming、计划、TDD、调试、CR 和完成前验证等方法纪律。用户授权、项目 `AGENTS.md`、知止者和专业 Skill 的约束优先于插件默认流程；插件已安装也不能自动获得脚本、worktree、Git、subagent、联网或项目写入授权。
 
@@ -96,12 +96,12 @@ Superpowers 通过官方 Codex 插件独立提供，调度入口读 `superpowers
 
 - **pre-flight plan review**：进入执行前先检查计划冲突、跨任务接口不一致、会被 reviewer 判为缺陷的要求、验证命令缺失和授权越界。
 - **单一 Task Reviewer**：每个任务由一个独立 Checker 同时给出规格符合度和代码质量结论，避免 spec reviewer 与 quality reviewer 重复、漂移或互相甩锅。
-- **文件化 handoff**：任务说明、实现报告、review diff、验证证据和未决问题优先落到任务文档、review package、Goal Ledger、Harness Plan 或项目允许的状态文件；不靠长对话粘贴维持状态。
+- **文件化 handoff**：任务说明、实现报告、review diff、验证证据和未决问题优先落到任务文档、review package、项目执行规范、Harness Plan 或项目允许的状态文件；不靠长对话粘贴维持状态。
 - **progress ledger**：每个小闭环必须回写状态、验证结果、失败原因、下一步和停止理由；上下文丢失后能从仓库允许的状态载体恢复。
 - **model / cost policy**：派发 AI Maker / Checker 时说明使用的模型或能力等级、为什么足够、什么时候升级到更强模型或人工 owner。
 - **final broad review**：任务级 review 通过后，仍要做一次跨任务、跨文件、跨 Spec / AC / 验证证据的整体复核；不能把单个任务通过叠加成整体准出。
 - **execution state gate**：每个任务必须声明 `Ready / Running / Review / Fix / Verified / Blocked / Handoff` 状态，缺少状态、owner、写入范围、验证命令或恢复入口时不得派发给 AI Maker。
-- **authorized workspace policy**：文件化 handoff 优先使用项目已有任务文档、Goal Ledger、Harness Plan、ADR、验证矩阵或 issue；外部插件目录、脚本、本地服务、`.superpowers/` 或其他状态目录只有用户或项目规则明确授权时才可创建或运行。
+- **authorized workspace policy**：文件化 handoff 优先使用项目已有任务文档、项目执行规范、Harness Plan、ADR、验证矩阵或 issue；外部插件目录、脚本、本地服务、`.superpowers/` 或其他状态目录只有用户或项目规则明确授权时才可创建或运行。
 
 v3 的不吸收边界：
 
@@ -116,9 +116,9 @@ v3 的不吸收边界：
 
 ```text
 Task ID:
-Goal ID:
-Goal 状态:
-Goal 成功标准:
+Execution ID:
+执行状态:
+项目执行规范成功标准:
 交付执行契约版本: v1 / v2 / v3
 SDD 套件版本: 无 / SDD v6 方法契约 / 外部工具已授权
 执行状态: Ready / Running / Review / Fix / Verified / Blocked / Handoff
@@ -135,7 +135,7 @@ AC 编号与测试映射:
 spec-lint / AC 覆盖 / 漂移检查:
 验证命令:
 停止条件:
-Goal Ledger 更新:
+项目执行规范更新:
 事实 / 推断 / 待确认 / 范围外不做:
 授权策略: 只读 / 计划内低风险执行 / Plan Grant / Wave Grant / Execution Grant / 显式确认
 执行方式: 不适用 / 只读 Loop / Plan Grant Loop / Wave Loop / 受控工程执行 Loop
@@ -164,7 +164,7 @@ Execution Grant / 显式确认缺口:
 
 - 小任务只输出 Harness 摘要，不展开完整 GSD 模板。
 - 中大型任务先给 Wave 顺序和每个 Wave 的 owner/写入范围，再展开单个任务。
-- 使用 Goal 组合时，Harness 摘要必须写清 Goal ID、Goal 状态、成功标准、预算 / 时间盒、停止条件和 Ledger 更新；Goal 不能扩大写入范围。
+- 使用 项目执行规范 组合时，Harness 摘要必须写清 Execution ID、执行状态、成功标准、预算 / 时间盒、停止条件和 Ledger 更新；项目执行规范 不能扩大写入范围。
 - 工程执行 Loop 候选只写“候选”和“缺口”，不把候选描述成执行授权。
 - GSD / 工程执行授权必须按风险分级：已授权范围内的低风险动作可以默认推进，Git、联网、依赖安装、生产、密钥、部署、不可逆操作和高风险业务必须显式确认。
 - Codex “替我审批”只能记录为当前会话已启用的低风险审批通道，不得写成 Skill 自行开启的权限，也不得替代 Execution Grant、项目规则或工具 sandbox。
@@ -206,7 +206,7 @@ Wave 3：集成验证、CR、文档、发布准备。
 - 已完成内容和未完成内容。
 - 变更文件和关键决策。
 - 业务意图、入口路径、影响模块、关键调用关系、边界变化和源码锚点。
-- 关联 Goal、Goal 状态、成功标准完成情况和 Ledger 更新。
+- 关联项目执行规范、执行状态、成功标准完成情况和 Ledger 更新。
 - 验证命令、结果和失败证据。
 - 残余风险、阻塞项和下一步。
 - 回滚或恢复入口。
@@ -254,7 +254,7 @@ AI 原生工具常见权限必须显式授权：
 - 是否从产品上下文包进入工程，而不是从一句 prompt 进入编码。
 - PRD / 系分是否已在需要时做合议预审，并形成锚点化问题、接受项、拒绝项、待定项、分歧、风险清单、owner 和验证方式。
 - 是否有 OpenSpec 固定范围、非目标、规则和验收。
-- 中大型或跨轮任务是否有 Goal 卡固定目标、成功标准、预算 / 时间盒、状态、停止条件和验证证据。
+- 中大型或跨轮任务是否有项目执行规范固定目标、成功标准、预算 / 时间盒、状态、停止条件和验证证据。
 - 是否有可评审 Spec 模板，覆盖五段式骨架、AC 与测试映射、风险自查和闸门证据。
 - 是否有 Harness 固定 owner、写入范围、顺序、验证和交接。
 - 是否有授权策略，能区分只读、计划内低风险执行、Plan Grant、Wave Grant、Execution Grant、Codex 替我审批和显式确认边界。
@@ -268,7 +268,7 @@ AI 原生工具常见权限必须显式授权：
 - 是否记录工具权限、外部来源和专业确认边界。
 - 是否避免多个 Agent 同时写同一职责范围。
 - 是否把失败、阻塞和恢复入口写入显式材料。
-- 是否避免把 Goal、Goal 状态或 GSD + Goal 当作 Execution Grant、测试通过、CR 结论或上线批准。
+- 是否避免把 项目执行规范、执行状态或 GSD + 项目执行规范 当作 Execution Grant、测试通过、CR 结论或上线批准。
 - 是否避免把 Loop、`/goal`、`/loop` 或 auto mode 当作无条件执行授权。
 
 完整性自检：
@@ -281,7 +281,7 @@ AI 原生工具常见权限必须显式授权：
 - **怎么验证**：测试、lint、静态检查、人工验收和不可执行原因是否明确。
 - **是否看懂**：入口路径、影响模块、调用关系、边界变化、源码锚点、验证证据和剩余不确定性是否能被 Review 者复述。
 - **何时停止**：权限不足、规格不清、验证失败、风险升级和用户中断是否明确。
-- **目标是否闭环**：Goal 成功标准、验证证据、Ledger 更新和交接 owner 是否明确。
+- **目标是否闭环**：项目执行规范成功标准、验证证据、Ledger 更新和交接 owner 是否明确。
 
 ## 9. 反模式
 
@@ -295,6 +295,6 @@ AI 原生工具常见权限必须显式授权：
 - 用大段 AI 总结替代结构理解，Review 者无法定位入口路径、关键源码、调用关系和边界变化。
 - 把 AI 快速阅读、上下文生成或可视化工具输出当成默认事实，不回链源码、OpenSpec、Harness 和验证证据。
 - 自动提交、自动合并、自动部署默认开启。
-- Goal 只有口号和状态，没有成功标准、验证证据、预算 / 时间盒、停止条件和 Ledger。
+- 项目执行规范只有口号和状态，没有成功标准、验证证据、预算 / 时间盒、停止条件和 Ledger。
 - 指标只看代码量、PR 数、执行轮数，不看返工率、缺陷率、验证质量和上线结果。
 - 只做 SDD / Spec / Harness 的前半程，不把 CR 高频问题、测试失败、发布问题和复盘发现回流到知识、模板、测试、fixture、脚本或门禁。

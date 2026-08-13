@@ -22,7 +22,7 @@
 - 认知闭环、上下文与协作形态读 `cognition-and-capability-model.md`。
 - 盘问、问题台账、历史去重和决策快照装载独立 `grill-me`；长任务自治、授权和执行前对账读 `delivery-execution-control.md`。
 - 产品到工程生命周期读 `product-to-engineering-lifecycle.md` 与 `delivery-lifecycle.md`。
-- Maker / Checker、Harness、Goal 与多 Agent 成本读 `engineering-governance.md`。
+- Maker / Checker、Harness、项目执行规范 与多 Agent 成本读 `engineering-governance.md`。
 - 外部 Skill 吸收和供应链边界读 `superpowers-skill-library.md` 与 `source-map.md`。
 
 ## 按任务读取索引

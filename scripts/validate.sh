@@ -198,6 +198,9 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelis
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
 
+echo "==> wise-agent module deliberation behavior cases"
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"
+
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test
 

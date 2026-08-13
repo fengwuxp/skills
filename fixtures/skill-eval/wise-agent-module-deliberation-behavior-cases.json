@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "description": "wise-agent 项目内模块合议的专项 baseline/candidate 契约。静态 fixture 不等于真实行为证据；真实改善要求同一 runner/model 的 baseline 与 candidate 响应经过重复试验、盲评和可复核门禁。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true
+  },
+  "cases": [
+    {
+      "id": "mixed-value-module-deliberation",
+      "category": "module-deliberation",
+      "risk": "high",
+      "prompt": "$wise-agent 模块合议：讨论客户业务应用、客户公共能力和消息中间件的价值、定位、边界、依赖与非目标；当前只有模块文档和源码线索，不改代码、不执行 Git。",
+      "criteria": [
+        "先执行信息充分性门禁，证据不足时保留 pending，不凭模块名称分配职责。",
+        "区分直接业务价值、赋能业务价值和技术价值，并要求赋能链闭合。",
+        "按模块输出 Module Fact Card、依赖契约、Owner、Checker 和停止条件。"
+      ]
+    },
+    {
+      "id": "ascii-colon-module-deliberation",
+      "category": "trigger-variation",
+      "risk": "medium",
+      "prompt": "$wise-agent 模块合议: 讨论订单应用与消息适配模块的定位、公共契约、依赖方向和不做什么。",
+      "criteria": [
+        "把半角冒号识别为同一模块合议入口。",
+        "加载产品语义与系分架构证据，不降级成普通单模块 CR。"
+      ]
+    },
+    {
+      "id": "pure-technical-module-value",
+      "category": "technical-value",
+      "risk": "medium",
+      "prompt": "$wise-agent 模块合议：评审构建缓存与运行观测两个基础设施模块。尚无业务场景，只依据构建耗时、故障恢复时间和资源成本。",
+      "criteria": [
+        "以基线、变化量、消费者和运行证据验证技术价值。",
+        "没有业务价值主张时不强行引入产品侧，不虚构直接或赋能业务价值。"
+      ]
+    },
+    {
+      "id": "technical-capability-claims-business-enablement",
+      "category": "enablement-value",
+      "risk": "high",
+      "prompt": "$wise-agent 模块合议：消息平台声称可以赋能订单履约，请核对其价值与模块边界。当前技术指标已有，业务受益主体和结果口径尚未确认。",
+      "criteria": [
+        "技术能力主张赋能业务时加入产品侧确认受益主体、业务场景和结果口径。",
+        "赋能链未闭合前将赋能业务价值标为 pending，而不是用技术指标代签业务结果。"
+      ]
+    },
+    {
+      "id": "single-module-review-does-not-deliberate",
+      "category": "negative-routing",
+      "risk": "medium",
+      "prompt": "只评审 order-service 中一个已定位的空值修复，核对调用链和聚焦测试，不涉及跨模块共享决策。",
+      "criteria": [
+        "不启动模块合议，也不加载产品业务架构。",
+        "按普通源码 CR 处理并保持修改与验证范围聚焦。"
+      ]
+    }
+  ]
+}

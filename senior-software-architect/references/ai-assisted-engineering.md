@@ -113,7 +113,7 @@ AI Native 交接卡消费结论只需说明：Product Context Card 是否足够�
 - 工程实施切片至少写清：任务 ID、`Goal / Spec / AC`、读写范围、依赖、契约 / 状态 / 数据、兼容 / 迁移 / 回滚、验证证据和停止条件。
 - 编码前做 Solution Review，检查边界、数据责任、状态与失败路径、兼容迁移、回滚、测试和发布风险；未决产品语义退回产品 Owner，不由工程侧补写。
 - 实现后以 `done / partial / todo / changed / blocked` 对账：所有状态回链来源需求 / AC 的版本与观察时间；`done / partial` 补当前 diff / commit、源码 / 测试锚点和验证结果；`todo / blocked` 记录原因、依赖、Owner 与停止证据；候选 `changed` 记录偏差并冻结受影响切片，由产品 Owner 裁决需求变化还是实现偏离。需求确变时先更新权威需求契约，属于实现偏离时保持需求并修正实现。
-- 未完成项续写到既有 Harness Plan、Goal Ledger 或 OpenSpec tasks，不强制新建 requirement.md 或命令树。稳定工程知识只回流到 ADR、模块 reference、测试或静态门禁，不覆盖产品事实。
+- 未完成项续写到既有 Harness Plan、项目执行规范或 OpenSpec tasks，不强制新建 requirement.md 或命令树。稳定工程知识只回流到 ADR、模块 reference、测试或静态门禁，不覆盖产品事实。
 
 ## Codex 运行时协作模式
 

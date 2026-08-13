@@ -7,9 +7,9 @@
 - 用户明确有中大型项目、长任务、多阶段实现、跨模块改造、AI 编码连续推进或多 Agent 协作需求。
 - 主会话开始出现上下文衰减：目标、决策、阻塞项、禁止事项、验证证据散落在长对话里。
 - 任务需要分阶段推进，每阶段都有设计、计划、执行、验证、Review 和恢复入口。
-- 用户希望用 Codex thread、automation、goal、side panel 或 artifact 把工作从单次对话推进为持续工作流。
+- 用户希望用 Codex thread、automation、side panel 或 artifact 把工作从单次对话推进为持续工作流，或从旧 Goal 输入迁移到项目执行规范。
 - 用户要求类似 GSD、规格驱动开发、阶段状态、并行 Wave、任务恢复或 AI 编码项目管理能力。
-- 用户从 AI Native 的 Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent 或 GSD + Goal + Loop 准入进入工程侧，需要把持续编排落成可恢复、可验证、可停止的 Wave。
+- 用户从 AI Native 的 Agent Loop、旧 `/goal` 输入、`/loop`、auto mode、后台 Agent 或 GSD + 长任务准入进入工程侧，需要先把目标落入项目执行规范，再把当前切片编排成可恢复、可验证、可停止的 Wave。
 
 ## 不适用场景
 
@@ -43,10 +43,10 @@
 | 初始化项目账本 | 3、4、5 | 不展开执行 Wave |
 | 规划阶段和原子任务 | 6、7 | 不进入工程执行 Loop 细节 |
 | GSD / 工程执行组合判断 | 先消费 `wise-agent/references/planning-execution-admission.md` 的准入结论，再读 8 和 `cad-mode.md` | 不把整个大项目交给工程执行 Loop |
-| GSD + Goal + Loop 进入工程 | 先消费 `wise-agent/references/delivery-execution-control.md` 和 `planning-execution-admission.md`，再读 6、7、10 | 不把 Loop 当整个 Roadmap 授权 |
+| GSD + 长任务 + Loop 进入工程 | 先消费 `wise-agent/references/execution-specification.md`、`delivery-execution-control.md` 和 `planning-execution-admission.md`，再读 6、7、10 | 不创建运行时 Goal，不把 Loop 当整个 Roadmap 授权 |
 | AI Native 编排结论进入工程 | 8A，并消费 `wise-agent` 或产品侧交接材料 | 不把业务 MVP 直接当工程执行授权 |
 | 多 Agent / Wave 执行 | 7、9、10 | 不跳过验证 |
-| Codex automation / goal / artifact 协作 | 10、11、12 | 不把平台能力当授权 |
+| Codex automation / artifact 协作 | 10、11、12 | 不把平台能力当授权，不创建 runtime Goal |
 | 暂停、恢复或跨会话继续 | 12 | 不依赖聊天记忆 |
 | 收口、Review、阶段提交和交付 | 13、14 | 不把提交建议当 Git 授权 |
 
@@ -95,9 +95,9 @@ AI Native 交接结论
 | 一次对话难以承载完整目标、设计、计划和执行细节 | 需要上下文账本。 |
 | 用户希望多轮自动推进、暂停恢复或长期持续开发 | 需要阶段状态和恢复入口。 |
 | 需要多个 Agent 或并行探索/实现/验证 | 需要 Wave 依赖和交接规范。 |
-| 需要后台 Agent、`/goal`、`/loop` 或持续编排 | 需要状态载体、反馈源、验证者、预算和停止条件。 |
+| 需要后台 Agent、旧 `/goal` 输入、`/loop` 或持续编排 | 先把旧目标意图写入项目执行规范，再配置状态载体、反馈源、验证者、预算和停止条件。 |
 | 修改涉及公共契约、资金、权限、生产行为、数据迁移或安全 | 需要人工确认点、验证矩阵和回滚边界。 |
-| 需要 thread automation、goal 或 side panel artifact 持续迭代 | 需要明确 verifier、停止条件、状态位置和人工确认点。 |
+| 需要 thread automation 或 side panel artifact 持续迭代 | 需要明确 verifier、停止条件、状态位置和人工确认点。 |
 
 不满足启用门槛时，用轻量 OpenSpec + 普通工作流即可；不要为了“流程完整”创建额外文档。
 
@@ -386,7 +386,7 @@ GSD Round 0
 
 ## 11. Codex 持续协作边界
 
-当大项目编排使用 Codex app 的 thread、automation、goal、side panel 或 artifact 时，先把平台能力转成工程协议：
+当大项目编排使用 Codex app 的 thread、automation、side panel 或 artifact 时，先把平台能力转成工程协议；旧 Goal 输入只提取目标意图和历史 provenance：
 
 | 能力 | 可用方式 | 编排约束 |
 | --- | --- | --- |
@@ -394,14 +394,14 @@ GSD Round 0
 | Steering / queuing | 用户执行中纠偏，或排入下一任务。 | 每次新指令都要判断是否改变范围、风险、Wave 依赖或验证矩阵。 |
 | Thread automation | 定期回到同一 thread 检查反馈、刷新 artifact 或继续监控。 | 必须说明频率、触发条件、停止条件、输出位置和是否需要用户批准；不能默认发消息、上传、部署或修改生产。 |
 | Scheduled automation | 从固定 workspace 定期开始重复任务。 | 适合周期性报告或定期仓库检查；必须把 workspace、验证命令、输出形态和失败处理写清楚。 |
-| Goal | 给长期任务一个可判断的 finish line。 | 必须包含 outcome、success criterion、verifier、停止条件和失败处理；弱目标必须先改写。 |
+| 旧 Goal 输入 | 只提取目标意图和历史 provenance，转写到项目执行规范。 | 不创建、恢复、续期或绑定 runtime Goal；切片准入只认项目执行规范、当前授权和验证证据。 |
 | Side panel / artifact | 就地审查页面、文档、deck、表格、PDF、静态 HTML 或数据 app。 | 交付前应真实预览、渲染、截图或运行相应验证；用户标注必须回写到当前任务包或 Review 结论。 |
 | Shared written context | 把跨会话关键上下文写到显式材料。 | 优先复用项目文档、AGENTS、OpenSpec、ADR、任务状态；不得写入个人长期偏好、私有对话轨迹、私有 vault 或无关目录。 |
 
 持续协作红线：
 
 - 不把 voice/transcript 的原始表达直接当规格；先转成目标、假设、待确认、验收和验证。
-- 不把 automation、goal 或 queue 当成 Git、联网、外部消息、桌面 GUI、生产操作或长期记忆授权。
+- 不把 automation、queue 或历史 Goal 记录当成 Git、联网、外部消息、桌面 GUI、生产操作或长期记忆授权。
 - 不为了“持久化”制造无意义文件变动；没有可复用事实、决策、阻塞或验证证据时不更新状态材料。
 - 涉及 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、客户数据、生产配置或敏感信息时，必须先说明权限、数据边界和人工确认点。
 
@@ -475,7 +475,7 @@ GSD Round 0
 
 ## 16. Codex 官方团队文章来源边界
 
-微信公众号文章《Codex 官方团队：如何把 Codex 用到极致》可作为 Codex app 运行时协作方式的公开参考来源，用于增强 thread、voice、steering/queuing、tool reach、automation、goal、side panel、artifact 和 shared written context 的工程编排意识。
+微信公众号文章《Codex 官方团队：如何把 Codex 用到极致》可作为 Codex app 运行时协作方式的公开参考来源，用于增强 thread、voice、steering/queuing、tool reach、automation、side panel、artifact 和 shared written context 的工程编排意识；其中 goal 只保留为文章来源中的能力名和旧输入 provenance。
 
 该文章不作为 OpenAI 官方当前产品能力、模型、工具可用性或路线图承诺依据；涉及 Codex 当前能力、工具状态、产品规则或官方承诺时，必须核验 OpenAI 官方文档或当前会话工具状态。
 
@@ -484,7 +484,7 @@ GSD Round 0
 - 把 thread 视为长期工作空间，但把关键事实写入显式材料。
 - 用 voice/transcript 捕获粗糙想法，再提炼成规格和验收。
 - 用 steering/queuing 支持过程中纠偏和后续任务排队，并重新校准范围。
-- 用 automation/goal 支持持续推进，但必须绑定 verifier、停止条件和人工确认点。
+- 用 automation 配合项目执行规范支持持续推进，并绑定 verifier、停止条件和人工确认点。
 - 用 side panel/artifact 将产物审查留在同一工作 loop，并要求真实预览或验证。
 - 用 shared written context 保存决策、阻塞、owner、日期和有用链接，避免仅依赖聊天记录。
 
@@ -492,6 +492,6 @@ GSD Round 0
 
 - 不把 Codex app 功能清单写成当前会话一定可用的工具能力。
 - 不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺。
-- 不默认创建 pinned thread、automation、goal、vault、外部 connector 或长期记忆。
+- 不默认创建 pinned thread、automation、vault、外部 connector 或长期记忆；不创建、恢复、续期或绑定 runtime Goal。
 - 不默认访问 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、外部 API 或私有数据。
 - 不复制文章示例、提示语、目录结构、作者表达、平台宣传语或未核验的未来能力。
