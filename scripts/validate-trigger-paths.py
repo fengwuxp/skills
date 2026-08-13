@@ -7,6 +7,7 @@ It is not a natural-language router or a complete prompt evaluation suite.
 Keep checks focused on durable invariants that should survive wording changes.
 """
 
+import hashlib
 import json
 import re
 from typing import NamedTuple
@@ -192,6 +193,33 @@ def behavior_contract_has(case_id: str, required_keys: tuple[str, ...], required
     )
 
 
+def behavior_case_criteria_has(path: str, case_id: str, required_terms: tuple[str, ...]) -> None:
+    """Check one behavior case's own criteria; this does not execute an Agent."""
+    cases = json.loads(read(path))["cases"]
+    case = next((item for item in cases if item.get("id") == case_id), None)
+    criteria = [] if case is None else case.get("criteria", [])
+    criteria_text = "\n".join(criteria) if isinstance(criteria, list) else ""
+    missing = [term for term in required_terms if term not in criteria_text]
+    detail = f" missing={missing}" if missing else ""
+    check(f"behavior fixture criteria outlines {case_id}{detail}", case is not None and not missing)
+
+
+def behavior_fixture_fingerprint(path: str, expected_sha256: str) -> None:
+    """Guard the scored fixture contract, including its exact case set and release gate."""
+    document = json.loads(read(path))
+    keys = ("version", "rubric", "release_gate", "cases")
+    payload = {key: document.get(key) for key in keys}
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode()
+    actual_sha256 = hashlib.sha256(encoded).hexdigest()
+    detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
+    check(f"behavior fixture preserves {path} contract{detail}", actual_sha256 == expected_sha256)
+
+
 senior_skill = "senior-software-architect/SKILL.md"
 senior_agent = "senior-software-architect/agents/openai.yaml"
 senior_routing = "senior-software-architect/references/scenario-routing.md"
@@ -361,6 +389,7 @@ novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
 novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
+novelist_character_life_behavior_cases = "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
 grill_me_question_ledger = "grill-me/references/question-ledger.md"
@@ -18875,6 +18904,86 @@ check(
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
         ],
     ),
+)
+
+check(
+    "novelist character life behavior cases stay wired",
+    (ROOT / novelist_character_life_behavior_cases).exists()
+    and has_all(
+        novelist_character_life_behavior_cases,
+        [
+            "待执行回归契约",
+            "同一 runner/model",
+            "重复试验、盲评和可复核门禁",
+            '"mode": "non_regression"',
+            "novelist-should-deposit-life-history-into-present-character",
+            "novelist-should-show-character-change-across-life-stages",
+            "novelist-should-reveal-one-character-across-relationships-and-pressure",
+            "novelist-should-not-deduce-one-personality-from-shared-trauma",
+            "novelist-should-allow-aesthetic-detail-without-forced-plot-duty",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"',
+        ],
+    ),
+)
+behavior_case_criteria_has(
+    novelist_character_life_behavior_cases,
+    "novelist-should-deposit-life-history-into-present-character",
+    (
+        "已确认事实与候选解释",
+        "人物当时的解释",
+        "同一经历不被机械推导",
+        "保护策略只在确有证据时使用",
+        "压力选择",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_character_life_behavior_cases,
+    "novelist-should-show-character-change-across-life-stages",
+    (
+        "年龄、身体、职业、资源、身份或关系",
+        "一条或多条可追踪的连续倾向",
+        "不强制安排观察者误读",
+        "普通细节可以只承担生活质感",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_character_life_behavior_cases,
+    "novelist-should-reveal-one-character-across-relationships-and-pressure",
+    (
+        "随关系、风险与筹码变化",
+        "一条或多条可追踪的稳定倾向",
+        "人物内部矛盾",
+        "稳定模式、当前状态与一次性压力反应",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_character_life_behavior_cases,
+    "novelist-should-not-deduce-one-personality-from-shared-trauma",
+    (
+        "各自的解释、关系位置、后续反馈与反复选择",
+        "不靠天生理性或感性标签",
+        "不擅自增加",
+        "互补、冲突并接受反馈",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_character_life_behavior_cases,
+    "novelist-should-allow-aesthetic-detail-without-forced-plot-duty",
+    (
+        "审美乐趣、身份表达和生活质感",
+        "不把每个细节都强迫变成",
+        "谈判与逃离",
+        "她可以真正在意",
+    ),
+)
+behavior_fixture_fingerprint(
+    novelist_character_life_behavior_cases,
+    "b62a208e82d77b095d879eb2a5119157b46c103103647f88eb96d62f385eca81",
 )
 
 expected_handling_has(

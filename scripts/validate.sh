@@ -192,6 +192,7 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resourc
 
 echo "==> novelist behavior cases"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test

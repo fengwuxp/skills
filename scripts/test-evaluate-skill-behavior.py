@@ -124,6 +124,41 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         self.assertFalse(report["passed"])
         self.assertTrue(any("correctness" in reason for reason in report["reasons"]))
 
+    def test_non_regression_gate_allows_ties_and_rejects_regressions(self) -> None:
+        case_data = deepcopy(self.case_data)
+        case_data["release_gate"]["mode"] = "non_regression"
+        case_data["release_gate"]["candidate_weighted_score_must_improve"] = False
+        MODULE.validate_cases(case_data)
+
+        invalid_mode = deepcopy(case_data)
+        invalid_mode["release_gate"]["mode"] = "preserve"
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.validate_cases(invalid_mode)
+
+        _, key = MODULE.blind_responses(case_data, self.response_rows(), seed=731)
+        equal_scores = self.score_rows(key)
+        for row in equal_scores:
+            for dimension in MODULE.DIMENSIONS:
+                row[dimension] = 4
+        self.assertTrue(MODULE.score_judgments(case_data, equal_scores, key)["passed"])
+
+        regressed = deepcopy(equal_scores)
+        candidate_label = next(
+            label
+            for label, condition in key["pairs"][0]["labels"].items()
+            if condition == "candidate"
+        )
+        candidate_score = next(
+            row
+            for row in regressed
+            if row["pair_id"] == key["pairs"][0]["pair_id"]
+            and row["label"] == candidate_label
+        )
+        candidate_score["actionability"] = 3
+        report = MODULE.score_judgments(case_data, regressed, key)
+        self.assertFalse(report["passed"])
+        self.assertTrue(any("weighted_score regressed" in reason for reason in report["reasons"]))
+
 
 if __name__ == "__main__":
     unittest.main()

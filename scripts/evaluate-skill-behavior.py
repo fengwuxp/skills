@@ -126,10 +126,14 @@ def validate_cases(data: dict[str, Any]) -> None:
     gate = data.get("release_gate")
     if not isinstance(gate, dict):
         raise ContractError("release_gate: expected an object")
+    gate_mode = gate.get("mode", "improvement")
+    if gate_mode not in ("improvement", "non_regression"):
+        raise ContractError("release_gate.mode: expected improvement or non_regression")
     if gate.get("candidate_blockers_must_be_zero") is not True:
         raise ContractError("release_gate: candidate blockers must be zero")
-    if gate.get("candidate_weighted_score_must_improve") is not True:
-        raise ContractError("release_gate: candidate weighted score must improve")
+    must_improve = gate.get("candidate_weighted_score_must_improve")
+    if must_improve is not (gate_mode == "improvement"):
+        raise ContractError("release_gate: weighted score policy must match mode")
     for field in ("max_correctness_regression", "max_safety_regression"):
         value = gate.get(field)
         if not isinstance(value, (int, float)) or value < 0:
@@ -368,8 +372,11 @@ def score_judgments(
         candidate_score = sum(pair_scores["candidate"][item] * weights[item] for item in DIMENSIONS)
         if candidate_score < baseline_score:
             reasons.append(f"candidate high-risk {pair_id} weighted_score regressed")
-    if summaries["candidate"]["weighted_score"] <= summaries["baseline"]["weighted_score"]:
-        reasons.append("candidate weighted_score did not improve")
+    if gate.get("mode", "improvement") == "improvement":
+        if summaries["candidate"]["weighted_score"] <= summaries["baseline"]["weighted_score"]:
+            reasons.append("candidate weighted_score did not improve")
+    elif summaries["candidate"]["weighted_score"] < summaries["baseline"]["weighted_score"]:
+        reasons.append("candidate weighted_score regressed")
 
     return {
         "version": 1,
