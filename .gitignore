@@ -40,3 +40,4 @@ __pycache__/
 .DS_Store
 **/dependency-reduced-pom.xml
 .serena
+/plans/
