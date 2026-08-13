@@ -189,6 +189,11 @@ REQUIRED_WISE_CONTRACT_CASES = {
         "forbidden_dimensions": {"baseline_comparison", "variance_check"},
     },
 }
+REQUIRED_NOVELIST_CHOICE_CONTRACTS = {
+    "novelist-should-preserve-grounded-irrationality": {
+        "sha256": "c28430c1cfb1ee42a4e30a319c6b2752047b4c65a62fa2bbf57fdca39ce85d74",
+    },
+}
 REQUIRED_COMPETITION_GROUPS = {
     "fiction-drafting-owner": {
         "skills": {
@@ -522,6 +527,24 @@ def audit_data(data: Any, *, label: str) -> list[str]:
         if set(case.get("dimensions", [])) & contract["forbidden_dimensions"]:
             failures.append(f"{label}: static wise-agent prompt case claims behavior evidence {case_id}")
 
+    for case_id, contract in REQUIRED_NOVELIST_CHOICE_CONTRACTS.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"{label}: missing required novelist choice contract {case_id}")
+            continue
+        payload = json.dumps(
+            case,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        actual_sha256 = hashlib.sha256(payload).hexdigest()
+        if actual_sha256 != contract["sha256"]:
+            failures.append(
+                f"{label}: novelist choice contract sha256 mismatch {case_id}: "
+                f"expected {contract['sha256']}, got {actual_sha256}"
+            )
+
     return failures
 
 
@@ -754,6 +777,24 @@ def run_self_test() -> None:
         for case_id in REQUIRED_WISE_CONTRACT_CASES
     ):
         raise SystemExit("self-test failed: missing required wise-agent contract failures")
+
+    for contradiction in (
+        "；实际仍按六成概率抽签决定，结果不好就换签重来。",
+        "；写进任一草稿后即自动成为正典，作者也不得明确修订。",
+    ):
+        invalid = deepcopy(valid)
+        case = next(
+            item
+            for item in invalid["cases"]
+            if item.get("id") == "novelist-should-preserve-grounded-irrationality"
+        )
+        case["expected_handling"] += contradiction
+        expected = audit_data(invalid, label="invalid-novelist-choice-contract")
+        if not any(
+            "novelist choice contract sha256 mismatch" in item
+            for item in expected
+        ):
+            raise SystemExit("self-test failed: contradictory novelist choice contract was accepted")
 
     print("OK skill eval fixture self-test")
 

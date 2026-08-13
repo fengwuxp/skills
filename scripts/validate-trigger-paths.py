@@ -89,6 +89,11 @@ def has_none(path: str, texts: list[str]) -> bool:
     return all(text not in body for text in texts)
 
 
+def has_all_across(paths: tuple[str, ...], texts: list[str]) -> bool:
+    bodies = [read(path) for path in paths]
+    return all(any(text in body for body in bodies) for text in texts)
+
+
 def marked_line_lacks(path: str, marker: str, patterns: tuple[str, ...]) -> bool:
     line = next((item for item in read(path).splitlines() if marker in item), "")
     return bool(line) and all(re.search(pattern, line) is None for pattern in patterns)
@@ -385,11 +390,18 @@ novelist_skill = "novelist/SKILL.md"
 novelist_agent = "novelist/agents/openai.yaml"
 novelist_admission = "novelist/admission.json"
 novelist_story = "novelist/references/story-design-and-drafting.md"
+novelist_character = "novelist/references/character-craft.md"
+novelist_scene = "novelist/references/scene-and-prose-craft.md"
 novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
 novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
+novelist_character_template = "novelist/assets/character-dynamic-profile-template.md"
+novelist_creative_behavior_cases = "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
 novelist_character_life_behavior_cases = "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
+novelist_r6_foundation_behavior_cases = "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
+novelist_r6_craft_behavior_cases = "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
+novelist_r8_practice_behavior_cases = "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
 grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
 grill_me_question_ledger = "grill-me/references/question-ledger.md"
@@ -18669,15 +18681,18 @@ check(
             "人工智能生成合成内容标识办法",
         ],
     )
-    and has_all(
-        novelist_story,
-        [
+    and all(
+        any(
+            term in read(path)
+            for path in (novelist_story, novelist_character, novelist_continuity)
+        )
+        for term in [
             "纸媒文学短篇",
             "移动端连载",
             "叙事距离",
             "单屏信息负荷",
             "不把载体适配退化成只切短句子",
-        ],
+        ]
     )
     and has_all(
         huaxia_skill,
@@ -18755,8 +18770,8 @@ check(
             "跨轮、多稿权威、状态恢复",
         ],
     )
-    and has_all(
-        novelist_story,
+    and has_all_across(
+        (novelist_story, novelist_character, novelist_scene, novelist_continuity),
         [
             "故事发动机",
             "想象的两种来路",
@@ -18765,6 +18780,23 @@ check(
             "不堆知识，也不拼贴来源",
             "不急于合理化、筛优或统一世界观",
             "验证服务于成形，不能反向改写或扼杀探索期的原始核",
+            "博采与熔铸",
+            "古典小说、现代小说、网文、短篇、散文及其他叙事传统",
+            "先从具体作品提炼可迁移能力",
+            "以作品实证为准",
+            "叙述分寸、人情世态与章法照应",
+            "个体幽微、视角复杂与复义",
+            "目标推进、期待管理与连载反馈",
+            "聚焦、留白与不可逆选择",
+            "意象、节奏与感官质地",
+            "按当前作品的类型承诺、人物、场景和读者体验取舍",
+            "不设固定比例",
+            "同一叙述主体和统一声腔",
+            "共同服务人物选择、故事因果与后果",
+            "不复刻其表面句法、口癖或标志性意象",
+            "长期阅读、生活与材料积累、持续创作、删改和读者反馈",
+            "稳定审美判断与叙事声音",
+            "不以自称宗师代替作品验证",
             "故事架构：执简驭繁",
             "知其要者",
             "内容、类型、篇幅、作者要表达的故事与要展示的世界",
@@ -18826,6 +18858,13 @@ check(
             "不为展示学养堆砌典故",
             "节奏、氛围、人物声音、视角质感、幽默",
             "连载读者视角",
+            "节奏与呼吸",
+            "类型 / 节拍",
+            "不能被临场刺激静默替换",
+            "凑字副词",
+            "万能形容词",
+            "客观点评腔",
+            "套路连接词",
         ],
     )
     and has_all(
@@ -18867,7 +18906,30 @@ check(
     )
     and has_all(
         novelist_continuity,
-        ["作者本真", "人物所知", "读者所知", "旧稿提炼", "连续性检查"],
+        [
+            "项目已有状态定义时",
+            "故事正典状态、来源证据状态和工作进度状态分轴记录",
+            "项目未定义时，才使用默认四态",
+            "重建权威拓扑",
+            "不能替代事实权威",
+            "续写当前章前，先按项目范围、权威、状态和 currentness 过滤材料，再只选本章实际调用的人物当前状态、前章离场结果、规则约束与活跃读者承诺；旧摘要、已取代内容和相邻项目材料不能因名称相同或语义相关进入当前事实。权威冲突或适用范围无法裁决时停止续写并指出缺口，不强制创建上下文包、统一目录、RAG 或全项目扫描。",
+            "作者本真",
+            "人物所知",
+            "读者所知",
+            "旧稿提炼",
+            "连续性检查",
+        ],
+    )
+    and has_all(
+        repo_source_map,
+        [
+            "modoojunko/awesome-novel-agent",
+            "e7d19936bac10e165ab42cb744f7d5c549c19f77",
+            "人物选择沙盘",
+            "跨章信息流压力测试",
+            "GPL-3.0",
+            "不把该仓库作为运行时依赖",
+        ],
     )
     and has_none(skill_eval_prompt_fixture, ["候潮氏", "守潮古族", "轮回若红尘", "帝殇"]),
 )
@@ -18907,6 +18969,101 @@ check(
 )
 
 check(
+    "novelist character template and creative techniques stay wired",
+    (ROOT / novelist_character_template).exists()
+    and (ROOT / novelist_creative_behavior_cases).exists()
+    and has_all(
+        novelist_skill,
+        ["人物动态档案", "assets/character-dynamic-profile-template.md"],
+    )
+    and has_all(
+        novelist_character_template,
+        [
+            "最小人物卡",
+            "重要人物扩展",
+            "动态更新附录",
+            "项目本地状态",
+            "错误信念或旧伤",
+            "保护策略",
+            "认知盲区",
+            "脆弱触发",
+            "实际发生的变化",
+            "下一阶段必须继承",
+        ],
+    )
+    and has_none(
+        novelist_character_template,
+        ["三部曲", "六朝序列", "宗门", "修为", "法器"],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "错误信念或旧伤",
+            "保护策略",
+            "认知盲区",
+            "脆弱触发",
+            "人物选择沙盘",
+            "不写回正文、人物档案、伏笔台账或正典",
+            "不替作者决定",
+        ],
+    )
+    and has_all(
+        novelist_scene,
+        [
+            "目标、筹码、位差、隐瞒",
+            "权力、信息、情绪或决定",
+            "感知 -> 冲动冲突 -> 决定",
+        ],
+    )
+    and has_all(
+        novelist_story,
+        [
+            "自己的问题",
+            "目标、资源、情报和计划",
+            "退让成本",
+            "明确更新、移动、合并或退役章卡",
+        ],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "人物场景状态转移",
+            "目标、情绪、关系、身体、知情和声音",
+            "无因复位",
+            "下一场必须继承",
+            "终局",
+            "可见规则、合理假设、已埋异常和隐藏支点",
+            "读者优先复读",
+            "跨章信息差压力测试",
+            "当前 POV",
+            "重释旧事实",
+        ],
+    )
+    and has_all(
+        novelist_creative_behavior_cases,
+        [
+            "novelist-should-give-supporting-character-and-opponent-independent-agency",
+            "novelist-should-track-character-scene-state-transitions",
+            "novelist-should-build-bilateral-nonretreat-conflict",
+            "novelist-should-make-dialogue-change-the-scene",
+            "novelist-should-filter-scene-through-pov-and-interiority",
+            "novelist-should-build-fair-recontextualizing-reversal",
+            "novelist-should-carry-chapter-afterforce-forward",
+            "novelist-should-review-as-reader-before-technical-diagnosis",
+            "静态 fixture 只固定预期行为",
+            "同一 runner/model",
+            "盲评",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"',
+        ],
+    ),
+)
+
+check(
     "novelist character life behavior cases stay wired",
     (ROOT / novelist_character_life_behavior_cases).exists()
     and has_all(
@@ -18930,60 +19087,404 @@ check(
         ],
     ),
 )
+
+behavior_case_criteria_has(
+    novelist_behavior_cases,
+    "novelist-should-build-character-through-story-and-relationships",
+    (
+        "错误信念或旧伤",
+        "保护策略",
+        "认知盲区",
+        "脆弱触发",
+        "跨不同关系与压力场景",
+        "一句台词或单场策略只保留为候选",
+        "非正典压力测试不得写回正典",
+        "动态更新只写实际发生的变化",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-sandbox-character-choices-without-promoting-canon",
+    (
+        "未知保持未知",
+        "真正不同的候选行动链",
+        "心理或处境支点",
+        "作者选择前全部结果保持候选",
+        "不写回正文、人物档案、伏笔台账或正典",
+        "不证明唯一正确反应",
+        "情、理、欲、关系、身体、处境与偶然",
+        "高、中、低或粗略权重",
+        "不按概率抽签",
+        "当前草稿分支",
+        "不自动晋升正典",
+        "明确修订",
+        "暗中重抽",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-preserve-cross-chapter-information-asymmetry",
+    (
+        "信息来源、接收者、人物理解或误解",
+        "读者所得和对下一章的约束",
+        "作者本真不得倒灌给人物",
+        "当前 POV 已经知道",
+        "改变判断、关系、风险或行动",
+        "重释旧事实",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-give-supporting-character-and-opponent-independent-agency",
+    ("自己的问题", "目标、资源、情报", "受挫后"),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-track-character-scene-state-transitions",
+    ("入场目标、情绪、关系、身体、知情和声音", "下一场必须继承", "无因复位"),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-build-bilateral-nonretreat-conflict",
+    ("双方目标具体且当前不兼容", "退让会失去", "冲突结果产生新的责任"),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-make-dialogue-change-the-scene",
+    ("目标、筹码、位差、隐瞒", "权力、信息、情绪或决定", "下一动作"),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-filter-scene-through-pov-and-interiority",
+    (
+        "欲望、知识、偏见、身体和风险",
+        "感知、冲动冲突、决定",
+        "不越权进入他人内心",
+        "此前不可得的信息、有效重释、新压力、新选择或新行动",
+        "重复同一事件",
+        "叙述位置与信息权限",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-build-fair-recontextualizing-reversal",
+    ("可见规则、对手或读者的合理假设、已埋异常和隐藏支点", "不临时增加", "人物选择、代价与余波"),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-carry-chapter-afterforce-forward",
+    ("关系、决定、风险或情绪", "兑现、反拨或转义", "不无因降温"),
+)
+behavior_case_criteria_has(
+    novelist_creative_behavior_cases,
+    "novelist-should-review-as-reader-before-technical-diagnosis",
+    ("第一遍暂不看提纲和作者意图", "注意力、期待、情绪和停顿", "再次沉浸复读"),
+)
 behavior_case_criteria_has(
     novelist_character_life_behavior_cases,
     "novelist-should-deposit-life-history-into-present-character",
-    (
-        "已确认事实与候选解释",
-        "人物当时的解释",
-        "同一经历不被机械推导",
-        "保护策略只在确有证据时使用",
-        "压力选择",
-    ),
+    ("已确认事实与候选解释", "人物当时的解释", "同一经历不被机械推导", "保护策略只在确有证据时使用", "压力选择"),
 )
 behavior_case_criteria_has(
     novelist_character_life_behavior_cases,
     "novelist-should-show-character-change-across-life-stages",
-    (
-        "年龄、身体、职业、资源、身份或关系",
-        "一条或多条可追踪的连续倾向",
-        "不强制安排观察者误读",
-        "普通细节可以只承担生活质感",
-    ),
+    ("年龄、身体、职业、资源、身份或关系", "一条或多条可追踪的连续倾向", "不强制安排观察者误读", "普通细节可以只承担生活质感"),
 )
 behavior_case_criteria_has(
     novelist_character_life_behavior_cases,
     "novelist-should-reveal-one-character-across-relationships-and-pressure",
-    (
-        "随关系、风险与筹码变化",
-        "一条或多条可追踪的稳定倾向",
-        "人物内部矛盾",
-        "稳定模式、当前状态与一次性压力反应",
-    ),
+    ("随关系、风险与筹码变化", "一条或多条可追踪的稳定倾向", "人物内部矛盾", "稳定模式、当前状态与一次性压力反应"),
 )
 behavior_case_criteria_has(
     novelist_character_life_behavior_cases,
     "novelist-should-not-deduce-one-personality-from-shared-trauma",
-    (
-        "各自的解释、关系位置、后续反馈与反复选择",
-        "不靠天生理性或感性标签",
-        "不擅自增加",
-        "互补、冲突并接受反馈",
-    ),
+    ("各自的解释、关系位置、后续反馈与反复选择", "不靠天生理性或感性标签", "不擅自增加", "互补、冲突并接受反馈"),
 )
 behavior_case_criteria_has(
     novelist_character_life_behavior_cases,
     "novelist-should-allow-aesthetic-detail-without-forced-plot-duty",
-    (
-        "审美乐趣、身份表达和生活质感",
-        "不把每个细节都强迫变成",
-        "谈判与逃离",
-        "她可以真正在意",
-    ),
+    ("审美乐趣、身份表达和生活质感", "不把每个细节都强迫变成", "谈判与逃离", "她可以真正在意"),
+)
+
+behavior_fixture_fingerprint(
+    novelist_behavior_cases,
+    "8e6a2b1b8641380209168beb693d39f1375f28285da94117f782cbf8fc7da310",
+)
+behavior_fixture_fingerprint(
+    novelist_creative_behavior_cases,
+    "15d8198f505c6115113f14d545a2b21af53f643b07cac87a3fff040e703888f7",
 )
 behavior_fixture_fingerprint(
     novelist_character_life_behavior_cases,
     "b62a208e82d77b095d879eb2a5119157b46c103103647f88eb96d62f385eca81",
+)
+
+check(
+    "novelist R6 foundation behavior cases stay wired",
+    (ROOT / novelist_r6_foundation_behavior_cases).exists()
+    and has_all(
+        novelist_r6_foundation_behavior_cases,
+        [
+            "novelist-should-select-current-authoritative-chapter-context",
+            "novelist-should-propagate-confirmed-revision-impact",
+            "novelist-should-expand-only-causally-bearing-beats",
+            "novelist-should-keep-prose-output-free-of-workflow-metadata",
+            "novelist-should-triage-revision-and-preserve-working-passages",
+            "novelist-should-replan-rhythm-without-fixed-chapter-ratios",
+            "novelist-should-preserve-agency-under-confirmed-ending",
+            "novelist-should-embody-character-without-leaking-author-knowledge",
+            "静态 fixture 只固定预期行为",
+            "同一 runner/model",
+            "盲评",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"',
+        ],
+    ),
+)
+
+behavior_case_criteria_has(
+    novelist_r6_foundation_behavior_cases,
+    "novelist-should-replan-rhythm-without-fixed-chapter-ratios",
+    (
+        "不以连续章数、固定动静比例、句长或节拍标签代替诊断",
+        "同质重复、过载或拖欠读者承诺时才重排",
+        "未形成承诺时可有依据地删除、移动或转义",
+        "不能被临场刺激静默替换",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_r6_foundation_behavior_cases,
+    "novelist-should-preserve-agency-under-confirmed-ending",
+    (
+        "保持作者已确认的终局",
+        "真心争位",
+        "终局约束最终结果，不预告、操控或掏空中段选择",
+        "由女主主动选择并承担政治、关系或身份后果",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_r6_foundation_behavior_cases,
+    "novelist-should-embody-character-without-leaking-author-knowledge",
+    (
+        "人物可知事实",
+        "不得倒灌为人物直觉、潜意识或莫名确信",
+        "身体反应、被触发的经历、情绪与相互冲突的冲动",
+        "判断或误判",
+        "退出人物视角复核",
+        "作者选择前不得写回正文、人物档案或正典",
+    ),
+)
+check(
+    "novelist character embodiment stays bounded by canon and limited knowledge",
+    has_all(
+        novelist_skill,
+        [
+            "人物代入、角色扮演或人物反应推演",
+            "不创建持久人格或第二角色 Owner",
+        ],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "人物沉浸推演",
+            "入境",
+            "内演",
+            "出境",
+            "人物不应知道的作者本真",
+            "判断或误判",
+            "作者选择前仍是候选",
+        ],
+    )
+    and has_all(
+        novelist_scene,
+        [
+            "作者侧的隐藏过程",
+            "不展示推演表、标签或完整心理因果说明",
+            "可感的身体、注意、动作、言语、克制或片段心理",
+        ],
+    ),
+)
+
+behavior_fixture_fingerprint(
+    novelist_r6_foundation_behavior_cases,
+    "ae71e68e406c41fe42db81649b11eaeffbb1d3f789ad8787e11dec510d4bcea0",
+)
+
+check(
+    "novelist R6 craft behavior cases stay wired",
+    (ROOT / novelist_r6_craft_behavior_cases).exists()
+    and (ROOT / novelist_scene).exists()
+    and has_all(
+        novelist_skill,
+        [
+            "references/scene-and-prose-craft.md",
+            "场景展开、正文续写、转场、POV、内心、对白、打趣或项目文风校准",
+        ],
+    )
+    and has_all(
+        novelist_scene,
+        [
+            "场景承重与展开",
+            "刺激 -> 相互冲突的冲动 -> 决定",
+            "不为满足字数、感官配额或“全都场景化”制造动作",
+            "此前不可得的信息、有效重释、新压力、新选择或新行动",
+            "有效硬切可以直接进入下一场第一拍",
+            "不为平滑补齐赶路和解释",
+            "打趣只有在压力和关系中承担功能时才使用",
+            "当前任务中明确属于作者或已获授权",
+            "不用词频、口头禅、固定句长或标志性意象复制冒充作者文风",
+            "作品载体只放必要标题、分隔和正文",
+        ],
+    )
+    and has_all(
+        novelist_story,
+        [
+            "开篇抓手与长期承诺",
+            "第一拍抓手与作品长期承诺",
+            "两向主线接口",
+            "短意象、生活纹理和一次性呼应",
+        ],
+    )
+    and has_all(
+        novelist_world,
+        [
+            "命名适配与证据边界",
+            "不得提前揭示之事",
+            "文学构义或待确认",
+        ],
+    )
+    and has_all(
+        novelist_r6_craft_behavior_cases,
+        [
+            "novelist-should-bridge-scene-state-without-forcing-smooth-transition",
+            "novelist-should-open-with-durable-promise-not-cheap-shock",
+            "novelist-should-diagnose-pacing-across-scales-without-fixed-ratios",
+            "novelist-should-diagnose-ai-like-prose-after-structural-facts",
+            "novelist-should-give-major-subplot-a-two-way-mainline-interface",
+            "novelist-should-calibrate-style-only-from-authorized-functional-samples",
+            "novelist-should-use-banter-only-when-humor-carries-pressure",
+            "novelist-should-name-story-entities-for-fit-without-overclaiming-etymology",
+            "静态 fixture 只固定预期行为",
+            "同一 runner/model",
+            "盲评",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"',
+        ],
+    ),
+)
+
+behavior_fixture_fingerprint(
+    novelist_r6_craft_behavior_cases,
+    "ff1d56a3b4765686bc5f85cfb2d031d44c3d1cfaf534e4740e4cdcb8c897ea75",
+)
+
+check(
+    "novelist R8 practice and external absorption behavior cases stay wired",
+    (ROOT / novelist_r8_practice_behavior_cases).exists()
+    and has_all(
+        novelist_r8_practice_behavior_cases,
+        [
+            "novelist-should-preserve-agency-inside-protective-relationships",
+            "novelist-should-allow-proportionate-emergency-protection",
+            "novelist-should-derive-a-flaw-from-a-strength-crossing-its-boundary",
+            "novelist-should-route-long-history-through-current-character-decisions",
+            "novelist-should-not-force-single-protagonist-filter-on-generational-sagas",
+            "novelist-should-sandbox-character-choices-without-promoting-canon",
+            "novelist-should-preserve-cross-chapter-information-asymmetry",
+            "novelist-should-resume-long-serial-from-authoritative-evidence",
+            "静态 fixture 只固定预期行为",
+            "同一 runner/model",
+            "盲评",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"',
+        ],
+    ),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-preserve-agency-inside-protective-relationships",
+    ("理解与行动能力", "谁在替谁作决定", "善意", "关系代价", "下一场必须继承"),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-allow-proportionate-emergency-protection",
+    ("紧迫性", "最小且相称的临时代决", "归还后续治疗和行动选择", "不机械地把一切保护判为剥夺"),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-derive-a-flaw-from-a-strength-crossing-its-boundary",
+    ("同一价值、能力或保护策略", "越过信息、权限、关系或时势边界", "受益者、被排除者、承担者", "不要求每个优点都配对称缺陷"),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-route-long-history-through-current-character-decisions",
+    ("当前主角", "其余年表和王朝材料留在作者侧", "作者本真、人物所知与读者所得", "当场行动和后续责任"),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-not-force-single-protagonist-filter-on-generational-sagas",
+    ("多代、换主角的类型承诺", "每卷分别建立当代行动者", "可追踪遗产", "不强造一个总主角"),
+)
+behavior_case_criteria_has(
+    novelist_r8_practice_behavior_cases,
+    "novelist-should-resume-long-serial-from-authoritative-evidence",
+    ("唯一权威", "最近已验证章节", "标为失效或待修订", "不替代事实权威", "第二份正典"),
+)
+check(
+    "novelist long-serial evidence loop stays grounded in existing authority",
+    has_all(
+        novelist_story,
+        ["事实与权威指针", "只引用本章实际调用"],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "最近已验证的正文或章节",
+            "活跃读者承诺",
+            "恢复简报只保留",
+            "章节状态增量",
+            "不复制未变化状态",
+        ],
+    )
+    and has_all(
+        novelist_scene,
+        [
+            "遮住人物姓名",
+            "不靠口头禅、方言或固定句长",
+        ],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "损失、新情报和剩余资源",
+            "不得无因复刻失败方案",
+        ],
+    )
+    and has_all(
+        repo_source_map,
+        [
+            "XINGANLIU/web-novel-writing-skill",
+            "308ae728abf1c5526cfc533cde47904ff1f63584",
+            "不安装或引入运行时依赖",
+            "自动写回正典",
+        ],
+    ),
+)
+behavior_fixture_fingerprint(
+    novelist_r8_practice_behavior_cases,
+    "97bfd6d49f78c10341a1108dc5ee129428efe55e4a6b521600b8edf474068f99",
 )
 
 expected_handling_has(
@@ -19041,6 +19542,67 @@ expected_handling_lacks(
         "外貌衣着清单",
         "人物卡即完成",
         "所有关系始终不变",
+    ),
+)
+expected_handling_has(
+    "novelist-should-resume-from-local-canon-authority",
+    (
+        "项目本地状态",
+        "故事正典状态、来源证据状态与工作进度状态",
+        "项目没有定义时才回退到默认状态集",
+        "唯一权威拓扑",
+        "不替代事实权威",
+        "标记摘要失效",
+        "停止具体写回",
+        "不新建统一状态文件、固定目录或第二份正典",
+    ),
+)
+expected_handling_has(
+    "novelist-should-bound-historical-knowledge-and-interpretation",
+    (
+        "名义范围、实际控制、文化影响和真实履责半径",
+        "观察、记录、保存、交通与消息传播能力",
+        "不前置成熟官僚机构、实时汇总或全国同步执行",
+        "现象本真、有限观测、多方解释、政治利用或人物行动、实际履责后果、后世书写",
+        "一次观测不能自动证明天命、法统或政治结论",
+        "不直接证明文学神话、王朝映射或超凡解释为现实史实",
+    ),
+)
+expected_handling_has(
+    "novelist-should-check-actor-bearer-and-knowledge-time",
+    (
+        "谁行动、谁承受、何时发生、当时谁知道、知情依据",
+        "作者本真、人物所知和读者所知",
+        "甲乙转生时点",
+        "丁乙生育方向",
+        "丙所谓亲历的来源",
+        "戊与乙首次相识及共同记忆来源",
+        "停止扩写依赖这些事实的剧情",
+        "不把跨材料语义冲突降格成措辞问题",
+    ),
+)
+expected_handling_has(
+    "novelist-should-pressure-test-worldbuilding-with-noncanon-slice",
+    (
+        "非正典最小故事切片",
+        "两条道路都须有现实理由",
+        "普通人的受益、受损",
+        "不可逆后果",
+        "不自动升级为作者本真、工作骨架或正典",
+        "停止",
+        "不借机扩写完整王朝史",
+    ),
+)
+expected_handling_has(
+    "novelist-should-balance-two-sided-power-concessions",
+    (
+        "双方实际交出什么、保留什么",
+        "谁受益、谁承受外部损失",
+        "紧急封渡与常态通行",
+        "触发条件、范围、期限、告知、复核、损害承担和恢复通行责任",
+        "自治、盟约或双重主权候选",
+        "不同时宣称权力已经归一",
+        "具体官制与正典仍待作者决定",
     ),
 )
 expected_handling_has(
@@ -19131,7 +19693,24 @@ expected_handling_has(
 )
 expected_handling_has(
     "novelist-should-preserve-grounded-irrationality",
-    ("三层真实", "不相信消息来源", "不敢赌为假", "现有心理支点已成立", "不新增外部证据", "现实后果"),
+    (
+        "三层真实",
+        "情、理、欲、关系、身体、处境与偶然",
+        "局部原因或事后自辩",
+        "不收束成唯一动机",
+        "不要求事前可预测",
+        "不敢赌为假",
+        "不新增外部证据",
+        "多个符合当下人物的候选",
+        "作者侧",
+        "高、中、低或粗略权重",
+        "不触碰承重正典",
+        "当前草稿分支",
+        "不自动晋升正典",
+        "明确修订",
+        "不得仅因效果不理想而暗中重抽",
+        "现实后果",
+    ),
 )
 expected_handling_has(
     "novelist-should-allow-consequential-absurdity",
@@ -19140,12 +19719,21 @@ expected_handling_has(
 expected_handling_has(
     "novelist-should-preserve-counterintuitive-source-material",
     (
-        "共同记载的事实主张",
+        "事件本真、亲历之实、初始记录、流传变形、后世版本和现实遗痕",
         "来源独立性与可靠性",
         "反常识不等于材料有误",
         "不以常识替代证据",
+        "本真下限",
         "不得为六名囚犯补写统一动机",
-        "真实结局保持未确定",
+        "开放未知",
+        "不误标为待补漏洞",
+        "讲述者、时代、对象与现实作用",
+        "不能因历史可被改写就视为同等可信",
+        "承重志怪",
+        "支流志怪",
+        "背景异闻",
+        "不必汇入同一幕后真相",
+        "有限证据下复验",
         "必须标记为文学改编",
     ),
 )
@@ -19157,6 +19745,80 @@ expected_handling_lacks(
         "应归并为唯一真相",
         "应当归并为唯一真相",
         "确定真实结局",
+        "所有异闻最终来自同一个幕后真相",
+        "所有历史版本同等可信",
+    ),
+)
+check(
+    "novelist routes long-world evolution and layered strange tales through one worldbuilding authority",
+    has_all(
+        novelist_skill,
+        [
+            "历史长期演进",
+            "神话传说",
+            "志怪异闻",
+            "references/worldbuilding-and-research.md",
+        ],
+    )
+    and has_all(
+        novelist_world,
+        [
+            "六层历史真实",
+            "事件本真",
+            "亲历之实",
+            "初始记录",
+            "流传变形",
+            "后世版本",
+            "现实遗痕",
+            "本真下限",
+            "开放未知",
+            "历史记忆分流",
+            "讲述者、时代、对象与现实作用",
+            "不同版本不因此同等可信",
+            "承重志怪",
+            "支流志怪",
+            "背景异闻",
+            "不必汇入同一幕后真相",
+            "时代交接",
+            "前代遗产",
+            "普通人的生活与选择余地",
+        ],
+    ),
+)
+check(
+    "novelist keeps human choice grounded but not mechanically predictable",
+    has_all(
+        novelist_skill,
+        [
+            "心理真实要求可回望",
+            "不要求事前可预测",
+            "references/character-craft.md",
+        ],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "情、理、欲、关系、身体、处境与偶然",
+            "局部原因或事后自辩",
+            "不收束成唯一动机",
+            "高、中、低或粗略权重",
+            "作者侧小扰动",
+            "不作为统计概率、人物规则或掷骰机制",
+            "当前草稿分支",
+            "不自动晋升正典",
+            "作者明确修订",
+            "不得仅因效果不理想而暗中重抽",
+        ],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "可回望，不等于事前可预测",
+            "不强求事后唯一解释",
+            "当前草稿或版本内",
+            "不自动晋升正典",
+            "明确修订",
+        ],
     ),
 )
 expected_handling_has(
@@ -19178,7 +19840,15 @@ expected_handling_has(
 )
 expected_handling_lacks(
     "novelist-should-preserve-grounded-irrationality",
-    ("必须补足外部证据", "证据充分后才能行动"),
+    (
+        "必须补足外部证据",
+        "证据充分后才能行动",
+        "唯一最合理的心理原因",
+        "冲进去的概率固定为 70%",
+        "用掷骰决定",
+        "失败后重新抽取",
+        "永远不许作者改动",
+    ),
 )
 expected_handling_lacks(
     "novelist-should-allow-consequential-absurdity",
@@ -19366,6 +20036,64 @@ expected_handling_has(
         "视角、人称、叙事距离、人物声音、节奏和信息密度",
         "不把载体适配退化成只切短句子",
         "不为制造钩子改变人物性格或新增事实",
+    ),
+)
+synthesis_case_id = "novelist-should-synthesize-literary-traditions-into-own-voice"
+synthesis_case = skill_eval_cases_by_id.get(synthesis_case_id, {})
+synthesis_query = synthesis_case.get("query", "")
+check(
+    f"prompt fixture fields define {synthesis_case_id}",
+    synthesis_case.get("skill") == "novelist"
+    and synthesis_case.get("should_trigger") is True
+    and synthesis_case.get("hard_negative") is False
+    and set(synthesis_case.get("dimensions", [])) == {"output_quality", "variance_check"},
+)
+check(
+    f"prompt fixture query preserves pressure for {synthesis_case_id}",
+    all(
+        term in synthesis_query
+        for term in (
+            "一周内炼成独门风格",
+            "古典小说",
+            "现代小说",
+            "网文",
+            "短篇",
+            "散文",
+            "30%、25%、25%、10%、10%",
+            "每段都让读者一眼看出来源",
+            "玄幻、现实、悬疑全部照用",
+            "公式并写一段示范",
+        )
+    ),
+)
+expected_handling_has(
+    synthesis_case_id,
+    (
+        "拒绝按固定百分比、逐段显露来源或跨题材永久套用同一配方",
+        "古典小说、现代小说、网文、短篇与散文",
+        "叙述分寸与人情世态",
+        "个体幽微与复义",
+        "目标推进与期待",
+        "聚焦留白与不可逆选择",
+        "意象节奏与感官质地",
+        "可迁移能力",
+        "当前作品的类型承诺、人物、场景和读者体验",
+        "不要求五类等量出现",
+        "同一叙述主体与统一声腔",
+        "人物选择、故事因果和后果",
+        "不做风格标签拼贴",
+        "不模仿具体作者",
+        "长期阅读、生活与材料积累、持续创作、删改和读者反馈",
+        "不承诺一周成为宗师",
+    ),
+)
+expected_handling_lacks(
+    synthesis_case_id,
+    (
+        "古典小说固定占 30%",
+        "每段标明技法来源",
+        "所有题材永久使用同一比例",
+        "一周即可成为宗师",
     ),
 )
 expected_handling_has(
