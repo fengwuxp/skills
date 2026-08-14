@@ -16,6 +16,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -108,6 +109,40 @@ def metadata_path_for(destination_dir: Path, archive_id: str) -> Path:
     return destination_dir / f"{archive_id}.metadata.json"
 
 
+def ensure_private_dir(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+    metadata = os.lstat(path)
+    if not stat.S_ISDIR(metadata.st_mode) or stat.S_ISLNK(metadata.st_mode):
+        fail(f"archive path must be a real directory: {path}")
+    os.chmod(path, 0o700)
+
+
+def atomic_private_write(path: Path, write_content: Any) -> None:
+    descriptor, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temp_path = Path(temp_name)
+    try:
+        os.fchmod(descriptor, 0o600)
+        with os.fdopen(descriptor, "wb") as output:
+            write_content(output)
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temp_path, path)
+        os.chmod(path, 0o600)
+    finally:
+        try:
+            temp_path.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def copy_private_file(source: Path, destination: Path) -> None:
+    def copy(output: Any) -> None:
+        with source.open("rb") as input_stream:
+            shutil.copyfileobj(input_stream, output)
+
+    atomic_private_write(destination, copy)
+
+
 def archive_evidence(
     *,
     source_url: str,
@@ -135,8 +170,8 @@ def archive_evidence(
     if not dry_run:
         if destination_dir.exists() and not overwrite:
             fail(f"archive already exists, pass --overwrite to replace: {destination_dir}")
-        destination_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(evidence, destination_file)
+        ensure_private_dir(destination_dir)
+        copy_private_file(evidence, destination_file)
 
     metadata: dict[str, Any] = {
         "archive_id": archive_id,
@@ -156,9 +191,10 @@ def archive_evidence(
     }
 
     if not dry_run:
-        metadata_file.write_text(
-            json.dumps(metadata, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
+        payload = (json.dumps(metadata, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+        atomic_private_write(
+            metadata_file,
+            lambda output: output.write(payload),
         )
 
     return metadata
@@ -202,6 +238,40 @@ def run_self_test() -> None:
             fail("self-test metadata file was not written")
         if is_within(Path(metadata["archive_path"]), ROOT):
             fail("self-test archive path should be outside repository")
+        destination_dir = Path(metadata["archive_path"])
+        destination_file = destination_dir / "evidence.html"
+        metadata_file = Path(metadata["metadata_path"])
+        if destination_dir.stat().st_mode & 0o777 != 0o700:
+            fail("self-test archive directory must be private")
+        if destination_file.stat().st_mode & 0o777 != 0o600:
+            fail("self-test evidence file must be private")
+        if metadata_file.stat().st_mode & 0o777 != 0o600:
+            fail("self-test metadata file must be private")
+
+        evidence_victim = base / "evidence-victim.txt"
+        metadata_victim = base / "metadata-victim.txt"
+        evidence_victim.write_text("KEEP-EVIDENCE", encoding="utf-8")
+        metadata_victim.write_text("KEEP-METADATA", encoding="utf-8")
+        destination_file.unlink()
+        metadata_file.unlink()
+        destination_file.symlink_to(evidence_victim)
+        metadata_file.symlink_to(metadata_victim)
+        archive_evidence(
+            source_url=SELF_TEST_READ_URL,
+            evidence_file=outside_repo,
+            title="已读取文章",
+            author="demo",
+            published_at="2026-05-26",
+            read_at="2026-05-26T12:00:00+00:00",
+            capture_method="playwright",
+            archive_root=archive_root,
+            overwrite=True,
+            dry_run=False,
+        )
+        if evidence_victim.read_text(encoding="utf-8") != "KEEP-EVIDENCE":
+            fail("self-test archive overwrite followed an evidence symlink")
+        if metadata_victim.read_text(encoding="utf-8") != "KEEP-METADATA":
+            fail("self-test archive overwrite followed a metadata symlink")
 
         repo_evidence = ROOT / "AGENTS.md"
         try:
