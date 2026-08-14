@@ -443,6 +443,20 @@ def build_package(
         return result
 
     result = result_for(content, selections)
+    if status == "ready" and re.search(r"(?:资金|支付|安全|权限|Git|生产|部署|密钥|删除|不可逆)", query, re.IGNORECASE):
+        content = text if text.endswith("\n") else text + "\n"
+        selections = [
+            {
+                "kind": "file",
+                "heading_path": [],
+                "start_line": 1,
+                "end_line": len(lines),
+            }
+        ]
+        result = result_for(content, selections)
+        result["estimated_savings_ratio"] = 0.0
+        result["forced_full_reason"] = "high-risk-query"
+        return result
     if status == "ready" and result["estimated_savings_ratio"] < min_savings_ratio:
         content = text if text.endswith("\n") else text + "\n"
         selections = [
@@ -774,6 +788,21 @@ Verify version, configuration, rollback, and observation.
             json.dumps(boundary_result, ensure_ascii=False, indent=2)
         )["midpoint"]
         assert boundary_result["estimated_selected_tokens"] == actual_boundary_tokens
+
+        high_risk = Path(temp_dir) / "high-risk.md"
+        high_risk.write_text(
+            "# High Risk\n\n## 使用时机\n用于受控执行。\n\n"
+            "## 按任务读取索引\n\n| 任务 | 优先读取 | 跳过 |\n| --- | --- | --- |\n"
+            "| 执行生产删除 | `执行步骤` | 不跳过 |\n\n"
+            "## 执行步骤\n先运行命令。\n\n"
+            "## 授权红线\n生产删除必须由 Owner 明确授权并保留回滚。\n"
+            + "无关说明。\n" * 80,
+            encoding="utf-8",
+        )
+        high_risk_result = build_package(high_risk, "执行生产删除", min_savings_ratio=0)
+        assert high_risk_result["status"] == "ready"
+        assert high_risk_result["selections"][0]["kind"] == "file"
+        assert "生产删除必须由 Owner 明确授权" in high_risk_result["content"]
 
     print("OK wise-agent reference section reader self-test")
 

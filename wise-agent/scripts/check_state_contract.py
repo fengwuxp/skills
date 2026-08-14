@@ -52,6 +52,8 @@ LOAD_BEARING_EXECUTION_FIELDS = {
     "current_slice",
     "next_action",
     "authorization",
+    "maker",
+    "verification_evidence_refs",
 }
 STRING_FIELDS = {
     "execution_id",
@@ -365,6 +367,29 @@ def validate_evidence_refs(node_id: str, value: Any) -> list[str]:
         for field in sorted(EVIDENCE_REF_FIELDS):
             if not isinstance(evidence_ref.get(field), str) or not evidence_ref[field].strip():
                 errors.append(f"{prefix} {field} must be a non-empty string")
+    return errors
+
+
+def validate_top_verification_refs(value: Any) -> list[str]:
+    if not isinstance(value, list) or not value:
+        return ["Verified requires typed verification_evidence_refs"]
+    errors: list[str] = []
+    evidence_types: set[str] = set()
+    for index, evidence_ref in enumerate(value):
+        prefix = f"verification_evidence_refs[{index}]"
+        if not isinstance(evidence_ref, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        evidence_type = evidence_ref.get("type")
+        if not isinstance(evidence_type, str) or evidence_type not in EVIDENCE_REF_TYPES:
+            errors.append(f"{prefix} type must be one of {sorted(EVIDENCE_REF_TYPES)}")
+        else:
+            evidence_types.add(evidence_type)
+        for field in sorted(EVIDENCE_REF_FIELDS):
+            if not isinstance(evidence_ref.get(field), str) or not evidence_ref[field].strip():
+                errors.append(f"{prefix} {field} must be a non-empty string")
+    if not evidence_types & NON_VALIDATOR_EVIDENCE_REF_TYPES:
+        errors.append("Verified requires at least one non-validator verification_evidence_ref")
     return errors
 
 
@@ -902,6 +927,11 @@ def validate(
     for field in ("success_criteria", "non_goals", "write_scope", "stop_conditions"):
         if isinstance(data.get(field), list) and not data[field]:
             errors.append(f"{field} must not be empty")
+    if is_string_list(data.get("write_scope")):
+        for scope in data["write_scope"]:
+            candidate_scope = PurePosixPath(scope)
+            if candidate_scope.is_absolute() or ".." in candidate_scope.parts or scope in {".", ""}:
+                errors.append(f"write_scope {scope} must be a relative path inside the execution root")
 
     maximum = data.get("max_iterations")
     no_progress = data.get("no_progress_limit")
@@ -933,6 +963,15 @@ def validate(
         errors.append(f"{status} requires at least one confirmed execution_basis decision")
     if isinstance(status, str) and status in {"Verified", "Closed"} and isinstance(data.get("verification_evidence"), list) and not data["verification_evidence"]:
         errors.append(f"{status} requires verification_evidence")
+    if strict_verified_evidence and isinstance(status, str) and status in {"Verified", "Closed"}:
+        typed_errors = validate_top_verification_refs(data.get("verification_evidence_refs"))
+        errors.extend(error.replace("Verified", status, 1) for error in typed_errors)
+        maker = data.get("maker")
+        checker = data.get("checker")
+        if not isinstance(maker, str) or not maker.strip():
+            errors.append(f"{status} requires maker")
+        elif isinstance(checker, str) and checker.strip().casefold() == maker.strip().casefold():
+            errors.append(f"{status} requires checker different from maker")
 
     work_graph = data.get("work_graph")
     previous_graph = previous_contract.get("work_graph") if isinstance(previous_contract, dict) else None
@@ -985,6 +1024,20 @@ def run_self_test() -> None:
     valid_errors = validate(valid_contract)
     if valid_errors:
         raise SystemExit(f"valid fixture rejected: {valid_errors}")
+
+    unbounded_scope = copy.deepcopy(valid_contract)
+    unbounded_scope.pop("work_graph")
+    unbounded_scope["write_scope"] = ["/"]
+    if "write_scope / must be a relative path inside the execution root" not in validate(unbounded_scope):
+        raise SystemExit("top-level write_scope accepted an absolute path")
+
+    self_verified = copy.deepcopy(valid_contract)
+    self_verified.pop("work_graph")
+    self_verified["status"] = "Verified"
+    self_verified["verification_evidence"] = ["Maker reports completion"]
+    self_verified["checker"] = "implementation-maker"
+    if "Verified requires typed verification_evidence_refs" not in validate(self_verified):
+        raise SystemExit("top-level Verified accepted a Maker self-report")
 
     legacy_goal_contract = copy.deepcopy(valid_contract)
     legacy_goal_contract["goal_id"] = legacy_goal_contract.pop("execution_id", "EXEC-17")

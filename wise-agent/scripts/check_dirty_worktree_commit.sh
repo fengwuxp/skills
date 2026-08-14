@@ -10,7 +10,7 @@ set -euo pipefail
 
 tmp_dir="$(mktemp -d)"
 cleanup() {
-  rm -r "${tmp_dir}"
+  rm -r -- "${tmp_dir}"
 }
 trap cleanup EXIT
 
