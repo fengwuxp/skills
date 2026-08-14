@@ -6233,7 +6233,7 @@ check(
             "REQUIRED_PROMPT_DIMENSIONS",
             "prompt_fixture_stats",
             "score_prompt_fixtures",
-            '"grill-me": ["$grill-me", "压力测试", "关键分叉", "重复问"]',
+            '"grill-me": ["$grill-me", "压力测试这份", "关键分叉", "重复问"]',
             '"huaxia-practical-wisdom": ["$huaxia-practical-wisdom", "老祖宗智慧", "名实是否相符", "可逆"]',
             '("grill-me", "huaxia-practical-wisdom")',
             "trigger fixture coverage is incomplete",
@@ -15327,6 +15327,11 @@ negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="grill-me on confirmed plan execution",
         prompt="方案和决策快照已经由 owner 确认，请按现有任务卡执行，不要重新发起需求澄清。",
+        routes={"grill-me", "question-ledger.md"},
+    ),
+    RouteFixture(
+        name="performance load test does not imply grill-me",
+        prompt="对这个 API 做性能压力测试，输出并发、吞吐、P95 延迟和资源占用。",
         routes={"grill-me", "question-ledger.md"},
     ),
     RouteFixture(

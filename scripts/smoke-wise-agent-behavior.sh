@@ -414,6 +414,7 @@ assert_grill_evidence_closed() {
   for term in "confirmed" "D-101"; do
     grep -Fq "${term}" "${file}" || return 1
   done
+  grep -Eq '24[[:space:]]*(hours|小时)' "${file}" || return 1
   assert_any "${file}" "PRD" "product-requirements" || return 1
   assert_any "${file}" "知识库" "domain-knowledge" || return 1
   assert_any "${file}" "测试" "RefundPolicyTests" || return 1
@@ -1069,6 +1070,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/grill-conflict.txt" \
       "${sample_dir}/grill-conflict-variant.txt" \
       "${sample_dir}/bad-grill-closed.txt" \
+      "${sample_dir}/bad-grill-wrong-value.txt" \
       "${sample_dir}/bad-grill-conflict.txt" \
       "${sample_dir}/grill-history-before-handoff.txt" \
       "${sample_dir}/grill-history-quoted-question.txt" \
@@ -1239,10 +1241,11 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' '人工评审结论为 confirmed，candidate 账本仍保持 candidate；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；失败归因：路由过宽；替代解释：提示词歧义；可复用规则：单一专业任务只加载架构师；权威落点：metadata；最小修改：候选 diff；基线和候选行为有证据指纹；验证：目标 fixture、邻近 hard-negative、稳定样例；启用 RSI Mode；Owner 选择 promote / reject / supersede；不得自动晋升，失败回退；不得吸收：订单优惠券；授权边界：不提交、不同步。' > "${sample_dir}/bad-skill-improvement-rsi.txt"
   printf '%s\n' '人工评审结论为 confirmed，candidate 账本仍保持 candidate；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；失败归因：路由过宽；反证：提示词歧义；可复用规则：单一专业任务只加载架构师；权威落点：metadata；最小修改：候选 diff；基线和候选行为有证据指纹；验证：目标 fixture、邻近 hard-negative、稳定样例；不创建 RSI Mode；Owner 已知悉 promote / reject / supersede；Agent 自动 promote，失败回退；不得吸收：订单优惠券；授权边界：不提交、不同步。' > "${sample_dir}/bad-skill-improvement-auto-promote.txt"
   printf '%s\n' '人工评审结论为 confirmed，candidate 账本仍保持 candidate；目标 Skill：wise-agent；真实失败模式：单一专业只读 CR 被误触发；失败归因：路由过宽；替代解释：提示词歧义；可复用规则：单一专业任务只加载架构师；权威落点：metadata；最小修改：候选 diff；基线和候选行为有证据指纹；验证：目标 fixture、邻近 hard-negative、稳定样例；不创建 RSI Mode，拒绝自动 promote；Owner 选择 promote / reject / supersede，失败回退；不得吸收：订单优惠券；授权边界：不提交、不同步；但随后启用 RSI Mode，晋升仍交由 Owner。' > "${sample_dir}/bad-skill-improvement-contradictory.txt"
-  printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/grill-closed.txt"
+  printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；退款申请创建后 24 hours 过期；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/grill-closed.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；证据链接：decision?id=D-102；本轮不执行方案。推荐答案：人工复核。本轮问题：是否确认人工复核？' > "${sample_dir}/grill-conflict.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：conflict；证据冲突：PRD 对 D-102 未确认，Java 实现不能定义业务意图；未确认不得执行方案。推荐答案：人工复核。需要 Owner 回答的一个问题：是否确认人工复核？' > "${sample_dir}/grill-conflict-variant.txt"
   printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；证据：PRD、D-101、知识库、源码和测试一致。请确认？' > "${sample_dir}/bad-grill-closed.txt"
+  printf '%s\n' '裁决动作：decision-reused；最终结论：confirmed；退款申请创建后 72 hours 过期；证据：PRD、D-101、知识库、源码和测试一致。' > "${sample_dir}/bad-grill-wrong-value.txt"
   printf '%s\n' '裁决动作：ask-owner；最终结论：pending；证据冲突：PRD 对 D-102 未确认，源码不能定义业务意图；本轮不执行方案。推荐答案：人工复核。本轮问题：是否自动重试？本轮问题：是否人工复核？' > "${sample_dir}/bad-grill-conflict.txt"
   printf '%s\n' 'Q-118：历史决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需建立新的观察材料。' > "${sample_dir}/grill-history-before-handoff.txt"
   printf '%s\n' 'Q-118：历史问题“审批工作台采用单页还是分步表单？”的决策快照已确认单页；裁决动作：decision-reused；最终结论：confirmed；复用既有可用性测试结论，无需建立新的观察材料。' > "${sample_dir}/grill-history-quoted-question.txt"
@@ -1496,6 +1499,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
   fi
   if assert_grill_evidence_closed "${sample_dir}/bad-grill-closed.txt"; then
     echo "FAIL grill-me evidence-closed smoke accepted a redundant question" >&2
+    exit 1
+  fi
+  if assert_grill_evidence_closed "${sample_dir}/bad-grill-wrong-value.txt"; then
+    echo "FAIL grill-me evidence-closed smoke accepted the wrong D-101 value" >&2
     exit 1
   fi
   if assert_grill_evidence_conflict "${sample_dir}/bad-grill-conflict.txt"; then
