@@ -21,7 +21,7 @@
 - 写入范围、禁止事项、验证命令和停止条件。
 - AI Native 交接卡消费结论：Product Context Card 是否足够，Engineering Handoff Card 是否可执行，生产交付卡是否满足持续推进门禁。
 - 长任务的上下文账本、阶段状态、交接方式和恢复入口。
-- Codex 运行时协作方式与工程知识资产判断：thread、voice/transcript、steering/queuing、tool reach、automation/goal、side panel/artifact 或显式 written context 是否适用；知识资产需说明资料范围、源码锚点、项目规则、验证证据、输出标准、更新 owner 和停用条件。
+- Codex 运行时协作方式与工程知识资产判断：thread、voice/transcript、steering/queuing、tool reach、automation、side panel/artifact 或显式 written context 是否适用；旧 Goal 输入只迁移目标意图与历史来源。知识资产需说明资料范围、源码锚点、项目规则、验证证据、输出标准、更新 owner 和停用条件。
 - AI 产物复核重点：边界、契约、测试、验证、依赖、安全和生产风险。
 
 ## 需要继续读取的 reference
@@ -105,19 +105,19 @@ AI 降低了手写代码的边际成本，但没有降低架构判断、上下�
 
 AI Native 交接卡消费结论只需说明：Product Context Card 是否足够，Engineering Handoff Card 是否可执行，生产交付卡是否满足持续推进门禁，以及下一步是退回产品专家、退回 AI Native、进入 OpenSpec / Harness / GSD 任务包 / 工程执行 Loop 候选，还是只做只读侦察。
 
-消费规则：Product Context Card 只提供产品事实和验收种子，缺目标、对象、不变量、流程规则或验收 owner 时退回产品专家或 AI Native；Engineering Handoff Card 缺 Goal、Spec/AC、Wave/Task、写入范围、验证命令、停止条件、失败回写或授权策略时不进入工程执行 Loop；生产交付卡缺状态载体、隔离执行、Maker / Checker、反馈源、独立验证、预算、无进展检测、观测审计、人工接管或发布/回滚时不进入自动循环。三卡都不是 Plan Grant / Execution Grant、测试通过、CR 结论、生产审批或 Git 授权；可消费后再映射为 OpenSpec、领域模型、接口/数据契约、测试矩阵、Harness Plan、GSD Atomic Task、工程执行 Loop 候选、源码级 CR 重点、发布/回滚和残余风险。
+消费规则：Product Context Card 只提供产品事实和验收种子，缺目标、对象、不变量、流程规则或验收 owner 时退回产品专家或 AI Native；Engineering Handoff Card 缺目标与成功标准、Spec/AC、Wave/Task、写入范围、验证命令、停止条件、失败回写或授权策略时不进入工程执行 Loop；生产交付卡缺状态载体、隔离执行、Maker / Checker、反馈源、独立验证、预算、无进展检测、观测审计、人工接管或发布/回滚时不进入自动循环。三卡都不是 Plan Grant / Execution Grant、测试通过、CR 结论、生产审批或 Git 授权；可消费后再映射为 OpenSpec、领域模型、接口/数据契约、测试矩阵、Harness Plan、GSD Atomic Task、工程执行 Loop 候选、源码级 CR 重点、发布/回滚和残余风险。
 
 ## 1E. 工程实施切片与 Requirement-Diff Review
 
 - 从 Product Context Card 或产品需求切片建立 `业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试` 映射，只读取当前切片需要的知识和源码。
-- 工程实施切片至少写清：任务 ID、`Goal / Spec / AC`、读写范围、依赖、契约 / 状态 / 数据、兼容 / 迁移 / 回滚、验证证据和停止条件。
+- 工程实施切片至少写清：任务 ID、`目标 / Spec / AC`、读写范围、依赖、契约 / 状态 / 数据、兼容 / 迁移 / 回滚、验证证据和停止条件。
 - 编码前做 Solution Review，检查边界、数据责任、状态与失败路径、兼容迁移、回滚、测试和发布风险；未决产品语义退回产品 Owner，不由工程侧补写。
 - 实现后以 `done / partial / todo / changed / blocked` 对账：所有状态回链来源需求 / AC 的版本与观察时间；`done / partial` 补当前 diff / commit、源码 / 测试锚点和验证结果；`todo / blocked` 记录原因、依赖、Owner 与停止证据；候选 `changed` 记录偏差并冻结受影响切片，由产品 Owner 裁决需求变化还是实现偏离。需求确变时先更新权威需求契约，属于实现偏离时保持需求并修正实现。
 - 未完成项续写到既有 Harness Plan、项目执行规范或 OpenSpec tasks，不强制新建 requirement.md 或命令树。稳定工程知识只回流到 ADR、模块 reference、测试或静态门禁，不覆盖产品事实。
 
 ## Codex 运行时协作模式
 
-Codex 的 thread、voice、tool、automation、goal、side panel 和 artifact 能把工程工作从单次问答推进到连续工作流，但它们只改变协作方式，不替代 OpenSpec、Harness Plan、测试、Review 或用户授权。
+Codex 的 thread、voice、tool、automation、side panel 和 artifact 能把工程工作从单次问答推进到连续工作流，但它们只改变协作方式，不替代 OpenSpec、Harness Plan、项目执行规范、测试、Review 或用户授权。
 
 | 运行时能力 | 适合承载 | 必须保留的边界 |
 | --- | --- | --- |
@@ -126,7 +126,7 @@ Codex 的 thread、voice、tool、automation、goal、side panel 和 artifact �
 | Steering / queuing | 用户在执行中纠偏，或把后续任务排队。 | 新指令要重新校准范围、风险和验证；不得借排队任务绕过当前停止条件。 |
 | Browser / computer / MCP / connector | 网页审查、桌面 GUI、外部服务、Slack/Gmail/Calendar 等工作入口。 | 以当前会话可用工具和权限为准；访问外部服务、联网、上传、发送消息或读取私有数据都需要明确授权。 |
 | Thread automation / scheduled automation | 定期检查、反馈循环、周期性报告或同一 thread 的 heartbeat。 | 只有用户明确要求监控、提醒或持续推进时才创建；必须说明频率、停止条件、输出和权限边界。 |
-| Goal | 长任务的可验证终点。 | 目标必须有 success criterion、停止条件和 verifier，例如测试套件、benchmark、bug reproduction、验证矩阵或端到端流程。 |
+| Project execution specification | 长任务的目标、当前切片、状态和停止线。 | 目标必须有 success criterion、停止条件和 verifier，例如测试套件、benchmark、bug reproduction、验证矩阵或端到端流程；旧 Goal 输入先迁移到该载体。 |
 | Side panel / artifact | 代码、页面、文档、deck、表格、PDF 或静态 HTML 的就地审查。 | 需要真实渲染、截图、预览或验证；用户标注进入同一 Review loop，不替代测试和工程复核。 |
 | Shared memory / written context | 跨会话复用的项目事实、决策、阻塞和 open loop。 | 优先写项目已有权威文档；不默认创建 vault，不写入个人长期偏好或私有对话轨迹。 |
 

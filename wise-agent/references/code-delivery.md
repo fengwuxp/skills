@@ -8,7 +8,7 @@
 - 编码阶段提速明显，但端到端交付、CR、测试、对齐或返工没有明显改善。
 - 需要判断 Spec 写得太重、太轻、不可验证，还是上下文和 Harness 不足。
 - 需要把 GSD + 项目执行规范 的成功标准、预算 / 时间盒、状态、停止条件和 Ledger 接入交付闭环。
-- 需要把 Agent Loop、`/goal`、`/loop`、auto mode 或后台 Agent 接入反馈、验证、预算和停止条件。
+- 需要把 Agent Loop、`/loop`、auto mode 或后台 Agent 接入反馈、验证、预算和停止条件，或把旧 `/goal` 输入迁移为项目执行规范。
 - 需要把 AI 工作流 Loop 做成生产可用闭环，明确隔离执行、可复现状态、独立验证、观测审计、人工接管、发布/回滚和责任 owner。
 - 需要让 AI 在真实项目中自我挖掘需求和代码上下文、形成计划、完成低风险执行，并判断何时完成、继续、停止或人工确认。
 - 需要把多套 AI 工作流、GSD / 工程执行 / GStack / 项目执行规范 / Harness / 工具链混一为一个生产可用交付口径。
@@ -56,7 +56,7 @@
 - 产品上下文、PRD-Lite 和工程交接读 `product-to-engineering-lifecycle.md`。
 - OpenSpec、Superpowers、Harness、GSD、工程执行 profile 和权限边界读 `engineering-governance.md`。
 - 项目执行规范 组合、GSD + 项目执行规范、状态机、Ledger、预算 / 时间盒和跨轮交接读 `execution-specification.md`。
-- Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、预算和停止条件读 `delivery-execution-control.md`。
+- Agent Loop、`/loop`、auto mode、后台 Agent、预算和停止条件读 `delivery-execution-control.md`；旧 `/goal` 输入不得作为运行方式。
 - Spec / SDD / OpenSpec 模板、AC 编号、测试映射、spec-lint、AC 覆盖、漂移检查和风险自查读 `spec-template-practices.md`。
 - 代码库理解、变更可理解性、CR、发布和复盘读 `verification-review-release.md`。
 - Gemini CLI、AgentRC 或同类工具安装 / 调用准入读 `code-understanding-tools.md`。

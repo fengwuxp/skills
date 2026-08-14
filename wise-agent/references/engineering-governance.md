@@ -6,7 +6,7 @@
 
 - 用户要求设计 AI 编码流程、Agentic Engineering、OpenSpec、Harness、GSD、CAD 或多 Agent 协作。
 - 用户要求 GSD + 项目执行规范、CAD + 项目执行规范、目标驱动推进、持续推进、目标状态、预算 / 时间盒、停止条件或跨轮交接。
-- 用户要求设计 Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、持续编排、多 Agent 监督、自我验证或 Loop 停止条件。
+- 用户要求设计 Agent Loop、`/loop`、auto mode、后台 Agent、持续编排、多 Agent 监督、自我验证或 Loop 停止条件，或提供旧 `/goal` 输入需要迁移。
 - 用户希望 GSD/CAD 自动推进、计划内授权、减少每个任务审批，或希望用 Codex “替我审批”模式承接低风险工具审批。
 - 产品上下文包已经形成，需要进入系统设计、任务拆分、Agent 执行或工程执行 Loop 准入判断。
 - 团队使用 Codex、Claude Code、GitHub Copilot coding agent、Cursor、MCP、自动化线程或其他 AI 原生工具协作。
@@ -36,7 +36,7 @@
 - PRD / 系分合议预审、多视角评审、MAGI 三角色或 IPD 式互审读 `prd-system-design-review.md`。
 - GSD / 工程执行编排准入、GSD Round 0、Wave/Atomic Task 候选、工程执行 Loop 缺口和 Execution Grant 缺口读 `planning-execution-admission.md`。
 - 项目执行规范 组合、GSD + 项目执行规范、工程执行 Loop + 项目执行规范、状态机、Ledger、预算 / 时间盒和跨轮交接读 `execution-specification.md`。
-- Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent、多 Agent 监督和循环停止条件读 `delivery-execution-control.md`。
+- Agent Loop、`/loop`、auto mode、后台 Agent、多 Agent 监督和循环停止条件读 `delivery-execution-control.md`；旧 `/goal` 输入先迁移为项目执行规范。
 - 验证、CR、发布和复盘读 `verification-review-release.md`。
 - Spec / SDD / OpenSpec 模板、AC 编号、Given-When-Then、测试映射、spec-lint、AC 覆盖和漂移检查读 `spec-template-practices.md`。
 - AI Coding / SDD / Spec / Harness 最终代码交付闭环、CR 减负、知识回流和指标读 `code-delivery.md`。
@@ -52,7 +52,7 @@
 | 升级 SDD / Superpowers / Harness 版本 | `2. OpenSpec / Superpowers / Harness`、`2A. 交付执行契约 v3`，再读 `superpowers-skill-library.md` 和 `code-delivery.md` | 不把上游 release、插件版本和内部契约混为一体 |
 | 落地 Spec 模板 | 先读 `spec-template-practices.md`，再读 `3. Harness 最小契约` | 不复制外部 ASD/SSD Harness |
 | 做 GSD + 项目执行规范 / 项目执行规范 组合 | 先读 `execution-specification.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不把 项目执行规范 写成 Execution Grant |
-| 设计 Agent Loop / `/goal` / `/loop` | 先读 `delivery-execution-control.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把 Loop 当自动授权 |
+| 设计 Agent Loop / `/loop`，或迁移旧 `/goal` 输入 | 先读 `delivery-execution-control.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把 Loop 当自动授权，不创建运行时 Goal |
 | 设计计划内授权 / 自动推进 | 先读 `planning-execution-admission.md`，再读 `3. Harness 最小契约`、`6. 权限边界` | 不把所有审批自动通过 |
 | 多 Agent / GSD 编排 | 先读 `planning-execution-admission.md`，再读 `3. Harness 最小契约`、`5. Wave 和交接` | 不直接进入工程执行 Loop |
 | PRD / 系分合议预审 | 先读 `prd-system-design-review.md`，再读 `2. OpenSpec / Superpowers / Harness`、`3. Harness 最小契约` | 不把预审结论写成 Execution Grant |
@@ -174,7 +174,7 @@ Execution Grant / 显式确认缺口:
 - 对 AI 代码交付闭环，Harness 摘要必须说明 Spec 强度、独立验证证据、CR 高频问题是否机器化、知识回流位置和交付指标；如果只能证明“代码已生成”，不能进入合并或发布判断。
 - 对 Spec 模板落地，Harness 摘要必须说明模板强度、AC 编号规则、Given-When-Then 映射、测试证据、spec-lint、AC 覆盖、漂移检查和风险自查；如果只能证明“文档已生成”，不能进入实现判断。
 - 对任何知止者编排，Harness 摘要必须说明哪些来自用户目标或源材料、哪些只是模型推断、哪些需要确认、哪些超出目标不做；不能把无根据猜测、外部文章观点、工具总结或模型脑补写成任务、实现或授权。
-- 对任何 Agent Loop、`/goal`、`/loop`、auto mode 或后台 Agent，Harness 摘要必须说明状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物；不能只写“循环直到完成”。
+- 对任何 Agent Loop、`/loop`、auto mode 或后台 Agent，Harness 摘要必须说明状态载体、反馈源、验证者、预算 / 最大轮次、无进展检测、停止条件和交接物；旧 `/goal` 输入必须先迁移，不能只写“循环直到完成”。
 
 ## 4. 受控工程执行 Loop 只处理原子任务
 

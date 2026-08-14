@@ -22477,6 +22477,21 @@ check(
     ),
 )
 
+check(
+    "runtime Goal stays legacy-only across professional Skills and execution references",
+    has_none(payment_skill, ["持有 Goal"])
+    and has_none(
+        ai_engineering,
+        [
+            "缺 Goal、Spec/AC",
+            "任务 ID、`Goal / Spec / AC`",
+            "| Goal | 长任务的可验证终点。",
+        ],
+    )
+    and has_none(workflow, ["升级为 Goal 或任务状态"])
+    and has_none(wind_skill_agents_template, ["Goal/Loop/GSD/CAD 编排"]),
+)
+
 failed = [name for name, ok in checks if not ok]
 for name, ok in checks:
     print(f"{'PASS' if ok else 'FAIL'} {name}")
