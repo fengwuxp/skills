@@ -99,11 +99,15 @@
       "support_rationale": "Governance, checker behavior, and sync behavior jointly distinguish install dependencies from runtime routing.",
       "predictive_test": {
         "passed": true,
-        "rationale": "The contract predicts that a new caller with optional domain routing can sync while the candidate domain Skill remains blocked."
+        "rationale": "The contract predicts that a new caller with optional domain routing can sync while the candidate domain Skill remains blocked.",
+        "evidence_ref": "fixtures/valid-multisource-forward.json#predictive-route",
+        "reviewer": "repository-checker"
       },
       "non_obviousness": {
         "passed": true,
-        "rationale": "Without this distinction, a valid optional collaboration can silently disable unrelated core Skills."
+        "rationale": "Without this distinction, a valid optional collaboration can silently disable unrelated core Skills.",
+        "evidence_ref": "fixtures/valid-multisource-forward.json#non-obvious-boundary",
+        "reviewer": "repository-checker"
       },
       "recommended_destination": "fixture"
     }

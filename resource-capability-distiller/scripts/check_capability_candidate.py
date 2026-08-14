@@ -142,8 +142,15 @@ def validate(data: object) -> list[str]:
                 errors.append(f"{label}.recommended_destination is invalid")
             for field in ("predictive_test", "non_obviousness"):
                 assessment = capability.get(field)
-                if not isinstance(assessment, dict) or assessment.get("passed") is not True or not nonempty_text(assessment.get("rationale")):
-                    errors.append(f"{label}.{field} requires passed=true and rationale")
+                if (
+                    not isinstance(assessment, dict)
+                    or assessment.get("passed") is not True
+                    or not nonempty_text(assessment.get("rationale"))
+                    or not nonempty_text(assessment.get("evidence_ref"))
+                    or not nonempty_text(assessment.get("reviewer"))
+                    or assessment.get("reviewer", "").strip().casefold() in {"agent", "ai", "model", "self", "maker"}
+                ):
+                    errors.append(f"{label}.{field} requires passed=true, rationale, evidence_ref, and an independent reviewer")
         elif status == "rejected":
             if not nonempty_text(capability.get("failed_gate")) or not nonempty_text(capability.get("rejection_reason")):
                 errors.append(f"{label} rejected entries require failed_gate and rejection_reason")
@@ -192,8 +199,18 @@ def sample() -> dict:
                 "version_and_freshness": "valid until repository authority changes",
                 "license_and_privacy_boundary": "internal repository; no sensitive content",
                 "support_rationale": "The repository authority contract and operating rules agree.",
-                "predictive_test": {"passed": True, "rationale": "Routes a new test report without adding a parallel document."},
-                "non_obviousness": {"passed": True, "rationale": "Prevents knowledge-base evidence from becoming production authority."},
+                "predictive_test": {
+                    "passed": True,
+                    "rationale": "Routes a new test report without adding a parallel document.",
+                    "evidence_ref": "fixtures/predictive-route-report.json",
+                    "reviewer": "repository-checker",
+                },
+                "non_obviousness": {
+                    "passed": True,
+                    "rationale": "Prevents knowledge-base evidence from becoming production authority.",
+                    "evidence_ref": "reviews/non-obviousness.md#route-authority",
+                    "reviewer": "repository-checker",
+                },
                 "recommended_destination": "existing-skill",
             },
             {
@@ -232,6 +249,14 @@ def run_self_test() -> int:
     invalid["capabilities"][0]["predictive_test"]["passed"] = False
     if not any("predictive_test" in item for item in validate(invalid)):
         failures.append("failed predictive test was accepted")
+    invalid = deepcopy(valid)
+    invalid["capabilities"][0]["predictive_test"].pop("evidence_ref")
+    if not any("predictive_test" in item for item in validate(invalid)):
+        failures.append("predictive test without external evidence was accepted")
+    invalid = deepcopy(valid)
+    invalid["capabilities"][0]["non_obviousness"]["reviewer"] = "agent"
+    if not any("non_obviousness" in item for item in validate(invalid)):
+        failures.append("self-reviewed non-obviousness was accepted")
     invalid = deepcopy(valid)
     invalid["capabilities"].append(deepcopy(invalid["capabilities"][0]))
     if not any("duplicate capability_id" in item for item in validate(invalid)):

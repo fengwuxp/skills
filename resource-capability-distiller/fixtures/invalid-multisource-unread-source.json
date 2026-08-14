@@ -64,11 +64,15 @@
       "support_rationale": "The title appears relevant.",
       "predictive_test": {
         "passed": true,
-        "rationale": "Claimed without evidence."
+        "rationale": "Claimed without evidence.",
+        "evidence_ref": "missing-review#predictive-test",
+        "reviewer": "repository-checker"
       },
       "non_obviousness": {
         "passed": true,
-        "rationale": "Claimed without evidence."
+        "rationale": "Claimed without evidence.",
+        "evidence_ref": "missing-review#non-obviousness",
+        "reviewer": "repository-checker"
       },
       "recommended_destination": "new-skill"
     }
