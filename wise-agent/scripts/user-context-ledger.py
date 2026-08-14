@@ -46,7 +46,7 @@ PROTECTED_PROFILE_PATTERNS = (
         PROFILE_SUBJECT
         + r"(?:信奉|信仰|皈依)(?:了|于)?\s*(?:佛教|道教|基督教|天主教|伊斯兰教|犹太教|印度教|佛门|宗教)"
     ),
-    re.compile(PROFILE_SUBJECT + r"(?:患有|被?确诊(?:为|患有)?)"),
+    re.compile(PROFILE_SUBJECT + r"(?:患有|得了|被?确诊(?:为|患有)?)"),
     re.compile(PROFILE_SUBJECT + r"(?:有|存在)[^。；，,\n]{0,12}病史"),
     re.compile(
         PROFILE_SUBJECT
@@ -1265,6 +1265,7 @@ def run_self_test() -> None:
         direct_protected_profiles = (
             "用户是佛教徒。",
             "用户是抑郁症患者。",
+            "用户得了抑郁症。",
             "用户是民主党党员。",
         )
         for statement in direct_protected_profiles:
