@@ -560,7 +560,7 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
         "senior-software-architect": ["CR", "架构", "TDD"],
         "ui-design-expert": ["$ui-design-expert", "信息架构", "交互状态", "可用性"],
         "wind-coding-conventions": ["Wind 编码约规", "Entity 不外露", "AGENTS.md"],
-        "grill-me": ["$grill-me", "压力测试", "关键分叉", "重复问"],
+        "grill-me": ["$grill-me", "压力测试这份", "关键分叉", "重复问"],
         "huaxia-practical-wisdom": ["$huaxia-practical-wisdom", "老祖宗智慧", "名实是否相符", "可逆"],
         "novelist": ["长篇小说", "故事总纲", "卷纲", "正文"],
     }
