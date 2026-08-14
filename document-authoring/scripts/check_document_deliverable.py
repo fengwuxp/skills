@@ -255,7 +255,11 @@ def main() -> int:
     if not args.kind:
         parser.error("--kind is required unless --self-test is used")
 
-    text = read_input(args)
+    try:
+        text = read_input(args)
+    except (OSError, UnicodeError) as error:
+        print(f"ERROR document deliverable check: {error}", file=sys.stderr)
+        return 2
     if not text.strip():
         print("FAIL document deliverable check: empty input", file=sys.stderr)
         return 2

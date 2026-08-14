@@ -26,7 +26,8 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
         RequiredGroup("excavated_material", ("出土材料", "甲骨", "金文", "简帛", "簡帛")),
         RequiredGroup("provenance_and_date", ("合集号", "合集號", "器号", "器號", "图版", "圖版", "出处", "出處", "时代", "時代", "年代"), 2),
         RequiredGroup("form_and_usage", ("构形", "構形", "辞例", "辭例", "用例", "语境", "語境"), 2),
-        RequiredGroup("traditional_and_modern", ("传统训释", "傳統訓釋", "说文", "說文", "尔雅", "爾雅", "现代研究", "現代研究", "学者", "學者"), 2),
+        RequiredGroup("traditional_glosses", ("传统训释", "傳統訓釋", "说文", "說文", "尔雅", "爾雅"), 2),
+        RequiredGroup("modern_research", ("现代研究", "現代研究", "学者", "學者")),
         RequiredGroup("conflict_and_status", ("支持", "反证", "反證", "争议", "爭議", "冲突", "衝突", "结论等级", "結論等級", "材料可证", "材料可證", "待考"), 2),
     ),
     "exegesis": (
@@ -42,7 +43,8 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
         RequiredGroup("form_evidence", ("出土材料", "甲骨", "金文", "简帛", "簡帛", "小篆"), 2),
         RequiredGroup("provenance", ("合集号", "合集號", "器号", "器號", "图版", "圖版", "出处", "出處")),
         RequiredGroup("phonology_and_context", ("音韵", "音韻", "声符", "聲符", "辞例", "辭例", "语境", "語境"), 2),
-        RequiredGroup("traditional_and_modern", ("传统训释", "傳統訓釋", "说文", "說文", "尔雅", "爾雅", "现代研究", "現代研究", "学者", "學者"), 2),
+        RequiredGroup("traditional_glosses", ("传统训释", "傳統訓釋", "说文", "說文", "尔雅", "爾雅"), 2),
+        RequiredGroup("modern_research", ("现代研究", "現代研究", "学者", "學者")),
         RequiredGroup("conflict_and_status", ("支持", "反证", "反證", "争议", "爭議", "结论等级", "結論等級", "材料可证", "材料可證", "待考"), 2),
     ),
 }
@@ -298,6 +300,13 @@ def run_self_test() -> int:
     )
     if "shuowen_single_source_overreach" not in missing_groups("etymology", negated_evidence):
         failures.append("etymology: negated evidence bypassed Shuowen overclaim guard")
+    no_modern_research = (
+        "研究对象：某字本义；时代：商周。出土材料：甲骨和金文；合集号：123。"
+        "音韵：声符关系待核；辞例语境：用于某义。传统训释：《说文》作某，《尔雅》另训。"
+        "支持：辞例；反证：构形未定；结论等级：争议，待考。"
+    )
+    if "modern_research" not in missing_groups("etymology", no_modern_research):
+        failures.append("etymology: traditional glosses substituted for modern research")
     if failures:
         print("FAIL philology evidence self-test", file=sys.stderr)
         for failure in failures:
@@ -320,7 +329,11 @@ def main() -> int:
     if not args.kind:
         parser.error("--kind is required unless --self-test is used")
 
-    text = read_input(args)
+    try:
+        text = read_input(args)
+    except (OSError, UnicodeError) as error:
+        print(f"ERROR philology evidence check: {error}", file=sys.stderr)
+        return 2
     if not text.strip():
         print("FAIL philology evidence check: empty input", file=sys.stderr)
         return 2

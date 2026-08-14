@@ -187,6 +187,21 @@ PROTOTYPE_LEVEL_PATTERN = re.compile(
     re.IGNORECASE,
 )
 PROTOTYPE_MIN_NON_KEYWORD_SECTION_CHARS = 12
+NEGATED_FIGMA_STRUCTURE = re.compile(
+    r"(?:不提供|未提供|没有|缺少|无需|不需要|不采用).{0,24}"
+    r"(?:components|Code Connect|Figma variables|Auto Layout|setReactionsAsync)",
+    re.IGNORECASE,
+)
+NEGATED_CODE_HANDOFF = re.compile(
+    r"(?:不提供|未提供|没有|缺少|无需|不需要|不采用).{0,24}"
+    r"(?:exact node|get_design_context|get_metadata|get_screenshot)",
+    re.IGNORECASE,
+)
+L1_NO_CODE_HANDOFF = re.compile(
+    r"(?:本轮|非目标|范围外).{0,16}(?:不进入|不做|不交付|无需)(?:代码|工程)(?:实现|交接)|"
+    r"仅(?:做|用于).{0,12}(?:概念|交互|可用性).{0,8}验证",
+    re.IGNORECASE,
+)
 
 
 def normalize(text: str) -> str:
@@ -260,14 +275,24 @@ def missing_groups(kind: str, text: str) -> list[str]:
     ]
     if kind == "prototype-plan":
         selected_levels = {match.group(1).casefold() for match in PROTOTYPE_LEVEL_PATTERN.finditer(text)}
+        skips_code_handoff = False
         if len(selected_levels) != 1:
             missing.append("prototype_level")
         else:
+            selected_level = selected_levels.pop()
+            level_groups = PROTOTYPE_LEVEL_CHECKS[selected_level]
+            if selected_level == "l1" and L1_NO_CODE_HANDOFF.search(text):
+                skips_code_handoff = True
+                level_groups = tuple(group for group in level_groups if group.name != "figma_code_handoff")
             missing.extend(
                 group.name
-                for group in PROTOTYPE_LEVEL_CHECKS[selected_levels.pop()]
+                for group in level_groups
                 if sum(1 for alias in group.aliases if normalize(alias) in normalized) < group.min_hits
             )
+            if NEGATED_FIGMA_STRUCTURE.search(text) or (
+                NEGATED_CODE_HANDOFF.search(text) and not skips_code_handoff
+            ):
+                missing.append("negated_ui_evidence")
     missing.extend(missing_sections(kind, text))
     if has_keyword_only_section(kind, text):
         missing.append("keyword_only_section")
@@ -313,6 +338,21 @@ def run_self_test() -> int:
     for invalid_kind, invalid_name in invalid_cases:
         if not missing_groups(invalid_kind, (fixtures / invalid_name).read_text(encoding="utf-8")):
             failures.append(f"{invalid_kind}: invalid fixture unexpectedly passed: {invalid_name}")
+    l1_text = (fixtures / "prototype-plan-valid.md").read_text(encoding="utf-8")
+    no_code_handoff = re.sub(
+        r"交接给 AI 编码时提供 exact node.*?由 `senior-software-architect` 负责。",
+        "本轮仅用于交互验证，非目标是不进入代码实现或工程交接，因此不需要 exact node、get_design_context、get_metadata 或 get_screenshot。",
+        l1_text,
+        flags=re.DOTALL,
+    )
+    if missing := missing_groups("prototype-plan", no_code_handoff):
+        failures.append("prototype-plan: valid L1 without code handoff failed: " + ", ".join(missing))
+    negated_evidence = l1_text.replace(
+        "组件优先复用现有 Figma components，并核对 Code Connect、Figma variables、Auto Layout",
+        "本轮不提供 Figma components、Code Connect、Figma variables 或 Auto Layout",
+    )
+    if "negated_ui_evidence" not in missing_groups("prototype-plan", negated_evidence):
+        failures.append("prototype-plan: negated Figma evidence unexpectedly passed")
     if failures:
         print("FAIL UI design deliverable checker self-test")
         for failure in failures:
@@ -339,7 +379,12 @@ def main() -> int:
     if not args.kind:
         print("FAIL UI design deliverable: --kind is required", file=sys.stderr)
         return 2
-    missing = missing_groups(args.kind, read_input(args))
+    try:
+        text = read_input(args)
+    except (OSError, UnicodeError) as error:
+        print(f"ERROR UI design deliverable: {error}", file=sys.stderr)
+        return 2
+    missing = missing_groups(args.kind, text)
     if missing:
         print(f"FAIL UI design deliverable {args.kind}: missing {', '.join(missing)}")
         return 1
