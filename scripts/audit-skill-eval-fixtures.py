@@ -38,6 +38,8 @@ SKILLS = {
     "ui-design-expert",
     "wind-coding-conventions",
 }
+EXTERNAL_COMPETITOR_SKILLS = {"ai-slop-detector"}
+KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS
 SKILL_MENTIONS = {
     "wise-agent": [
         "wise-agent",
@@ -235,6 +237,11 @@ REQUIRED_COMPETITION_GROUPS = {
         "expected_skill": "hanzi-philology",
         "sha256": "c3e90a710d7d747381e77e9473a44d0ba6128b39f64e7bedb51d594d5aee5d43",
     },
+    "fiction-anti-ai-owner": {
+        "skills": {"ai-slop-detector", "novelist"},
+        "expected_skill": "novelist",
+        "sha256": "831e3b703ca6d2b6b57b8980ed3bcb079b4d2f55d0efcc215bea49f60b828713",
+    },
     "payment-product-owner": {
         "skills": {"payment-expert", "payment-funds-review"},
         "expected_skill": "payment-expert",
@@ -351,7 +358,7 @@ def audit_data(data: Any, *, label: str) -> list[str]:
             cases_by_id.setdefault(case_id, case)
 
         skill = case.get("skill")
-        if not is_non_blank_string(skill) or skill not in SKILLS:
+        if not is_non_blank_string(skill) or skill not in KNOWN_SKILLS:
             failures.append(f"{case_label}: unknown skill {skill!r}")
             continue
 
@@ -398,7 +405,19 @@ def audit_data(data: Any, *, label: str) -> list[str]:
             failures.append(f"{case_label}: unknown dimensions {sorted(case_dimensions - REQUIRED_DIMENSIONS)}")
         used_dimensions.update(case_dimensions)
 
-        if should_trigger:
+        if skill in EXTERNAL_COMPETITOR_SKILLS:
+            if should_trigger is not False or case.get("hard_negative") is not True:
+                failures.append(
+                    f"{case_label}: external competitor must be a non-triggering hard negative"
+                )
+            if raw_competition_group is None:
+                failures.append(f"{case_label}: external competitor requires a competition group")
+            if not is_non_blank_string(case.get("negative_reason")):
+                failures.append(f"{case_label}: negative_reason must be a non-blank string")
+            preferred = case.get("preferred_skill")
+            if not is_non_blank_string(preferred) or preferred not in KNOWN_SKILLS:
+                failures.append(f"{case_label}: preferred_skill must be a known skill")
+        elif should_trigger:
             by_skill[skill]["positive"] += 1
             if not has_skill_mention(skill, query):
                 by_skill[skill]["positive_without_name"] += 1
@@ -412,7 +431,7 @@ def audit_data(data: Any, *, label: str) -> list[str]:
                 failures.append(f"{case_label}: negative_reason must be a non-blank string")
             preferred = case.get("preferred_skill")
             if preferred is not None:
-                if not is_non_blank_string(preferred) or (preferred not in SKILLS and preferred != "none"):
+                if not is_non_blank_string(preferred) or (preferred not in KNOWN_SKILLS and preferred != "none"):
                     failures.append(f"{case_label}: preferred_skill must be a known skill or none")
 
     for skill, counts in sorted(by_skill.items()):

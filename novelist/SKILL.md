@@ -1,6 +1,6 @@
 ---
 name: novelist
-description: Use when 用户要构思、规划、续写、重写或评审短篇小说、长篇小说、超长篇小说、连载小说、世界观、人物刻画、人物弧光、角色扮演、人物代入、故事总纲、卷纲、章纲或正文；纯史实研究、古籍训诂、正式报告、简单润色和非虚构写作不触发。
+description: Use when 用户要构思、规划、续写、重写或评审短篇小说、长篇小说、超长篇小说、连载小说、世界观、人物刻画、人物弧光、角色扮演、人物代入、故事总纲、卷纲、章纲、正文或小说去 AI 味；纯史实研究、古籍训诂、正式报告、简单润色和非虚构写作不触发。
 ---
 
 # 小说家
@@ -63,6 +63,7 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 - 场景展开、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
 - 天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进和东方幻想：读 `references/worldbuilding-and-research.md`。
 - 旧稿提炼、版本归位、人物知情、时间地理一致性、伏笔与承诺闭环、三层真实和重写：读 `references/continuity-and-revision.md`。
+- 小说正文去 AI 味、人物同声、动机断裂或套话诊断仍由本 Skill 主责，读 `references/continuity-and-revision.md`；通用文本清洗能力不得跳过正典、人物、因果和作者声音边界接管小说重写。
 - 人物名、地名、称号、器物名、古语确有字源、音韵、训诂或时代语感问题：协同 `hanzi-philology`，只消费其创作用字证据卡。
 - 作者侧正典档案、设定集、人物档案、时间线、伏笔/承诺台账、出版提案、编辑梗概和读者附录需要正式整理或 DOCX/PDF：相关故事事实及其状态已由作者确认，或在作者明确授予的自决范围内由 `novelist` 确认后，协同 `document-authoring`；交接时一并传递授权范围、逐项设定状态与确认证据 / 权威指针，缺失或冲突的条目保持待确认。
 - 投稿、公开连载、出版、签约、商业改编或公开传播与内容治理审查：读 `references/publication-and-content-governance.md`，只形成目标场景的发布适配建议和待确认项，不自证合规准入。

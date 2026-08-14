@@ -370,6 +370,10 @@ document_style_checker = "document-authoring/scripts/check_document_style.py"
 document_routing = "document-authoring/references/scenario-routing.md"
 document_contract = "document-authoring/references/document-contract.md"
 document_writing = "document-authoring/references/writing-and-structure.md"
+document_review = "document-authoring/references/review-and-revision.md"
+document_humanization_behavior_cases = "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"
+document_humanization_responses = "fixtures/skill-eval/document-authoring-humanization-responses.jsonl"
+document_humanization_scores = "fixtures/skill-eval/document-authoring-humanization-scores.jsonl"
 resource_distiller_skill = "resource-capability-distiller/SKILL.md"
 resource_distiller_agent = "resource-capability-distiller/agents/openai.yaml"
 resource_distiller_contract = "resource-capability-distiller/references/distillation-contract.md"
@@ -18822,12 +18826,61 @@ check(
         ],
     )
     and has_all(
-        "document-authoring/references/review-and-revision.md",
+        document_review,
         [
             "文种与效力是否匹配",
             "必须 / 不得 / 应 / 可以 / 建议",
             "作者侧、编辑侧和读者侧",
             "剧透等级",
+            "## 保真去模板化",
+            "冻结不得漂移项",
+            "按授权范围修改",
+            "按功能判断形式",
+            "保真回读",
+            "检测器分数只能作为复读线索",
+            "不删除承载独有语义的句子",
+            "可删除不承载独有语义的套话、结构自述和重复收尾",
+            "没有可核验的公开文件或具名来源",
+            "不扩大为没有任何来源支持",
+            "清除本轮改写新引入的同义复沓、错搭或病句",
+        ],
+    )
+    and has_none(
+        document_review,
+        [
+            "只改措辞时不删句、不并句、不重排",
+            "明确“当前无来源支持”",
+        ],
+    )
+    and (ROOT / document_humanization_behavior_cases).exists()
+    and (ROOT / document_humanization_responses).exists()
+    and (ROOT / document_humanization_scores).exists()
+    and has_all(
+        document_humanization_behavior_cases,
+        [
+            "document-authoring-should-preserve-policy-force-while-humanizing",
+            "document-authoring-should-not-upgrade-incident-correlation-to-cause",
+            "document-authoring-should-preserve-protected-text-and-functional-repetition",
+            "document-authoring-should-not-turn-meeting-positions-into-decisions",
+            "document-authoring-should-not-expand-sample-findings",
+            "document-authoring-should-let-verified-facts-carry-vague-praise",
+            "document-authoring-should-remove-nonfunctional-structural-announcements",
+            "document-authoring-should-not-relabel-untraceable-attribution",
+            "candidate_weighted_score_must_improve",
+            "同一 runner/model",
+            "没有可核验的公开文件或具名来源",
+            "不扩大为没有任何来源支持",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
+            'fixtures/skill-eval/document-authoring-humanization-responses.jsonl',
+            'fixtures/skill-eval/document-authoring-humanization-scores.jsonl',
+            '--seed 731',
         ],
     )
     and has_all(
@@ -18866,6 +18919,18 @@ check(
             "one valued field supplied unrelated groups",
         ],
     ),
+)
+behavior_fixture_fingerprint(
+    document_humanization_behavior_cases,
+    "7b454e78bdc3aa9e69313a297f124f6770058e531f894a78f3f386faef24cb55",
+)
+file_fingerprint(
+    document_humanization_responses,
+    "6f935e14d3cfee5c7ee1ce88f25ca6a8c1b6264cbf1a38c04268a8b91b34ee32",
+)
+file_fingerprint(
+    document_humanization_scores,
+    "13329ae8eb5f2fcaf5cf33baa85ffc751a31d8af1adbbcb6c80e9b63fdb0bf3a",
 )
 
 check(
@@ -19363,6 +19428,8 @@ check(
         [
             "正文续写先读 `references/story-design-and-drafting.md`",
             "再读 `references/scene-and-prose-craft.md`",
+            "小说正文去 AI 味、人物同声、动机断裂或套话诊断仍由本 Skill 主责",
+            "通用文本清洗能力不得跳过正典、人物、因果和作者声音边界接管小说重写",
         ],
     )
     and has_all(
@@ -19394,12 +19461,43 @@ check(
         ["缺少授权或写回位置时可以分析、对账和提出候选，不得直接续写或回写权威"],
     )
     and has_all(
+        skill_eval_prompt_fixture,
+        [
+            '"competition_group": "fiction-anti-ai-owner"',
+            '"skill": "ai-slop-detector"',
+            '"preferred_skill": "novelist"',
+        ],
+    )
+    and has_all(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"',
             'fixtures/skill-eval/novelist-planning-responses.jsonl',
             'fixtures/skill-eval/novelist-planning-scores.jsonl',
+        ],
+    ),
+)
+
+check(
+    "novelist explicitly owns fiction anti-AI revision",
+    "小说去 AI 味" in frontmatter(novelist_skill)
+    and "正文" in frontmatter(novelist_skill)
+    and has_all(
+        novelist_skill,
+        [
+            "小说正文去 AI 味",
+            "人物同声",
+            "动机断裂",
+            "套话诊断",
+            "正典、人物、因果和作者声音边界",
+        ],
+    )
+    and has_none(
+        novelist_skill,
+        [
+            "小说去 AI 味交给 `ai-slop-detector`",
+            "先运行 `ai-slop-detector`",
         ],
     ),
 )

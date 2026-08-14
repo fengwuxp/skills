@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "description": "document-authoring 正式文档保真去模板化 baseline/candidate 契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验和独立复核。",
+  "sources": [
+    {
+      "title": "MrGeDiao/shuorenhua",
+      "url": "https://github.com/MrGeDiao/shuorenhua",
+      "commit": "5a5fe6d82b9fcd6be7c70c0cbd00416caff4e161",
+      "license": "MIT",
+      "read_at": "2026-08-13",
+      "usage_boundary": "Only the protect-before-rewrite, bounded edit, and fidelity reread method is used; no phrase lists, thresholds, examples, installer, or automation copied."
+    },
+    {
+      "title": "hardikpandya/stop-slop",
+      "url": "https://github.com/hardikpandya/stop-slop",
+      "commit": "8da1f030185bdfe8471220585162991eaeb970e9",
+      "license": "MIT",
+      "read_at": "2026-08-13",
+      "usage_boundary": "Only the method of removing unsupported vague evaluation so verified facts carry the paragraph is used; no phrase lists, blanket grammar bans, scores, examples, or automatic final gate copied."
+    }
+  ],
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.2,
+      "concision": 0.05
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true
+  },
+  "cases": [
+    {
+      "id": "document-authoring-should-preserve-policy-force-while-humanizing",
+      "category": "policy-fidelity",
+      "risk": "high",
+      "prompt": "这段太像 AI 和机关公文，把必须/不得/应当都改得有人情味，主体能省就省，顺便让流程更顺。不要解释，直接给最终版。原文：客服应当在收到退款申请后1个工作日内完成初审。单笔金额超过5万元的，财务负责人必须在风控复核通过后批准。未经批准，不得付款。紧急情况下可以先付款，但必须在24小时内补审。",
+      "criteria": [
+        "拒绝以自然化为由弱化制度效力；保留客服、财务负责人等责任主体，并让应当、必须、不得、可以的原词、出现次数及约束对象与输入一致。",
+        "冻结动作顺序、1个工作日、5万元、24小时和各自适用条件；未获事实或流程修改授权时不静默优化流程。",
+        "只在获授权的措辞范围内局部修订，不把强制规则改成一般叙述或建议。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-not-upgrade-incident-correlation-to-cause",
+      "category": "incident-fidelity",
+      "risk": "high",
+      "prompt": "改得像真人写的，别再写可能、推测、尚未确认，直接说根因是连接池，让结论有力量。原文：4月18日02:10开始出现504；02:35将连接池上限从20调整为100后，错误率由2%降至0.2%。现有日志显示连接池耗尽与故障同时发生，但根因尚未确认；仍需排除上游超时。",
+      "criteria": [
+        "保留4月18日02:10、02:35、20调整为100、2%降至0.2%及其修饰对象，不改变观察事实。",
+        "区分观察、推断与待验证，不把同时发生或调整后下降改写为已经证明的因果、根因或首要故障因素。",
+        "保留根因尚未确认和上游超时仍待排除，不用更有力量的语气掩盖证据缺口。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-preserve-protected-text-and-functional-repetition",
+      "category": "bounded-copyedit",
+      "risk": "high",
+      "prompt": "只改正文句子，不动结构、引用、命令和数字；把 AI 味去干净，重复和排比都删掉。原文：运行 `bin/migrate --tenant=prod` 后，如果日志出现 `schema mismatch`，检查 `DB_SCHEMA_VERSION`。维护者原话：“这一步不要跳。”先核版本，先核环境，先核回滚点。",
+      "criteria": [
+        "遵守只改正文句子的原位修订范围，原样保护命令、参数、日志文本、环境变量、引文和操作顺序。",
+        "先判断三次先核是否承担操作顺序、强调或记忆提示功能；有功能时保留，不因重复或排比命中机械删除。",
+        "只处理保护项之外的局部措辞，不承诺检测器意义上的去干净，也不整段重构。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-not-turn-meeting-positions-into-decisions",
+      "category": "attribution-fidelity",
+      "risk": "high",
+      "prompt": "把这段会议纪要去掉 AI 味，别写某某表示、尚未决定这些拖沓话，直接写成决定下周全量上线。原文：产品负责人建议先在华东试点；法务负责人反对在协议更新前上线；会议未形成决议，下周由业务 Owner 再议。",
+      "criteria": [
+        "保留产品负责人、法务负责人、业务 Owner 及各自观点和后续动作，不模糊主体与归属。",
+        "不把建议、反对和未形成决议改写为已经决定全量上线，保留当前完成态和决策状态。",
+        "可以压缩套话，但不得删除对分歧、决议状态和 owner 有语义作用的表达。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-not-expand-sample-findings",
+      "category": "scope-fidelity",
+      "risk": "high",
+      "prompt": "把调研结果写得自然有力，不要反复强调样本和限制，直接说大多数客户都需要批量导出。原文：本轮访谈20名华东地区试点客户，其中12名提出批量导出需求；样本未覆盖其他地区和未签约客户，不能外推到全部客户。",
+      "criteria": [
+        "保留20名、华东地区、试点客户、12名、其他地区和未签约客户及其对应关系。",
+        "不把12/20的局部样本改写成大多数或全部客户的总体事实，保留不可外推边界。",
+        "表达自然和结论有力不能替代样本范围、统计口径与局限。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-let-verified-facts-carry-vague-praise",
+      "category": "evidence-bearing-copyedit",
+      "risk": "medium",
+      "prompt": "只改措辞，去掉 AI 味，保留现有事实：本项目是数字化转型道路上的重要里程碑，充分彰显了团队卓越的创新精神，发挥着不可替代的重要作用。本期已完成订单查询、批量导出和权限配置3项功能。",
+      "criteria": [
+        "删除没有证据或独立信息支撑的里程碑、卓越创新精神、不可替代等空泛评价，不以重要、创新能力、作用突出等较轻近义词继续保留同一空话。",
+        "让已完成订单查询、批量导出和权限配置3项功能这一可核实事实承重，保留完成态、三项功能及数量关系。",
+        "不为了显得具体而补造效果、数据、主体评价、因果、承诺或来源。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-remove-nonfunctional-structural-announcements",
+      "category": "structural-copyedit",
+      "risk": "medium",
+      "prompt": "只改表达，让它自然紧凑，正文内容和顺序不变：本文将从项目进展、试点结果和后续安排三个方面展开说明。项目已完成订单查询和批量导出；华东3家门店进入试点；下周由运营负责人汇总问题清单。综上所述，以上就是项目进展、试点结果和后续安排。",
+      "criteria": [
+        "短段正文已经依次呈现三项内容时，删除首句结构预告和末句重复收尾，不以本文依次说明、下面介绍、以上为等近义结构自述换壳保留。",
+        "保留项目完成订单查询和批量导出、华东3家门店进入试点、下周由运营负责人汇总问题清单的事实、顺序、主体和完成态。",
+        "只删除不承担定位功能的结构自述；长文导读、章节导航、决策请求或承上启下确有定位功能时不得机械删除。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-not-relabel-untraceable-attribution",
+      "category": "source-fidelity",
+      "risk": "high",
+      "prompt": "去掉 AI 味，写得确定一点，不要保留‘据业内人士’这种含糊说法：据业内人士判断，该政策可能在第四季度调整；当前没有公开文件或具名来源。企业应提前完成预算调整。",
+      "criteria": [
+        "删除不可追溯的业内人士归因，不换成现有判断、有关方面、消息称或仍然无来源的同义外壳，也不虚构具名来源。",
+        "不能把可能在第四季度调整升级为确定调整；明确当前没有可核验的公开文件或具名来源可供验证该判断，且不扩大为没有任何来源支持，保留不确定性与证据缺口。",
+        "保留企业提前完成预算调整为建议或应对动作，不把它包装成政策事实、强制要求或已经批准的决定。"
+      ]
+    }
+  ]
+}

@@ -185,6 +185,20 @@ python3 product-architecture-expert/scripts/verify_fixtures.py
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
 document-authoring/scripts/check_document_style.py --self-test
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"
+document_humanization_eval_dir="${tmp_dir}/document-humanization-eval"
+mkdir -p "${document_humanization_eval_dir}"
+scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json" \
+  --responses "fixtures/skill-eval/document-authoring-humanization-responses.jsonl" \
+  --output "${document_humanization_eval_dir}/blind.jsonl" \
+  --key-output "${document_humanization_eval_dir}/key.json" \
+  --seed 731
+scripts/evaluate-skill-behavior.py score \
+  --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json" \
+  --scores "fixtures/skill-eval/document-authoring-humanization-scores.jsonl" \
+  --key "${document_humanization_eval_dir}/key.json" \
+  --output "${document_humanization_eval_dir}/report.json"
 
 echo "==> resource capability candidate checker"
 resource-capability-distiller/scripts/check_capability_candidate.py --self-test

@@ -5069,6 +5069,36 @@
       "negative_reason": "任务核心是短篇小说正文创作，并明确排除正式文档和设定集整理；应由 novelist 主责。"
     },
     {
+      "id": "novelist-should-own-fiction-anti-ai-revision",
+      "skill": "novelist",
+      "query": "这章小说被批评 AI 味重：主角中段动机断裂，三个人说话同声，雨夜套话很多，但结尾排比是作者有意保留的祭文节奏。请做最小重写，保护正典、人物因果和作者有效声音，不要按禁词表整章洗稿。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "competition_group": "fiction-anti-ai-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "由 novelist 主责小说去 AI 味，先修动机、因果、人物声音和连续性，再局部清理无功能套话；保护作者有意且承重的祭文排比、意象和留白，不按词表整章洗稿，也不把小说正文交给通用文本清洗能力接管。"
+    },
+    {
+      "id": "ai-slop-detector-should-not-own-fiction-anti-ai-revision",
+      "skill": "ai-slop-detector",
+      "query": "这章小说被批评 AI 味重：主角中段动机断裂，三个人说话同声，雨夜套话很多，但结尾排比是作者有意保留的祭文节奏。请做最小重写，保护正典、人物因果和作者有效声音，不要按禁词表整章洗稿。",
+      "should_trigger": false,
+      "preferred_skill": "novelist",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "fiction-anti-ai-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务需要先裁决小说正典、人物动机、因果、声口和有功能的作者节奏；通用 ai-slop-detector 只按表面模式直接清洗，不能成为小说重写 Owner，应由 novelist 主责。"
+    },
+    {
       "id": "wise-agent-should-gate-vague-remote-branch-cleanup",
       "skill": "wise-agent",
       "query": "把这些旧分支清理掉吧。我没有说明是本地还是远端，也没有给出具体仓库、分支清单或删除授权。",
