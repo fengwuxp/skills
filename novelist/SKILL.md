@@ -57,10 +57,10 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 
 ## 场景路由
 
-- 故事总纲、卷纲、章卡、开篇承诺和支线接口：读 `references/story-design-and-drafting.md`。
+- 故事总纲、卷提要 / 卷卡、章节提要 / 章卡、正文准入、开篇承诺和支线接口：读 `references/story-design-and-drafting.md`。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
 - 人物设计、人物弧光、重要配角或对手、人物动态档案，以及人物代入、角色扮演或人物反应推演：读 `references/character-craft.md`；确需成篇再读 `references/scene-and-prose-craft.md`。角色扮演只是受正典与有限认知约束的临时创作方法，不创建持久人格或第二角色 Owner；确需建档时使用 `assets/character-dynamic-profile-template.md`，不强制所有人物填满。
-- 场景展开、正文续写、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。
+- 场景展开、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
 - 天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进和东方幻想：读 `references/worldbuilding-and-research.md`。
 - 旧稿提炼、版本归位、人物知情、时间地理一致性、伏笔与承诺闭环、三层真实和重写：读 `references/continuity-and-revision.md`。
 - 人物名、地名、称号、器物名、古语确有字源、音韵、训诂或时代语感问题：协同 `hanzi-philology`，只消费其创作用字证据卡。
@@ -93,7 +93,7 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 
 ## 参考索引
 
-- `references/story-design-and-drafting.md`：故事发动机、架构与篇幅、节奏呼吸、层级契约、发布载体和章卡。
+- `references/story-design-and-drafting.md`：故事发动机、架构与篇幅、节奏呼吸、分层规划、作者讨论、正文准入、发布载体和章卡。
 - `references/character-craft.md`：人物刻画、人物弧光、经世叙事校准，以及直笔与曲笔。
 - `references/scene-and-prose-craft.md`：场景承重与展开、POV、转场、对白、打趣、文风校准和纯正文交付。
 - `references/web-serial-craft.md`：网文 / 连载语境的分层定位、持续力诊断和逐章自查；补充而非替代通用故事语义。

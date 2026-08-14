@@ -225,6 +225,26 @@ def behavior_fixture_fingerprint(path: str, expected_sha256: str) -> None:
     check(f"behavior fixture preserves {path} contract{detail}", actual_sha256 == expected_sha256)
 
 
+def file_fingerprint(path: str, expected_sha256: str) -> None:
+    """Guard an exact evidence artifact against stale downstream judgments."""
+    actual_sha256 = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+    detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
+    check(f"evidence artifact preserves {path}{detail}", actual_sha256 == expected_sha256)
+
+
+def source_set_fingerprint(paths: tuple[str, ...], expected_sha256: str) -> None:
+    """Bind scored behavior evidence to the exact source set it evaluated."""
+    digest = hashlib.sha256()
+    for path in paths:
+        digest.update(path.encode())
+        digest.update(b"\0")
+        digest.update((ROOT / path).read_bytes())
+        digest.update(b"\0")
+    actual_sha256 = digest.hexdigest()
+    detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
+    check(f"source set preserves evaluated contract{detail}", actual_sha256 == expected_sha256)
+
+
 senior_skill = "senior-software-architect/SKILL.md"
 senior_agent = "senior-software-architect/agents/openai.yaml"
 senior_routing = "senior-software-architect/references/scenario-routing.md"
@@ -398,6 +418,9 @@ novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
 novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
+novelist_planning_behavior_cases = "fixtures/skill-eval/novelist-planning-behavior-cases.json"
+novelist_planning_responses = "fixtures/skill-eval/novelist-planning-responses.jsonl"
+novelist_planning_scores = "fixtures/skill-eval/novelist-planning-scores.jsonl"
 novelist_character_template = "novelist/assets/character-dynamic-profile-template.md"
 novelist_creative_behavior_cases = "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
 novelist_character_life_behavior_cases = "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
@@ -19292,6 +19315,9 @@ check(
 check(
     "novelist behavior cases cover domain capability and collaboration boundaries",
     (ROOT / novelist_behavior_cases).exists()
+    and (ROOT / novelist_planning_behavior_cases).exists()
+    and (ROOT / novelist_planning_responses).exists()
+    and (ROOT / novelist_planning_scores).exists()
     and has_all(
         novelist_behavior_cases,
         [
@@ -19316,9 +19342,64 @@ check(
         ],
     )
     and has_all(
+        novelist_planning_behavior_cases,
+        [
+            "novelist-should-plan-volume-before-chapters",
+            "novelist-should-discuss-chapter-before-drafting",
+            "novelist-should-admit-direct-chapter-draft",
+            "novelist-should-list-branches-before-one-blocker",
+            "novelist-should-not-promote-draft-deviation-without-authorization",
+            "同一 runner/model",
+            "baseline",
+            "candidate",
+            "盲评",
+            "静态 fixture 不等于真实行为证据",
+            "列全会改变核心因果、高潮、卷末交付或后续承诺的关键分叉",
+            "不因文字已经成篇或效果更好而自动升级为事实、章卡或卷卡",
+        ],
+    )
+    and has_all(
+        novelist_skill,
+        [
+            "正文续写先读 `references/story-design-and-drafting.md`",
+            "再读 `references/scene-and-prose-craft.md`",
+        ],
+    )
+    and has_all(
+        novelist_story,
+        [
+            "总纲 -> 卷提要 -> 作者裁决 / 明确自决授权 -> 卷卡",
+            "卷卡 + 已发生正文 -> 章节提要 -> 作者裁决 / 明确自决授权 -> 章卡 -> 正文 -> 状态回写",
+            "列出会改变核心因果、高潮、结局或读者承诺的关键分叉及其依赖",
+            "不得因一次只请作者裁决一个 blocker 而隐藏其他关键分叉",
+            "依赖当前主 blocker 的其他分叉只列候选关系",
+            "只有作者确认或明确自决授权范围内的变化才能回写卡片和后续承诺",
+            "超出授权的变化只记录为候选差异并交作者裁决",
+            "不得把读者专属线索改写成人物可感暗示",
+            "不得补造权威未确认的既往事件、对白或记忆",
+            "合并重复的边界说明",
+        ],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "作者授权范围与允许写回位置",
+            "缺少续写授权时可以分析、对账和提出候选",
+            "已获续写授权但缺少允许写回位置时，可以在对话中交付正文",
+            "不得写入文件或权威",
+        ],
+    )
+    and has_none(
+        novelist_continuity,
+        ["缺少授权或写回位置时可以分析、对账和提出候选，不得直接续写或回写权威"],
+    )
+    and has_all(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"',
+            'fixtures/skill-eval/novelist-planning-responses.jsonl',
+            'fixtures/skill-eval/novelist-planning-scores.jsonl',
         ],
     ),
 )
@@ -19376,7 +19457,7 @@ check(
             "自己的问题",
             "目标、资源、情报和计划",
             "退让成本",
-            "明确更新、移动、合并或退役章卡",
+            "授权范围内再更新、移动、合并或退役章卡",
         ],
     )
     and has_all(
@@ -19455,6 +19536,56 @@ behavior_case_criteria_has(
         "一句台词或单场策略只保留为候选",
         "非正典压力测试不得写回正典",
         "动态更新只写实际发生的变化",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-plan-volume-before-chapters",
+    (
+        "列出会改变核心因果的关键分叉及其依赖",
+        "不得因一次只请作者裁决一个 blocker 而隐藏其他关键分叉",
+        "不预设固定章数、三幕比例或远期逐章事件",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-list-branches-before-one-blocker",
+    (
+        "列全会改变核心因果、高潮、卷末交付或后续承诺的关键分叉",
+        "不因一次只裁决一个 blocker 而隐藏其他分叉",
+        "只展开当前主 blocker",
+        "不写入卷卡或正典",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-not-promote-draft-deviation-without-authorization",
+    (
+        "不因文字已经成篇或效果更好而自动升级为事实、章卡或卷卡",
+        "不覆盖当前权威",
+        "作者主 blocker",
+        "只有作者确认或明确自决授权后",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-discuss-chapter-before-drafting",
+    (
+        "人物 / 读者信息边界",
+        "依赖当前主 blocker 的其他分叉只列候选关系",
+        "会推翻本章因果的待确认项",
+        "非正典压力测试",
+        "回写状态增量",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-admit-direct-chapter-draft",
+    (
+        "即使用户要求直接续写",
+        "不因只交付正文而绕过准入",
+        "不强迫作者观看提要或逐项确认",
+        "只有作者确认或明确自决授权范围内的变化才能回写卡片与后续承诺",
     ),
 )
 behavior_case_criteria_has(
@@ -19564,6 +19695,22 @@ behavior_case_criteria_has(
 behavior_fixture_fingerprint(
     novelist_behavior_cases,
     "8e6a2b1b8641380209168beb693d39f1375f28285da94117f782cbf8fc7da310",
+)
+behavior_fixture_fingerprint(
+    novelist_planning_behavior_cases,
+    "18f2e9d7db8d02427ca191fb0cfe0f2ae186e1c32113e62fef3f7b6c056371df",
+)
+file_fingerprint(
+    novelist_planning_responses,
+    "242500c1bd7eb0c5c18515aefc2d42c33f918701d34bcd7a60a61d592f78614a",
+)
+file_fingerprint(
+    novelist_planning_scores,
+    "b0afce1d11cd9daac6d339f0f83648ecdfcce85de03013571afc0e648ccac04c",
+)
+source_set_fingerprint(
+    (novelist_story, novelist_scene, novelist_continuity),
+    "ba63a0560e1cf44120dd1f7da0b138243dae2356bdf7147e4ca6db71dadc3f09",
 )
 behavior_fixture_fingerprint(
     novelist_creative_behavior_cases,
@@ -19677,7 +19824,10 @@ check(
         novelist_skill,
         [
             "references/scene-and-prose-craft.md",
-            "场景展开、正文续写、转场、POV、内心、对白、打趣或项目文风校准",
+            "场景展开、转场、POV、内心、对白、打趣或项目文风校准",
+            "正文续写先读 `references/story-design-and-drafting.md`",
+            "通过内部章级准入后再读 `references/scene-and-prose-craft.md`",
+            "只交付正文时不展示规划过程",
         ],
     )
     and has_all(

@@ -192,6 +192,20 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resourc
 
 echo "==> novelist behavior cases"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"
+novelist_planning_eval_dir="${tmp_dir}/novelist-planning-eval"
+mkdir -p "${novelist_planning_eval_dir}"
+scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json" \
+  --responses "fixtures/skill-eval/novelist-planning-responses.jsonl" \
+  --output "${novelist_planning_eval_dir}/blind.jsonl" \
+  --key-output "${novelist_planning_eval_dir}/key.json" \
+  --seed 731
+scripts/evaluate-skill-behavior.py score \
+  --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json" \
+  --scores "fixtures/skill-eval/novelist-planning-scores.jsonl" \
+  --key "${novelist_planning_eval_dir}/key.json" \
+  --output "${novelist_planning_eval_dir}/report.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
