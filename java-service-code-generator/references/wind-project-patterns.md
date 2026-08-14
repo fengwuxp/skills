@@ -74,7 +74,7 @@
 
 ## Service / ServiceImpl
 
-- Spring Bean 构造注入优先使用 Lombok `@AllArgsConstructor`。
+- Spring Bean 构造注入优先使用 Lombok `@RequiredArgsConstructor`，只注入必要依赖。
 - 内部服务参数使用 `org.jspecify.annotations.NonNull`；实现方法内不再重复写无业务语义的 `AssertUtils.notNull`，只对集合内容、状态条件和查不到数据等运行时业务事实使用断言。
 - 单 ID 删除可以作为接口 default 方法委托批量删除，这是服务契约便利方法；必然存在的 ID 查询使用 `getXxxById`；ServiceImpl 只实现批量删除。
 - 币种字段使用 `com.wind.transaction.core.enums.CurrencyIsoCode`，不生成 `String currency`。

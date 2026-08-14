@@ -1,4 +1,8 @@
 {
   "status": "installable",
+  "requires": [
+    "wind-coding-conventions",
+    "senior-software-architect"
+  ],
   "blockers": []
 }

@@ -137,12 +137,23 @@ add_selected() {
   selected+=("${key}")
 }
 
+select_with_dependencies() {
+  local key="$1"
+  local dependency
+  while IFS= read -r dependency; do
+    [[ -z "${dependency}" ]] && continue
+    select_with_dependencies "${dependency}"
+  done < <(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
+    --list-dependencies "${SKILLS_DIR}/${key}")
+  add_selected "${key}"
+}
+
 select_all() {
   local i
   for i in "${!skill_dirs[@]}"; do
     if [[ "${skill_statuses[$i]}" == "installable" ]]; then
       if [[ "${skill_dependency_statuses[$i]}" == "ready" ]]; then
-        add_selected "${skill_dirs[$i]}"
+        select_with_dependencies "${skill_dirs[$i]}"
       else
         echo "Skip ${skill_dirs[$i]}: required Skill is not installable" >&2
       fi

@@ -43,7 +43,7 @@ CASES = [
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": "bf0bcefcc15aadcd026766ba3faef8722893fdb094803cefcc9046ea64eccc82",
-            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": "80a8612d1a3bfeb18acf192cad7f2fba8927618ac97813a9f58f06243ae8dbf5",
+            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": "ef36ab50232ce462e83278942524a7feb20098dc0565fe2bb1b5194ed63e3834",
             "face/com/example/skill/codegen/services/SampleOrderService.java": "158d589e2d01d911a78665cb2232541a3002b09667049774547e8f955087853f",
         },
     },
@@ -78,7 +78,7 @@ CASES = [
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": "a13d32ee0a7d3e3ad5cde36ee65c97cd6bb81f140339a49bfa1fa530f24fb16d",
             "impl/com/example/skill/codegen/services/mapstruct/SampleChannelConverter.java": "e21e1307512adef43d2dabdb2e01b2af7e83bbc0388328c4497ccb8eafa5c03a",
-            "impl/com/example/skill/codegen/services/impl/SampleChannelServiceImpl.java": "cd968148e29b3c8f86afd89b9e56978a0af3c4596ab28f4c335461986301482d",
+            "impl/com/example/skill/codegen/services/impl/SampleChannelServiceImpl.java": "b8b5d3798b17e13426361496c399d7d34cd008b0ef8d61e91094e1f35ab0ff56",
             "face/com/example/skill/codegen/model/query/SampleChannelQuery.java": "6ae445ced82b7eb419fab48c2b7cfe3862dad643a754df7ec25b502361b73a1e",
             "face/com/example/skill/codegen/services/SampleChannelService.java": "a3cddb82b11233b60c7374a26b0193bdfeec87121091eccefb484943acb92767",
         },
@@ -114,7 +114,7 @@ CASES = [
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleBatch.java": "595864b4760c4fff7a374d15d187bd74c45fc709874efbfded0a3aeef474735f",
-            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": "7f53987eebcfe5e980f328a16f0e6153d71ee7308f8470382ec3f28111f29d3e",
+            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": "1338602a35cbcfd4f5991a4e0e13f0db9b0ba54eb759d497481e27ad471d846e",
             "face/com/example/skill/codegen/services/SampleBatchService.java": "8dc393c29a193876b8aecd37bc709f905ddd56eb3ea7ec582a06ccbd953bc717",
         },
     },
@@ -337,6 +337,58 @@ def run_negative_cases(base_tmp: Path) -> None:
         ],
         "字段表格输入必须通过 --table-name",
     )
+    common_args = [
+        "--ddl-file",
+        str(FIXTURE_DIR / "sample_order.sql"),
+        "--output-dir",
+        str(base_tmp / "negative-identifiers"),
+    ]
+    expect_failure(
+        "absolute package path escape",
+        [*common_args, "--base-package", "/tmp.escape"],
+        "基础包名不合法",
+    )
+    expect_failure(
+        "parent package path escape",
+        [*common_args, "--base-package", "com.example...escape"],
+        "基础包名不合法",
+    )
+    expect_failure(
+        "class name path escape",
+        [*common_args, "--base-package", BASE_PACKAGE, "--class-name", "../Escape"],
+        "类名不合法",
+    )
+    expect_failure(
+        "author javadoc injection",
+        [*common_args, "--base-package", BASE_PACKAGE, "--author", "codex */ class Escape {} /*"],
+        "author 包含不安全内容",
+    )
+
+
+def verify_service_impl_contract(base_tmp: Path) -> None:
+    out = base_tmp / "service-contract"
+    result = run_generator(
+        [
+            "--ddl-file",
+            str(FIXTURE_DIR / "sample_order.sql"),
+            "--base-package",
+            BASE_PACKAGE,
+            "--output-dir",
+            str(out),
+        ]
+    )
+    if result.returncode != 0:
+        raise AssertionError(f"service contract generation failed: {result.stdout}{result.stderr}")
+    text = (
+        out / "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java"
+    ).read_text(encoding="utf-8")
+    for required in ["@RequiredArgsConstructor", "@Transactional(rollbackFor = Exception.class)"]:
+        if required not in text:
+            raise AssertionError(f"service impl missing required contract: {required}")
+    for forbidden in ["@AllArgsConstructor", "findSampleOrder(request.getId());"]:
+        if forbidden in text:
+            raise AssertionError(f"service impl contains forbidden contract: {forbidden}")
+    print("OK fixture service implementation contract")
 
 
 def main() -> int:
@@ -350,6 +402,7 @@ def main() -> int:
             run_case(case, base_tmp)
         run_reserved_identifier_cases(base_tmp)
         run_negative_cases(base_tmp)
+        verify_service_impl_contract(base_tmp)
     finally:
         shutil.rmtree(base_tmp)
     return 0

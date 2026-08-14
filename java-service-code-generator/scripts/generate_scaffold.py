@@ -24,6 +24,9 @@ RESERVED = {
 
 CURRENCY_ENUM = "CurrencyIsoCode"
 CURRENCY_ENUM_IMPORT = "com.wind.transaction.core.enums.CurrencyIsoCode"
+PACKAGE_RE = re.compile(r"^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$")
+CLASS_RE = re.compile(r"^[A-Z][A-Za-z0-9]*$")
+SQL_IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 def avoid_reserved_identifier(name: str) -> str:
@@ -34,6 +37,25 @@ def lower_camel_identifier(name: str) -> str:
     if not name:
         return name
     return avoid_reserved_identifier(name[:1].lower() + name[1:])
+
+
+def validate_generation_inputs(base_package: str, class_name: str, table: Table, author: str) -> None:
+    if not PACKAGE_RE.fullmatch(base_package):
+        raise ValueError(f"基础包名不合法：{base_package}")
+    if not CLASS_RE.fullmatch(class_name):
+        raise ValueError(f"类名不合法：{class_name}")
+    if not SQL_IDENTIFIER_RE.fullmatch(table.name):
+        raise ValueError(f"表名不合法：{table.name}")
+    for column in table.columns:
+        if not SQL_IDENTIFIER_RE.fullmatch(column.name):
+            raise ValueError(f"字段名不合法：{column.name}")
+    unsafe_doc = ("\x00", "\r", "\n", "*/")
+    unsafe_string = (*unsafe_doc, '"', "\\")
+    if any(token in author for token in unsafe_doc):
+        raise ValueError("author 包含不安全内容")
+    for label, value in [("table-comment", table.comment), *[(f"column-comment:{c.name}", c.comment) for c in table.columns]]:
+        if any(token in value for token in unsafe_string):
+            raise ValueError(f"{label} 包含不安全内容")
 
 
 @dataclasses.dataclass
@@ -1158,10 +1180,11 @@ import com.wind.common.query.WindPagination;
 import com.wind.common.query.WindQuery;
 import com.wind.common.query.supports.QueryOrderField;
 import com.wind.mybatis.flex.MybatisQueryHelper;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
@@ -1173,7 +1196,7 @@ import java.util.Arrays;
  */
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class {name}ServiceImpl implements {name}Service {{
 
     private final {name}Mapper {var}Mapper;
@@ -1198,7 +1221,6 @@ public class {name}ServiceImpl implements {name}Service {{
      */
     @Override
     public void update{name}(@NonNull Update{name}Request request) {{
-        find{name}(request.getId());
         {name} entity = {name}Converter.INSTANCE.convertToEntity(request);
         AssertUtils.isTrue({var}Mapper.updateSelective(entity) == 1, "更新{desc}失败");
     }}
@@ -1209,6 +1231,7 @@ public class {name}ServiceImpl implements {name}Service {{
      * @param ids {desc}ID 列表
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delete{name}ByIds(@NonNull Long... ids) {{
         AssertUtils.notEmpty(ids, "参数 ids 不能为空");
         int total = {var}Mapper.deleteBatchByIds(Arrays.asList(ids));
@@ -1264,10 +1287,15 @@ public class {name}ServiceImpl implements {name}Service {{
 
 
 def package_path(base: Path, package_name: str) -> Path:
-    return base.joinpath(*package_name.split("."))
+    path = base.joinpath(*package_name.split("."))
+    if not path.resolve().is_relative_to(base.resolve()):
+        raise ValueError(f"生成路径越界：{path}")
+    return path
 
 
 def write_file(path: Path, content: str, overwrite: bool) -> None:
+    if path.is_symlink():
+        raise ValueError(f"拒绝写入符号链接：{path}")
     if path.exists() and not overwrite:
         raise FileExistsError(f"{path} exists; pass --overwrite to replace it")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -1314,9 +1342,6 @@ def main() -> int:
     table = table_from_input(ddl, input_type, args.table_name, args.table_comment)
     name = prepare(table, args.class_name)
 
-    if args.emit_ddl:
-        write_file(Path(args.emit_ddl), render_ddl(table), args.overwrite)
-
     if bool(args.face_src) != bool(args.impl_src):
         parser.error("--face-src 和 --impl-src 必须同时传入")
     base_package = args.base_package
@@ -1336,6 +1361,11 @@ def main() -> int:
         impl_root = out / "impl"
         if not base_package:
             parser.error("无法推断基础包名，请传入 --base-package")
+
+    validate_generation_inputs(base_package, name, table, args.author)
+
+    if args.emit_ddl:
+        write_file(Path(args.emit_ddl), render_ddl(table), args.overwrite)
 
     files = [
         (package_path(impl_root, f"{base_package}.dal.entities") / f"{name}.java", render_entity(base_package, table, name, args.author)),
