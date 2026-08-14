@@ -1,6 +1,27 @@
 {
   "version": 1,
   "description": "novelist 从故事架构到卷、章与正文准入的专项 baseline/candidate 契约。静态 fixture 不等于真实行为证据；真实改善要求同一 runner/model 的 baseline 与 candidate 响应经过重复试验、盲评和可复核门禁。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/character-craft.md",
+        "novelist/references/scene-and-prose-craft.md",
+        "novelist/references/continuity-and-revision.md",
+        "novelist/references/worldbuilding-and-research.md"
+      ],
+      "sha256": "b1ae637e35b4206acb601269aee5c16bff34c3fdc9208d3d4c9573ad6c130268"
+    }
+  },
   "rubric": {
     "scale": {
       "min": 1,
@@ -101,6 +122,18 @@
         "从具体关系、利益、恐惧、责任、偏见、爱、控制欲和处境形成可并存但不必等量的动机，不用‘人性复杂’把责任稀释成善恶皆无。",
         "让读者从人物反复怎样选择、让谁付代价、造成什么后果、是否承担责任，以及不同关系人的反应中判断其底色与边界。",
         "保留人物可敬、可憎或应受追责的事实，不用旁白、标签、舍己仪式或隐藏阴谋替具体行动完成道德裁决。"
+      ]
+    },
+    {
+      "id": "novelist-should-build-length-scaled-living-world-before-drafting",
+      "category": "world-readiness",
+      "risk": "high",
+      "prompt": "请比较两个项目能否进入正式正文，并分别给出开写前的世界背景方案。A 是三百万字架空历史网文，但故事承诺限定在同一座边城、同一代人：目前只确认主角是药铺学徒、城外有战乱、修炼分九级，税粮、交通、律法、医药和城乡关系都准备边写边编。B 是两万字短篇，用同一方旧药碾串联建城、洪灾、改朝换代三个时代，目前没有确定每次传承留下什么、普通人怎样误读它。编辑催我今天都直接开写。不要因 A 字数多就擅自扩成跨国跨时代史诗，也不要因 B 字数短就忽略真正承重的跨期约束；不要写尽百科，也不要把候选自动写成正典。",
+      "criteria": [
+        "区分已确认设定、创作候选与待确认项；两个项目都不能在承重世界背景缺失时直接进入正式正文，也不能要求先写尽全部百科。把相对完善定义为当前叙事半径内可独立运行、足以推演人物行动与后果。",
+        "把篇幅体量与叙事范围分开判断：A 因篇幅长而提高单城系统的反馈深度、稳定时长和变化层级，不擅自扩造国家或时代；B 虽是短篇，仍锁定药碾在三个时代的传承、物质变化、记录误差和普通人认知等少数跨期硬约束，不机械补全各时代百科。",
+        "不把维度写成彼此孤立的名录；只对故事会调用的承重系统追问资源与约束、参与者、日常运转与执行、利益和代价如何分配、灰区、失灵方式、反馈及其怎样改变人物选择。世界离开主角仍会运行，允许地域差异、制度摩擦、未知、误传、偶然和非理性。",
+        "A 在正式开写前同时建立单城范围内的全书外框、当前卷运行系统和开篇生活切片；B 建立有限场景生活闭环及少数跨期依赖。只冻结会影响核心因果和长期承诺的规则；承重缺口未决时停止正式正文，或明确交付非正典压力测试，未经作者确认或自决授权不升级正典。"
       ]
     }
   ]

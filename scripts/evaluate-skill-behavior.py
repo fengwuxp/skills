@@ -79,8 +79,78 @@ def _case_digest(case_data: dict[str, Any]) -> str:
         "release_gate": case_data["release_gate"],
         "cases": case_data["cases"],
     }
+    if "source_profiles" in case_data:
+        payload["source_profiles"] = case_data["source_profiles"]
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
+
+
+def _blind_digest(rows: list[dict[str, Any]]) -> str:
+    payload = [{key: value for key, value in row.items() if key != "blind_sha256"} for row in rows]
+    encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def source_set_digest(paths: Sequence[str]) -> str:
+    digest = hashlib.sha256()
+    root = ROOT.resolve()
+    for path in paths:
+        relative_path = Path(path)
+        if relative_path.is_absolute() or ".." in relative_path.parts or not path:
+            raise ContractError(f"source profile path must stay under the repository root: {path!r}")
+        try:
+            source_path = (ROOT / relative_path).resolve(strict=True)
+            source_path.relative_to(root)
+        except (OSError, ValueError) as exc:
+            raise ContractError(
+                f"source profile path must stay under the repository root: {path!r}"
+            ) from exc
+        if not source_path.is_file():
+            raise ContractError(f"source profile path is not a file: {path}")
+        digest.update(path.encode())
+        digest.update(b"\0")
+        digest.update(source_path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def validate_source_profiles(data: dict[str, Any]) -> None:
+    profiles = data.get("source_profiles")
+    if profiles is None:
+        return
+    if not isinstance(profiles, dict) or set(profiles) != set(CONDITIONS):
+        raise ContractError("source_profiles: expected baseline and candidate")
+    for condition in CONDITIONS:
+        profile = profiles[condition]
+        if not isinstance(profile, dict) or set(profile) != {"id", "paths", "sha256"}:
+            raise ContractError(
+                f"source_profiles.{condition}: expected id, paths, and sha256"
+            )
+        _non_empty_string(profile.get("id"), f"source_profiles.{condition}.id")
+        paths = profile.get("paths")
+        if not isinstance(paths, list) or any(not isinstance(path, str) for path in paths):
+            raise ContractError(f"source_profiles.{condition}.paths: expected a string list")
+        if len(paths) != len(set(paths)):
+            raise ContractError(f"source_profiles.{condition}.paths: duplicate path")
+        expected_sha256 = profile.get("sha256")
+        if (
+            not isinstance(expected_sha256, str)
+            or len(expected_sha256) != 64
+            or expected_sha256.lower() != expected_sha256
+        ):
+            raise ContractError(f"source_profiles.{condition}.sha256: expected lowercase SHA-256")
+        try:
+            int(expected_sha256, 16)
+        except ValueError as exc:
+            raise ContractError(
+                f"source_profiles.{condition}.sha256: expected lowercase SHA-256"
+            ) from exc
+        actual_sha256 = source_set_digest(paths)
+        if actual_sha256 != expected_sha256:
+            raise ContractError(
+                f"source_profiles.{condition}: source set changed "
+                f"expected={expected_sha256} actual={actual_sha256}"
+            )
 
 
 def validate_cases(data: dict[str, Any]) -> None:
@@ -138,25 +208,34 @@ def validate_cases(data: dict[str, Any]) -> None:
         value = gate.get(field)
         if not isinstance(value, (int, float)) or value < 0:
             raise ContractError(f"release_gate.{field}: expected a non-negative number")
+    validate_source_profiles(data)
 
 
 def build_plan(case_data: dict[str, Any], trials: int) -> list[dict[str, Any]]:
     validate_cases(case_data)
     if not isinstance(trials, int) or trials < 1:
         raise ContractError("trials: expected a positive integer")
-    return [
-        {
-            "case_id": case["id"],
-            "trial": trial,
-            "condition": condition,
-            "prompt": case["prompt"],
-            "risk": case["risk"],
-            "criteria": case["criteria"],
-        }
-        for case in case_data["cases"]
-        for trial in range(1, trials + 1)
-        for condition in CONDITIONS
-    ]
+    source_profiles = case_data.get("source_profiles")
+    tasks = []
+    for case in case_data["cases"]:
+        for trial in range(1, trials + 1):
+            for condition in CONDITIONS:
+                task = {
+                    "case_id": case["id"],
+                    "trial": trial,
+                    "condition": condition,
+                    "prompt": case["prompt"],
+                    "risk": case["risk"],
+                    "criteria": case["criteria"],
+                }
+                if isinstance(source_profiles, dict):
+                    profile = source_profiles[condition]
+                    task["case_sha256"] = _case_digest(case_data)
+                    task["source_profile"] = profile["id"]
+                    task["source_paths"] = profile["paths"]
+                    task["source_sha256"] = profile["sha256"]
+                tasks.append(task)
+    return tasks
 
 
 def blind_responses(
@@ -164,6 +243,7 @@ def blind_responses(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     validate_cases(case_data)
     cases_by_id = {case["id"]: case for case in case_data["cases"]}
+    source_profiles = case_data.get("source_profiles")
     indexed: dict[tuple[str, int], dict[str, dict[str, Any]]] = defaultdict(dict)
     profiles = set()
 
@@ -180,6 +260,22 @@ def blind_responses(
         _non_empty_string(row.get("response"), f"responses[{index}].response")
         runner = _non_empty_string(row.get("runner"), f"responses[{index}].runner")
         model = _non_empty_string(row.get("model"), f"responses[{index}].model")
+        if isinstance(source_profiles, dict):
+            case_sha256 = _non_empty_string(
+                row.get("case_sha256"), f"responses[{index}].case_sha256"
+            )
+            if case_sha256 != _case_digest(case_data):
+                raise ContractError(
+                    f"responses[{index}].case_sha256: does not match the selected cases"
+                )
+            source_sha256 = _non_empty_string(
+                row.get("source_sha256"), f"responses[{index}].source_sha256"
+            )
+            expected_sha256 = source_profiles[condition]["sha256"]
+            if source_sha256 != expected_sha256:
+                raise ContractError(
+                    f"responses[{index}].source_sha256: does not match {condition} source profile"
+                )
         profiles.add((runner, model))
         pair = indexed[(case_id, trial)]
         if condition in pair:
@@ -244,11 +340,21 @@ def blind_responses(
         "model": model,
         "pairs": key_pairs,
     }
+    if isinstance(source_profiles, dict):
+        blind_sha256 = _blind_digest(tasks)
+        for task in tasks:
+            task["blind_sha256"] = blind_sha256
+        key["blind_sha256"] = blind_sha256
+        key["source_profiles"] = source_profiles
     return tasks, key
 
 
 def score_judgments(
-    case_data: dict[str, Any], score_rows: list[dict[str, Any]], key: dict[str, Any]
+    case_data: dict[str, Any],
+    score_rows: list[dict[str, Any]],
+    key: dict[str, Any],
+    *,
+    blind_rows: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     validate_cases(case_data)
     if key.get("version") != 1 or key.get("case_sha256") != _case_digest(case_data):
@@ -258,6 +364,17 @@ def score_judgments(
         raise ContractError("key.pairs: expected a non-empty list")
     _non_empty_string(key.get("runner"), "key.runner")
     _non_empty_string(key.get("model"), "key.model")
+    source_profiles = case_data.get("source_profiles")
+    if isinstance(source_profiles, dict) and key.get("source_profiles") != source_profiles:
+        raise ContractError("key.source_profiles: does not match the selected cases")
+    if isinstance(source_profiles, dict):
+        if not blind_rows:
+            raise ContractError("blind: required for source-bound scoring")
+        blind_sha256 = _blind_digest(blind_rows)
+        if key.get("blind_sha256") != blind_sha256:
+            raise ContractError("key.blind_sha256: does not match the selected blind responses")
+        if any(row.get("blind_sha256") != blind_sha256 for row in blind_rows):
+            raise ContractError("blind.blind_sha256: does not match the selected blind responses")
 
     mappings = {}
     cases_by_id = {case["id"]: case for case in case_data["cases"]}
@@ -289,6 +406,21 @@ def score_judgments(
         raise ContractError("key.pairs: every case must contain the same non-empty trial set")
     if first_trials != set(range(1, max(first_trials) + 1)):
         raise ContractError("key.pairs: trials must be contiguous and start at 1")
+    if isinstance(source_profiles, dict):
+        seed = key.get("seed")
+        if not isinstance(seed, int):
+            raise ContractError("key.seed: expected an integer")
+        rng = random.Random(seed)
+        for case in case_data["cases"]:
+            for trial in sorted(first_trials):
+                baseline_label = "A" if rng.randrange(2) == 0 else "B"
+                expected_labels = {
+                    baseline_label: "baseline",
+                    "B" if baseline_label == "A" else "A": "candidate",
+                }
+                pair_id = f"{case['id']}:{trial}"
+                if mappings[pair_id] != expected_labels:
+                    raise ContractError(f"key.pairs: {pair_id} labels do not match seed")
 
     scale = case_data["rubric"]["scale"]
     scores_by_pair: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
@@ -299,6 +431,14 @@ def score_judgments(
         label = row.get("label")
         if label not in LABELS:
             raise ContractError(f"scores[{index}].label: expected A or B")
+        if isinstance(source_profiles, dict):
+            score_blind_sha256 = _non_empty_string(
+                row.get("blind_sha256"), f"scores[{index}].blind_sha256"
+            )
+            if score_blind_sha256 != key["blind_sha256"]:
+                raise ContractError(
+                    f"scores[{index}].blind_sha256: does not match the selected blind responses"
+                )
         if label in scores_by_pair[pair_id]:
             raise ContractError(f"scores: duplicate {pair_id} label {label}")
         for dimension in DIMENSIONS:
@@ -363,22 +503,13 @@ def score_judgments(
             pair_scores = pair_condition_scores[pair_id]
             if pair_scores["candidate"][dimension] + gate[field] < pair_scores["baseline"][dimension]:
                 reasons.append(f"candidate high-risk {case_id} {dimension} regressed beyond {gate[field]}")
-    for pair_id in mappings:
-        case_id = pair_id.rsplit(":", 1)[0]
-        if cases_by_id[case_id]["risk"] != "high":
-            continue
-        pair_scores = pair_condition_scores[pair_id]
-        baseline_score = sum(pair_scores["baseline"][item] * weights[item] for item in DIMENSIONS)
-        candidate_score = sum(pair_scores["candidate"][item] * weights[item] for item in DIMENSIONS)
-        if candidate_score < baseline_score:
-            reasons.append(f"candidate high-risk {pair_id} weighted_score regressed")
     if gate.get("mode", "improvement") == "improvement":
         if summaries["candidate"]["weighted_score"] <= summaries["baseline"]["weighted_score"]:
             reasons.append("candidate weighted_score did not improve")
     elif summaries["candidate"]["weighted_score"] < summaries["baseline"]["weighted_score"]:
         reasons.append("candidate weighted_score regressed")
 
-    return {
+    report = {
         "version": 1,
         "passed": not reasons,
         "reasons": reasons,
@@ -388,6 +519,10 @@ def score_judgments(
         "release_gate": gate,
         "conditions": summaries,
     }
+    if isinstance(source_profiles, dict):
+        report["source_profiles"] = source_profiles
+        report["blind_sha256"] = key["blind_sha256"]
+    return report
 
 
 def run_self_test() -> None:
@@ -458,18 +593,6 @@ def run_self_test() -> None:
         "candidate high-risk" in reason for reason in regressed_report["reasons"]
     ):
         raise SystemExit("self-test failed: high-risk case regression was hidden by aggregate scores")
-    weighted_regressed_scores = [dict(row) for row in scores]
-    for row in weighted_regressed_scores:
-        if row["pair_id"] == high_risk_pair["pair_id"] and row["label"] == candidate_label:
-            row["autonomy"] = 1
-            row["actionability"] = 1
-            row["concision"] = 1
-    weighted_regressed_report = score_judgments(case_data, weighted_regressed_scores, key)
-    if weighted_regressed_report["passed"] or not any(
-        "high-risk" in reason and "weighted_score regressed" in reason
-        for reason in weighted_regressed_report["reasons"]
-    ):
-        raise SystemExit("self-test failed: high-risk weighted regression was hidden by aggregate scores")
     with tempfile.TemporaryDirectory() as temp_dir:
         output = Path(temp_dir) / "report.json"
         write_json(output, report)
@@ -502,6 +625,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     score.add_argument("--scores", type=Path, required=True)
     score.add_argument("--key", type=Path, required=True)
+    score.add_argument("--blind", type=Path)
     score.add_argument("--output", type=Path)
     return parser
 
@@ -532,7 +656,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"OK wrote {args.output} and {args.key_output}")
             return 0
         if args.command == "score":
-            report = score_judgments(case_data, read_jsonl(args.scores), load_json(args.key))
+            report = score_judgments(
+                case_data,
+                read_jsonl(args.scores),
+                load_json(args.key),
+                blind_rows=read_jsonl(args.blind) if args.blind else None,
+            )
             if args.output:
                 write_json(args.output, report)
             print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))

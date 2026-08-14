@@ -4,11 +4,14 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import sys
+import tempfile
 import unittest
 from copy import deepcopy
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,21 +31,47 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         cls.case_data = MODULE.load_json(CASES)
         MODULE.validate_cases(cls.case_data)
 
-    def response_rows(self) -> list[dict[str, object]]:
+    def response_rows(self, case_data: dict[str, object] | None = None) -> list[dict[str, object]]:
+        case_data = case_data or self.case_data
+        source_profiles = case_data.get("source_profiles")
         rows = []
-        for case in self.case_data["cases"]:
+        for case in case_data["cases"]:
             for condition in ("baseline", "candidate"):
-                rows.append(
-                    {
-                        "case_id": case["id"],
-                        "trial": 1,
-                        "condition": condition,
-                        "response": f"response {len(rows) + 1} for {case['id']}",
-                        "runner": "fixture-runner",
-                        "model": "fixture-model",
-                    }
-                )
+                row = {
+                    "case_id": case["id"],
+                    "trial": 1,
+                    "condition": condition,
+                    "response": f"response {len(rows) + 1} for {case['id']}",
+                    "runner": "fixture-runner",
+                    "model": "fixture-model",
+                }
+                if isinstance(source_profiles, dict):
+                    row["case_sha256"] = MODULE._case_digest(case_data)
+                    row["source_sha256"] = source_profiles[condition]["sha256"]
+                rows.append(row)
         return rows
+
+    def source_bound_case_data(self) -> dict[str, object]:
+        case_data = deepcopy(self.case_data)
+        candidate_path = "novelist/SKILL.md"
+        digest = hashlib.sha256()
+        digest.update(candidate_path.encode())
+        digest.update(b"\0")
+        digest.update((ROOT / candidate_path).read_bytes())
+        digest.update(b"\0")
+        case_data["source_profiles"] = {
+            "baseline": {
+                "id": "no-skill",
+                "paths": [],
+                "sha256": hashlib.sha256().hexdigest(),
+            },
+            "candidate": {
+                "id": "novelist-current",
+                "paths": [candidate_path],
+                "sha256": digest.hexdigest(),
+            },
+        }
+        return case_data
 
     def score_rows(self, key: dict[str, object]) -> list[dict[str, object]]:
         rows = []
@@ -60,6 +89,11 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                         "concision": score,
                         "blocker": False,
                         "notes": "fixture",
+                        **(
+                            {"blind_sha256": key["blind_sha256"]}
+                            if "blind_sha256" in key
+                            else {}
+                        ),
                     }
                 )
         return rows
@@ -83,6 +117,84 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         drifted[1]["model"] = "different-model"
         with self.assertRaises(MODULE.ContractError):
             MODULE.blind_responses(self.case_data, drifted, seed=731)
+
+    def test_source_profiles_bind_responses_key_and_current_files(self) -> None:
+        case_data = self.source_bound_case_data()
+        rows = self.response_rows(case_data)
+
+        stale_case_rows = deepcopy(rows)
+        stale_case_rows[0]["case_sha256"] = "0" * 64
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.blind_responses(case_data, stale_case_rows, seed=731)
+
+        changed_cases = deepcopy(case_data)
+        changed_cases["cases"][0]["prompt"] += " changed"
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.blind_responses(changed_cases, rows, seed=731)
+
+        stale_response = deepcopy(rows)
+        stale_response[0]["source_sha256"] = "0" * 64
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.blind_responses(case_data, stale_response, seed=731)
+
+        blind_rows, key = MODULE.blind_responses(case_data, rows, seed=731)
+        self.assertEqual(key["source_profiles"], case_data["source_profiles"])
+        self.assertEqual(
+            {row["blind_sha256"] for row in blind_rows},
+            {key["blind_sha256"]},
+        )
+
+        stale_key = deepcopy(key)
+        stale_key["source_profiles"]["candidate"]["sha256"] = "0" * 64
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.score_judgments(
+                case_data, self.score_rows(key), stale_key, blind_rows=blind_rows
+            )
+
+        stale_mapping = deepcopy(key)
+        stale_mapping["pairs"][0]["labels"] = {
+            "A": key["pairs"][0]["labels"]["B"],
+            "B": key["pairs"][0]["labels"]["A"],
+        }
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.score_judgments(
+                case_data, self.score_rows(key), stale_mapping, blind_rows=blind_rows
+            )
+
+        changed_rows = deepcopy(rows)
+        changed_rows[0]["response"] += " changed"
+        changed_blind_rows, changed_key = MODULE.blind_responses(
+            case_data, changed_rows, seed=731
+        )
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.score_judgments(
+                case_data,
+                self.score_rows(key),
+                changed_key,
+                blind_rows=changed_blind_rows,
+            )
+
+        stale_blind_rows = deepcopy(blind_rows)
+        stale_blind_rows[0]["responses"][0]["text"] += " changed"
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.score_judgments(
+                case_data, self.score_rows(key), key, blind_rows=stale_blind_rows
+            )
+
+        stale_source = deepcopy(case_data)
+        stale_source["source_profiles"]["candidate"]["sha256"] = "0" * 64
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.validate_cases(stale_source)
+
+    def test_source_profile_paths_cannot_escape_through_symlinks(self) -> None:
+        with tempfile.TemporaryDirectory() as root_dir, tempfile.TemporaryDirectory() as outside_dir:
+            root = Path(root_dir)
+            outside = Path(outside_dir) / "outside.md"
+            outside.write_text("outside", encoding="utf-8")
+            (root / "escape.md").symlink_to(outside)
+            with patch.object(MODULE, "ROOT", root):
+                with self.assertRaises(MODULE.ContractError):
+                    MODULE.source_set_digest(["escape.md"])
 
     def test_release_gate_blocks_findings_and_material_regressions(self) -> None:
         _, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)
@@ -158,6 +270,28 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         report = MODULE.score_judgments(case_data, regressed, key)
         self.assertFalse(report["passed"])
         self.assertTrue(any("weighted_score regressed" in reason for reason in report["reasons"]))
+
+    def test_high_risk_concision_variance_does_not_override_aggregate_improvement(self) -> None:
+        _, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)
+        scores = self.score_rows(key)
+        pair = next(
+            pair
+            for pair in key["pairs"]
+            if next(
+                case for case in self.case_data["cases"] if case["id"] == pair["case_id"]
+            )["risk"]
+            == "high"
+        )
+        for row in scores:
+            if row["pair_id"] != pair["pair_id"]:
+                continue
+            for dimension in MODULE.DIMENSIONS:
+                row[dimension] = 5
+            if pair["labels"][row["label"]] == "candidate":
+                row["concision"] = 4
+
+        report = MODULE.score_judgments(self.case_data, scores, key)
+        self.assertTrue(report["passed"], report["reasons"])
 
 
 if __name__ == "__main__":

@@ -214,6 +214,8 @@ def behavior_fixture_fingerprint(path: str, expected_sha256: str) -> None:
     document = json.loads(read(path))
     keys = ("version", "rubric", "release_gate", "cases")
     payload = {key: document.get(key) for key in keys}
+    if "source_profiles" in document:
+        payload["source_profiles"] = document["source_profiles"]
     encoded = json.dumps(
         payload,
         ensure_ascii=False,
@@ -232,17 +234,44 @@ def file_fingerprint(path: str, expected_sha256: str) -> None:
     check(f"evidence artifact preserves {path}{detail}", actual_sha256 == expected_sha256)
 
 
-def source_set_fingerprint(paths: tuple[str, ...], expected_sha256: str) -> None:
-    """Bind scored behavior evidence to the exact source set it evaluated."""
+def source_set_fingerprint(case_path: str, condition: str) -> None:
+    """Verify the source set declared by one behavior-evaluation condition."""
+    document = json.loads(read(case_path))
+    profile = document.get("source_profiles", {}).get(condition)
+    if not isinstance(profile, dict):
+        check(f"behavior source profile declares {condition}", False)
+        return
+    paths = profile.get("paths")
+    expected_sha256 = profile.get("sha256")
+    if not isinstance(paths, list) or not isinstance(expected_sha256, str):
+        check(f"behavior source profile declares {condition} paths and sha256", False)
+        return
     digest = hashlib.sha256()
+    root = ROOT.resolve()
     for path in paths:
+        relative_path = Path(path) if isinstance(path, str) else Path("/")
+        if relative_path.is_absolute() or ".." in relative_path.parts or not path:
+            check(f"behavior source profile keeps {condition} paths under repository root", False)
+            return
+        try:
+            source_path = (ROOT / relative_path).resolve(strict=True)
+            source_path.relative_to(root)
+        except (OSError, ValueError):
+            check(f"behavior source profile keeps {condition} paths under repository root", False)
+            return
+        if not source_path.is_file():
+            check(f"behavior source profile declares {condition} files", False)
+            return
         digest.update(path.encode())
         digest.update(b"\0")
-        digest.update((ROOT / path).read_bytes())
+        digest.update(source_path.read_bytes())
         digest.update(b"\0")
     actual_sha256 = digest.hexdigest()
     detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
-    check(f"source set preserves evaluated contract{detail}", actual_sha256 == expected_sha256)
+    check(
+        f"source set preserves {case_path} {condition} contract{detail}",
+        actual_sha256 == expected_sha256,
+    )
 
 
 senior_skill = "senior-software-architect/SKILL.md"
@@ -19089,7 +19118,7 @@ check(
             "可以退回天马行空重新发散",
             "故事、人物、世界、历史与神话中归来",
             "读者可感的叙事现实",
-            "完整世界不得先于人物选择与当场故事",
+            "完整百科不得先于人物选择与当场故事",
             "不指成为现实史实",
             "不按章节给伏笔配额",
             "伏笔不要求事前唯一锁定答案",
@@ -19340,9 +19369,9 @@ check(
             "不要求五层齐全",
             "五层按故事需要取用，不机械凑齐",
             "不把人物和故事留到以后",
-            "即使用户明确要求完整方案",
-            "交付并验证最小故事切片",
-            "再完成用户明确要求的完整方案",
+            "用户明确要求完整方案时",
+            "在同一方案中用一个人物、一个场景、一次选择及其后果检验设定能否进入生活与因果",
+            "而不是先写正式故事再补世界",
             "神系、部族、年表和力量表时不得擅自省略",
             "读者可感",
             "不是现实史实",
@@ -19413,6 +19442,7 @@ check(
             "novelist-should-not-promote-draft-deviation-without-authorization",
             "novelist-should-preserve-living-world-contingency",
             "novelist-should-preserve-mixed-motives-and-moral-consequences",
+            "novelist-should-build-length-scaled-living-world-before-drafting",
             "同一 runner/model",
             "baseline",
             "candidate",
@@ -19420,11 +19450,18 @@ check(
             "静态 fixture 不等于真实行为证据",
             "列全会改变核心因果、高潮、卷末交付或后续承诺的关键分叉",
             "不因文字已经成篇或效果更好而自动升级为事实、章卡或卷卡",
+            '"source_profiles"',
+            '"id": "no-skill"',
+            '"id": "novelist-current"',
+            '"novelist/admission.json"',
+            '"huaxia-practical-wisdom/SKILL.md"',
         ],
     )
     and has_all(
         novelist_skill,
         [
+            "显性分叉、隐含前提及依赖",
+            "最短证据链",
             "正文续写先读 `references/story-design-and-drafting.md`",
             "再读 `references/scene-and-prose-craft.md`",
             "小说正文去 AI 味、人物同声、动机断裂或套话诊断仍由本 Skill 主责",
@@ -19439,6 +19476,8 @@ check(
             "列出会改变核心因果、高潮、结局或读者承诺的关键分叉及其依赖",
             "不得因一次只请作者裁决一个 blocker 而隐藏其他关键分叉",
             "依赖当前主 blocker 的其他分叉只列候选关系",
+            "互斥机制、揭示时点、关键物件或资源功能",
+            "用户已经锁定核心取舍时",
             "只有作者确认或明确自决授权范围内的变化才能回写卡片和后续承诺",
             "超出授权的变化只记录为候选差异并交作者裁决",
             "不得把读者专属线索改写成人物可感暗示",
@@ -19448,6 +19487,8 @@ check(
             "不要为显得严密把意外强编成反派计划、伏笔回收或单一幕后真相",
             "主角不在场时，普通人、对手、机构、环境和资源仍继续变化",
             "生活细节可以只属于当下，不必全部变成伏笔",
+            "长篇与超长篇还须确认全书外框和当前卷运行系统",
+            "当前卷运行或全书长期承诺",
         ],
     )
     and has_all(
@@ -19458,6 +19499,45 @@ check(
             "不用“人性复杂”把责任稀释成善恶皆无",
             "不同关系人所见的侧面",
             "不用旁白标签替故事宣判",
+        ],
+    )
+    and has_all(
+        novelist_world,
+        [
+            "篇幅分层的世界准备度",
+            "世界离开主角仍能运行",
+            "篇幅体量",
+            "叙事范围",
+            "三百万字的单城单代故事",
+            "两万字的跨时代故事",
+            "短篇或局部故事",
+            "长篇或持续区域故事",
+            "超长篇且确有跨地域、跨时代承诺",
+            "正式首章至少同时准备三个嵌套层级",
+            "全书外框",
+            "当前卷运行系统",
+            "开篇生活切片",
+            "不能用一个局部切片代替前两层",
+            "不因暂不深入而静默省略",
+            "世界系统扫描",
+            "民生与生产流通",
+            "聚落与基础设施",
+            "知识、科技与照护",
+            "身体与日常人生",
+            "幻想与异常力量",
+            "系统闭环与正文准入",
+            "最小准备度卡",
+            "不能只给开篇场景",
+            "一次只展开当前主 blocker，不等于只需确认一个决定",
+            "逐项扫描状态（不得缺项，可标按剧情扩建）",
+            "只复述用户点名的领域、遗漏未点名的系统，不算完成世界背景方案",
+            "扩写超出全书外框、当前卷运行系统与开篇生活切片",
+            "不要把维度写成彼此孤立的名录",
+            "世界不围着主角运转",
+            "非正典压力测试",
+            "不能因产物完整就称为正典",
+            "而不是先写正式故事再补世界",
+            "不能代替前两层",
         ],
     )
     and has_all(
@@ -19488,6 +19568,7 @@ check(
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"',
             'fixtures/skill-eval/novelist-planning-responses.jsonl',
             'fixtures/skill-eval/novelist-planning-scores.jsonl',
+            '--blind "${novelist_planning_eval_dir}/blind.jsonl"',
         ],
     ),
 )
@@ -19723,6 +19804,21 @@ behavior_case_criteria_has(
     ),
 )
 behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-build-length-scaled-living-world-before-drafting",
+    (
+        "当前叙事半径内可独立运行",
+        "把篇幅体量与叙事范围分开判断",
+        "不擅自扩造国家或时代",
+        "少数跨期硬约束",
+        "单城范围内的全书外框、当前卷运行系统和开篇生活切片",
+        "不把维度写成彼此孤立的名录",
+        "世界离开主角仍会运行",
+        "承重缺口未决时停止正式正文",
+        "未经作者确认或自决授权不升级正典",
+    ),
+)
+behavior_case_criteria_has(
     novelist_r8_practice_behavior_cases,
     "novelist-should-sandbox-character-choices-without-promoting-canon",
     (
@@ -19832,20 +19928,18 @@ behavior_fixture_fingerprint(
 )
 behavior_fixture_fingerprint(
     novelist_planning_behavior_cases,
-    "a4f42784df544d258699e199c6204433964dfb6cec66b8579eb074e69f1a3c69",
+    "4fd5c105f98e686b687e26675c80994fd30851b5416ace8946abc91fde884f2a",
 )
 file_fingerprint(
     novelist_planning_responses,
-    "ef1621b519c4ac0f9b0894b387795dbc4949db88af8a0804276a28eed5b895a3",
+    "64155654a4945b13d46d948b4b3d6cad46af3f0906586f48cb63e122302304be",
 )
 file_fingerprint(
     novelist_planning_scores,
-    "2ebe65b3261e9ab05252ee69a9bb559ea6a7399b81df6eca144a8212a953cfee",
+    "3d7db1ccd736fb8b9d05e0fde2d1dd6b3e476ee49610a77a80d9a828f2b7160a",
 )
-source_set_fingerprint(
-    (novelist_story, novelist_character, novelist_scene, novelist_continuity),
-    "dfa10c246176f63c2b8b8bd4e1a05b93160d7d270b6ac2a5be6ccd28bfbf4305",
-)
+source_set_fingerprint(novelist_planning_behavior_cases, "baseline")
+source_set_fingerprint(novelist_planning_behavior_cases, "candidate")
 behavior_fixture_fingerprint(
     novelist_creative_behavior_cases,
     "15d8198f505c6115113f14d545a2b21af53f643b07cac87a3fff040e703888f7",

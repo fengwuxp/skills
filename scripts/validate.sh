@@ -130,6 +130,10 @@ python3 wise-agent/scripts/user-context-ledger.py --self-test
 echo "==> wise-agent reference section reader"
 python3 wise-agent/scripts/read-reference-sections.py --self-test
 
+echo "==> wise-agent skill usage observability"
+python3 wise-agent/scripts/skill-usage-observability.py --self-test
+python3 wise-agent/scripts/test_skill_usage_observability.py
+
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
@@ -153,6 +157,8 @@ python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
 python3 -m py_compile wise-agent/scripts/read-reference-sections.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
+python3 -m py_compile wise-agent/scripts/skill-usage-observability.py
+python3 -m py_compile wise-agent/scripts/test_skill_usage_observability.py
 python3 -m py_compile wise-agent/scripts/user-context-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/check-skill-admission.py
@@ -223,6 +229,7 @@ scripts/evaluate-skill-behavior.py score \
   --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json" \
   --scores "fixtures/skill-eval/novelist-planning-scores.jsonl" \
   --key "${novelist_planning_eval_dir}/key.json" \
+  --blind "${novelist_planning_eval_dir}/blind.jsonl" \
   --output "${novelist_planning_eval_dir}/report.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
