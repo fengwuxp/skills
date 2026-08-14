@@ -291,6 +291,19 @@ python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py disable
 
 `candidate` 只是待审证据，不代表 Skill 已改进。Owner 确认复用范围、目标 Skill 和权威落点后，人工评审结论为 `confirmed`，candidate 账本文件仍保持 `candidate`；受控试验在该状态内执行，不新增 `RSI Mode` 或其他生命周期状态。独立 Checker 复核后，由 Owner 作 `promote / reject / supersede` 裁决并留在任务证据中。学习模式只控制 candidate 账本写入；Skill 源仓库修改、Git、同步和发布分别需要对应授权。
 
+知止者使用观测与学习候选账本相互独立。只有用户显式授权后才在本地启用 metadata-only 记录；脚本不修改 Codex 配置，先打印候选配置供人工审查：
+
+```bash
+python3 ~/.codex/skills/wise-agent/scripts/skill-usage-observability.py enable
+python3 ~/.codex/skills/wise-agent/scripts/skill-usage-observability.py config
+python3 ~/.codex/skills/wise-agent/scripts/skill-usage-observability.py serve
+python3 ~/.codex/skills/wise-agent/scripts/skill-usage-observability.py status
+python3 ~/.codex/skills/wise-agent/scripts/skill-usage-observability.py report
+python3 ~/.codex/skills/wise-agent/scripts/skill-usage-observability.py disable
+```
+
+默认目录为 `~/.skill-usage/wise-agent`，只保存事件和资源标识、token 遥测或静态估算，不保存 prompt、回答或源码正文。确定性事件 ID 用于拦截 Hook / OTLP 重放；`status` 会分开报告写入开关与本地接收器健康。Hook 信任、修改 `~/.codex/config.toml`、启动接收器和真实试点仍需分别授权；完成真实试点前状态为 `PILOT_PENDING`。
+
 需要跨任务保留已确认的沟通、工作流或证据偏好时，可另行显式开启“用户协作档案”。它默认关闭，不扫描历史对话，和 Skill 学习回流完全隔离；新记录先进入 candidate，candidate 不会生效，只有用户确认后才可读取。当前指令始终优先，档案也不能授予 Git、联网、安装、部署、生产或删除权限：
 
 ```bash

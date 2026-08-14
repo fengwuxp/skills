@@ -92,6 +92,7 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 - PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
 - 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
+- Skill 使用记录、OTel、Hook、token 成本和命中 / 效果评测仅在用户显式要求开启、关闭、检查或优化知止者使用观测时读取 `references/skill-usage-observability.md`；观测默认关闭，不保存正文，不自动写学习 candidate。
 - 学习回流 candidate 记录仅在显式开启后读取 `references/skill-learning-backflow.md`；只记录当前任务已脱敏、可复核的 `$SKILL_LEARNING_HOME` `candidate`，不得扫描历史对话、自动晋升、提交、同步或发布。
 - 用户协作档案仅在用户显式开启后读取 `references/user-collaboration-profile.md`；档案与学习回流、仓库和安装目录隔离，candidate 不参与运行时决策，当前指令优先，也不得扩大任何授权。
 - 用户明确授权修改 Skill 源仓库时不要求先开启学习回流模式；按根目录 `AGENTS.md` 和 `references/code-delivery.md` 推进，学习账本、仓库写入、Git、同步和发布分别使用各自授权。
