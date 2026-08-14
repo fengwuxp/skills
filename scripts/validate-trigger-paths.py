@@ -421,6 +421,8 @@ novelist_scene = "novelist/references/scene-and-prose-craft.md"
 novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
+novelist_source_map = "novelist/references/source-map.md"
+novelist_craft_cases = "novelist/references/craft-case-library.md"
 novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
 novelist_planning_behavior_cases = "fixtures/skill-eval/novelist-planning-behavior-cases.json"
 novelist_planning_responses = "fixtures/skill-eval/novelist-planning-responses.jsonl"
@@ -19399,11 +19401,6 @@ check(
             "candidate",
             "盲评",
             "静态 fixture 不等于真实行为证据",
-            "改变哪条主线",
-            "关系选择前后",
-            "积厚而发与灵感天成",
-            "原样保护不可替代的幻想核",
-            "只有作者要求选择、成形、写入作品或检验可用性时才进入幻想归来",
         ],
     )
     and has_all(
@@ -19414,6 +19411,8 @@ check(
             "novelist-should-admit-direct-chapter-draft",
             "novelist-should-list-branches-before-one-blocker",
             "novelist-should-not-promote-draft-deviation-without-authorization",
+            "novelist-should-preserve-living-world-contingency",
+            "novelist-should-preserve-mixed-motives-and-moral-consequences",
             "同一 runner/model",
             "baseline",
             "candidate",
@@ -19445,6 +19444,20 @@ check(
             "不得把读者专属线索改写成人物可感暗示",
             "不得补造权威未确认的既往事件、对白或记忆",
             "合并重复的边界说明",
+            "把故事背景当作所有人都在生活的真实世界",
+            "不要为显得严密把意外强编成反派计划、伏笔回收或单一幕后真相",
+            "主角不在场时，普通人、对手、机构、环境和资源仍继续变化",
+            "生活细节可以只属于当下，不必全部变成伏笔",
+        ],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "不先写好人、坏人、伟光正、纯恶或“人人自私”的结论",
+            "一次恶行不证明此前善行全是假，一次善行也不抵消既有伤害",
+            "不用“人性复杂”把责任稀释成善恶皆无",
+            "不同关系人所见的侧面",
+            "不用旁白标签替故事宣判",
         ],
     )
     and has_all(
@@ -19687,6 +19700,29 @@ behavior_case_criteria_has(
     ),
 )
 behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-preserve-living-world-contingency",
+    (
+        "不由主线势力制造",
+        "不要求每件事都由主线需要安排",
+        "不让背景世界只围绕主角运转",
+        "不强行恢复原定决战",
+        "结果仍来自人物后续选择、行动和代价",
+        "不强迫所有生活细节成为伏笔",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_planning_behavior_cases,
+    "novelist-should-preserve-mixed-motives-and-moral-consequences",
+    (
+        "不为立场鲜明把县令洗成伟光正",
+        "一次恶行不证明此前善行全是假",
+        "不用‘人性复杂’把责任稀释成善恶皆无",
+        "是否承担责任",
+        "不用旁白、标签、舍己仪式或隐藏阴谋",
+    ),
+)
+behavior_case_criteria_has(
     novelist_r8_practice_behavior_cases,
     "novelist-should-sandbox-character-choices-without-promoting-canon",
     (
@@ -19796,19 +19832,19 @@ behavior_fixture_fingerprint(
 )
 behavior_fixture_fingerprint(
     novelist_planning_behavior_cases,
-    "18f2e9d7db8d02427ca191fb0cfe0f2ae186e1c32113e62fef3f7b6c056371df",
+    "a4f42784df544d258699e199c6204433964dfb6cec66b8579eb074e69f1a3c69",
 )
 file_fingerprint(
     novelist_planning_responses,
-    "242500c1bd7eb0c5c18515aefc2d42c33f918701d34bcd7a60a61d592f78614a",
+    "ef1621b519c4ac0f9b0894b387795dbc4949db88af8a0804276a28eed5b895a3",
 )
 file_fingerprint(
     novelist_planning_scores,
-    "b0afce1d11cd9daac6d339f0f83648ecdfcce85de03013571afc0e648ccac04c",
+    "2ebe65b3261e9ab05252ee69a9bb559ea6a7399b81df6eca144a8212a953cfee",
 )
 source_set_fingerprint(
-    (novelist_story, novelist_scene, novelist_continuity),
-    "ba63a0560e1cf44120dd1f7da0b138243dae2356bdf7147e4ca6db71dadc3f09",
+    (novelist_story, novelist_character, novelist_scene, novelist_continuity),
+    "dfa10c246176f63c2b8b8bd4e1a05b93160d7d270b6ac2a5be6ccd28bfbf4305",
 )
 behavior_fixture_fingerprint(
     novelist_creative_behavior_cases,
@@ -20421,6 +20457,80 @@ check(
             "当前草稿或版本内",
             "不自动晋升正典",
             "明确修订",
+        ],
+    ),
+)
+check(
+    "novelist external sources stay traceable without becoming runtime dependencies",
+    (ROOT / novelist_source_map).exists()
+    and has_reference_header(novelist_source_map)
+    and has_task_reading_index(novelist_source_map)
+    and has_all(
+        novelist_source_map,
+        [
+            "zy-zmc/tianming-skill",
+            "b5ef6e30817e086022ecbd09f9c2d2e781dd8b43",
+            "modoojunko/awesome-novel-agent",
+            "e7d19936bac10e165ab42cb744f7d5c549c19f77",
+            "XINGANLIU/web-novel-writing-skill",
+            "308ae728abf1c5526cfc533cde47904ff1f63584",
+            "Tomsawyerhu/Chinese-WebNovel-Skill",
+            "4e0332eec0da62bf160eb284944a4c0def40b4c9",
+            "GPL-3.0",
+            "MIT",
+            "CC BY-NC-SA 4.0",
+            "未发现标准许可证",
+            "不复制外部原文、模板、示例或语料",
+            "不作为运行时依赖",
+        ],
+    )
+    and has_none(
+        novelist_source_map,
+        [
+            "允许复制外部原文",
+            "外部仓库作为运行时依赖",
+            "外部仓库是当前作品正典",
+        ],
+    ),
+)
+check(
+    "novelist craft cases stay synthetic and task-retrievable",
+    (ROOT / novelist_craft_cases).exists()
+    and has_reference_header(novelist_craft_cases)
+    and has_task_reading_index(novelist_craft_cases)
+    and has_all(
+        novelist_craft_cases,
+        [
+            "全部案例均为本仓库合成",
+            "不复制外部示例",
+            "不成为项目正典",
+            "概念与故事发动机",
+            "开篇承诺与当场压力",
+            "人物声纹与关系变化",
+            "信息边界与转场",
+            "对手适应与反作用",
+            "长篇恢复与伏笔承续",
+            "静态案例可发现不等于真实写作行为提升",
+        ],
+    )
+    and has_none(
+        novelist_craft_cases,
+        [
+            "可以直接写入项目正典",
+            "可以替代行为验证",
+            "允许模仿在世作者",
+        ],
+    ),
+)
+check(
+    "novelist routes examples to the bounded local craft library",
+    has_all(
+        novelist_skill,
+        [
+            "参考案例、示例对照或反例诊断",
+            "`references/craft-case-library.md`",
+            "`references/source-map.md`",
+            "合成案例不成为正典或来源证据",
         ],
     ),
 )

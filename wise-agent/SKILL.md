@@ -62,6 +62,8 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 `references/capability-routing.md` 是能力 owner 与装载规则的唯一权威。显式调用专业 Skill 只表示优先装载该能力，不切换人格；多 Skill 只补同一 Agent 的上下文，专业能力完成后仍由知止者综合结果。
 
+reference 默认按稳定标题路径分段读取，不以固定行号作为长期契约。任务已能映射到“按任务读取索引”或唯一标题时，先运行 `scripts/read-reference-sections.py` 选择文件与完整语义章节；脚本返回歧义、依赖跨节、高风险语境不完整或预计节省不足时扩大到父节或整文件。详细规则只读取 `references/capability-routing.md` 的“二 C、章节级 JIT 加载”。
+
 能力不以本表为上限。新增或外部能力必须先审查输入输出、复用价值、脚本、权限、持久化、网络和验证方式；不因“可能有用”安装或一次加载全部能力。
 
 涉及代码交付时，只有候选 diff 已稳定、本地验证已完成且风险或复杂度达到独立补扫门槛，才读取 `references/verification-review-release.md` 决定是否调用 Open Code Review；它不是每轮 CR 的默认动作，也不替代资深架构师的源码裁决。

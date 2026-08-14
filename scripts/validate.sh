@@ -127,6 +127,9 @@ python3 wise-agent/scripts/skill-learning-ledger.py --self-test
 echo "==> wise-agent user collaboration profile"
 python3 wise-agent/scripts/user-context-ledger.py --self-test
 
+echo "==> wise-agent reference section reader"
+python3 wise-agent/scripts/read-reference-sections.py --self-test
+
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
@@ -148,6 +151,7 @@ python3 -m py_compile ui-design-expert/scripts/check_ui_source.py
 python3 -m py_compile ui-design-expert/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
+python3 -m py_compile wise-agent/scripts/read-reference-sections.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
 python3 -m py_compile wise-agent/scripts/user-context-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py

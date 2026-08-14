@@ -59,6 +59,7 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 
 - 故事总纲、卷提要 / 卷卡、章节提要 / 章卡、正文准入、开篇承诺和支线接口：读 `references/story-design-and-drafting.md`。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
+- 需要参考案例、示例对照或反例诊断：只按任务读取 `references/craft-case-library.md` 对应一节；合成案例不成为正典或来源证据。需要复核外部方法的出处、固定版本或许可证时，另读 `references/source-map.md`，普通创作不加载来源索引。
 - 人物设计、人物弧光、重要配角或对手、人物动态档案，以及人物代入、角色扮演或人物反应推演：读 `references/character-craft.md`；确需成篇再读 `references/scene-and-prose-craft.md`。角色扮演只是受正典与有限认知约束的临时创作方法，不创建持久人格或第二角色 Owner；确需建档时使用 `assets/character-dynamic-profile-template.md`，不强制所有人物填满。
 - 场景展开、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
 - 天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进和东方幻想：读 `references/worldbuilding-and-research.md`。
@@ -98,6 +99,8 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 - `references/character-craft.md`：人物刻画、人物弧光、经世叙事校准，以及直笔与曲笔。
 - `references/scene-and-prose-craft.md`：场景承重与展开、POV、转场、对白、打趣、文风校准和纯正文交付。
 - `references/web-serial-craft.md`：网文 / 连载语境的分层定位、持续力诊断和逐章自查；补充而非替代通用故事语义。
+- `references/craft-case-library.md`：按病灶检索的合成案例，只迁移判断方法，不套写内容。
+- `references/source-map.md`：外部小说能力来源、固定快照、许可证、吸收与拒绝边界；普通创作不加载。
 - `assets/character-dynamic-profile-template.md`：按重要度裁剪的人物动态档案，含最小人物卡、重要人物扩展和动态更新附录。
 - `references/worldbuilding-and-research.md`：按剧情调用构建世界，区分事实、传统、推演和虚构，处理历史长期演进、记忆分流与志怪异闻。
 - `references/continuity-and-revision.md`：稿件权威、信息层、三层真实、伏笔与承诺闭环、旧稿提炼、重写和连续性检查。
