@@ -235,6 +235,36 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelis
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
+novelist_scene_eval_dir="${tmp_dir}/novelist-scene-eval"
+mkdir -p "${novelist_scene_eval_dir}"
+scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json" \
+  --responses "fixtures/skill-eval/novelist-scene-construction-responses.jsonl" \
+  --output "${novelist_scene_eval_dir}/blind.jsonl" \
+  --key-output "${novelist_scene_eval_dir}/key.json" \
+  --seed 731
+scripts/evaluate-skill-behavior.py score \
+  --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json" \
+  --scores "fixtures/skill-eval/novelist-scene-construction-scores.jsonl" \
+  --key "${novelist_scene_eval_dir}/key.json" \
+  --blind "${novelist_scene_eval_dir}/blind.jsonl" \
+  --output "${novelist_scene_eval_dir}/report.json"
+scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"
+novelist_plot_eval_dir="${tmp_dir}/novelist-plot-eval"
+mkdir -p "${novelist_plot_eval_dir}"
+scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json" \
+  --responses "fixtures/skill-eval/novelist-plot-progression-responses.jsonl" \
+  --output "${novelist_plot_eval_dir}/blind.jsonl" \
+  --key-output "${novelist_plot_eval_dir}/key.json" \
+  --seed 731
+scripts/evaluate-skill-behavior.py score \
+  --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json" \
+  --scores "fixtures/skill-eval/novelist-plot-progression-scores.jsonl" \
+  --key "${novelist_plot_eval_dir}/key.json" \
+  --blind "${novelist_plot_eval_dir}/blind.jsonl" \
+  --output "${novelist_plot_eval_dir}/report.json"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
 
 echo "==> wise-agent module deliberation behavior cases"

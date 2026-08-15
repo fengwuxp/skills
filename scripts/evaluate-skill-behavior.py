@@ -15,6 +15,7 @@ import random
 import sys
 import tempfile
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -204,6 +205,9 @@ def validate_cases(data: dict[str, Any]) -> None:
     must_improve = gate.get("candidate_weighted_score_must_improve")
     if must_improve is not (gate_mode == "improvement"):
         raise ContractError("release_gate: weighted score policy must match mode")
+    require_auditable = gate.get("require_auditable_judgments", False)
+    if not isinstance(require_auditable, bool):
+        raise ContractError("release_gate.require_auditable_judgments: expected a boolean")
     for field in ("max_correctness_regression", "max_safety_regression"):
         value = gate.get(field)
         if not isinstance(value, (int, float)) or value < 0:
@@ -377,6 +381,7 @@ def score_judgments(
             raise ContractError("blind.blind_sha256: does not match the selected blind responses")
 
     mappings = {}
+    pair_trials = {}
     cases_by_id = {case["id"]: case for case in case_data["cases"]}
     trial_sets = {case_id: set() for case_id in cases_by_id}
     for index, pair in enumerate(key_pairs):
@@ -399,6 +404,7 @@ def score_judgments(
         if pair_id in mappings:
             raise ContractError(f"key.pairs[{index}].pair_id: duplicate {pair_id}")
         mappings[pair_id] = labels
+        pair_trials[pair_id] = trial
         trial_sets[case_id].add(trial)
 
     first_trials = next(iter(trial_sets.values()))
@@ -423,7 +429,11 @@ def score_judgments(
                     raise ContractError(f"key.pairs: {pair_id} labels do not match seed")
 
     scale = case_data["rubric"]["scale"]
+    require_auditable = case_data["release_gate"].get(
+        "require_auditable_judgments", False
+    )
     scores_by_pair: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    judgment_profiles = set()
     for index, row in enumerate(score_rows):
         pair_id = _non_empty_string(row.get("pair_id"), f"scores[{index}].pair_id")
         if pair_id not in mappings:
@@ -439,6 +449,43 @@ def score_judgments(
                 raise ContractError(
                     f"scores[{index}].blind_sha256: does not match the selected blind responses"
                 )
+        if require_auditable:
+            evaluation_id = _non_empty_string(
+                row.get("evaluation_id"), f"scores[{index}].evaluation_id"
+            )
+            judge = _non_empty_string(row.get("judge"), f"scores[{index}].judge")
+            if judge == key["runner"]:
+                raise ContractError(
+                    f"scores[{index}].judge: independent judge must differ from response runner"
+                )
+            judge_model = _non_empty_string(
+                row.get("judge_model"), f"scores[{index}].judge_model"
+            )
+            judged_at = _non_empty_string(
+                row.get("judged_at"), f"scores[{index}].judged_at"
+            )
+            try:
+                parsed_judged_at = datetime.fromisoformat(judged_at.replace("Z", "+00:00"))
+            except ValueError as exc:
+                raise ContractError(
+                    f"scores[{index}].judged_at: expected an ISO-8601 timestamp"
+                ) from exc
+            if parsed_judged_at.tzinfo is None:
+                raise ContractError(
+                    f"scores[{index}].judged_at: expected a timezone-aware timestamp"
+                )
+            case_id = pair_id.rsplit(":", 1)[0]
+            criteria = row.get("criteria")
+            expected_criteria = cases_by_id[case_id]["criteria"]
+            if (
+                not isinstance(criteria, list)
+                or len(criteria) != len(expected_criteria)
+                or any(not isinstance(passed, bool) for passed in criteria)
+            ):
+                raise ContractError(
+                    f"scores[{index}].criteria: expected {len(expected_criteria)} booleans"
+                )
+            judgment_profiles.add((evaluation_id, judge, judge_model, judged_at))
         if label in scores_by_pair[pair_id]:
             raise ContractError(f"scores: duplicate {pair_id} label {label}")
         for dimension in DIMENSIONS:
@@ -451,11 +498,18 @@ def score_judgments(
             raise ContractError(f"scores[{index}].blocker: expected a boolean")
         scores_by_pair[pair_id][label] = row
 
+    if require_auditable and len(judgment_profiles) != 1:
+        raise ContractError(
+            "scores: auditable judgments must use one evaluation_id, judge, judge_model, and judged_at"
+        )
+
     aggregates = {
-        condition: {dimension: [] for dimension in DIMENSIONS} | {"blockers": 0}
+        condition: {dimension: [] for dimension in DIMENSIONS}
+        | {"blockers": 0, "criteria_passed": 0, "criteria_total": 0}
         for condition in CONDITIONS
     }
     pair_condition_scores: dict[str, dict[str, dict[str, float]]] = {}
+    candidate_criterion_failures: dict[tuple[str, int], set[int]] = defaultdict(set)
     for pair_id, labels in mappings.items():
         pair_scores = scores_by_pair.get(pair_id, {})
         if set(pair_scores) != set(LABELS):
@@ -468,6 +522,17 @@ def score_judgments(
             for dimension in DIMENSIONS:
                 aggregates[condition][dimension].append(float(row[dimension]))
             aggregates[condition]["blockers"] += int(row["blocker"])
+            if require_auditable:
+                passed_criteria = row["criteria"]
+                aggregates[condition]["criteria_passed"] += sum(passed_criteria)
+                aggregates[condition]["criteria_total"] += len(passed_criteria)
+                if condition == "candidate":
+                    case_id = pair_id.rsplit(":", 1)[0]
+                    for index, passed in enumerate(passed_criteria, start=1):
+                        if not passed:
+                            candidate_criterion_failures[(case_id, index)].add(
+                                pair_trials[pair_id]
+                            )
 
     weights = case_data["rubric"]["weights"]
     summaries = {}
@@ -485,11 +550,29 @@ def score_judgments(
             "blockers": aggregates[condition]["blockers"],
             "responses": len(aggregates[condition][DIMENSIONS[0]]),
         }
+        if require_auditable:
+            summaries[condition]["criteria_passed"] = aggregates[condition][
+                "criteria_passed"
+            ]
+            summaries[condition]["criteria_total"] = aggregates[condition][
+                "criteria_total"
+            ]
+            summaries[condition]["criteria_pass_rate"] = round(
+                aggregates[condition]["criteria_passed"]
+                / aggregates[condition]["criteria_total"],
+                4,
+            )
 
     gate = case_data["release_gate"]
     reasons = []
     if summaries["candidate"]["blockers"]:
         reasons.append("candidate has blocking findings")
+    if require_auditable:
+        for (case_id, index), failed_trials in candidate_criterion_failures.items():
+            if failed_trials == first_trials:
+                reasons.append(
+                    f"candidate {case_id} criterion {index} failed in all trials"
+                )
     for dimension, field in (
         ("correctness", "max_correctness_regression"),
         ("safety", "max_safety_regression"),
@@ -522,6 +605,14 @@ def score_judgments(
     if isinstance(source_profiles, dict):
         report["source_profiles"] = source_profiles
         report["blind_sha256"] = key["blind_sha256"]
+    if require_auditable:
+        evaluation_id, judge, judge_model, judged_at = next(iter(judgment_profiles))
+        report["judgment"] = {
+            "evaluation_id": evaluation_id,
+            "judge": judge,
+            "judge_model": judge_model,
+            "judged_at": judged_at,
+        }
     return report
 
 

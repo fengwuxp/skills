@@ -60,8 +60,8 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 - 故事总纲、卷提要 / 卷卡、章节提要 / 章卡、正文准入、开篇承诺和支线接口：读 `references/story-design-and-drafting.md`。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
 - 需要参考案例、示例对照或反例诊断：只按任务读取 `references/craft-case-library.md` 对应一节；合成案例不成为正典或来源证据。需要复核外部方法的出处、固定版本或许可证时，另读 `references/source-map.md`，普通创作不加载来源索引。
-- 人物设计、人物弧光、重要配角或对手、人物动态档案，以及人物代入、角色扮演或人物反应推演：读 `references/character-craft.md`；确需成篇再读 `references/scene-and-prose-craft.md`。角色扮演只是受正典与有限认知约束的临时创作方法，不创建持久人格或第二角色 Owner；确需建档时使用 `assets/character-dynamic-profile-template.md`，不强制所有人物填满。
-- 场景展开、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
+- 人物设计、人物弧光、重要配角或对手、人物动态档案、人物外号、绰号、诨名与群体称呼，以及人物代入、角色扮演或人物反应推演：读 `references/character-craft.md`；确需成篇再读 `references/scene-and-prose-craft.md`。角色扮演只是受正典与有限认知约束的临时创作方法，不创建持久人格或第二角色 Owner；确需建档时使用 `assets/character-dynamic-profile-template.md`，不强制所有人物填满。
+- 场景展开、凡人 / 武侠 / 玄幻 / 仙侠 / 魔法等打斗与斗法、功法 / 武器 / 法宝和人物成长、妖鬼神魔或灵兽行动、战争、市井、家庭、朝堂、礼制与风土场面，以及导演调度、编辑 / 观众复核、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
 - 短篇 / 长篇 / 超长篇开写前的世界准备度，以及天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进和东方幻想：读 `references/worldbuilding-and-research.md`。
 - 旧稿提炼、版本归位、人物知情、时间地理一致性、伏笔与承诺闭环、三层真实和重写：读 `references/continuity-and-revision.md`。
 - 小说正文去 AI 味、人物同声、动机断裂或套话诊断仍由本 Skill 主责，读 `references/continuity-and-revision.md`；通用文本清洗能力不得跳过正典、人物、因果和作者声音边界接管小说重写。
@@ -84,6 +84,7 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 ## 红线
 
 - 不把“直接交付设计”误读为“采纳为正典”；旧稿、废案、助手建议、命名候选或读者推测只有经作者确认或明确授权自决后才能写入当前权威。
+- 不把外号、榜文赞称或污名等同人物真实本质；即使用户要求从多个称呼中硬选，也只能绑定具体叙事任务、阶段或视角说明采用哪一个，不能写成核心外号或人格结论。
 - 不用完整百科、名录、力量等级和年表替代故事；超出当前三层叙事半径且不影响承重系统依赖时停止扩写。
 - 不把现代拼合神系、拟古名称、文学构义或模型记忆冒充古籍、史实和古文字结论。
 - 不把人物不理性等同人物失真；允许冲动、误判、情绪失控和反常行为，但不得为推进剧情无因改写欲望、认知、关系或能力。
@@ -97,7 +98,7 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 
 - `references/story-design-and-drafting.md`：故事发动机、架构与篇幅、节奏呼吸、分层规划、作者讨论、正文准入、发布载体和章卡。
 - `references/character-craft.md`：人物刻画、人物弧光、经世叙事校准，以及直笔与曲笔。
-- `references/scene-and-prose-craft.md`：场景承重与展开、POV、转场、对白、打趣、文风校准和纯正文交付。
+- `references/scene-and-prose-craft.md`：场景承重、导演 / 编辑 / 观众三镜、POV、打斗与斗法、战争与社会场面、转场、对白、文风校准和纯正文交付。
 - `references/web-serial-craft.md`：网文 / 连载语境的分层定位、持续力诊断和逐章自查；补充而非替代通用故事语义。
 - `references/craft-case-library.md`：按病灶检索的合成案例，只迁移判断方法，不套写内容。
 - `references/source-map.md`：外部小说能力来源、固定快照、许可证、吸收与拒绝边界；普通创作不加载。

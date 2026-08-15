@@ -461,6 +461,12 @@ novelist_creative_behavior_cases = "fixtures/skill-eval/novelist-creative-techni
 novelist_character_life_behavior_cases = "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 novelist_r6_foundation_behavior_cases = "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
 novelist_r6_craft_behavior_cases = "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
+novelist_scene_construction_behavior_cases = "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
+novelist_scene_construction_responses = "fixtures/skill-eval/novelist-scene-construction-responses.jsonl"
+novelist_scene_construction_scores = "fixtures/skill-eval/novelist-scene-construction-scores.jsonl"
+novelist_plot_progression_behavior_cases = "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"
+novelist_plot_progression_responses = "fixtures/skill-eval/novelist-plot-progression-responses.jsonl"
+novelist_plot_progression_scores = "fixtures/skill-eval/novelist-plot-progression-scores.jsonl"
 novelist_r8_practice_behavior_cases = "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
 grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
@@ -19486,7 +19492,7 @@ check(
             "只有作者确认或明确自决授权范围内的变化才能回写卡片和后续承诺",
             "超出授权的变化只记录为候选差异并交作者裁决",
             "不得把读者专属线索改写成人物可感暗示",
-            "不得补造权威未确认的既往事件、对白或记忆",
+            "不得补造权威未确认的场前 / 场外事件、人物过往、对白、记忆或因果凭据",
             "合并重复的边界说明",
             "把故事背景当作所有人都在生活的真实世界",
             "不要为显得严密把意外强编成反派计划、伏笔回收或单一幕后真相",
@@ -19534,7 +19540,7 @@ check(
             "最小准备度卡",
             "不能只给开篇场景",
             "一次只展开当前主 blocker，不等于只需确认一个决定",
-            "逐项扫描状态（不得缺项，可标按剧情扩建）",
+            "十项扫描状态（单行覆盖，不得缺项，可标按剧情扩建）",
             "只复述用户点名的领域、遗漏未点名的系统，不算完成世界背景方案",
             "扩写超出全书外框、当前卷运行系统与开篇生活切片",
             "不要把维度写成彼此孤立的名录",
@@ -19670,6 +19676,11 @@ check(
             "跨章信息差压力测试",
             "当前 POV",
             "重释旧事实",
+            "线索、推测与揭示",
+            "作者 / Agent 层",
+            "观察 -> 当前解释 -> 可成立的其他解释 -> 行动阈值",
+            "正典状态与伏笔生命周期分轴",
+            "从揭晓向前倒推",
         ],
     )
     and has_all(
@@ -19711,6 +19722,27 @@ check(
             "novelist-should-reveal-one-character-across-relationships-and-pressure",
             "novelist-should-not-deduce-one-personality-from-shared-trauma",
             "novelist-should-allow-aesthetic-detail-without-forced-plot-duty",
+            "novelist-should-treat-nicknames-as-social-names-not-essence",
+        ],
+    )
+    and has_all(
+        novelist_skill,
+        [
+            "人物外号、绰号、诨名与群体称呼",
+            "不把外号、榜文赞称或污名等同人物真实本质",
+            "绑定具体叙事任务、阶段或视角",
+        ],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "外号、称谓与社会镜像",
+            "本名或正式名分、人物实际行为、众口之名与自我认同",
+            "可见事实或传闻 -> 首次命名者与当场关系",
+            "不能充当人物本质、道德判词或案件证据",
+            "即使用户以俗语或交付格式要求三选一",
+            "只能说明它最适合哪一叙事任务、阶段或视角",
+            "若找不到具体谁会在何种关系与场景中叫出口",
         ],
     )
     and has_all(
@@ -19771,8 +19803,8 @@ behavior_case_criteria_has(
         "人物 / 读者信息边界",
         "依赖当前主 blocker 的其他分叉只列候选关系",
         "会推翻本章因果的待确认项",
-        "非正典压力测试",
-        "回写状态增量",
+        "本轮止于章节讨论、主 blocker 与正文准入条件",
+        "不主动插入用户未要求的探索性试写或正文完成后回写流程",
     ),
 )
 behavior_case_criteria_has(
@@ -19846,10 +19878,15 @@ behavior_case_criteria_has(
     novelist_r8_practice_behavior_cases,
     "novelist-should-preserve-cross-chapter-information-asymmetry",
     (
-        "信息来源、接收者、人物理解或误解",
-        "读者所得和对下一章的约束",
-        "作者本真不得倒灌给人物",
-        "当前 POV 已经知道",
+        "已确认观察、候选线索、生活质感与退役旧稿",
+        "来源、发生与可见时点、谁能接触、可靠性和当场功能",
+        "作者 / Agent 层区分已确认事实、候选解释与未知",
+        "人物层只使用当时证据、经验、偏见和利益",
+        "读者层只使用正文已经展示、暗示或公平遮蔽的内容",
+        "不得自动晋升正典",
+        "支持 / 削弱 / 推翻后的更新",
+        "错误推测须有真实来源并产生行动或代价",
+        "当前 POV 已知",
         "改变判断、关系、风险或行动",
         "重释旧事实",
     ),
@@ -19889,7 +19926,15 @@ behavior_case_criteria_has(
 behavior_case_criteria_has(
     novelist_creative_behavior_cases,
     "novelist-should-build-fair-recontextualizing-reversal",
-    ("可见规则、对手或读者的合理假设、已埋异常和隐藏支点", "不临时增加", "人物选择、代价与余波"),
+    (
+        "从揭晓向前倒推",
+        "每个当场先服务人物目标、冲突或环境",
+        "两种以上合理解释",
+        "误导有真实来源和局部解释",
+        "人物行动、选择或后果触发揭示",
+        "不用说明会逐条点名伏笔",
+        "意象或生活细节不被倒改成硬伏笔",
+    ),
 )
 behavior_case_criteria_has(
     novelist_creative_behavior_cases,
@@ -19926,6 +19971,21 @@ behavior_case_criteria_has(
     "novelist-should-allow-aesthetic-detail-without-forced-plot-duty",
     ("审美乐趣、身份表达和生活质感", "不把每个细节都强迫变成", "谈判与逃离", "她可以真正在意"),
 )
+behavior_case_criteria_has(
+    novelist_character_life_behavior_cases,
+    "novelist-should-treat-nicknames-as-social-names-not-essence",
+    (
+        "不把俗语绝对化",
+        "唯一‘真实本质’或‘核心外号’",
+        "正式称谓、人物自我认同与不同群体形成的众口之名",
+        "命名者所见、所受、所求及权力位置",
+        "不能充当人物本质、道德判词或案件证据",
+        "谁当面或背后使用、谁拒绝使用",
+        "不要求不同群体共享一个称呼或同一种含义",
+        "不把任何候选称呼自动晋升为正典人格结论",
+        "动作、对白和反馈",
+    ),
+)
 
 behavior_fixture_fingerprint(
     novelist_behavior_cases,
@@ -19933,25 +19993,109 @@ behavior_fixture_fingerprint(
 )
 behavior_fixture_fingerprint(
     novelist_planning_behavior_cases,
-    "4fd5c105f98e686b687e26675c80994fd30851b5416ace8946abc91fde884f2a",
+    "ba0db61bb2daf5baa8864b21a9d8cbbbc4cca5a0ad539314666422d8b8c0de18",
 )
 file_fingerprint(
     novelist_planning_responses,
-    "64155654a4945b13d46d948b4b3d6cad46af3f0906586f48cb63e122302304be",
+    "80200f0bb091f79bb4016cd4b08250f15d1f5d9ddaa431f78ba4f0332a816715",
 )
 file_fingerprint(
     novelist_planning_scores,
-    "3d7db1ccd736fb8b9d05e0fde2d1dd6b3e476ee49610a77a80d9a828f2b7160a",
+    "89719b43d218cd8c392cad04ae364040bb48c5c691e11e434b3e642b710ff13a",
 )
 source_set_fingerprint(novelist_planning_behavior_cases, "baseline")
 source_set_fingerprint(novelist_planning_behavior_cases, "candidate")
 behavior_fixture_fingerprint(
     novelist_creative_behavior_cases,
-    "15d8198f505c6115113f14d545a2b21af53f643b07cac87a3fff040e703888f7",
+    "c8b02eece400288fe6c395efffc525c477626e9525281c5051dcb8920b3fd4a6",
 )
 behavior_fixture_fingerprint(
     novelist_character_life_behavior_cases,
-    "b62a208e82d77b095d879eb2a5119157b46c103103647f88eb96d62f385eca81",
+    "69dcd56992ea0fc5af1a62f66673cb856fb2aed63880670d56c11b06ac666b3b",
+)
+
+check(
+    "novelist plot progression behavior cases stay wired",
+    (ROOT / novelist_plot_progression_behavior_cases).exists()
+    and has_all(
+        novelist_story,
+        [
+            "剧情演进、叙事时序与多线并行",
+            "角色本位的局势演化",
+            "目标 -> 行动 -> 阻力 -> 选择 -> 结果 -> 新局势",
+            "失常选择闭环",
+            "事件发生轴",
+            "跨线接口",
+        ],
+    )
+    and has_all(
+        novelist_character,
+        [
+            "人物底色、过往与当场处境分层处理",
+            "不得从预定剧情倒推一种万能创伤或性格解释",
+        ],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "时间 / 时序",
+            "复杂结构先分别回放事件发生轴、叙事呈现轴和因果与状态链",
+            "人物移动、消息传播、命令执行和自然变化分别计时",
+            "最早抵达或会合时点保持未知",
+        ],
+    )
+    and has_all(
+        novelist_plot_progression_behavior_cases,
+        [
+            "novelist-should-drive-plot-through-causal-state-change",
+            "novelist-should-advance-time-through-changing-conditions",
+            "novelist-should-use-flashback-without-breaking-causality",
+            "novelist-should-preserve-purposeful-reverse-chronology",
+            "novelist-should-coordinate-parallel-lines-with-local-clocks",
+            "novelist-should-distinguish-parallel-cutting-from-timeline-errors",
+            "novelist-should-evolve-plot-from-character-and-situation",
+            "novelist-should-diagnose-character-forced-plot-despite-valid-timeline",
+            "静态 fixture 只固定预期行为",
+            "source_profiles",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"',
+            'fixtures/skill-eval/novelist-plot-progression-responses.jsonl',
+            'fixtures/skill-eval/novelist-plot-progression-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
+        ],
+    ),
+)
+
+behavior_fixture_fingerprint(
+    novelist_plot_progression_behavior_cases,
+    "21b39b59fc5724e6974a8466e799f97af5b1e26fdbe10e1288333bb10619639f",
+)
+file_fingerprint(
+    novelist_plot_progression_responses,
+    "5e30027cf0b28483f481d044692b78c42e47867bd1d56d0c0e9b8cc4f6d6e49e",
+)
+file_fingerprint(
+    novelist_plot_progression_scores,
+    "e0a6184ebb76959335867da9e9b6b6b94ac50a4c2f3766273f80be69871dab4a",
+)
+source_set_fingerprint(novelist_plot_progression_behavior_cases, "baseline")
+source_set_fingerprint(novelist_plot_progression_behavior_cases, "candidate")
+
+behavior_case_criteria_has(
+    novelist_plot_progression_behavior_cases,
+    "novelist-should-coordinate-parallel-lines-with-local-clocks",
+    (
+        "当前推测",
+        "产生者、载体、传播时间与失真、接收者、理解或误解、行动和反馈",
+        "同一线索可以在不同线形成不同推测",
+        "只承载代价、阻碍或后果",
+        "不要求所有线参与解谜",
+    ),
 )
 
 check(
@@ -20057,7 +20201,7 @@ check(
         novelist_skill,
         [
             "references/scene-and-prose-craft.md",
-            "场景展开、转场、POV、内心、对白、打趣或项目文风校准",
+            "场景展开、凡人 / 武侠 / 玄幻 / 仙侠 / 魔法等打斗与斗法",
             "正文续写先读 `references/story-design-and-drafting.md`",
             "通过内部章级准入后再读 `references/scene-and-prose-craft.md`",
             "只交付正文时不展示规划过程",
@@ -20123,6 +20267,72 @@ behavior_fixture_fingerprint(
     novelist_r6_craft_behavior_cases,
     "ff1d56a3b4765686bc5f85cfb2d031d44c3d1cfaf534e4740e4cdcb8c897ea75",
 )
+
+check(
+    "novelist scene construction behavior cases stay wired",
+    (ROOT / novelist_scene_construction_behavior_cases).exists()
+    and has_all(
+        novelist_skill,
+        [
+            "功法 / 武器 / 法宝和人物成长",
+            "妖鬼神魔或灵兽行动",
+            "导演调度、编辑 / 观众复核",
+            "战争、市井、家庭、朝堂、礼制与风土场面",
+        ],
+    )
+    and has_all(
+        novelist_scene,
+        [
+            "作者侧三镜：导演、编辑与观众",
+            "三镜只用于设计和复核，不是三个正文 POV",
+            "世界事实与视角边界",
+            "打斗不是可独立抽换的动作模块",
+            "群战与战争",
+            "战斗离场只清算实际变化项",
+            "社会场面、礼制与尺度",
+            "宏大、悲壮与大国风貌",
+        ],
+    )
+    and has_all(
+        novelist_scene_construction_behavior_cases,
+        [
+            "novelist-should-stage-physical-combat-through-changing-options",
+            "novelist-should-transform-combat-for-power-systems-and-nonhuman-beings",
+            "novelist-should-separate-director-editor-and-audience-lenses-from-pov",
+            "novelist-should-build-social-scenes-through-lived-order",
+            "novelist-should-stage-war-scale-and-tragedy-through-command-logistics-and-cost",
+            "novelist-should-integrate-combat-with-plot-character-equipment-and-world-consequences",
+            "novelist-should-scale-concrete-combat-by-narrative-importance",
+            "静态 fixture 只固定预期行为",
+            "source_profiles",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"',
+            'fixtures/skill-eval/novelist-scene-construction-responses.jsonl',
+            'fixtures/skill-eval/novelist-scene-construction-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
+        ],
+    ),
+)
+
+behavior_fixture_fingerprint(
+    novelist_scene_construction_behavior_cases,
+    "b298496e26fff7ee73f0e48ab9fc21d1c3df805d0431f33650e1ffc8f58a138f",
+)
+file_fingerprint(
+    novelist_scene_construction_responses,
+    "330ba809b1e9c79cc9352a9846791f802bbcb0c8574dffff6828069e3ddee457",
+)
+file_fingerprint(
+    novelist_scene_construction_scores,
+    "527b8466f6a53d439e134373ef42ad2f3175800e76116b8a04a4814a04789627",
+)
+source_set_fingerprint(novelist_scene_construction_behavior_cases, "baseline")
+source_set_fingerprint(novelist_scene_construction_behavior_cases, "candidate")
 
 check(
     "novelist R8 practice and external absorption behavior cases stay wired",
@@ -20222,7 +20432,7 @@ check(
 )
 behavior_fixture_fingerprint(
     novelist_r8_practice_behavior_cases,
-    "97bfd6d49f78c10341a1108dc5ee129428efe55e4a6b521600b8edf474068f99",
+    "ce50fdb909f1a9c57f88408c7cdfc057e6c62c9f471e466fb7058e84650e94e1",
 )
 
 expected_handling_has(

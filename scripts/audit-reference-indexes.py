@@ -21,13 +21,16 @@ REFERENCE_ROOTS = [
     ROOT / "java-service-code-generator" / "references",
     ROOT / "wind-coding-conventions" / "references",
     ROOT / "wise-agent" / "references",
+    ROOT / "novelist" / "references",
 ]
 WARN_LINE_THRESHOLD = 500
 REQUIRED_INDEX_THRESHOLD = 350
 REQUIRED_HEADING = "## 按任务读取索引"
 REQUIRED_COLUMNS = ["任务", "优先读取", "跳过"]
 ALTERNATIVE_REQUIRED_COLUMNS = ["任务", "主文档保留", "按需展开"]
-LOCAL_MARKDOWN_REF = re.compile(r"`([a-z0-9][a-z0-9._/-]*\.md)`", re.IGNORECASE)
+LOCAL_MARKDOWN_REF = re.compile(
+    r"`((?:\.\./)*[a-z0-9][a-z0-9._/-]*\.md)`", re.IGNORECASE
+)
 
 REQUIRED_INDEX_FILES = {
     "senior-software-architect/references/ai-assisted-engineering.md",
@@ -118,7 +121,7 @@ def missing_local_references(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     for reference in sorted(set(LOCAL_MARKDOWN_REF.findall(text))):
         target = path.parent / reference
-        if reference.startswith("references/"):
+        if reference == "SKILL.md" or reference.startswith(("references/", "assets/")):
             target = path.parents[1] / reference
         if not target.exists():
             missing.append(reference)
@@ -147,10 +150,13 @@ def main() -> int:
         if not has_task_index(ROOT / rel):
             failures.append(f"{rel}: tracked indexed reference missing {REQUIRED_HEADING}")
 
-    payment_root = ROOT / "payment-expert" / "references"
-    for path in sorted(payment_root.glob("*.md")):
-        for reference in missing_local_references(path):
-            failures.append(f"{relative(path)}: missing local reference {reference}")
+    for root in (
+        ROOT / "payment-expert" / "references",
+        ROOT / "novelist" / "references",
+    ):
+        for path in sorted(root.glob("*.md")):
+            for reference in missing_local_references(path):
+                failures.append(f"{relative(path)}: missing local reference {reference}")
 
     for warning in warnings:
         print(warning)

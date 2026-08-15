@@ -71,11 +71,15 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                 "sha256": digest.hexdigest(),
             },
         }
+        case_data["release_gate"]["require_auditable_judgments"] = True
         return case_data
 
     def score_rows(self, key: dict[str, object]) -> list[dict[str, object]]:
         rows = []
         for pair in key["pairs"]:
+            case = next(
+                case for case in self.case_data["cases"] if case["id"] == pair["case_id"]
+            )
             for label, condition in pair["labels"].items():
                 score = 4 if condition == "baseline" else 5
                 rows.append(
@@ -89,6 +93,11 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                         "concision": score,
                         "blocker": False,
                         "notes": "fixture",
+                        "evaluation_id": "fixture-evaluation-1",
+                        "judge": "fixture-independent-judge",
+                        "judge_model": "fixture-judge-model",
+                        "judged_at": "2026-08-15T00:00:00Z",
+                        "criteria": [True] * len(case["criteria"]),
                         **(
                             {"blind_sha256": key["blind_sha256"]}
                             if "blind_sha256" in key
@@ -97,6 +106,52 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                     }
                 )
         return rows
+
+    def test_source_bound_scores_require_auditable_independent_judgments(self) -> None:
+        case_data = self.source_bound_case_data()
+        blind_rows, key = MODULE.blind_responses(
+            case_data, self.response_rows(case_data), seed=731
+        )
+        scores = self.score_rows(key)
+
+        missing_provenance = deepcopy(scores)
+        del missing_provenance[0]["evaluation_id"]
+        with self.assertRaisesRegex(MODULE.ContractError, "evaluation_id"):
+            MODULE.score_judgments(
+                case_data, missing_provenance, key, blind_rows=blind_rows
+            )
+
+        same_runner = deepcopy(scores)
+        for row in same_runner:
+            row["judge"] = key["runner"]
+        with self.assertRaisesRegex(MODULE.ContractError, "independent"):
+            MODULE.score_judgments(case_data, same_runner, key, blind_rows=blind_rows)
+
+        incomplete_criteria = deepcopy(scores)
+        incomplete_criteria[0]["criteria"].pop()
+        with self.assertRaisesRegex(MODULE.ContractError, "criteria"):
+            MODULE.score_judgments(
+                case_data, incomplete_criteria, key, blind_rows=blind_rows
+            )
+
+        failed_criterion = deepcopy(scores)
+        candidate_label = next(
+            label
+            for label, condition in key["pairs"][0]["labels"].items()
+            if condition == "candidate"
+        )
+        candidate_score = next(
+            row
+            for row in failed_criterion
+            if row["pair_id"] == key["pairs"][0]["pair_id"]
+            and row["label"] == candidate_label
+        )
+        candidate_score["criteria"][0] = False
+        report = MODULE.score_judgments(
+            case_data, failed_criterion, key, blind_rows=blind_rows
+        )
+        self.assertFalse(report["passed"])
+        self.assertTrue(any("criterion" in reason for reason in report["reasons"]))
 
     def test_fixture_is_bounded_and_valid(self) -> None:
         self.assertGreaterEqual(len(self.case_data["cases"]), 5)
