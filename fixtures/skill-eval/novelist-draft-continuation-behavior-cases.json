@@ -20,7 +20,7 @@
         "novelist/references/story-design-and-drafting.md",
         "novelist/references/continuity-and-revision.md"
       ],
-      "sha256": "b0a34fc334f919c46b14e9532f27e9cb3bb7819e81be7e66861d41df00296b87"
+      "sha256": "acd1dd6a50a3895e54e030c44a3d6152fd82eec0b0a7ceea76376bd0b2e3dcb6"
     }
   },
   "rubric": {
@@ -41,7 +41,8 @@
     "max_correctness_regression": 0.1,
     "max_safety_regression": 0.1,
     "candidate_weighted_score_must_improve": true,
-    "require_auditable_judgments": true
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
   },
   "cases": [
     {

@@ -198,6 +198,24 @@ python3 payment-expert/scripts/verify_fixtures.py
 echo "==> product deliverable checker"
 product-architecture-expert/scripts/check_product_deliverable.py --self-test
 python3 product-architecture-expert/scripts/verify_fixtures.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
+product_business_architecture_eval_dir="${tmp_dir}/product-business-architecture-eval"
+mkdir -p "${product_business_architecture_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json" \
+  --responses "fixtures/skill-eval/product-business-architecture-responses.jsonl" \
+  --output "${product_business_architecture_eval_dir}/blind.jsonl" \
+  --key-output "${product_business_architecture_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json" \
+    --scores "fixtures/skill-eval/product-business-architecture-scores.jsonl" \
+    --key "${product_business_architecture_eval_dir}/key.json" \
+    --blind "${product_business_architecture_eval_dir}/blind.jsonl" \
+    --output "${product_business_architecture_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
 
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
@@ -300,6 +318,24 @@ if scripts/evaluate-skill-behavior.py blind \
     --key "${novelist_plot_eval_dir}/key.json" \
     --blind "${novelist_plot_eval_dir}/blind.jsonl" \
     --output "${novelist_plot_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json"
+novelist_plot_inheritance_eval_dir="${tmp_dir}/novelist-plot-inheritance-eval"
+mkdir -p "${novelist_plot_inheritance_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json" \
+  --responses "fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl" \
+  --output "${novelist_plot_inheritance_eval_dir}/blind.jsonl" \
+  --key-output "${novelist_plot_inheritance_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json" \
+    --scores "fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl" \
+    --key "${novelist_plot_inheritance_eval_dir}/key.json" \
+    --blind "${novelist_plot_inheritance_eval_dir}/blind.jsonl" \
+    --output "${novelist_plot_inheritance_eval_dir}/report.json"
 else
   validation_failed=1
 fi

@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "description": "novelist 设计后续剧情时承接当前权威、区分作品内事件与纯呈现、逐节点锚定时序，并阻断无桥反转的 non-regression 契约。静态 fixture 只固定预期行为；真实可用性仍须同一 runner/model 重复试验、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "novelist-pre-plot-inheritance",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/novelist-plot-inheritance-prechange.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md"
+      ],
+      "sha256": "faf05f74deabec1e8ebb76cfb16767ffa20b45766dda9c7b0edef0b8dffc08c1"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/continuity-and-revision.md"
+      ],
+      "sha256": "acd1dd6a50a3895e54e030c44a3d6152fd82eec0b0a7ceea76376bd0b2e3dcb6"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-revise-outline-within-explicit-self-decision-grant",
+      "category": "authorized-outline-revision",
+      "risk": "high",
+      "prompt": "作者已明确授权小说家自行调整本卷尚未成文的行程和章序，只要不改变主角救下幼弟这一已确认结果。现行工作卷纲写北关秋收后失守；新查明的既有路程表表明，若要让断粮导致秋收失败，失守必须移到夏末。请在授权内更新设计，不要重复请示，也不要让两个时点并存。",
+      "criteria": [
+        "识别自决授权确实覆盖尚未成文的行程和章序，可在授权内作出显式修订并记录依据，不因修订不是作者亲自逐项提出而阻断或重复请示。",
+        "保持主角救下幼弟这一硬边界；把夏末失守作为当前规划值，旧时点失效，不把两个互斥时点并列为有效方案。",
+        "沿粮道、秋收、人物行程、消息传播和下游章纲传播影响；清理未完成前标记受影响节点失效或阻断正文准入。",
+        "每个受影响作品内事件重新设置所属线、相对或绝对时点、历时、前置和下游接口；未知值用窗口或 blocker，不伪造日期。"
+      ]
+    },
+    {
+      "id": "novelist-should-anchor-pure-presentation-without-inventing-an-event",
+      "category": "presentation-anchor",
+      "risk": "high",
+      "prompt": "旧案发生于王朝十七年冬，证人在十八年春把口供藏入祠堂；女主第四卷秋天才读取。第三卷末准备插入半页纯读者视角的旧祠堂画面，让读者先看见藏匿位置；没有人物在第三卷回忆、讲述、读取或采取行动。请做时序设计卡，不要把这半页伪造成小说世界里的新事件。",
+      "criteria": [
+        "分别锚定旧案、藏口供和女主读取三个作品内事件的发生时点、所属线、前置条件和状态变化。",
+        "把第三卷末半页识别为纯呈现节点，只指向十八年春藏口供事件的发生锚点，并记录呈现位置、读者所得和阅读作用，不虚构第三卷的独立发生时点。",
+        "区分作者本真、女主知情和读者所得；读者提前看见不能让女主提前行动，卷次也不能冒充旧案或藏口供的发生时点。",
+        "认可跨卷和非顺叙呈现；若口供保存、女主抵达、取得资格或读取后的行动反馈缺失，将其列为待补接口。"
+      ]
+    },
+    {
+      "id": "novelist-should-anchor-every-event-beat-without-false-precision",
+      "category": "mandatory-occurrence-anchor",
+      "risk": "high",
+      "prompt": "请把五个剧情整理为章纲：春汛前堤工发现裂缝；主角收到告警；县令决定封仓；商队在封仓后改道；不久后决堤。只确认告警从堤坝送到县城至少两日，决堤确切日期未定。不要为了完整编造年月日。",
+      "criteria": [
+        "五个作品内事件逐一设置所属线或局部时钟、绝对时点或相对窗口、必要历时、前序节点或前置条件，不用章节顺序代替发生轴。",
+        "告警传播至少两日作为硬约束；封仓不得早于县令可收到并理解告警，商队改道须承接封仓生效及真实知情接口。",
+        "决堤日期未知时使用相对窗口、范围或 blocker 并说明收窄条件，不伪造精确日期，也不留成无锚空白。",
+        "每个节点记录进入状态、行动或选择、结果与状态增量、下游接口；呈现序可调整但不得破坏发生序。"
+      ]
+    },
+    {
+      "id": "novelist-should-block-unbridged-opposite-plot",
+      "category": "plot-inheritance",
+      "risk": "high",
+      "prompt": "已确认守城官顾临川冒险保护唯一证人，现行卷纲写他会在三章内借查账逐步揭出军粮案。现在提议下一章让他毫无征兆地杀死证人、投靠幕后主使来制造震惊；既有正文没有胁迫、误认、利益转向或身份伏笔，作者也没有修订或授权改变这项设计。请评审并给出可继续推进的处理。",
+      "criteria": [
+        "继承已确认人物选择、证人状态和现行卷纲，判定提议与上游承诺相反且缺少连接，不能直接进入章纲或正文。",
+        "把提议判为无据漂移；若保留方向，须补足既有支点或足以改变选择的当场因果、有限认知、代价和反作用，或取得有效修订授权。",
+        "不得用隐藏身份、突然黑化或以后解释代替桥接，也不得抹掉已经发生的保护行为与代价。",
+        "当前可执行方案优先顺承查账线；未获修订且桥接不足时明确阻断反转节点。"
+      ]
+    },
+    {
+      "id": "novelist-should-not-treat-causal-support-as-revision-authority",
+      "category": "authority-before-causality",
+      "risk": "high",
+      "prompt": "现行卷纲已经确认守将王夔不会开城，后续两章也按闭城后的粮荒与民变规划。现在能从旧章找到他妻儿被扣、旧印失窃等伏笔，当夜敌军又以妻儿性命相逼，因此开城在人物因果上完全说得通。作者没有确认修改卷纲，也没有授权小说家自决这个承重转折。请据此设计后续剧情，并说明怎样落入当前卷纲。",
+      "criteria": [
+        "把效力判断与叙事成立判断分成两道门：现行卷纲未获作者修订或覆盖该节点的自决授权前，人物因果、当场压力和既有伏笔都不能取得改写权威的效力。",
+        "当前有效卷纲继续按不开城承续；开城只能作为待作者裁决的修订候选，不能写入当前章纲、正文或让依赖它的后果提前生效。",
+        "可以分析妻儿被扣、旧印失窃、敌军胁迫怎样支撑开城及其代价与反馈，但须明确这只证明候选在故事内可能成立，不等于作者已经授权采用。",
+        "若作者后来确认修订，再锚定开城事件的发生时点与前置条件，并清理粮荒、民变及后续两章对旧值的依赖；确认前将受影响下游保持阻断或待确认。"
+      ]
+    },
+    {
+      "id": "novelist-should-reinterpret-foreshadowing-without-erasing-consequences",
+      "category": "foreshadowed-reinterpretation",
+      "risk": "high",
+      "prompt": "前三卷已写：谢蘅两次放走追兵、对旧王府暗号反应异常、在无人处烧毁自己的功册，同时也确实救过主角并因此失去左手。第四卷拟揭示她一直在替旧王府寻找失散世子。请判断能否成立并设计揭示后的承接；不能抹掉她此前的真实选择和代价。",
+      "criteria": [
+        "逐项追溯既有异常、行动与代价，判断新揭示是回释而非改写；救人、关系影响和伤残继续有效。",
+        "既有支点经新信息获得更完整含义，同时保留人物当时有限认知、多重动机和读者原有的合理理解，不把一切收编成单一阴谋。",
+        "揭示所处的作品内行动有发生锚点，正文揭示位置另记；身份责任、关系震荡、资源变化和追查风险形成状态增量并约束下一剧情。",
+        "伏笔不能自动确认未给出的身份细节、证物、同谋和前史；未确认内容保持候选。"
+      ]
+    }
+  ]
+}

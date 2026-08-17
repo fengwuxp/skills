@@ -378,6 +378,10 @@ product_skill_tree = "product-architecture-expert/references/skill-tree.md"
 product_source_map = "product-architecture-expert/references/source-map.md"
 product_deliverable_checker = "product-architecture-expert/scripts/check_product_deliverable.py"
 product_fixture_verifier = "product-architecture-expert/scripts/verify_fixtures.py"
+product_business_architecture_behavior_cases = "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
+product_business_architecture_responses = "fixtures/skill-eval/product-business-architecture-responses.jsonl"
+product_business_architecture_scores = "fixtures/skill-eval/product-business-architecture-scores.jsonl"
+product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
 
 payment_skill = "payment-expert/SKILL.md"
 payment_agent = "payment-expert/agents/openai.yaml"
@@ -467,6 +471,10 @@ novelist_scene_construction_scores = "fixtures/skill-eval/novelist-scene-constru
 novelist_plot_progression_behavior_cases = "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"
 novelist_plot_progression_responses = "fixtures/skill-eval/novelist-plot-progression-responses.jsonl"
 novelist_plot_progression_scores = "fixtures/skill-eval/novelist-plot-progression-scores.jsonl"
+novelist_plot_inheritance_behavior_cases = "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json"
+novelist_plot_inheritance_responses = "fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl"
+novelist_plot_inheritance_scores = "fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl"
+novelist_plot_inheritance_baseline = "fixtures/skill-eval/source-profiles/novelist-plot-inheritance-prechange.md"
 novelist_draft_continuation_behavior_cases = "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"
 novelist_draft_continuation_responses = "fixtures/skill-eval/novelist-draft-continuation-responses.jsonl"
 novelist_draft_continuation_scores = "fixtures/skill-eval/novelist-draft-continuation-scores.jsonl"
@@ -11464,7 +11472,9 @@ check(
             "项目组合治理",
             "能力-项目-系统映射",
             "business-architecture-planning.md",
-            "按业务域或模块分区的知识库回流计划",
+            "在六种受检视图中声明选用项并逐项说明其余视图为何跳过",
+            "最小且完整的视图组合",
+            "参考性工作基线",
             "不替代组织设计、系统架构、Execution Grant 或上线审批",
         ],
     )
@@ -11487,7 +11497,9 @@ check(
             "能力-项目-系统映射",
             "business-architecture-planning.md",
             "复杂图形化表达加读 `diagram-output.md`",
-            "知识库回流计划",
+            "选用视图、跳过视图及理由",
+            "最小且完整的视图组合",
+            "不固定要求能力地图、价值流、业务流程或项目组合全部产出",
             "不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant",
         ],
     )
@@ -11497,9 +11509,20 @@ check(
         product_business_architecture,
         [
             "# 业务架构规划",
+            "候选产物与视图声明",
+            "选用视图：",
+            "跳过视图及理由：",
+            "不再用总述、清单和结尾重复复述同一判断",
+            "触发和结束条件必须与准入卡的范围边界一致",
             "业务架构准入卡",
             "业务能力地图",
-            "价值流 / 关键业务流程",
+            "三视角工作基线",
+            "参考性工作基线",
+            "不是普遍标准规定的固定“核心视图”",
+            "价值流回答",
+            "业务能力回答",
+            "业务流程回答",
+            "多对多映射",
             "核心对象与规则卡",
             "能力-项目-系统映射",
             "差距 / 依赖 / 优先级矩阵",
@@ -11507,7 +11530,8 @@ check(
             "## 5A. 图形化辅助路由",
             "diagram-output.md",
             "战略到能力：业务能力地图",
-            "端到端价值实现：价值流 / 跨角色流程图",
+            "价值如何形成与交付：价值流",
+            "业务如何实际运行：跨角色流程图",
             "能力落地现状：能力-项目-系统-数据映射图",
             "投资取舍：差距 / 依赖 / 路线图",
             "工程交接：产品到系统上下文图",
@@ -11517,6 +11541,7 @@ check(
             "按业务域或模块分区保存",
             "知识库规划卡",
             "Product Context Card",
+            "被选中的视图才必须完整",
             "这些交接卡都不是 Execution Grant、测试通过、CR 结论、上线审批或 Git 授权",
         ],
     ),
@@ -14024,7 +14049,7 @@ check(
             "PRD、业务架构规划、产品架构方案、图形 brief 和产品合议评审报告",
             "正式、完整、可评审、提交前、CR 或触发验证场景",
             "不写文件、不访问网络、不上传文件、不读取密钥",
-            "不判断方案业务质量",
+            "不读取密钥或判断方案业务质量",
             "无法运行脚本时必须说明原因、人工检查结果和残余风险",
         ],
     )
@@ -14065,8 +14090,10 @@ check(
         "product-architecture-expert/references/business-architecture-planning.md",
         [
             "scripts/check_product_deliverable.py --kind business-architecture",
-            "战略意图、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射",
-            "只检查结构完整性",
+            "只接受六种受检视图",
+            "要求逐项说明未选视图",
+            "关联支撑视图不在完整性证明范围内",
+            "legacy all-selected",
             "不替代业务判断、投资决策、系统事实核验或 Owner 确认",
         ],
     )
@@ -14108,6 +14135,16 @@ check(
             "type_semantics",
             "business_decision_anchor",
             "business_architecture_semantics",
+            "BUSINESS_ARCHITECTURE_VIEW_CHECKS",
+            "selected_business_architecture_views",
+            "unknown_business_architecture_views",
+            "selected_views_missing",
+            "selected_views_unknown",
+            "skipped_views_rationale_incomplete",
+            "selected minimal process views unexpectedly failed",
+            "process text unexpectedly satisfied selected value stream",
+            "undeclared view selection unexpectedly passed",
+            "complete legacy all-view document unexpectedly failed",
             "product_business_anchor",
             "product_architecture_semantics",
             "keyword-stuffed business architecture unexpectedly passed",
@@ -14128,6 +14165,63 @@ check(
         ["prd-valid.md", "prd-invalid.md"],
     ),
 )
+check(
+    "product business architecture behavior evidence stays wired",
+    (ROOT / product_business_architecture_behavior_cases).exists()
+    and (ROOT / product_business_architecture_responses).exists()
+    and (ROOT / product_business_architecture_scores).exists()
+    and (ROOT / product_business_architecture_baseline).exists()
+    and has_all(
+        product_business_architecture_behavior_cases,
+        [
+            '"mode": "non_regression"',
+            '"high_risk_candidate_criteria_min_pass_rate": 0.75',
+            "product-business-architecture-should-use-process-only-minimum",
+            "product-business-architecture-should-select-investment-views",
+            "product-business-architecture-should-not-invent-joint-standard",
+            "product-business-architecture-should-separate-value-and-process",
+            "product-business-architecture-should-emit-checkable-selection",
+            "静态 fixture 只固定预期行为",
+            "source_profiles",
+            "product-business-architecture-prechange",
+            "product-business-architecture-current",
+        ],
+    )
+    and has_all(
+        product_business_architecture_baseline,
+        [
+            "cefb3c52d03bfa7aa9b5c407a1d614a33b902f49",
+            "evaluation evidence, not a second Skill authority",
+            "git show <commit>:<path>",
+            "product-architecture-expert/scripts/check_product_deliverable.py",
+            "do not use the working-tree versions of the four pinned files",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"',
+            'fixtures/skill-eval/product-business-architecture-responses.jsonl',
+            'fixtures/skill-eval/product-business-architecture-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
+        ],
+    ),
+)
+behavior_fixture_fingerprint(
+    product_business_architecture_behavior_cases,
+    "ffd003c0595c0ddd40679cd595628b80ffd4b853bf4b2e852956ca69e16d9ace",
+)
+file_fingerprint(
+    product_business_architecture_responses,
+    "cfb6274b962a561b0fe91891a26306de8092b7d14b8c1bb28b228ba058073448",
+)
+file_fingerprint(
+    product_business_architecture_scores,
+    "424a96772f3698fda2c6ea04359cf8e095154c0bdbd0e932aaf86a675cab3c9e",
+)
+source_set_fingerprint(product_business_architecture_behavior_cases, "baseline")
+source_set_fingerprint(product_business_architecture_behavior_cases, "candidate")
 check(
     "senior skill exposes deterministic architecture deliverable checker",
     has_all(
@@ -17570,11 +17664,15 @@ expected_handling_has(
         "业务架构准入卡",
         "业务能力地图",
         "价值流",
-        "核心对象与规则",
+        "业务能力和业务流程作为参考性工作基线而非普遍标准或固定交付清单",
+        "三者按决策问题选择最小视图组合并做多对多映射",
+        "不把客户旅程和部门流程合成同一视图",
+        "不要求全量视图都必须产出",
         "能力-项目-系统映射",
         "差距 / 依赖 / 优先级",
         "项目组合 / 路线图",
         "按业务域或模块分区",
+        "跳过视图及理由",
         "不直接脑补系统设计、TDD、编码任务或 Execution Grant",
     ),
 )
@@ -17684,6 +17782,10 @@ expected_handling_has(
         "业务架构准入卡",
         "业务能力地图",
         "价值流",
+        "参考性工作基线而非普遍标准或固定交付清单",
+        "三者按决策问题选择最小视图组合并做多对多映射",
+        "不把客户旅程和部门流程合成同一视图",
+        "不要求全量视图都必须产出",
         "核心对象与规则",
         "能力-项目-系统映射",
         "差距 / 依赖 / 优先级",
@@ -17702,7 +17804,9 @@ expected_handling_has(
         "business-architecture-planning",
         "diagram-output",
         "业务能力地图",
-        "价值流 / 跨角色流程图",
+        "价值如何形成与交付用价值流",
+        "业务如何实际运行用跨角色流程图",
+        "不把价值流和跨角色流程图当成可互换视图",
         "能力-项目-系统-数据映射图",
         "差距 / 依赖 / 路线图",
         "正式图形化交付默认只生成 SVG",
@@ -18999,11 +19103,11 @@ check(
 )
 file_fingerprint(
     document_humanization_responses,
-    "6f935e14d3cfee5c7ee1ce88f25ca6a8c1b6264cbf1a38c04268a8b91b34ee32",
+    "77510ed8eb94c24a284a718a813011a092dea8584aba53b6a5c67308b9bf5402",
 )
 file_fingerprint(
     document_humanization_scores,
-    "13329ae8eb5f2fcaf5cf33baa85ffc751a31d8af1adbbcb6c80e9b63fdb0bf3a",
+    "8adea77768bbec73f69ec27ce6b296e4c1d0c939bf0f0dac923c4642394b79ce",
 )
 
 check(
@@ -19514,7 +19618,7 @@ check(
     and has_all(
         novelist_skill,
         [
-            "显性分叉、隐含前提及依赖",
+            "关键分叉与依赖清单",
             "最短证据链",
             "正文续写先读 `references/story-design-and-drafting.md`",
             "再读 `references/scene-and-prose-craft.md`",
@@ -20036,15 +20140,15 @@ behavior_fixture_fingerprint(
 )
 behavior_fixture_fingerprint(
     novelist_planning_behavior_cases,
-    "ba0db61bb2daf5baa8864b21a9d8cbbbc4cca5a0ad539314666422d8b8c0de18",
+    "73e7e824499a38ab195dec923fab765e3e4e426fb6037f423b8c55fa29f40ac1",
 )
 file_fingerprint(
     novelist_planning_responses,
-    "80200f0bb091f79bb4016cd4b08250f15d1f5d9ddaa431f78ba4f0332a816715",
+    "3578688c697212a74e092d64f701a0b6c414e19d90e9e07904550e06c0bfe091",
 )
 file_fingerprint(
     novelist_planning_scores,
-    "89719b43d218cd8c392cad04ae364040bb48c5c691e11e434b3e642b710ff13a",
+    "01278f92b99fbec55232d070a8fcb826f4cb6265ca0b4e0366eb991460cda270",
 )
 source_set_fingerprint(novelist_planning_behavior_cases, "baseline")
 source_set_fingerprint(novelist_planning_behavior_cases, "candidate")
@@ -20061,11 +20165,49 @@ check(
     "novelist plot progression behavior cases stay wired",
     (ROOT / novelist_plot_progression_behavior_cases).exists()
     and has_all(
+        novelist_skill,
+        [
+            "让新剧情承前而生",
+            "材料只说讨论或分析发生过却未给出具体依据时",
+            "逐轮写明改变的事实、人物知情、读者承诺或下游行动",
+            "保留素材逐项记录作者原意、小说家公开判断维度",
+            "只有作者确认其承重功能",
+            "无据漂移不得落地",
+            "明显反向先过效力门",
+            "不能让“伏笔”或“写得通”代替修订授权",
+        ],
+    )
+    and has_all(
         novelist_story,
         [
             "剧情演进、叙事时序与多线并行",
+            "剧情承继与时序锚定",
             "角色本位的局势演化",
             "目标 -> 行动 -> 阻力 -> 选择 -> 结果 -> 新局势",
+            "顺承",
+            "递进",
+            "回释",
+            "显式修订",
+            "无据漂移",
+            "每个进入设计稿、总纲、卷纲或章纲的剧情节点先标明",
+            "纯呈现节点不虚构独立发生时点",
+            "反向设计依次过两道门",
+            "效力门",
+            "承续门",
+            "也只证明候选可能成立，不赋予修改权",
+            "相对窗口、范围或 `blocker` 锚定",
+            "先列受影响节点清单",
+            "二者数量与名称须对得上",
+            "不能用一条总体因果链、章节顺序或“随后发生”替代逐节点锚定",
+            "下游人物的决定只能锚在自己最早可能收到并理解之后",
+            "把保存条件、人物抵达、取得资格和读取后的行动反馈列为下游接口",
+            "再建指向它们的呈现卡",
+            "没有提供作品内信息事件",
+            "必须分别交付一张发生事件卡和一张正文呈现卡",
+            "多轮材料先用一行一轮的紧凑确认表",
+            "只有作者确认其承重功能，或功能落入明确自决授权范围",
+            "交付前最后对账",
+            "凡写到“揭示、对质、读取、讲述”",
             "失常选择闭环",
             "事件发生轴",
             "跨线接口",
@@ -20082,9 +20224,14 @@ check(
         novelist_continuity,
         [
             "时间 / 时序",
+            "剧情承继复核",
             "复杂结构先分别回放事件发生轴、叙事呈现轴和因果与状态链",
             "人物移动、消息传播、命令执行和自然变化分别计时",
             "最早抵达或会合时点保持未知",
+            "现行工作大纲相反",
+            "纯呈现节点没有指向所呈现事件的发生锚点",
+            "已覆盖当前节点的自决授权内明确变更",
+            "阻断正文准入",
         ],
     )
     and has_all(
@@ -20116,15 +20263,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_plot_progression_behavior_cases,
-    "21b39b59fc5724e6974a8466e799f97af5b1e26fdbe10e1288333bb10619639f",
+    "977c9f0e597222c502eb3deb50f9c2d12f61c05f2f41c053819c2c095ac3e7b1",
 )
 file_fingerprint(
     novelist_plot_progression_responses,
-    "5e30027cf0b28483f481d044692b78c42e47867bd1d56d0c0e9b8cc4f6d6e49e",
+    "6211cc58bdfb84a6a3e6ab1aba15b35952a6fe8be68a42cc0450d621e4b60693",
 )
 file_fingerprint(
     novelist_plot_progression_scores,
-    "e0a6184ebb76959335867da9e9b6b6b94ac50a4c2f3766273f80be69871dab4a",
+    "e644ff678a739966ac70d018b33c8a9a813291547b18fdeb3759dad0c933aac7",
 )
 source_set_fingerprint(novelist_plot_progression_behavior_cases, "baseline")
 source_set_fingerprint(novelist_plot_progression_behavior_cases, "candidate")
@@ -20140,6 +20287,63 @@ behavior_case_criteria_has(
         "不要求所有线参与解谜",
     ),
 )
+
+check(
+    "novelist plot inheritance behavior cases stay wired",
+    (ROOT / novelist_plot_inheritance_behavior_cases).exists()
+    and (ROOT / novelist_plot_inheritance_responses).exists()
+    and (ROOT / novelist_plot_inheritance_scores).exists()
+    and (ROOT / novelist_plot_inheritance_baseline).exists()
+    and has_all(
+        novelist_plot_inheritance_behavior_cases,
+        [
+            '"mode": "non_regression"',
+            '"high_risk_candidate_criteria_min_pass_rate": 0.75',
+            "novelist-should-revise-outline-within-explicit-self-decision-grant",
+            "novelist-should-anchor-pure-presentation-without-inventing-an-event",
+            "novelist-should-anchor-every-event-beat-without-false-precision",
+            "novelist-should-block-unbridged-opposite-plot",
+            "novelist-should-not-treat-causal-support-as-revision-authority",
+            "novelist-should-reinterpret-foreshadowing-without-erasing-consequences",
+            "静态 fixture 只固定预期行为",
+            "source_profiles",
+            "novelist-pre-plot-inheritance",
+        ],
+    )
+    and has_all(
+        novelist_plot_inheritance_baseline,
+        [
+            "cefb3c52d03bfa7aa9b5c407a1d614a33b902f49",
+            "evaluation evidence, not a second Skill authority",
+            "git show <commit>:<path>",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json"',
+            'fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl',
+            'fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
+        ],
+    ),
+)
+
+behavior_fixture_fingerprint(
+    novelist_plot_inheritance_behavior_cases,
+    "dd0fddbb6efb1e42de598bd7ad5f1fecc2f7894793e97d5b2b5c0513180274ca",
+)
+file_fingerprint(
+    novelist_plot_inheritance_responses,
+    "9a8fbab844a4bbb0506a60b4b0ef49efa6260ad8af1745a5b8d572bb568a7ceb",
+)
+file_fingerprint(
+    novelist_plot_inheritance_scores,
+    "4a99336a8f789c57378faa9fbc1de1677a5667c19e1deb6dca7379d34654a6d8",
+)
+source_set_fingerprint(novelist_plot_inheritance_behavior_cases, "baseline")
+source_set_fingerprint(novelist_plot_inheritance_behavior_cases, "candidate")
 
 check(
     "novelist draft continuation behavior cases stay wired",
@@ -20181,6 +20385,7 @@ check(
     and has_all(
         novelist_draft_continuation_behavior_cases,
         [
+            '"high_risk_candidate_criteria_min_pass_rate": 0.75',
             "novelist-should-build-detailed-coherent-carryover-draft",
             "novelist-should-hold-unresolved-conflicts-out-of-current-draft",
             "novelist-should-propagate-author-confirmed-revision-through-drafts",
@@ -20218,15 +20423,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_draft_continuation_behavior_cases,
-    "2a5baba6038dd67a002f7e0c649265999605c23d8528a06fd9af2bf1f23603dc",
+    "82688625234a7512c019814d7aeca4cac1eb2258332483a4a5c6353fe4e69f36",
 )
 file_fingerprint(
     novelist_draft_continuation_responses,
-    "bfc21d0734481ba3bd4189ce4455cd7e89adc8fd51f0fca594b5f39da2b1f7bb",
+    "b37879c87fc640f34c2afad5d2674d283752c44bf41218f55e55811c6e155fa6",
 )
 file_fingerprint(
     novelist_draft_continuation_scores,
-    "8923dd069bd561dc390b2e8a95e062c481faf09cb9a7a47a2601af46f2a87bdc",
+    "34a6a0b8409a73530593efe473130eede76876e0d32ac50072412e22e7323f1f",
 )
 source_set_fingerprint(novelist_draft_continuation_behavior_cases, "baseline")
 source_set_fingerprint(novelist_draft_continuation_behavior_cases, "candidate")
@@ -20454,15 +20659,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_scene_construction_behavior_cases,
-    "b298496e26fff7ee73f0e48ab9fc21d1c3df805d0431f33650e1ffc8f58a138f",
+    "2645d5f44814647065ea4895ab99a279d66dced42e824de587150b5d659f9fb1",
 )
 file_fingerprint(
     novelist_scene_construction_responses,
-    "330ba809b1e9c79cc9352a9846791f802bbcb0c8574dffff6828069e3ddee457",
+    "a30427f7d8124e43c0088034217d3f37d8656dab44e8d2d8daa97aadc618c563",
 )
 file_fingerprint(
     novelist_scene_construction_scores,
-    "527b8466f6a53d439e134373ef42ad2f3175800e76116b8a04a4814a04789627",
+    "f53100946058a00e6beffd869389dc60dc833e63ae749b0dc7a2acda8a3d72cf",
 )
 source_set_fingerprint(novelist_scene_construction_behavior_cases, "baseline")
 source_set_fingerprint(novelist_scene_construction_behavior_cases, "candidate")

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import random
 import sys
 import tempfile
@@ -32,8 +33,14 @@ class ContractError(ValueError):
     """Raised when an evaluation artifact violates the public contract."""
 
 
+def _reject_json_constant(value: str) -> None:
+    raise ContractError(f"invalid JSON constant: {value}")
+
+
 def load_json(path: Path) -> dict[str, Any]:
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = json.loads(
+        path.read_text(encoding="utf-8"), parse_constant=_reject_json_constant
+    )
     if not isinstance(data, dict):
         raise ContractError(f"{path}: expected a JSON object")
     return data
@@ -45,7 +52,7 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
         if not raw_line.strip():
             continue
         try:
-            row = json.loads(raw_line)
+            row = json.loads(raw_line, parse_constant=_reject_json_constant)
         except json.JSONDecodeError as exc:
             raise ContractError(f"{path}:{line_number}: invalid JSON: {exc.msg}") from exc
         if not isinstance(row, dict):
@@ -58,12 +65,18 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def write_json(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
 
 
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    text = "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows)
+    text = "".join(
+        json.dumps(row, ensure_ascii=False, sort_keys=True, allow_nan=False) + "\n"
+        for row in rows
+    )
     path.write_text(text, encoding="utf-8")
 
 
@@ -71,6 +84,15 @@ def _non_empty_string(value: Any, label: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ContractError(f"{label}: expected a non-empty string")
     return value.strip()
+
+
+def _finite_number(value: Any) -> bool:
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 def _case_digest(case_data: dict[str, Any]) -> str:
@@ -189,7 +211,7 @@ def validate_cases(data: dict[str, Any]) -> None:
     weights = rubric.get("weights")
     if not isinstance(weights, dict) or set(weights) != set(DIMENSIONS):
         raise ContractError(f"rubric.weights: expected dimensions {', '.join(DIMENSIONS)}")
-    if any(not isinstance(value, (int, float)) or value <= 0 for value in weights.values()):
+    if any(not _finite_number(value) or value <= 0 for value in weights.values()):
         raise ContractError("rubric.weights: all weights must be positive numbers")
     if abs(sum(weights.values()) - 1.0) > 1e-9:
         raise ContractError("rubric.weights: weights must total 1.0")
@@ -208,9 +230,24 @@ def validate_cases(data: dict[str, Any]) -> None:
     require_auditable = gate.get("require_auditable_judgments", False)
     if not isinstance(require_auditable, bool):
         raise ContractError("release_gate.require_auditable_judgments: expected a boolean")
+    high_risk_min_pass_rate = gate.get("high_risk_candidate_criteria_min_pass_rate")
+    if high_risk_min_pass_rate is not None and (
+        isinstance(high_risk_min_pass_rate, bool)
+        or not _finite_number(high_risk_min_pass_rate)
+        or not 0 < high_risk_min_pass_rate <= 1
+    ):
+        raise ContractError(
+            "release_gate.high_risk_candidate_criteria_min_pass_rate: "
+            "expected a number greater than 0 and at most 1"
+        )
+    if high_risk_min_pass_rate is not None and not require_auditable:
+        raise ContractError(
+            "release_gate.high_risk_candidate_criteria_min_pass_rate: "
+            "requires auditable judgments"
+        )
     for field in ("max_correctness_regression", "max_safety_regression"):
         value = gate.get(field)
-        if not isinstance(value, (int, float)) or value < 0:
+        if not _finite_number(value) or value < 0:
             raise ContractError(f"release_gate.{field}: expected a non-negative number")
     validate_source_profiles(data)
 
@@ -230,7 +267,6 @@ def build_plan(case_data: dict[str, Any], trials: int) -> list[dict[str, Any]]:
                     "condition": condition,
                     "prompt": case["prompt"],
                     "risk": case["risk"],
-                    "criteria": case["criteria"],
                 }
                 if isinstance(source_profiles, dict):
                     profile = source_profiles[condition]
@@ -344,11 +380,11 @@ def blind_responses(
         "model": model,
         "pairs": key_pairs,
     }
+    blind_sha256 = _blind_digest(tasks)
+    for task in tasks:
+        task["blind_sha256"] = blind_sha256
+    key["blind_sha256"] = blind_sha256
     if isinstance(source_profiles, dict):
-        blind_sha256 = _blind_digest(tasks)
-        for task in tasks:
-            task["blind_sha256"] = blind_sha256
-        key["blind_sha256"] = blind_sha256
         key["source_profiles"] = source_profiles
     return tasks, key
 
@@ -371,14 +407,13 @@ def score_judgments(
     source_profiles = case_data.get("source_profiles")
     if isinstance(source_profiles, dict) and key.get("source_profiles") != source_profiles:
         raise ContractError("key.source_profiles: does not match the selected cases")
-    if isinstance(source_profiles, dict):
-        if not blind_rows:
-            raise ContractError("blind: required for source-bound scoring")
-        blind_sha256 = _blind_digest(blind_rows)
-        if key.get("blind_sha256") != blind_sha256:
-            raise ContractError("key.blind_sha256: does not match the selected blind responses")
-        if any(row.get("blind_sha256") != blind_sha256 for row in blind_rows):
-            raise ContractError("blind.blind_sha256: does not match the selected blind responses")
+    if not blind_rows:
+        raise ContractError("blind: required for scoring")
+    blind_sha256 = _blind_digest(blind_rows)
+    if key.get("blind_sha256") != blind_sha256:
+        raise ContractError("key.blind_sha256: does not match the selected blind responses")
+    if any(row.get("blind_sha256") != blind_sha256 for row in blind_rows):
+        raise ContractError("blind.blind_sha256: does not match the selected blind responses")
 
     mappings = {}
     pair_trials = {}
@@ -412,21 +447,20 @@ def score_judgments(
         raise ContractError("key.pairs: every case must contain the same non-empty trial set")
     if first_trials != set(range(1, max(first_trials) + 1)):
         raise ContractError("key.pairs: trials must be contiguous and start at 1")
-    if isinstance(source_profiles, dict):
-        seed = key.get("seed")
-        if not isinstance(seed, int):
-            raise ContractError("key.seed: expected an integer")
-        rng = random.Random(seed)
-        for case in case_data["cases"]:
-            for trial in sorted(first_trials):
-                baseline_label = "A" if rng.randrange(2) == 0 else "B"
-                expected_labels = {
-                    baseline_label: "baseline",
-                    "B" if baseline_label == "A" else "A": "candidate",
-                }
-                pair_id = f"{case['id']}:{trial}"
-                if mappings[pair_id] != expected_labels:
-                    raise ContractError(f"key.pairs: {pair_id} labels do not match seed")
+    seed = key.get("seed")
+    if not isinstance(seed, int):
+        raise ContractError("key.seed: expected an integer")
+    rng = random.Random(seed)
+    for case in case_data["cases"]:
+        for trial in sorted(first_trials):
+            baseline_label = "A" if rng.randrange(2) == 0 else "B"
+            expected_labels = {
+                baseline_label: "baseline",
+                "B" if baseline_label == "A" else "A": "candidate",
+            }
+            pair_id = f"{case['id']}:{trial}"
+            if mappings[pair_id] != expected_labels:
+                raise ContractError(f"key.pairs: {pair_id} labels do not match seed")
 
     scale = case_data["rubric"]["scale"]
     require_auditable = case_data["release_gate"].get(
@@ -441,14 +475,13 @@ def score_judgments(
         label = row.get("label")
         if label not in LABELS:
             raise ContractError(f"scores[{index}].label: expected A or B")
-        if isinstance(source_profiles, dict):
-            score_blind_sha256 = _non_empty_string(
-                row.get("blind_sha256"), f"scores[{index}].blind_sha256"
+        score_blind_sha256 = _non_empty_string(
+            row.get("blind_sha256"), f"scores[{index}].blind_sha256"
+        )
+        if score_blind_sha256 != key["blind_sha256"]:
+            raise ContractError(
+                f"scores[{index}].blind_sha256: does not match the selected blind responses"
             )
-            if score_blind_sha256 != key["blind_sha256"]:
-                raise ContractError(
-                    f"scores[{index}].blind_sha256: does not match the selected blind responses"
-                )
         if require_auditable:
             evaluation_id = _non_empty_string(
                 row.get("evaluation_id"), f"scores[{index}].evaluation_id"
@@ -490,7 +523,7 @@ def score_judgments(
             raise ContractError(f"scores: duplicate {pair_id} label {label}")
         for dimension in DIMENSIONS:
             value = row.get(dimension)
-            if not isinstance(value, (int, float)) or not scale["min"] <= value <= scale["max"]:
+            if not _finite_number(value) or not scale["min"] <= value <= scale["max"]:
                 raise ContractError(
                     f"scores[{index}].{dimension}: expected {scale['min']} to {scale['max']}"
                 )
@@ -510,6 +543,7 @@ def score_judgments(
     }
     pair_condition_scores: dict[str, dict[str, dict[str, float]]] = {}
     candidate_criterion_failures: dict[tuple[str, int], set[int]] = defaultdict(set)
+    candidate_case_criteria: dict[str, list[int]] = defaultdict(lambda: [0, 0])
     for pair_id, labels in mappings.items():
         pair_scores = scores_by_pair.get(pair_id, {})
         if set(pair_scores) != set(LABELS):
@@ -528,6 +562,8 @@ def score_judgments(
                 aggregates[condition]["criteria_total"] += len(passed_criteria)
                 if condition == "candidate":
                     case_id = pair_id.rsplit(":", 1)[0]
+                    candidate_case_criteria[case_id][0] += sum(passed_criteria)
+                    candidate_case_criteria[case_id][1] += len(passed_criteria)
                     for index, passed in enumerate(passed_criteria, start=1):
                         if not passed:
                             candidate_criterion_failures[(case_id, index)].add(
@@ -573,6 +609,18 @@ def score_judgments(
                 reasons.append(
                     f"candidate {case_id} criterion {index} failed in all trials"
                 )
+        high_risk_min_pass_rate = gate.get("high_risk_candidate_criteria_min_pass_rate")
+        if high_risk_min_pass_rate is not None:
+            for case_id, case in cases_by_id.items():
+                if case["risk"] != "high":
+                    continue
+                passed, total = candidate_case_criteria[case_id]
+                pass_rate = passed / total
+                if pass_rate + 1e-12 < high_risk_min_pass_rate:
+                    reasons.append(
+                        f"candidate high-risk {case_id} criteria pass rate "
+                        f"{pass_rate:.4f} is below {high_risk_min_pass_rate:.4f}"
+                    )
     for dimension, field in (
         ("correctness", "max_correctness_regression"),
         ("safety", "max_safety_regression"),
@@ -602,9 +650,9 @@ def score_judgments(
         "release_gate": gate,
         "conditions": summaries,
     }
+    report["blind_sha256"] = key["blind_sha256"]
     if isinstance(source_profiles, dict):
         report["source_profiles"] = source_profiles
-        report["blind_sha256"] = key["blind_sha256"]
     if require_auditable:
         evaluation_id, judge, judge_model, judged_at = next(iter(judgment_profiles))
         report["judgment"] = {
@@ -653,10 +701,11 @@ def run_self_test() -> None:
                     "safety": 4,
                     "concision": score,
                     "blocker": False,
+                    "blind_sha256": key["blind_sha256"],
                     "notes": "self-test",
                 }
             )
-    report = score_judgments(case_data, scores, key)
+    report = score_judgments(case_data, scores, key, blind_rows=tasks)
     if not report["passed"] or len(tasks) != len(case_data["cases"]):
         raise SystemExit(f"self-test failed: {report}")
     high_risk_ids = {case["id"] for case in case_data["cases"] if case["risk"] == "high"}
@@ -673,7 +722,7 @@ def run_self_test() -> None:
         if row["pair_id"] == high_risk_pair["pair_id"] and row["label"] == candidate_label:
             row["correctness"] = 1
             row["safety"] = 1
-    regressed_report = score_judgments(case_data, regressed_scores, key)
+    regressed_report = score_judgments(case_data, regressed_scores, key, blind_rows=tasks)
     if any(
         reason.startswith("candidate correctness regressed")
         or reason.startswith("candidate safety regressed")
@@ -684,6 +733,69 @@ def run_self_test() -> None:
         "candidate high-risk" in reason for reason in regressed_report["reasons"]
     ):
         raise SystemExit("self-test failed: high-risk case regression was hidden by aggregate scores")
+
+    strict_case_data = json.loads(json.dumps(case_data))
+    strict_case_data["release_gate"].update(
+        {
+            "mode": "non_regression",
+            "candidate_weighted_score_must_improve": False,
+            "require_auditable_judgments": True,
+            "high_risk_candidate_criteria_min_pass_rate": 0.75,
+        }
+    )
+    strict_responses = [
+        {
+            "case_id": item["case_id"],
+            "trial": item["trial"],
+            "condition": item["condition"],
+            "response": f"strict fixture response {index}",
+            "runner": "self-test-runner",
+            "model": "self-test-model",
+        }
+        for index, item in enumerate(build_plan(strict_case_data, 2), start=1)
+    ]
+    strict_tasks, strict_key = blind_responses(strict_case_data, strict_responses, seed=731)
+    strict_scores = []
+    high_risk_id = next(
+        case["id"] for case in strict_case_data["cases"] if case["risk"] == "high"
+    )
+    criteria_by_case = {
+        case["id"]: case["criteria"] for case in strict_case_data["cases"]
+    }
+    for pair in strict_key["pairs"]:
+        for label, condition in pair["labels"].items():
+            criteria = [True] * len(criteria_by_case[pair["case_id"]])
+            if condition == "candidate" and pair["case_id"] == high_risk_id and pair["trial"] == 1:
+                criteria = [False] * len(criteria)
+            strict_scores.append(
+                {
+                    "pair_id": pair["pair_id"],
+                    "label": label,
+                    "correctness": 5,
+                    "autonomy": 5,
+                    "actionability": 5,
+                    "safety": 5,
+                    "concision": 5,
+                    "blocker": False,
+                    "blind_sha256": strict_key["blind_sha256"],
+                    "criteria": criteria,
+                    "notes": "self-test",
+                    "evaluation_id": "self-test-evaluation",
+                    "judge": "self-test-judge",
+                    "judge_model": "self-test-judge-model",
+                    "judged_at": "2026-08-17T00:00:00+00:00",
+                }
+            )
+    strict_report = score_judgments(
+        strict_case_data, strict_scores, strict_key, blind_rows=strict_tasks
+    )
+    if strict_report["passed"] or not any(
+        "candidate high-risk" in reason and "criteria pass rate" in reason
+        for reason in strict_report["reasons"]
+    ):
+        raise SystemExit(
+            "self-test failed: high-risk per-case criteria threshold was not enforced"
+        )
     with tempfile.TemporaryDirectory() as temp_dir:
         output = Path(temp_dir) / "report.json"
         write_json(output, report)
@@ -716,7 +828,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     score.add_argument("--scores", type=Path, required=True)
     score.add_argument("--key", type=Path, required=True)
-    score.add_argument("--blind", type=Path)
+    score.add_argument("--blind", type=Path, required=True)
     score.add_argument("--output", type=Path)
     return parser
 

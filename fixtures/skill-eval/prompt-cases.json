@@ -61,7 +61,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "知止者装载产品架构能力并读取 business-architecture-planning，直接交付业务架构准入卡、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划；同时保持 owner、授权、验证与停止条件，材料不足时停止补证据，不直接脑补系统设计、TDD、编码任务或 Execution Grant。"
+      "expected_handling": "知止者装载产品架构能力并读取 business-architecture-planning，把价值流、业务能力和业务流程作为参考性工作基线而非普遍标准或固定交付清单，三者按决策问题选择最小视图组合并做多对多映射，不把客户旅程和部门流程合成同一视图，不要求全量视图都必须产出；按本请求明确范围直接交付业务架构准入卡，选用业务能力地图、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划，并说明跳过视图及理由；同时保持 owner、授权、验证与停止条件，材料不足时停止补证据，不直接脑补系统设计、TDD、编码任务或 Execution Grant。"
     },
     {
       "id": "wise-agent-should-classify-ambiguous-architecture-view",
@@ -2584,7 +2584,7 @@
     {
       "id": "product-should-business-architecture-planning",
       "skill": "product-architecture-expert",
-      "query": "我们要做客户中心转型，想先做业务架构规划：梳理业务能力地图、价值流、能力 owner、现有项目组合、重复建设、能力差距和系统支撑，再决定路线图和知识库回流方式。",
+      "query": "我们要做客户中心转型，想先做业务架构规划：材料同时包含客户旅程、跨部门流程、能力 owner、现有项目组合、重复建设、能力差距和系统支撑。请说明价值流、业务能力和业务流程如何选用与关联，再决定路线图和知识库回流方式。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -2594,7 +2594,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入业务架构规划路径，读取 business-architecture-planning；先从真实问题、战略意图和决策场景切入，输出业务架构准入卡、业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图、Product Context Card 和按业务域或模块分区的知识库回流计划；不把业务架构降级为全公司大图、组织架构图、系统清单或 Execution Grant。"
+      "expected_handling": "进入业务架构规划路径，读取 business-architecture-planning；先从真实问题、战略意图和决策场景切入，把价值流、业务能力和业务流程作为参考性工作基线而非普遍标准或固定交付清单；价值流回答价值与阶段，业务能力回答需要稳定具备什么，业务流程回答一次业务如何实际运行，三者按决策问题选择最小视图组合并做多对多映射，不把客户旅程和部门流程合成同一视图，不要求全量视图都必须产出；再按需输出业务架构准入卡、业务能力地图、核心对象与规则、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图、Product Context Card 和按业务域或模块分区的知识库回流计划；不把业务架构降级为全公司大图、组织架构图、系统清单或 Execution Grant。"
     },
     {
       "id": "product-should-business-architecture-diagram-route",
@@ -2608,7 +2608,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "进入业务架构规划图形化路由，读取 business-architecture-planning 和 diagram-output；按问题选择业务能力地图、价值流 / 跨角色流程图、能力-项目-系统-数据映射图、差距 / 依赖 / 路线图等最小图形；正式图形化交付默认只生成 SVG；图只辅助评审与沟通，不替代业务确认、产品判断、工程设计、Execution Grant 或上线审批。"
+      "expected_handling": "进入业务架构规划图形化路由，读取 business-architecture-planning 和 diagram-output；按问题选择最小图形：战略到能力用业务能力地图，价值如何形成与交付用价值流，业务如何实际运行用跨角色流程图，能力落地现状用能力-项目-系统-数据映射图，投资取舍用差距 / 依赖 / 路线图；不把价值流和跨角色流程图当成可互换视图；正式图形化交付默认只生成 SVG；图只辅助评审与沟通，不替代业务确认、产品判断、工程设计、Execution Grant 或上线审批。"
     },
     {
       "id": "payment-should-vcc-issuing-flow",

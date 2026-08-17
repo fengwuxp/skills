@@ -158,6 +158,33 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         self.assertLessEqual(len(self.case_data["cases"]), 8)
         self.assertAlmostEqual(sum(self.case_data["rubric"]["weights"].values()), 1.0)
 
+    def test_rejects_non_finite_json_and_gate_numbers(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            invalid_json = Path(tmp_dir) / "invalid.json"
+            invalid_json.write_text('{"value": NaN}\n', encoding="utf-8")
+            with self.assertRaises(MODULE.ContractError):
+                MODULE.load_json(invalid_json)
+
+        invalid_cases = deepcopy(self.case_data)
+        invalid_cases["rubric"]["weights"]["correctness"] = float("nan")
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.validate_cases(invalid_cases)
+
+        invalid_gate = deepcopy(self.case_data)
+        invalid_gate["release_gate"]["max_correctness_regression"] = float("nan")
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.validate_cases(invalid_gate)
+
+        oversized_weight = deepcopy(self.case_data)
+        oversized_weight["rubric"]["weights"]["correctness"] = 10**10000
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.validate_cases(oversized_weight)
+
+    def test_prepare_does_not_disclose_judging_criteria(self) -> None:
+        plan = MODULE.build_plan(self.case_data, 1)
+        self.assertTrue(plan)
+        self.assertTrue(all("criteria" not in task for task in plan))
+
     def test_committed_responses_are_bound_to_current_sources(self) -> None:
         fixture_dir = ROOT / "fixtures" / "skill-eval"
         response_files = sorted(fixture_dir.glob("*-responses.jsonl"))
@@ -189,6 +216,30 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         drifted[1]["model"] = "different-model"
         with self.assertRaises(MODULE.ContractError):
             MODULE.blind_responses(self.case_data, drifted, seed=731)
+
+    def test_unbound_fixtures_still_require_blind_digest_and_seed_mapping(self) -> None:
+        blind_rows, key = MODULE.blind_responses(
+            self.case_data, self.response_rows(), seed=731
+        )
+        self.assertIn("blind_sha256", key)
+        self.assertEqual(
+            {row["blind_sha256"] for row in blind_rows},
+            {key["blind_sha256"]},
+        )
+        scores = self.score_rows(key)
+
+        with self.assertRaisesRegex(MODULE.ContractError, "blind"):
+            MODULE.score_judgments(self.case_data, scores, key)
+
+        swapped_key = deepcopy(key)
+        swapped_key["pairs"][0]["labels"] = {
+            "A": key["pairs"][0]["labels"]["B"],
+            "B": key["pairs"][0]["labels"]["A"],
+        }
+        with self.assertRaisesRegex(MODULE.ContractError, "seed"):
+            MODULE.score_judgments(
+                self.case_data, scores, swapped_key, blind_rows=blind_rows
+            )
 
     def test_source_profiles_bind_responses_key_and_current_files(self) -> None:
         case_data = self.source_bound_case_data()
@@ -269,17 +320,23 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                     MODULE.source_set_digest(["escape.md"])
 
     def test_release_gate_blocks_findings_and_material_regressions(self) -> None:
-        _, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)
+        blind_rows, key = MODULE.blind_responses(
+            self.case_data, self.response_rows(), seed=731
+        )
         scores = self.score_rows(key)
 
-        passing = MODULE.score_judgments(self.case_data, scores, key)
+        passing = MODULE.score_judgments(
+            self.case_data, scores, key, blind_rows=blind_rows
+        )
         self.assertTrue(passing["passed"])
 
         truncated_key = deepcopy(key)
         removed_pair_id = truncated_key["pairs"].pop()["pair_id"]
         truncated_scores = [row for row in scores if row["pair_id"] != removed_pair_id]
         with self.assertRaises(MODULE.ContractError):
-            MODULE.score_judgments(self.case_data, truncated_scores, truncated_key)
+            MODULE.score_judgments(
+                self.case_data, truncated_scores, truncated_key, blind_rows=blind_rows
+            )
 
         blocked = deepcopy(scores)
         candidate_label = next(
@@ -294,7 +351,11 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             and row["label"] == candidate_label
         )
         candidate_score["blocker"] = True
-        self.assertFalse(MODULE.score_judgments(self.case_data, blocked, key)["passed"])
+        self.assertFalse(
+            MODULE.score_judgments(
+                self.case_data, blocked, key, blind_rows=blind_rows
+            )["passed"]
+        )
 
         regressed = deepcopy(scores)
         candidate_score = next(
@@ -304,7 +365,9 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             and row["label"] == candidate_label
         )
         candidate_score["correctness"] = 3
-        report = MODULE.score_judgments(self.case_data, regressed, key)
+        report = MODULE.score_judgments(
+            self.case_data, regressed, key, blind_rows=blind_rows
+        )
         self.assertFalse(report["passed"])
         self.assertTrue(any("correctness" in reason for reason in report["reasons"]))
 
@@ -319,12 +382,18 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         with self.assertRaises(MODULE.ContractError):
             MODULE.validate_cases(invalid_mode)
 
-        _, key = MODULE.blind_responses(case_data, self.response_rows(), seed=731)
+        blind_rows, key = MODULE.blind_responses(
+            case_data, self.response_rows(), seed=731
+        )
         equal_scores = self.score_rows(key)
         for row in equal_scores:
             for dimension in MODULE.DIMENSIONS:
                 row[dimension] = 4
-        self.assertTrue(MODULE.score_judgments(case_data, equal_scores, key)["passed"])
+        self.assertTrue(
+            MODULE.score_judgments(
+                case_data, equal_scores, key, blind_rows=blind_rows
+            )["passed"]
+        )
 
         regressed = deepcopy(equal_scores)
         candidate_label = next(
@@ -339,12 +408,16 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             and row["label"] == candidate_label
         )
         candidate_score["actionability"] = 3
-        report = MODULE.score_judgments(case_data, regressed, key)
+        report = MODULE.score_judgments(
+            case_data, regressed, key, blind_rows=blind_rows
+        )
         self.assertFalse(report["passed"])
         self.assertTrue(any("weighted_score regressed" in reason for reason in report["reasons"]))
 
     def test_high_risk_concision_variance_does_not_override_aggregate_improvement(self) -> None:
-        _, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)
+        blind_rows, key = MODULE.blind_responses(
+            self.case_data, self.response_rows(), seed=731
+        )
         scores = self.score_rows(key)
         pair = next(
             pair
@@ -362,7 +435,9 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             if pair["labels"][row["label"]] == "candidate":
                 row["concision"] = 4
 
-        report = MODULE.score_judgments(self.case_data, scores, key)
+        report = MODULE.score_judgments(
+            self.case_data, scores, key, blind_rows=blind_rows
+        )
         self.assertTrue(report["passed"], report["reasons"])
 
 

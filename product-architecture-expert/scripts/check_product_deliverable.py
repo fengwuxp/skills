@@ -24,11 +24,6 @@ class RequiredGroup(NamedTuple):
 CHECKS: dict[str, list[RequiredGroup]] = {
     "business-architecture": [
         RequiredGroup("strategic_intent", ["战略意图", "真实问题", "决策场景", "范围边界"], 3),
-        RequiredGroup("capability_map", ["业务能力地图", "能力分层", "能力 owner", "能力边界", "业务结果"], 3),
-        RequiredGroup("value_stream", ["价值流", "价值实现", "主链路", "异常链路", "人工节点"], 2),
-        RequiredGroup("objects_and_rules", ["核心对象", "生命周期", "业务不变量", "关键规则", "规则 owner"], 3),
-        RequiredGroup("capability_mapping", ["能力-项目-系统", "现有项目", "现有系统", "数据源", "重复建设"], 3),
-        RequiredGroup("portfolio", ["能力差距", "依赖", "优先级", "项目组合", "路线图", "停止条件"], 3),
         RequiredGroup("governance", ["证据来源", "待确认", "验收", "知识库回流", "复审"], 3),
     ],
     "prd": [
@@ -73,6 +68,34 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("pending_confirmation", ["待确认", "确认方", "owner", "负责人"], 2),
         RequiredGroup("verification", ["验证方式", "验收", "检查", "下一步", "去向"], 2),
     ],
+}
+BUSINESS_ARCHITECTURE_VIEW_CHECKS: dict[str, RequiredGroup] = {
+    "capability_map": RequiredGroup(
+        "capability_map", ["业务能力地图", "能力分层", "能力 owner", "能力边界", "业务结果"], 3
+    ),
+    "value_stream": RequiredGroup(
+        "value_stream", ["价值流", "利益相关者", "价值结果", "价值阶段", "价值形成", "价值交付"], 3
+    ),
+    "business_process": RequiredGroup(
+        "business_process", ["业务流程", "触发", "参与者", "交接", "异常", "人工节点", "结束条件"], 4
+    ),
+    "objects_and_rules": RequiredGroup(
+        "objects_and_rules", ["核心对象", "生命周期", "业务不变量", "关键规则", "规则 owner"], 3
+    ),
+    "capability_mapping": RequiredGroup(
+        "capability_mapping", ["能力-项目-系统", "现有项目", "现有系统", "数据源", "重复建设"], 3
+    ),
+    "portfolio": RequiredGroup(
+        "portfolio", ["能力差距", "依赖", "优先级", "项目组合", "路线图", "停止条件"], 3
+    ),
+}
+BUSINESS_ARCHITECTURE_VIEW_NAMES: dict[str, tuple[str, ...]] = {
+    "capability_map": ("业务能力地图", "能力地图"),
+    "value_stream": ("价值流",),
+    "business_process": ("业务流程", "跨角色流程"),
+    "objects_and_rules": ("核心对象与规则", "对象与规则", "对象规则"),
+    "capability_mapping": ("能力-项目-系统映射", "能力-项目-系统"),
+    "portfolio": ("项目组合", "路线图"),
 }
 DIAGRAM_TYPE_CHECKS: dict[str, list[RequiredGroup]] = {
     "业务架构": [
@@ -132,8 +155,10 @@ VALUED_GROUP_KINDS = {"business-architecture", "product-review"}
 SELF_TESTS: dict[str, tuple[str, str]] = {
     "business-architecture": (
         "战略意图：提升客户经营效率；真实问题：项目重复建设；决策场景：项目组合取舍；范围边界：客户中心。"
+        "选用视图：业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、项目组合。"
+        "跳过视图及理由：业务流程不影响本轮投资取舍。"
         "业务能力地图包含能力分层、能力 owner、业务结果和能力边界。"
-        "价值流说明从客户准入到持续经营的价值实现主链路、异常链路和人工节点。"
+        "价值流面向利益相关者说明从客户准入到持续经营的价值阶段、价值结果、价值形成和价值交付。"
         "核心对象为客户与客户关系；生命周期、业务不变量、关键规则和规则 owner 明确。"
         "能力-项目-系统映射列出现有项目、现有系统、数据源和重复建设。"
         "能力差距、依赖、优先级、项目组合、路线图和停止条件明确。"
@@ -352,6 +377,40 @@ def field_values(text: str, label: str) -> list[str]:
     return meaningful_values(values)
 
 
+def all_check_groups(kind: str) -> list[RequiredGroup]:
+    groups = CHECKS[kind]
+    if kind == "business-architecture":
+        return groups + list(BUSINESS_ARCHITECTURE_VIEW_CHECKS.values())
+    return groups
+
+
+def selected_business_architecture_views(text: str) -> set[str]:
+    tokens = business_architecture_view_tokens(text, "选用视图")
+    return {
+        name
+        for name, aliases in BUSINESS_ARCHITECTURE_VIEW_NAMES.items()
+        if any(normalize(alias) in tokens for alias in aliases)
+    }
+
+
+def business_architecture_view_tokens(text: str, label: str) -> set[str]:
+    return {
+        normalize(token)
+        for value in field_values(text, label)
+        for token in re.split(r"[,，、]+", value)
+        if normalize(token)
+    }
+
+
+def unknown_business_architecture_views(text: str) -> set[str]:
+    known = {
+        normalize(alias)
+        for aliases in BUSINESS_ARCHITECTURE_VIEW_NAMES.values()
+        for alias in aliases
+    }
+    return business_architecture_view_tokens(text, "选用视图") - known
+
+
 def table_column_values(text: str, aliases: tuple[str, ...]) -> list[str]:
     lines = text.splitlines()
     normalized_aliases = {normalize(alias) for alias in aliases}
@@ -471,7 +530,7 @@ def contains_term(text: str, term: str) -> bool:
 def valued_group_hits(kind: str, group: RequiredGroup, text: str) -> int:
     aliases = [alias.casefold() for alias in group.aliases]
     all_aliases = sorted(
-        {alias.casefold() for candidate in CHECKS[kind] for alias in candidate.aliases},
+        {alias.casefold() for candidate in all_check_groups(kind) for alias in candidate.aliases},
         key=len,
         reverse=True,
     )
@@ -492,13 +551,13 @@ def valued_group_hits(kind: str, group: RequiredGroup, text: str) -> int:
 def is_keyword_shell(kind: str, text: str) -> bool:
     residue = normalize(text)
     for alias in sorted(
-        {alias.casefold() for group in CHECKS[kind] for alias in group.aliases},
+        {alias.casefold() for group in all_check_groups(kind) for alias in group.aliases},
         key=len,
         reverse=True,
     ):
         residue = residue.replace(alias, "")
     meaningful = re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", residue)
-    return len(meaningful) < len(CHECKS[kind]) * 2
+    return len(meaningful) < len(all_check_groups(kind)) * 2
 
 
 def warning_groups(kind: str, text: str) -> list[str]:
@@ -523,6 +582,38 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.append(group.name)
         elif kind in VALUED_GROUP_KINDS and valued_group_hits(kind, group, text) < group.min_hits:
             missing.append(f"unvalued_{group.name}")
+    if kind == "business-architecture":
+        selected_views = selected_business_architecture_views(text)
+        declared_view_tokens = business_architecture_view_tokens(text, "选用视图")
+        if not declared_view_tokens and all(
+            sum(1 for alias in group.aliases if alias.casefold() in normalized) >= group.min_hits
+            and valued_group_hits(kind, group, text) >= group.min_hits
+            for group in BUSINESS_ARCHITECTURE_VIEW_CHECKS.values()
+        ):
+            selected_views = set(BUSINESS_ARCHITECTURE_VIEW_CHECKS)
+        if not selected_views:
+            missing.append("selected_views_missing")
+        if unknown_business_architecture_views(text):
+            missing.append("selected_views_unknown")
+        for name in selected_views:
+            group = BUSINESS_ARCHITECTURE_VIEW_CHECKS[name]
+            hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
+            if hits < group.min_hits:
+                missing.append(group.name)
+            elif valued_group_hits(kind, group, text) < group.min_hits:
+                missing.append(f"unvalued_{group.name}")
+        unselected_views = set(BUSINESS_ARCHITECTURE_VIEW_CHECKS) - selected_views
+        if unselected_views:
+            skipped_values = field_values(text, "跳过视图及理由")
+            if not skipped_values:
+                missing.append("skipped_views_rationale_missing")
+            else:
+                skipped_text = normalize(" ".join(skipped_values))
+                if any(
+                    not any(normalize(alias) in skipped_text for alias in BUSINESS_ARCHITECTURE_VIEW_NAMES[name])
+                    for name in unselected_views
+                ):
+                    missing.append("skipped_views_rationale_incomplete")
     if kind in VALUED_GROUP_KINDS and is_keyword_shell(kind, text):
         missing.append("keyword_shell")
     if kind == "diagram-brief":
@@ -586,6 +677,58 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    minimal_process_architecture = (
+        "战略意图：降低投诉转交时延；真实问题：客服与运营反复转交；决策场景：优化一次投诉处理；范围边界：不做系统重构。\n"
+        "选用视图：业务流程、核心对象与规则。\n"
+        "跳过视图及理由：价值流、业务能力地图、能力-项目-系统映射和项目组合与本轮运营流程决策无关。\n"
+        "业务流程：投诉进入后由客服受理、运营复核、责任人处置并由客服回告；触发、参与者、交接、异常、人工节点和结束条件明确。\n"
+        "核心对象：投诉单；生命周期：待受理、处理中、已关闭；业务不变量：每次转交留痕；关键规则：超时升级；规则 owner：运营负责人。\n"
+        "证据来源：工单日志；待确认：SLA；验收：平均转交次数下降；复审：两周后。"
+    )
+    if missing_groups("business-architecture", minimal_process_architecture):
+        failures.append("business-architecture: selected minimal process views unexpectedly failed")
+    process_masquerading_as_value_stream = (
+        "战略意图：降低投诉转交时延；真实问题：客服与运营反复转交；决策场景：验证价值形成；范围边界：投诉处理。\n"
+        "选用视图：价值流。\n"
+        "跳过视图及理由：其他视图不在本轮范围。\n"
+        "业务流程：投诉进入后的主链路由客服受理、运营复核和责任人处置组成；异常链路处理材料不全，人工节点负责超时升级。\n"
+        "证据来源：工单日志；待确认：SLA；验收：转交次数下降；复审：两周后。"
+    )
+    if "value_stream" not in missing_groups("business-architecture", process_masquerading_as_value_stream):
+        failures.append("business-architecture: process text unexpectedly satisfied selected value stream")
+    undeclared_business_architecture = (
+        SELF_TESTS["business-architecture"][0]
+        .replace("选用视图：业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、项目组合。", "", 1)
+        .replace("跳过视图及理由：业务流程不影响本轮投资取舍。", "", 1)
+    )
+    if "selected_views_missing" not in missing_groups("business-architecture", undeclared_business_architecture):
+        failures.append("business-architecture: undeclared view selection unexpectedly passed")
+    legacy_all_views = (
+        SELF_TESTS["business-architecture"][0]
+        .replace("选用视图：业务能力地图、价值流、核心对象与规则、能力-项目-系统映射、项目组合。", "", 1)
+        .replace("跳过视图及理由：业务流程不影响本轮投资取舍。", "", 1)
+        + "业务流程由投诉触发，客服与运营参与并交接；材料缺失走异常处理，人工节点复核，回告客户后结束。"
+    )
+    if missing_groups("business-architecture", legacy_all_views):
+        failures.append("business-architecture: complete legacy all-view document unexpectedly failed")
+    unknown_selected_view = minimal_process_architecture.replace(
+        "选用视图：业务流程、核心对象与规则。",
+        "选用视图：业务流程、火星视图。",
+        1,
+    )
+    if "selected_views_unknown" not in missing_groups(
+        "business-architecture", unknown_selected_view
+    ):
+        failures.append("business-architecture: unknown selected view unexpectedly passed")
+    incomplete_skip_rationale = minimal_process_architecture.replace(
+        "跳过视图及理由：价值流、业务能力地图、能力-项目-系统映射和项目组合与本轮运营流程决策无关。",
+        "跳过视图及理由：价值流与本轮运营流程决策无关。",
+        1,
+    )
+    if "skipped_views_rationale_incomplete" not in missing_groups(
+        "business-architecture", incomplete_skip_rationale
+    ):
+        failures.append("business-architecture: incomplete skipped-view rationale unexpectedly passed")
     for kind in VALUED_GROUP_KINDS:
         stuffed = " ".join(alias for group in CHECKS[kind] for alias in group.aliases) + " 内容完整"
         if not missing_groups(kind, stuffed):

@@ -381,11 +381,11 @@ python3 scripts/evaluate-skills.py \
 python3 scripts/evaluate-skill-behavior.py prepare --trials 3 --output /tmp/skill-behavior-plan.jsonl
 # 使用同一 runner/model 收集 response JSONL：case_id、trial、condition、response、runner、model
 python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior-responses.jsonl --output /tmp/skill-behavior-judge.jsonl --key-output /tmp/skill-behavior-key.json
-# 独立评分 JSONL：pair_id、label、五项 rubric 分数、blocker、notes
+# 独立评分 JSONL：pair_id、label、五项 rubric 分数、blocker、notes、blind_sha256
 python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --blind /tmp/skill-behavior-judge.jsonl --output /tmp/skill-behavior-report.json
 ```
 
-当 cases 声明 `source_profiles` 时，response 必须原样保留 `prepare` 生成的 `case_sha256` 与 `source_sha256`，独立评分还须从 blind 文件原样保留 `blind_sha256`；`score` 会同时核对 cases、source、seed 映射、blind 正文与 scores，任一漂移即拒绝。
+所有独立评分都须从 blind 文件原样保留 `blind_sha256`，`score` 始终核对 seed 映射、blind 正文与 scores；cases 声明 `source_profiles` 时，response 还必须原样保留 `prepare` 生成的 `case_sha256` 与 `source_sha256`。任一漂移即拒绝。
 
 默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
 

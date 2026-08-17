@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 业务架构最小视图组合专项非回归契约。静态 fixture 只固定预期行为；准出仍要求同一 runner/model 重复采集、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "product-business-architecture-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
+      ],
+      "sha256": "52ae5924f0a18ff4ad649a056e9847f115fb4991886b02e47fc9fd552210864a"
+    },
+    "candidate": {
+      "id": "product-business-architecture-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-scenario-routing.md",
+        "product-architecture-expert/references/business-architecture-planning.md",
+        "product-architecture-expert/scripts/check_product_deliverable.py"
+      ],
+      "sha256": "f9135116140f2060ece7f3b1e8c54b59a4b9415a70f29f0a183cdbcf68fdf3e1"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "product-business-architecture-should-use-process-only-minimum",
+      "category": "minimal-view-selection",
+      "risk": "high",
+      "prompt": "我们只想解决客服到法务的投诉转交问题。请做一份可评审的业务架构分析，但不要扩成全域能力地图、价值流、项目组合、系统建设、路线图或知识库规划。",
+      "criteria": [
+        "明确选用业务流程及必要的核心对象与规则，并说明其他候选视图因与当前决策无关而跳过。",
+        "流程覆盖触发、参与者、交接、等待、异常、人工兜底、owner、结束条件和待确认 SLA。",
+        "不强制生成价值流、全域能力地图、能力-项目-系统映射、项目组合、路线图或知识库回流计划。"
+      ]
+    },
+    {
+      "id": "product-business-architecture-should-select-investment-views",
+      "category": "portfolio-decision",
+      "risk": "high",
+      "prompt": "集团客户中心有多套重复 CRM 和多个在建项目。请判断哪些能力值得继续投资、哪些系统或项目应合并、停止或补齐；不要输出与投资决策无关的全量流程库。",
+      "criteria": [
+        "选用价值流、业务能力地图、能力-项目-系统映射和项目组合视图，并说明跳过详细业务流程等非必要视图的理由。",
+        "以多对多关系追溯战略结果、价值阶段、能力、项目和系统，不把视图写成固定单向流水线。",
+        "投资建议回指现状证据、能力差距、依赖、owner、准出证据和停止条件；证据不足时保留待确认。"
+      ]
+    },
+    {
+      "id": "product-business-architecture-should-not-invent-joint-standard",
+      "category": "standard-attribution",
+      "risk": "high",
+      "prompt": "请确认：BIZBOK、TOGAF 和 BACM 是否共同规定‘价值流、能力、流程’就是业务架构三大核心视图？把结论写进我们的业务架构方法。",
+      "criteria": [
+        "不把三种视角归因为多个标准共同规定的普遍结论，也不虚构未核验的一手标准条文。",
+        "仅把价值流、业务能力和业务流程定位为可选的参考性工作基线，不写成完整元模型或固定交付清单。",
+        "项目已有行业标准、组织方法或权威元模型时以其定义为准；缺少一手证据时明确待核验边界。"
+      ]
+    },
+    {
+      "id": "product-business-architecture-should-separate-value-and-process",
+      "category": "semantic-separation",
+      "risk": "high",
+      "prompt": "材料里既有客户旅程，也有客服、运营、法务的部门流程。请直接合成一张‘客户价值流/跨部门流程图’，再把每个步骤当成业务能力。",
+      "criteria": [
+        "拒绝把客户旅程、价值流、跨角色业务流程和业务能力合成同一语义视图。",
+        "分别说明价值与阶段、稳定能力、一次业务运行的活动与交接，并用多对多映射关联。",
+        "按当前决策问题选择最小视图组合，不把流程步骤或部门职责直接命名为业务能力。"
+      ]
+    },
+    {
+      "id": "product-business-architecture-should-emit-checkable-selection",
+      "category": "formal-deliverable",
+      "risk": "high",
+      "prompt": "给出一份可以交给本地 business-architecture 检查器验证的投诉流程改进稿。范围只限一次投诉处理，不做投资组合和系统改造；同时说明检查通过能证明什么、不能证明什么。",
+      "criteria": [
+        "正式稿显式包含选用视图和跳过视图及理由，所选业务流程与核心对象规则内容完整。",
+        "未选的价值流、能力地图、能力-项目-系统映射和项目组合不被补成固定交付项。",
+        "明确本地检查器只证明结构命中，不替代业务判断、事实核验、Owner 确认或上线授权。"
+      ]
+    }
+  ]
+}
