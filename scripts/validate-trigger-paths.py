@@ -5885,7 +5885,7 @@ check(
     )
     and has_all(
         payment_funds_review_agent,
-        ["支付资金审查", "独立 Checker", "allow_implicit_invocation: true"],
+        ["支付资金审查", "独立 Checker", "allow_implicit_invocation: false"],
     )
     and has_all(
         payment_funds_review_source_map,
@@ -18909,6 +18909,9 @@ check(
             "document-authoring-should-remove-nonfunctional-structural-announcements",
             "document-authoring-should-not-relabel-untraceable-attribution",
             "candidate_weighted_score_must_improve",
+            "require_auditable_judgments",
+            "source_profiles",
+            "document-authoring-current",
             "同一 runner/model",
             "没有可核验的公开文件或具名来源",
             "不扩大为没有任何来源支持",
@@ -18964,7 +18967,21 @@ check(
 )
 behavior_fixture_fingerprint(
     document_humanization_behavior_cases,
-    "7b454e78bdc3aa9e69313a297f124f6770058e531f894a78f3f386faef24cb55",
+    "7208d312de5c788a7329b119a2f4422fcf1d1641e7cd68976e048249b4e36187",
+)
+source_set_fingerprint(document_humanization_behavior_cases, "baseline")
+source_set_fingerprint(document_humanization_behavior_cases, "candidate")
+check(
+    "validation records behavior-evidence failures and continues to later stages",
+    has_all(
+        "scripts/validate.sh",
+        [
+            "validation_failed=0",
+            "run_gate()",
+            "Validation completed with deferred gate failures.",
+            "==> installed skill parity self-test",
+        ],
+    ),
 )
 file_fingerprint(
     document_humanization_responses,

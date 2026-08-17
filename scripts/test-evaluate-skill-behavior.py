@@ -158,6 +158,23 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         self.assertLessEqual(len(self.case_data["cases"]), 8)
         self.assertAlmostEqual(sum(self.case_data["rubric"]["weights"].values()), 1.0)
 
+    def test_committed_responses_are_bound_to_current_sources(self) -> None:
+        fixture_dir = ROOT / "fixtures" / "skill-eval"
+        response_files = sorted(fixture_dir.glob("*-responses.jsonl"))
+        self.assertTrue(response_files)
+
+        for response_path in response_files:
+            prefix = response_path.name.removesuffix("-responses.jsonl")
+            cases_path = fixture_dir / f"{prefix}-behavior-cases.json"
+            with self.subTest(responses=response_path.name):
+                self.assertTrue(cases_path.is_file())
+                case_data = MODULE.load_json(cases_path)
+                self.assertIn(
+                    "source_profiles",
+                    case_data,
+                    f"{cases_path.name}: committed behavior evidence must bind its sources",
+                )
+
     def test_blinding_hides_conditions_and_rejects_model_drift(self) -> None:
         tasks, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)
 

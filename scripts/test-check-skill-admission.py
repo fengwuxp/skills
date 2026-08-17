@@ -31,6 +31,13 @@ class SkillAdmissionTests(unittest.TestCase):
             json.dumps(metadata),
             encoding="utf-8",
         )
+        if metadata.get("status") == "candidate":
+            agent_dir = skill_dir / "agents"
+            agent_dir.mkdir()
+            (agent_dir / "openai.yaml").write_text(
+                "policy:\n  allow_implicit_invocation: false\n",
+                encoding="utf-8",
+            )
         return skill_dir
 
     def test_missing_admission_metadata_is_rejected(self) -> None:
@@ -70,6 +77,35 @@ class SkillAdmissionTests(unittest.TestCase):
             self.assertTrue(
                 any(
                     "requires non-installable skill candidate (candidate)" in item
+                    for item in failures
+                )
+            )
+
+    def test_candidate_must_disable_implicit_invocation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_dir = self.write_skill(
+                Path(temp_dir),
+                "candidate",
+                {
+                    "status": "candidate",
+                    "updated_at": "2026-08-17",
+                    "blockers": [
+                        {"id": "Q-1", "summary": "pending", "owner": "Owner"}
+                    ],
+                },
+            )
+            agent_dir = skill_dir / "agents"
+            agent_dir.mkdir(exist_ok=True)
+            (agent_dir / "openai.yaml").write_text(
+                "policy:\n  allow_implicit_invocation: true\n",
+                encoding="utf-8",
+            )
+
+            _, failures = MODULE.audit_skill(skill_dir)
+
+            self.assertTrue(
+                any(
+                    "candidate must set allow_implicit_invocation: false" in item
                     for item in failures
                 )
             )

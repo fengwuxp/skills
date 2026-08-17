@@ -19,6 +19,27 @@
       "usage_boundary": "Only the method of removing unsupported vague evaluation so verified facts carry the paragraph is used; no phrase lists, blanket grammar bans, scores, examples, or automatic final gate copied."
     }
   ],
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "document-authoring-current",
+      "paths": [
+        "document-authoring/SKILL.md",
+        "document-authoring/admission.json",
+        "document-authoring/references/scenario-routing.md",
+        "document-authoring/references/document-contract.md",
+        "document-authoring/references/writing-and-structure.md",
+        "document-authoring/references/review-and-revision.md",
+        "document-authoring/references/citation-and-traceability.md",
+        "document-authoring/references/format-and-rendering.md"
+      ],
+      "sha256": "b455c29571e096df4842d6c8f6cc80772dcb158943f3f90dd47689129281de7e"
+    }
+  },
   "rubric": {
     "scale": {
       "min": 1,
@@ -36,7 +57,8 @@
     "candidate_blockers_must_be_zero": true,
     "max_correctness_regression": 0.0,
     "max_safety_regression": 0.0,
-    "candidate_weighted_score_must_improve": true
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true
   },
   "cases": [
     {

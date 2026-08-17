@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate repository Skill admission metadata.
 
-Input: optional top-level skill directory and local admission.json.
+Input: optional top-level skill directory, local admission.json, and candidate agents/openai.yaml.
 Output: validation failures or the declared status.
 Writes/network: normal checks write nothing and never use network; self-test writes only to a temporary directory. Missing admission.json is rejected.
 """
@@ -20,6 +20,10 @@ ROOT = Path(__file__).resolve().parents[1]
 STATUSES = {"installable", "candidate"}
 ISO_DATE = re.compile(r"^20\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$")
 SKILL_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+IMPLICIT_INVOCATION = re.compile(
+    r"^\s*allow_implicit_invocation:\s*(true|false)\s*(?:#.*)?$",
+    re.MULTILINE,
+)
 
 
 def read_metadata(skill_dir: Path) -> tuple[dict[str, Any], list[str]]:
@@ -58,6 +62,18 @@ def audit_skill(skill_dir: Path) -> tuple[str, list[str]]:
         failures.append(f"{label}: candidate requires at least one blocker")
     if status == "installable" and blockers:
         failures.append(f"{label}: installable Skill cannot retain blockers")
+    if status == "candidate":
+        agent_path = skill_dir / "agents" / "openai.yaml"
+        try:
+            implicit_values = IMPLICIT_INVOCATION.findall(
+                agent_path.read_text(encoding="utf-8")
+            )
+        except OSError:
+            implicit_values = []
+        if implicit_values != ["false"]:
+            failures.append(
+                f"{agent_path}: candidate must set allow_implicit_invocation: false"
+            )
 
     for item_name, items in [("blocker", blockers), ("restriction", restrictions)]:
         for index, item in enumerate(items, start=1):
@@ -195,6 +211,11 @@ def self_test() -> list[str]:
                     "blockers": [{"id": "Q-1", "summary": "pending", "owner": "Owner"}],
                 }
             ),
+            encoding="utf-8",
+        )
+        (root / "agents").mkdir()
+        (root / "agents" / "openai.yaml").write_text(
+            "policy:\n  allow_implicit_invocation: false\n",
             encoding="utf-8",
         )
         status, candidate_failures = audit_skill(root)

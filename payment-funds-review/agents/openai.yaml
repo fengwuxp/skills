@@ -3,4 +3,4 @@ interface:
   short_description: "独立审查支付资金事实链、资金门禁及失败无副作用"
   default_prompt: "Use $payment-funds-review 作为独立 Checker 审查这项支付资金事实链、门禁与失败副作用。"
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
