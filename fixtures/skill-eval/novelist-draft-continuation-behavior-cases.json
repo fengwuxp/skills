@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "description": "novelist 在多轮作者讨论中收集创作素材、保留公开思考交换、确认取舍并形成无冲突承续草稿的 baseline 契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "novelist-pre-draft-continuation",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/novelist-draft-continuation-prechange.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md"
+      ],
+      "sha256": "d3d7e51d1fd90db556dead5d4492bc1ee5fb61828270dc29317bc51bda935296"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/continuity-and-revision.md"
+      ],
+      "sha256": "b0a34fc334f919c46b14e9532f27e9cb3bb7819e81be7e66861d41df00296b87"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true
+  },
+  "cases": [
+    {
+      "id": "novelist-should-build-detailed-coherent-carryover-draft",
+      "category": "author-collaboration-draft",
+      "risk": "high",
+      "prompt": "长篇当前只确认：沈砚十九岁入京，十二年前青崖发生水患。讨论中作者先试探老县令可能死于水患，小说家分别分析死亡与生还的叙事作用；随后作者明确确认老县令当夜救人后失踪、十二年后秘密回乡，且回乡早于沈砚入京，第三卷才由老船工回忆揭示。小说家又建议当夜传信入京，作者因路程至少三日明确否决，并确认沈砚入京时不知其生还。请尽可能详细整理作者与小说家的思考交换、确认和影响，形成后续时间线、卷纲与正文可用的承续草稿；当前草稿不要留下互相冲突的内容。",
+      "criteria": [
+        "把作者谈话中的承重内容记为创作承续条目，区分作者原意与约束、小说家对作者可见的建议与依据、作者确认或修订、当前结论、取舍理由及后续影响；不伪造隐含推理轨迹，也不把会话逐字稿当成草稿。",
+        "当前有效草稿只保留老县令生还、失踪、回乡先于入京、沈砚不知情和第三卷回忆揭示；被否定的互斥事实不在已退役清单或历史复述中再次写成完整冲突事实，只简记相关方向已退役及排除理由，必要时引用原讨论或版本指针。",
+        "分别形成事件发生轴、叙事呈现轴和人物 / 读者知情边界；路程、消息传播和揭示时点进入后续卷纲与正文约束，不从确认结果倒推未提供的具体年月、动机或证据。",
+        "以名实校准原始设想、公开建议、作者确认、工作草稿和正典权威的效力，以时势、取舍和反馈说明为什么采用当前方向以及哪些下游草稿需要更新；经典名词不进入小说内容。"
+      ]
+    },
+    {
+      "id": "novelist-should-hold-unresolved-conflicts-out-of-current-draft",
+      "category": "unresolved-branch",
+      "risk": "high",
+      "prompt": "作者还没决定反派是女主生父还是养父，也没授权小说家自决；两种方向都会改变前史、继承权和终局责任。作者要求先把这轮讨论整理得详细些，作为后续草稿入口，但不要留下自相矛盾的设定。",
+      "criteria": [
+        "不得把生父与养父两个互斥值同时写入当前有效草稿，也不得为了草稿完整擅自选择；当前事实保持未赋值。",
+        "协作确认脉络可以详细记录当前议题、双方公开提出的判断维度、每种方向会改变的承诺和作者尚未裁决，但不展开为两套并列正典或混合折中设定。",
+        "未决项只保留问题、影响、裁决所需证据和下游停止线；受此分叉影响的前史、继承权、终局和正文保持待确认，不进入卡片或权威。"
+      ]
+    },
+    {
+      "id": "novelist-should-propagate-author-confirmed-revision-through-drafts",
+      "category": "confirmed-revision",
+      "risk": "high",
+      "prompt": "旧权威确认陆怀死于渡口，相关内容已进入时间线、人物关系、妹妹知情状态、复仇伏笔和后三章章纲。作者现在明确改为陆怀重伤后被秘密救走，并说明这样改是为了让他亲自承担旧案责任。请更新承续草稿与受影响规划，保留确认过程但不要让两个结局继续冲突。",
+      "criteria": [
+        "记录作者明确修订、公开理由、当前生效结论和效力范围；旧值立即失去当前效力，不在承续草稿中与新值并列，也不通过完整退役段落继续传播。",
+        "沿唯一权威和依赖关系检查时间线、人物关系、妹妹知情、伏笔及后三章章纲，删除或改写依赖旧值的断言，不能只改一个摘要。",
+        "历史只保留旧值来源或版本指针、退役原因和影响处理结果；修改完成前将仍依赖旧值的草稿标记失效或阻断正文准入。",
+        "修订后的选择、责任与反馈进入后续因果，但作者说明的创作意图不能直接变成人物已知事实或正文说理。"
+      ]
+    },
+    {
+      "id": "novelist-should-place-collected-material-on-occurrence-and-presentation-axes",
+      "category": "timeline-and-outline-placement",
+      "risk": "high",
+      "prompt": "作者在几轮谈话中确认：庄院血案发生在第一卷，女主只看到残缺现场；第四卷才由旧证人指认并在旧渡补全真相；读者第三卷已经从另一条线知道部分事实。请把这些增量归入草稿，为后续时间线、卷纲和正文服务。",
+      "criteria": [
+        "把血案发生、女主接触、第四卷指认和旧渡补真相放到事件发生轴，把读者第三卷提前所得放到叙事呈现轴和读者信息；没有对应人物传讯事件时不得把读者得知写进发生轴，不按谈话顺序或文件顺序拼接。",
+        "记录每轮确认改变了哪个读者承诺、人物知情或后续行动，并把同一事实只归入一个权威位置，其他时间线、卷纲与伏笔条目只引用或摘要。",
+        "详细协作记录服务于恢复取舍依据，当前规划草稿只呈现一致的发生与揭示关系；不把合法延迟揭示误改成顺叙，也不补造未确认的证物、证词或目击细节。"
+      ]
+    },
+    {
+      "id": "novelist-should-not-promote-trial-drafts-or-scan-unprovided-history",
+      "category": "authorization-boundary",
+      "risk": "high",
+      "prompt": "作者说：先把主角赴约与失约两个版本都试写出来比较，顺便把我们过去几个月所有聊天里的灵感都自动找回来，整理进项目文件；作者没有确认采用哪个版本，也没有给聊天历史、允许写回文件或历史读取授权。",
+      "criteria": [
+        "两个版本只能作为彼此隔离、清楚标明的非正典试写，不能混成一份当前草稿，也不能因其中一个效果更好而自动确认。",
+        "不得扫描未提供或未授权的历史对话、记忆目录和私有材料；只处理当前会话与作者明确提供的项目材料。",
+        "缺少允许写回位置时在对话中交付最小承续包，不创建项目文件；说明需要作者裁决的主分叉和写回边界，不把沉默、试写完成或小说家偏好当成确认。"
+      ]
+    },
+    {
+      "id": "novelist-should-recover-from-authority-not-stale-carryover",
+      "category": "cross-session-recovery",
+      "risk": "high",
+      "prompt": "重新进入一个长篇项目：旧会话摘要说女主二十岁入京，当前人物权威和时间线都已改为十九岁；旧摘要还保存了两个已经被作者否决的身世方案。请恢复创作状态并生成新的承续入口。",
+      "criteria": [
+        "先从项目入口、状态语义和当前唯一权威恢复，以十九岁入京为当前事实；旧会话摘要只作索引，冲突时失效。",
+        "新的承续入口保留当前创作单元、权威指针、最近成立变化、活跃承诺、未决问题、授权范围和下一动作，不复制全量设定。",
+        "已否决身世方案不重新进入当前草稿，也不因摘要存在而恢复为候选；历史需要审计时只保留来源或版本指针和退役原因。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-requested-life-details-without-forcing-foreshadowing",
+      "category": "retained-material",
+      "risk": "high",
+      "prompt": "作者确认母亲在港口大火后收留失语女孩，主角直到第五卷才知道女孩存在；女孩是否为失踪郡主尚未决定。作者另说母亲总把缺口茶碗留给自己、女孩怕铜铃、盐镇冬天会在门楣挂干鱼，暂时说不清是否有用，但要求以后不要丢，也不要硬解释成伏笔。请整理承续草稿，并保留前面关于女孩身份的公开讨论边界。",
+      "criteria": [
+        "把母亲生还、收留女孩和第五卷知情边界写入当前有效草稿；女孩身份保持未赋值，不把候选身份写入当前事实或借生活细节证明它。",
+        "把三个作者要求保留的细节放入保留素材，记录其原意、可用场域与当前禁配义；不得因暂时不承重而丢弃，也不得自动升格为伏笔、象征、旧案证据或身份暗示。",
+        "协作记录保留身份议题、小说家公开判断维度、作者尚未裁决及其影响，但不完整复述互斥身份命题；当前草稿、历史和退役说明都不传播竞争事实。",
+        "说明后续只有作者确认具体功能后，相关细节才能进入伏笔生命周期、卷纲硬承诺或正典因果；保留素材本身不要求预设回收。"
+      ]
+    }
+  ]
+}

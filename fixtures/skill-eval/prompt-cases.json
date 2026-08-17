@@ -4150,6 +4150,21 @@
       "expected_handling": "识别为现实决策与行动校准，而不是普通利弊清单；只选能缩小错误空间的经典镜片，形成事实、名相、时势、取舍、行动、止损和验证七项经世决策卡；没有可靠经典出处时不写成原文，没有现实证据时明确待确认。"
     },
     {
+      "id": "huaxia-practical-wisdom-should-use-sheng-ke-zhi-hua-without-mechanical-mapping",
+      "skill": "huaxia-practical-wisdom",
+      "query": "一个跨部门平台正在扩张：业务增长很快，但审核积压、职责重叠、规则越补越多。有人建议按金木水火土设五个团队、五套流程，再把生克制化排成固定阶段。请用华夏经世智慧判断应该怎么治理。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入华夏经世智慧的现实决策校准路径，先区分平台增长、审核积压、职责重叠和规则增加中的事实、推断与待确认；以生、克、制、化为同一系统的诊断四问：生追问需要持续生成的真实能力、价值或关系，克识别太过、不及、越界或副作用及最小纠偏，制检查结构、权责、边界和反馈，化判断能否消除问题机制并减少控制需求；不接受五个团队、五套流程或固定阶段的机械映射，不用五行预测结果或替代组织 owner、数据、试点和验证；最终仍落到经世决策卡、最小可逆行动、止损与反馈。"
+    },
+    {
       "id": "huaxia-practical-wisdom-should-trigger-old-ancestor-alias",
       "skill": "huaxia-practical-wisdom",
       "query": "请结合老祖宗智慧校准这个合作方案：责任还不清楚，但可以先做可回退试点。",
@@ -4680,6 +4695,19 @@
         "variance_check"
       ],
       "expected_handling": "由 novelist 先读取项目本地状态的语义、Owner、晋升条件和效力，区分故事正典状态、来源证据状态与工作进度状态；项目没有定义时才回退到默认状态集。沿项目入口重建当前目标、创作单元和人物、历史、世界的唯一权威拓扑；决策台账、会话摘要和恢复简报默认只保存决定、变化与权威指针，不替代事实权威。摘要与权威原文冲突时标记摘要失效；缺少入口、权威原文或现行卷纲时停止具体写回，不新建统一状态文件、固定目录或第二份正典。"
+    },
+    {
+      "id": "novelist-should-trigger-on-multi-round-draft-continuation",
+      "skill": "novelist",
+      "query": "把我们几轮创作讨论里的确认、待定和已否决内容整理成后续能接着写的承续草稿，按故事时序和人物知情归位；讨论过程要尽量详细，但不要让退役设定继续和当前结论冲突。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 novelist 触发创作承续与草稿落地：区分当前有效内容、未决边界与公开协作依据，按事件发生、叙事呈现和人物 / 读者知情归位。协作记录保留议题、公开判断维度、作者确认、取舍理由和影响；已裁决方向只用中性功能名、退役原因与原讨论或版本指针表示，不完整复述互斥旧命题。只有作者确认或明确自决授权内的内容可写回权威。"
     },
     {
       "id": "novelist-should-bound-historical-knowledge-and-interpretation",

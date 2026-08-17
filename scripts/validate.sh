@@ -250,6 +250,24 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"
+novelist_draft_continuation_eval_dir="${tmp_dir}/novelist-draft-continuation-eval"
+mkdir -p "${novelist_draft_continuation_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json" \
+  --responses "fixtures/skill-eval/novelist-draft-continuation-responses.jsonl" \
+  --output "${novelist_draft_continuation_eval_dir}/blind.jsonl" \
+  --key-output "${novelist_draft_continuation_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json" \
+    --scores "fixtures/skill-eval/novelist-draft-continuation-scores.jsonl" \
+    --key "${novelist_draft_continuation_eval_dir}/key.json" \
+    --blind "${novelist_draft_continuation_eval_dir}/blind.jsonl" \
+    --output "${novelist_draft_continuation_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
 novelist_scene_eval_dir="${tmp_dir}/novelist-scene-eval"
 mkdir -p "${novelist_scene_eval_dir}"
 if scripts/evaluate-skill-behavior.py blind \

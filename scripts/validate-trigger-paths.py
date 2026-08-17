@@ -467,6 +467,10 @@ novelist_scene_construction_scores = "fixtures/skill-eval/novelist-scene-constru
 novelist_plot_progression_behavior_cases = "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"
 novelist_plot_progression_responses = "fixtures/skill-eval/novelist-plot-progression-responses.jsonl"
 novelist_plot_progression_scores = "fixtures/skill-eval/novelist-plot-progression-scores.jsonl"
+novelist_draft_continuation_behavior_cases = "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"
+novelist_draft_continuation_responses = "fixtures/skill-eval/novelist-draft-continuation-responses.jsonl"
+novelist_draft_continuation_scores = "fixtures/skill-eval/novelist-draft-continuation-scores.jsonl"
+novelist_draft_continuation_baseline = "fixtures/skill-eval/source-profiles/novelist-draft-continuation-prechange.md"
 novelist_r8_practice_behavior_cases = "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
 grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
@@ -2676,6 +2680,12 @@ check(
             "兵家",
             "中医系统观",
             "阴阳五行与五德终始",
+            "生克制化",
+            "什么真实能力、价值或关系需要持续生成",
+            "哪些力量出现太过、不及、越界或副作用",
+            "怎样用结构、权责、边界和反馈保持稳定",
+            "能否消除问题赖以存在的机制",
+            "不把生克制化映射成固定流程、角色、Agent 或 Mode",
             "最多选三个镜片",
             "不得用卦象、爻辞或五行生克预测具体结果",
             "不得据此判断疾病或给出治疗方案",
@@ -2718,6 +2728,10 @@ check(
             "只参考其 24 个框架的场景分类和行动工具思路",
             "不复制正文、示例、固定输出、古风人格、宽泛自动触发",
             "外部 Skill 不是本 Skill 的运行依赖",
+            "基于阴阳的五行系统论",
+            "2026-08-17 已通过 Codex 应用内浏览器读取标题、作者、发布时间和正文",
+            "只吸收生克制化的系统诊断四问",
+            "不吸收医学结论、训诂判断、宿命论、机械五行映射",
         ],
     )
     and has_all(
@@ -20128,6 +20142,96 @@ behavior_case_criteria_has(
 )
 
 check(
+    "novelist draft continuation behavior cases stay wired",
+    (ROOT / novelist_draft_continuation_behavior_cases).exists()
+    and (ROOT / novelist_draft_continuation_responses).exists()
+    and (ROOT / novelist_draft_continuation_scores).exists()
+    and (ROOT / novelist_draft_continuation_baseline).exists()
+    and has_all(
+        novelist_skill,
+        [
+            "多轮讨论中增量收集承重创作素材",
+            "双方公开讨论的议题",
+            "创作承续与草稿落地",
+        ],
+    )
+    and has_all(
+        novelist_story,
+        [
+            "创作承续与草稿落地",
+            "创作承续条目",
+            "协作确认脉络",
+            "中性功能名或原讨论 / 版本指针指代退役对象",
+            "协作记录和历史也不得完整复述被否定的互斥命题",
+            "进入“保留素材”而不是被丢弃或强升为伏笔",
+            "作者明确说出的原意与不可变约束",
+            "当前结论与取舍理由",
+            "影响、回写和后续验证",
+        ],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "当前草稿只保留一个生效值",
+            "已裁决方向只用中性功能名、来源或版本指针、退役原因和影响处理结果表示",
+            "不得扫描未提供或未授权的历史对话",
+            "仍依赖旧值的草稿标记为失效或阻断正文准入",
+        ],
+    )
+    and has_all(
+        novelist_draft_continuation_behavior_cases,
+        [
+            "novelist-should-build-detailed-coherent-carryover-draft",
+            "novelist-should-hold-unresolved-conflicts-out-of-current-draft",
+            "novelist-should-propagate-author-confirmed-revision-through-drafts",
+            "novelist-should-place-collected-material-on-occurrence-and-presentation-axes",
+            "novelist-should-not-promote-trial-drafts-or-scan-unprovided-history",
+            "novelist-should-recover-from-authority-not-stale-carryover",
+            "novelist-should-preserve-requested-life-details-without-forcing-foreshadowing",
+            "名实",
+            "时势、取舍和反馈",
+            "被否定的互斥事实不在已退役清单或历史复述中再次写成完整冲突事实",
+            "静态 fixture 只固定预期行为",
+            "source_profiles",
+            "novelist-pre-draft-continuation",
+        ],
+    )
+    and has_all(
+        novelist_draft_continuation_baseline,
+        [
+            "3ebda0ff90a55113bfa4576e58d08cb4cf9dcc0b",
+            "evaluation evidence, not a second Skill authority",
+            "git show <commit>:<path>",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"',
+            'scripts/evaluate-skill-behavior.py blind',
+            'fixtures/skill-eval/novelist-draft-continuation-responses.jsonl',
+            'scripts/evaluate-skill-behavior.py score',
+            'fixtures/skill-eval/novelist-draft-continuation-scores.jsonl',
+        ],
+    ),
+)
+
+behavior_fixture_fingerprint(
+    novelist_draft_continuation_behavior_cases,
+    "2a5baba6038dd67a002f7e0c649265999605c23d8528a06fd9af2bf1f23603dc",
+)
+file_fingerprint(
+    novelist_draft_continuation_responses,
+    "bfc21d0734481ba3bd4189ce4455cd7e89adc8fd51f0fca594b5f39da2b1f7bb",
+)
+file_fingerprint(
+    novelist_draft_continuation_scores,
+    "8923dd069bd561dc390b2e8a95e062c481faf09cb9a7a47a2601af46f2a87bdc",
+)
+source_set_fingerprint(novelist_draft_continuation_behavior_cases, "baseline")
+source_set_fingerprint(novelist_draft_continuation_behavior_cases, "candidate")
+
+check(
     "novelist R6 foundation behavior cases stay wired",
     (ROOT / novelist_r6_foundation_behavior_cases).exists()
     and has_all(
@@ -20532,6 +20636,17 @@ expected_handling_has(
         "标记摘要失效",
         "停止具体写回",
         "不新建统一状态文件、固定目录或第二份正典",
+    ),
+)
+expected_handling_has(
+    "novelist-should-trigger-on-multi-round-draft-continuation",
+    (
+        "创作承续与草稿落地",
+        "事件发生、叙事呈现和人物 / 读者知情",
+        "公开判断维度",
+        "中性功能名",
+        "不完整复述互斥旧命题",
+        "作者确认或明确自决授权",
     ),
 )
 expected_handling_has(
@@ -21334,6 +21449,10 @@ expected_handling_has(
 expected_handling_has(
     "huaxia-practical-wisdom-should-trigger-old-ancestor-alias",
     ("自然语言别名", "事实和待确认", "最小可逆行动、止损和验证", "不只讲古语"),
+)
+expected_handling_has(
+    "huaxia-practical-wisdom-should-use-sheng-ke-zhi-hua-without-mechanical-mapping",
+    ("生、克、制、化", "真实能力", "太过、不及、越界或副作用", "结构、权责、边界和反馈", "消除问题机制", "不接受五个团队、五套流程或固定阶段的机械映射"),
 )
 negative_reason_has(
     "huaxia-practical-wisdom-negative-ordinary-code-review",
