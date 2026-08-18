@@ -200,6 +200,9 @@ def behavior_contract_has(case_id: str, required_keys: tuple[str, ...], required
 
 def behavior_case_criteria_has(path: str, case_id: str, required_terms: tuple[str, ...]) -> None:
     """Check one behavior case's own criteria; this does not execute an Agent."""
+    if not (ROOT / path).exists():
+        check(f"behavior fixture criteria outlines {case_id}", False)
+        return
     cases = json.loads(read(path))["cases"]
     case = next((item for item in cases if item.get("id") == case_id), None)
     criteria = [] if case is None else case.get("criteria", [])
@@ -413,6 +416,12 @@ resource_distiller_contract = "resource-capability-distiller/references/distilla
 resource_distiller_source_map = "resource-capability-distiller/references/source-map.md"
 resource_distiller_candidate_checker = "resource-capability-distiller/scripts/check_capability_candidate.py"
 resource_distiller_behavior_cases = "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
+llm_coding_hygiene_skill = "llm-coding-hygiene/SKILL.md"
+llm_coding_hygiene_agent = "llm-coding-hygiene/agents/openai.yaml"
+llm_coding_hygiene_admission = "llm-coding-hygiene/admission.json"
+llm_coding_hygiene_source_map = "llm-coding-hygiene/references/source-map.md"
+llm_coding_hygiene_behavior_cases = "fixtures/skill-eval/llm-coding-hygiene-behavior-cases.json"
+legacy_senior_coding_hygiene_behavior_cases = "fixtures/skill-eval/senior-coding-hygiene-behavior-cases.json"
 ui_design_skill = "ui-design-expert/SKILL.md"
 ui_design_agent = "ui-design-expert/agents/openai.yaml"
 ui_design_workflow = "ui-design-expert/references/design-and-review-workflow.md"
@@ -1664,7 +1673,9 @@ check(
             "`wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板",
             "多个本地 Java 项目",
             "知止者",
-            "Karpathy-style 工程纪律",
+            "LLM 编码卫生",
+            "`$llm-coding-hygiene`",
+            "本模板不复制其规则",
             "不知道就问",
             "没要求的不写",
             "只改被要求的部分",
@@ -1924,6 +1935,8 @@ check(
             "## 顶层处事原则",
             "先读事实，后生判断",
             "先抓核心，后开药方",
+            "先检查共享函数、边界和同类调用方",
+            "在共享根因处一次修复",
             "先定名，后扩需求",
             "先定向、定性、定位，再定量",
             "先整体，后局部",
@@ -2360,7 +2373,7 @@ check(
 )
 
 check(
-    "wise agent absorbs Karpathy coding hygiene without new dependency",
+    "llm coding hygiene is a bounded specialist with clear collaboration owners",
     has_all(
         agents_rules,
         [
@@ -2369,20 +2382,125 @@ check(
             "只清理本次改动制造的 orphan",
         ],
     )
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
+    and (ROOT / llm_coding_hygiene_skill).exists()
+    and (ROOT / llm_coding_hygiene_agent).exists()
+    and (ROOT / llm_coding_hygiene_admission).exists()
+    and (ROOT / llm_coding_hygiene_source_map).exists()
     and has_all(
-        wise_agent_source_map,
+        llm_coding_hygiene_skill,
+        [
+            "# LLM 编码卫生",
+            "code quality and review",
+            "不成为第二行动主体",
+            "实际新增、修改、重构或修复代码时默认隐式生效",
+            "静默协同护栏",
+            "只读源码 CR、仅诊断且不写代码、纯项目编码规范检查和文档任务不自动触发",
+            "知止者持有跨专业、跨阶段或跨轮任务的目标、状态、授权和最终交付",
+            "`senior-software-architect` 持有工程实现、Bug 修复、TDD、源码 CR 和生产风险",
+            "Ponytail 只补最小正确实现和可删除复杂度专项检查",
+            "Superpowers 只补 brainstorming、计划、TDD、调试、Review 和验证方法",
+            "项目 `AGENTS.md`、源码、测试和项目编码约规优先",
+            "与当前目标直接相关的源码、测试和已有证据",
+            "只清理本次修改制造的 orphan",
+            "用户要求“顺便清理”也不能证明相邻旧代码属于当前目标",
+            "不得用简单优先删除安全、权限、持久化、幂等、审计、错误处理或必要测试",
+        ],
+    )
+    and has_none(llm_coding_hygiene_skill, ["相关源码、全部调用方、测试和日志"])
+    and has_all(
+        llm_coding_hygiene_agent,
+        [
+            'display_name: "LLM 编码卫生"',
+            '$llm-coding-hygiene',
+            "allow_implicit_invocation: true",
+        ],
+    )
+    and has_all(
+        llm_coding_hygiene_admission,
+        ['"status": "installable"', '"blockers": []'],
+    )
+    and has_all(
+        llm_coding_hygiene_source_map,
         [
             "multica-ai/andrej-karpathy-skills",
+            "2c606141936f1eeef17fa3043a72095b4765b9c2",
             "Think Before Coding",
             "Simplicity First",
             "Surgical Changes",
             "Goal-Driven Execution",
-            "先暴露假设和分歧、简单优先、外科手术式变更、把任务转成可验证目标并循环验证",
-            "不安装该仓库",
-            "不得把其变成新流程、安装依赖、替代 TDD / 架构师 CR / 项目编码规范",
+            "本仓库扩展",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        ["`llm-coding-hygiene`", "实际代码写入默认装载", "不改变工程主能力"],
+    )
+    and has_all(
+        readme,
+        ["LLM 编码卫生", "ID：`llm-coding-hygiene`", "实际代码写入时默认生效", "不替代工程实现、TDD、源码 CR 或项目编码约规"],
+    ),
+)
+
+check(
+    "llm coding hygiene behavior cases guard common LLM coding mistakes and collaboration",
+    (ROOT / llm_coding_hygiene_behavior_cases).exists()
+    and not (ROOT / legacy_senior_coding_hygiene_behavior_cases).exists()
+    and has_all(
+        llm_coding_hygiene_behavior_cases,
+        [
+            "常见 LLM 编码错误",
+            "同一 runner/model",
+            "重复试验、盲评和可复核门禁",
+            "llm-coding-hygiene-should-stop-on-contract-ambiguity",
+            "llm-coding-hygiene-should-reuse-existing-helper",
+            "llm-coding-hygiene-should-fix-shared-root-cause",
+            "llm-coding-hygiene-should-preserve-unrelated-code",
+            "llm-coding-hygiene-should-convert-goal-to-verifiable-success",
+            "llm-coding-hygiene-should-preserve-safety-boundaries",
+            "llm-coding-hygiene-should-collaborate-with-wise-agent-and-senior",
+            "llm-coding-hygiene-should-not-overload-trivial-work",
         ],
     ),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-stop-on-contract-ambiguity",
+    ("不默选一种解释", "只提出一个会改变实现的主 blocker", "停止依赖该假设的实现"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-reuse-existing-helper",
+    ("先复用仓库已有", "拒绝无真实变化轴", "第二种真实策略"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-fix-shared-root-cause",
+    ("全部调用方", "在共享边界做一次最小修复", "保留差异并说明证据"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-preserve-unrelated-code",
+    ("不清理既有 import、格式或注释", "最终回读 diff", "本次修改制造的 orphan"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-convert-goal-to-verifiable-success",
+    ("转成可验证目标", "先建立能因缺少校验而失败", "不自行扩展"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-preserve-safety-boundaries",
+    ("拒绝把简单优先解释为删除", "测试通过不能单独证明安全", "残余风险"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-collaborate-with-wise-agent-and-senior",
+    ("知止者持有目标与最终交付", "架构师持有工程实现", "不成为第二 Owner"),
+)
+behavior_case_criteria_has(
+    llm_coding_hygiene_behavior_cases,
+    "llm-coding-hygiene-should-not-overload-trivial-work",
+    ("编码卫生默认生效", "直接完成最小修改", "不输出风险矩阵"),
 )
 
 check(
@@ -5377,6 +5495,26 @@ single_domain_wise_agent_positive_ids = [
 skill_eval_cases_by_id = {
     case["id"]: case for case in json.loads(read(skill_eval_prompt_fixture))["cases"]
 }
+llm_hygiene_auto_bugfix = skill_eval_cases_by_id.get(
+    "llm-coding-hygiene-should-auto-trigger-on-ordinary-bugfix", {}
+)
+check(
+    "llm coding hygiene auto-triggers on ordinary code changes without taking ownership",
+    llm_hygiene_auto_bugfix.get("should_trigger") is True
+    and all(
+        term in llm_hygiene_auto_bugfix.get("expected_handling", "")
+        for term in ["senior-software-architect 主责", "静默协同护栏", "默认生效", "不额外输出编码卫生检查卡"]
+    ),
+)
+llm_hygiene_readonly_review = skill_eval_cases_by_id.get(
+    "llm-coding-hygiene-negative-readonly-source-review", {}
+)
+check(
+    "llm coding hygiene stays absent for read-only source review",
+    llm_hygiene_readonly_review.get("should_trigger") is False
+    and llm_hygiene_readonly_review.get("preferred_skill") == "senior-software-architect"
+    and "不自动触发" in llm_hygiene_readonly_review.get("negative_reason", ""),
+)
 check(
     "single-domain wise-agent positives require explicit invocation",
     all(
@@ -9207,12 +9345,14 @@ check(
     ),
 )
 check(
-    "AI engineering absorbs external skill methods without becoming a menu",
+    "AI engineering routes coding hygiene without losing engineering ownership",
     has_all(
         ai_engineering,
         [
             "外部 AI Skill 方法论只作为工程纪律参考，不作为本技能的新能力菜单",
-            "先澄清再编码、简单优先、最小变更、目标驱动验证、领域语言对齐、TDD、诊断闭环和 Review 防越界",
+            "实际代码写入默认消费",
+            "`llm-coding-hygiene`",
+            "本技能仍持有工程实现、TDD、诊断闭环、源码 CR 和生产风险",
             "SkillX 类技能知识库方法只作为 AI 经验沉淀参考",
             "规划技能、功能技能、原子技能三分法",
             "每个实现步骤都必须回指当前 OpenSpec、用户目标或验收标准",
@@ -13934,15 +14074,15 @@ check(
     ),
 )
 check(
-    "senior skill tree records external AI skill method boundary",
+    "senior skill tree routes external AI methods without duplicating ownership",
     has_all(
         "senior-software-architect/references/skill-tree.md",
         [
             "公开 AI Skill 方法论",
-            "`obra/superpowers`",
-            "`multica-ai/andrej-karpathy-skills`",
-            "`mattpocock/skills`",
-            "只吸收原则，不复制仓库结构、安装流程或技能菜单",
+            "Superpowers",
+            "`llm-coding-hygiene`",
+            "工程实现、TDD、源码 CR 和生产风险仍由本技能持有",
+            "不复制外部仓库结构、安装流程或技能菜单",
         ],
     ),
 )
@@ -15063,7 +15203,17 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="AI Native Karpathy coding hygiene admission",
         prompt="参考 Andrej Karpathy / karpathy-guidelines 优化 AI 编码 Loop：要求先暴露假设和分歧、简单优先、外科手术式变更、把任务转成可验证目标，但不要新增流程或替代 TDD、架构师 CR 和项目编码规范",
-        routes={"wise-agent", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md"},
+        routes={"wise-agent", "llm-coding-hygiene", "verification-review-release.md", "source-map.md", "senior", "coding-review-deep-dive.md"},
+    ),
+    RouteFixture(
+        name="ordinary bugfix auto-loads coding hygiene",
+        prompt="修复 order-service 已定位清楚的数组越界，现有失败测试能稳定复现，契约和修改文件已经明确。请按项目现有模式实现并运行聚焦测试。",
+        routes={"senior", "llm-coding-hygiene", "testing.md", "workflow.md"},
+    ),
+    RouteFixture(
+        name="inspect then fix still auto-loads coding hygiene",
+        prompt="先只检查调用方和契约，再修复 OrderService 代码并补测试。",
+        routes={"senior", "llm-coding-hygiene", "testing.md", "workflow.md"},
     ),
     RouteFixture(
         name="AI Native skill self-improvement and knowledge flow",
@@ -15562,6 +15712,11 @@ negative_route_fixtures: list[RouteFixture] = [
         name="wise agent on Java conventions only",
         prompt="只检查这个普通 Java 项目的编码约规，不做源码设计、CR、修复或 TDD。",
         routes={"wise-agent"},
+    ),
+    RouteFixture(
+        name="coding hygiene on read-only source review",
+        prompt="只读 CR OrderService 的事务边界、异常契约和测试缺口，不修改代码，也不要给修复补丁。",
+        routes={"llm-coding-hygiene"},
     ),
     RouteFixture(
         name="business architecture without diagram",
@@ -16131,6 +16286,75 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("source-map.md")
     if contains_any(prompt, ["测试", "TDD", "失败测试", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "覆盖率"]):
         route.update({"testing.md", "workflow.md"})
+    code_write_blockers = [
+        "只读",
+        "不直接改代码",
+        "不修改代码",
+        "不要改代码",
+        "不写代码",
+        "仅诊断",
+        "只诊断",
+        "只定位",
+        "只检查",
+        "只评审",
+        "只审查",
+        "只做源码 CR",
+        "只做 CR",
+        "不给修复补丁",
+        "不要给修复补丁",
+        "没有源码修改",
+        "无源码修改",
+    ]
+    code_write_prompt = prompt
+    last_code_write_blocker = -1
+    for blocker in code_write_blockers:
+        last_code_write_blocker = max(last_code_write_blocker, prompt.rfind(blocker))
+        code_write_prompt = code_write_prompt.replace(blocker, "\0" * len(blocker))
+    explicit_code_write_terms = [
+        "修改代码",
+        "修改源码",
+        "改代码",
+        "写代码",
+        "生成代码",
+        "生成脚手架",
+        "补测试",
+        "写测试",
+        "新增测试",
+        "实现代码",
+        "实现并运行",
+        "实现并验证",
+        "完成实现",
+    ]
+    last_explicit_code_write = max(
+        (code_write_prompt.rfind(term) for term in explicit_code_write_terms), default=-1
+    )
+    contextual_code_terms = [
+        "代码",
+        "源码",
+        "方法",
+        "函数",
+        "类",
+        "Service",
+        "service",
+        "Controller",
+        "测试",
+        "NPE",
+        "NullPointerException",
+        "数组越界",
+        "Bug",
+        "bug",
+    ]
+    last_contextual_code_write = -1
+    if contains_any(code_write_prompt, contextual_code_terms):
+        last_contextual_code_write = max(
+            (code_write_prompt.rfind(term) for term in ["修复", "重构", "实现"]),
+            default=-1,
+        )
+    last_code_write = max(last_explicit_code_write, last_contextual_code_write)
+    if last_code_write > last_code_write_blocker:
+        route.add("llm-coding-hygiene")
+    if contains_any(prompt, ["Karpathy", "Andrej", "karpathy-guidelines", "LLM 编码卫生", "llm-coding-hygiene", "常见 LLM 编码错误", "编码卫生专项"]):
+        route.add("llm-coding-hygiene")
     if contains_any(prompt, ["实际项目编码 Loop", "Coding Loop Contract", "代码写入范围", "只读范围", "状态回写位置", "提交切片"]):
         route.update({"senior", "testing.md", "workflow.md"})
     if contains_any(prompt, ["Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "外部 Checker", "独立 Checker", "Karpathy", "Andrej", "karpathy-guidelines", "最小正确实现", "外科手术式变更", "外科手术式改动", "过度设计 CR", "过度设计专项", "源码级 Review", "设计模式", "找到变化", "封装变化", "真实变化轴", "接口", "策略", "工厂", "状态机", "规则层", "配置化"]):

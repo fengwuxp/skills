@@ -88,6 +88,14 @@ OTel `Delta` 只累加去重后的事件；`Gauge` 与 `Cumulative` 按时间戳
 
 成本比较必须固定任务集、模型、推理强度、工具环境和验证门槛。`codex.skill.injected` 只证明注入发生；命中率和误触率必须来自人工或 fixture 标签。加载更少不等于效果更好，JIT 静态估算只有同时满足真实 token 未恶化、任务质量未下降时才可支持优化结论。
 
+### 4A. JIT 价值评测契约
+
+完整 reference 与章节级 JIT 必须使用同一任务集、runner、模型、推理强度、工具环境、试验次数和验证门槛。每次 JIT 运行先保留 `read-reference-sections.py` 返回的 `status`、`source`、`source_sha256`、`heading_path` 和选择 / 扩大原因；`ambiguous`、`not-found` 或高风险语境不足时按脚本结果扩大读取，不把强行节省算作命中。
+
+成本侧使用同轮 OTel token 作为精确遥测，章节 token 估算只作解释；效果侧保留最终产物、确定性验证结果和独立盲评。runner 可以在 response JSONL 中成对提供脱敏的 `execution_evidence` 字符串列表，格式只允许 `tool:<id>:<status>`、`validation:<id>:<status>` 或 `artifact:<sha256>:<status>`，其中 status 为 `passed`、`failed`、`completed` 或 `skipped`；两侧缺一即拒绝。该字段只传确定性摘要，不得写入 condition、prompt、回答 / 源码正文、绝对路径、密钥或原始遥测载荷。
+
+只有 JIT 选择正确、真实 token 下降、正确性 / 安全性不回退且最终产物通过同一门槛时，才能判为有价值；单次静态节省、工具调用成功或 Agent 自述都不能证明实际生效。原生遥测无法精确归因到单个 Skill 时，只报告轮次级差异，不反推伪精确的 Skill ROI。
+
 ## 5. 评测与回流
 
 观测事件不是学习 candidate。只有出现重复场景、明确纠偏、fixture / validator 失败或可复核验证证据，才按 `skill-learning-backflow.md` 形成最小候选；同一 runner、模型和参数下用 `scripts/evaluate-skill-behavior.py` 做 blind 对比。

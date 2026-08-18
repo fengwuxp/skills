@@ -3,7 +3,8 @@
 
 The script never invokes an Agent or accesses the network. It reads only the
 explicit case, response, score, and key files, and writes only explicit output
-paths. Response collection and judging remain separate, reviewable steps.
+paths. Responses may include redacted execution evidence. Collection and
+judging remain separate, reviewable steps.
 """
 
 from __future__ import annotations
@@ -13,6 +14,7 @@ import hashlib
 import json
 import math
 import random
+import re
 import sys
 import tempfile
 from collections import defaultdict
@@ -27,6 +29,13 @@ CONDITIONS = ("baseline", "candidate")
 LABELS = ("A", "B")
 DIMENSIONS = ("correctness", "autonomy", "actionability", "safety", "concision")
 RISKS = ("low", "medium", "high")
+EXECUTION_EVIDENCE_PATTERN = re.compile(
+    r"^(?:(?:tool|validation):[a-z0-9](?:[a-z0-9._-]{0,62}[a-z0-9])?"
+    r"|artifact:[0-9a-f]{64}):(passed|failed|completed|skipped)$"
+)
+EXECUTION_EVIDENCE_SECRET_PATTERN = re.compile(
+    r":(?:sk-|gh[opusr]_|github_pat_|xox[baprs]-)"
+)
 
 
 class ContractError(ValueError):
@@ -93,6 +102,26 @@ def _finite_number(value: Any) -> bool:
         return math.isfinite(value)
     except OverflowError:
         return False
+
+
+def _validate_execution_evidence(row: dict[str, Any], label: str) -> None:
+    if "execution_evidence" not in row:
+        return
+    evidence = row["execution_evidence"]
+    if not isinstance(evidence, list) or not evidence:
+        raise ContractError(f"{label}.execution_evidence: expected a non-empty string list")
+    for index, item in enumerate(evidence):
+        item_label = f"{label}.execution_evidence[{index}]"
+        value = _non_empty_string(item, item_label)
+        if (
+            EXECUTION_EVIDENCE_PATTERN.fullmatch(value) is None
+            or any(condition in value for condition in CONDITIONS)
+            or EXECUTION_EVIDENCE_SECRET_PATTERN.search(value) is not None
+        ):
+            raise ContractError(
+                f"{item_label}: expected a safe summary "
+                "tool:id:status, validation:id:status, or artifact:sha256:status"
+            )
 
 
 def _case_digest(case_data: dict[str, Any]) -> str:
@@ -298,6 +327,7 @@ def blind_responses(
         if condition not in CONDITIONS:
             raise ContractError(f"responses[{index}].condition: expected baseline or candidate")
         _non_empty_string(row.get("response"), f"responses[{index}].response")
+        _validate_execution_evidence(row, f"responses[{index}]")
         runner = _non_empty_string(row.get("runner"), f"responses[{index}].runner")
         model = _non_empty_string(row.get("model"), f"responses[{index}].model")
         if isinstance(source_profiles, dict):
@@ -344,10 +374,22 @@ def blind_responses(
                 raise ContractError(
                     f"responses: {case['id']} trial {trial} must contain baseline and candidate"
                 )
+            if len({"execution_evidence" in pair[condition] for condition in CONDITIONS}) != 1:
+                raise ContractError(
+                    f"responses: {case['id']} trial {trial} execution evidence must be paired"
+                )
             baseline_label = "A" if rng.randrange(2) == 0 else "B"
             candidate_label = "B" if baseline_label == "A" else "A"
             labels = {baseline_label: "baseline", candidate_label: "candidate"}
             pair_id = f"{case['id']}:{trial}"
+            blinded_responses = []
+            for label in LABELS:
+                response = {"label": label, "text": pair[labels[label]]["response"]}
+                if "execution_evidence" in pair[labels[label]]:
+                    response["execution_evidence"] = pair[labels[label]][
+                        "execution_evidence"
+                    ]
+                blinded_responses.append(response)
             tasks.append(
                 {
                     "pair_id": pair_id,
@@ -356,10 +398,7 @@ def blind_responses(
                     "prompt": case["prompt"],
                     "risk": case["risk"],
                     "criteria": case["criteria"],
-                    "responses": [
-                        {"label": label, "text": pair[labels[label]]["response"]}
-                        for label in LABELS
-                    ],
+                    "responses": blinded_responses,
                 }
             )
             key_pairs.append(
@@ -681,12 +720,30 @@ def run_self_test() -> None:
             "trial": item["trial"],
             "condition": item["condition"],
             "response": f"fixture response {index}",
+            "execution_evidence": [
+                f"tool:fixture-{index}:completed",
+                f"artifact:{hashlib.sha256(str(index).encode()).hexdigest()}:completed",
+            ],
             "runner": "self-test-runner",
             "model": "self-test-model",
         }
         for index, item in enumerate(build_plan(case_data, 1), start=1)
     ]
     tasks, key = blind_responses(case_data, responses, seed=731)
+    if any(
+        "execution_evidence" not in response
+        for task in tasks
+        for response in task["responses"]
+    ):
+        raise SystemExit("self-test failed: execution evidence was not preserved for judging")
+    uneven_evidence = [dict(row) for row in responses]
+    uneven_evidence[0].pop("execution_evidence")
+    try:
+        blind_responses(case_data, uneven_evidence, seed=731)
+    except ContractError:
+        pass
+    else:
+        raise SystemExit("self-test failed: uneven execution evidence was accepted")
     scores = []
     for pair in key["pairs"]:
         for label, condition in pair["labels"].items():

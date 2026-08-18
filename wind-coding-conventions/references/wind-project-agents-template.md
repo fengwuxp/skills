@@ -1,6 +1,6 @@
 # Wind 项目 AGENTS.md 模板
 
-本文是 `wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自多个本地 Java 项目的稳定共性、Wind 编码约规、AI Native 产研协同、Karpathy-style 工程纪律和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。
+本文是 `wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板，用于 Wind 风格 Java 项目初始化或改进 Agent 运行约规。模板提炼自多个本地 Java 项目的稳定共性、Wind 编码约规、AI Native 产研协同、LLM 编码卫生和 AGENTS.md 实战经验；项目本地事实、OpenSpec/ADR、CI 与附近代码风格优先。实际代码写入默认消费 `$llm-coding-hygiene` 作为静默护栏，Wind 约规仍持有项目规则判断；本模板不复制其规则。
 
 ## 使用时机
 

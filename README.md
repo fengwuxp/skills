@@ -180,6 +180,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 业务、资金、身份权限、数据、通信协议、软件供应链、系统架构与运行事件的安全设计、评审和准出 | 安全工程专家，ID：`security-engineering-expert`，路径：[security-engineering-expert](./security-engineering-expert) | 目标环境、资产与资损、主体、真实流程、信任边界、现有控制、证据与风险 Owner | 不替代产品/支付事实、代码实现、精确的 `codex-security:*` 能力、法律合规判断或生产授权 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
+| 实际代码写入，Karpathy Guidelines，或 AI 生成计划 / diff 的隐藏假设、过度设计、范围漂移、无关清理与弱验证专项审查 | LLM 编码卫生，ID：`llm-coding-hygiene`，路径：[llm-coding-hygiene](./llm-coding-hygiene) | 用户目标、计划或 diff、相关源码与测试、成功标准 | 实际代码写入时默认生效，但只作静默护栏，不替代工程实现、TDD、源码 CR 或项目编码约规 |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事/卷/章设计、正文、重写和连续性审查 | 小说家，ID：`novelist`，路径：[novelist](./novelist) | 类型承诺、当前创作单元、稿件权威、设定状态、允许改变范围、作者验收 | 以华夏经世智慧校准人情事势；不把旧稿、考据结论或创作候选自动升级为正典 |
 | 正式报告、制度、手册、研究说明、创作设定集、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、小说、法律、合规或考据结论，不负责小说正文 |
 | 教程、视频、代码、文档、规范和产物到可复用能力候选 | 资源炼技，ID：`resource-capability-distiller`，路径：[resource-capability-distiller](./resource-capability-distiller) | 可读取材料、复用目标、目标环境、许可与验收方式 | 先提炼能力单元并逐项归位；不默认创建新 Skill，不自动安装、同步、提交或晋升 |
@@ -196,6 +197,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 常见组合仍只保留一个最终 Owner：
 
 - 从 AI 原型到工程化：产品专家稳定对象、流程、规则和验收，架构师完成系分、TDD、源码 CR 和生产验证，知止者持有跨阶段目标。
+- 从 AI 编码计划到工程交付：知止者只在跨阶段时持有目标、状态与授权；实际代码写入默认装载 LLM 编码卫生，静默约束假设、简化、范围和成功证据；架构师持有实现、TDD、源码 CR 与生产风险。
 - 从支付产品到工程化：支付专家稳定资金事实、支付不变量、外部规则边界和验收种子，架构师完成系统设计、代码、测试和生产证据，知止者只在跨阶段或跨轮时持有项目执行规范与 Checker。
 - 从产品事实到可用界面：产品专家稳定业务语义和验收口径，UI 设计专家形成信息架构、交互状态、视觉与可用性契约，架构师实现并验证；Figma 能力只负责工具内执行或既有设计到代码。
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
@@ -379,7 +381,7 @@ python3 scripts/evaluate-skills.py \
 
 ```bash
 python3 scripts/evaluate-skill-behavior.py prepare --trials 3 --output /tmp/skill-behavior-plan.jsonl
-# 使用同一 runner/model 收集 response JSONL：case_id、trial、condition、response、runner、model
+# 使用同一 runner/model 收集 response JSONL：case_id、trial、condition、response、runner、model；可选 execution_evidence 必须成对提供，格式限 tool:id:status、validation:id:status 或 artifact:sha256:status
 python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior-responses.jsonl --output /tmp/skill-behavior-judge.jsonl --key-output /tmp/skill-behavior-key.json
 # 独立评分 JSONL：pair_id、label、五项 rubric 分数、blocker、notes、blind_sha256
 python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --blind /tmp/skill-behavior-judge.jsonl --output /tmp/skill-behavior-report.json

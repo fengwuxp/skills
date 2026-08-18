@@ -1,0 +1,6 @@
+interface:
+  display_name: "LLM 编码卫生"
+  short_description: "代码写入时默认约束假设、复杂度、范围与验证"
+  default_prompt: "Use $llm-coding-hygiene as a silent guardrail while writing code, or explicitly audit a coding plan or diff for hidden assumptions, overengineering, scope drift, and weak verification."
+policy:
+  allow_implicit_invocation: true

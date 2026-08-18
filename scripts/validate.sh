@@ -347,6 +347,9 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-ag
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test
 
+echo "==> llm coding hygiene behavior cases"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/llm-coding-hygiene-behavior-cases.json"
+
 echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test

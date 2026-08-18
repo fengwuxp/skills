@@ -116,6 +116,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具 | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
+| 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段由 `wise-agent` 持有目标与授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；设定集和正式载体用 `document-authoring` | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | `document-authoring` | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
 | 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
@@ -128,6 +129,8 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | 其它领域 | 先判断通用能力是否足够，再审查已安装或候选 Skill | 仅装载能缩小错误空间的能力 | 该能力声明的 validator、来源证据或专业人工复核 |
 
 显式调用专业 Skill 时，不再反向追加无关能力。比如 `$senior-software-architect` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind 证据不得加载 Wind 专项；`$ui-design-expert` 做界面设计时不替产品 Owner 发明业务规则，也不因存在 Figma 工具就自动调用；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。
+
+`llm-coding-hygiene` 在实际代码写入时默认装载，但不改变工程主能力、不成为第二 Owner，也不要求额外输出检查卡。只读源码 CR、仅诊断且不写代码、纯项目编码规范检查和文档任务不自动触发；简单一步代码修改仍静默应用编码卫生并直接完成，不为展示流程而追加知止者、Ponytail、Superpowers 或完整协作链。
 
 轻量产品任务同样适用：只要求为“退款申请”补通用验收种子，且没有原交易、支付轨道、资金账务、清结算、法域或合规事实时，只装载产品通用路径；需要卡组织退款、ACH return、资金回退或账务处理时才升级到 `payment-expert`。
 

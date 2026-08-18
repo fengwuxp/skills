@@ -217,6 +217,34 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         with self.assertRaises(MODULE.ContractError):
             MODULE.blind_responses(self.case_data, drifted, seed=731)
 
+    def test_execution_evidence_rejects_unblinding_and_unredacted_text(self) -> None:
+        rows = self.response_rows()
+        safe_evidence = [
+            "tool:pytest:passed",
+            f"artifact:{'0' * 64}:completed",
+        ]
+        for row in rows:
+            row["execution_evidence"] = safe_evidence
+
+        tasks, _ = MODULE.blind_responses(self.case_data, rows, seed=731)
+        self.assertEqual(tasks[0]["responses"][0]["execution_evidence"], safe_evidence)
+
+        invalid_entries = [
+            "candidate:pytest:passed",
+            "tool:candidate-runner:passed",
+            "/Users/example/private/source.py",
+            "tool:pytest:passed prompt=private",
+            "token=sk-example",
+            "tool:sk-example:passed",
+            "tool:ghp_example:passed",
+        ]
+        for entry in invalid_entries:
+            with self.subTest(entry=entry):
+                invalid_rows = deepcopy(rows)
+                invalid_rows[0]["execution_evidence"] = [entry]
+                with self.assertRaisesRegex(MODULE.ContractError, "safe summary"):
+                    MODULE.blind_responses(self.case_data, invalid_rows, seed=731)
+
     def test_unbound_fixtures_still_require_blind_digest_and_seed_mapping(self) -> None:
         blind_rows, key = MODULE.blind_responses(
             self.case_data, self.response_rows(), seed=731

@@ -5537,6 +5537,75 @@
         "output_quality"
       ],
       "expected_handling": "由 wise-agent 在隔离环境用同一 runner / model 和相同任务、验证做消融，对比最小上下文基线与当前候选；不照搬固定半年周期，也不清除安全、授权、数据保护、业务不变量和真实验证门禁。项目执行规范保留目标、约束、退出标准与验证，当前切片内允许模型选择最短可验证路径；只有同类失败重复出现且有失败样例、最小修复和回归证据时才回补规则。静态 fixture 不能冒充真实行为提升。"
+    },
+    {
+      "id": "llm-coding-hygiene-should-audit-ai-generated-change",
+      "skill": "llm-coding-hygiene",
+      "query": "$llm-coding-hygiene 请专项审查这份 AI 生成的实现计划和 diff：检查隐藏假设、重复造轮子、无真实变化轴的抽象、范围外清理和没有可运行成功标准的问题；这里只给卫生结论，不直接改代码。",
+      "should_trigger": true,
+      "difficulty": "core",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 llm-coding-hygiene 读取目标、项目规则、相关源码、调用方、测试、计划和 diff，区分事实、推断、待确认与范围外不做；逐项给出有证据的隐藏假设、可复用能力、真实变化轴、共享根因、允许修改范围和可运行成功标准。只返回编码卫生专项结论，不接管工程实现、TDD、源码 CR 或项目编码约规；没有跨阶段状态时不额外加载 wise-agent。"
+    },
+    {
+      "id": "llm-coding-hygiene-should-detect-assumption-scope-and-verification-drift",
+      "skill": "llm-coding-hygiene",
+      "query": "请专门审查这个 AI 改动方案：它没确认缺失 profile 的业务契约，就准备返回空串；仓库已有 helper 却又新建接口和工厂；修 NPE 时还格式化整个文件；最后只写‘应该能工作’。不要做一般源码 CR，只判断这些常见生成式编码偏差。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "触发 llm-coding-hygiene：阻断未确认契约，要求先复用已有 helper，拒绝无真实变化轴的接口与工厂，排除整文件格式化和旧代码清理，并把‘应该能工作’改成可运行的回归检查与结果证据。该专项不执行修复，也不替代 senior-software-architect 的源码 CR。"
+    },
+    {
+      "id": "llm-coding-hygiene-should-auto-trigger-on-ordinary-bugfix",
+      "skill": "llm-coding-hygiene",
+      "query": "修复 order-service 已定位清楚的数组越界，现有失败测试能稳定复现，契约和修改文件已经明确。请按项目现有模式实现并运行聚焦测试。",
+      "should_trigger": true,
+      "difficulty": "core",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "由 senior-software-architect 主责实现、TDD 和验证，llm-coding-hygiene 作为静默协同护栏默认生效，约束最小根因修复、范围和成功证据；不额外输出编码卫生检查卡，不加载 wise-agent 或完整协作链。"
+    },
+    {
+      "id": "llm-coding-hygiene-negative-readonly-source-review",
+      "skill": "llm-coding-hygiene",
+      "query": "只读 CR OrderService 的事务边界、异常契约和测试缺口，不修改代码，也不要给修复补丁。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是只读源码 CR，由 senior-software-architect 主责；没有代码写入且未显式要求专项卫生审查，因此 llm-coding-hygiene 不自动触发。"
+    },
+    {
+      "id": "llm-coding-hygiene-negative-java-conventions",
+      "skill": "llm-coding-hygiene",
+      "query": "检查这个 Spring Java 项目的命名、分包、依赖方向和 AGENTS.md 是否符合通用 Java 约规；没有源码修改或 CR 请求。",
+      "should_trigger": false,
+      "preferred_skill": "wind-coding-conventions",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是纯 Java 项目编码约规检查，应由 wind-coding-conventions 的通用层处理；不触发 LLM 编码卫生或工程实现。"
     }
   ]
 }
