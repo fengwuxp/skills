@@ -22,6 +22,22 @@ SPEC.loader.exec_module(MODULE)
 
 
 class SkillDeliveryGateTests(unittest.TestCase):
+    def test_explicit_only_skill_counts_all_supported_invocation_aliases(self) -> None:
+        stats = MODULE.prompt_fixture_stats(
+            "wise-agent",
+            {
+                "cases": [
+                    {"skill": "wise-agent", "query": "$wise-agent：推进", "should_trigger": True},
+                    {"skill": "wise-agent", "query": "wise-agent，推进", "should_trigger": True},
+                    {"skill": "wise-agent", "query": "知止者，推进", "should_trigger": True},
+                ]
+            },
+        )
+
+        self.assertEqual(stats["positive_without_name_cases"], 0)
+        _, warnings = MODULE.score_prompt_fixtures("wise-agent", stats, {"evaluation_dimensions": []})
+        self.assertNotIn("wise-agent: positive prompt fixture lacks explicit invocation", warnings)
+
     def test_extract_frontmatter_supports_folded_description_blocks(self) -> None:
         frontmatter, _ = MODULE.extract_frontmatter(
             "---\n"

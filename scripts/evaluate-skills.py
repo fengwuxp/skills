@@ -40,6 +40,10 @@ REQUIRED_PROMPT_DIMENSIONS = {
     "baseline_comparison",
     "variance_check",
 }
+EXPLICIT_INVOCATION_SKILLS = {"wise-agent"}
+EXPLICIT_INVOCATION_ALIASES = {
+    "wise-agent": ("$wise-agent", "wise-agent", "知止者"),
+}
 PROGRESSIVE_HEADER_TERMS = [
     "## 使用时机",
     "## 不适用场景",
@@ -531,7 +535,11 @@ def score_deterministic(
         score += score_ratio(fixture_count, 2, 10)
         if prompt_stats["positive_cases"] >= 2 and prompt_stats["hard_negative_cases"] >= 2:
             score += 15
-        if prompt_stats["positive_without_name_cases"] >= 1:
+        if (
+            prompt_stats["positive_without_name_cases"] == 0
+            if skill_name in EXPLICIT_INVOCATION_SKILLS
+            else prompt_stats["positive_without_name_cases"] >= 1
+        ):
             score += 5
         return max(min(score, 100), 0), warnings
 
@@ -549,7 +557,7 @@ def score_trigger(skill_name: str, prompt_fixture: dict[str, Any]) -> tuple[int,
     warnings: list[str] = []
     score = 80
     expected_terms = {
-        "wise-agent": ["知止者", "自己判断并推进", "做一轮提交", "补单元测试"],
+        "wise-agent": ["$wise-agent", "wise-agent", "知止者"],
         "document-authoring": ["document-authoring", "正式报告", "DOCX"],
         "hanzi-philology": ["hanzi-philology", "甲骨文", "《说文解字》"],
         "java-service-code-generator": ["CREATE TABLE", "字段表格", "Java Entity"],
@@ -596,7 +604,10 @@ def prompt_fixture_stats(skill_name: str, prompt_fixture: dict[str, Any]) -> dic
     positive_without_name = [
         case
         for case in positive
-        if skill_name not in case.get("query", "").casefold()
+        if not any(
+            alias.casefold() in case.get("query", "").casefold()
+            for alias in EXPLICIT_INVOCATION_ALIASES.get(skill_name, (skill_name,))
+        )
     ]
     dimensions = sorted(
         {
@@ -624,7 +635,11 @@ def score_prompt_fixtures(skill_name: str, stats: dict[str, Any], prompt_fixture
     score += score_ratio(stats["positive_cases"], 2, 12)
     score += score_ratio(stats["negative_cases"], 2, 12)
     score += score_ratio(stats["hard_negative_cases"], 2, 10)
-    score += score_ratio(stats["positive_without_name_cases"], 1, 6)
+    if skill_name in EXPLICIT_INVOCATION_SKILLS:
+        if stats["positive_cases"] and stats["positive_without_name_cases"] == 0:
+            score += 6
+    else:
+        score += score_ratio(stats["positive_without_name_cases"], 1, 6)
     score += score_ratio(len(stats["dimensions"]), 4, 5)
 
     if stats["positive_cases"] < 2:
@@ -633,7 +648,9 @@ def score_prompt_fixtures(skill_name: str, stats: dict[str, Any], prompt_fixture
         warnings.append(f"{skill_name}: realistic prompt fixture has too few negative cases")
     if stats["hard_negative_cases"] < 2:
         warnings.append(f"{skill_name}: realistic prompt fixture has too few hard negatives")
-    if stats["positive_without_name_cases"] < 1:
+    if skill_name in EXPLICIT_INVOCATION_SKILLS and stats["positive_without_name_cases"]:
+        warnings.append(f"{skill_name}: positive prompt fixture lacks explicit invocation")
+    elif skill_name not in EXPLICIT_INVOCATION_SKILLS and stats["positive_without_name_cases"] < 1:
         warnings.append(f"{skill_name}: realistic prompt fixture has no positive case without explicit skill name")
 
     fixture_dimensions = set(prompt_fixture.get("evaluation_dimensions", []))

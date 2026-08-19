@@ -41,12 +41,12 @@ SKILLS = {
 }
 EXTERNAL_COMPETITOR_SKILLS = {"ai-slop-detector"}
 KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS
+EXPLICIT_INVOCATION_SKILLS = {"wise-agent"}
 SKILL_MENTIONS = {
     "wise-agent": [
+        "$wise-agent",
         "wise-agent",
         "知止者",
-        "自己判断并推进",
-        "按需调用能力",
     ],
     "document-authoring": ["document-authoring", "专业文档撰写"],
     "grill-me": ["grill-me", "grill me", "盘问", "拷问"],
@@ -345,7 +345,13 @@ def audit_data(data: Any, *, label: str) -> list[str]:
     competition_groups: dict[str, list[dict[str, Any]]] = {}
     used_dimensions: set[str] = set()
     by_skill = {
-        skill: {"positive": 0, "negative": 0, "hard_negative": 0, "positive_without_name": 0}
+        skill: {
+            "positive": 0,
+            "negative": 0,
+            "hard_negative": 0,
+            "positive_without_name": 0,
+            "negative_without_name": 0,
+        }
         for skill in SKILLS
     }
     for index, case in enumerate(cases):
@@ -432,6 +438,8 @@ def audit_data(data: Any, *, label: str) -> list[str]:
                 failures.append(f"{case_label}: expected_handling must be a non-blank string")
         else:
             by_skill[skill]["negative"] += 1
+            if not has_skill_mention(skill, query):
+                by_skill[skill]["negative_without_name"] += 1
             if case.get("hard_negative") is True:
                 by_skill[skill]["hard_negative"] += 1
             if not is_non_blank_string(case.get("negative_reason")):
@@ -448,8 +456,12 @@ def audit_data(data: Any, *, label: str) -> list[str]:
             failures.append(f"{label}: {skill} needs at least 2 negative cases")
         if counts["hard_negative"] < 2:
             failures.append(f"{label}: {skill} needs at least 2 hard negatives")
-        if counts["positive_without_name"] < 1:
+        if skill in EXPLICIT_INVOCATION_SKILLS and counts["positive_without_name"]:
+            failures.append(f"{label}: {skill} positive cases require an explicit skill name")
+        elif skill not in EXPLICIT_INVOCATION_SKILLS and counts["positive_without_name"] < 1:
             failures.append(f"{label}: {skill} needs a positive case without explicit skill name")
+        if skill in EXPLICIT_INVOCATION_SKILLS and counts["negative_without_name"] < 1:
+            failures.append(f"{label}: {skill} needs a negative case without explicit skill name")
 
     missing_used_dimensions = REQUIRED_DIMENSIONS - used_dimensions
     if missing_used_dimensions:
@@ -649,6 +661,8 @@ def run_self_test() -> None:
         raise SystemExit("self-test failed: wise-agent explicit aliases were not detected")
     if has_skill_mention("wise-agent", "请做普通代码 CR，并给出源码证据"):
         raise SystemExit("self-test failed: ordinary task intent was treated as an explicit alias")
+    if has_skill_mention("wise-agent", "请自己判断并推进，按需调用能力"):
+        raise SystemExit("self-test failed: ordinary coordination intent was treated as an explicit alias")
 
     expected = audit_data([], label="invalid-root-type")
     if not any("root must be an object" in item for item in expected):

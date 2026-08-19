@@ -25,6 +25,10 @@ bash -n scripts/smoke-wise-agent-behavior.sh
 bash -n scripts/validate-superpowers-install.sh
 bash -n wise-agent/scripts/check_dirty_worktree_commit.sh
 
+echo "==> Codex agent TOML"
+python3 scripts/validate-codex-agent-profiles.py --self-test
+python3 scripts/validate-codex-agent-profiles.py --source-dir .codex/agents
+
 echo "==> skill audit"
 scripts/audit-skills.sh
 

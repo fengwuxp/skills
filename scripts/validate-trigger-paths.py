@@ -1200,8 +1200,8 @@ expected_handling_has(
 )
 
 check(
-    "wise-agent and precise specialist capabilities support implicit loading in one agent",
-    contains(wise_agent_agent, "allow_implicit_invocation: true")
+    "wise-agent requires explicit invocation while specialist capabilities remain precise",
+    contains(wise_agent_agent, "allow_implicit_invocation: false")
     and all(
         contains(path, "allow_implicit_invocation: true")
         for path in [
@@ -1215,15 +1215,12 @@ check(
     )
     and has_all(
         wise_agent_skill,
-        ["同一 Agent", "不切换人格", "一个项目执行契约"],
+        ["同一 Agent", "不切换人格", "一个项目执行契约", "默认使用中文与用户交流"],
     )
-    and has_all(
-        wise_agent_agent,
-        ["allow_implicit_invocation: true", "统一行动主体", "默认使用中文响应"],
-    )
+    and has_all(wise_agent_agent, ["allow_implicit_invocation: false", "使用 $wise-agent 完成：<目标>"])
     and has_all(
         wise_agent_skill_type_owner_routing,
-        ["专业 Skill 也按精确 description 隐式匹配", "同一 Agent", "不产生第二人格或重复 Owner"],
+        ["`wise-agent` 只在用户显式调用后装载", "同一 Agent", "不产生第二人格或重复 Owner"],
     )
     and has_all(product_skill, ["知止者按需装载", "显式调用本 Skill 只表示优先装载该能力"])
     and has_all(senior_skill, ["知止者按需装载", "显式调用本 Skill 只表示优先装载工程能力"])
@@ -1240,7 +1237,8 @@ check(
             "简单任务直接完成",
             "最短可验证路径",
             "最小专业 Skill",
-            "再加载 `$wise-agent`",
+            "只有用户显式输入 `$wise-agent`、`wise-agent` 或“知止者”时才加载该 Skill",
+            "未显式点名时",
             "必须取得用户明确授权",
             "更深目录的 `AGENTS.md` 可以补充或覆盖",
             "学习回流模式",
@@ -2712,12 +2710,12 @@ check(
 )
 
 check(
-    "wise agent metadata requires coordination evidence rather than generic verification",
+    "wise agent metadata requires explicit invocation",
     has_all(
         wise_agent_skill,
         [
-            "任务跨专业、跨阶段或跨轮且需要目标、状态、能力组合、独立验证或知识回流",
-            "单一专业任务（含只读 CR）",
+            "只有用户显式输入",
+            "未显式点名时不触发",
         ],
     )
     and has_none(
@@ -3136,22 +3134,49 @@ check(
     and all(
         term in frontmatter(wise_agent_skill)
         for term in [
-            "用户显式说“知止者”“wise-agent”“自己判断并推进”“按需调用能力”",
-            "要求 Git stage / commit / push、提交并同步或 PR",
-            "任务跨专业、跨阶段或跨轮",
-            "单一专业任务（含只读 CR）",
-            "简单问答、一步措辞和仅翻译 commit message 不触发",
+            "只有用户显式输入",
+            "`$wise-agent`",
+            "未显式点名时不触发",
         ]
+    )
+    and contains(wise_agent_agent, "理解事实，知所止而后行动")
+    and has_all(
+        wise_agent_skill,
+        ["统一智能行动主体", "确定目标、范围、授权", "默认只加载一个主能力", "Checker 独立"],
+    ),
+)
+check(
+    "wise agent supports one-line portable runtime routing",
+    has_all(
+        wise_agent_skill,
+        ["`$wise-agent <目标>`", "“知止者，<目标>”", "不要求用户选择模型、子代理或模式", "不隐式启用"],
     )
     and has_all(
         wise_agent_agent,
+        ['default_prompt: "使用 $wise-agent 完成：<目标>"', "allow_implicit_invocation: false"],
+    )
+    and has_all(
+        wise_agent_engineering_governance,
         [
-            "理解事实，知所止而后行动",
-            "统一行动主体",
-            "先定目标、权限、完成证据和停止条件",
-            "装载最小专业能力",
-            "独立证据验证",
+            "`task_name` 只命名任务",
+            "`agent_type`",
+            "`gpt-5.6-terra`",
+            "`gpt-5.6-luna`",
+            "回退为主代理直接执行",
+            "不得扩大当前会话、项目和任务包授权",
         ],
+    )
+    and has_all(
+        "sync-skills.sh",
+        ["--with-agents", "AGENT_PROFILE_FILES", "AGENT_SOURCE_DIR", "AGENT_TARGET_DIR", "validate-codex-agent-profiles.py", "--target-dir", "cmp -s"],
+    )
+    and has_all(
+        "scripts/validate-codex-agent-profiles.py",
+        ["gpt-5.6-terra", "gpt-5.6-luna", "model_reasoning_effort", "duplicate agent name"],
+    )
+    and has_all(
+        wise_agent_skill,
+        ["./sync-skills.sh --dry-run --with-agents wise-agent", "明确授权全局写入", "重启 Codex 或新建任务"],
     ),
 )
 check(
@@ -3161,14 +3186,6 @@ check(
         [
             "默认使用中文与用户交流、说明判断并交付结果",
             "用户明确要求其他语言时遵从用户要求",
-            "代码、命令、协议字段、专有名词和原文引用保持原样",
-        ],
-    )
-    and has_all(
-        wise_agent_agent,
-        [
-            "默认使用中文响应",
-            "用户明确要求其他语言时除外",
             "代码、命令、协议字段、专有名词和原文引用保持原样",
         ],
     ),
@@ -3189,7 +3206,7 @@ check(
     )
     and has_all(
         wise_agent_agent,
-        ['display_name: "知止者"', "知所止而后行动", "先定目标、权限、完成证据和停止条件"],
+        ['display_name: "知止者"', "知所止而后行动", "使用 $wise-agent 完成：<目标>"],
     )
     and has_all(
         agents_rules,
@@ -5473,11 +5490,9 @@ check(
     and has_all(
         skill_evaluator,
         [
+            '"$wise-agent"',
             "\"wise-agent\"",
             "\"知止者\"",
-            "\"自己判断并推进\"",
-            "\"做一轮提交\"",
-            "\"补单元测试\"",
         ],
     ),
 )
@@ -5496,6 +5511,14 @@ single_domain_wise_agent_positive_ids = [
 skill_eval_cases_by_id = {
     case["id"]: case for case in json.loads(read(skill_eval_prompt_fixture))["cases"]
 }
+check(
+    "all wise-agent positive fixtures use an explicit invocation",
+    all(
+        any(term.casefold() in case.get("query", "").casefold() for term in ["$wise-agent", "wise-agent", "知止者"])
+        for case in skill_eval_cases_by_id.values()
+        if case.get("skill") == "wise-agent" and case.get("should_trigger") is True
+    ),
+)
 llm_hygiene_auto_bugfix = skill_eval_cases_by_id.get(
     "llm-coding-hygiene-should-auto-trigger-on-ordinary-bugfix", {}
 )
@@ -5523,7 +5546,7 @@ check(
         and skill_eval_cases_by_id[case_id].get("should_trigger") is True
         and any(
             term in skill_eval_cases_by_id[case_id].get("query", "")
-            for term in ["$wise-agent", "进入知止者", "自己判断并推进", "按需调用能力"]
+            for term in ["$wise-agent", "wise-agent", "知止者"]
         )
         for case_id in single_domain_wise_agent_positive_ids
     ),
@@ -5545,7 +5568,9 @@ check(
             "### 1. 30 秒上手",
             "通用任务模板",
             "任务明显跨专业、跨阶段、跨轮",
-            "再在前面加 `$wise-agent：`",
+            "可在前面显式加 `$wise-agent：`",
+            "`wise-agent，<目标>`",
+            "没有这三种显式称呼时不会启用该 Skill",
             "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
             "常见任务可以直接这样说",
             "我有 PRD 和代码路径，只做只读 CR，不改代码",
@@ -6505,7 +6530,8 @@ check(
             "Prompt 矩阵规则",
             "每个 Skill 至少有两个应该触发的真实请求",
             "每个 Skill 至少有两个不应该触发的难负例",
-            "每个 Skill 至少有一个正例不直接点名 Skill",
+            "允许隐式触发的 Skill 至少有一个正例不直接点名 Skill",
+            "只允许显式调用的 Skill 则要求所有正例点名",
             "https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg",
             "2026-05-28",
             "已通过浏览器自动化读取标题、账号、作者、发布时间和正文",
@@ -6524,6 +6550,9 @@ check(
             "needs at least 2 positive cases",
             "needs at least 2 hard negatives",
             "positive case without explicit skill name",
+            "EXPLICIT_INVOCATION_SKILLS",
+            "positive cases require an explicit skill name",
+            "negative case without explicit skill name",
             "toy prompt",
             "appears to contain sensitive data",
             "source title must be a non-blank string",
@@ -8039,13 +8068,7 @@ check(
             "增加独立 Checker",
         ],
     )
-    and has_all(
-        wise_agent_agent,
-        [
-            "默认直接完成",
-            "SDLC、Loop、Worker 或 Checker",
-        ],
-    ),
+    and contains(wise_agent_agent, 'default_prompt: "使用 $wise-agent 完成：<目标>"'),
 )
 check(
     "AGENTS defines skill experience layering",

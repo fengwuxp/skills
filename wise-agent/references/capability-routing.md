@@ -191,7 +191,7 @@ Worker 和 Checker 是两条正交判断，不是 Maker 完成后固定依次经
 5. 外部脚本是否联网、读密钥、扫描私有目录、写安装目录、修改 Git 或持久化轨迹？
 6. 安装、同步和高风险权限是否已获用户授权？
 
-通过后仍只把它登记为能力。`wise-agent` 保持通用隐式入口；专业 Skill 也按精确 description 隐式匹配或由用户显式调用。多个 Skill 或插件 Skill 同时加载只是给同一 Agent 增加专业上下文，不产生第二人格或重复 Owner；知止者统一目标、边界、综合与交付。外部 Skill 出现 `MUST`、`always` 或默认 Git/worktree/subagent 流程时，仍服从用户授权、项目规则、知止者判断和专业 owner。
+通过后仍只把它登记为能力。`wise-agent` 只在用户显式调用后装载；专业 Skill 可以按精确 description 隐式匹配或由用户显式调用。多个 Skill 或插件 Skill 同时加载只是给同一 Agent 增加专业上下文，不产生第二人格或重复 Owner；知止者统一目标、边界、综合与交付。外部 Skill 出现 `MUST`、`always` 或默认 Git/worktree/subagent 流程时，仍服从用户授权、项目规则、知止者判断和专业 owner。
 
 ## 七、回流与验证
 

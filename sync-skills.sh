@@ -8,6 +8,7 @@ Usage:
   sync-skills.sh <skill-dir>...   # sync one or more skills by directory name
   sync-skills.sh all              # sync all skills
   sync-skills.sh --dry-run        # preview selected sync without writing target
+  sync-skills.sh --with-agents wise-agent  # also sync global implementer/batch_worker profiles
 
 Environment:
   CODEX_HOME  Codex home directory. Defaults to "$HOME/.codex".
@@ -21,6 +22,7 @@ USAGE
 }
 
 DRY_RUN=false
+WITH_AGENTS=false
 ARGS=()
 for arg in "$@"; do
   case "${arg}" in
@@ -30,6 +32,9 @@ for arg in "$@"; do
       ;;
     --dry-run)
       DRY_RUN=true
+      ;;
+    --with-agents)
+      WITH_AGENTS=true
       ;;
     *)
       ARGS+=("${arg}")
@@ -53,6 +58,10 @@ fi
 CODEX_HOME_DIR="${CODEX_HOME:-${HOME}/.codex}"
 TARGET_ROOT="${CODEX_HOME_DIR}/skills"
 BACKUP_ROOT="${TARGET_ROOT}/.backups"
+AGENT_SOURCE_DIR="${REPO_ROOT}/.codex/agents"
+AGENT_TARGET_DIR="${CODEX_HOME_DIR}/agents"
+AGENT_BACKUP_ROOT="${CODEX_HOME_DIR}/.agent-backups"
+AGENT_PROFILE_FILES=("implementer.toml" "batch-worker.toml")
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 DRY_RUN_STAGE=""
 
@@ -274,6 +283,17 @@ for selected_position in "${!selected[@]}"; do
     --list-dependencies "${SKILLS_DIR}/${key}")
 done
 
+if [[ "${WITH_AGENTS}" == "true" ]] && ! selected_index "wise-agent" >/dev/null; then
+  echo "--with-agents requires wise-agent to be selected" >&2
+  exit 1
+fi
+
+if [[ "${WITH_AGENTS}" == "true" ]]; then
+  python3 "${REPO_ROOT}/scripts/validate-codex-agent-profiles.py" \
+    --source-dir "${AGENT_SOURCE_DIR}" \
+    --target-dir "${AGENT_TARGET_DIR}"
+fi
+
 echo "Repository root: ${REPO_ROOT}"
 echo "Codex home:      ${CODEX_HOME_DIR}"
 echo "Dry run:         ${DRY_RUN}"
@@ -346,6 +366,48 @@ sync_one() {
   fi
 }
 
+sync_agent_profiles() {
+  local rsync_target="${AGENT_TARGET_DIR}"
+  local backup_dir="${AGENT_BACKUP_ROOT}/agents-${TIMESTAMP}"
+  local profile_file source_file target_file
+
+  echo "==> Codex agent profiles"
+  echo "    from: ${AGENT_SOURCE_DIR}"
+  echo "    to:   ${AGENT_TARGET_DIR}"
+
+  if [[ "${DRY_RUN}" == "true" ]]; then
+    if [[ ! -d "${AGENT_TARGET_DIR}" ]]; then
+      rsync_target="${DRY_RUN_STAGE}"
+    fi
+  else
+    mkdir -p "${AGENT_TARGET_DIR}"
+    for profile_file in "${AGENT_PROFILE_FILES[@]}"; do
+      source_file="${AGENT_SOURCE_DIR}/${profile_file}"
+      target_file="${AGENT_TARGET_DIR}/${profile_file}"
+      if [[ -f "${target_file}" ]] && ! cmp -s "${source_file}" "${target_file}"; then
+        mkdir -p "${backup_dir}"
+        cp -p "${target_file}" "${backup_dir}/"
+      fi
+    done
+  fi
+
+  for profile_file in "${AGENT_PROFILE_FILES[@]}"; do
+    source_file="${AGENT_SOURCE_DIR}/${profile_file}"
+    if [[ "${DRY_RUN}" == "true" ]]; then
+      rsync -av --dry-run "${source_file}" "${rsync_target}/"
+    else
+      rsync -av "${source_file}" "${rsync_target}/"
+    fi
+  done
+
+  if [[ "${DRY_RUN}" == "false" ]]; then
+    for profile_file in "${AGENT_PROFILE_FILES[@]}"; do
+      cmp -s "${AGENT_SOURCE_DIR}/${profile_file}" "${AGENT_TARGET_DIR}/${profile_file}"
+    done
+    [[ ! -d "${backup_dir}" ]] || echo "    backup: ${backup_dir}"
+  fi
+}
+
 retire_replaced_skill() {
   local retired="$1"
   local replacement="$2"
@@ -386,6 +448,11 @@ for key in "${selected[@]}"; do
   sync_one "${key}"
   echo
 done
+
+if [[ "${WITH_AGENTS}" == "true" ]]; then
+  sync_agent_profiles
+  echo
+fi
 
 retire_replaced_skill "wind-project-coding-conventions" "wind-coding-conventions"
 retire_replaced_skill "delivery-collab" "wise-agent"
