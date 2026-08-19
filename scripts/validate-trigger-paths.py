@@ -1029,7 +1029,7 @@ grill_me_unresolved_terms = [
 ]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "能力-项目-系统映射", "知识库回流", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
 product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
-product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
+product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "别一上来写 PRD", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
 payment_terms = [
     "清结算",
     "对账",
@@ -11568,6 +11568,41 @@ check(
     ),
 )
 check(
+    "product judgment action chain exposes pre-PRD decision fields",
+    has_all(
+        product_judgment_action_chain,
+        [
+            "产品定位",
+            "商业成立条件",
+            "核心用户 / 非用户",
+            "核心场景 / 当前替代方式",
+            "关键触点与断点",
+            "产品阶段 / 阶段证据",
+            "不新增固定九步模板",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "产品经理别一上来写 PRD，先想清这 9 件事",
+            "https://mp.weixin.qq.com/s/D04Ty2kQoSqedbSBENPjmQ",
+            "硬件产品的AI实践",
+            "2026-07-07 21:31",
+            "2026-08-19 已通过 Codex in-app Browser",
+            "关键触点与断点",
+            "不新增固定九步模板或平行 Skill",
+        ],
+    )
+    and has_none(
+        repo_source_map,
+        ["https://mp.weixin.qq.com/s/D04Ty2kQoSqedbSBENPjmQ"],
+    )
+    and has_none(
+        wise_agent_source_map,
+        ["https://mp.weixin.qq.com/s/D04Ty2kQoSqedbSBENPjmQ"],
+    ),
+)
+check(
     "product source map keeps product topic index and routes payment sources",
     has_all(
         product_source_map,
@@ -15425,6 +15460,11 @@ scenario_fixtures: list[RouteFixture] = [
         name="product judgment action chain pm skills",
         prompt="参考 pm-skills 把产品判断成流程：我们有访谈、工单、竞品、路线图、PRD 和发布材料，帮我用产品判断动作链判断现在做什么、为什么做、先不做什么，并把输出交给 AI Native",
         routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md", "product-insight-analyst.md", "po-backlog-manager.md", "wise-agent", "product-to-engineering-lifecycle.md", "source-map.md"},
+    ),
+    RouteFixture(
+        name="product pre-PRD decision chain",
+        prompt="产品经理别一上来写 PRD，先判断产品定位、商业模式、目标用户、用户场景、关键触点、产品阶段、资源优先级和验证方式。",
+        routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md"},
     ),
     RouteFixture(
         name="ai native product judgment loop admission",
