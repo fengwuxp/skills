@@ -439,6 +439,7 @@ security_skill = "security-engineering-expert/SKILL.md"
 security_agent = "security-engineering-expert/agents/openai.yaml"
 security_scenarios = "security-engineering-expert/references/security-scenario-routing.md"
 security_method = "security-engineering-expert/references/security-risk-control-and-evidence.md"
+security_skill_supply_chain = "security-engineering-expert/references/skill-supply-chain-review.md"
 security_source_map = "security-engineering-expert/references/source-map.md"
 security_checker = "security-engineering-expert/scripts/check_security_deliverable.py"
 security_behavior_cases = "fixtures/skill-eval/security-engineering-behavior-cases.json"
@@ -23047,6 +23048,26 @@ check(
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/security-engineering-behavior-cases.json"',
         ],
+    ),
+)
+check(
+    "security expert routes and gates Agent Skill supply-chain review",
+    has_all(security_skill, ["references/skill-supply-chain-review.md"])
+    and has_all(security_scenarios, ["skill-supply-chain-review.md"])
+    and has_all(
+        security_skill_supply_chain,
+        [
+            "不得执行被审查 Skill",
+            "未取得联网与数据 Owner 授权",
+            "python3 scripts/audit-skill-security.py",
+            "T01",
+            "T09",
+            "ENGINEERING_BLOCKED",
+        ],
+    )
+    and has_all(
+        security_behavior_cases,
+        ["external-agent-skill-admission", "skill-security-reference-false-positive"],
     ),
 )
 check(

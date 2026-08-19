@@ -45,7 +45,7 @@ description: |
 7. **绑定声明与证据**：把控制期望形成可验证声明，并映射到测试、扫描、配置回读、权限矩阵、日志/告警、审计记录、演练、故障注入或生产观测；区分设计、实现、启用、运行和生产证据。
 8. **形成工程建议**：先声明 `DESIGN_D1 / IMPLEMENTATION_D2 / ENABLEMENT_D3 / RUNTIME_D4 / PRODUCTION_D5` 准出目标，再列出残余风险、风险 Owner、期限、补偿控制、停止条件和复核触发器；关键责任、控制或目标证据未知时给出 `ENGINEERING_BLOCKED`，不得越权写成独立评估、生产批准或“基本安全”。
 
-先读 `references/security-scenario-routing.md` 选择当前场景，只加载需要的专题。建立风险、控制和证据闭环时读 `references/security-risk-control-and-evidence.md`；引用公开标准、版本或厂商无关基线时读 `references/source-map.md` 并复核时效。
+先读 `references/security-scenario-routing.md` 选择当前场景，只加载需要的专题。审查外部 Agent Skill 的安装、脚本、指令、依赖、持久化、网络和数据边界时读 `references/skill-supply-chain-review.md`；建立风险、控制和证据闭环时读 `references/security-risk-control-and-evidence.md`；引用公开标准、版本或厂商无关基线时读 `references/source-map.md` 并复核时效。
 
 ## 交付契约
 

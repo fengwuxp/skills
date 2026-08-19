@@ -17,6 +17,7 @@
 ## 需要继续读取的 reference
 
 - 建立资产、路径、控制、证据和残余风险闭环时读 `security-risk-control-and-evidence.md`。
+- 审查外部 Agent Skill 的指令、脚本、依赖、安装、网络、持久化和数据边界时读 `skill-supply-chain-review.md`。
 - 引用外部标准、版本与时效事实时读 `source-map.md`。
 
 ## 任务身份门禁

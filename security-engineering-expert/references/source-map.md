@@ -35,5 +35,6 @@
 | [RFC 8446](https://www.rfc-editor.org/rfc/rfc8446) | TLS 1.3，2018 | 传输机密性、完整性和握手安全边界 | 不自动提供业务授权、防重放、幂等或端到端消息真实性 |
 | [RFC 9700](https://www.rfc-editor.org/rfc/rfc9700) | OAuth 2.0 Security Best Current Practice，2025 | OAuth 威胁模型、弃用不安全模式和客户端/授权服务器安全建议 | 需结合实际 grant、客户端类型、部署与 provider 契约 |
 | [CISA Secure by Design](https://www.cisa.gov/securebydesign) | 持续维护 | 默认安全、产品责任和减少用户安全负担 | 原则性倡议，不替代项目控制实现与验证 |
+| [Tencent AI-Infra-Guard `aig-skill-scan`](https://github.com/Tencent/AI-Infra-Guard/tree/main/skill-scan) | `aig-skill-scan` 0.2.1，2026-08-19 核验 `main` | Agent Skill 指令与脚本同等审查、T01-T09 风险分类、确定性预扫后进行语义审计和 finding 复核 | 不复制代码或 Prompt，不安装依赖，不默认上传源码或调用外部 LLM，不采用项目自报 benchmark、三档 verdict 或安全分作为准出证据；复制或衍生实现需遵守 Apache-2.0 与 NOTICE 归因要求 |
 
-以上公开来源于 2026-08-11 核验索引与版本。时效性来源在正式交付前重新核验；任何来源都不替代安全、法务、合规、隐私、支付、财务或生产 Owner 的适用性决定。
+除表内单列日期外，以上公开来源于 2026-08-11 核验索引与版本。时效性来源在正式交付前重新核验；任何来源都不替代安全、法务、合规、隐私、支付、财务或生产 Owner 的适用性决定。

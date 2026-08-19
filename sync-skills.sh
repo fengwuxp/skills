@@ -321,7 +321,7 @@ sync_one() {
     echo "    target does not exist; it will be created"
   fi
 
-  rsync_args=(-av --delete --exclude '.DS_Store' --exclude '.idea' --exclude '__pycache__' --exclude '*.pyc')
+  rsync_args=(-av --delete --exclude '.DS_Store' --exclude '.idea' --exclude '__pycache__' --exclude '*.[pP][yY][cC]')
   if [[ "${DRY_RUN}" == "true" ]]; then
     rsync_args+=(--dry-run)
     if [[ ! -d "${target_dir}" ]]; then
@@ -337,8 +337,8 @@ sync_one() {
     test -f "${target_dir}/SKILL.md"
     test -d "${target_dir}/references" || true
     local source_count target_count
-    source_count="$(find "${source_dir}" -type f ! -name '.DS_Store' ! -name '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
-    target_count="$(find "${target_dir}" -type f ! -name '.DS_Store' ! -name '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
+    source_count="$(find "${source_dir}" -type f ! -name '.DS_Store' ! -iname '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
+    target_count="$(find "${target_dir}" -type f ! -name '.DS_Store' ! -iname '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
     echo "    files: source=${source_count}, target=${target_count}"
     if [[ "${source_count}" != "${target_count}" ]]; then
       echo "    warning: source and target file counts differ; inspect rsync output" >&2

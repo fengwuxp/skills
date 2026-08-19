@@ -170,6 +170,8 @@ python3 -m py_compile wise-agent/scripts/user-context-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/check-skill-admission.py
 python3 -m py_compile scripts/test-check-skill-admission.py
+python3 -m py_compile scripts/audit-skill-security.py
+python3 -m py_compile scripts/test-audit-skill-security.py
 python3 -m py_compile scripts/audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py
 python3 -m py_compile scripts/archive-source-evidence.py
@@ -390,6 +392,7 @@ python3 scripts/evaluate-skill-behavior.py --self-test
 python3 scripts/test-evaluate-skill-behavior.py
 
 echo "==> skill quality advisory"
+python3 scripts/test-audit-skill-security.py
 scripts/audit-skill-quality.py
 scripts/audit-skill-quality.py --self-test
 
