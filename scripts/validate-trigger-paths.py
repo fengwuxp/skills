@@ -472,6 +472,9 @@ novelist_planning_responses = "fixtures/skill-eval/novelist-planning-responses.j
 novelist_planning_scores = "fixtures/skill-eval/novelist-planning-scores.jsonl"
 novelist_character_template = "novelist/assets/character-dynamic-profile-template.md"
 novelist_creative_behavior_cases = "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
+novelist_narrative_expression_behavior_cases = "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"
+novelist_narrative_expression_responses = "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl"
+novelist_narrative_expression_scores = "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl"
 novelist_character_life_behavior_cases = "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 novelist_r6_foundation_behavior_cases = "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
 novelist_r6_craft_behavior_cases = "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
@@ -19876,6 +19879,8 @@ check(
             "candidate",
             "盲评",
             "静态 fixture 不等于真实行为证据",
+            "source_profiles",
+            "require_auditable_judgments",
         ],
     )
     and has_all(
@@ -20143,6 +20148,58 @@ check(
 )
 
 check(
+    "novelist narrative expression and reader payoff cases stay wired",
+    (ROOT / novelist_narrative_expression_behavior_cases).exists()
+    and (ROOT / novelist_narrative_expression_responses).exists()
+    and (ROOT / novelist_narrative_expression_scores).exists()
+    and has_all(
+        novelist_skill,
+        [
+            "目标读者与阅读体验",
+            "让技法退居其位",
+            "项目文风校准",
+        ],
+    )
+    and has_all(
+        novelist_story,
+        [
+            "叙事呈现轴",
+            "节奏与呼吸",
+            "不把短句、长句或节拍标签直接等同于快慢",
+        ],
+    )
+    and has_all(
+        novelist_scene,
+        [
+            "感官细节由人物当下寻找、躲避和能够感知之物筛选",
+            "不规定固定笑点次数",
+            "不用词频、口头禅、固定句长或标志性意象复制冒充作者文风",
+        ],
+    )
+    and has_all(
+        novelist_narrative_expression_behavior_cases,
+        [
+            "novelist-should-choose-reader-payoff-without-technique-quotas",
+            "novelist-should-make-description-carry-pov-judgment-and-pressure",
+            "novelist-should-use-humor-without-erasing-grief-or-cost",
+            "novelist-should-build-misunderstanding-from-limited-knowledge-without-stupidity",
+            "novelist-should-earn-callback-payoff-without-forcing-symbolism",
+            "静态 fixture 只固定预期行为",
+            "同一 runner/model",
+            "盲评",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"',
+            '--responses "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl"',
+            '--scores "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl"',
+        ],
+    ),
+)
+
+check(
     "novelist character life behavior cases stay wired",
     (ROOT / novelist_character_life_behavior_cases).exists()
     and has_all(
@@ -20158,6 +20215,8 @@ check(
             "novelist-should-not-deduce-one-personality-from-shared-trauma",
             "novelist-should-allow-aesthetic-detail-without-forced-plot-duty",
             "novelist-should-treat-nicknames-as-social-names-not-essence",
+            "source_profiles",
+            "require_auditable_judgments",
         ],
     )
     and has_all(
@@ -20382,6 +20441,37 @@ behavior_case_criteria_has(
     ("第一遍暂不看提纲和作者意图", "注意力、期待、情绪和停顿", "再次沉浸复读"),
 )
 behavior_case_criteria_has(
+    novelist_narrative_expression_behavior_cases,
+    "novelist-should-choose-reader-payoff-without-technique-quotas",
+    ("一种主要阅读回报", "拒绝每两百字反转", "事件事实、人物知情和下一章揭晓边界保持不变"),
+)
+behavior_case_criteria_has(
+    novelist_narrative_expression_behavior_cases,
+    "novelist-should-make-description-carry-pov-judgment-and-pressure",
+    ("细节须改变判断、行动难度或下一步", "两种判断及其不同代价", "不把短句、碎段或意象密度机械等同于节奏"),
+)
+behavior_case_criteria_has(
+    novelist_narrative_expression_behavior_cases,
+    "novelist-should-use-humor-without-erasing-grief-or-cost",
+    ("不强制造梗、喜剧角色或固定笑点", "不能取消死亡、哀悼、人物尊严和欠账责任", "允许克制、沉默和直写"),
+)
+behavior_case_criteria_has(
+    novelist_narrative_expression_behavior_cases,
+    "novelist-should-build-misunderstanding-from-limited-knowledge-without-stupidity",
+    (
+        "双方已知、误知、目标、风险",
+        "不靠偶然打断、装聋作哑",
+        "人物必须更新理解或承担拒绝更新的明确代价",
+        "保持待确认或候选",
+        "不得为形成误会、揭晓和反转直接补成当前事实",
+    ),
+)
+behavior_case_criteria_has(
+    novelist_narrative_expression_behavior_cases,
+    "novelist-should-earn-callback-payoff-without-forcing-symbolism",
+    ("其他细节可以继续只是生活质感", "回收重释但不取消旧事实", "不用作者说明会、人物自我解说、秘密暗号或新增前史"),
+)
+behavior_case_criteria_has(
     novelist_character_life_behavior_cases,
     "novelist-should-deposit-life-history-into-present-character",
     ("已确认事实与候选解释", "人物当时的解释", "同一经历不被机械推导", "保护策略只在确有证据时使用", "压力选择"),
@@ -20424,19 +20514,21 @@ behavior_case_criteria_has(
 
 behavior_fixture_fingerprint(
     novelist_behavior_cases,
-    "8e6a2b1b8641380209168beb693d39f1375f28285da94117f782cbf8fc7da310",
+    "2aefe1a08710f3fc7bb718adf3015c01191c5c220a5ec6964bede21c15b1e661",
 )
+source_set_fingerprint(novelist_behavior_cases, "baseline")
+source_set_fingerprint(novelist_behavior_cases, "candidate")
 behavior_fixture_fingerprint(
     novelist_planning_behavior_cases,
-    "73e7e824499a38ab195dec923fab765e3e4e426fb6037f423b8c55fa29f40ac1",
+    "7d3c01d23125066d02bc6c3f277315d0b1d1102d66a0412fb451a69fb2e81077",
 )
 file_fingerprint(
     novelist_planning_responses,
-    "3578688c697212a74e092d64f701a0b6c414e19d90e9e07904550e06c0bfe091",
+    "5e5613d32c397da719e286d9b9f9fb65e644f82abdc993b7db42c7f3b0dfd906",
 )
 file_fingerprint(
     novelist_planning_scores,
-    "01278f92b99fbec55232d070a8fcb826f4cb6265ca0b4e0366eb991460cda270",
+    "a5761ec9bd84d9828065a019707453e4a3df743240f7dc8258db87f95d54e5db",
 )
 source_set_fingerprint(novelist_planning_behavior_cases, "baseline")
 source_set_fingerprint(novelist_planning_behavior_cases, "candidate")
@@ -20445,9 +20537,25 @@ behavior_fixture_fingerprint(
     "c8b02eece400288fe6c395efffc525c477626e9525281c5051dcb8920b3fd4a6",
 )
 behavior_fixture_fingerprint(
-    novelist_character_life_behavior_cases,
-    "69dcd56992ea0fc5af1a62f66673cb856fb2aed63880670d56c11b06ac666b3b",
+    novelist_narrative_expression_behavior_cases,
+    "695afc28629dfa76f250a3f3dd6616fa2de89c9b8f237fd61645c735a1cba6ea",
 )
+file_fingerprint(
+    novelist_narrative_expression_responses,
+    "70319a9314a8e2157d0d720f963971a7847ce1ed5aa6c860017ae4185400d444",
+)
+file_fingerprint(
+    novelist_narrative_expression_scores,
+    "47c224663bcbf64ce5cc43a5e4d23bb2e6a867216f5c7112a30bf50ac0ec66c2",
+)
+source_set_fingerprint(novelist_narrative_expression_behavior_cases, "baseline")
+source_set_fingerprint(novelist_narrative_expression_behavior_cases, "candidate")
+behavior_fixture_fingerprint(
+    novelist_character_life_behavior_cases,
+    "b1f0d37d56c69bdfa5b48c5b43d5b8691fcef988e9c236a1bb3cc38365a3c12e",
+)
+source_set_fingerprint(novelist_character_life_behavior_cases, "baseline")
+source_set_fingerprint(novelist_character_life_behavior_cases, "candidate")
 
 check(
     "novelist plot progression behavior cases stay wired",
@@ -20551,15 +20659,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_plot_progression_behavior_cases,
-    "977c9f0e597222c502eb3deb50f9c2d12f61c05f2f41c053819c2c095ac3e7b1",
+    "af73a7422e02f92180450fca55dd21968bda7948a1e0fe899db206073886d917",
 )
 file_fingerprint(
     novelist_plot_progression_responses,
-    "6211cc58bdfb84a6a3e6ab1aba15b35952a6fe8be68a42cc0450d621e4b60693",
+    "0bfbf6720093007103a683ce9f25446331c34ffcc3b00b1f774ffb6b4552444f",
 )
 file_fingerprint(
     novelist_plot_progression_scores,
-    "e644ff678a739966ac70d018b33c8a9a813291547b18fdeb3759dad0c933aac7",
+    "59a842bd9b19913c1755273820faa5d221c7b5862bb034bb80c3c36639e9bda6",
 )
 source_set_fingerprint(novelist_plot_progression_behavior_cases, "baseline")
 source_set_fingerprint(novelist_plot_progression_behavior_cases, "candidate")
@@ -20620,15 +20728,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_plot_inheritance_behavior_cases,
-    "dd0fddbb6efb1e42de598bd7ad5f1fecc2f7894793e97d5b2b5c0513180274ca",
+    "b20164326c7f664e3c831ee259e8382678eb36d6c9f11405c4e722d555d948f2",
 )
 file_fingerprint(
     novelist_plot_inheritance_responses,
-    "9a8fbab844a4bbb0506a60b4b0ef49efa6260ad8af1745a5b8d572bb568a7ceb",
+    "f2f2af0ed6f47d620ec10a41d58b5ed58935ab2f5e619443497ab38c52c4c05b",
 )
 file_fingerprint(
     novelist_plot_inheritance_scores,
-    "4a99336a8f789c57378faa9fbc1de1677a5667c19e1deb6dca7379d34654a6d8",
+    "3dad95a78db9f48da39bf0b243f5cbb04e37ec6bc42839b59149e1153837923d",
 )
 source_set_fingerprint(novelist_plot_inheritance_behavior_cases, "baseline")
 source_set_fingerprint(novelist_plot_inheritance_behavior_cases, "candidate")
@@ -20711,15 +20819,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_draft_continuation_behavior_cases,
-    "82688625234a7512c019814d7aeca4cac1eb2258332483a4a5c6353fe4e69f36",
+    "5712e7992fdef284878d94ab508ab97cf5c527d01ae164c72d9330e0be9bce00",
 )
 file_fingerprint(
     novelist_draft_continuation_responses,
-    "b37879c87fc640f34c2afad5d2674d283752c44bf41218f55e55811c6e155fa6",
+    "40f3ff145e402f1f3903cecefabf3c4891c90b8f4c69e0c9ceb3371dca0da0dc",
 )
 file_fingerprint(
     novelist_draft_continuation_scores,
-    "34a6a0b8409a73530593efe473130eede76876e0d32ac50072412e22e7323f1f",
+    "4215bce07037137fe95ba9557f39eed3e4eff4736c539b6d96f910c0d29275ba",
 )
 source_set_fingerprint(novelist_draft_continuation_behavior_cases, "baseline")
 source_set_fingerprint(novelist_draft_continuation_behavior_cases, "candidate")
@@ -20947,15 +21055,15 @@ check(
 
 behavior_fixture_fingerprint(
     novelist_scene_construction_behavior_cases,
-    "2645d5f44814647065ea4895ab99a279d66dced42e824de587150b5d659f9fb1",
+    "d9cb99414f554a0ed542239ea71f91891072db811c9d708b3e44e571803177a2",
 )
 file_fingerprint(
     novelist_scene_construction_responses,
-    "a30427f7d8124e43c0088034217d3f37d8656dab44e8d2d8daa97aadc618c563",
+    "f9c5efc3a4fce360062d82ee384938bbc9dd630272231275f4d5cd1a387ffdbc",
 )
 file_fingerprint(
     novelist_scene_construction_scores,
-    "f53100946058a00e6beffd869389dc60dc833e63ae749b0dc7a2acda8a3d72cf",
+    "77cd189fccec14de3f3e833f0f762a50e9efa5e6ba12fabd77dca6820f58edda",
 )
 source_set_fingerprint(novelist_scene_construction_behavior_cases, "baseline")
 source_set_fingerprint(novelist_scene_construction_behavior_cases, "candidate")

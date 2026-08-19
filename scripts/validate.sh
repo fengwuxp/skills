@@ -182,6 +182,7 @@ python3 -m py_compile scripts/archive-source-evidence.py
 python3 -m py_compile scripts/audit-source-map.py
 python3 -m py_compile scripts/evaluate-skill-behavior.py
 python3 -m py_compile scripts/test-evaluate-skill-behavior.py
+python3 -m py_compile novelist/scripts/check-novelist-continuity-ledger.py
 python3 -m py_compile scripts/evaluate-skills.py
 python3 -m py_compile scripts/test-evaluate-skills.py
 python3 -m py_compile scripts/skillx_export_adapter.py
@@ -250,6 +251,7 @@ resource-capability-distiller/scripts/check_capability_candidate.py --self-test
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
 
 echo "==> novelist behavior cases"
+python3 novelist/scripts/test-check-novelist-continuity-ledger.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"
 novelist_planning_eval_dir="${tmp_dir}/novelist-planning-eval"
@@ -270,6 +272,24 @@ else
   validation_failed=1
 fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"
+novelist_narrative_expression_eval_dir="${tmp_dir}/novelist-narrative-expression-eval"
+mkdir -p "${novelist_narrative_expression_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json" \
+  --responses "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl" \
+  --output "${novelist_narrative_expression_eval_dir}/blind.jsonl" \
+  --key-output "${novelist_narrative_expression_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json" \
+    --scores "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl" \
+    --key "${novelist_narrative_expression_eval_dir}/key.json" \
+    --blind "${novelist_narrative_expression_eval_dir}/blind.jsonl" \
+    --output "${novelist_narrative_expression_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"

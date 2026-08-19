@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "description": "novelist 戏剧增益、叙事表达、文字描写与阅读回报的专项 baseline/candidate 契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/character-craft.md",
+        "novelist/references/scene-and-prose-craft.md",
+        "novelist/references/continuity-and-revision.md",
+        "novelist/references/worldbuilding-and-research.md"
+      ],
+      "sha256": "c67a03e6f8d3fb95f49f9884e932bf7af430d1ef201e0bd7e6575ab86a604aaa"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-choose-reader-payoff-without-technique-quotas",
+      "category": "reader-payoff-and-technique-selection",
+      "risk": "high",
+      "prompt": "一场乡试散场戏因果无误但太平、太淡。当前只确认父亲在门外等儿子，儿子出来后说‘没写完’，父亲把伞递给他，两人一同离开；本场不能揭示最终是否中举，下一章才公布。请用儿子近距离第三人称增加戏剧性和文字表现。编辑建议每两百字一次小反转、每段一个感官细节，再安排一句能传播的金句；请自行判断取舍，不得新增考场细节、父子往事、旁观者议论、天气变化、成绩线索或人物秘密。",
+      "criteria": [
+        "先依据人物关系、场景任务、类型承诺和读者现有信息选择一种主要阅读回报，再用注意顺序、叙事距离、信息显隐、节拍或动作回收实现；不把‘有趣’自动等同于笑话、反转或煽情。",
+        "拒绝每两百字反转、逐段感官和强造金句等技法配额；可记忆句子须从递伞、同行等当场动作与关系变化中长出，不由作者站出来总结主题。",
+        "事件事实、人物知情和下一章揭晓边界保持不变；叙事调度与文字润色不得补造考场内容、父子前史、天气变化、成绩暗示或其他因果凭据。",
+        "细节、句段速度和留白经过儿子当下的欲望、回避与身体注意过滤，最终仍须形成可追踪的行动、关系、情绪或读者理解变化。"
+      ]
+    },
+    {
+      "id": "novelist-should-make-description-carry-pov-judgment-and-pressure",
+      "category": "prose-and-description",
+      "risk": "high",
+      "prompt": "雨夜，受伤的巡检进入空药铺寻找失踪学徒；他右肩脱臼，怀疑学徒自愿离开，却害怕判断错误。当前只确认柜台上有一盏将灭的灯、一只倒扣药碗和半扇未闩的后门。请用近距离第三人称写这一场，让文字描述承担判断与压力；不要罗列五感，不要解释‘这里很紧张’，也不得新增脚印、血迹、书信、回忆或场外答案。",
+      "criteria": [
+        "灯、药碗、后门和伤势按巡检此刻寻找、回避、怀疑和能够感知之物进入正文，细节须改变判断、行动难度或下一步，而非静态布景或五感清单。",
+        "右肩脱臼实际限制观察、移动或开门等选择；压力由有限信息下两种判断及其不同代价形成，不靠作者解释、万能形容词或无来源危险信号宣布紧张。",
+        "句段速度、停顿、视野收放和感官焦点服从注意与行动变化，不把短句、碎段或意象密度机械等同于节奏。",
+        "不新增题面之外的线索、往事和答案；场景结尾由人物在不确定中作出选择，并把身体、风险或责任变化带入离场状态。"
+      ]
+    },
+    {
+      "id": "novelist-should-use-humor-without-erasing-grief-or-cost",
+      "category": "tonal-control-and-humor",
+      "risk": "high",
+      "prompt": "战后守灵，老兵与阵亡者的弟弟整理遗物。当前只确认一把缺口短刀、一双未穿过的新鞋和欠炊事班三枚铜钱的木牌。请写这一场，允许有一处让读者发笑或会心，但不能消解死亡、把人物写成喜剧工具，也不得补写阵亡者生前对白或具体往事。",
+      "criteria": [
+        "幽默或会心来自当场人物关系、身份分寸、有限知识、器物或责任的真实摩擦，可以落在动作、叙述或对白中，不强制造梗、喜剧角色或固定笑点。",
+        "笑意不能取消死亡、哀悼、人物尊严和欠账责任；短暂释压后仍须回到遗物处置、关系选择、代价或后续行动。",
+        "短刀、新鞋和木牌可以承担生活质感、情绪或行动功能，但不得全部强升为象征、伏笔或阵亡者性格证明，也不补造物件来历和生前故事。",
+        "文字强度服从守灵场景和人物承受方式，允许克制、沉默和直写，不用密集比喻、排比或作者抒情证明悲伤。"
+      ]
+    },
+    {
+      "id": "novelist-should-build-misunderstanding-from-limited-knowledge-without-stupidity",
+      "category": "dramatic-irony-and-misunderstanding",
+      "risk": "high",
+      "prompt": "商队掌柜只知道新来的账房在暗查亏空，账房只知道掌柜昨夜私自调过货箱；两人都不知道调箱是为了避开漏雨的车篷。请设计一场有会心和紧张感的对账戏，让双方基于有限知识互相试探，但不要靠听不清、拒绝一句话说完或突然降智拖延误会。",
+      "criteria": [
+        "分别写清双方已知、误知、目标、风险与足以支撑当前判断的可见依据，读者所得可以多于任一人物，但不得由作者旁白提前宣布真相。",
+        "误会通过试探、回避、物件处置或错误归因改变行动和关系，每次升级都来自人物保护对象与现实代价，不靠偶然打断、装聋作哑或隐瞒自己本会说出的信息。",
+        "当足以修正判断的信息真正进入人物视野时，人物必须更新理解或承担拒绝更新的明确代价；误会不能为延长篇幅自动续命。",
+        "题面未提供的账目、执行者、动机、数量、查验结果或揭示动作保持待确认或候选；不得为形成误会、揭晓和反转直接补成当前事实。",
+        "调箱真相可以重释旧行动，但不能取消暗查亏空、私自调箱及双方已经作出的选择与关系后果。"
+      ]
+    },
+    {
+      "id": "novelist-should-earn-callback-payoff-without-forcing-symbolism",
+      "category": "callback-and-reader-payoff",
+      "risk": "high",
+      "prompt": "前文只确认三项生活细节：女掌柜记账前总把算盘归零，学徒收铺时总把门闩横放，一名客人曾付过一枚缺角铜钱。终场中女掌柜发现学徒已经离开，并决定追出去。请从既有细节中选择真正有用的一项形成回收，让读者获得会心或余味；不要把三项都串成暗号、证据、象征或伏笔，也不得新增学徒留言和秘密约定。",
+      "criteria": [
+        "先按终场人物选择、关系变化和读者已有记忆判断哪一项能自然回收；其他细节可以继续只是生活质感，不为闭环全部强升为伏笔。",
+        "被选细节此前先有当场生活或行动功能，终场通过位置、使用方式、缺席或变体获得新重量；回收重释但不取消旧事实。",
+        "阅读满足来自读者自行认出旧细节与当前选择的联系，不用作者说明会、人物自我解说、秘密暗号或新增前史证明设计精巧。",
+        "回收必须推动女掌柜追出的决定、关系理解或后续风险；若删去该细节不影响任何状态，就不把它包装成有效回收。"
+      ]
+    }
+  ]
+}

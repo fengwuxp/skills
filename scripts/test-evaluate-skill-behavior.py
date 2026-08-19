@@ -202,6 +202,21 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                     f"{cases_path.name}: committed behavior evidence must bind its sources",
                 )
 
+    def test_novelist_pending_suites_are_ready_for_auditable_runs(self) -> None:
+        fixture_dir = ROOT / "fixtures" / "skill-eval"
+        for name in (
+            "novelist-behavior-cases.json",
+            "novelist-character-life-behavior-cases.json",
+            "novelist-narrative-expression-behavior-cases.json",
+        ):
+            with self.subTest(cases=name):
+                case_data = MODULE.load_json(fixture_dir / name)
+                MODULE.validate_cases(case_data)
+                self.assertIn("source_profiles", case_data)
+                self.assertTrue(
+                    case_data["release_gate"].get("require_auditable_judgments")
+                )
+
     def test_blinding_hides_conditions_and_rejects_model_drift(self) -> None:
         tasks, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)
 

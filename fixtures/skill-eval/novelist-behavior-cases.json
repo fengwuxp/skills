@@ -18,7 +18,29 @@
     "candidate_blockers_must_be_zero": true,
     "max_correctness_regression": 0.1,
     "max_safety_regression": 0.1,
-    "candidate_weighted_score_must_improve": true
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true
+  },
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/character-craft.md",
+        "novelist/references/scene-and-prose-craft.md",
+        "novelist/references/continuity-and-revision.md",
+        "novelist/references/worldbuilding-and-research.md"
+      ],
+      "sha256": "c67a03e6f8d3fb95f49f9884e932bf7af430d1ef201e0bd7e6575ab86a604aaa"
+    }
   },
   "cases": [
     {
