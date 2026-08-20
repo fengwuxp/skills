@@ -2,9 +2,10 @@
 """Prepare, blind, and score offline Skill behavior comparisons.
 
 The script never invokes an Agent or accesses the network. It reads only the
-explicit case, response, score, and key files, and writes only explicit output
-paths. Responses may include redacted execution evidence. Collection and
-judging remain separate, reviewable steps.
+explicit evaluation artifacts and source/input files declared by the selected
+case contract, and writes only explicit output paths. Responses may include
+redacted execution evidence. Collection and judging remain separate,
+reviewable steps.
 """
 
 from __future__ import annotations
@@ -133,6 +134,8 @@ def _case_digest(case_data: dict[str, Any]) -> str:
     }
     if "source_profiles" in case_data:
         payload["source_profiles"] = case_data["source_profiles"]
+    if "input_profile" in case_data:
+        payload["input_profile"] = case_data["input_profile"]
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
 
@@ -162,6 +165,38 @@ def source_set_digest(paths: Sequence[str]) -> str:
         digest.update(path.encode())
         digest.update(b"\0")
         digest.update(source_path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def input_set_digest(root: str | Path, paths: Sequence[str]) -> str:
+    input_root = Path(root)
+    if not input_root.is_absolute():
+        raise ContractError("input_profile.root: expected an absolute directory")
+    try:
+        input_root = input_root.resolve(strict=True)
+    except OSError as exc:
+        raise ContractError("input_profile.root: expected an existing directory") from exc
+    if not input_root.is_dir():
+        raise ContractError("input_profile.root: expected an existing directory")
+
+    digest = hashlib.sha256()
+    for path in paths:
+        relative_path = Path(path)
+        if relative_path.is_absolute() or ".." in relative_path.parts or not path:
+            raise ContractError(f"input profile path must stay under input root: {path!r}")
+        try:
+            input_path = (input_root / relative_path).resolve(strict=True)
+            input_path.relative_to(input_root)
+        except (OSError, ValueError) as exc:
+            raise ContractError(
+                f"input profile path must stay under input root: {path!r}"
+            ) from exc
+        if not input_path.is_file():
+            raise ContractError(f"input profile path is not a file: {path}")
+        digest.update(path.encode())
+        digest.update(b"\0")
+        digest.update(input_path.read_bytes())
         digest.update(b"\0")
     return digest.hexdigest()
 
@@ -203,6 +238,58 @@ def validate_source_profiles(data: dict[str, Any]) -> None:
                 f"source_profiles.{condition}: source set changed "
                 f"expected={expected_sha256} actual={actual_sha256}"
             )
+
+
+def validate_input_profile(data: dict[str, Any]) -> None:
+    profile = data.get("input_profile")
+    if profile is None:
+        return
+    if not isinstance(profile, dict) or set(profile) != {"id", "root", "paths", "sha256"}:
+        raise ContractError("input_profile: expected id, root, paths, and sha256")
+    _non_empty_string(profile.get("id"), "input_profile.id")
+    root = _non_empty_string(profile.get("root"), "input_profile.root")
+    paths = profile.get("paths")
+    if (
+        not isinstance(paths, list)
+        or not paths
+        or any(not isinstance(path, str) for path in paths)
+    ):
+        raise ContractError("input_profile.paths: expected a non-empty string list")
+    if len(paths) != len(set(paths)):
+        raise ContractError("input_profile.paths: duplicate path")
+    expected_sha256 = profile.get("sha256")
+    if (
+        not isinstance(expected_sha256, str)
+        or len(expected_sha256) != 64
+        or expected_sha256.lower() != expected_sha256
+    ):
+        raise ContractError("input_profile.sha256: expected lowercase SHA-256")
+    try:
+        int(expected_sha256, 16)
+    except ValueError as exc:
+        raise ContractError("input_profile.sha256: expected lowercase SHA-256") from exc
+    actual_sha256 = input_set_digest(root, paths)
+    if actual_sha256 != expected_sha256:
+        raise ContractError(
+            "input_profile: input set changed "
+            f"expected={expected_sha256} actual={actual_sha256}"
+        )
+
+
+def _input_binding(profile: dict[str, Any]) -> dict[str, str]:
+    return {"id": profile["id"], "sha256": profile["sha256"]}
+
+
+def _reject_external_input_path(
+    text: str, label: str, profile: dict[str, Any]
+) -> None:
+    root = Path(profile["root"])
+    markers = {str(root), str(root.resolve(strict=True))}
+    for path in profile["paths"]:
+        input_path = root / path
+        markers.update((path, str(input_path), str(input_path.resolve(strict=True))))
+    if any(marker in text for marker in markers):
+        raise ContractError(f"{label}: external input path must not enter blind content")
 
 
 def validate_cases(data: dict[str, Any]) -> None:
@@ -279,6 +366,22 @@ def validate_cases(data: dict[str, Any]) -> None:
         if not _finite_number(value) or value < 0:
             raise ContractError(f"release_gate.{field}: expected a non-negative number")
     validate_source_profiles(data)
+    validate_input_profile(data)
+    input_profile = data.get("input_profile")
+    if isinstance(input_profile, dict):
+        for index, case in enumerate(cases):
+            _reject_external_input_path(
+                case["id"], f"cases[{index}].id", input_profile
+            )
+            _reject_external_input_path(
+                case["prompt"], f"cases[{index}].prompt", input_profile
+            )
+            for criterion_index, criterion in enumerate(case["criteria"]):
+                _reject_external_input_path(
+                    criterion,
+                    f"cases[{index}].criteria[{criterion_index}]",
+                    input_profile,
+                )
 
 
 def build_plan(case_data: dict[str, Any], trials: int) -> list[dict[str, Any]]:
@@ -286,6 +389,7 @@ def build_plan(case_data: dict[str, Any], trials: int) -> list[dict[str, Any]]:
     if not isinstance(trials, int) or trials < 1:
         raise ContractError("trials: expected a positive integer")
     source_profiles = case_data.get("source_profiles")
+    input_profile = case_data.get("input_profile")
     tasks = []
     for case in case_data["cases"]:
         for trial in range(1, trials + 1):
@@ -297,12 +401,18 @@ def build_plan(case_data: dict[str, Any], trials: int) -> list[dict[str, Any]]:
                     "prompt": case["prompt"],
                     "risk": case["risk"],
                 }
+                if isinstance(source_profiles, dict) or isinstance(input_profile, dict):
+                    task["case_sha256"] = _case_digest(case_data)
                 if isinstance(source_profiles, dict):
                     profile = source_profiles[condition]
-                    task["case_sha256"] = _case_digest(case_data)
                     task["source_profile"] = profile["id"]
                     task["source_paths"] = profile["paths"]
                     task["source_sha256"] = profile["sha256"]
+                if isinstance(input_profile, dict):
+                    task["input_profile"] = input_profile["id"]
+                    task["input_root"] = input_profile["root"]
+                    task["input_paths"] = input_profile["paths"]
+                    task["input_sha256"] = input_profile["sha256"]
                 tasks.append(task)
     return tasks
 
@@ -313,6 +423,7 @@ def blind_responses(
     validate_cases(case_data)
     cases_by_id = {case["id"]: case for case in case_data["cases"]}
     source_profiles = case_data.get("source_profiles")
+    input_profile = case_data.get("input_profile")
     indexed: dict[tuple[str, int], dict[str, dict[str, Any]]] = defaultdict(dict)
     profiles = set()
 
@@ -326,11 +437,15 @@ def blind_responses(
         condition = row.get("condition")
         if condition not in CONDITIONS:
             raise ContractError(f"responses[{index}].condition: expected baseline or candidate")
-        _non_empty_string(row.get("response"), f"responses[{index}].response")
+        response = _non_empty_string(row.get("response"), f"responses[{index}].response")
+        if isinstance(input_profile, dict):
+            _reject_external_input_path(
+                response, f"responses[{index}].response", input_profile
+            )
         _validate_execution_evidence(row, f"responses[{index}]")
         runner = _non_empty_string(row.get("runner"), f"responses[{index}].runner")
         model = _non_empty_string(row.get("model"), f"responses[{index}].model")
-        if isinstance(source_profiles, dict):
+        if isinstance(source_profiles, dict) or isinstance(input_profile, dict):
             case_sha256 = _non_empty_string(
                 row.get("case_sha256"), f"responses[{index}].case_sha256"
             )
@@ -338,6 +453,7 @@ def blind_responses(
                 raise ContractError(
                     f"responses[{index}].case_sha256: does not match the selected cases"
                 )
+        if isinstance(source_profiles, dict):
             source_sha256 = _non_empty_string(
                 row.get("source_sha256"), f"responses[{index}].source_sha256"
             )
@@ -345,6 +461,14 @@ def blind_responses(
             if source_sha256 != expected_sha256:
                 raise ContractError(
                     f"responses[{index}].source_sha256: does not match {condition} source profile"
+                )
+        if isinstance(input_profile, dict):
+            input_sha256 = _non_empty_string(
+                row.get("input_sha256"), f"responses[{index}].input_sha256"
+            )
+            if input_sha256 != input_profile["sha256"]:
+                raise ContractError(
+                    f"responses[{index}].input_sha256: does not match input profile"
                 )
         profiles.add((runner, model))
         pair = indexed[(case_id, trial)]
@@ -425,6 +549,8 @@ def blind_responses(
     key["blind_sha256"] = blind_sha256
     if isinstance(source_profiles, dict):
         key["source_profiles"] = source_profiles
+    if isinstance(input_profile, dict):
+        key["input_profile"] = _input_binding(input_profile)
     return tasks, key
 
 
@@ -446,6 +572,9 @@ def score_judgments(
     source_profiles = case_data.get("source_profiles")
     if isinstance(source_profiles, dict) and key.get("source_profiles") != source_profiles:
         raise ContractError("key.source_profiles: does not match the selected cases")
+    input_profile = case_data.get("input_profile")
+    if isinstance(input_profile, dict) and key.get("input_profile") != _input_binding(input_profile):
+        raise ContractError("key.input_profile: does not match the selected cases")
     if not blind_rows:
         raise ContractError("blind: required for scoring")
     blind_sha256 = _blind_digest(blind_rows)
@@ -692,6 +821,8 @@ def score_judgments(
     report["blind_sha256"] = key["blind_sha256"]
     if isinstance(source_profiles, dict):
         report["source_profiles"] = source_profiles
+    if isinstance(input_profile, dict):
+        report["input_profile"] = _input_binding(input_profile)
     if require_auditable:
         evaluation_id, judge, judge_model, judged_at = next(iter(judgment_profiles))
         report["judgment"] = {

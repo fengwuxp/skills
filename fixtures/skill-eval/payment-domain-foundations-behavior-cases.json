@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "description": "payment-expert 支付领域基础知识与系统学习入口的专项 baseline/candidate 契约。静态 fixture 只冻结评测问题和验收断言；真实改善仍须同一 runner/model 重复采集、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "payment-domain-foundations-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/payment-domain-foundations-prechange.md"
+      ],
+      "sha256": "117e120b12388b956f20f9bc7e16cb57f6f43c1c5652fa254176cc7b7f4be605"
+    },
+    "candidate": {
+      "id": "payment-domain-foundations-current",
+      "paths": [
+        "payment-expert/SKILL.md",
+        "payment-expert/references/payment-domain-foundations.md"
+      ],
+      "sha256": "a68b63dd2065d8cfb8ccfd3387976c14353e1335e079cd22497cd00182e8e048"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.8
+  },
+  "cases": [
+    {
+      "id": "payment-foundations-should-separate-completion-layers",
+      "category": "payment-foundations",
+      "risk": "high",
+      "prompt": "支付接口同步返回成功后，业务方准备把订单履约、账务、清算、银行到账和对账全部标记完成。请判断能否这样做，并给出逐层确认清单。",
+      "criteria": [
+        "拒绝用接口成功替代履约、账务、清算、结算、外部到账或对账完成。",
+        "沿业务义务、支付意图、支付尝试、外部处理、内部账务、清结算、到账和对账区分事实层级。",
+        "为每个完成层级指出权威证据或 Owner；证据不足时保持待确认。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-handle-bank-reconciliation",
+      "category": "accounting-and-bank-reconciliation",
+      "risk": "high",
+      "prompt": "商户产品余额与银行对账单相差 1000 元，但会计试算平衡。运营建议直接改产品余额或银行账，让两边一致。请分析原因并给出处置顺序。",
+      "criteria": [
+        "区分产品账户、账本账户、会计科目和银行账户，不把任一余额当成其他账簿或真实资金的证明。",
+        "说明试算平衡只证明借贷算术平衡，并检查四类银行未达账项和真实错账。",
+        "说明余额调节表不直接修改账簿；错账应经审批后更正、冲正或调账，再发起新的对账。",
+        "不在缺少会计政策和原始凭据时虚构具体科目或借贷方向。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-model-transaction-and-payment",
+      "category": "transaction-and-payment",
+      "risk": "high",
+      "prompt": "一个 100 元订单满减 20 元，用户用钱包余额 50 元和银行卡 30 元支付；支付成功后仓库缺货。请给出产品对象、金额关系和后续处理边界。",
+      "criteria": [
+        "把满减归入计价或资金承担，不把它当成真实支付工具。",
+        "分别建模订单、账单或支付义务、支付分配、支付尝试和履约，不预设固定一对一关系。",
+        "拒绝用支付成功证明履约完成，并保留取消、退款等逆向事实与原订单、原支付的关联。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-recover-unknown-payment",
+      "category": "payment-recovery",
+      "risk": "high",
+      "prompt": "用户付款时第一条通道超时，路由系统准备立即换第二条通道重试，并把第一条标记失败。请设计最小恢复方案。",
+      "criteria": [
+        "区分支付意图与两次潜在支付尝试，不覆盖第一次尝试历史。",
+        "把超时视为结果未知而非失败，先做幂等控制和权威状态回查。",
+        "切换通道前控制重复扣款风险，并为迟到成功、冲突结果和人工处理保留恢复路径。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-separate-clearing-and-settlement",
+      "category": "clearing-and-settlement",
+      "risk": "high",
+      "prompt": "平台完成商户应收应付计算后，就宣布机构间清算、商户结算和银行到账均已完成，并统一承诺 T+1。请评审这项设计。",
+      "criteria": [
+        "区分内部清分或内部清算、机构间清算、商户结算和真实资金结算或到账。",
+        "把清分快照或清算候选视为待确认计算结果；规则、数据或授权变化时失效或重算。",
+        "不把 T+1 写成无条件通则，并补充时区、cutoff、日历、币种、费用、冻结和失败恢复。",
+        "最终完成需要外部执行、到账和对账证据。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-preserve-ledger-and-reconciliation-facts",
+      "category": "ledger-and-reconciliation",
+      "risk": "high",
+      "prompt": "日终发现一笔通道单边账和一笔重复过账。运营计划删除单边记录、覆盖原分录，并把差异状态改成已核销。请给出账务与对账修复方案。",
+      "criteria": [
+        "拒绝删除单边记录、覆盖原分录或只改状态制造一致。",
+        "通过冲正、更正、调账、挂账或补事实追加修复，并在修复后发起新的对账运行。",
+        "保留不可变分录、匹配结果、差异对象、Owner、审批和证据链。",
+        "说明余额是分录投影，重复过账还需检查业务幂等键和 posting plan 平衡。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-design-wallet-mvp-controls",
+      "category": "funds-wallet-and-product-method",
+      "risk": "high",
+      "prompt": "平台准备上线商户钱包 MVP，支持充值、余额支付、转账和提现。方案只写了‘所有余额都放在平台银行资金池’，并打算上线后再补账务、对账和权限。请完成最小可评审设计。",
+      "criteria": [
+        "区分钱包产品层、内部账本层、外部资金与通道层，不把钱包余额等同于银行、支付、备付金或央行账户。",
+        "说明资金归属、业务原因、真实资金支持、可用时点、冻结或出款权限、风险承担、最终确认和退出。",
+        "按主体责任、业务对象、接入执行、资金账务、风控合规、运营证据六个设计面补齐最小方案。",
+        "MVP 不得删除防止错扣、重复出款、账务失衡、资金不可解释或合规违规的基本控制；高风险法律与会计结论保持待确认。"
+      ]
+    },
+    {
+      "id": "payment-foundations-should-not-capture-generic-accounting",
+      "category": "trigger-boundary",
+      "risk": "medium",
+      "prompt": "解释一般会计教材里的总账和明细账概念，不涉及支付产品、资金账户、支付账本、清结算或对账设计。",
+      "criteria": [
+        "不把一般会计教材问题扩成支付产品设计，也不强行加载 payment-expert 专项方法。",
+        "给出简洁的一般会计解释，或明确路由到通用会计知识；不虚构具体企业会计政策。",
+        "不因为出现总账、明细账或账户等孤立词就引入支付轨道、钱包或清结算对象。"
+      ]
+    }
+  ]
+}

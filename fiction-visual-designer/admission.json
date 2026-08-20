@@ -1,0 +1,11 @@
+{
+  "status": "candidate",
+  "updated_at": "2026-08-19",
+  "blockers": [
+    {
+      "id": "FVD-001",
+      "summary": "尚未取得同一 runner/model 的 baseline/candidate 重复执行、盲评与可复核准入证据",
+      "owner": "用户/仓库 Owner"
+    }
+  ]
+}

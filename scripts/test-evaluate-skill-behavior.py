@@ -34,6 +34,7 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
     def response_rows(self, case_data: dict[str, object] | None = None) -> list[dict[str, object]]:
         case_data = case_data or self.case_data
         source_profiles = case_data.get("source_profiles")
+        input_profile = case_data.get("input_profile")
         rows = []
         for case in case_data["cases"]:
             for condition in ("baseline", "candidate"):
@@ -45,9 +46,12 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                     "runner": "fixture-runner",
                     "model": "fixture-model",
                 }
-                if isinstance(source_profiles, dict):
+                if isinstance(source_profiles, dict) or isinstance(input_profile, dict):
                     row["case_sha256"] = MODULE._case_digest(case_data)
+                if isinstance(source_profiles, dict):
                     row["source_sha256"] = source_profiles[condition]["sha256"]
+                if isinstance(input_profile, dict):
+                    row["input_sha256"] = input_profile["sha256"]
                 rows.append(row)
         return rows
 
@@ -72,6 +76,26 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             },
         }
         case_data["release_gate"]["require_auditable_judgments"] = True
+        return case_data
+
+    def input_bound_case_data(self, root: Path) -> dict[str, object]:
+        paths = ["canon.md", "timeline/events.md"]
+        (root / "timeline").mkdir()
+        (root / paths[0]).write_text("canon", encoding="utf-8")
+        (root / paths[1]).write_text("events", encoding="utf-8")
+        digest = hashlib.sha256()
+        for path in paths:
+            digest.update(path.encode())
+            digest.update(b"\0")
+            digest.update((root / path).read_bytes())
+            digest.update(b"\0")
+        case_data = deepcopy(self.case_data)
+        case_data["input_profile"] = {
+            "id": "frozen-project-input",
+            "root": str(root),
+            "paths": paths,
+            "sha256": digest.hexdigest(),
+        }
         return case_data
 
     def score_rows(self, key: dict[str, object]) -> list[dict[str, object]]:
@@ -361,6 +385,94 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             with patch.object(MODULE, "ROOT", root):
                 with self.assertRaises(MODULE.ContractError):
                     MODULE.source_set_digest(["escape.md"])
+
+    def test_input_profile_binds_plan_responses_key_and_report(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            case_data = self.input_bound_case_data(Path(temp_dir))
+            profile = case_data["input_profile"]
+
+            plan = MODULE.build_plan(case_data, 1)
+            expected_task_binding = {
+                "case_sha256": MODULE._case_digest(case_data),
+                "input_profile": profile["id"],
+                "input_root": profile["root"],
+                "input_paths": profile["paths"],
+                "input_sha256": profile["sha256"],
+            }
+            self.assertTrue(set(expected_task_binding).issubset(plan[0]))
+            self.assertEqual(
+                {key: plan[0][key] for key in expected_task_binding},
+                expected_task_binding,
+            )
+
+            rows = self.response_rows(case_data)
+            stale_response = deepcopy(rows)
+            stale_response[0]["input_sha256"] = "0" * 64
+            with self.assertRaisesRegex(MODULE.ContractError, "input_sha256"):
+                MODULE.blind_responses(case_data, stale_response, seed=731)
+
+            blind_rows, key = MODULE.blind_responses(case_data, rows, seed=731)
+            binding = {"id": profile["id"], "sha256": profile["sha256"]}
+            self.assertEqual(key["input_profile"], binding)
+            self.assertNotIn(profile["root"], json.dumps(blind_rows))
+
+            report = MODULE.score_judgments(
+                case_data, self.score_rows(key), key, blind_rows=blind_rows
+            )
+            self.assertEqual(report["input_profile"], binding)
+
+            stale_key = deepcopy(key)
+            stale_key["input_profile"]["sha256"] = "0" * 64
+            with self.assertRaisesRegex(MODULE.ContractError, "input_profile"):
+                MODULE.score_judgments(
+                    case_data,
+                    self.score_rows(key),
+                    stale_key,
+                    blind_rows=blind_rows,
+                )
+
+    def test_input_profile_rejects_drift_and_paths_outside_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case_data = self.input_bound_case_data(root)
+            MODULE.validate_cases(case_data)
+            (root / "canon.md").write_text("changed", encoding="utf-8")
+            with self.assertRaisesRegex(MODULE.ContractError, "input set changed"):
+                MODULE.validate_cases(case_data)
+
+        with tempfile.TemporaryDirectory() as root_dir, tempfile.TemporaryDirectory() as outside_dir:
+            root = Path(root_dir)
+            outside = Path(outside_dir) / "outside.md"
+            outside.write_text("outside", encoding="utf-8")
+            (root / "escape.md").symlink_to(outside)
+            escaped = deepcopy(self.case_data)
+            escaped["input_profile"] = {
+                "id": "escaped-input",
+                "root": str(root),
+                "paths": ["escape.md"],
+                "sha256": "0" * 64,
+            }
+            with self.assertRaisesRegex(MODULE.ContractError, "input profile path"):
+                MODULE.validate_cases(escaped)
+
+    def test_input_profile_rejects_external_paths_in_blind_content(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case_data = self.input_bound_case_data(root)
+            leaked_prompt = deepcopy(case_data)
+            leaked_prompt["cases"][0]["prompt"] = f"Read {root / 'canon.md'}"
+            with self.assertRaisesRegex(MODULE.ContractError, "external input path"):
+                MODULE.validate_cases(leaked_prompt)
+
+            leaked_criterion = deepcopy(case_data)
+            leaked_criterion["cases"][0]["criteria"][0] = "Inspect canon.md"
+            with self.assertRaisesRegex(MODULE.ContractError, "external input path"):
+                MODULE.validate_cases(leaked_criterion)
+
+            rows = self.response_rows(case_data)
+            rows[0]["response"] = f"Used {root / 'canon.md'}"
+            with self.assertRaisesRegex(MODULE.ContractError, "external input path"):
+                MODULE.blind_responses(case_data, rows, seed=731)
 
     def test_release_gate_blocks_findings_and_material_regressions(self) -> None:
         blind_rows, key = MODULE.blind_responses(

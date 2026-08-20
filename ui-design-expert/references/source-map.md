@@ -66,9 +66,16 @@
 ### Google Stitch Skills
 
 - 来源：`https://github.com/google-labs-code/stitch-skills`
-- 核验日期：2026-07-30。
-- 读取状态：README、`skills/taste-design/SKILL.md` 与许可证已读取；仓库声明 Apache License 2.0。
-- 使用范围：只参考“先建立设计方向和评审口径，再调用生成工具”的分层；该仓库依赖 Stitch / MCP，不是通用 UI 标准或本 Skill 的运行依赖。
+- 核验日期：2026-07-30；2026-08-20 补读 `plugins/stitch-design/skills/generate-design/SKILL.md`。
+- 读取状态：README、`skills/taste-design/SKILL.md`、`plugins/stitch-design/skills/generate-design/SKILL.md` 与许可证已读取；仓库声明 Apache License 2.0。
+- 使用范围：只参考“先建立设计方向和评审口径，再调用生成工具”以及按屏幕生成、定向修改、变体和 HTML / 截图交付的分层；该仓库依赖 Stitch / MCP，不是通用 UI 标准或本 Skill 的运行依赖。
+
+### Effective HTML
+
+- 来源：`https://github.com/plannotator/effective-html` 与 `https://github.com/plannotator/effective-html/blob/main/skills/html-prototype/SKILL.md`。
+- 核验日期：2026-08-20。
+- 读取状态：README、`skills/html-prototype/SKILL.md` 与 MIT 许可证已读取。
+- 使用范围：只参考无目标代码库时用自包含 HTML 验证一条可信流程、真实状态、键盘 / 焦点、响应式和浏览器行为，并显式标注生产系统接管点；不复制其正文或把原型当生产实现。
 
 ### Claude Design Skill
 
@@ -165,7 +172,7 @@
 
 - Anthropic 与 Vercel 候选体量小、来源明确，适合吸收方法，但各自偏“直接实现”或“代码审查”，不能单独承担完整 UI 设计责任。
 - Impeccable 方法覆盖更完整且有公开许可证，但整包包含安装器、Hooks、状态目录、脚本、浏览器流程和持久化约定；本仓库未安装、复制或执行这些资产。
-- UI/UX Pro Max 包含可检索数据和生成脚本，Google Stitch Skills 绑定外部生成工具；Claude Design Skill 与 Huashu Design 还包含原型壳、脚本或额外工作流。它们只提供组织和验证启发，不进入本 Skill 的运行依赖。
+- UI/UX Pro Max 包含可检索数据和生成脚本，Google Stitch Skills 绑定外部生成工具；Effective HTML、Claude Design Skill 与 Huashu Design 还包含原型壳、脚本或额外工作流。它们只提供组织和验证启发，不进入本 Skill 的运行依赖。
 - Hallmark 包含主题目录、门禁集合、项目日志和生成约定；本仓库未安装或复制，也不采用 `.hallmark/log.json`、强制 `tokens.css`、CSS 自评分注释或项目持久化机制。
 - 本 Skill 只吸收经标准校正后的抽象方法，不依赖外部仓库、联网抓取、npm 包、Hooks、subagent 数量或项目状态目录。
 
@@ -180,7 +187,7 @@
 - 任务型产品界面优先熟悉、一致和高效，营销或展示界面才提高视觉表达权重。
 - 评审结合独立设计判断、源码/浏览器证据和确定性检查，并限制无休止润色。
 - 把设计契约、可操作原型、实现证据和用户/运行证据分层表达；用任务测试与 Design QA 补足“设计说明不等于可用”的证据缺口。
-- 将原型分为 L0 流程契约、L1 Figma 可点击原型和 L2 浏览器可运行原型；按验证问题选择最低层级，并为 Figma 到代码交接要求 components、Code Connect、variables、语义命名、Auto Layout、精确节点、design context、screenshot 和浏览器验证。
+- 将原型分为 L0 流程契约、L1 Figma 可点击原型和 L2 浏览器可运行原型；按验证问题选择最低层级。无目标代码库时，L2 可收敛为一个自包含 HTML 和一条可信流程；Figma 到代码交接仍要求 components、Code Connect、variables、语义命名、Auto Layout、精确节点、design context、screenshot 和浏览器验证。
 - 以 WCAG 2.2 和 ARIA APG 校正审美型建议，不让视觉差异性压过键盘、焦点、语义和恢复能力。
 - 以 Nielsen 十项可用性启发式统一专家评审语言，但让任务影响和恢复成本决定严重度。
 - 以 GOV.UK 的完整任务与错误恢复模式补强高责任服务场景，以 USWDS 的分层成熟模型校准设计系统建设。

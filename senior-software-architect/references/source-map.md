@@ -264,12 +264,13 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 未吸收内容：不复制文章原文、表格、代码示例、图示、参考资料列表、标题传播话术、作者表达或具体排版结构；不把 DDD、Clean、微服务、CQRS、Event Sourcing、12-Factor 或 Reactive 写成默认架构套餐；不把 DDD 术语当作命名装饰；不把 DRY、KISS、YAGNI 等原则名直接写成 Review 结论；不把微信公众号文章当作官方标准、法规、安全基线、云产品、SDK/API 或生产上线依据。
 ## 已参考的公开来源：AI 辅助画图与架构图
 ### AI 辅助画图与架构图公开来源组
-- 读取日期：2026-06-01；追加读取日期：2026-06-07
-- 读取状态：微信公众号文章《架构师必备--让AI画架构图》已通过移动端微信 UA 公开 HTML 读取标题、作者/账号、发布时间和正文；本机 Chrome headless 等价浏览器尝试返回异常，未作为正文来源。微信公众号文章《如何让 AI 画出高质量架构图，一个Skill搞定》2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文。C4 Model 与 arc42 沿用“业务驱动架构与验证公开来源组”的既有读取记录，本轮只补充图形化应用；draw.io 官方页面已通过公开 HTML 读取正文。
-- 许可证：C4 Model 页面声明站点和示例图使用 CC-BY 4.0；arc42、draw.io 与微信文章本轮不复用原文、模板、图示或站点资产。本仓库只保留来源说明、结构化提炼和归因边界。
+- 读取日期：2026-06-01；追加读取日期：2026-06-07、2026-08-18
+- 读取状态：微信公众号文章《架构师必备--让AI画架构图》已通过移动端微信 UA 公开 HTML 读取标题、作者/账号、发布时间和正文；本机 Chrome headless 等价浏览器尝试返回异常，未作为正文来源。微信公众号文章《如何让 AI 画出高质量架构图，一个Skill搞定》2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文。微信公众号文章《开源技能show-me：让AI编码输出一目了然》2026-08-18 常规网页读取未取得正文，随后通过 Codex in-app Browser 读取标题、作者、发布时间和正文，并核验上游 `humanlayer/skills` 的固定 commit 与 `show-me/SKILL.md`。C4 Model 与 arc42 沿用“业务驱动架构与验证公开来源组”的既有读取记录，本轮只补充图形化应用；draw.io 官方页面已通过公开 HTML 读取正文。
+- 许可证：C4 Model 页面声明站点和示例图使用 CC-BY 4.0；`humanlayer/skills` 上游仓库使用 MIT；arc42、draw.io 与微信文章本轮不复用原文、模板、图示或站点资产。本仓库只保留来源说明、结构化提炼和归因边界。
 已读取来源：
 - 微信公众号文章《架构师必备--让AI画架构图》：`https://mp.weixin.qq.com/s/_oR0ycOVQBX9PNkwDspFOg`。作者/账号为 `方兴集`，发布时间为 2026-04-30 16:28:31；公开内容用于参考 AI + draw.io 的自然语言生成、文档转图、图像参考、版本历史、可编辑 draw.io XML 和本地模型/凭据边界。
 - 微信公众号文章《如何让 AI 画出高质量架构图，一个Skill搞定》：`https://mp.weixin.qq.com/s/tE0kfJ2ZHeGGz6xCgEp3Zg`。2026-06-07 普通 `curl` 返回微信环境异常验证页；本地 Node Playwright 包不可用，未新增依赖；随后通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，页面作者字段为 `Davon Dong`，既有账号线索保留 `日积月码`，页面时间字段为 2026-05-12；公开内容用于参考陌生代码库先形成架构描述、再生成可编辑架构图、并通过组件和连接关系迭代校验的图形化理解工作法。
+- 微信公众号文章《开源技能show-me：让AI编码输出一目了然》：`https://mp.weixin.qq.com/s/UGHABPzqpNNgfPSa82fbCQ`；上游 `humanlayer/skills` 固定版本：`https://github.com/humanlayer/skills/blob/6ab9013a10c28f5046f7f999549cd5328a0b30d7/plugins/show-me/skills/show-me/SKILL.md`。文章作者字段为 `dexhorthy`、账号为 `登链造物`，页面发布时间为 2026-08-14 18:30；2026-08-18 常规网页读取未取得正文，随后通过 Codex in-app Browser 读取标题、作者、发布时间和正文，并核验上游 commit `6ab9013a10c28f5046f7f999549cd5328a0b30d7`、`SKILL.md` 与 MIT 许可。公开内容用于参考“先判断局部代码问题，再从伪代码、调用树、组件树、浅文件树、类型/签名、差异视图或正式图形中选择最小表达”；上游未附脚本、validator 或行为评测。
 - C4 Model Diagrams：沿用上文既有来源记录，公开内容用于参考 System Context、Container、Component、Code、Dynamic、Deployment 等图形视图，以及按不同 zoom level 面向不同读者讲不同故事。
 - arc42 Template Overview：沿用上文既有来源记录，公开内容用于参考架构文档中的 Introduction & Goals、Constraints、Context & Scope、Solution Strategy、Building Block View、Runtime View、Deployment View、Quality Requirements、Risks & Technical Debt 等视图。
 - draw.io 官方 GitHub 集成文档：`https://www.drawio.com/docs/integrations/github/`。公开内容用于参考可编辑图文件和源码/文档同库维护、GitHub 权限边界和文件大小提示。
@@ -278,12 +279,14 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 | --- | --- |
 | `diagram-output.md` | 新增 AI 辅助可编辑图治理，要求先给出图形 brief，按业务上下文、容器/应用、组件、运行时交互、部署、数据/消息和观测分层拆解；保留 SVG、draw.io XML、Mermaid 或生成脚本等可编辑源；检查敏感信息、版权边界、远程资源、错误连线、异常路径、颜色语义和文本溢出。 |
 | `diagram-output.md` | 新增陌生代码库图形化理解包，要求只读提取组件、入口、启动顺序、认证权限、外部系统、数据/消息/状态流、源码锚点和未确认连接，再判断能否进入实现或 CR。 |
+| `diagram-output.md` | 新增轻量结构表达选择：局部代码解释、重构预览或小范围 Review 优先使用伪代码、调用树、组件树、浅文件树、类型/签名草图或前后差异视图；复杂协作继续进入正式图形路由。 |
 | `wise-agent/references/engineering-governance.md` | 补充 AI Native Harness 对图形化理解 brief 的调度要求，避免陌生代码库或多模块变更只靠文字总结进入实现。 |
 | `skill-tree-platform-leadership-ai.md` | 在技术表达与图文能力中补充 AI 辅助画图只是可编辑草案，架构师仍需校验视图层级、节点责任、箭头语义、敏感信息、版权边界和工程验证闭环。 |
 | `README.md` | 新增公开参考来源记录，说明只吸收 AI + draw.io、C4、arc42、draw.io 官方文档中的通用方法和治理边界。 |
 | `scripts/validate-trigger-paths.py` | 增加关键字符串断言，防止 AI 辅助可编辑图治理、来源记录和图形能力入口漂移。 |
 未吸收内容：
 - 不复制微信文章示例图、提示词、项目安装说明、工具宣传语、截图、作者表达或具体工具链配置；不安装《如何让 AI 画出高质量架构图，一个Skill搞定》中提到的外部 Skill。
+- 不安装或新建同名 `show-me` Skill，不复制其原文、截图、示例或命令，不默认生成或打开 HTML，也不把轻量表达写成正确性、Review 效率或本项目收益已获证明。
 - 不把 next-ai-draw-io、draw.io、Mermaid、SVG 或 `$fireworks-tech-graph` 的生成结果写成架构质量结论；架构质量仍需回到业务目标、模块边界、接口契约、数据、测试、监控、发布和回滚。
 - 不默认把内部文档、代码、客户资料、生产配置或密钥上传到云端 AI 画图工具；涉及 API Key、OAuth 或仓库访问时必须说明数据边界、凭据边界、联网行为和写入范围。
 - 不复制 C4、arc42 或 draw.io 的图示、模板、品牌资产、站点样式或完整流程；只吸收视图选择、文档结构和版本化治理的轻量检查项。

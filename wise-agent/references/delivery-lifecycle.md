@@ -45,8 +45,9 @@
 
 - 能力 owner、专业 Skill、Worker / Checker 和最小装载规则统一读取 `capability-routing.md`；本文只消费其结果。
 - 产品上下文、需求分析、PRD-Lite、产品 / 系统 DNA 和三卡交接读 `product-to-engineering-lifecycle.md`。
-- 产品 / 交互设计、PRD、验收种子和产品合议由 `产品架构专家` 执行；按场景读取 `product-architecture-expert/references/product-scenario-routing.md`、`product-architecture-expert/references/product-design-and-prd.md`、`product-architecture-expert/references/product-prd-quality-gates.md`、`product-architecture-expert/references/product-deliberation-workflow.md` 或 `product-architecture-expert/references/ai-native-product-context.md`。
-- 系分、TDD、编码、CR、安全可靠和发布风险由 `资深架构师` 执行；按场景读取 `senior-software-architect/references/system-analysis-design.md`、`senior-software-architect/references/testing.md`、`senior-software-architect/references/workflow.md`、`senior-software-architect/references/coding-review-deep-dive.md`、`senior-software-architect/references/security-architecture.md` 或 `senior-software-architect/references/production-readiness.md`。具体编码先服从项目本地规范；Java 项目读取 `wind-coding-conventions` 的通用层，Wind 专项按依赖或上下文启用。
+- 产品语义、PRD、验收种子和产品合议由 `product-architecture-expert` 负责；按场景读取 `product-architecture-expert/references/product-scenario-routing.md`、`product-architecture-expert/references/product-design-and-prd.md`、`product-architecture-expert/references/product-prd-quality-gates.md`、`product-architecture-expert/references/product-deliberation-workflow.md` 或 `product-architecture-expert/references/ai-native-product-context.md`。
+- Web UI、交互状态、可操作原型和可用性由 `ui-design-expert` 负责；需要浏览器实现时把稳定的设计契约交给 `senior-software-architect`，Figma 只作执行工具。
+- 系分、TDD、代码实现和工程验证由 `senior-software-architect` 负责；按场景读取 `senior-software-architect/references/system-analysis-design.md`、`senior-software-architect/references/testing.md`、`senior-software-architect/references/workflow.md`、`senior-software-architect/references/coding-review-deep-dive.md`、`senior-software-architect/references/security-architecture.md` 或 `senior-software-architect/references/production-readiness.md`。具体编码先服从项目本地规范；Java 项目读取 `wind-coding-conventions` 的通用层，Wind 专项按依赖或上下文启用。
 - 结构化 Java Service 基础服务、DTO / Request / Query / Entity / Mapper / Converter / Service / ServiceImpl 骨架生成由 `java-service-code-generator` 执行；生成后回 `wind-coding-conventions` 检查通用 Java 约规并按依赖/上下文叠加 Wind 专项，再回 `资深架构师` 做源码级设计 / TDD / CR。
 - Java 项目编码指导和规则由 `wind-coding-conventions` 执行；它提供通用 Java 约规，并在命中 Wind 信号后提供专项规则和模板样例，架构裁决、测试策略、源码级 Review 和生产风险仍回 `资深架构师`。
 - 代码阅读理解、设计-代码对齐和外部理解工具准入读 `code-understanding-tools.md`；工具输出只是只读证据，不替代源码锚点、测试、CR 或 owner 判断。
@@ -129,7 +130,7 @@ Loop 推进中适时装载 `grill-me`；盘问、问题去重、shared understan
 | --- | --- | --- | --- | --- |
 | 意图收集 | 业务 owner / 产品专家 | 整理事实、问题和不确定性 | 原始意图、证据、影响面、成功/失败信号 | 缺少主体、场景、证据或验收方时停止 |
 | 自我挖掘与确认边界 | 知止者编排，业务 / 产品 / 架构 owner 确认关键判断 | 读取现有材料、代码、测试、历史反馈和约规，形成候选需求与边界 | 自主交付控制卡、事实/推断/待确认、人工确认点 | 无来源、冲突事实、目标取舍、范围扩张或高风险动作时停止转人工 |
-| 产品 / 交互设计 | 产品专家 / UED | 辅助梳理流程、用例、交互状态和验收种子 | 产品上下文卡、流程 / 用例 / 页面状态、验收种子 | 产品只传话、未解释业务问题或影响面时停止 |
+| 产品 / 交互设计 | 产品专家 / UED | 产品事实走 `product-architecture-expert`，Web UI、交互与原型走 `ui-design-expert` | 产品上下文卡、流程 / 用例 / 页面状态、验收种子、原型证据 | 产品语义未稳定，或原型证据等级不足却要求宣称可用时停止 |
 | 设计评审 | 知止者编排，产品 / 架构 owner 决策 | Design Reviewer / MAGI / Checker 提出挑战与风险 | ACCEPT/REJECT/PENDING、风险清单、owner | AI 预审不能替代 owner 决策 |
 | TDD / 测试设计 | 资深架构师 / 质量门禁 | 辅助把验收种子转成失败测试候选和验证矩阵 | 测试策略、失败测试候选、验证命令 | 缺业务规则、不变量或验收样例时停止 |
 | 编码实现 | 资深架构师 / 工程 owner | AI Maker 在授权范围内实现，按 TDD 推进 | 失败测试、实现、提交切片、状态回写 | 不允许模拟模块、内存版业务 Service 或无业务入口 demo |

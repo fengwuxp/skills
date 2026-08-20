@@ -77,6 +77,7 @@ VCC/发卡、ACH/银行轨道、FX/多币种、通道路由、清结算/账本�
 
 ## 参考路由
 
+- 支付基础知识与学习入口：`references/payment-domain-foundations.md`；按支付、会计、生态、交易、清结算、账务、对账、资金、钱包和产品方法建立共同语言后，再进入专项 reference。
 - 来源独立公共核心：`references/object-and-completion.md`、`references/event-recovery.md`、`references/responsibility-reconciliation-evidence.md`、`references/provider-facts.md`。
 - 场景入口：`references/payment-scenario-routing.md`、`references/glossary.md`。
 - 总体方法与可执行方法卡：`references/payment-methodology.md`、`references/payment-method-cards.md`。

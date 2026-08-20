@@ -53,6 +53,8 @@ if rg --files --hidden \
 fi
 
 echo "==> skill frontmatter and agent yaml"
+ruby scripts/test-validate-skill-frontmatter.rb
+ruby scripts/validate-skill-frontmatter.rb .
 ruby <<'RB'
 require "yaml"
 
@@ -148,6 +150,7 @@ python3 wise-agent/scripts/test_skill_usage_observability.py
 echo "==> python compile"
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
+python3 -m py_compile fiction-visual-designer/scripts/compose-design-sheet.py
 python3 -m py_compile hanzi-philology/scripts/check_philology_evidence.py
 python3 -m py_compile java-service-code-generator/scripts/generate_scaffold.py
 python3 -m py_compile payment-expert/scripts/check_external_rules.py
@@ -200,6 +203,7 @@ public_core_eval_dir="${tmp_dir}/payment-public-core-eval"
 python3 payment-expert/scripts/verify_behavior_cases.py --prepare-eval-batches "${public_core_eval_dir}"
 python3 scripts/evaluate-skill-behavior.py validate --cases "${public_core_eval_dir}/candidate-comparison.json"
 python3 scripts/evaluate-skill-behavior.py validate --cases "${public_core_eval_dir}/post-merge-forward.json"
+python3 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/payment-domain-foundations-behavior-cases.json"
 python3 payment-expert/scripts/verify_fixtures.py
 
 echo "==> product deliverable checker"
@@ -249,6 +253,9 @@ fi
 echo "==> resource capability candidate checker"
 resource-capability-distiller/scripts/check_capability_candidate.py --self-test
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
+
+echo "==> fiction visual designer behavior cases"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/fiction-visual-designer-behavior-cases.json"
 
 echo "==> novelist behavior cases"
 python3 novelist/scripts/test-check-novelist-continuity-ledger.py

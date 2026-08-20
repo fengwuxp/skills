@@ -463,6 +463,8 @@ novelist_character = "novelist/references/character-craft.md"
 novelist_scene = "novelist/references/scene-and-prose-craft.md"
 novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
+novelist_continuity_checker = "novelist/scripts/check-novelist-continuity-ledger.py"
+novelist_continuity_checker_test = "novelist/scripts/test-check-novelist-continuity-ledger.py"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
 novelist_source_map = "novelist/references/source-map.md"
 novelist_craft_cases = "novelist/references/craft-case-library.md"
@@ -519,6 +521,7 @@ wise_agent_domain_expert_distillation = "wise-agent/references/domain-expert-dis
 wise_agent_spec_template_practices = "wise-agent/references/spec-template-practices.md"
 wise_agent_code_delivery = "wise-agent/references/code-delivery.md"
 wise_agent_skill_learning_backflow = "wise-agent/references/skill-learning-backflow.md"
+wise_agent_skill_usage_observability = "wise-agent/references/skill-usage-observability.md"
 wise_agent_user_collaboration_profile = "wise-agent/references/user-collaboration-profile.md"
 wise_agent_execution_specification = "wise-agent/references/execution-specification.md"
 wise_agent_delivery_execution_control = "wise-agent/references/delivery-execution-control.md"
@@ -3725,6 +3728,9 @@ check(
             "版本回读",
             "配置回读",
             "冒烟",
+            "产品语义、PRD、验收种子和产品合议由 `product-architecture-expert` 负责",
+            "Web UI、交互状态、可操作原型和可用性由 `ui-design-expert` 负责",
+            "代码实现和工程验证由 `senior-software-architect` 负责",
             "product-architecture-expert/references/product-design-and-prd.md",
             "senior-software-architect/references/testing.md",
             "senior-software-architect/references/coding-review-deep-dive.md",
@@ -3738,6 +3744,10 @@ check(
             "继续收敛",
             "停止交接",
         ],
+    )
+    and has_none(
+        wise_agent_delivery_lifecycle,
+        ["产品 / 交互设计、PRD、验收种子和产品合议由 `产品架构专家` 执行"],
     )
     and has_all(
         wise_agent_source_map,
@@ -5522,6 +5532,14 @@ check(
         if case.get("skill") == "wise-agent" and case.get("should_trigger") is True
     ),
 )
+check(
+    "all fiction-visual-designer positive fixtures use an explicit invocation",
+    all(
+        "$fiction-visual-designer" in case.get("query", "")
+        for case in skill_eval_cases_by_id.values()
+        if case.get("skill") == "fiction-visual-designer" and case.get("should_trigger") is True
+    ),
+)
 llm_hygiene_auto_bugfix = skill_eval_cases_by_id.get(
     "llm-coding-hygiene-should-auto-trigger-on-ordinary-bugfix", {}
 )
@@ -5876,6 +5894,14 @@ check(
     "product and senior metadata disambiguate diagram semantics",
     all(term in frontmatter(product_skill) for term in ["产品语义图", "系统实现", "工程图"])
     and all(term in frontmatter(senior_skill) for term in ["工程图", "产品业务语义"]),
+)
+negative_reason_has(
+    "product-architecture-expert-negative-direct-clickable-prototype",
+    (
+        "ui-design-expert",
+        "product-architecture-expert 只提供已确认的产品语义和验收口径",
+        "senior-software-architect 实现与验证",
+    ),
 )
 negative_reason_has(
     "product-negative-ambiguous-state-machine",
@@ -6634,6 +6660,18 @@ check(
             "业务上下文、容器/应用、组件、运行时交互、部署拓扑、数据/消息和观测支撑",
             "SVG、draw.io XML、Mermaid 或生成脚本",
             "数据边界、凭据边界、联网行为和写入范围",
+            "## 轻量结构表达选择",
+            "局部代码形状说明",
+            "伪代码",
+            "调用树",
+            "组件树",
+            "两层以内的浅文件树",
+            "类型/签名草图",
+            "当前态 / 目标态的前后差异视图",
+            "不使用轻量结构表达",
+            "默认只选一种表达",
+            "附源码锚点",
+            "不默认生成或打开 HTML",
             "## 技术架构图三级视图",
             "整体技术架构图",
             "子领域技术架构图",
@@ -6676,6 +6714,29 @@ check(
             "调用 `$fireworks-tech-graph`",
             "即使外部 Skill 默认同时导出 PNG",
             "供应链安全审查",
+        ],
+    ),
+)
+check(
+    "senior source map owns show-me lightweight diagram source",
+    has_all(
+        senior_source_map,
+        [
+            "《开源技能show-me：让AI编码输出一目了然》",
+            "https://mp.weixin.qq.com/s/UGHABPzqpNNgfPSa82fbCQ",
+            "https://github.com/humanlayer/skills/blob/6ab9013a10c28f5046f7f999549cd5328a0b30d7/plugins/show-me/skills/show-me/SKILL.md",
+            "公开内容用于参考",
+            "轻量结构表达选择",
+            "不安装或新建同名 `show-me` Skill",
+            "不默认生成或打开 HTML",
+            "不把轻量表达写成正确性、Review 效率或本项目收益已获证明",
+        ],
+    )
+    and has_none(
+        "wise-agent/references/source-map.md",
+        [
+            "https://mp.weixin.qq.com/s/UGHABPzqpNNgfPSa82fbCQ",
+            "https://github.com/humanlayer/skills/blob/6ab9013a10c28f5046f7f999549cd5328a0b30d7/plugins/show-me/skills/show-me/SKILL.md",
         ],
     ),
 )
@@ -17076,8 +17137,9 @@ expected_handling_has(
         "资深架构师",
         "质量/测试门禁",
         "发布 owner",
-        "产品/交互设计和验收种子回到产品架构专家",
-        "TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师",
+        "产品语义、PRD 和验收种子回到 product-architecture-expert",
+        "Web UI、交互、可操作原型和可用性回到 ui-design-expert",
+        "代码实现和工程验证回到 senior-software-architect",
         "写代码的 Agent 不能自证通过",
         "不等于默认授权、测试通过、CR 结论或上线审批",
     ),
@@ -17127,8 +17189,9 @@ expected_handling_has(
         "编码实现",
         "代码 CR",
         "验证发布",
-        "产品/交互设计和验收种子回到产品架构专家",
-        "TDD/测试设计、编码实现、代码 CR、安全可靠和发布风险回到资深架构师",
+        "产品语义、PRD 和验收种子回到 product-architecture-expert",
+        "Web UI、交互、可操作原型和可用性回到 ui-design-expert",
+        "代码实现和工程验证回到 senior-software-architect",
         "Complete / Loop / Stop / Human handoff",
         "不能把自我规划当授权",
         "不能把 Agent 自述完成当证据",
@@ -17159,8 +17222,9 @@ expected_handling_has(
         "复盘回流",
         "需求变更进入 Loop 时，先做影响识别再改文档或代码",
         "PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接",
-        "产品/交互设计和验收种子回到产品架构专家",
-        "TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师",
+        "产品语义、PRD 和验收种子回到 product-architecture-expert",
+        "Web UI、交互、可操作原型和可用性回到 ui-design-expert",
+        "代码实现和工程验证回到 senior-software-architect",
         "结构化 Java Service 生成回到 java-service-code-generator",
         "不能把阶段名当成自由发挥提示词",
         "目标、计划、原子执行、执行契约和授权边界只作内部层",
@@ -19858,6 +19922,42 @@ check(
 )
 
 check(
+    "review fixes keep privacy, permissions, JIT, and novelist tooling wired",
+    has_all(
+        novelist_skill,
+        [
+            "scripts/check-novelist-continuity-ledger.py",
+            "RW-nnn",
+            "--root",
+            "--ledger",
+        ],
+    )
+    and (ROOT / novelist_continuity_checker).is_file()
+    and (ROOT / novelist_continuity_checker_test).is_file()
+    and not (ROOT / "scripts/check-novelist-continuity-ledger.py").exists()
+    and not (ROOT / "scripts/test-check-novelist-continuity-ledger.py").exists()
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "python3 scripts/validate-codex-agent-profiles.py --self-test",
+            "python3 -m py_compile novelist/scripts/check-novelist-continuity-ledger.py",
+            "python3 novelist/scripts/test-check-novelist-continuity-ledger.py",
+        ],
+    )
+    and has_none("scripts/validate-codex-agent-profiles.py", ["danger-full-access"])
+    and has_all(
+        wise_agent_skill_usage_observability,
+        [
+            "单次 JIT token 未下降不触发立即停止",
+            "完成预声明重复次数",
+            "端到端成本稳定恶化",
+            "insufficient",
+        ],
+    )
+    and not (ROOT / "fixtures/model-routing-pilot/batch-worker-input.txt").exists(),
+)
+
+check(
     "novelist behavior cases cover domain capability and collaboration boundaries",
     (ROOT / novelist_behavior_cases).exists()
     and (ROOT / novelist_planning_behavior_cases).exists()
@@ -22521,6 +22621,20 @@ expected_handling_has(
     ("Tests are skipped", "Surefire XML", "tests", "failures", "errors", "skipped", "jdbc-schema.sql"),
 )
 expected_handling_has(
+    "senior-should-use-lightweight-structure-for-local-call-change",
+    (
+        "轻量结构表达选择",
+        "当前态 / 目标态",
+        "调用树或前后差异视图",
+        "一至三句",
+        "不要生成文件",
+        "SVG",
+        "Mermaid",
+        "HTML",
+        "不把用户给出的调用关系冒充已核验源码锚点",
+    ),
+)
+expected_handling_has(
     "senior-should-route-interactive-repository-map-to-archify",
     ("senior-software-architect", "Archify", "typed JSON IR", "自包含 HTML", "Schema", "不得假定未安装能力可用"),
 )
@@ -22795,6 +22909,21 @@ expected_handling_has(
         "关键状态、失败恢复、响应式、键盘焦点和可访问性",
     ),
 )
+expected_handling_has(
+    "ui-design-expert-should-plan-standalone-browser-prototype",
+    (
+        "无目标代码库的轻量 L2 浏览器原型",
+        "ui-design-expert",
+        "senior-software-architect",
+        "一个自包含 HTML 文件",
+        "一条可信流程",
+        "不依赖构建、认证、真实 API 或外部服务",
+        "控件无死链",
+        "宽窄视口、键盘、焦点、长内容、控制台和溢出",
+        "真实系统接管点",
+        "不是生产代码、容量安全或发布就绪证据",
+    ),
+)
 
 check(
     "UI design capability is web-scoped, sourced, routed, and smoke-covered",
@@ -22924,6 +23053,9 @@ check(
             "v2025.10",
             "nextlevelbuilder/ui-ux-pro-max-skill",
             "google-labs-code/stitch-skills",
+            "plugins/stitch-design/skills/generate-design/SKILL.md",
+            "plannotator/effective-html",
+            "skills/html-prototype/SKILL.md",
             "jiji262/claude-design-skill",
             "alchaincyf/huashu-design",
             "Nutlope/hallmark",
@@ -23059,6 +23191,11 @@ check(
             "L0 流程契约",
             "L1 Figma 可点击原型",
             "L2 浏览器可运行原型",
+            "无目标代码库",
+            "一个自包含 `.html` 文件",
+            "一条可信流程",
+            "不接认证、真实 API 或外部服务",
+            "真实系统接管点",
             "figma-create-new-file",
             "figma-use",
             "figma-generate-design",
@@ -23104,6 +23241,8 @@ check(
             "ui-design-expert-should-design-operational-dashboard",
             "ui-design-expert-should-redesign-mobile-form-flow",
             "ui-design-expert-negative-product-prd-only",
+            "product-architecture-expert-negative-direct-clickable-prototype",
+            "assert_product_direct_prototype_route",
             "ui-design-expert-negative-figma-to-code",
             "ui-design-expert-should-plan-figma-clickable-prototype",
             "ui-design-expert-should-select-ui-ecosystem-by-category",

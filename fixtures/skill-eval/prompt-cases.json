@@ -256,7 +256,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入产研协同 / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师；目标、计划、原子执行、执行契约和授权边界只作内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
+      "expected_handling": "进入产研协同 / 意图到生产交付角色 Loop，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle 并输出 Role Collaboration Loop Map / Intent-to-Production Role Loop Map；覆盖意图收集、需求事实分层、产品/交互设计、设计评审、TDD/测试设计、编码实现/AI Maker、编码评审/AI Checker、可用性/安全性/可靠性评估、验证发布和生产反馈回流；明确业务 owner、产品专家、UED、资深架构师、AI Maker、AI Checker、质量/测试门禁、发布 owner 的阶段分工和不替代边界；产品语义、PRD 和验收种子回到 product-architecture-expert，Web UI、交互、可操作原型和可用性回到 ui-design-expert，代码实现和工程验证回到 senior-software-architect；目标、计划、原子执行、执行契约和授权边界只作内部层，写代码的 Agent 不能自证通过，Loop 不等于默认授权、测试通过、CR 结论或上线审批。"
     },
     {
       "id": "wise-agent-should-three-layer-feedback-loop-cadence",
@@ -286,7 +286,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入自主挖掘到交付的产研协同，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle、delivery-execution-control、code-delivery 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、代码 CR、安全可靠和发布风险回到资深架构师；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认。"
+      "expected_handling": "进入自主挖掘到交付的产研协同，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle、delivery-execution-control、code-delivery 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品语义、PRD 和验收种子回到 product-architecture-expert，Web UI、交互、可操作原型和可用性回到 ui-design-expert，代码实现和工程验证回到 senior-software-architect；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认。"
     },
     {
       "id": "wise-agent-should-prd-system-design-deliberation-review",
@@ -316,7 +316,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入知止者主流程，读取 delivery-lifecycle 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品/交互设计和验收种子回到产品架构专家，TDD/测试设计、编码实现、编码评审、安全可靠和发布风险回到资深架构师，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确目标、计划、原子执行、执行契约和授权边界只作内部层，不替代角色协作、测试通过、CR 结论或发布审批。"
+      "expected_handling": "进入知止者主流程，读取 delivery-lifecycle 和 verification-review-release；按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；输出主责 owner、协作角色、AI Maker、AI Checker 和下一角色；阶段链覆盖设计、设计评审、TDD/测试设计、编码实现、编码评审、可用性/安全性/可靠性评估、验证发布和复盘回流；需求变更进入 Loop 时，先做影响识别再改文档或代码，覆盖 PRD 决策层 / 方案层 / 实现层、系分、接口 / 事件、规则 / 字段、验收种子、测试用例、发布风险、通知对象和过程记录链接；每个阶段必须输出能力/约规来源：产品语义、PRD 和验收种子回到 product-architecture-expert，Web UI、交互、可操作原型和可用性回到 ui-design-expert，代码实现和工程验证回到 senior-software-architect，结构化 Java Service 生成回到 java-service-code-generator；不能把阶段名当成自由发挥提示词；明确目标、计划、原子执行、执行契约和授权边界只作内部层，不替代角色协作、测试通过、CR 结论或发布审批。"
     },
     {
       "id": "wise-agent-should-coordinate-specialized-skills",
@@ -2506,6 +2506,21 @@
       "expected_handling": "进入原型反推 PRD 路径，先补语义、角色、对象、流程、规则、指标和验收。"
     },
     {
+      "id": "product-architecture-expert-negative-direct-clickable-prototype",
+      "skill": "product-architecture-expert",
+      "query": "审批退回的产品对象、状态和验收已经确认。本轮只把这条 Web 流程画成可点击的 Figma 或单文件浏览器原型，不改 PRD，也不新增产品规则。",
+      "should_trigger": false,
+      "preferred_skill": "ui-design-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "negative_reason": "这是直接设计 Web UI、交互状态和可操作原型的任务，应由 ui-design-expert 主责；product-architecture-expert 只提供已确认的产品语义和验收口径，需要浏览器代码时由 senior-software-architect 实现与验证。"
+    },
+    {
       "id": "product-should-intake-vague-idea-before-prd",
       "skill": "product-architecture-expert",
       "query": "我不是产品经理，想做一个帮助家庭整理订阅支出的 Web 小工具。请直接写一份完整 PRD 并开始开发。",
@@ -3074,6 +3089,16 @@
         "trigger_accuracy"
       ],
       "negative_reason": "缺少产品语义或工程实现目标，不能仅凭“状态机”抢占主责；应先澄清是业务状态与验收，还是系统实现与工程落点。"
+    },
+    {
+      "id": "senior-should-use-lightweight-structure-for-local-call-change",
+      "skill": "senior-software-architect",
+      "query": "帮我画一下这个小重构，用最短方式让我看懂，不要生成文件：改前 CheckoutController.submit -> CheckoutService.place -> PaymentGateway.charge；改后只是在 place 与 charge 之间插入同步 FraudCheck.evaluate。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "读取 diagram-output 的轻量结构表达选择；问题只涉及一条局部同步调用链，使用当前态 / 目标态的调用树或前后差异视图，只保留 CheckoutController.submit、CheckoutService.place、新增 FraudCheck.evaluate 和 PaymentGateway.charge，并在旁边用一至三句说明唯一变化。不要生成文件、正式 SVG、Mermaid 或 HTML，不展开完整 diagram brief，也不把用户给出的调用关系冒充已核验源码锚点。"
     },
     {
       "id": "senior-should-route-interactive-repository-map-to-archify",
@@ -4454,6 +4479,21 @@
       "expected_handling": "识别为 UI 设计与 L1 Figma 可点击原型任务；先稳定用户、范围、页面/状态图和交互表，再按当前 Figma 能力使用 figma-create-new-file、figma-use 与 figma-generate-design，交互通过 setReactionsAsync 建立并在 preview 走查。Figma 文件使用 components、Code Connect、variables、语义命名、Auto Layout、annotations 和 dev resources；AI 编码交接提供 exact node，依次获取 design context、必要时 metadata 缩小范围和 screenshot，复用项目组件、tokens、路由、状态与数据模式。代码实现仍由 senior-software-architect 负责；截图不证明可点击，MCP 输出不是生产代码。"
     },
     {
+      "id": "ui-design-expert-should-plan-standalone-browser-prototype",
+      "skill": "ui-design-expert",
+      "query": "使用 $ui-design-expert 把已确认的 Web 审批退回流程做成可直接打开和走查的浏览器原型；当前没有目标代码库，也没有 Figma 写入能力。只验证一条可信流程及其关键状态，不接真实 API，不要把原型说成生产实现。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "识别为无目标代码库的轻量 L2 浏览器原型；ui-design-expert 先稳定设计契约，再由 senior-software-architect 用一个自包含 HTML 文件实现一条可信流程，内联必要 CSS/JS，不依赖构建、认证、真实 API 或外部服务。原型覆盖成功、失败与恢复等相关状态，控件无死链，并在真实浏览器验证宽窄视口、键盘、焦点、长内容、控制台和溢出；交付绝对路径、已验证任务与真实系统接管点，明确它不是生产代码、容量安全或发布就绪证据。"
+    },
+    {
       "id": "ui-design-expert-should-diversify-expressive-page-structure",
       "skill": "ui-design-expert",
       "query": "使用 $ui-design-expert 为同一品牌的第二条 SaaS 业务线设计转化型 Web 首页。第一条业务线已经采用居中 hero、三张等宽卖点卡、客户 Logo、CTA 和 footer；新页面不能只换颜色和字体，也不能发明产品数据。请说明怎样建立有依据的结构差异并验证。",
@@ -5617,6 +5657,92 @@
         "baseline_comparison"
       ],
       "negative_reason": "这是纯 Java 项目编码约规检查，应由 wind-coding-conventions 的通用层处理；不触发 LLM 编码卫生或工程实现。"
+    },
+    {
+      "id": "fiction-visual-designer-should-design-patterned-inscribed-artifacts",
+      "skill": "fiction-visual-designer",
+      "query": "$fiction-visual-designer：为仙侠故事设计一套山门水闸使用的篆文、云纹与祥纹、凭符和碑刻。故事已经规定必须两地验合才能启闸，请把文字、纹样、载体、制作、权限、动作与损耗设计清楚，不要把它们都画成发光符箓。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "触发 fiction-visual-designer，先继承两地验合这一故事规则，再区分载文构件、纹样与文饰工艺、凭证验合器和空间型工器；分别设计文字内容与书体、纹样基本单元与组织、载体、制作工序、所在部位、可读者、权限、接口、磨损和伪造风险，不新增召神、善恶判断或自动启闸能力。"
+    },
+    {
+      "id": "fiction-visual-designer-should-review-eastern-fantasy-artifact-system",
+      "skill": "fiction-visual-designer",
+      "query": "$fiction-visual-designer：审查这套仙侠法宝视觉方案是否只堆了五行颜色、龙纹、宝石、器灵升级和终结技；请结合神话职事、历史器物、建筑营造和工器制作给出最小修订。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "触发 fiction-visual-designer，以四类证据镜片检查器类与职事、器骨与接合、材料与成器、灵机与行用、状态与承续；删除无依据的颜色、纹样、宝石、器灵成长和招式堆叠，只把上游已确认的能力转成可见状态，并列出需要 novelist 或作者确认的语义分叉。"
+    },
+    {
+      "id": "fiction-visual-designer-negative-pure-artifact-history",
+      "skill": "fiction-visual-designer",
+      "query": "只考证秦汉虎符的形制、铭文、验合制度和出土证据，区分哪些结论能由具体藏品支持；不要做小说或视觉设计。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "这是纯历史器物考证，应直接读取博物馆、考古与史料来源；不触发 fiction-visual-designer，也不把考证结论自动改造成幻想设计。"
+    },
+    {
+      "id": "fiction-visual-designer-negative-direct-image-generation",
+      "skill": "fiction-visual-designer",
+      "query": "秋水剑的视觉设计已经确认，请严格按现有设计直接生成三张图片，不再修改设计。",
+      "should_trigger": false,
+      "preferred_skill": "imagegen",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "negative_reason": "视觉契约已经确认且请求只剩图片生成，应由 imagegen 执行；fiction-visual-designer 只在生成后需要结构、材质或连续性验收时再次参与。"
+    },
+    {
+      "id": "fiction-visual-designer-should-stop-unconfirmed-artifact-rendering",
+      "skill": "fiction-visual-designer",
+      "query": "$fiction-visual-designer：状态：视觉候选。青铜与黑木拼合的机关匣还有内部结构和开启方式未确认，请跳过确认，直接生成正面、侧面、3/4、细节图并拼版。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics"
+      ],
+      "expected_handling": "触发 fiction-visual-designer 的确认门禁；指出未确认结构会改变多视图，停止调用 imagegen 或拼版脚本，只收敛会改变成图方向的关键分叉，不把视觉候选或生成结果升级为已确认设计。"
+    },
+    {
+      "id": "fiction-visual-designer-should-reject-cad-manufacturing-claim",
+      "skill": "fiction-visual-designer",
+      "query": "$fiction-visual-designer：把已确认的秋水剑画成可直接交给工厂开模的精确 CAD 三视图，必须是真实正投影并标注毫米尺寸和公差。",
+      "should_trigger": true,
+      "difficulty": "hard_negative",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison"
+      ],
+      "expected_handling": "触发 fiction-visual-designer 后拒绝制造精度声明；说明生成式概念图不能证明真实正投影、毫米尺寸、公差或开模可用性，继续需要完整工程输入与专业 CAD 或工程制图能力，视觉参考不得冒充生产文件。"
     }
   ]
 }

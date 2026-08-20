@@ -24,6 +24,7 @@ FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 SKILLS = {
     "wise-agent",
     "document-authoring",
+    "fiction-visual-designer",
     "grill-me",
     "hanzi-philology",
     "huaxia-practical-wisdom",
@@ -40,8 +41,8 @@ SKILLS = {
     "wind-coding-conventions",
 }
 EXTERNAL_COMPETITOR_SKILLS = {"ai-slop-detector"}
-KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS
-EXPLICIT_INVOCATION_SKILLS = {"wise-agent"}
+KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS | {"imagegen"}
+EXPLICIT_INVOCATION_SKILLS = {"fiction-visual-designer", "wise-agent"}
 SKILL_MENTIONS = {
     "wise-agent": [
         "$wise-agent",
@@ -49,6 +50,7 @@ SKILL_MENTIONS = {
         "知止者",
     ],
     "document-authoring": ["document-authoring", "专业文档撰写"],
+    "fiction-visual-designer": ["fiction-visual-designer", "小说视觉设计师"],
     "grill-me": ["grill-me", "grill me", "盘问", "拷问"],
     "hanzi-philology": ["hanzi-philology", "汉字学与训诂专家"],
     "huaxia-practical-wisdom": [

@@ -27,6 +27,7 @@
 | `S5` | 微信公众号文章《一套真正的收单平台，到底应该包含什么？》；作者 Scott 薛；页面显示 2026-08-08 20:08；2026-08-08 通过 Codex 应用内浏览器 DOM 读取标题、作者、发布时间和正文 | Payment API 与完整收单产品的区别、商户准入、能力三轴和多控制面完整性问题的 D1 候选 | 通用 Merchant/Store/MID 关系、当前厂商成熟度、法域/法律/会计规则、卡组织精确规则或生产可用性 |
 | `S6` | 2026-08-10 读取 [Stripe capabilities](https://docs.stripe.com/connect/account-capabilities)、[Stripe onboarding](https://docs.stripe.com/connect/onboarding)、[Adyen onboarding](https://docs.adyen.com/platforms/onboard-users)、[Adyen payment reconciliation](https://docs.adyen.com/platforms/reconciliation-use-cases/reconcile-payments)、[Adyen payout reconciliation](https://docs.adyen.com/platforms/payout-reconciliation)、[EMV 3DS](https://www.emvco.com/emv-technologies/3d-secure/) 与 [PCI DSS](https://www.pcisecuritystandards.org/standards/pci-dss/) 官方正文 | 商户验证与能力激活、Hosted/API 入网责任、卡非面对面认证、支付与 payout 对账证据的 D1 对齐 | 厂商对象/状态/报表通则、目标账户 capability、PCI 适用范围、法域责任或生产准入 |
 | `S7` | 用户显式提供的本地支付知识库；2026-08-11 完成结构扫描与相关专题详读；`read-with-limitations` | 企业卡与费用管理分层、支付开放平台交付面、支付事故/补偿证据链及专业培训情景设计的 D1 候选 | 不能支持当前监管、合同、厂商能力、目标项目契约或生产事实；不复制正文、图表、练习答案、人物故事线或作者表达；当前读取授权不外推为 Git、同步、共享或公开发布授权 |
+| `S8` | 陈天宇宙《支付之门》极简版公开长页；2026-08-20 通过 Codex 应用内浏览器 DOM 读取 14 章与跨境支付附篇；提取的章节正文 31,735 字符，SHA-256 `8857c5d4103a0503a7f47d279c585a368b6fb64e14439115e747ac3ec82d5097` | 支付基础、会计基础、支付清算生态、交易、支付执行、清结算、账务、对账、资金处理、钱包和产品方法论的 D1 知识骨架候选 | 原书全文、当前监管/会计/卡组织/机构规则、精确费率限额时效、作者授权、目标项目契约或生产事实 |
 
 S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取或泄露客户数据、密钥、生产配置和未提交工作区。
 
@@ -116,6 +117,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 
 ## 外部来源状态
 
+- 陈天宇宙《支付之门》极简版：`https://1108a071b96f49b1916ec6ff5dee584a.app.workbuddy.link/`。2026-08-20 已通过 Codex 应用内浏览器 DOM 读取页面标题、14 章正文与跨境支付附篇；页面是极简版长页，不是页面所述 400 余页原书全文。第二遍已逐章对照第 1–13 章和跨境附篇：仅将第 2 章缺失的凭证账簿、银行存款余额调节和试算平衡边界补入基础知识，其余用户指定主题由现有专项 reference 覆盖；第 14 章职场力不在本轮范围。基础知识只吸收经现有权威校正后的对象、流程和分析骨架；页面中的限额、时效、费率、会计分录、监管、3DS、拒付、申报、结汇和机构能力均不得作为当前通则。
 - 陈天宇宙个人内容站：`https://chentianyuzhou.com/`。当前只登记为课程作者相关公开索引；页面正文读取证据和作者授权仍为 `PENDING`，不得作为已吸收来源或版权授权证明。
 - 微信公众号文章《头部大厂，怎么做清结算全局规划，分享一个真实案例！》：`https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q`。2026-05-26 Playwright 核验结果为页面已被发布者删除，正文不可复核；仅保留为历史索引线索，不得作为已吸收来源。
 - 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端公开 HTML，并使用本机 Chrome headless 作为 Playwright 等价浏览器读取标题、作者、发布时间和正文；公开内容用于参考 AI 出海资金管理的场景问题，不支持厂商能力、覆盖范围或当前商业结论。

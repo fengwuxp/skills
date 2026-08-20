@@ -652,9 +652,10 @@ assert_ui_design() {
 assert_ui_design_mobile_form() {
   local file="$1" term
   [[ -s "${file}" ]] || return 1
-  for term in "失败恢复" "返回修改" "焦点" "弱网" "状态" "验证"; do
+  for term in "返回修改" "焦点" "弱网" "状态" "验证"; do
     grep -Fq "${term}" "${file}" || return 1
   done
+  assert_any "${file}" "失败恢复" "失败时" "错误恢复" || return 1
   assert_any "${file}" "移动 Web" "移动浏览器" "移动端" "移动窄屏" "移动视口" || return 1
   assert_none "${file}" "只需视觉美化" "无需错误恢复"
 }
@@ -665,6 +666,16 @@ assert_ui_design_product_route() {
   grep -Fq "PRD" "${file}" || return 1
   assert_route_owner_and_exclusion "${file}" "product-architecture-expert" "ui-design-expert" || return 1
   assert_none "${file}" "先做页面设计"
+}
+
+assert_product_direct_prototype_route() {
+  local file="$1"
+  [[ -s "${file}" ]] || return 1
+  assert_any "${file}" "Figma" "浏览器原型" "可点击原型" || return 1
+  assert_route_owner_and_exclusion "${file}" "ui-design-expert" "product-architecture-expert" || return 1
+  assert_any "${file}" "产品语义" "产品事实" || return 1
+  assert_any "${file}" "验收口径" "验收" || return 1
+  grep -Fq "senior-software-architect" "${file}" || return 1
 }
 
 assert_ui_design_figma_route() {
@@ -982,7 +993,7 @@ PY
 assert_ui_reference_axes_direct() {
   local file="$1"
   [[ -s "${file}" ]] || return 1
-  assert_any "${file}" "直接进入设计" "直接推进" "不再确认" || return 1
+  assert_any "${file}" "直接进入" "直接推进" "不再确认" "无需继续确认" || return 1
   assert_any "${file}" "信息节奏" "排版角色" || return 1
   assert_none "${file}" "请确认采用轴" "等待确认" "确认后再设计"
 }
@@ -1117,6 +1128,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
       "${sample_dir}/ui-design-product-route-not-owner.txt" \
       "${sample_dir}/bad-ui-design-product-route.txt" \
       "${sample_dir}/bad-ui-design-product-route-contradictory.txt" \
+      "${sample_dir}/product-direct-prototype-route.txt" \
+      "${sample_dir}/bad-product-direct-prototype-route.txt" \
       "${sample_dir}/ui-design-figma-route.txt" \
       "${sample_dir}/bad-ui-design-figma-route.txt" \
       "${sample_dir}/bad-ui-design-figma-route-contradictory.txt" \
@@ -1277,6 +1290,8 @@ if [[ "${1:-}" == "--self-test" ]]; then
   printf '%s\n' 'PRD 由 product-architecture-expert 负责，不由 ui-design-expert 负责。' > "${sample_dir}/ui-design-product-route-not-owner.txt"
   printf '%s\n' 'PRD 先做页面设计，改由 ui-design-expert 设计。' > "${sample_dir}/bad-ui-design-product-route.txt"
   printf '%s\n' 'PRD 由 product-architecture-expert 负责，ui-design-expert 不触发；但页面设计交给 ui-design-expert 执行。' > "${sample_dir}/bad-ui-design-product-route-contradictory.txt"
+  printf '%s\n' 'Figma 或浏览器可点击原型由 ui-design-expert 主责，product-architecture-expert 不触发，只提供已确认的产品语义和验收口径；需要浏览器代码时由 senior-software-architect 实现与验证。' > "${sample_dir}/product-direct-prototype-route.txt"
+  printf '%s\n' '可点击原型仍由 product-architecture-expert 负责，ui-design-expert 不触发；senior-software-architect 只提供建议。' > "${sample_dir}/bad-product-direct-prototype-route.txt"
   printf '%s\n' 'Figma 已确认，ui-design-expert 不触发；由 senior-software-architect 负责工程还原，按需使用 design-to-code。' > "${sample_dir}/ui-design-figma-route.txt"
   printf '%s\n' 'Figma 已确认，仍由 ui-design-expert 重新设计并重新定义视觉方向。' > "${sample_dir}/bad-ui-design-figma-route.txt"
   printf '%s\n' 'Figma 已确认，由 senior-software-architect 负责还原，ui-design-expert 不触发；但重新设计交给 ui-design-expert 执行。' > "${sample_dir}/bad-ui-design-figma-route-contradictory.txt"
@@ -1380,6 +1395,7 @@ if [[ "${1:-}" == "--self-test" ]]; then
   assert_ui_design_mobile_form "${sample_dir}/ui-design-mobile-form.txt"
   assert_ui_design_product_route "${sample_dir}/ui-design-product-route.txt"
   assert_ui_design_product_route "${sample_dir}/ui-design-product-route-not-owner.txt"
+  assert_product_direct_prototype_route "${sample_dir}/product-direct-prototype-route.txt"
   assert_ui_design_figma_route "${sample_dir}/ui-design-figma-route.txt"
   assert_ui_figma_prototype "${sample_dir}/ui-figma-prototype.txt"
   assert_ui_ecosystem_selection "${sample_dir}/ui-ecosystem-selection.txt"
@@ -1601,6 +1617,10 @@ if [[ "${1:-}" == "--self-test" ]]; then
     echo "FAIL UI design smoke accepted contradictory PRD ownership" >&2
     exit 1
   fi
+  if assert_product_direct_prototype_route "${sample_dir}/bad-product-direct-prototype-route.txt"; then
+    echo "FAIL product prototype routing smoke accepted product ownership" >&2
+    exit 1
+  fi
   if assert_ui_design_figma_route "${sample_dir}/bad-ui-design-figma-route.txt"; then
     echo "FAIL UI design smoke accepted redesign of confirmed Figma" >&2
     exit 1
@@ -1820,6 +1840,10 @@ if [[ "${MODE}" == "all" || "${MODE}" == "ui-design" ]]; then
   run_codex_smoke "${OUTPUT_DIR}/ui-design-product-route.txt" \
     "只读行为验证，对应 fixture ui-design-expert-negative-product-prd-only。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/product-architecture-expert/SKILL.md，以源仓库内容为规则。任务只要求定义退款申请的主体、对象、状态、规则、权限和验收并输出 PRD，明确不做页面、交互或视觉设计。请判断由哪个 Skill 负责以及是否触发 ui-design-expert；不写文件，控制在 180 字。"
   assert_ui_design_product_route "${OUTPUT_DIR}/ui-design-product-route.txt" || { echo "FAIL UI design PRD routing behavior smoke: ${OUTPUT_DIR}/ui-design-product-route.txt" >&2; exit 1; }
+
+  run_codex_smoke "${OUTPUT_DIR}/product-direct-prototype-route.txt" \
+    "只读行为验证，对应 fixture product-architecture-expert-negative-direct-clickable-prototype。先读取 ${ROOT_DIR}/product-architecture-expert/SKILL.md、${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/ui-design-expert/references/prototype-output.md，以源仓库内容为规则。审批退回的产品对象、状态和验收已经确认，本轮只把该 Web 流程做成 Figma 或浏览器可点击原型，不改 PRD、不新增产品规则。请判断主责 Skill、product-architecture-expert 是否触发，以及浏览器代码由谁实现与验证；不写文件，控制在 220 字。"
+  assert_product_direct_prototype_route "${OUTPUT_DIR}/product-direct-prototype-route.txt" || { echo "FAIL product direct-prototype routing behavior smoke: ${OUTPUT_DIR}/product-direct-prototype-route.txt" >&2; exit 1; }
 
   run_codex_smoke "${OUTPUT_DIR}/ui-design-figma-route.txt" \
     "只读行为验证，对应 fixture ui-design-expert-negative-figma-to-code。先读取 ${ROOT_DIR}/ui-design-expert/SKILL.md 和 ${ROOT_DIR}/senior-software-architect/SKILL.md，以源仓库内容为规则。Figma 组件、变量、断点和交互已经确认，任务只要求严格还原 React、补测试并验证一致性，不允许改设计。请判断由哪个 Skill 负责、是否触发 ui-design-expert，以及 Figma 工具的角色；不写文件，控制在 200 字。"

@@ -10,13 +10,15 @@
 
 | 任务 | 优先读取 | 继续读取 |
 | --- | --- | --- |
-| 支付基础能力 | 支付事实、四流、对象和单据 | `payment-methodology.md` |
+| 支付基础能力与系统学习 | `payment-domain-foundations.md` | `payment-methodology.md` |
 | 账户/账务/清结算 | 账户余额、账本、清算结算和对账 | `clearing-settlement.md`, `payment-method-cards.md` |
 | 通道、卡与银行转账 | 通道适配、卡轨、ACH/银行转账 | 对应轨道 reference |
 | 风控、争议与合规 | 风险运营、逆向、监管与证据 | `regulatory-baseline.md` |
 | 跨境、FX、VCC、新支付 | 全球支付、显式报价、卡与新形态 | 对应专项 reference |
 
 ## 1. 支付事实与产品
+
+系统学习支付、会计、生态、交易、支付、清结算、账务、对账、资金处理、钱包和产品方法论时，先读 `payment-domain-foundations.md`；本文件只保留能力地图和分级，不复制基础知识正文。
 
 - 四流：业务流、支付信息流、账户/账务流、真实资金流。
 - 事实分层：交易承诺、支付执行、履约、清分/清算、账务、结算、外部到账和对账。
