@@ -44,6 +44,8 @@ description: Use when 用户要设计、延展、审查或统一小说、漫画�
 
 完整方法、对象专项和图片验收读取 `references/visual-design-method.md`。只有用户明确要求仙侠、玄幻、武侠或其他东方幻想方向时，才继续读取 `references/eastern-fantasy.md`。
 
+东方幻想任务进一步要求传统纹饰、颜色、留白、意境、篆书或符箓、道家或道教视觉、古建筑、工艺与造器审美时，再按需读取 `references/eastern-aesthetic-language.md`，不为普通东方幻想任务自动加载完整审美专项。
+
 ## 核心流程
 
 1. **继承权威**：提取正典、不得改变项、未知项和目标载体，不用视觉完整度补写故事事实。
@@ -71,6 +73,7 @@ description: Use when 用户要设计、延展、审查或统一小说、漫画�
 
 - 通用人物、服饰、建筑、环境、兵器、器物、植物、药物、灵物、生物设计或视觉体系：读取 `references/visual-design-method.md` 对应章节。
 - 仙侠、玄幻、武侠等东方幻想：先读取通用方法，再读取 `references/eastern-fantasy.md`；专项只校准真实原型、文化语境和幻想变形，不成为固定风格模板。
+- 传统纹饰、颜色、留白、意境、篆书或符箓、道家或道教视觉、古建筑和造器审美：在东方幻想方法之后读取 `references/eastern-aesthetic-language.md`，把文化名词编译成媒介、部位、组织、工艺和可观察条件。
 - 外部参考图、文章、Skill 或资料吸收：需要追查来源、许可、读取状态和拒绝内容时读取 `references/source-map.md`；不能实际读取的材料不支撑设计事实。
 - 小说正文、剧情、人物命运、器物来历、能力代价或正典写回：交给 `novelist` 或作者裁决，本 Skill 只接收其结果。
 - 已确认器物设计的多视图或视觉设计单成图：读取 `references/artifact-rendering.md`；本 Skill 编排视图、连续性与验收，`imagegen` 执行生成，四图通过后运行 `scripts/compose-design-sheet.py` 拼版。
@@ -117,6 +120,7 @@ description: Use when 用户要设计、延展、审查或统一小说、漫画�
 
 - `references/visual-design-method.md`：通用五轴、视觉体系与单件设计、对象专项、连续性和生成验收。
 - `references/eastern-fantasy.md`：东方幻想的证据优先级、真实原型到有限幻想变形及分类红线。
+- `references/eastern-aesthetic-language.md`：形、纹、色、留白、意境、文字与道教图形、古建筑和造器的按需设计语法。
 - `references/artifact-rendering.md`：已确认器物的四视图生成、跨图连续性、重试上限、拼版与停止条件。
 - `references/source-map.md`：外部 Skill、制作复盘和一手资料的读取、许可、时效、吸收与拒绝边界。
 - `assets/visual-design-sheet-template.md`：视觉候选、已确认设计与生成验收共用的可裁剪设计单。
