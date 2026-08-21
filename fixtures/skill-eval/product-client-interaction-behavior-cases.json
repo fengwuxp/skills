@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 的客户端交互契约行为评测定义。静态 fixture 只固定预期行为与边界；真实 runner/model 重复采集、盲评和独立复核完成前，不声明能力已验证。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "product-client-interaction-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/agents/openai.yaml",
+        "product-architecture-expert/references/product-client-interaction.md",
+        "product-architecture-expert/references/product-design-and-prd.md",
+        "product-architecture-expert/references/product-scenario-routing.md",
+        "product-architecture-expert/references/source-map.md"
+      ],
+      "sha256": "dbc4aaec2c81097b6e8b295affe64acd26e819660fc0bdb140a36aa363143931"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "product-client-interaction-should-split-device-and-runtime",
+      "category": "client-dimension-model",
+      "risk": "high",
+      "prompt": "请为同一业务规划 PC 浏览器、手机 H5 和手机 APP 三端交互。不要把‘移动端’当成一个端，也不要先画桌面缩小版。",
+      "criteria": [
+        "分别识别设备情境与运行载体，并列出输入、窗口或视口、系统能力、网络和会话约束。",
+        "跨端保持业务对象、状态、权限、规则和验收稳定，只对导航、输入、反馈、生命周期和系统能力做有证据的差异。",
+        "在进入视觉或组件设计前，先输出客户端策略表、任务/路由图和交互状态矩阵；未知事实保持假设与确认方。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-preserve-browser-reentry",
+      "category": "browser-navigation-recovery",
+      "risk": "high",
+      "prompt": "浏览器端有列表、详情和提交流程。请只说明浏览器交互验收，不要只给首屏截图或成功路径。",
+      "criteria": [
+        "覆盖 URL 深链、前进/后退、刷新、新标签或重进时的当前位置、上下文保留和失败恢复。",
+        "覆盖 loading、empty、partial、submitting、error、timeout、permission denied、expired 和重复提交等与任务相关状态。",
+        "每个错误都说明用户可见原因类别、下一步和可恢复动作，静态截图不能单独作为交互可用证据。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-recover-mobile-interruption",
+      "category": "mobile-interruption",
+      "risk": "high",
+      "prompt": "手机 APP 的表单提交可能被来电、通知、切后台、旋转和软键盘打断。请设计恢复要求，不要假定用户会从头再来。",
+      "criteria": [
+        "说明切后台、系统返回、方向变化、软键盘遮挡和会话过期后数据是否保存、如何回到原任务以及是否允许重试或撤销。",
+        "按真实触控、单手可达、安全区、文字放大和辅助技术语义检查主任务，不把复杂手势或悬停作为唯一入口。",
+        "权限拒绝、通知进入和版本差异要有可解释回退，并把平台生命周期与系统 API 确认交给对应平台 Owner。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-degrade-h5-capabilities",
+      "category": "h5-capability-degradation",
+      "risk": "high",
+      "prompt": "H5 需要分享、登录回跳和弱网下的订单查询。请说明在浏览器能力不可用时如何保持主任务。",
+      "criteria": [
+        "不假定原生 API、常驻通知或稳定网络；先保证首屏、表单、回跳、刷新、失败重试和离开页面后的上下文可恢复。",
+        "按 progressive enhancement 给出分享、通知或设备集成不可用时的可解释回退，而不是把增强能力当成主流程前置条件。",
+        "通过目标浏览器、浏览器返回、弱网和登录回跳走查验证，不以浏览器教程或组件文档替代真实任务证据。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-handoff-ui-boundary",
+      "category": "role-boundary",
+      "risk": "high",
+      "prompt": "请把上述多端交互需求直接画成最终视觉稿、组件 API 和可点击原型，并保证用户体验好。",
+      "criteria": [
+        "产品专家先交付任务、端形态、交互约束、跨端差异、状态矩阵和可观察验收，不把‘好用’当成无证结论。",
+        "明确视觉、布局、组件、tokens、响应式细节和可点击原型交给 ui-design-expert，平台生命周期和系统能力交给对应平台工程 Owner。",
+        "缺少目标客户端、关键任务、用户证据或平台能力确认时，停止在假设、问题清单和最小试片，不声称已经完成界面设计或用户体验验证。"
+      ]
+    }
+  ]
+}

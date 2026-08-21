@@ -351,6 +351,7 @@ skill_tree_refs = [
 product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
+product_client_interaction_behavior_cases = "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_business_architecture = "product-architecture-expert/references/business-architecture-planning.md"
 product_concept_lifecycle = "product-architecture-expert/references/product-concept-lifecycle.md"
@@ -6076,6 +6077,67 @@ check(
 check(
     "product openai yaml mentions visual output",
     has_all(product_agent, ["原型", "页面截图", "默认输出 SVG", "待确认项"]),
+)
+check(
+    "product client interaction contract is routed and bounded",
+    has_all(
+        product_skill,
+        [
+            "客户端交互先于原型皮肤",
+            "客户端交互契约",
+            "product-client-interaction.md",
+            "ui-design-expert",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "读取 `product-client-interaction.md`",
+            "客户端交互契约",
+            "每端主任务与失败恢复验收卡",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "客户端交互 / 响应式 / 可用性",
+            "product-client-interaction.md",
+            "客户端策略表",
+            "不把桌面缩小成移动方案",
+        ],
+    )
+    and has_all(
+        "product-architecture-expert/references/product-client-interaction.md",
+        [
+            "PC / 手机",
+            "浏览器 / H5 / APP",
+            "交互状态矩阵",
+            "不替代 `ui-design-expert`",
+            "用户体验好",
+        ],
+    )
+    and has_all(product_source_map, ["WCAG", "Material Design 3", "Fluent 2", "web.dev"]),
+)
+check(
+    "product client interaction behavior contract is wired",
+    (ROOT / product_client_interaction_behavior_cases).exists()
+    and has_all(
+        product_client_interaction_behavior_cases,
+        [
+            '"mode": "non_regression"',
+            "product-client-interaction-should-split-device-and-runtime",
+            "product-client-interaction-should-preserve-browser-reentry",
+            "product-client-interaction-should-recover-mobile-interruption",
+            "product-client-interaction-should-degrade-h5-capabilities",
+            "product-client-interaction-should-handoff-ui-boundary",
+            "静态 fixture 只固定预期行为",
+            "真实 runner/model",
+        ],
+    ),
+)
+behavior_fixture_fingerprint(
+    product_client_interaction_behavior_cases,
+    "b322a29dfd50058e07d21496dd17a1ac8c14353d0bf52136b43f110f310c7cce",
 )
 check(
     "payment metadata owns payment specialty",

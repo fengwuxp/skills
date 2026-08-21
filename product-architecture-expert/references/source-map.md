@@ -89,6 +89,12 @@
 
 ## 已参考的公开来源
 
+- W3C《Web Content Accessibility Guidelines (WCAG) 2.2》：`https://www.w3.org/TR/WCAG22/`。2026-08-21 已读取公开规范，吸收 Web/移动 Web 的键盘可用、焦点顺序、焦点不被遮挡、内容重排（reflow）、输入方式和目标尺寸检查项，用于 `product-client-interaction.md` 的体验验收；不把 WCAG 合规等级等同于产品可用性、视觉质量或上线批准。
+- Apple《Human Interface Guidelines - Layout》《Accessibility》：`https://developer.apple.com/design/human-interface-guidelines/layout`、`https://developer.apple.com/design/human-interface-guidelines/accessibility`。2026-08-21 已读取公开页面，吸收跨窗口/方向/安全区/动态字体/多输入方式、层级、渐进披露、平台控制尺寸与可访问性检查项；不复制 Apple 组件、素材、token 或把 iOS/macOS 约束外推到其他平台。
+- Material Design 3《Canonical layout examples》与 Android Developers《Design an Adaptive Layout with Material Design》：`https://m3.material.io/foundations/layout/canonical-examples/overview`、`https://developer.android.com/codelabs/adaptive-material-guidance`。2026-08-21 已读取公开页面，吸收按窗口可用空间和人体工学选择断点、列表-详情/多栏等布局策略、在断点之间保持弹性和系统栏上下文的检查项；不把 Material 的窗口尺寸、组件或 Compose 实现当作本项目标准。
+- Microsoft Fluent 2《Layout》《Design principles》：`https://fluent2.microsoft.design/layout`、`https://fluent2.microsoft.design/design-principles`。2026-08-21 已读取公开页面，吸收 responsive/adaptive 的区别，以及重排、缩放、显隐和重构页面结构的适配决策；不复制 Fluent 的设计语言、token、断点或组件实现。
+- web.dev《Introduction to responsive design》《Accessible responsive design》：`https://web.dev/learn/design/intro`、`https://web.dev/articles/accessible-responsive-design`。2026-08-21 已读取公开页面，吸收移动视口、流式布局、内容驱动的响应式和可访问响应式检查项；不把教程示例或浏览器实现细节当作产品事实。
+
 - 支付课程、支付公众号文章与全球支付厂商来源已迁移到 `payment-expert/references/source-map.md`；未带正文读取证据的旧条目不再作为产品专家已吸收来源。
 - 微信公众号文章《代码不再稀缺，稀缺的是你如何对抗复杂度》：`https://mp.weixin.qq.com/s/TxU2D0Plf__Xh-yUD2zjPA`。2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考 AI 代码生成时代实现成本下降、复杂度/注意力成本上升、系统设计、前置约束和问题定义能力的重要性；只吸收问题框架和能力定位，不复制原文或作者表达。
 - 微信公众号文章《放下 PRD：写给AI Native时代的产品经理朋友们》：`https://mp.weixin.qq.com/s/5TEAxFYueNc6MD5ngKEgGg`。作者/账号为 `大数据随笔`，发布时间为 2026-05-25 18:00:00；2026-06-02 已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文，本轮未再执行 Playwright 等价浏览器取证。公开内容用于参考 AI Native 下 PRD 从静态翻译文档转为可运行证据、对象规则、验收种子和工程交接门禁的上下文包，覆盖 Product Builder、业务 owner + Agent、业务 dogfooding、MVP/原型 harden 和产品侧交接；端到端 GSD/CAD 准入与 AI 工具编排交给 `wise-agent`，不复制原文、标题表达、作者判断、引用案例、传播性措辞或岗位评价，也不把“放下 PRD”理解为跳过产品语义、评审、留痕、合规和验收。
