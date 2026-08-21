@@ -2931,6 +2931,81 @@
       "expected_handling": "进入产品判断动作链路径，读取 product-judgment-action-chain；输出产品判断动作链卡，覆盖原始输入、当前阶段、已知事实 / 证据、合理推断、待确认项、范围外不做、判断动作、取舍结论、不做项 / 延后项、下一产物、owner、验收 / 停止条件和交接路由；按缺口再转产品洞察、Backlog、PRD、合议评审或知止者前置门禁；不安装、复制或照搬外部 pm-skills，不把路线图愿望清单当产品判断。"
     },
     {
+      "id": "product-should-layer-direction-before-prd",
+      "skill": "product-architecture-expert",
+      "query": "先别写完整 PRD。我们只知道想做一个面向中小商家的库存助手，但目标用户、当前替代方式、商业成立条件和目标结果都没有证据，请先判断下一步。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入第一层定方向，区分已知事实、合理推断和待确认项；不直接生成完整 PRD，把产品定位、商业成立条件、核心用户 / 非用户、真实问题 / 当前替代方式、目标结果 / 非目标和产品策略的缺口写成待验证假设，并为价值风险、商业成立风险给出证据、置信度、验证动作、owner 和停止条件。"
+    },
+    {
+      "id": "product-should-inherit-confirmed-direction",
+      "skill": "product-architecture-expert",
+      "query": "会员产品的定位、目标用户、商业模式和季度结果已经由现行 PRD 与评审纪要确认。本次只增加跨端权益领取，请按产品判断动作链继续规划，不要重做一轮完整 discovery。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "核对现行权威与本次增量无冲突后继承已确认方向，不得强制重做完整发现；从第二层通链路或第三层取舍进入，补关键触点、对象状态规则、最小切片、原型 / PRD 增量、验收种子、owner 和停止条件；发现新证据冲突时才回到第一层。"
+    },
+    {
+      "id": "product-should-judge-internal-platform-viability",
+      "skill": "product-architecture-expert",
+      "query": "运营团队想做内部工单平台，先不要写 PRD。它不对外收费，请判断商业成立条件和是否值得持续投入。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入第一层商业成立风险判断，但不强制套收入、付费或外部市场模型；用组织目标、效率、成本、风险、采用率、责任归属和机会成本判断可持续性，区分事实与假设，并给出证据、置信度、验证动作、owner 和停止条件。"
+    },
+    {
+      "id": "product-should-link-multi-app-service-chain",
+      "skill": "product-architecture-expert",
+      "query": "同一个售后需求要落到 C 端 H5、运营浏览器后台和客服桌面端。请先做产品链路与原型范围规划，不要按端名复制三套页面。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入第二层通链路与跨应用原型范围规划，按端到端场景识别用户动作、关键触点与断点、前台 / 后台 / 支撑责任、对象状态规则、身份与上下文、状态同步、失败恢复和审计；再按业务责任分配应用、客户端、页面 / 状态 / 非页面能力，不按端名机械复制页面。"
+    },
+    {
+      "id": "product-should-review-outcomes-after-launch",
+      "skill": "product-architecture-expert",
+      "query": "新搜索功能已经上线，访问量和功能使用次数都涨了。请做发布复盘，判断是否成功以及下一步是否继续投入。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "从第三层发布与回流进入，回看原始目标与验收种子，比较用户结果、业务结果、质量、运营成本和副作用；不把访问量、活动量或功能上线直接当成功，证据不足时保留待确认，并给出继续、收缩、废弃或下一实验的取舍、owner 与停止条件。"
+    },
+    {
       "id": "product-should-nonstandard-problem-solution",
       "skill": "product-architecture-expert",
       "query": "老板、销售和客户都说要做一个智能运营能力，但表达很散，UED 也反馈现有流程交互阻塞。请不要做传话筒，先输出真实问题、影响面、失败成本、当前替代方式、目标用户、解决方案假设、验收种子、UED 重点验证的交互/状态和下一步验证动作。",
@@ -4689,6 +4764,35 @@
         "baseline_comparison"
       ],
       "negative_reason": "任务明确排除页面交互设计，现有页面只是产品事实输入；应由 product-architecture-expert 负责，不触发 ui-design-expert。"
+    },
+    {
+      "id": "product-architecture-expert-should-plan-cross-application-prototype-requirements",
+      "skill": "product-architecture-expert",
+      "query": "一个会员权益需求同时涉及运营平台、C 端浏览器、桌面客户端和 H5。请先规划需求分别落在哪些应用、客户端和页面，列页面清单、跨端差异、跨应用衔接及逐页产品标注；暂不画界面，也不生成可点击原型。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "competition_group": "cross-application-prototype-planning-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "expected_handling": "由 product-architecture-expert 持有跨应用原型需求规划，先区分应用、客户端、页面和非页面能力，再输出需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接与验收追踪；只定义必须呈现、可操作和可观察的产品事实，不直接绘制界面或生成可点击原型。"
+    },
+    {
+      "id": "ui-design-expert-negative-cross-application-prototype-requirement-planning",
+      "skill": "ui-design-expert",
+      "query": "一个会员权益需求同时涉及运营平台、C 端浏览器、桌面客户端和 H5。请先规划需求分别落在哪些应用、客户端和页面，列页面清单、跨端差异、跨应用衔接及逐页产品标注；暂不画界面，也不生成可点击原型。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "competition_group": "cross-application-prototype-planning-owner",
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务要求先完成跨应用原型需求规划和产品级页面标注，并明确暂不画界面；应由 product-architecture-expert 主责，ui-design-expert 在产品范围和业务状态确认后再负责信息架构、交互和原型绘制。"
     },
     {
       "id": "competition-spring-fix-owner-architect",

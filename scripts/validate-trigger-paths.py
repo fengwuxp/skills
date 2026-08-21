@@ -1035,7 +1035,7 @@ grill_me_unresolved_terms = [
 ]
 product_terms = ["产品", "产品方案", "PRD", "模板", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "验收种子", "交给架构师", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "能力-项目-系统映射", "知识库回流", "产品洞察", "需求洞察", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "资料资产化", "机会雷达", "竞品动态", "标杆实践", "Backlog", "机会清单", "机会点", "需求优先级", "User Story", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "清结算", "对账", "合规", "商户", "SaaS", "B2B", "运营后台", "规则矩阵", "能力地图", "用例图", "业务流程图", "资金流图", "外卡收单", "Mastercard", "商户到账", "产品大师", "MAGI", "多视角", "合议评审", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "假设挑战", "HMW", "OODA", "逆向头脑风暴"]
 product_general_route_terms = ["产品方案", "验收种子", "交给架构师", "SaaS", "B2B", "业务流程", "业务流程图", "用例图", "能力地图", "业务架构", "业务架构规划", "业务 IT 对齐", "战略落项目", "战略到项目组合", "项目组合治理", "投资取舍", "投资决策支持", "重复建设识别", "能力-项目-系统映射", "知识库回流", "运营后台", "规则矩阵", "原型", "页面截图", "页面说明", "交互稿", "反推 PRD", "反推需求", "根源需求", "产品定义", "产品边界", "产品 DNA", "业务不变量", "功能先行、规则后补", "稳定点/变化点", "稳定点 / 变化点", "边界坐标", "概念定名", "概念生命周期", "概念退役", "新旧概念", "事实源分裂", "只加不减", "旧规则", "旧入口", "需求止损", "需求无止境", "价值 / 意义边界", "价值意义摇摆", "非标产品问题", "非标诉求", "不是传话筒", "解决方案假设", "老板", "销售", "客户", "运营", "目标用户", "UED", "产品阶段", "PMF", "贡献方式", "不按岗位分工", "原型验证", "真实交付", "复杂度清扫", "增长放大", "可靠维护", "产品经理方法论", "产品经理知识体系", "产品专家基础能力", "基础工作法", "产品洞察", "需求洞察", "资料资产化", "机会雷达", "客户访谈", "竞品动态", "标杆实践", "证据来源", "推理链", "机会清单", "Backlog", "需求优先级", "User Story", "AC", "pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "路线图取舍", "发布复盘", "增长实验", "AI-shaped", "readiness", "AI 工作流", "AI 成熟度", "产品团队 AI", "AI 产品工作成熟度", "AI Native", "Product Builder", "业务 dogfooding", "MVP harden", "放下 PRD", "PRD 可执行上下文", "产品大师", "MAGI", "多视角", "合议评审", "PM/Reviewer", "AI 生成方案", "需求评审", "评审会前", "AI 预扫描", "完整性/一致性/可测试性/二义性", "产品头脑风暴", "问题探索", "方案发散", "假设挑战", "HMW", "第一性原理", "OODA", "逆向头脑风暴"]
-product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "别一上来写 PRD", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
+product_judgment_terms = ["pm-skills", "phuryn/pm-skills", "产品判断成流程", "产品动作链", "产品判断动作链", "产品判断 Loop", "别一上来写 PRD", "先别写完整 PRD", "先不要写 PRD", "路线图取舍", "发布复盘", "增长实验", "不只是写文档"]
 payment_terms = [
     "清结算",
     "对账",
@@ -5902,6 +5902,21 @@ negative_reason_has(
         "product-architecture-expert 只提供已确认的产品语义和验收口径",
         "senior-software-architect 实现与验证",
     ),
+)
+expected_handling_has(
+    "product-architecture-expert-should-plan-cross-application-prototype-requirements",
+    (
+        "需求覆盖矩阵",
+        "页面清单",
+        "产品级页面标注",
+        "多端差异",
+        "跨应用衔接",
+        "不直接绘制界面",
+    ),
+)
+negative_reason_has(
+    "ui-design-expert-negative-cross-application-prototype-requirement-planning",
+    ("product-architecture-expert", "跨应用原型需求规划", "暂不画界面"),
 )
 negative_reason_has(
     "product-negative-ambiguous-state-machine",
@@ -11068,6 +11083,41 @@ check(
     ),
 )
 check(
+    "product owns cross-application prototype requirement planning",
+    has_all(
+        product_skill,
+        [
+            "跨应用、客户端和页面",
+            "跨应用原型需求规划",
+            "产品级页面标注",
+            "ui-design-expert",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "跨应用 / 多端原型需求规划",
+            "需求覆盖矩阵",
+            "多端差异",
+            "跨应用衔接",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "跨应用原型需求规划",
+            "应用、客户端、页面与非页面能力",
+            "需求覆盖矩阵",
+            "页面清单",
+            "产品级页面标注",
+            "多端差异矩阵",
+            "跨应用衔接",
+            "原型覆盖追踪",
+            "scripts/check_product_deliverable.py --kind prototype-scope-plan",
+        ],
+    ),
+)
+check(
     "senior architect keeps architecture decay and entropy review gate",
     has_all(
         senior_skill,
@@ -11687,6 +11737,53 @@ check(
     and has_none(
         wise_agent_source_map,
         ["https://mp.weixin.qq.com/s/D04Ty2kQoSqedbSBENPjmQ"],
+    ),
+)
+check(
+    "product expert exposes a three-layer judgment spine",
+    has_all(
+        product_skill,
+        [
+            "第一层：定方向",
+            "第二层：通链路",
+            "第三层：定取舍并形成可验证方案",
+            "不是固定瀑布",
+            "最小完整视图",
+            "同一背景、边界、证据与待确认项只写一次",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "方向尚未确认",
+            "继承已确认方向",
+            "内部平台",
+            "不得强制重做完整发现",
+        ],
+    )
+    and has_all(
+        product_judgment_action_chain,
+        [
+            "产品策略",
+            "方案 / 服务策略",
+            "价值风险",
+            "可用性风险",
+            "商业成立风险",
+            "可行性风险",
+            "证据 / 置信度 / 验证动作 / 停止条件",
+            "回看原始目标与验收种子",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "Product Model Concepts",
+            "How the discovery phase works",
+            "How the alpha phase works",
+            "Opportunity Solution Trees",
+            "skills/identify-assumptions-existing/SKILL.md",
+            "不复制固定画布、固定数量",
+        ],
     ),
 )
 check(
@@ -14369,6 +14466,7 @@ check(
             '"prd":',
             '"product-architecture":',
             '"diagram-brief":',
+            '"prototype-scope-plan":',
             '"product-review":',
             "background_and_goal",
             "strategic_intent",
@@ -14473,15 +14571,15 @@ check(
 )
 behavior_fixture_fingerprint(
     product_business_architecture_behavior_cases,
-    "ffd003c0595c0ddd40679cd595628b80ffd4b853bf4b2e852956ca69e16d9ace",
+    "3b9ddddec7aa80f8953a5a01322bbd2f3fe595f809112b476f00a63489678587",
 )
 file_fingerprint(
     product_business_architecture_responses,
-    "cfb6274b962a561b0fe91891a26306de8092b7d14b8c1bb28b228ba058073448",
+    "b88f0d0c2433e5d21f3ebab7d14739c4c931872d7e4c07b82b3ead95fb46f908",
 )
 file_fingerprint(
     product_business_architecture_scores,
-    "424a96772f3698fda2c6ea04359cf8e095154c0bdbd0e932aaf86a675cab3c9e",
+    "fe80ac554711a087966cb750195cb7ea3ebc693663ce465b30a2c3e05049198d",
 )
 source_set_fingerprint(product_business_architecture_behavior_cases, "baseline")
 source_set_fingerprint(product_business_architecture_behavior_cases, "candidate")
@@ -15551,6 +15649,31 @@ scenario_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="product pre-PRD decision chain",
         prompt="产品经理别一上来写 PRD，先判断产品定位、商业模式、目标用户、用户场景、关键触点、产品阶段、资源优先级和验证方式。",
+        routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md"},
+    ),
+    RouteFixture(
+        name="product three-layer direction before PRD",
+        prompt="先别写完整 PRD，目标用户、当前替代方式、商业成立条件和目标结果都没有证据，请先判断下一步。",
+        routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md", "product-prd-template.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
+        name="product inherits confirmed direction",
+        prompt="现行 PRD 已确认定位、目标用户和商业模式，请按产品判断动作链继续规划跨端增量，不要重做完整 discovery。",
+        routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md", "product-prd-template.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
+        name="product internal platform viability",
+        prompt="运营团队想做内部工单平台，先不要写 PRD，请判断商业成立条件和是否值得持续投入。",
+        routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md", "product-prd-template.md", "product-design-and-prd.md"},
+    ),
+    RouteFixture(
+        name="product multi-app service chain",
+        prompt="同一个售后需求要落到 C 端 H5、运营浏览器后台和客服桌面端，请先做产品链路与原型范围规划，不要按端名复制页面。",
+        routes={"product", "product-scenario-routing.md"},
+    ),
+    RouteFixture(
+        name="product post-launch outcome review",
+        prompt="新搜索功能上线后访问量涨了，请做发布复盘，判断是否成功以及是否继续投入。",
         routes={"product", "product-scenario-routing.md", "product-judgment-action-chain.md"},
     ),
     RouteFixture(
@@ -18123,6 +18246,57 @@ expected_handling_has(
         "交接路由",
         "知止者前置门禁",
         "不安装、复制或照搬外部 pm-skills",
+    ),
+)
+
+expected_handling_has(
+    "product-should-layer-direction-before-prd",
+    (
+        "第一层定方向",
+        "不直接生成完整 PRD",
+        "产品策略",
+        "价值风险",
+        "商业成立风险",
+        "证据、置信度、验证动作、owner 和停止条件",
+    ),
+)
+
+expected_handling_has(
+    "product-should-inherit-confirmed-direction",
+    (
+        "继承已确认方向",
+        "不得强制重做完整发现",
+        "第二层通链路或第三层取舍",
+        "发现新证据冲突时才回到第一层",
+    ),
+)
+
+expected_handling_has(
+    "product-should-judge-internal-platform-viability",
+    (
+        "不强制套收入、付费或外部市场模型",
+        "效率、成本、风险、采用率、责任归属和机会成本",
+        "证据、置信度、验证动作、owner 和停止条件",
+    ),
+)
+
+expected_handling_has(
+    "product-should-link-multi-app-service-chain",
+    (
+        "第二层通链路",
+        "前台 / 后台 / 支撑责任",
+        "身份与上下文、状态同步、失败恢复和审计",
+        "不按端名机械复制页面",
+    ),
+)
+
+expected_handling_has(
+    "product-should-review-outcomes-after-launch",
+    (
+        "回看原始目标与验收种子",
+        "不把访问量、活动量或功能上线直接当成功",
+        "继续、收缩、废弃或下一实验",
+        "owner 与停止条件",
     ),
 )
 

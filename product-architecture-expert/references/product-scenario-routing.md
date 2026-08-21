@@ -6,8 +6,9 @@
 
 - 用户要求写作、生成、完善、补全或改写 PRD、产品需求文档、产品方案、业务流程、状态机、规则矩阵、运营后台或验收标准。
 - 用户提供原型、HTML、页面截图、页面说明或交互稿，要求反推、补写或改写 PRD。
+- 用户要求把同一需求规划到运营平台、C 端等多个应用，或浏览器、桌面客户端、H5 等多个客户端，并输出页面范围和产品级页面标注。
 - 用户提供客户访谈、工单、竞品动态、行业/政策资料、标杆实践、Markdown 笔记或知识库资料，要求做产品洞察、需求洞察、机会挖掘或机会雷达。
-- 用户提到 `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘或增长实验，需要把分散材料串成证据、判断、取舍、不做项、下一产物和 owner。
+- 用户提到 `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘或增长实验，或 PRD / Backlog / 原型任务的方向、链路、取舍与验证尚不清楚，需要把分散材料串成证据、判断、取舍、不做项、下一产物和 owner。
 - 用户给出洞察、机会清单、需求池、老板/销售/客户诉求或路线图候选，要求做 Backlog 决策、需求优先级、User Story、AC 或研发可执行条目。
 - 用户要求业务架构规划、业务 IT 对齐、业务能力地图、战略落项目、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射或按业务域 / 模块规划知识库回流。
 - 用户要求产品头脑风暴、问题探索、假设挑战、HMW、第一性原理拆解、OODA、逆向头脑风暴或在写 PRD 前先把想法想透。
@@ -34,12 +35,13 @@
 
 ## 需要继续读取的 reference
 
-- PRD/产品文档读 `product-prd-template.md` 和 `product-design-and-prd.md`；正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后可交给 `document-authoring` 处理同一权威版本的表达和载体，编辑后回本技能重新校验。
+- PRD/产品文档在方向、链路和取舍已有可信权威时读 `product-prd-template.md` 和 `product-design-and-prd.md`；任一项缺失时先读 `product-judgment-action-chain.md`。正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后可交给 `document-authoring` 处理同一权威版本的表达和载体，编辑后回本技能重新校验。
+- 跨应用 / 多端原型需求规划读 `product-design-and-prd.md` 的“跨应用原型需求规划”，输出需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；直接绘制 Web 原型转 `ui-design-expert`。
 - AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD / 工程执行准入、Harness/Agent 编排由 `wise-agent` 处理。
 - 复杂 PRD、AI 生成方案、原型候选、多方争议、PM / Reviewer / 产品大师 / MAGI 多视角评审读 `product-deliberation-workflow.md`；它只提供产品合议评审流程，不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 业务架构规划、业务能力地图、战略到项目组合、项目组合治理、能力-项目-系统映射和知识库回流读 `business-architecture-planning.md`；复杂图形化表达加读 `diagram-output.md`。
-- `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘或增长实验场景，读 `product-judgment-action-chain.md`；它只串产品判断动作和交接路由，不安装外部 Skill。
+- `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘、增长实验，或方向 / 链路 / 取舍 / 验证缺口场景，读 `product-judgment-action-chain.md`；它只串产品判断动作和交接路由，不安装外部 Skill。
 - 产品方案需要交给架构师继续做系统设计或业务驱动架构交接时，读 `product-architecture-methodology.md` 的“与技术架构的交接”和“业务驱动验证口径”，必要时加读 `product-prd-quality-gates.md`。
 - 产品洞察、资料资产化、客户/竞品/标杆情报分拣、证据推理链或机会雷达场景，读 `product-insight-analyst.md`；机会需要排序或转研发候选时，再读 `po-backlog-manager.md`。
 - 机会清单、需求池、Backlog 决策、优先级、路线图候选、User Story 或 AC 场景，读 `po-backlog-manager.md`，再按目标产物读取 `product-design-and-prd.md`。
@@ -55,14 +57,17 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 产品场景初判 | 使用方式、产品语义门禁、快速路由表 | 输出路由细节 |
-| PRD/产品方案 | 快速路由表、输出路由，并继续读 PRD reference | 支付资金专项，除非命中资金场景 |
-| 从零构思 / 优化已有 PRD / 既有产品增量需求 | 输出路由，并继续读 `product-design-and-prd.md` 的“PRD 连环追问与原型反推” | 不新建平行 PRD；不把技术栈、数据模型、API 或 Agent 控制规则写入正式 PRD |
+| PRD/产品方案 | 方向尚未确认，或链路、取舍有缺口时先读 `product-judgment-action-chain.md`；已有可信权威时继承已确认方向并继续读 PRD reference | 不因用户要求 PRD 就跳过产品判断，也不得强制重做完整发现 |
+| 从零构思 / 优化已有 PRD / 既有产品增量需求 | 从零任务先定方向；既有产品先核对当前权威与新需求是否一致，再从链路或取舍层进入，并继续读 `product-design-and-prd.md` 的“PRD 连环追问与原型反推” | 不新建平行 PRD；不把技术栈、数据模型、API 或 Agent 控制规则写入正式 PRD |
 | 原型/HTML/页面截图/交互稿反推 PRD | 使用方式、产品语义门禁、快速路由表，并继续读 PRD reference | 只描述页面控件 |
+| 跨应用 / 多端原型需求规划 | 产品语义门禁、快速路由表，并继续读 `product-design-and-prd.md` 的“跨应用原型需求规划” | 不直接绘制界面，不按端名机械复制页面 |
 | 复杂 PRD / AI 生成方案 / 多视角合议评审 | 快速路由表、产品语义门禁，并继续读 `product-deliberation-workflow.md`、`product-prd-quality-gates.md` | 不新增独立产品大师 Skill，不照搬外部多 Agent 工具 |
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
 | PRD / 需求评审会前 AI 预扫描 | 快速路由表、产品语义门禁，并继续读 `product-prd-quality-gates.md` 的“AI 预扫描四维度” | 不把 AI 扫描结果当已确认缺陷，不替代正式评审 |
 | 产品洞察 / 资料分析 / 机会雷达 | 快速路由表、产品语义门禁，并继续读 `product-insight-analyst.md` | 不把资料摘要当机会决策 |
 | 产品判断动作链 / pm-skills 工作流参考 | 快速路由表、产品语义门禁，并继续读 `product-judgment-action-chain.md`，按缺口再读 `product-insight-analyst.md`、`po-backlog-manager.md` 或 PRD reference | 不安装或照搬外部 `pm-skills`，不把路线图愿望清单当产品判断 |
+| 内部平台 / 运营工具商业成立判断 | 读 `product-judgment-action-chain.md` 的第一层与商业成立风险；用效率、成本、风险、采用率和责任归属判断可持续性 | 不强制套收入、付费或外部市场模型 |
+| 上线后复盘 / 指标回流 | 从第三层进入，回看原始目标与验收种子，再按新证据回溯方向和链路 | 不把活动量、访问量或功能上线直接当价值证明 |
 | 产品头脑风暴 / 问题探索 / 假设挑战 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律” | 不把发散想法直接当 PRD、Backlog 或研发任务 |
 | 非标产品问题 / 老板客户只给方向 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“1.4 非标问题与解决方案责任” | 不做传话筒，不把诉求原样丢给研发 |
 | 产品阶段 / 团队贡献方式诊断 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0F 产品阶段与贡献方式诊断” | 不把贡献方式等同岗位、组织架构或绩效标准 |
@@ -110,7 +115,7 @@
 
 正式、完整、可评审、提交前或触发验证场景中，支付外部规则由 `payment-expert` 运行其完整性检查器；其他外部规则必须记录来源、版本、范围、核验日期和确认方。检查结果不替代规则真实性、适用性或可上线性的专业确认；无法核验时必须说明原因、人工检查结果和残余风险。
 
-正式、完整、可评审、提交前、CR 或触发验证场景中，PRD、业务架构规划、产品架构方案、图形 brief 或产品合议评审报告必须运行 `scripts/check_product_deliverable.py --kind prd`、`--kind business-architecture`、`--kind product-architecture`、`--kind diagram-brief` 或 `--kind product-review`。该脚本只做本地文本完整性检查，不联网、不写文件、不替代产品判断、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
+正式、完整、可评审、提交前、CR 或触发验证场景中，PRD、业务架构规划、产品架构方案、图形 brief 或产品合议评审报告必须运行 `scripts/check_product_deliverable.py --kind prd`、`--kind business-architecture`、`--kind product-architecture`、`--kind diagram-brief` 或 `--kind product-review`；跨应用原型范围规划运行 `--kind prototype-scope-plan`。该脚本只做本地文本完整性检查；其中原型范围规划还检查显式引用关系。脚本不联网、不写文件，不替代产品判断、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
 
 ## 快速路由表
 
@@ -120,6 +125,7 @@
 | 从零构思、优化已有 PRD、既有产品增量需求 | `product-design-and-prd.md`, `product-architecture-methodology.md` | 需求分析结论卡、PRD-Lite 或既有权威 PRD 的 `ADDED / MODIFIED / REMOVED` 增量；不建立第二事实源 |
 | 业务架构规划、业务 IT 对齐、战略落项目、业务能力地图、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射 | `business-architecture-planning.md`, `product-architecture-methodology.md`；复杂图形化表达加读 `diagram-output.md` | 业务架构准入卡、选用视图、跳过视图及理由，以及按决策问题选择的最小完整视图组合；不固定要求能力地图、价值流、业务流程或项目组合全部产出 |
 | 写 PRD、生成 PRD、完善 PRD、补全 PRD、改写 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；支付资金协同 `payment-expert`，运营数据发布加读 `product-prd-operations-and-data.md`，提交前自检加读 `product-prd-quality-gates.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
+| 同一需求跨运营平台 / C 端等应用，或跨浏览器 / 桌面客户端 / H5 等客户端的原型范围规划 | `product-design-and-prd.md` | 需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；不直接画界面 |
 | PRD 文档过厚、过薄、未更新、未评审、版本状态不清或过程稿混入正文 | `product-design-and-prd.md`, `product-prd-quality-gates.md` | 文档目标/受众、裁剪建议、必改项、版本状态/过程记录链接和最终正文准出机制 |
 | 需求评审、PRD 评审会前扫描、需求评审 Skill、完整性/一致性/可测试性/二义性检查 | `product-prd-quality-gates.md`, `product-design-and-prd.md` | AI 预扫描疑似问题清单：锚点、维度、影响、建议追问、建议改法、决策状态、owner、验证方式；只做评审前广度扫描，不替代正式评审 |
 | 多 AI、PM/Reviewer、产品大师、MAGI、合议式评审复杂 PRD、AI 生成方案、HTML Demo 或产品方案 | `product-deliberation-workflow.md`, `product-prd-quality-gates.md`，需要正文时再读 `product-prd-template.md` 和 `product-design-and-prd.md` | 合议评审结论：触发原因、阶段门、共识、分歧、必改、建议、待确认、owner、验证方式和下一步去向 |

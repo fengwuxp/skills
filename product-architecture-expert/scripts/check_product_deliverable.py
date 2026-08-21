@@ -68,6 +68,15 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("pending_confirmation", ["待确认", "确认方", "owner", "负责人"], 2),
         RequiredGroup("verification", ["验证方式", "验收", "检查", "下一步", "去向"], 2),
     ],
+    "prototype-scope-plan": [
+        RequiredGroup("goal_and_scope", ["目标", "范围", "非目标", "owner"], 3),
+        RequiredGroup("requirement_coverage", ["需求覆盖矩阵", "需求 ID", "AC ID", "应用", "客户端"], 4),
+        RequiredGroup("carrier_inventory", ["原型载体清单", "承接 ID", "类型", "应用", "客户端"], 4),
+        RequiredGroup("page_annotations", ["产品级页面标注", "业务对象", "权限", "状态变化", "异常", "AC"], 4),
+        RequiredGroup("client_differences", ["多端差异矩阵", "不变", "差异", "证据", "回退"], 3),
+        RequiredGroup("cross_application_handoff", ["跨应用衔接", "身份", "状态同步", "失败恢复", "审计"], 3),
+        RequiredGroup("prototype_trace", ["原型覆盖追踪", "关系姿态", "覆盖状态", "未覆盖前处理"], 3),
+    ],
 }
 BUSINESS_ARCHITECTURE_VIEW_CHECKS: dict[str, RequiredGroup] = {
     "capability_map": RequiredGroup(
@@ -437,6 +446,145 @@ def table_column_values(text: str, aliases: tuple[str, ...]) -> list[str]:
     return []
 
 
+def table_records(text: str, columns: dict[str, tuple[str, ...]]) -> list[dict[str, str]]:
+    lines = text.splitlines()
+    normalized_aliases = {
+        name: {normalize(alias) for alias in aliases}
+        for name, aliases in columns.items()
+    }
+    for index, line in enumerate(lines):
+        if not line.strip().startswith("|"):
+            continue
+        headers = [cell.strip().strip("`*_").strip() for cell in line.strip().strip("|").split("|")]
+        positions = {
+            name: next(
+                (position for position, header in enumerate(headers) if normalize(header) in aliases),
+                None,
+            )
+            for name, aliases in normalized_aliases.items()
+        }
+        if any(position is None for position in positions.values()):
+            continue
+        records: list[dict[str, str]] = []
+        for row in lines[index + 1 :]:
+            if not row.strip().startswith("|"):
+                break
+            cells = [cell.strip().strip("`*_").strip() for cell in row.strip().strip("|").split("|")]
+            if all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+                continue
+            records.append({name: cells[position] if position < len(cells) else "" for name, position in positions.items()})
+        return records
+    return []
+
+
+def valid_stable_id(value: str) -> bool:
+    return bool(re.fullmatch(r"[\w.:-]+", value, re.UNICODE)) and bool(meaningful_values([value]))
+
+
+def prototype_scope_issues(text: str) -> list[str]:
+    requirements = table_records(
+        text,
+        {
+            "requirement_id": ("需求 ID",),
+            "acceptance_id": ("AC ID",),
+            "role": ("角色",),
+            "application": ("应用",),
+            "client": ("客户端",),
+            "status": ("状态",),
+        },
+    )
+    carriers = table_records(
+        text,
+        {
+            "carrier_id": ("承接 ID",),
+            "carrier_type": ("类型",),
+            "application": ("应用",),
+            "client": ("客户端",),
+            "owner": ("Owner", "负责人"),
+        },
+    )
+    traces = table_records(
+        text,
+        {
+            "requirement_id": ("需求 ID",),
+            "acceptance_id": ("AC ID",),
+            "carrier_id": ("承接 ID",),
+            "posture": ("关系姿态",),
+            "coverage": ("覆盖状态",),
+            "owner": ("Owner", "负责人"),
+            "handling": ("未覆盖前处理",),
+        },
+    )
+    issues: list[str] = []
+    if not requirements:
+        issues.append("requirement_coverage_table_missing")
+    if not carriers:
+        issues.append("carrier_inventory_table_missing")
+    if not traces:
+        issues.append("prototype_trace_table_missing")
+    if issues:
+        return issues
+
+    requirement_pairs = {(row["requirement_id"], row["acceptance_id"]) for row in requirements}
+    trace_pairs = {(row["requirement_id"], row["acceptance_id"]) for row in traces}
+    carrier_ids = {row["carrier_id"] for row in carriers}
+    used_carriers = {row["carrier_id"] for row in traces if meaningful_values([row["carrier_id"]])}
+
+    if any(not valid_stable_id(row[field]) for row in requirements for field in ("requirement_id", "acceptance_id")):
+        issues.append("requirement_id_invalid")
+    if any(
+        not all(meaningful_values([row[field]]) for field in ("role", "application", "client"))
+        or not row["status"].strip()
+        or PLACEHOLDER_FIELD.search(row["status"])
+        for row in requirements
+    ):
+        issues.append("requirement_coverage_invalid")
+    if len(requirement_pairs) != len(requirements):
+        issues.append("duplicate_requirement_trace_source")
+    if any(
+        not valid_stable_id(row["carrier_id"])
+        or normalize(row["carrier_type"]) not in {"页面", "page", "页面状态", "状态", "state", "非页面能力", "non-page"}
+        or not all(meaningful_values([row[field]]) for field in ("application", "client", "owner"))
+        for row in carriers
+    ):
+        issues.append("carrier_inventory_invalid")
+    if len(carrier_ids) != len(carriers):
+        issues.append("duplicate_carrier_id")
+    if len({(row["requirement_id"], row["acceptance_id"], row["carrier_id"]) for row in traces}) != len(traces):
+        issues.append("duplicate_prototype_trace")
+    if requirement_pairs - trace_pairs:
+        issues.append("requirement_trace_missing")
+    if trace_pairs - requirement_pairs:
+        issues.append("unknown_requirement_trace")
+    if used_carriers - carrier_ids:
+        issues.append("unknown_carrier_reference")
+    if carrier_ids - used_carriers:
+        issues.append("orphan_carrier")
+    if any(normalize(row["posture"]) not in {"required", "必需", "target", "目标", "informational", "信息性", "optional", "可选"} for row in traces):
+        issues.append("relationship_posture_invalid")
+    if any(normalize(row["coverage"]) not in {"已覆盖", "covered", "待覆盖", "pending", "不适用", "not-applicable"} for row in traces):
+        issues.append("coverage_status_invalid")
+    if any(
+        normalize(row["coverage"]) in {"已覆盖", "covered"}
+        and not meaningful_values([row["carrier_id"]])
+        for row in traces
+    ):
+        issues.append("covered_carrier_missing")
+
+    unresolved = [row for row in traces if normalize(row["coverage"]) not in {"已覆盖", "covered"}]
+    if any(
+        normalize(row["posture"]) in {"required", "必需"}
+        and (normalize(row["coverage"]) not in {"已覆盖", "covered"} or not meaningful_values([row["carrier_id"]]))
+        for row in traces
+    ):
+        issues.append("required_coverage_missing")
+    if any(not meaningful_values([row["owner"]]) for row in unresolved):
+        issues.append("unresolved_coverage_owner_missing")
+    if any(not meaningful_values([row["handling"]]) for row in unresolved):
+        issues.append("unresolved_coverage_handling_missing")
+    return issues
+
+
 def scenario_contract_issues(text: str) -> list[str]:
     blocks = scenario_blocks(section_body(text, ("详细设计",)))
     if not blocks:
@@ -651,6 +799,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
                 missing.append("rule_scope_missing")
             missing.extend(rule_scenario_issues(text))
             missing.extend(acceptance_scenario_issues(text))
+    if kind == "prototype-scope-plan":
+        missing.extend(prototype_scope_issues(text))
     return missing
 
 
@@ -666,6 +816,8 @@ def run_self_test() -> int:
     failures: list[str] = []
     if "business-architecture" not in CHECKS:
         failures.append("business-architecture: missing deliverable kind")
+    if "prototype-scope-plan" not in CHECKS:
+        failures.append("prototype-scope-plan: missing deliverable kind")
     diagram_group_names = {group.name for group in CHECKS["diagram-brief"]}
     for required_name in ("architecture_type", "view_state", "view_level"):
         if required_name not in diagram_group_names:

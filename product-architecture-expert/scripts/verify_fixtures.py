@@ -22,6 +22,23 @@ CASES = (
     ("business-architecture", FIXTURES / "business-architecture-invalid.md", False, set()),
     ("product-review", FIXTURES / "product-review-valid.md", True, set()),
     ("product-review", FIXTURES / "product-review-invalid.md", False, set()),
+    ("prototype-scope-plan", FIXTURES / "prototype-scope-plan-valid.md", True, set()),
+    (
+        "prototype-scope-plan",
+        FIXTURES / "prototype-scope-plan-invalid.md",
+        False,
+        {
+            "covered_carrier_missing",
+            "requirement_coverage_invalid",
+            "requirement_trace_missing",
+            "required_coverage_missing",
+            "unknown_carrier_reference",
+            "unknown_requirement_trace",
+            "orphan_carrier",
+            "unresolved_coverage_owner_missing",
+            "unresolved_coverage_handling_missing",
+        },
+    ),
 )
 
 
@@ -32,7 +49,11 @@ def main() -> int:
             failures.append(f"missing fixture: {path.name}")
             continue
         text = path.read_text(encoding="utf-8")
-        missing = missing_groups(kind, text)
+        try:
+            missing = missing_groups(kind, text)
+        except KeyError:
+            failures.append(f"fixture kind not supported: {kind}")
+            continue
         passed = not missing
         if passed != should_pass:
             failures.append(
