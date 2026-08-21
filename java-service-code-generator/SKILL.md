@@ -5,7 +5,7 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind Java Service
 
 # Java Service 代码生成
 
-本 Skill 是知止者按需装载的确定性 Java Service 代码生成能力包。当用户要求把 SQL `CREATE TABLE` DDL、schema 文件、Java 类、字段说明表格或其他结构化模型转换为 Java Service 配套代码时使用。Codex 可按精确 description 隐式加载本 Skill；若与 `wise-agent` 同时加载，仍由同一 Agent 统一目标和交付，不形成第二人格。使用者不需要了解脚本参数；如果用户提供结构来源、表名和业务模块，应先分析仓库并自行推断参数。
+本 Skill 是知止者按需装载的确定性 Java Service 代码生成能力包。当用户要求把 SQL `CREATE TABLE` DDL、schema 文件、Java 类、字段说明表格或其他结构化模型转换为 Java Service 配套代码时使用。使用者不需要了解脚本参数；如果用户提供结构来源、表名和业务模块，应先分析仓库并自行推断参数。
 
 本技能的基础服务、DTO、Request、Query、Entity、Mapper、MapStruct、Service、ServiceImpl 模板是 Wind 编码约规的标准生成面；权威规则以 `wind-coding-conventions` Skill 为准，本技能只保存可确定生成的模板细节，避免复制一套会漂移的约规。
 

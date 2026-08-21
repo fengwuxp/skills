@@ -7,7 +7,7 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 
 ## 定位
 
-本 Skill 是知止者按需装载的 Java 项目分层约规能力包。Codex 可按精确 description 隐式加载本 Skill；若与 `wise-agent` 同时加载，仍由同一 Agent 统一目标和交付，不形成第二人格。所有包含 Java 源码的项目先使用通用 Java 约规；Spring、JSpecify、Lombok、MapStruct、MyBatis 等规则按实际依赖或源码上下文启用；只有命中 Wind 信号时，才叠加 face/impl、服务分层、模型归位、Entity 不外露、ServiceImpl、基础服务并发/锁边界、查询字段/方法、内网 API 和字典国际化等 Wind 专项规则。`CurrencyIsoCode` 是 Wind 项目币种字段的通用强制项，不属于依赖按需规则。
+本 Skill 是知止者按需装载的 Java 项目分层约规能力包。所有包含 Java 源码的项目先使用通用 Java 约规；Spring、JSpecify、Lombok、MapStruct、MyBatis 等规则按实际依赖或源码上下文启用；只有命中 Wind 信号时，才叠加 face/impl、服务分层、模型归位、Entity 不外露、ServiceImpl、基础服务并发/锁边界、查询字段/方法、内网 API 和字典国际化等 Wind 专项规则。`CurrencyIsoCode` 是 Wind 项目币种字段的通用强制项，不属于依赖按需规则。
 
 本 Skill 只回答“当前 Java 项目应启用哪层约规、具体约规是什么、当前设计或代码是否偏离约规”。纯约规检查由本 Skill 主责；源码设计、代码 CR、Bug 修复、TDD 和验证不触发本 Skill 主责，只把本 Skill 的通用 Java 与按需 Wind 规则作为输入交给 `senior-software-architect`；结构化 Java Service 生成继续交给 `java-service-code-generator`。
 
