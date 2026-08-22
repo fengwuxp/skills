@@ -165,6 +165,10 @@ python3 -m py_compile senior-software-architect/scripts/check_architecture_deliv
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
 python3 -m py_compile ui-design-expert/scripts/check_ui_design_deliverable.py
+python3 -m py_compile ui-design-expert/scripts/check_design_draft_review.py
+python3 -m py_compile ui-design-expert/scripts/test_check_design_draft_review.py
+python3 -m py_compile ui-design-expert/scripts/check_figma_design_plan.py
+python3 -m py_compile ui-design-expert/scripts/test_check_figma_design_plan.py
 python3 -m py_compile ui-design-expert/scripts/check_ui_source.py
 python3 -m py_compile ui-design-expert/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
@@ -391,6 +395,8 @@ senior-software-architect/scripts/verify_fixtures.py
 
 echo "==> UI design deliverable checker"
 python3 ui-design-expert/scripts/check_ui_design_deliverable.py --self-test
+python3 ui-design-expert/scripts/test_check_design_draft_review.py
+python3 ui-design-expert/scripts/test_check_figma_design_plan.py
 python3 ui-design-expert/scripts/check_ui_source.py --self-test
 python3 ui-design-expert/scripts/verify_fixtures.py
 

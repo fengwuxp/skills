@@ -6,6 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 
 try:
+    from check_design_draft_review import parse_review
     from check_ui_design_deliverable import CHECKS, missing_groups
     from check_ui_source import scan_file
 except ModuleNotFoundError:
@@ -36,6 +37,17 @@ INVALID_CASES = [
 ]
 SOURCE_VALID = FIXTURES / "source-valid.tsx"
 SOURCE_INVALID = FIXTURES / "source-invalid.tsx"
+DESIGN_REVIEW_VALID = [
+    FIXTURES / "design-draft-review-valid.md",
+    FIXTURES / "design-draft-review-mockingbot-valid.md",
+]
+DESIGN_REVIEW_INVALID = [
+    FIXTURES / "design-draft-review-invalid-source.md",
+    FIXTURES / "design-draft-review-invalid-wrap.md",
+    FIXTURES / "design-draft-review-invalid-viewport.md",
+    FIXTURES / "design-draft-review-invalid-screenshot-e2.md",
+    FIXTURES / "design-draft-review-invalid-mockingbot-export-e2.md",
+]
 EXPECTED_SOURCE_RULES = {"zoom-disabled", "transition-all", "non-semantic-click", "paste-blocked"}
 
 
@@ -76,6 +88,19 @@ def main() -> int:
         )
     else:
         print(f"OK negative UI source fixture {SOURCE_INVALID.name}")
+
+    for path in DESIGN_REVIEW_VALID:
+        try:
+            parse_review(read_fixture(path))
+            print(f"OK design draft review fixture {path.name}")
+        except ValueError as error:
+            failures.append(f"valid design review fixture failed: {path.name}: {error}")
+    for path in DESIGN_REVIEW_INVALID:
+        try:
+            parse_review(read_fixture(path))
+            failures.append(f"invalid design review fixture unexpectedly passed: {path.name}")
+        except ValueError:
+            print(f"OK negative design draft review fixture {path.name}")
 
     if failures:
         print("FAIL UI fixture verification")

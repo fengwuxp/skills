@@ -1,6 +1,6 @@
 interface:
   display_name: "UI 设计专家"
-  short_description: "任务流、可操作原型、Design QA 与可用性验证"
-  default_prompt: "使用 $ui-design-expert 基于现有产品事实设计、评审或验证 Web 界面与可操作原型，并给出可复核的交互、响应式、可访问性和可用性证据。"
+  short_description: "任务流、Figma/墨刀设计稿契约、可操作原型与 Design QA"
+  default_prompt: "使用 $ui-design-expert 基于现有产品事实设计、规划或验证 Web 界面与 Figma、墨刀或截图交付，并给出可复核的来源、交互、响应式、可访问性和可用性证据。"
 policy:
   allow_implicit_invocation: true

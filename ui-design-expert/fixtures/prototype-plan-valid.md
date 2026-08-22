@@ -14,7 +14,7 @@
 
 ## 工程交接与可访问性
 
-组件优先复用现有 Figma components，并核对 Code Connect、Figma variables、Auto Layout、语义命名、annotations 和 dev resources。交接给 AI 编码时提供 exact node，先取 `get_design_context`；截断时先用 `get_metadata` 缩小范围，再取 `get_screenshot`。实现继续复用项目组件、tokens、路由、状态和数据模式，由 `senior-software-architect` 负责。响应式覆盖桌面与移动，键盘、焦点、可访问名称、对比和 200% 缩放进入验收。
+设计系统姿态为继承项目现有体系；组件来源、语义 tokens、组件状态、偏离项和 Owner 均写入组件规范。组件优先复用现有 Figma components，并核对 Code Connect、Figma variables、Auto Layout、语义命名、annotations 和 dev resources。交接给 AI 编码时提供 exact node，先取 `get_design_context`；截断时先用 `get_metadata` 缩小范围，再取 `get_screenshot`。实现继续复用项目组件、tokens、路由、状态和数据模式，由 `senior-software-architect` 负责。响应式覆盖桌面与移动，键盘、焦点、可访问名称、对比和 200% 缩放进入验收。
 
 ## 验证证据与停止条件
 

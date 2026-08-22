@@ -151,11 +151,42 @@
 - 官方推荐要点：多数用户优先 Remote MCP，写入画布时配合官方 Agent Skills；文件优先 components、Code Connect、variables、语义命名、Auto Layout、annotations 和 dev resources；设计到代码先取精确节点的 design context，必要时用 metadata 缩小范围，再以 screenshot 校准，并继续遵守项目组件与工程规范。
 - 边界：Figma 官方明确 MCP 不是“一键完美生产代码”；Plugin API 的 `setReactionsAsync` 能建立 reactions，但它不是官方强制原型流程，静态截图也不能证明导航、变量、条件或失败恢复已可用。L0/L1/L2 是本项目的工程化证据分层，不是 Figma 官方术语。
 
+本轮本地能力增强（核验日期：2026-08-22）：`figma-design-contract.md` 与 `figma-file-engineering.md` 将上述官方能力落到来源权威、页面清单、命名、文件骨架、资产登记和代码交接字段。它们是本仓库的交付约定，不是 Figma 官方标准；Figma 权限、工具行为和 Code Connect 支持仍需执行前按官方文档重新核验。
+
+### 二轮公开核验：Figma 原型与状态交接（2026-08-22）
+
+- [Figma Dev Mode guide](https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode)：实际读取。吸收 `dev resources`、component playground、Ready for dev、变量 / 图层属性和 Code Connect 作为交接证据；不把自动生成 code snippet 当生产实现。
+- [Figma Code Connect](https://help.figma.com/hc/en-us/articles/23920389749655-Code-Connect)：实际读取。吸收“先规划组件映射，再由设计与工程共同 review Dev Mode 输出”；记录 Organization / Enterprise 与 Full / Dev seat 前置条件，不默认项目可用。
+- [Figma auto layout guide](https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout)：实际读取。吸收动态内容、fixed / min / max 尺寸和明确记录 `ignore auto layout` 例外；不把绝对定位当默认布局。
+- [GOV.UK prototyping](https://design-system.service.gov.uk/get-started/prototyping/) 与 [GOV.UK get started](https://design-system.service.gov.uk/get-started/)：实际读取。吸收原型 Kit / Design System 版本边界、可访问响应式组件和“先用当前组件、再按本服务研究扩展”；不复制 GOV.UK 品牌模板。
+- [Storybook component explorers](https://storybook.js.org/tutorials/visual-testing-handbook/react/en/component-explorers/) 与 [visual testing](https://storybook.js.org/tutorials/ui-testing-handbook/react/en/visual-testing)：实际读取。吸收组件隔离、props / state 样例、手工核对与截图回归的分层；不把 Storybook 作为所有项目的硬依赖。
+- [Material 3 states](https://m3.material.io/foundations/interaction/states/overview)：实际读取。吸收状态层需可区分、可组合且不能只靠颜色表达；不把 Material 的色值、形状或平台组件套到 Web 项目。
+- [Carbon Figma kits](https://carbondesignsystem.com/designing/kits/figma/)：实际读取。吸收组件变体、变量化色彩和多断点画布记录；不复制 Carbon 的品牌、主题或网格模板。
+
+### 设计稿保真审查公开核验（2026-08-22）
+
+- [Figma text resizing](https://help.figma.com/hc/en-us/articles/27378154668951-Adjust-text-dimensions-and-resizing) 与 [Auto Layout properties](https://help.figma.com/hc/en-us/articles/360040451373-Explore-auto-layout-properties)：实际读取。吸收 Auto width / Auto height / Fixed size、hug / fill / fixed / min / max 对换行和重叠的影响；不把 Figma 画布表现外推为浏览器结果。
+- [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 与 [Understanding Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing)：实际读取。吸收 320 CSS px 重排、文字缩放和用户覆盖文字间距时不得丢失内容或功能的实现复测要求；这些要求用于浏览器证据层，不用静态 Figma 稿宣称 WCAG 符合。
+- [Playwright visual comparisons](https://playwright.dev/docs/test-snapshots)：实际读取。吸收在固定浏览器、操作系统、字体和渲染条件下保存并复核截图差异；截图回归只能发现视觉变化，不能替代内容来源、语义、任务或人工判断。
+
+本轮未吸收：任何外部设计系统的 Logo、字体、图片、组件代码、内部 DOM / class、品牌配色、固定断点或项目安装步骤；这些资料只提供可迁移的方法和验证边界。
+
+### 三轮公开核验：视觉还原与跨工具来源（2026-08-22）
+
+- [Figma Tools and prompts](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/)、[MCP vs. agent](https://developers.figma.com/docs/figma-mcp-server/mcp-vs-agent/) 与 [Code to canvas](https://developers.figma.com/docs/figma-mcp-server/code-to-canvas/)：实际读取。吸收精确节点 design context、metadata 定位、variables、screenshot、Code Connect 和 code-to-canvas 回环的职责边界；不把 MCP 返回代码或捕获画布当成生产实现。
+- [Figma Create skills](https://developers.figma.com/docs/figma-mcp-server/create-skills/) 与 [OpenAI figma-design-to-code](https://github.com/openai/plugins/blob/main/plugins/figma/skills/figma-design-to-code/SKILL.md)：实际读取。吸收“团队专用重复流程才值得建 Skill”“先读 exact node、再适配目标代码库”的边界；不复制外部 Skill 正文，也不新建平行 Figma Skill。
+- [Storybook visual testing](https://storybook.js.org/tutorials/ui-testing-handbook/react/en/visual-testing) 与 [Playwright visual comparisons](https://playwright.dev/docs/test-snapshots)：实际读取。吸收组件状态隔离、人工核对、固定渲染环境和截图差异复核；Storybook 只在目标项目已有时复用，Playwright 断言进入目标项目测试，不在 Skills 仓库建立前端运行平台。
+- [DTCG 2025.10](https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/)：实际读取。它是 W3C Community Group Report，不是 W3C Recommendation；只在真实跨工具 token 交换出现时采用，不把交换格式升级为统一设计工具节点模型。
+- [墨刀原型与标注](https://modao.cc/prototyping/create-a-prototype.html)、[设计协作](https://modao.cc/usergrowth/designer.html) 与 [D2C 能力边界](https://modao.cc/ad/blog/ai-prototype-to-vue-code.html)：实际读取。确认公开产品支持分享、Preview、标注、字体 / CSS、切图、导出和生成代码；本轮未发现可供 Agent 使用的公开结构化节点 API，因此只建立分享 / 标注 / 导出薄适配。厂商生成代码按其自身说明也只是基础结构起点，不作为生产准出。
+
+归位结论：Figma 是结构化主路径；墨刀、截图和 PDF 进入统一 Review Contract，但不统一各工具内部节点。该取舍以名实、时位和知止校准：证据名称必须对应实际能力，按当前工具成熟度选择不同路径，并在来源不可访问或证据不足时停止升级结论。
+
 ## 三、设计系统与 UI 生态
 
 以下官方来源均于 2026-07-30 核验。类别、适用边界和选型结论以 `ui-library-landscape.md` 为唯一权威；本节只保留复核入口和来源边界。
 
 - 设计体系与实现：[GOV.UK Design System](https://design-system.service.gov.uk/)、[USWDS](https://designsystem.digital.gov/)、[Material 3](https://m3.material.io/)、[Ant Design](https://ant.design/docs/spec/overview/)、[Ant Design theme](https://ant.design/docs/react/customize-theme/)、[Fluent 2](https://fluent2.microsoft.design/)、[Fluent design tokens](https://fluent2.microsoft.design/design-tokens)、[Fluent accessibility](https://fluent2.microsoft.design/accessibility)、[Carbon](https://carbondesignsystem.com/all-about-carbon/what-is-carbon/)、[Carbon accessibility](https://carbondesignsystem.com/guidelines/accessibility/overview/)、[PatternFly](https://www.patternfly.org/get-started/about-patternfly/)、[Spectrum](https://spectrum.adobe.com/)、[React Spectrum](https://react-spectrum.adobe.com/)、[Primer](https://primer.style/product/getting-started/foundations/)、[Atlassian Design System](https://atlassian.design/foundations)。
+- Ant Design 专项于 2026-08-21 复核：[主题与 tokens](https://ant.design/docs/react/customize-theme/)、[v6 迁移](https://ant.design/docs/react/migration-v6/)、[Data Entry](https://ant.design/docs/spec/data-entry/)、[Data Display](https://ant.design/docs/spec/data-display/)。只吸收三层 token / 组件 token、数据任务模式和迁移兼容门禁；不固定 latest 版本，不把内部 DOM / class 或运营端视觉写成跨端权威。
 - 中文企业生态与组件：[TDesign](https://github.com/Tencent/tdesign)、[Arco Design](https://github.com/arco-design)、[Semi Design](https://semi.design/)、[Element Plus](https://element-plus.org/)。
 - 行为原语与源码分发：[React Aria](https://react-spectrum.adobe.com/react-aria/)、[Radix Primitives](https://www.radix-ui.com/primitives/docs/overview/introduction)、[Radix accessibility](https://www.radix-ui.com/primitives/docs/overview/accessibility)、[shadcn/ui](https://ui.shadcn.com/docs)。
 

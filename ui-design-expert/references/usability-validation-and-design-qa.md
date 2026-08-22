@@ -20,6 +20,7 @@
 
 - 设计 brief、状态和评审严重度读 `design-and-review-workflow.md`。
 - 视觉、tokens 与内容韧性读 `design-foundations.md`。
+- Figma / 截图设计稿的内容确实、布局变形、文字换行和资产一致性读 `design-draft-fidelity-review.md`。
 - 具体业务页面模式读 `common-scenario-patterns.md`。
 - WCAG 与 ARIA 依据和时效边界读 `source-map.md`。
 
@@ -30,6 +31,7 @@
 | 方案阶段走查 | `一`、`二`、`三` | 不把专家判断冒充用户证据 |
 | 目标用户任务测试 | `一`、`三`、`四`、`六` | 不先用满意度代替任务完成 |
 | 实现后 Design QA | `一`、`二`、`五`、`六` | 不只做像素截图对比 |
+| Figma / 截图设计稿审查 | `design-draft-fidelity-review.md` | 不把静态稿证据升级为浏览器实现证据 |
 | 上线后观察 | `一`、`四`、`六` | 不用单一指标证明因果 |
 
 ## 一、先声明证据等级

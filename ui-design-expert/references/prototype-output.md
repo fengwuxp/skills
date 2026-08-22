@@ -16,10 +16,13 @@
 - L0 产出流程契约及 Owner 确认证据；L1 另产出 Figma 文件结构、可点击路径和精确 frame/node；L2 另产出浏览器实现约束和运行验证证据。
 - 需要开发或 AI 编码还原时，再补充工程交接字段。
 - 设计责任、Figma 操作责任和代码实现责任的明确边界。
+- 原型库与设计系统的版本、运行时和状态样例来源；原型版本不能默默复制已过期组件代码。
 
 ## 需要继续读取的 reference
 
 - 任务结构与设计契约读取 `design-and-review-workflow.md`。
+- 完整网站的来源权威、页面命名、Page Manifest 和跨页一致性读取 `figma-design-contract.md`。
+- Figma 文件骨架、组件、变量、Auto Layout、资产登记和代码映射读取 `figma-file-engineering.md`。
 - 组件、tokens、响应式与可访问性读取 `design-foundations.md`。
 - 任务测试和实现后核对读取 `usability-validation-and-design-qa.md`。
 - 来源、时效性与供应链边界读取 `source-map.md`。
@@ -53,11 +56,16 @@
 开始画布操作前至少稳定：
 
 1. 用户、场景、验证问题、成功结果、范围、非目标、假设和 Owner。
-2. 入口、退出、返回、取消、重置，以及页面图和状态图。
-3. default、loading、empty、error、success、权限、弱网、长内容和真实数据范围。
-4. 交互表：`source / trigger / condition / action / destination / feedback / failure`。
-5. 响应式、键盘、焦点、可访问名称、对比、缩放和减少动效要求。
-6. 交付文件、精确 frame/node、版本、证据、残余风险和停止条件。
+2. 每个应用 / 客户端的设计系统姿态、继承或参考来源、品牌与密度边界、例外及 Owner；具体选型读取 `ui-library-landscape.md`。
+3. 入口、退出、返回、取消、重置，以及页面图和状态图。
+4. default、loading、empty、error、success、权限、弱网、长内容和真实数据范围。
+5. 交互表：`source / trigger / condition / action / destination / feedback / failure`。
+6. 响应式、键盘、焦点、可访问名称、对比、缩放和减少动效要求。
+7. 交付文件、精确 frame/node、版本、证据、残余风险和停止条件。
+8. 涉及完整网站时，补充 `Design Contract`、`Page Manifest`、导航映射、内容 / 资产来源和页面状态覆盖；未通过 `check_figma_design_plan.py` 不进入 Figma 写入。
+9. 涉及组件交接时，补充 `state_matrix`、`component_playground` 或等价状态 fixture、`ready_for_dev_status` 和 reviewer；没有这些证据时只能标为 planned。
+
+组件规范最小字段为 `组件 / 来源 | 语义 tokens | 状态 | 交互与反馈 | 响应式 | 可访问性 | 偏离项 | Owner`。跨端只共享已经确认的语义和行为；页面结构、品牌和密度是否共享由各应用 / 客户端姿态决定。
 
 产品规则、权限和成功口径未确认时停止，不用原型发明业务事实。
 
@@ -91,6 +99,7 @@
 - 为主路径、失败恢复、返回、取消、重试和重置建立 reactions；条件分支与变量变化必须能回到交互表。
 - 用 `setReactionsAsync` 写入 Figma 节点，不以静态连线说明冒充可点击原型。
 - 在 Figma preview 从真实入口逐步操作到成功、失败和恢复结果；复测 overlay 的打开/关闭、焦点意图和返回目标。
+- 记录 Figma 文件版本、原型库 / 设计系统版本与运行环境；若组件库已升级，重新核对组件变体、状态样例和代码映射，不沿用旧原型的隐式假设。
 - 截图只证明某一时刻的静态画面，不证明 reaction、条件、变量、导航或恢复路径成立。
 - 保存精确 frame 链接、文件版本、验证任务和实际结果；未走查的路径保持未验证。
 

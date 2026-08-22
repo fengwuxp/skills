@@ -63,6 +63,11 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
     "prototype-plan": (
         RequiredGroup("goal_scope", ("验证问题", "范围", "非目标", "假设", "owner"), 5),
         RequiredGroup(
+            "design_system_and_components",
+            ("设计系统姿态", "组件来源", "语义 tokens", "组件状态", "偏离项", "owner"),
+            6,
+        ),
+        RequiredGroup(
             "screens_states_content",
             ("入口", "退出", "重置", "页面图", "状态图", "loading", "empty", "error", "权限", "弱网", "真实"),
             6,
