@@ -34,6 +34,12 @@ while IFS= read -r skill_md; do
     continue
   fi
 
+  if ! python3 "${ROOT_DIR}/scripts/check-skill-evidence.py" \
+    --skill "${source_dir}" >/dev/null 2>&1; then
+    echo "SKIP installed parity: ${skill_name} evidence is not current"
+    continue
+  fi
+
   if [[ ! -f "${target_dir}/SKILL.md" ]]; then
     fail "installed skill missing: ${target_dir}"
     continue

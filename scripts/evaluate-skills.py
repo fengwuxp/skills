@@ -27,6 +27,10 @@ REQUIRED_VALIDATE_HOOKS = [
     "scripts/audit-source-map.py",
     "scripts/audit-skill-eval-fixtures.py --self-test",
     "scripts/evaluate-skill-behavior.py --self-test",
+    "scripts/check-skill-evidence.py",
+    "scripts/test-check-skill-evidence.py",
+    "scripts/test-audit-skill-quality.py",
+    "scripts/test-validate-trigger-paths-structure.py",
     "scripts/archive-source-evidence.py --self-test",
     "scripts/skillx_export_adapter.py --self-test",
     "scripts/validate-installed-skills.sh",
@@ -40,8 +44,9 @@ REQUIRED_PROMPT_DIMENSIONS = {
     "baseline_comparison",
     "variance_check",
 }
-EXPLICIT_INVOCATION_SKILLS = {"wise-agent"}
+EXPLICIT_INVOCATION_SKILLS = {"requirement-acceptance-testing", "wise-agent"}
 EXPLICIT_INVOCATION_ALIASES = {
+    "requirement-acceptance-testing": ("$requirement-acceptance-testing", "requirement-acceptance-testing", "需求验收测试"),
     "wise-agent": ("$wise-agent", "wise-agent", "知止者"),
 }
 PROGRESSIVE_HEADER_TERMS = [
@@ -68,6 +73,7 @@ REFERENCE_SPLIT_TRIGGERS = [
     "more than eight level-2 topics in one reference",
 ]
 ADMISSION_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-admission.py"))
+EVIDENCE_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-evidence.py"))
 
 
 def read(path: Path) -> str:
@@ -266,13 +272,18 @@ def delivery_gates(
     status, admission_failures = ADMISSION_CHECKER["audit_skill"](skill_dir)
     dependencies: list[str] = []
     dependency_failures: list[str] = []
+    evidence_failures: list[str] = []
     if not admission_failures:
         dependencies = ADMISSION_CHECKER["dependency_names"](skill_dir)
         dependency_failures = ADMISSION_CHECKER["audit_dependencies"](
             skill_dir,
             repository_root,
         )
-    blockers = [*admission_failures, *dependency_failures]
+        evidence_failures = EVIDENCE_CHECKER["audit_evidence"](
+            skill_dir,
+            repository_root,
+        )
+    blockers = [*admission_failures, *dependency_failures, *evidence_failures]
     if status != "installable":
         blockers.append(f"admission status is {status}")
     ready_for_parity = status == "installable" and not blockers
@@ -280,10 +291,12 @@ def delivery_gates(
         "admission_status": status,
         "required_skills": dependencies,
         "dependency_readiness": "ready" if not dependency_failures else "blocked",
+        "evidence_readiness": "ready" if not evidence_failures else "blocked",
         "installed_parity": "not_checked" if ready_for_parity else "blocked",
         "delivery_readiness": "requires_installed_parity" if ready_for_parity else "blocked",
         "blockers": blockers,
         "installed_parity_checker": "scripts/validate-installed-skills.sh",
+        "evidence_checker": "scripts/check-skill-evidence.py",
     }
 
 

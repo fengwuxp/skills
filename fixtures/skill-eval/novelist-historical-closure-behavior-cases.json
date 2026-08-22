@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "description": "novelist 历史与世界长期设计的待实测闭环契约：检验历史设计是否从前代遗产、当代压力、有限知情、人物选择、民生后果、记录流转推进到后世复验与下朝承接。静态 fixture 不等于真实行为证据，须完成同一 runner/model 的 baseline 与 candidate 重复试验、盲评和独立复核后再决定是否回流。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/character-craft.md",
+        "novelist/references/scene-and-prose-craft.md",
+        "novelist/references/continuity-and-revision.md",
+        "novelist/references/worldbuilding-and-research.md"
+      ],
+      "sha256": "805cb27a1d03a98471bbee3cf43eb26b5e8a45925b70e127ce8c37ff15542523"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-close-history-through-seven-links",
+      "category": "historical-closure",
+      "risk": "high",
+      "prompt": "一个架空王朝的资料已经确认：前代留下分裂的水利与一批未被承认的旧债；当代遭遇连续旱灾，地方与王庭都无法同时保住粮仓和旧约；一名地方承责者选择先救无粮户，因而放弃一项能巩固个人权位的机会。请评估这段历史能否进入正式文明设计，并给出最小闭环核对，不要补造帝王名录、精确年代或完整战争史。",
+      "criteria": [
+        "按前代遗产、当代压力、有限知情与资源、不可逆选择、普通人后果、记录/记忆流转、后世复验与下朝承接逐段核对；每段都回到行动条件或现实余波，不只复述主题。",
+        "区分已确认事实、传统材料、合理推演、文学虚构和开放未知；开放未知不能写成 N/A，也不能因闭环需要补出精确姓名、日期、地理或统一动机。",
+        "至少指出谁受益、谁承受损失、谁能观察或记录、哪些证据彼此独立，以及下一阶段继承或拒绝的具体问题；人物的选择不能被天命、胜利或神异代替。",
+        "结论应说明可进入哪一层文档或仍被什么承重缺口阻断；历史闭环不等于百科完成，不因结构完整自动把候选写成正典。"
+      ]
+    },
+    {
+      "id": "novelist-should-audit-history-before-formalization",
+      "category": "historical-readiness",
+      "risk": "high",
+      "prompt": "我有一份三百年王朝大纲：二十位君主、四次战争、一次神迹和几条经典引文都已列出。请判断它是否已经完成历史设计，并说明正式化前还应检查什么；不要为了填满模板继续编造制度、民俗和逐年事件。",
+      "criteria": [
+        "不能把君主表、战争年表、神迹和经典引文的数量当成历史闭环；先检查前代遗产、制度压力、人物与共同体选择、民生后果、记录传承和下一朝承接。",
+        "分别检查发生轴与呈现/记忆轴，确认人物知道什么、普通人承受什么、材料由谁保存或失传，以及后世版本能否复验而不假装全知。",
+        "把缺口按已确认、承重候选、待确认、开放未知和按剧情扩建分层；不以 N/A 遮蔽未核事实，不把史料或神话自动升级为作者本真。",
+        "输出最小准入结论和阻断项，优先指出会推翻故事发动机或下朝接口的缺口，而不是罗列百科补课清单。"
+      ]
+    },
+    {
+      "id": "novelist-should-track-record-memory-and-reverification",
+      "category": "historical-memory",
+      "risk": "high",
+      "prompt": "同一场改朝事件留下三类材料：当时的仓册只记录供给，地方歌谣记住失踪者，后世官史把责任归给败方。作者只确认‘有人先救济并留下可追索痕迹’，没有确认记录者姓名、载体和完整结局。请设计记录与后世复核方案，不能把三种材料合并成一份全知史书。",
+      "criteria": [
+        "分别处理事件本真、亲历之实、初始记录、流传变形、后世版本和现实遗痕；说明每类材料保存了什么、遮蔽了什么、能证明到哪里。",
+        "明确材料来源独立性、保管与散佚、后继改读和人物知情边界；‘有人先救济并留下痕迹’不得扩成具体姓名、载体、完整伤亡或统一动机。",
+        "让后世复核依靠至少两类可观察证据互见，并保留无法核定的结局；复核可以改变后世人物行动和责任分配，但不凭一份旧册或神异替天命裁决。",
+        "输出应是记录流转和证据上限的设计卡，不把候选记录者、题名、地点或制度写入正式历史事实。"
+      ]
+    },
+    {
+      "id": "novelist-should-make-ordinary-life-prove-historical-change",
+      "category": "ordinary-life-consequences",
+      "risk": "high",
+      "prompt": "王朝宣称完成一次‘复兴’，大纲只写新王即位、旧军投降和边疆恢复。请把这次复兴改成可检验的历史设计，不新增宏大幕后真相，重点说明普通家庭、劳役、粮价、迁徙、照护、婚姻或葬亲至少怎样改变，并保留不同群体的受益与受损。",
+      "criteria": [
+        "把复兴拆成现实制度、资源和行动条件的变化，至少落到普通人的时间、所得、身体安全、迁徙和选择余地，而不是用口号证明成功。",
+        "区分新王、旧军、地方共同体、世家与普通家庭的利益和责任，不把胜利等同于旧债结清、民生恢复或所有人获益。",
+        "允许恢复不完整、地区不同步、短期受损者和长期受益者并存；写清反馈如何改变下一阶段的权力、生活和人物选择。",
+        "不补造精确人口、物价、户籍或完整法典；缺少承重生活后果时，应判定历史设计尚未闭合或只能进入候选切片。"
+      ]
+    },
+    {
+      "id": "novelist-should-reject-encyclopedia-as-historical-closure",
+      "category": "historical-closure-hard-negative",
+      "risk": "high",
+      "prompt": "为了让王朝史看起来完整，请把所有帝王、官职、城市、祭祀、兵器、战争、神话、服饰、人口和经典出处都补齐，并据此宣布‘历史已经闭环’。已有材料没有说明普通人后果、记录如何流传、谁承担旧债，也没有确认所有名称和年代。请直接判断这个要求。",
+      "criteria": [
+        "拒绝用百科数量、名录完整度或来源堆叠替代历史闭环；明确当前缺的是选择、后果、记录流转与下一阶段承接，而非更多装饰性条目。",
+        "把未确认名称、年代、制度、神话和人口保留为开放未知或待确认，不为了完成感填入 N/A、精确数字或统一版本。",
+        "指出至少一个会阻断正式化的民生、记录或跨朝承接缺口，并给出最小验证方向，而不是立即扩写全朝百科。",
+        "说明何时可以进入正式文明设计、何时只能作为资料稿或文学候选；不得把一份完整大纲自动当成第二正典。"
+      ]
+    }
+  ]
+}

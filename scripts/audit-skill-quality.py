@@ -19,6 +19,13 @@ DESCRIPTION_WARN_CHARS = 260
 DESCRIPTION_INFO_CHARS = 180
 BODY_WARN_LINES = 200
 BODY_HARD_HINT_LINES = 500
+DEFAULT_PROMPT_WARN_CHARS = 190
+DEFAULT_PROMPT_WORKFLOW_MARKERS = (
+    "正式正文按",
+    "详细执行控制",
+    "完整工作流",
+    "逐步执行以下流程",
+)
 
 
 def read_text(path: Path) -> str:
@@ -54,6 +61,18 @@ def extract_frontmatter(text: str) -> dict[str, str]:
 
 def count_list_markers(description: str) -> int:
     return description.count("、") + description.count("/") + description.count("；")
+
+
+def extract_default_prompt(text: str) -> str:
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if not stripped.startswith("default_prompt:"):
+            continue
+        value = stripped.split(":", 1)[1].strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        return value.strip()
+    return ""
 
 
 def analyze_skill(skill_md: Path) -> list[str]:
@@ -95,12 +114,32 @@ def analyze_skill(skill_md: Path) -> list[str]:
     return warnings
 
 
+def analyze_agent_metadata(skill_dir: Path) -> list[str]:
+    path = skill_dir / "agents" / "openai.yaml"
+    if not path.is_file():
+        return []
+    prompt = extract_default_prompt(read_text(path))
+    if not prompt:
+        return [f"WARN {path.as_posix()}: missing default_prompt"]
+    warnings: list[str] = []
+    if len(prompt) > DEFAULT_PROMPT_WARN_CHARS:
+        warnings.append(
+            f"WARN {path.as_posix()}: default_prompt is {len(prompt)} chars; keep Level-1 metadata concise"
+        )
+    markers = [marker for marker in DEFAULT_PROMPT_WORKFLOW_MARKERS if marker in prompt]
+    if markers:
+        warnings.append(
+            f"WARN {path.as_posix()}: default_prompt contains workflow detail: {', '.join(markers)}"
+        )
+    return warnings
+
+
 def audit(root: Path) -> list[str]:
-    return [
-        warning
-        for skill_md in sorted(root.glob("*/SKILL.md"))
-        for warning in analyze_skill(skill_md)
-    ]
+    warnings: list[str] = []
+    for skill_md in sorted(root.glob("*/SKILL.md")):
+        warnings.extend(analyze_skill(skill_md))
+        warnings.extend(analyze_agent_metadata(skill_md.parent))
+    return warnings
 
 
 def run_self_test() -> None:

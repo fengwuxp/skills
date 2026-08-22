@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Validate high-value skill trigger and reference routing invariants.
+"""Validate legacy high-value Skill trigger and reference routing invariants.
 
-This is a small regression guard for the repo's most important skill routes.
-It is not a natural-language router or a complete prompt evaluation suite.
-Keep checks focused on durable invariants that should survive wording changes.
+This is not a natural-language router or a behavior-evidence gate. Source-bound
+behavior evidence is owned by check-skill-evidence.py. Keep new checks focused
+on durable trigger, ownership, and routing invariants that survive wording changes.
 """
 
-import hashlib
 import json
 import re
 from typing import NamedTuple
@@ -212,69 +211,10 @@ def behavior_case_criteria_has(path: str, case_id: str, required_terms: tuple[st
     check(f"behavior fixture criteria outlines {case_id}{detail}", case is not None and not missing)
 
 
-def behavior_fixture_fingerprint(path: str, expected_sha256: str) -> None:
-    """Guard the scored fixture contract, including its exact case set and release gate."""
-    document = json.loads(read(path))
-    keys = ("version", "rubric", "release_gate", "cases")
-    payload = {key: document.get(key) for key in keys}
-    if "source_profiles" in document:
-        payload["source_profiles"] = document["source_profiles"]
-    encoded = json.dumps(
-        payload,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode()
-    actual_sha256 = hashlib.sha256(encoded).hexdigest()
-    detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
-    check(f"behavior fixture preserves {path} contract{detail}", actual_sha256 == expected_sha256)
 
 
-def file_fingerprint(path: str, expected_sha256: str) -> None:
-    """Guard an exact evidence artifact against stale downstream judgments."""
-    actual_sha256 = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
-    detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
-    check(f"evidence artifact preserves {path}{detail}", actual_sha256 == expected_sha256)
 
 
-def source_set_fingerprint(case_path: str, condition: str) -> None:
-    """Verify the source set declared by one behavior-evaluation condition."""
-    document = json.loads(read(case_path))
-    profile = document.get("source_profiles", {}).get(condition)
-    if not isinstance(profile, dict):
-        check(f"behavior source profile declares {condition}", False)
-        return
-    paths = profile.get("paths")
-    expected_sha256 = profile.get("sha256")
-    if not isinstance(paths, list) or not isinstance(expected_sha256, str):
-        check(f"behavior source profile declares {condition} paths and sha256", False)
-        return
-    digest = hashlib.sha256()
-    root = ROOT.resolve()
-    for path in paths:
-        relative_path = Path(path) if isinstance(path, str) else Path("/")
-        if relative_path.is_absolute() or ".." in relative_path.parts or not path:
-            check(f"behavior source profile keeps {condition} paths under repository root", False)
-            return
-        try:
-            source_path = (ROOT / relative_path).resolve(strict=True)
-            source_path.relative_to(root)
-        except (OSError, ValueError):
-            check(f"behavior source profile keeps {condition} paths under repository root", False)
-            return
-        if not source_path.is_file():
-            check(f"behavior source profile declares {condition} files", False)
-            return
-        digest.update(path.encode())
-        digest.update(b"\0")
-        digest.update(source_path.read_bytes())
-        digest.update(b"\0")
-    actual_sha256 = digest.hexdigest()
-    detail = f" expected={expected_sha256} actual={actual_sha256}" if actual_sha256 != expected_sha256 else ""
-    check(
-        f"source set preserves {case_path} {condition} contract{detail}",
-        actual_sha256 == expected_sha256,
-    )
 
 
 senior_skill = "senior-software-architect/SKILL.md"
@@ -2142,135 +2082,6 @@ check(
     ),
 )
 
-check(
-    "project-owned grill-me keeps upstream core and wise-agent boundary",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_none(
-        wise_agent_skill,
-        [
-            "grill-me 决策快照，只保留",
-            "执行 / 写文件 / 生成计划前必须先做执行前对账",
-        ],
-    )
-    and has_all(
-        wise_agent_delivery_lifecycle,
-        [
-            "轻量问询结论",
-            "`grill-me` 盘问结论",
-            *DECISION_GRILL_BOUNDARY_TERMS,
-            "装载这一独立 Skill",
-            "完整盘问、问题台账、历史去重、自决和决策快照由该 Skill 负责",
-            "Loop 推进中适时装载 `grill-me`",
-            "执行前对账读 `delivery-execution-control.md`",
-        ],
-    )
-    and has_none(
-        wise_agent_delivery_lifecycle,
-        ["grill-me 退出后形成决策快照", "被排除方案不得复活"],
-    )
-    and has_all(
-        wise_agent_delivery_execution_control,
-        [
-            "盘问、问题台账、历史去重和决策快照由独立 `grill-me` 负责",
-            "完整盘问、问题台账、历史去重、自决和红线规则",
-            "本节只消费决策快照并做执行前对账",
-            "已确认选择、被排除方案、待确认项、red_lines、下一阶段输入和写回位置",
-            "被排除方案不得复活",
-            "待确认项不得脑补",
-            "快照缺失或不一致时停止并问 Owner",
-            "领域知识分流",
-            "只有 Owner 已确认",
-            "冲突证据与影响范围",
-            "按业务域或模块写入术语与对象表、证据地图或领域知识卡",
-            "难以逆转",
-            "缺少背景会令人困惑",
-            "真实方案取舍",
-            "未获写入授权时只输出候选回流位置",
-            "不创建 `CONTEXT.md`、ADR 或知识库目录",
-            "任务树真相源",
-            "Task Tree / 任务树",
-            "目标、输入、owner、验收标准、依赖、状态和停止条件",
-            "不默认安装或依赖外部服务",
-        ],
-    )
-    and has_all(
-        wise_agent_superpowers_library,
-        [
-            "Matt Pocock 与 grill-me",
-            "复杂或模糊计划的升级盘问能力",
-            "一次一个问题",
-            "Facts 先查",
-            "Decisions 等 owner",
-            "关键分叉未决、回答含糊或连续返工时升级",
-            "不得重复问同一问题",
-            "项目自有独立 Skill",
-            "问题台账、历史去重、自决边界、红线与决策快照",
-            "上游只作来源参考",
-            "不安装全仓库",
-        ],
-    )
-    and has_all(
-        grill_me_source_map,
-        [
-            "Matt Pocock skills",
-            "2026-08-07 核验上游 `main`",
-            "CHANGELOG 当前版本为 `1.2.3`",
-            "2026-07-16",
-            "每轮询问整个 frontier",
-            "_4exXmzaNRbCqPgUFSvnKw",
-            "一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding",
-            "项目自有独立 `grill-me`",
-            "这是主动分歧，不随上游同步",
-            "不把文章中的固定五阶段链路、工具排名、模型表现、最佳配置或 TDD 阶段调整设为默认规则",
-            "不安装上游全仓库",
-            "不保留 `/grilling` alias",
-        ],
-    )
-    and has_none(
-        wise_agent_superpowers_library,
-        [
-            "入口 alias",
-            "快捷触发别名",
-            "转入 `grill-me`",
-            "安装 `grill-me` 与 `grilling`",
-        ],
-    )
-    and has_none(
-        grill_me_source_map,
-        [
-            "安装最小 Markdown 对 `grill-me` 与 `grilling`",
-        ],
-    )
-    and has_all(
-        product_skill,
-        [
-            "轻量问询不写进正式 PRD",
-            "`wise-agent` 交来轻量问询结论、`grill-me` 结论或任务树节点",
-            "产品上下文交接卡",
-        ],
-    )
-    and has_all(
-        senior_skill,
-        [
-            "轻量问询只收敛工程分叉",
-            "`wise-agent` 交来轻量问询结论、`grill-me` 结论或任务树节点",
-            "问询过程不进入正式系分、ADR 或代码注释",
-        ],
-    )
-    and has_all(
-        "README.md",
-        [
-            "决策澄清门禁只处理真正未决的 Decisions",
-            "`grill-me` 是升级盘问，不是每个任务的必经流程",
-            "复杂或模糊任务一次只问一个主 blocker",
-            "Facts 先从材料、源码、测试或日志自答",
-            "Decisions 才问 owner",
-            "路径：[grill-me](./grill-me)",
-            "已确认或已排除的问题不得换个说法重问",
-            "自决不扩大授权",
-        ],
-    ),
-)
 
 check(
     "project-owned grill-me keeps stateful handoff boundaries",
@@ -2904,122 +2715,6 @@ check(
             "创可贴式修复需要退回根因分析",
             "复现 / 根因 / 同类影响 / 独立验证",
             "不得把模型自述、补丁候选、局部 guard、放宽断言或工具告警写成已修复、测试通过、CR 结论、合并判断或上线审批",
-        ],
-    ),
-)
-check(
-    "wise agent keeps three-card handoff protocol",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
-        wise_agent_product_to_engineering,
-        [
-            "3A. 三卡交接协议",
-            "3B. 产品-架构-知止者阶段责任矩阵",
-            "Product Context Card / 产品上下文交接卡",
-            "Engineering Handoff Card / 工程执行交接卡",
-            "生产交付卡 / 生产 Loop 交接卡",
-            "规范主题 / 产品文档路径:",
-            "规范主题 / 产品文档路径 / 目标系分文档路径:",
-            "同一能力从产品到系分必须保持规范主题和精确路径",
-            "三卡都不是 Execution Grant",
-            "三卡必须区分事实、推断、待确认和范围外不做",
-            "产品专家裁决产品语义",
-            "架构师裁决工程设计与实现",
-            "独立 Checker 裁决验证",
-            "知止者只维持顺序、状态、Owner、证据和停止条件",
-        ],
-    )
-    and has_all(
-        wise_agent_planning_execution_admission,
-        [
-            "三卡交接结论",
-            "7A. 三卡到架构师的消费规则",
-            "Product Context Card",
-            "Engineering Handoff Card",
-            "生产交付卡",
-            "缺失时回 `产品架构专家`",
-            "缺失时停在知止者",
-            "缺失时只标记 Loop Candidate",
-        ],
-    )
-    and has_all(
-        product_skill,
-        [
-            "产品交接只交事实与验收",
-            "Product Context Card / 产品上下文交接卡",
-            "不判定 GSD / 工程执行准入",
-            "不生成 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线审批",
-            "产品合议只评产品内容",
-            "不替代 `wise-agent` 的跨角色准入、工程分派、发布门禁",
-            "也不判定系分或代码可执行性",
-        ],
-    )
-    and has_all(
-        product_ai_native_context,
-        [
-            "Product Context Card / 产品上下文交接卡",
-            "不生成 Engineering Handoff Card、生产交付卡或 Execution Grant",
-            "产品专家不输出 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线批准",
-        ],
-    )
-    and has_all(
-        senior_skill,
-        [
-            "消费交接卡而不重开流程",
-            "Product Context Card",
-            "Engineering Handoff Card",
-            "生产交付卡",
-            "不把交接卡当成 Execution Grant、测试通过、Git 授权或上线审批",
-            "声明角色视角再行动",
-            "设计者、设计评审者、TDD / 测试设计者、编码实现者、编码评审者、可用性 / 安全性 / 可靠性评估者或发布风险评估者",
-            "Maker 和 Checker 分离",
-        ],
-    )
-    and has_all(
-        ai_engineering,
-        [
-            "AI Native 交接卡消费结论",
-            "1D. AI Native 交接卡消费协议",
-            "1E. 工程实施切片与 Requirement-Diff Review",
-            "Product Context Card",
-            "Engineering Handoff Card",
-            "生产交付卡",
-            "三卡都不是 Plan Grant / Execution Grant、测试通过、CR 结论、生产审批或 Git 授权",
-            "业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试",
-            "done / partial / todo / changed / blocked",
-            "不强制新建 requirement.md 或命令树",
-        ],
-    )
-    and has_all(
-        product_prd,
-        [
-            "产品需求切片与实现后语义验收",
-            "需求 ID / 业务身份 / 目标与非目标 / 对象与状态 / 规则与业务事件",
-            "不设计内部接口、模型或表",
-            "产品契约变化还是实现偏离",
-            "不能把当前代码自动升级为产品事实",
-        ],
-    )
-    and has_all(
-        wise_agent_skill_type_owner_routing,
-        [
-            "三卡交接",
-            "Product Context Card",
-            "Engineering Handoff Card",
-            "生产交付卡",
-            "不让任一卡替代 Execution Grant、测试通过或上线审批",
-        ],
-    )
-    and has_none(
-        wise_agent_planning_execution_admission,
-        [
-            "Execution Handoff Card",
-        ],
-    )
-    and has_none(
-        "fixtures/skill-eval/prompt-cases.json",
-        [
-            "Execution Handoff Card",
         ],
     ),
 )
@@ -5928,8 +5623,11 @@ negative_reason_has(
     ("不能仅凭“状态机”", "先澄清", "业务状态与验收", "系统实现与工程落点"),
 )
 check(
-    "senior openai yaml mentions visual output",
-    has_all(senior_agent, ["默认输出 SVG", "发布回滚和生产风险"]),
+    "senior openai yaml keeps concise engineering scope",
+    has_all(
+        senior_agent,
+        ["$senior-software-architect", "源码、测试和项目约束", "发布回滚和生产风险"],
+    ),
 )
 check(
     "product skill uses three-step loading",
@@ -6075,8 +5773,11 @@ check(
     ),
 )
 check(
-    "product openai yaml mentions visual output",
-    has_all(product_agent, ["原型", "页面截图", "默认输出 SVG", "待确认项"]),
+    "product openai yaml keeps concise product scope",
+    has_all(
+        product_agent,
+        ["$product-architecture-expert", "产品判断", "业务架构规划", "跨应用原型范围", "待确认"],
+    ),
 )
 check(
     "product client interaction contract is routed and bounded",
@@ -6134,10 +5835,6 @@ check(
             "真实 runner/model",
         ],
     ),
-)
-behavior_fixture_fingerprint(
-    product_client_interaction_behavior_cases,
-    "b322a29dfd50058e07d21496dd17a1ac8c14353d0bf52136b43f110f310c7cce",
 )
 check(
     "payment metadata owns payment specialty",
@@ -11145,41 +10842,6 @@ check(
     ),
 )
 check(
-    "product owns cross-application prototype requirement planning",
-    has_all(
-        product_skill,
-        [
-            "跨应用、客户端和页面",
-            "跨应用原型需求规划",
-            "产品级页面标注",
-            "ui-design-expert",
-        ],
-    )
-    and has_all(
-        product_routing,
-        [
-            "跨应用 / 多端原型需求规划",
-            "需求覆盖矩阵",
-            "多端差异",
-            "跨应用衔接",
-        ],
-    )
-    and has_all(
-        product_prd,
-        [
-            "跨应用原型需求规划",
-            "应用、客户端、页面与非页面能力",
-            "需求覆盖矩阵",
-            "页面清单",
-            "产品级页面标注",
-            "多端差异矩阵",
-            "跨应用衔接",
-            "原型覆盖追踪",
-            "scripts/check_product_deliverable.py --kind prototype-scope-plan",
-        ],
-    ),
-)
-check(
     "senior architect keeps architecture decay and entropy review gate",
     has_all(
         senior_skill,
@@ -11880,91 +11542,6 @@ check(
             "https://www.airwallex.com/docs",
             "https://www.nacha.org/rules/operating-rules",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
-        ],
-    ),
-)
-check(
-    "product expert routes business architecture planning",
-    has_all(
-        product_skill,
-        [
-            "业务架构规划",
-            "业务 IT 对齐",
-            "战略落项目",
-            "项目组合治理",
-            "能力-项目-系统映射",
-            "business-architecture-planning.md",
-            "在六种受检视图中声明选用项并逐项说明其余视图为何跳过",
-            "最小且完整的视图组合",
-            "参考性工作基线",
-            "不替代组织设计、系统架构、Execution Grant 或上线审批",
-        ],
-    )
-    and has_all(
-        product_agent,
-        [
-            "业务架构规划",
-            "能力地图",
-        ],
-    )
-    and has_all(
-        product_routing,
-        [
-            "业务架构规划",
-            "业务 IT 对齐",
-            "战略落项目",
-            "项目组合治理",
-            "投资取舍",
-            "重复建设识别",
-            "能力-项目-系统映射",
-            "business-architecture-planning.md",
-            "复杂图形化表达加读 `diagram-output.md`",
-            "选用视图、跳过视图及理由",
-            "最小且完整的视图组合",
-            "不固定要求能力地图、价值流、业务流程或项目组合全部产出",
-            "不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant",
-        ],
-    )
-    and has_reference_header(product_business_architecture)
-    and has_task_reading_index(product_business_architecture)
-    and has_all(
-        product_business_architecture,
-        [
-            "# 业务架构规划",
-            "候选产物与视图声明",
-            "选用视图：",
-            "跳过视图及理由：",
-            "不再用总述、清单和结尾重复复述同一判断",
-            "触发和结束条件必须与准入卡的范围边界一致",
-            "业务架构准入卡",
-            "业务能力地图",
-            "三视角工作基线",
-            "参考性工作基线",
-            "不是普遍标准规定的固定“核心视图”",
-            "价值流回答",
-            "业务能力回答",
-            "业务流程回答",
-            "多对多映射",
-            "核心对象与规则卡",
-            "能力-项目-系统映射",
-            "差距 / 依赖 / 优先级矩阵",
-            "项目组合 / 路线图",
-            "## 5A. 图形化辅助路由",
-            "diagram-output.md",
-            "战略到能力：业务能力地图",
-            "价值如何形成与交付：价值流",
-            "业务如何实际运行：跨角色流程图",
-            "能力落地现状：能力-项目-系统-数据映射图",
-            "投资取舍：差距 / 依赖 / 路线图",
-            "工程交接：产品到系统上下文图",
-            "高风险对象：对象生命周期 / 状态机 / 规则决策图",
-            "正式图形化交付默认只生成 SVG",
-            "图不能替代业务确认、产品判断、工程设计、Execution Grant 或上线审批",
-            "按业务域或模块分区保存",
-            "知识库规划卡",
-            "Product Context Card",
-            "被选中的视图才必须完整",
-            "这些交接卡都不是 Execution Grant、测试通过、CR 结论、上线审批或 Git 授权",
         ],
     ),
 )
@@ -14631,20 +14208,6 @@ check(
         ],
     ),
 )
-behavior_fixture_fingerprint(
-    product_business_architecture_behavior_cases,
-    "3b9ddddec7aa80f8953a5a01322bbd2f3fe595f809112b476f00a63489678587",
-)
-file_fingerprint(
-    product_business_architecture_responses,
-    "b88f0d0c2433e5d21f3ebab7d14739c4c931872d7e4c07b82b3ead95fb46f908",
-)
-file_fingerprint(
-    product_business_architecture_scores,
-    "fe80ac554711a087966cb750195cb7ea3ebc693663ce465b30a2c3e05049198d",
-)
-source_set_fingerprint(product_business_architecture_behavior_cases, "baseline")
-source_set_fingerprint(product_business_architecture_behavior_cases, "candidate")
 check(
     "senior skill exposes deterministic architecture deliverable checker",
     has_all(
@@ -19121,14 +18684,6 @@ check(
         ],
     )
     and has_all(
-        product_agent,
-        ["能力提供者视角", "共性", "特殊性", "正式正文按背景", "详细执行控制进入执行计划"],
-    )
-    and has_all(
-        senior_agent,
-        ["能力提供者视角", "共同目标、对象、不变量", "真实变化轴", "正式正文按背景", "详细执行控制进入执行计划"],
-    )
-    and has_all(
         product_deliverable_checker,
         [
             "background_and_goal",
@@ -19674,12 +19229,6 @@ check(
         ],
     ),
 )
-behavior_fixture_fingerprint(
-    document_humanization_behavior_cases,
-    "7208d312de5c788a7329b119a2f4422fcf1d1641e7cd68976e048249b4e36187",
-)
-source_set_fingerprint(document_humanization_behavior_cases, "baseline")
-source_set_fingerprint(document_humanization_behavior_cases, "candidate")
 check(
     "validation records behavior-evidence failures and continues to later stages",
     has_all(
@@ -19691,14 +19240,6 @@ check(
             "==> installed skill parity self-test",
         ],
     ),
-)
-file_fingerprint(
-    document_humanization_responses,
-    "77510ed8eb94c24a284a718a813011a092dea8584aba53b6a5c67308b9bf5402",
-)
-file_fingerprint(
-    document_humanization_scores,
-    "8adea77768bbec73f69ec27ce6b296e4c1d0c939bf0f0dac923c4642394b79ce",
 )
 
 check(
@@ -20848,50 +20389,6 @@ behavior_case_criteria_has(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_behavior_cases,
-    "2aefe1a08710f3fc7bb718adf3015c01191c5c220a5ec6964bede21c15b1e661",
-)
-source_set_fingerprint(novelist_behavior_cases, "baseline")
-source_set_fingerprint(novelist_behavior_cases, "candidate")
-behavior_fixture_fingerprint(
-    novelist_planning_behavior_cases,
-    "7d3c01d23125066d02bc6c3f277315d0b1d1102d66a0412fb451a69fb2e81077",
-)
-file_fingerprint(
-    novelist_planning_responses,
-    "5e5613d32c397da719e286d9b9f9fb65e644f82abdc993b7db42c7f3b0dfd906",
-)
-file_fingerprint(
-    novelist_planning_scores,
-    "a5761ec9bd84d9828065a019707453e4a3df743240f7dc8258db87f95d54e5db",
-)
-source_set_fingerprint(novelist_planning_behavior_cases, "baseline")
-source_set_fingerprint(novelist_planning_behavior_cases, "candidate")
-behavior_fixture_fingerprint(
-    novelist_creative_behavior_cases,
-    "c8b02eece400288fe6c395efffc525c477626e9525281c5051dcb8920b3fd4a6",
-)
-behavior_fixture_fingerprint(
-    novelist_narrative_expression_behavior_cases,
-    "695afc28629dfa76f250a3f3dd6616fa2de89c9b8f237fd61645c735a1cba6ea",
-)
-file_fingerprint(
-    novelist_narrative_expression_responses,
-    "70319a9314a8e2157d0d720f963971a7847ce1ed5aa6c860017ae4185400d444",
-)
-file_fingerprint(
-    novelist_narrative_expression_scores,
-    "47c224663bcbf64ce5cc43a5e4d23bb2e6a867216f5c7112a30bf50ac0ec66c2",
-)
-source_set_fingerprint(novelist_narrative_expression_behavior_cases, "baseline")
-source_set_fingerprint(novelist_narrative_expression_behavior_cases, "candidate")
-behavior_fixture_fingerprint(
-    novelist_character_life_behavior_cases,
-    "b1f0d37d56c69bdfa5b48c5b43d5b8691fcef988e9c236a1bb3cc38365a3c12e",
-)
-source_set_fingerprint(novelist_character_life_behavior_cases, "baseline")
-source_set_fingerprint(novelist_character_life_behavior_cases, "candidate")
 
 check(
     "novelist plot progression behavior cases stay wired",
@@ -20993,20 +20490,6 @@ check(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_plot_progression_behavior_cases,
-    "af73a7422e02f92180450fca55dd21968bda7948a1e0fe899db206073886d917",
-)
-file_fingerprint(
-    novelist_plot_progression_responses,
-    "0bfbf6720093007103a683ce9f25446331c34ffcc3b00b1f774ffb6b4552444f",
-)
-file_fingerprint(
-    novelist_plot_progression_scores,
-    "59a842bd9b19913c1755273820faa5d221c7b5862bb034bb80c3c36639e9bda6",
-)
-source_set_fingerprint(novelist_plot_progression_behavior_cases, "baseline")
-source_set_fingerprint(novelist_plot_progression_behavior_cases, "candidate")
 
 behavior_case_criteria_has(
     novelist_plot_progression_behavior_cases,
@@ -21062,20 +20545,6 @@ check(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_plot_inheritance_behavior_cases,
-    "b20164326c7f664e3c831ee259e8382678eb36d6c9f11405c4e722d555d948f2",
-)
-file_fingerprint(
-    novelist_plot_inheritance_responses,
-    "f2f2af0ed6f47d620ec10a41d58b5ed58935ab2f5e619443497ab38c52c4c05b",
-)
-file_fingerprint(
-    novelist_plot_inheritance_scores,
-    "3dad95a78db9f48da39bf0b243f5cbb04e37ec6bc42839b59149e1153837923d",
-)
-source_set_fingerprint(novelist_plot_inheritance_behavior_cases, "baseline")
-source_set_fingerprint(novelist_plot_inheritance_behavior_cases, "candidate")
 
 check(
     "novelist draft continuation behavior cases stay wired",
@@ -21153,20 +20622,6 @@ check(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_draft_continuation_behavior_cases,
-    "5712e7992fdef284878d94ab508ab97cf5c527d01ae164c72d9330e0be9bce00",
-)
-file_fingerprint(
-    novelist_draft_continuation_responses,
-    "40f3ff145e402f1f3903cecefabf3c4891c90b8f4c69e0c9ceb3371dca0da0dc",
-)
-file_fingerprint(
-    novelist_draft_continuation_scores,
-    "4215bce07037137fe95ba9557f39eed3e4eff4736c539b6d96f910c0d29275ba",
-)
-source_set_fingerprint(novelist_draft_continuation_behavior_cases, "baseline")
-source_set_fingerprint(novelist_draft_continuation_behavior_cases, "candidate")
 
 check(
     "novelist R6 foundation behavior cases stay wired",
@@ -21258,10 +20713,6 @@ check(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_r6_foundation_behavior_cases,
-    "ae71e68e406c41fe42db81649b11eaeffbb1d3f789ad8787e11dec510d4bcea0",
-)
 
 check(
     "novelist R6 craft behavior cases stay wired",
@@ -21333,10 +20784,6 @@ check(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_r6_craft_behavior_cases,
-    "ff1d56a3b4765686bc5f85cfb2d031d44c3d1cfaf534e4740e4cdcb8c897ea75",
-)
 
 check(
     "novelist scene construction behavior cases stay wired",
@@ -21389,20 +20836,6 @@ check(
     ),
 )
 
-behavior_fixture_fingerprint(
-    novelist_scene_construction_behavior_cases,
-    "d9cb99414f554a0ed542239ea71f91891072db811c9d708b3e44e571803177a2",
-)
-file_fingerprint(
-    novelist_scene_construction_responses,
-    "f9c5efc3a4fce360062d82ee384938bbc9dd630272231275f4d5cd1a387ffdbc",
-)
-file_fingerprint(
-    novelist_scene_construction_scores,
-    "77cd189fccec14de3f3e833f0f762a50e9efa5e6ba12fabd77dca6820f58edda",
-)
-source_set_fingerprint(novelist_scene_construction_behavior_cases, "baseline")
-source_set_fingerprint(novelist_scene_construction_behavior_cases, "candidate")
 
 check(
     "novelist R8 practice and external absorption behavior cases stay wired",
@@ -21499,10 +20932,6 @@ check(
             "自动写回正典",
         ],
     ),
-)
-behavior_fixture_fingerprint(
-    novelist_r8_practice_behavior_cases,
-    "ce50fdb909f1a9c57f88408c7cdfc057e6c62c9f471e466fb7058e84650e94e1",
 )
 
 expected_handling_has(

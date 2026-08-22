@@ -296,8 +296,8 @@ def validate_cases(data: dict[str, Any]) -> None:
     if data.get("version") != 1:
         raise ContractError("cases: version must be 1")
     cases = data.get("cases")
-    if not isinstance(cases, list) or not 5 <= len(cases) <= 8:
-        raise ContractError("cases: expected 5 to 8 behavior cases")
+    if not isinstance(cases, list) or not 5 <= len(cases) <= 10:
+        raise ContractError("cases: expected 5 to 10 behavior cases")
 
     seen_ids = set()
     for index, case in enumerate(cases):

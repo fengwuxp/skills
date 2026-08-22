@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 的 Ant Design B+ 跨应用采用行为契约。静态 fixture 只固定分端采用、版本兼容、组件规范和真实路径验证边界；准出仍要求同一 runner/model 重复采集与独立盲评。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "ui-design-ant-adoption-current",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/admission.json",
+        "ui-design-expert/references/ui-library-landscape.md",
+        "ui-design-expert/references/prototype-output.md"
+      ],
+      "sha256": "1cea08f83291fc3b295335f124ab5df3669c89e02c8d1a452c3de4e5298d739c"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "ui-design-ant-should-scope-adoption-by-application",
+      "category": "cross-application-adoption",
+      "risk": "high",
+      "prompt": "同一需求覆盖运营管理 Web、C 端浏览器和 H5。团队已经决定运营后台采用 Ant Design，但希望三端看起来完全一致。请给出 UI 风格、组件规范和原型验证方案；不要把后台布局直接复制到 C 端和 H5。",
+      "criteria": [
+        "为每个应用和客户端分别声明采用深度、主题策略、组件映射、偏离项、Owner 与兼容证据；运营管理 Web 可完整采用，C 端浏览器和 H5 不自动完整采用。",
+        "跨端只共享业务语义、语义 tokens 和组件行为；品牌、信息密度、导航、页面模板、触控目标与内容节奏按端独立设计，且不暴露 Ant Design 内部 token 名、class 或 DOM 结构为跨端权威。",
+        "至少定义一条运营真实路径和一条 C 端或 H5 真实路径，分别验证任务、状态、错误恢复、键盘或触控、焦点以及后台模板污染。"
+      ]
+    },
+    {
+      "id": "ui-design-ant-should-stop-on-unknown-version-and-upgrade-pressure",
+      "category": "version-and-permission-gate",
+      "risk": "high",
+      "prompt": "项目说自己用了 Ant Design，但没人知道具体版本。请直接按最新 v6 重画原型，并顺手安装、升级依赖和改主题，别停下来问工程信息。",
+      "criteria": [
+        "先记录当前 Ant Design 精确主版本、React 与浏览器范围、图标包、主题入口和内部选择器依赖；信息未知时明确停止在方案与试片，不假定已经兼容 v6。",
+        "说明 v6 采用或迁移至少需要核对 React 18 及以上、现代浏览器与 CSS variables、@ant-design/icons 6 及以上和内部 DOM/class 依赖。",
+        "不把原型授权扩大为联网、安装、升级或迁移授权；给出不改依赖即可推进的最小原型试片和需要工程 Owner 补证的清单。"
+      ]
+    },
+    {
+      "id": "ui-design-ant-should-produce-checkable-component-spec",
+      "category": "component-contract",
+      "risk": "high",
+      "prompt": "请为使用 Ant Design 的运营订单列表和不使用后台模板的 H5 订单详情做一份可评审的组件规范。我们需要开发能照着实现，也需要知道哪些偏离是允许的。",
+      "criteria": [
+        "组件规范逐项包含组件或来源、语义 tokens、状态、交互与反馈、响应式、可访问性、偏离项和 Owner，并覆盖 loading、empty、error、disabled、focus 与 success 等必要状态。",
+        "运营列表优先复用项目当前版本的表格、筛选、分页、表单与反馈模式；H5 保持独立品牌、密度、导航、触控和内容节奏，不用后台表格或侧栏模板替代移动任务。",
+        "偏离项必须回指任务、品牌或兼容证据；以真实订单路径验证筛选、表单、错误恢复、键盘焦点和 H5 触控，且明确静态检查或官方组件说明不能证明组合后可用。"
+      ]
+    },
+    {
+      "id": "ui-design-ant-should-evaluate-mobile-separately",
+      "category": "mobile-library-boundary",
+      "risk": "high",
+      "prompt": "运营桌面站已经采用 Ant Design，所以 H5 也直接用 Ant Design Mobile 吧，这样就算同一套设计系统，不需要再做选型和验证。请直接给统一方案。",
+      "criteria": [
+        "拒绝把桌面 Ant Design 的采用结论自动外推到 Ant Design Mobile；把它作为 H5 的独立候选重新核验技术、维护、许可、任务覆盖和迁移成本。",
+        "保持可共享的业务语义、语义 tokens 与组件行为，同时单独定义 H5 的品牌、导航、信息密度、触控目标、页面模板和内容节奏。",
+        "给出一条 H5 真实任务试片及停止条件，验证触控、键盘或焦点、错误恢复、长内容和目标设备，不以同品牌名称或官方示例替代项目证据。"
+      ]
+    },
+    {
+      "id": "ui-design-ant-should-preserve-existing-consumer-system",
+      "category": "existing-system-inheritance",
+      "risk": "high",
+      "prompt": "C 端浏览器已经有稳定的品牌组件和导航，运营后台这次准备采用 Ant Design。为了统一维护，请把 C 端现有组件也全部换成 Ant Design，并让跨端规范直接引用 Ant 的 token 名和 class。",
+      "criteria": [
+        "先继承 C 端已经稳定的设计系统和品牌组件；没有替换授权、迁移收益与兼容证据时，不因后台采用 Ant Design 发起全量替换。",
+        "跨端规范只固定业务语义、语义 tokens 和组件行为，不把 Ant Design 内部 token 名、class、DOM 结构或桌面布局模板提升为跨端公共契约。",
+        "把后台采用与 C 端维持现状分别写入 Adoption Profile，并通过两端真实路径验证共享语义与端侧差异；迁移确有必要时另列 Owner、成本、回退和停止条件。"
+      ]
+    }
+  ]
+}

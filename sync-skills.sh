@@ -80,6 +80,7 @@ skill_dirs=()
 skill_names=()
 skill_statuses=()
 skill_dependency_statuses=()
+skill_evidence_statuses=()
 while IFS= read -r skill_file; do
   dir="$(dirname "${skill_file}")"
   key="$(basename "${dir}")"
@@ -106,6 +107,11 @@ while IFS= read -r skill_file; do
   else
     skill_dependency_statuses+=("blocked")
   fi
+  if python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" --skill "${dir}" >/dev/null 2>&1; then
+    skill_evidence_statuses+=("ready")
+  else
+    skill_evidence_statuses+=("blocked")
+  fi
 done < <(find "${SKILLS_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 
 if [[ ${#skill_dirs[@]} -eq 0 ]]; then
@@ -117,9 +123,10 @@ print_skills() {
   echo "Available skills:"
   local i
   for i in "${!skill_dirs[@]}"; do
-    printf '  [%d] %s  (%s, %s, dependencies=%s)\n' \
+    printf '  [%d] %s  (%s, %s, dependencies=%s, evidence=%s)\n' \
       "$((i + 1))" "${skill_dirs[$i]}" "${skill_names[$i]}" \
-      "${skill_statuses[$i]}" "${skill_dependency_statuses[$i]}"
+      "${skill_statuses[$i]}" "${skill_dependency_statuses[$i]}" \
+      "${skill_evidence_statuses[$i]}"
   done
 }
 
@@ -149,6 +156,12 @@ add_selected() {
 select_with_dependencies() {
   local key="$1"
   local dependency
+  if [[ "$(evidence_for_skill "${key}")" != "ready" ]]; then
+    python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
+      --skill "${SKILLS_DIR}/${key}" >&2 || true
+    echo "Skill evidence is not current: ${key}" >&2
+    exit 1
+  fi
   while IFS= read -r dependency; do
     [[ -z "${dependency}" ]] && continue
     select_with_dependencies "${dependency}"
@@ -161,8 +174,11 @@ select_all() {
   local i
   for i in "${!skill_dirs[@]}"; do
     if [[ "${skill_statuses[$i]}" == "installable" ]]; then
-      if [[ "${skill_dependency_statuses[$i]}" == "ready" ]]; then
+      if [[ "${skill_dependency_statuses[$i]}" == "ready" ]] \
+        && [[ "${skill_evidence_statuses[$i]}" == "ready" ]]; then
         select_with_dependencies "${skill_dirs[$i]}"
+      elif [[ "${skill_evidence_statuses[$i]}" != "ready" ]]; then
+        echo "Skip ${skill_dirs[$i]}: evidence is not current" >&2
       else
         echo "Skip ${skill_dirs[$i]}: required Skill is not installable" >&2
       fi
@@ -196,6 +212,18 @@ dependencies_for_skill() {
   return 1
 }
 
+evidence_for_skill() {
+  local candidate="$1"
+  local i
+  for i in "${!skill_dirs[@]}"; do
+    if [[ "${skill_dirs[$i]}" == "${candidate}" ]]; then
+      echo "${skill_evidence_statuses[$i]}"
+      return 0
+    fi
+  done
+  return 1
+}
+
 selected_index() {
   local candidate="$1"
   local i
@@ -223,6 +251,12 @@ if [[ ${#ARGS[@]} -gt 0 ]]; then
         python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
           --check-dependencies "${SKILLS_DIR}/${arg}" >&2 || true
         echo "Skill has non-installable dependencies: ${arg}" >&2
+        exit 1
+      fi
+      if [[ "$(evidence_for_skill "${arg}")" != "ready" ]]; then
+        python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
+          --skill "${SKILLS_DIR}/${arg}" >&2 || true
+        echo "Skill evidence is not current: ${arg}" >&2
         exit 1
       fi
       add_selected "${arg}"
@@ -326,6 +360,11 @@ sync_one() {
     --check-dependencies "${source_dir}")"; then
     echo "${dependency_output}" >&2
     echo "Skill has non-installable dependencies: ${key}" >&2
+    exit 1
+  fi
+  if ! python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
+    --skill "${source_dir}"; then
+    echo "Skill evidence is not current: ${key}" >&2
     exit 1
   fi
 

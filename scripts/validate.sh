@@ -181,9 +181,12 @@ python3 -m py_compile wise-agent/scripts/user-context-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/check-skill-admission.py
 python3 -m py_compile scripts/test-check-skill-admission.py
+python3 -m py_compile scripts/check-skill-evidence.py
+python3 -m py_compile scripts/test-check-skill-evidence.py
 python3 -m py_compile scripts/audit-skill-security.py
 python3 -m py_compile scripts/test-audit-skill-security.py
 python3 -m py_compile scripts/audit-skill-quality.py
+python3 -m py_compile scripts/test-audit-skill-quality.py
 python3 -m py_compile scripts/audit-skill-eval-fixtures.py
 python3 -m py_compile scripts/archive-source-evidence.py
 python3 -m py_compile scripts/audit-source-map.py
@@ -194,6 +197,7 @@ python3 -m py_compile scripts/evaluate-skills.py
 python3 -m py_compile scripts/test-evaluate-skills.py
 python3 -m py_compile scripts/skillx_export_adapter.py
 python3 -m py_compile scripts/validate-trigger-paths.py
+python3 -m py_compile scripts/test-validate-trigger-paths-structure.py
 python3 -m py_compile scripts/validate-grill-me-install.py
 
 echo "==> java-service-code-generator fixtures"
@@ -303,6 +307,7 @@ else
   validation_failed=1
 fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-historical-closure-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
@@ -399,6 +404,7 @@ python3 ui-design-expert/scripts/test_check_design_draft_review.py
 python3 ui-design-expert/scripts/test_check_figma_design_plan.py
 python3 ui-design-expert/scripts/check_ui_source.py --self-test
 python3 ui-design-expert/scripts/verify_fixtures.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
 
 echo "==> security engineering deliverable checker"
 python3 security-engineering-expert/scripts/check_security_deliverable.py --self-test
@@ -419,6 +425,10 @@ python3 scripts/check-skill-admission.py --self-test
 python3 scripts/test-check-skill-admission.py
 python3 scripts/check-skill-admission.py
 
+echo "==> skill evidence"
+python3 scripts/test-check-skill-evidence.py
+run_gate python3 scripts/check-skill-evidence.py
+
 echo "==> source evidence archive"
 scripts/archive-source-evidence.py --self-test
 
@@ -433,6 +443,8 @@ echo "==> skill quality advisory"
 python3 scripts/test-audit-skill-security.py
 scripts/audit-skill-quality.py
 scripts/audit-skill-quality.py --self-test
+python3 scripts/test-audit-skill-quality.py
+python3 scripts/test-validate-trigger-paths-structure.py
 
 echo "==> skill evaluation"
 scripts/evaluate-skills.py --self-test

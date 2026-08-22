@@ -232,6 +232,7 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             "novelist-behavior-cases.json",
             "novelist-character-life-behavior-cases.json",
             "novelist-narrative-expression-behavior-cases.json",
+            "novelist-historical-closure-behavior-cases.json",
         ):
             with self.subTest(cases=name):
                 case_data = MODULE.load_json(fixture_dir / name)
@@ -240,6 +241,19 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
                 self.assertTrue(
                     case_data["release_gate"].get("require_auditable_judgments")
                 )
+
+    def test_every_behavior_suite_is_wired_into_unified_validation(self) -> None:
+        fixture_dir = ROOT / "fixtures" / "skill-eval"
+        validate_script = (ROOT / "scripts" / "validate.sh").read_text(
+            encoding="utf-8"
+        )
+        missing = [
+            path.name
+            for path in sorted(fixture_dir.glob("*-behavior-cases.json"))
+            if path.name not in validate_script
+        ]
+
+        self.assertEqual([], missing)
 
     def test_blinding_hides_conditions_and_rejects_model_drift(self) -> None:
         tasks, key = MODULE.blind_responses(self.case_data, self.response_rows(), seed=731)

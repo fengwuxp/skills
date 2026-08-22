@@ -70,7 +70,7 @@
 | 产品设计 | `根据 <访谈/需求/原型> 写一版可评审 PRD；先提炼稳定能力、共性和有证据的特殊性，再展开场景、流程、规则和验收。` |
 | 创见探索 | `$wise-agent：结合华夏经世智慧处理这个原创/非标设想；先保留原始意图和挑战的默认前提，再做最小可逆实验；不要以主流/文献数量单独否决，也不要把新颖直接当成正确。` |
 | 小说构思、正文或单次评审 | `$novelist：通读 <当前稿件/必要上下文>，完成 <构思/正文/重写/评审>；区分权威稿、旧稿、创作候选和待确认，只在影响方向的主分叉处问我。` |
-| 小说视觉设计 | `$fiction-visual-designer：继承 <小说正典或独立创意>，为 <人物/服饰/建筑/兵器/灵药/灵物> 形成视觉设计契约；区分视觉候选、已确认设计和已验收图像。已确认器物可继续编排多视图成图与拼版，图片仍由 imagegen 执行。` |
+| 小说视觉设计 | `$fiction-visual-designer：继承 <小说正典或独立创意>，为 <人物/服饰/建筑/兵器/灵药/灵物> 形成视觉设计契约；区分视觉候选、已确认设计和已验收图像。已确认人物可继续编排审美基准、身份锚图与定向修订，已确认器物可编排多视图与拼版；图片仍由 imagegen 执行。` |
 | 跨轮长篇小说 | `$wise-agent：以 novelist 为故事主能力持续推进 <作品>；维护权威稿、设定状态、未决分叉和后续回收，跨轮恢复时先对账，不把旧稿或候选自动写成正典。` |
 | 创作设定集 | `$document-authoring：把作者或 novelist 已确认的设定整理成人物档案、时间线、世界规则和伏笔台账；保留授权范围、逐项状态与权威指针，不续写剧情，完成后交 novelist 做语义复核。` |
 | 创作用字考据 | `$hanzi-philology：只核验 <人物名/地名/称号/古语> 的形音义、时代语感、文本证据和误读风险；不测吉凶，不替作者决定是否采用。` |
@@ -183,7 +183,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |
 | 实际代码写入，Karpathy Guidelines，或 AI 生成计划 / diff 的隐藏假设、过度设计、范围漂移、无关清理与弱验证专项审查 | LLM 编码卫生，ID：`llm-coding-hygiene`，路径：[llm-coding-hygiene](./llm-coding-hygiene) | 用户目标、计划或 diff、相关源码与测试、成功标准 | 实际代码写入时默认生效，但只作静默护栏，不替代工程实现、TDD、源码 CR 或项目编码约规 |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事/卷/章设计、正文、重写和连续性审查 | 小说家，ID：`novelist`，路径：[novelist](./novelist) | 类型承诺、当前创作单元、稿件权威、设定状态、允许改变范围、作者验收 | 以华夏经世智慧校准人情事势；不把旧稿、考据结论或创作候选自动升级为正典 |
-| 小说、漫画、影视、动画或游戏叙事中的人物、服饰、建筑、兵器、器物、植物、药物、灵物和生物视觉设计 | 候选小说视觉设计师，ID：`fiction-visual-designer`，路径：[fiction-visual-designer](./fiction-visual-designer)；`FVD-001` 关闭前不可安装、同步、团队共享或公开发布 | 故事语义或独立创意、对象、必须保留、允许改变、目标载体、作者验收 | 持有视觉转译、已确认器物多视图编排与图像验收；图片由 `imagegen` 执行，不写小说正典，不替代史实或工程制图 |
+| 小说、漫画、影视、动画或游戏叙事中的人物、服饰、建筑、兵器、器物、植物、药物、灵物和生物视觉设计 | 候选小说视觉设计师，ID：`fiction-visual-designer`，路径：[fiction-visual-designer](./fiction-visual-designer)；`FVD-001` 关闭前不可安装、同步、团队共享或公开发布 | 故事语义或独立创意、对象、必须保留、允许改变、目标载体、作者验收 | 持有视觉转译、已确认人物审美基准与身份锚图编排、已确认器物多视图编排及图像验收；图片由 `imagegen` 执行，不写小说正典，不替代史实或工程制图 |
 | 正式报告、制度、手册、研究说明、创作设定集、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、小说、法律、合规或考据结论，不负责小说正文 |
 | 教程、视频、代码、文档、规范和产物到可复用能力候选 | 资源炼技，ID：`resource-capability-distiller`，路径：[resource-capability-distiller](./resource-capability-distiller) | 可读取材料、复用目标、目标环境、许可与验收方式 | 先提炼能力单元并逐项归位；不默认创建新 Skill，不自动安装、同步、提交或晋升 |
 | 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体及创作名称的时代语感证据 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只是证据之一；不测字吉凶、不替作者起名、不负责普通工程命名 |
@@ -205,7 +205,7 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
 - 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，`document-authoring` 只负责成文与载体，不改变证据等级。
 - 从小说创见到长篇交付：`novelist` 持有故事与正文，以 `huaxia-practical-wisdom` 校准人情事势；确有字词证据问题时调用 `hanzi-philology`，设定稳定且需要权威整理或正式载体时调用 `document-authoring`。
-- 从小说语义到视觉图像：`novelist` 稳定故事语义与正典，`fiction-visual-designer` 完成视觉转译与验收，并可编排已确认器物的多视图成图与拼版；`imagegen` 执行生成，已确认视觉设定需要正式载体时交 `document-authoring`。
+- 从小说语义到视觉图像：`novelist` 稳定故事语义与正典，`fiction-visual-designer` 完成视觉转译与验收，并可编排已确认人物的审美基准、身份锚图、服饰状态、场景表现与定向修订，以及已确认器物的多视图成图与拼版；`imagegen` 执行生成或编辑，已确认视觉设定需要正式载体时交 `document-authoring`。
 - 从普通图到复杂图：先由产品专家或架构师稳定语义，再决定是否使用专用出图能力。
 - 官方 Superpowers 插件只补 brainstorming、TDD、调试、CR、验证等方法缺口，不替代产品或工程主能力，也不扩大 Git、worktree、subagent 或安装授权。
 
@@ -369,6 +369,8 @@ git diff --check
 ```
 
 正式同步后运行 `scripts/validate-installed-skills.sh`。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
+
+`fixtures/skill-eval/evidence-gates.json` 声明需要进入交付门禁的 behavior contract 和已评分证据。`scripts/check-skill-evidence.py` 复用统一 evaluator 核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate；`sync-skills.sh` 会跳过或阻断 evidence 不再匹配当前源码的 Skill。证据失效时必须基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
 
 `scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。默认检查项目目录；需要核对指定目录时，显式传入来源和路径，递归报告重复 Skill ID、完全重复的 `description` 与无效 metadata，指向同一真实目录的软链接只记为 alias。语义相似不做词法自动裁决；`fixtures/skill-eval/prompt-cases.json` 中同一 `competition_group` 的真实请求只声明并静态校验唯一触发 Owner 和竞争者 hard negative，真实触发行为仍需 live eval / smoke：
 

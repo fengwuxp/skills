@@ -44,6 +44,7 @@ description: |
 - **局部优化或现有页面 CR**：读取同一 reference 的“评审路径”，保留既有产品语义和设计权威，按严重度给出证据与修复建议。
 - **设计基础或常见业务界面**：按需读取 `references/design-foundations.md` 或 `references/common-scenario-patterns.md`；模式用于暴露结构、状态和风险，不作为页面模板。
 - **设计系统或 UI 资产选型**：读取 `references/ui-library-landscape.md`，先继承现状并区分完整设计体系、组件库、无样式行为原语与开放代码分发；未经授权不安装、升级或迁移。
+- **Ant Design 跨应用采用**：读取同一 reference 的“Ant Design B+ 采用边界”；运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为，不复制后台密度、导航与页面模板，Ant Design Mobile 另行评估。
 - **东方或中国文化视觉方向**：仅在用户明确提出相关设计目标时读取 `references/visual-style-directions.md`；以真实内容和资产为依据，不把水墨、米色、红金、书法或传统符号当默认答案。
 - **参考页面或截图的设计学习**：读取 `references/visual-style-directions.md` 的“参考设计学习”；先按来源模式输出设计 DNA 诊断和采用边界，采用轴未明确且会改变结果时才询问 Owner，已明确采用轴或已授权自决时直接推进；不做像素复刻或源码、品牌、文案、素材复制。
 - **任务测试或实现后 Design QA**：读取 `references/usability-validation-and-design-qa.md`；先声明 E1-E4 证据等级，再按验证问题选择认知走查、目标用户任务测试、浏览器 Design QA 或运行观察，不用截图和主观偏好冒充可用性证据。

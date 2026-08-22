@@ -68,6 +68,12 @@ class SkillDeliveryGateTests(unittest.TestCase):
     def test_delivery_gates_are_reported_separately_from_static_score(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
+            fixture_dir = root / "fixtures" / "skill-eval"
+            fixture_dir.mkdir(parents=True)
+            (fixture_dir / "evidence-gates.json").write_text(
+                json.dumps({"version": 1, "skills": {}}),
+                encoding="utf-8",
+            )
             ready = self.write_skill(
                 root,
                 "ready-skill",
@@ -100,11 +106,45 @@ class SkillDeliveryGateTests(unittest.TestCase):
 
             self.assertEqual(ready_gates["admission_status"], "installable")
             self.assertEqual(ready_gates["dependency_readiness"], "ready")
+            self.assertEqual(ready_gates["evidence_readiness"], "ready")
             self.assertEqual(ready_gates["installed_parity"], "not_checked")
             self.assertEqual(ready_gates["delivery_readiness"], "requires_installed_parity")
             self.assertEqual(candidate_gates["delivery_readiness"], "blocked")
             self.assertEqual(blocked_gates["dependency_readiness"], "blocked")
             self.assertIn("candidate-skill", " ".join(blocked_gates["blockers"]))
+
+    def test_delivery_gate_blocks_stale_evidence_before_parity(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            fixture_dir = root / "fixtures" / "skill-eval"
+            fixture_dir.mkdir(parents=True)
+            (fixture_dir / "evidence-gates.json").write_text(
+                json.dumps(
+                    {
+                        "version": 1,
+                        "skills": {
+                            "ready-skill": [
+                                {
+                                    "cases": "fixtures/skill-eval/missing-behavior-cases.json"
+                                }
+                            ]
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            skill_dir = self.write_skill(
+                root,
+                "ready-skill",
+                {"status": "installable", "blockers": [], "requires": []},
+            )
+
+            gates = MODULE.delivery_gates(skill_dir, root)
+
+            self.assertEqual("blocked", gates["evidence_readiness"])
+            self.assertEqual("blocked", gates["installed_parity"])
+            self.assertEqual("blocked", gates["delivery_readiness"])
+            self.assertTrue(any("missing-behavior-cases" in item for item in gates["blockers"]))
 
     def test_catalog_audit_finds_cross_source_id_and_description_collisions(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

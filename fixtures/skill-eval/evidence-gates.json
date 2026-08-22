@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "skills": {
+    "document-authoring": [
+      {
+        "cases": "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json",
+        "responses": "fixtures/skill-eval/document-authoring-humanization-responses.jsonl",
+        "scores": "fixtures/skill-eval/document-authoring-humanization-scores.jsonl",
+        "seed": 731
+      }
+    ],
+    "fiction-visual-designer": [
+      {
+        "cases": "fixtures/skill-eval/fiction-visual-designer-behavior-cases.json"
+      }
+    ],
+    "novelist": [
+      {
+        "cases": "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json",
+        "responses": "fixtures/skill-eval/novelist-draft-continuation-responses.jsonl",
+        "scores": "fixtures/skill-eval/novelist-draft-continuation-scores.jsonl",
+        "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-historical-closure-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json",
+        "responses": "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl",
+        "scores": "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl",
+        "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-planning-behavior-cases.json",
+        "responses": "fixtures/skill-eval/novelist-planning-responses.jsonl",
+        "scores": "fixtures/skill-eval/novelist-planning-scores.jsonl",
+        "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json",
+        "responses": "fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl",
+        "scores": "fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl",
+        "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json",
+        "responses": "fixtures/skill-eval/novelist-plot-progression-responses.jsonl",
+        "scores": "fixtures/skill-eval/novelist-plot-progression-scores.jsonl",
+        "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json",
+        "responses": "fixtures/skill-eval/novelist-scene-construction-responses.jsonl",
+        "scores": "fixtures/skill-eval/novelist-scene-construction-scores.jsonl",
+        "seed": 731
+      }
+    ],
+    "product-architecture-expert": [
+      {
+        "cases": "fixtures/skill-eval/product-business-architecture-behavior-cases.json",
+        "responses": "fixtures/skill-eval/product-business-architecture-responses.jsonl",
+        "scores": "fixtures/skill-eval/product-business-architecture-scores.jsonl",
+        "seed": 731
+      }
+    ],
+    "ui-design-expert": [
+      {
+        "cases": "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json",
+        "responses": "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl",
+        "scores": "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl",
+        "seed": 731
+      }
+    ]
+  }
+}

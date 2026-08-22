@@ -1,6 +1,6 @@
 interface:
   display_name: "小说视觉设计师"
-  short_description: "设计叙事视觉资产，并编排已确认器物的多视图成图与验收"
-  default_prompt: "使用 $fiction-visual-designer 把当前故事语义或独立创意转成视觉设计契约；若器物设计已确认且需要出图，编排多视图生成、连续性验收与拼版，并保持 imagegen 的执行边界。"
+  short_description: "设计叙事视觉资产，并编排已确认人物与器物成图验收"
+  default_prompt: "使用 $fiction-visual-designer 把当前故事语义或独立创意转成视觉设计契约；若人物或器物设计已确认且需要出图，编排图片角色、生成或编辑与视觉验收，并保持 imagegen 的执行边界。"
 policy:
   allow_implicit_invocation: false
