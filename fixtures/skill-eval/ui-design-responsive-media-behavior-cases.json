@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 的 Web Responsive Media Contract。静态 fixture 固定图片职责、Art Direction、Resolution Switching、容器适配、超宽屏安全区和浏览器证据边界；不证明真实页面已经通过多屏验证。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "ui-design-responsive-media-current",
+      "paths": [
+        "ui-design-expert/references/design-foundations.md",
+        "ui-design-expert/references/source-map.md"
+      ],
+      "sha256": "4ab241c66247284fd564415dc6fbc15f58dae52f6999203032d35b9aa4d75a70"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "ui-responsive-media-should-separate-art-direction-and-resolution",
+      "category": "responsive-image-selection",
+      "risk": "high",
+      "prompt": "同一张团队协作照片需要用于 3440 超宽 Hero、1440 桌面和 390 H5。请给出多屏图片设计契约，不要只写一个 media query。",
+      "criteria": [
+        "区分构图变化的 Art Direction 与同构图不同清晰度的 Resolution Switching。",
+        "桌面、超宽屏和移动端分别定义裁切、焦点、文字安全区和资源版本。",
+        "把 picture/srcset/sizes/image-set 作为工程交接，不用静态 Figma 宣称浏览器已通过。"
+      ]
+    },
+    {
+      "id": "ui-responsive-media-should-protect-semantic-business-images",
+      "category": "semantic-media",
+      "risk": "high",
+      "prompt": "采购官网要展示质检缺陷照片、标签、数量和检验表。设计师建议统一用 background-size: cover 填满卡片。",
+      "criteria": [
+        "判定为业务语义图片，拒绝 cover 裁掉标签、缺陷、数量或文档内容。",
+        "使用 img/picture、alt、固有尺寸和 contain/独立裁切策略。",
+        "图片加载失败、缩放和窄屏仍应保留业务含义。"
+      ]
+    },
+    {
+      "id": "ui-responsive-media-should-handle-ultrawide-focal-safety",
+      "category": "ultrawide",
+      "risk": "high",
+      "prompt": "官网 Hero 在 1440 看起来正常，但 2560 和 3440 屏幕上人物被放大裁掉，标题压到人物脸上。",
+      "criteria": [
+        "定义超宽屏放大上限、稳定高度区间、焦点 token 和文字安全区。",
+        "需要时提供 ultrawide crop，不依赖单一中心裁切。",
+        "验收 1920、2560、3440 的主体、清晰度、文字遮挡和下一屏节奏。"
+      ]
+    },
+    {
+      "id": "ui-responsive-media-should-use-container-context-for-reusable-media",
+      "category": "container-responsive",
+      "risk": "medium",
+      "prompt": "同一个案例卡片会出现在全宽列表、两栏页面和侧栏中，只按 viewport breakpoint 调整图片比例。",
+      "criteria": [
+        "组件布局随可用容器而非只随 viewport 变化时选择 container query。",
+        "媒体查询仍负责页面级客户端与能力变化，两者不机械互相替代。",
+        "卡片保持稳定比例、内容韧性和加载占位，避免布局位移。"
+      ]
+    },
+    {
+      "id": "ui-responsive-media-should-not-force-background-images",
+      "category": "background-boundary",
+      "risk": "high",
+      "prompt": "为了统一多屏适配，把商品图、SaaS 产品截图、物流地图和团队氛围图全部改成固定高度 CSS 背景图。",
+      "criteria": [
+        "先按业务职责区分语义图片与纯装饰背景，不把所有媒体统一成背景图。",
+        "商品、产品截图和地图优先保留可访问语义与完整信息，装饰 Hero 才使用 cover 背景。",
+        "工程交接覆盖 srcset/sizes、1x/2x、LCP、布局位移和浏览器实测。"
+      ]
+    }
+  ]
+}

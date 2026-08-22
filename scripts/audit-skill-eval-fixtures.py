@@ -23,6 +23,7 @@ FIXTURE = ROOT / "fixtures" / "skill-eval" / "prompt-cases.json"
 
 SKILLS = {
     "wise-agent",
+    "business-website-planner",
     "document-authoring",
     "fiction-visual-designer",
     "grill-me",
@@ -34,6 +35,7 @@ SKILLS = {
     "payment-expert",
     "payment-funds-review",
     "product-architecture-expert",
+    "requirement-acceptance-testing",
     "resource-capability-distiller",
     "security-engineering-expert",
     "senior-software-architect",
@@ -42,8 +44,9 @@ SKILLS = {
 }
 EXTERNAL_COMPETITOR_SKILLS = {"ai-slop-detector"}
 KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS | {"imagegen"}
-EXPLICIT_INVOCATION_SKILLS = {"fiction-visual-designer", "wise-agent"}
+EXPLICIT_INVOCATION_SKILLS = {"business-website-planner", "fiction-visual-designer", "requirement-acceptance-testing", "wise-agent"}
 SKILL_MENTIONS = {
+    "business-website-planner": ["business-website-planner", "业务官网规划师"],
     "wise-agent": [
         "$wise-agent",
         "wise-agent",
@@ -69,6 +72,7 @@ SKILL_MENTIONS = {
     "payment-expert": ["payment-expert", "支付专家"],
     "payment-funds-review": ["payment-funds-review", "支付资金审查"],
     "product-architecture-expert": ["产品架构专家", "product-architecture-expert"],
+    "requirement-acceptance-testing": ["requirement-acceptance-testing", "需求验收测试"],
     "resource-capability-distiller": [
         "resource-capability-distiller",
         "资源炼技",

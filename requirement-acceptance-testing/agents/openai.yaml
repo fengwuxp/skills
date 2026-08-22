@@ -1,0 +1,6 @@
+interface:
+  display_name: "需求验收测试"
+  short_description: "按需求组织自动化与人工证据，独立验收业务、交互和视觉结果"
+  default_prompt: "Use $requirement-acceptance-testing 按已确认需求建立验收条件，复用现有自动化能力并输出独立裁决。"
+policy:
+  allow_implicit_invocation: false

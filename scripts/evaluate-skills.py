@@ -44,8 +44,9 @@ REQUIRED_PROMPT_DIMENSIONS = {
     "baseline_comparison",
     "variance_check",
 }
-EXPLICIT_INVOCATION_SKILLS = {"requirement-acceptance-testing", "wise-agent"}
+EXPLICIT_INVOCATION_SKILLS = {"business-website-planner", "requirement-acceptance-testing", "wise-agent"}
 EXPLICIT_INVOCATION_ALIASES = {
+    "business-website-planner": ("$business-website-planner", "business-website-planner", "业务官网规划师"),
     "requirement-acceptance-testing": ("$requirement-acceptance-testing", "requirement-acceptance-testing", "需求验收测试"),
     "wise-agent": ("$wise-agent", "wise-agent", "知止者"),
 }

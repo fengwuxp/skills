@@ -176,8 +176,10 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | --- | --- | --- | --- |
 | 跨领域真实工作、目标控制、能力组合、验证和知识演进 | 知止者，ID：`wise-agent`，路径：[wise-agent](./wise-agent) | 目标、事实源、范围、授权、完成证据 | 不限于产研；不获得无限自治或高风险授权 |
 | 产品语义、业务架构规划、产品判断动作链、PRD、Backlog、验收、产品图 | 产品架构专家，ID：`product-architecture-expert`，路径：[product-architecture-expert](./product-architecture-expert) | 用户、主体、目标、材料、范围、验收 | 不负责工程实现、代码 Review 和生产排障 |
+| 用于说明和辅助佐证公司真实业务的企业官网规划 | 候选业务官网规划师，ID：`business-website-planner`，路径：[business-website-planner](./business-website-planner)；`BWP-001~005` 关闭前不可自动路由、安装、同步或发布 | 公司主体、业务权威、业务类型、客户、真实范围、公开证据、品牌约束、指标确认 Owner | 页面是建议模块；指标只给参考示例值并等待确认；设计稿默认 Figma但写入另行授权；不接管 UI、代码、法律或发布 |
 | 支付、资金账户、支付账本、清结算、对账、原支付退款、通道、卡组织、ACH、VCC、跨境和支付监管产品规则 | 支付专家，ID：`payment-expert`，路径：[payment-expert](./payment-expert)；本机安装已授权，`R-002` 禁止 Git push、团队共享/同步与公开发布 | 主体、法域、资金归属、原事实、轨道/通道、规则来源、验收 Owner | 不替代法务合规、会计政策、工程实现或生产准入 |
 | 支付资金方案、实现证据或测试结果的独立准出审查 | 候选支付资金审查，ID：`payment-funds-review`，路径：[payment-funds-review](./payment-funds-review)；`PFR-001` 关闭前不可安装、同步、团队共享或公开发布 | 原始方案或实现证据、资金事实、来源引用、失败快照、验收 Owner | 只作独立 Checker；不定义产品路线，不做源码实现或修复，不替代专业审批 |
+| 已确认需求的业务逻辑、API/数据副作用、Web UI 交互、视觉还原、可访问性和运行结果验收 | 候选需求验收测试，ID：`requirement-acceptance-testing`，路径：[requirement-acceptance-testing](./requirement-acceptance-testing)；`RAT-001~003` 关闭前不可自动路由、安装、同步或发布 | 需求与实现版本、范围、环境、数据、验收 Owner 和授权边界 | 自动化优先但非自动化独占；只作独立 Checker，不定义需求、不修复实现、不替代发布授权 |
 | Web UI 或浏览器应用界面、信息架构、任务流、界面状态、响应式、视觉系统和可用性评审 | UI 设计专家，ID：`ui-design-expert`，路径：[ui-design-expert](./ui-design-expert) | 用户任务、产品事实、真实内容、现有设计、平台约束 | 不负责定义产品业务语义或替代工程实现；原生 iOS/Android 走平台能力，已有 Figma 还原代码走工程能力 |
 | 业务、资金、身份权限、数据、通信协议、软件供应链、系统架构与运行事件的安全设计、评审和准出 | 安全工程专家，ID：`security-engineering-expert`，路径：[security-engineering-expert](./security-engineering-expert) | 目标环境、资产与资损、主体、真实流程、信任边界、现有控制、证据与风险 Owner | 不替代产品/支付事实、代码实现、精确的 `codex-security:*` 能力、法律合规判断或生产授权 |
 | 系分、架构、代码、Bug、测试、CR、发布、生产变更、工程图 | 资深架构师，ID：`senior-software-architect`，路径：[senior-software-architect](./senior-software-architect) | 路径、目标或现象、约束、验证命令、写入授权 | 不替代产品专家定义复杂业务语义、PRD 和金融产品规则 |

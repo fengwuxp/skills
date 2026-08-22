@@ -1,0 +1,31 @@
+{
+  "status": "candidate",
+  "updated_at": "2026-08-23",
+  "blockers": [
+    {
+      "id": "BWP-001",
+      "summary": "尚无可复现的 baseline/candidate 重复响应、独立盲评与判定指纹",
+      "owner": "仓库 Owner / 独立 Checker"
+    },
+    {
+      "id": "BWP-002",
+      "summary": "尚未完成广告服务真实任务试点",
+      "owner": "业务 Owner / UI Owner"
+    },
+    {
+      "id": "BWP-003",
+      "summary": "尚未完成代采购或供应链真实任务试点",
+      "owner": "业务 Owner / 产品 Owner"
+    },
+    {
+      "id": "BWP-004",
+      "summary": "尚未完成电商或 Marketplace 真实任务试点",
+      "owner": "业务 Owner / 产品 Owner"
+    },
+    {
+      "id": "BWP-005",
+      "summary": "尚未完成 Responsive Media 行为回归与浏览器证据验证",
+      "owner": "UI Owner / 验收 Checker"
+    }
+  ]
+}

@@ -148,6 +148,8 @@ python3 wise-agent/scripts/skill-usage-observability.py --self-test
 python3 wise-agent/scripts/test_skill_usage_observability.py
 
 echo "==> python compile"
+python3 -m py_compile business-website-planner/scripts/check_business_website_plan.py
+python3 -m py_compile business-website-planner/scripts/test_check_business_website_plan.py
 python3 -m py_compile document-authoring/scripts/check_document_deliverable.py
 python3 -m py_compile document-authoring/scripts/check_document_style.py
 python3 -m py_compile fiction-visual-designer/scripts/compose-design-sheet.py
@@ -159,6 +161,8 @@ python3 -m py_compile payment-expert/scripts/verify_behavior_cases.py
 python3 -m py_compile payment-expert/scripts/verify_fixtures.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
+python3 -m py_compile requirement-acceptance-testing/scripts/check_requirement_acceptance.py
+python3 -m py_compile requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py
 python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
 python3 -m py_compile security-engineering-expert/scripts/check_security_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
@@ -398,12 +402,22 @@ senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py
 
+echo "==> business website planner"
+run_gate python3 business-website-planner/scripts/test_check_business_website_plan.py
+run_gate python3 business-website-planner/scripts/check_business_website_plan.py --file business-website-planner/fixtures/business-website-plan-valid.md
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/business-website-planner-behavior-cases.json"
+
+echo "==> requirement acceptance testing"
+run_gate python3 requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/requirement-acceptance-testing-behavior-cases.json"
+
 echo "==> UI design deliverable checker"
 python3 ui-design-expert/scripts/check_ui_design_deliverable.py --self-test
 python3 ui-design-expert/scripts/test_check_design_draft_review.py
 python3 ui-design-expert/scripts/test_check_figma_design_plan.py
 python3 ui-design-expert/scripts/check_ui_source.py --self-test
 python3 ui-design-expert/scripts/verify_fixtures.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
 
 echo "==> security engineering deliverable checker"

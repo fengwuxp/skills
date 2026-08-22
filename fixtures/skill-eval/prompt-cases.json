@@ -2831,6 +2831,106 @@
       "negative_reason": "目标是支付产品设计，应由 payment-expert 主责；尚无既有方案、实现证据或测试结果供独立 Checker 准出，不触发 payment-funds-review。"
     },
     {
+      "id": "requirement-acceptance-testing-should-verify-business-and-api-evidence",
+      "skill": "requirement-acceptance-testing",
+      "query": "使用 $requirement-acceptance-testing：需求版本和实现提交已经冻结。请独立验收订单只能提交一次、失败不写订单或事件、API 错误契约保持兼容；现有证据包括服务测试、契约报告、数据库与审计结果。请给出可追踪裁决，不要代替发布 Owner。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "识别为需求驱动的独立验收测试；冻结需求与实现指纹、范围、环境、数据、Owner 和授权边界，将幂等成功、失败无副作用和 API 兼容拆成原子条件，分别核对服务测试、契约报告、数据库或审计证据。证据冲突不得 Pass，缺失时输出 Blocked 或 Need Owner；不修改实现、不更新基线、不替代发布授权。"
+    },
+    {
+      "id": "requirement-acceptance-testing-should-verify-ui-and-visual-evidence",
+      "skill": "requirement-acceptance-testing",
+      "query": "使用 $requirement-acceptance-testing 验收已实现的 Web 表单：提交后显示 Thank You，防止重复提交，并按确认的 Figma 节点检查桌面和移动视口的内容、换行、溢出与视觉还原；项目已有 Playwright 和可访问性扫描。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "优先复用项目已有 Playwright 与可访问性工具，不安装新框架；UI 交互要求浏览器 trace 或行为断言，视觉还原同时要求可定位设计来源、声明视口的运行截图和独立视觉复核，可访问性同时保留自动报告与键盘、焦点、语义运行证据。检查成功、重复操作、错误恢复、文字换行、裁切、重叠和资产一致性；截图不能单独证明交互、响应式或可用性。"
+    },
+    {
+      "id": "requirement-acceptance-testing-negative-code-fix",
+      "skill": "requirement-acceptance-testing",
+      "query": "请直接修复订单重复提交 Bug，修改生产代码和测试，改到全绿后自己给出验收 Pass；本轮不需要独立 Checker。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "negative_reason": "目标是源码修复与 TDD，应由 senior-software-architect 主责；requirement-acceptance-testing 只作独立 Checker，不能由同一 Maker 修改实现后自证通过。"
+    },
+    {
+      "id": "requirement-acceptance-testing-negative-requirement-design",
+      "skill": "requirement-acceptance-testing",
+      "query": "退款需求还没有 PRD、规则版本和验收标准，请先定义主体、状态、金额、权限和失败规则，再据此宣布当前实现验收通过；本轮主要目标是把需求补完整。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "目标是产品需求定义，应由 product-architecture-expert 稳定主体、对象、规则、状态和验收种子；缺少需求权威时 requirement-acceptance-testing 必须 Blocked，不能发明需求后验收自身。"
+    },
+    {
+      "id": "business-website-planner-should-plan-advertising-site",
+      "skill": "business-website-planner",
+      "query": "使用 $business-website-planner：我们是一家 B2B 广告服务公司，业务范围与责任已确认。请规划用于说明和辅助佐证业务的官网，页面按场景建议，给指标参考示例值，默认交付 Figma 设计稿。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "冻结公司主体、客户、广告服务范围和账户/预算责任，选择广告业务适配器；建议模块可合并、拆分或删除，不固定四页；指标项和参考示例值等待使用者确认；输出内容、证据、Reference DNA、Asset/Responsive Media Brief，并把默认 Figma 载体交给 ui-design-expert，Figma 写入另行授权。"
+    },
+    {
+      "id": "business-website-planner-should-plan-sourcing-site",
+      "skill": "business-website-planner",
+      "query": "使用 $business-website-planner 为代采购、验厂、质检和物流协调业务规划官网。请搜索同类官网作参考，保证内容和视觉不照抄，并给出适合的业务指标参考示例值。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
+      "expected_handling": "实际读取同类官网正文并记录采用/拒绝边界，围绕产品需求、供应商筛选、样品、质检、订单和物流交接规划建议模块与证明材料；为供应商、检验、品类或响应等指标给参考示例值但不直接发布；业务图片保护产品、标签、缺陷和检验文件语义，默认形成 Figma UI 交接。"
+    },
+    {
+      "id": "business-website-planner-negative-direct-figma-design",
+      "skill": "business-website-planner",
+      "query": "请直接在这个 Figma 文件里重画官网全部页面、组件和响应式布局，业务定位、内容和指标已经确认，本轮不需要重新规划官网契约。",
+      "should_trigger": false,
+      "preferred_skill": "ui-design-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "negative_reason": "业务官网契约已确认，目标是 UI/Figma 执行，应由 ui-design-expert 与对应 Figma Skills 主责；business-website-planner 不接管绘制和写入。"
+    },
+    {
+      "id": "business-website-planner-negative-commerce-product",
+      "skill": "business-website-planner",
+      "query": "设计一个电商商城的商品详情、购物车、订单、会员账户、支付、退款和履约状态，输出完整 PRD 和可编码验收标准；不是公司业务说明官网。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "baseline_comparison"],
+      "negative_reason": "目标是商城交易产品设计，应由 product-architecture-expert 主责并按支付事实协同 payment-expert；business-website-planner 只规划企业业务说明官网。"
+    },
+    {
       "id": "product-should-push-back-tech-or-page-first-design",
       "skill": "product-architecture-expert",
       "query": "我想先画几个会员中心页面，再让研发按页面拆模块；帮我把这个想法整理成能交给架构师继续设计的产品方案。",

@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "business-website-planner": [
+      {
+        "cases": "fixtures/skill-eval/business-website-planner-behavior-cases.json"
+      }
+    ],
     "document-authoring": [
       {
         "cases": "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json",
@@ -69,6 +74,9 @@
         "responses": "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl",
         "scores": "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl",
         "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
       }
     ]
   }

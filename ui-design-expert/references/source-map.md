@@ -181,6 +181,15 @@
 
 归位结论：Figma 是结构化主路径；墨刀、截图和 PDF 进入统一 Review Contract，但不统一各工具内部节点。该取舍以名实、时位和知止校准：证据名称必须对应实际能力，按当前工具成熟度选择不同路径，并在来源不可访问或证据不足时停止升级结论。
 
+### Responsive Media Contract（2026-08-22）
+
+- [MDN Responsive Images](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images) 与 [`<picture>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/picture)：实际读取。吸收 Art Direction 与 Resolution Switching 的区分、`picture/source/img` fallback、`srcset` 和 `sizes`；不把示例断点或素材当项目标准。
+- [MDN Container Queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries) 与 [Media Queries](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Media_queries)：实际读取。吸收 viewport 与 container 两类适配问题的职责差异；不机械要求每个组件使用 container query。
+- [web.dev Responsive Images](https://web.dev/learn/design/responsive-images) 与 [Aspect Ratio](https://web.dev/articles/aspect-ratio)：实际读取。吸收 `object-fit`、`object-position`、比例、裁切损失与性能线索；不以 `cover` 替代业务语义判断。
+- [Next.js Image Optimization](https://nextjs.org/learn/seo/images)：实际读取。只作为框架图片优化、宽高和响应式实现的时效示例；稳定 UI 契约不绑定 Next.js，使用前复核当前版本。
+
+本轮只增强浏览器 UI 设计与交接，不吸收原生 App、小程序、桌面原生客户端的图片组件规范，也不把 Figma 多画板、自动截图或框架组件自述当成多屏适配已通过。
+
 ## 三、设计系统与 UI 生态
 
 以下官方来源均于 2026-07-30 核验。类别、适用边界和选型结论以 `ui-library-landscape.md` 为唯一权威；本节只保留复核入口和来源边界。

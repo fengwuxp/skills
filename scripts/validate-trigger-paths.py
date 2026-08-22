@@ -338,6 +338,25 @@ payment_funds_review_skill = "payment-funds-review/SKILL.md"
 payment_funds_review_agent = "payment-funds-review/agents/openai.yaml"
 payment_funds_review_source_map = "payment-funds-review/references/source-map.md"
 payment_funds_review_admission = "payment-funds-review/admission.json"
+requirement_acceptance_skill = "requirement-acceptance-testing/SKILL.md"
+requirement_acceptance_agent = "requirement-acceptance-testing/agents/openai.yaml"
+requirement_acceptance_contract = "requirement-acceptance-testing/references/acceptance-contract.md"
+requirement_acceptance_evidence = "requirement-acceptance-testing/references/evidence-routing.md"
+requirement_acceptance_source_map = "requirement-acceptance-testing/references/source-map.md"
+requirement_acceptance_checker = "requirement-acceptance-testing/scripts/check_requirement_acceptance.py"
+requirement_acceptance_tests = "requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py"
+requirement_acceptance_admission = "requirement-acceptance-testing/admission.json"
+requirement_acceptance_behavior_cases = "fixtures/skill-eval/requirement-acceptance-testing-behavior-cases.json"
+business_website_skill = "business-website-planner/SKILL.md"
+business_website_agent = "business-website-planner/agents/openai.yaml"
+business_website_contract = "business-website-planner/references/business-website-contract.md"
+business_website_types = "business-website-planner/references/business-type-patterns.md"
+business_website_reference = "business-website-planner/references/reference-research-and-distinctiveness.md"
+business_website_checker = "business-website-planner/scripts/check_business_website_plan.py"
+business_website_tests = "business-website-planner/scripts/test_check_business_website_plan.py"
+business_website_admission = "business-website-planner/admission.json"
+business_website_behavior_cases = "fixtures/skill-eval/business-website-planner-behavior-cases.json"
+ui_design_responsive_media_behavior_cases = "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
 
 codegen_skill = "java-service-code-generator/SKILL.md"
 document_skill = "document-authoring/SKILL.md"
@@ -22552,6 +22571,124 @@ expected_handling_has(
         "不发明转化数据",
     ),
 )
+
+check(
+    "requirement acceptance testing stays requirement-led, evidence-layered, and candidate-gated",
+    all(
+        (ROOT / path).exists()
+        for path in (
+            requirement_acceptance_skill,
+            requirement_acceptance_agent,
+            requirement_acceptance_contract,
+            requirement_acceptance_evidence,
+            requirement_acceptance_source_map,
+            requirement_acceptance_checker,
+            requirement_acceptance_tests,
+            requirement_acceptance_admission,
+            requirement_acceptance_behavior_cases,
+        )
+    )
+    and has_all(
+        requirement_acceptance_skill,
+        [
+            "product verification",
+            "Pass / Fail / Blocked / Need Owner",
+            "验收本身属于测试，但不等于只写自动化脚本",
+            "截图只能证明静态画面",
+            "Checker 不自证",
+        ],
+    )
+    and has_all(
+        requirement_acceptance_contract,
+        ["requirement_fingerprint", "cant-tell", "not-applicable", "独立复核者"],
+    )
+    and has_all(
+        requirement_acceptance_evidence,
+        ["最低充分证据层", "Playwright", "业务持久化正确、视觉完全一致", "依赖安装必须有持续价值和明确授权"],
+    )
+    and has_all(
+        requirement_acceptance_admission,
+        ['"status": "candidate"', "RAT-001", "RAT-002", "RAT-003"],
+    )
+    and has_all(
+        requirement_acceptance_behavior_cases,
+        [
+            '"mode": "improvement"',
+            "rat-should-verify-business-state-and-side-effects",
+            "rat-should-separate-api-contract-from-business-outcome",
+            "rat-should-require-runtime-ui-and-visual-evidence",
+            "rat-should-block-without-requirement-authority",
+            "rat-should-separate-acceptance-from-fix",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py",
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/requirement-acceptance-testing-behavior-cases.json"',
+        ],
+    ),
+)
+
+check(
+    "business website planner stays business-led, suggestion-based, Figma-default, and candidate-gated",
+    all(
+        (ROOT / path).exists()
+        for path in (
+            business_website_skill,
+            business_website_agent,
+            business_website_contract,
+            business_website_types,
+            business_website_reference,
+            business_website_checker,
+            business_website_tests,
+            business_website_admission,
+            business_website_behavior_cases,
+            ui_design_responsive_media_behavior_cases,
+        )
+    )
+    and has_all(
+        business_website_skill,
+        [
+            "Business Website Contract",
+            "页面与区段只是建议",
+            "参考示例值",
+            "官网设计稿默认使用 Figma",
+            "默认载体不等于写入授权",
+            "ui-design-expert",
+            "requirement-acceptance-testing",
+        ],
+    )
+    and has_all(
+        business_website_contract,
+        ["single-page", "core-plus-conditional", "multi-business", "使用者确认值", "Figma 写入授权状态"],
+    )
+    and has_all(
+        business_website_types,
+        ["广告、营销、创意与媒体", "代采购、贸易、质检", "电商与 Marketplace", "金融、医疗与其他高监管业务"],
+    )
+    and has_all(
+        business_website_admission,
+        ['"status": "candidate"', "BWP-001", "BWP-002", "BWP-003", "BWP-004", "BWP-005"],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        ["business-website-planner", "设计稿默认 Figma", "Figma 写入另行授权"],
+    )
+    and has_all(
+        ui_design_foundations,
+        ["Responsive Media Contract", "Art Direction", "Resolution Switching", "ultrawide", "3440"],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "business-website-planner/scripts/test_check_business_website_plan.py",
+            'fixtures/skill-eval/business-website-planner-behavior-cases.json',
+            'fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json',
+        ],
+    ),
+)
+
 expected_handling_has(
     "ui-design-expert-should-study-reference-design-without-cloning",
     (
