@@ -490,6 +490,7 @@ wise_agent_verification_release = "wise-agent/references/verification-review-rel
 wise_agent_superpowers_library = "wise-agent/references/superpowers-skill-library.md"
 wise_agent_skill_type_owner_routing = "wise-agent/references/capability-routing.md"
 wise_agent_source_map = "wise-agent/references/source-map.md"
+codex_harness_runtime_behavior_cases = "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
 codegen_route = {"codegen", "code-generation-rules.md", "wind-project-patterns.md", "generate_scaffold.py"}
 codegen_safety_route = codegen_route | {"requires-confirmation"}
 codegen_source_terms = ["CREATE TABLE", "DDL", "SQL", "建表语句", "schema", "字段表格", "字段说明", "Java 类", "表结构"]
@@ -2034,6 +2035,71 @@ check(
             "爆肝长文：SDD 实战下篇，从渐进式 SDD 到 Lattice Harness：AI Coding 的团队级闭环",
             "默认工具、执行授权、测试通过、CR 结论或上线审批",
             "当前默认工具、自动执行授权、合并判断或生产审批",
+        ],
+    ),
+)
+
+check(
+    "Codex Harness contract runtime evidence and interaction boundaries stay separated",
+    (ROOT / codex_harness_runtime_behavior_cases).exists()
+    and has_all(
+        wise_agent_code_delivery,
+        [
+            "Harness Contract",
+            "Harness Runtime",
+            "Harness Evidence",
+            "合同存在不证明运行时能力已经实现",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/ai-assisted-engineering.md",
+        [
+            "Codex 接入面选型",
+            "`codex --version`",
+            "`codex exec`",
+            "`codex exec --help`",
+            "`codex app-server`",
+            "`codex app-server --help`",
+            "observed_version / observed_status / observed_at / recheck_on",
+            "PENDING",
+        ],
+    )
+    and has_all(
+        "product-architecture-expert/references/ai-native-product-context.md",
+        [
+            "workflow-first",
+            "chat-optional",
+            "万能聊天框",
+            "真实任务走查",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_usage_observability,
+        [
+            "同一任务集、runner、模型、推理强度、工具环境、试验次数和验证门槛",
+            "最终产物",
+            "insufficient",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "震撼！OpenAI全面开源Codex Harness",
+            "mcjAxx6u5EqUsyOTeOmMaQ",
+            "codex-cli 0.148.0-alpha.15",
+            "二手 benchmark",
+        ],
+    )
+    and has_all(
+        codex_harness_runtime_behavior_cases,
+        [
+            '"mode": "non_regression"',
+            "codex-harness-should-separate-contract-runtime-and-evidence",
+            "codex-harness-should-select-local-runtime-surface",
+            "codex-harness-should-evaluate-harness-not-model-hype",
+            "codex-harness-should-prefer-workflow-first-product-interaction",
+            "codex-harness-should-use-huaxia-wisdom-as-a-lens",
+            "静态 fixture 只固定预期行为",
         ],
     ),
 )

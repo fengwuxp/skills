@@ -130,6 +130,19 @@ Codex 的 thread、voice、tool、automation、side panel 和 artifact 能把工
 | Side panel / artifact | 代码、页面、文档、deck、表格、PDF 或静态 HTML 的就地审查。 | 需要真实渲染、截图、预览或验证；用户标注进入同一 Review loop，不替代测试和工程复核。 |
 | Shared memory / written context | 跨会话复用的项目事实、决策、阻塞和 open loop。 | 优先写项目已有权威文档；不默认创建 vault，不写入个人长期偏好或私有对话轨迹。 |
 
+### Codex 接入面选型
+
+先区分 Harness Contract 与 Harness Runtime，再按当前环境选择最小接入面。接入前运行 `codex --version`、`codex exec --help` 和 `codex app-server --help`，按需继续读取协议生成子命令；记录 `observed_version / observed_status / observed_at / recheck_on`，只把当前帮助实际暴露的命令、选项和状态用于本次选型。带日期的本机快照进入 source-map，不写成长期现状，也不外推为其它版本、稳定 API、SDK 可用性或生产就绪。
+
+| 任务形态 | 优先接入面 | 准入与停止 |
+| --- | --- | --- |
+| 一次性脚本、CI、结构化报告、边界清楚的后台任务 | `codex exec` | 固定工作目录、输入、沙箱、审批、输出 schema、退出码和产物校验；需要长连接或产品内交互时停止扩写脚本。 |
+| 当前会话内的研究、实现、Review 和用户纠偏 | 已有 thread / tool 表面 | 状态较长时写入项目执行规范；thread 记忆、工具可见和自动审批不能替代 Spec、授权或验证。 |
+| 产品嵌入、长会话、事件流、中断恢复或动作审批 | 当前 preflight 发现的 `codex app-server` 候选 | 核验协议 schema、transport/auth、会话与断线恢复、工具和审批事件、观测、兼容与退出策略；当前帮助仍标 `experimental` 时不得升级为稳定能力，命令不存在或任一承重能力未核验时保持 `PENDING`。 |
+| 文章或示例提到 SDK | `PENDING` | 只有当前官方包、版本、许可、API 和最小可运行验证齐备后才进入选型；不得从二手文章推定默认可用。 |
+
+不为统一技术栈把所有任务塞进 app-server，也不因模型输出不佳先换模型。先定位问题属于 Prompt、Context、Harness Contract、Harness Runtime、Verification 还是业务规格，再只改变一个可观测变量做最小试验。
+
 运行时选择顺序：先判断用户是在补规格、要求执行、进行中纠偏、排后续任务还是长期监控；再选择最小工具面，本地文件和 shell 优先，网页审查用 in-app browser，外部服务和桌面 GUI 只在任务和权限需要时使用；长期推进必须写清 outcome、verifier、停止条件、状态位置和人工确认点；涉及外部账号、消息、邮件、日程、客户数据、生产配置或敏感信息时，先回 `negative-constraints.md` 和外部知识/权限门禁。
 
 工程知识生产要先固化上下文，再生成材料。最小工程知识资产包包含目标读者、使用场景、资料范围、入口路径、源码锚点、关键结论、验证证据、更新 owner、更新频率和停用条件。代码库教程、架构培训、技术早报和方案沉淀必须能回链源码路径、测试、日志、ADR、项目规则或官方来源；自动化只负责收集、分拣、排版和提醒，不替代架构判断、CR、测试结果、Git 授权或发布审批。不要用字数、生成速度或内容条数当工程价值指标。

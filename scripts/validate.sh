@@ -390,6 +390,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 
 echo "==> wise-agent module deliberation behavior cases"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
 
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test
