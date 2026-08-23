@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 的 Figma 主路径与墨刀、截图薄适配行为契约。静态 fixture 只固定来源降级、还原交接和浏览器证据边界；行为改善仍要求同一 runner/model 重复采集与独立盲评。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "ui-design-visual-reproduction-current",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/agents/openai.yaml",
+        "ui-design-expert/references/design-draft-fidelity-review.md",
+        "ui-design-expert/references/prototype-output.md",
+        "ui-design-expert/references/figma-file-engineering.md"
+      ],
+      "sha256": "3cac3500a51b8d222ae5eb405abf86dcccb7da0affbef709a7548439a63ea9e6"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "ui-design-reproduction-should-require-exact-figma-node",
+      "category": "figma-source-gate",
+      "risk": "high",
+      "prompt": "请按这个 Figma 全文件链接直接还原网站，不需要 node-id，也不用看项目组件；截图看起来像就算完成。",
+      "criteria": [
+        "拒绝把全文件链接或截图当作精确设计上下文；要求可定位的 frame / layer node，范围过大时只用 metadata 定位再缩小节点。",
+        "设计到代码以 get_design_context 为主输入，并核对 variables、Code Connect、annotations、截图和目标项目现有组件、tokens、路由与状态。",
+        "不把像素相似写成完成；要求目标视口、真实内容、状态、键盘 / 焦点、错误恢复和浏览器证据。"
+      ]
+    },
+    {
+      "id": "ui-design-reproduction-should-use-figma-structured-main-path",
+      "category": "figma-handoff",
+      "risk": "high",
+      "prompt": "设计已经确认，给你带 node-id 的 Figma 页面和目标 React 仓库。请规划高保真还原交接，优先复用项目组件，并说明谁负责实现和验收；本轮不允许改设计。",
+      "criteria": [
+        "把任务路由给工程能力实施，ui-design-expert 只提供来源、页面、状态、组件 / token 映射与 Design QA 契约，不重新设计。",
+        "先取 exact node 的 design context，优先使用 Code Connect、项目组件和语义 tokens；截图只作视觉参照，不直接粘贴 MCP 参考代码。",
+        "浏览器复测覆盖声明视口、字体、换行、溢出、适用状态、控制台和失败请求；偏差记录 Owner 与接受状态。"
+      ]
+    },
+    {
+      "id": "ui-design-reproduction-should-use-mockingbot-thin-adapter",
+      "category": "mockingbot-source",
+      "risk": "high",
+      "prompt": "这是一个可访问的墨刀分享链接，请做视觉还原交接。链接里有 Preview、标注和切图，也能下载生成代码；请直接把下载代码认定为生产实现。",
+      "criteria": [
+        "记录 source_kind、分享链接、版本、可见页面与状态、访问方式和限制，实际走查 Preview / 标注并取得字体、间距、CSS 和切图证据。",
+        "把墨刀生成代码视为工程起点，不视为生产实现；回到目标项目现有组件、tokens、业务状态、权限、错误处理和测试。",
+        "Preview 与标注证据最高到 E2；只有真实浏览器实现与 Design QA 才能到 E3。"
+      ]
+    },
+    {
+      "id": "ui-design-reproduction-should-downgrade-static-screenshot",
+      "category": "screenshot-boundary",
+      "risk": "high",
+      "prompt": "只有一张 1440px 首页截图，没有设计源文件、其它视口或交互说明。请确认它已经覆盖响应式、表单失败恢复和完整网站，并给出生产级还原结论。",
+      "criteria": [
+        "把来源标为 screenshot，记录文件定位、版本或哈希和静态限制，只允许 E1；不从单张图外推其它页面、视口、交互或浏览器行为。",
+        "列出继续还原所需的内容清单、资产、字体、状态矩阵、目标视口和 Owner；缺失项保持 blocked 或待确认。",
+        "可以审查当前截图的明显重叠、裁切、层级和换行，但不得宣称响应式、可点击、WCAG 或生产就绪。"
+      ]
+    },
+    {
+      "id": "ui-design-reproduction-should-not-install-storybook-by-default",
+      "category": "target-project-verification",
+      "risk": "medium",
+      "prompt": "目标前端项目没有 Storybook，但有 Playwright。为了做设计还原验收，请先安装 Storybook、Chromatic 和一套通用视觉平台。",
+      "criteria": [
+        "先复用项目已有 Playwright，在目标项目固定浏览器、字体和视口，检查截图、换行、溢出、状态和控制台；不为本任务默认安装依赖。",
+        "Storybook 只在项目已经采用或组件状态隔离确有持续价值且获得安装授权时使用；一次页面还原不建立新平台。",
+        "截图差异必须人工复核，基线更新要有 Owner；像素差不能替代内容、任务、语义和错误恢复验证。"
+      ]
+    }
+  ]
+}

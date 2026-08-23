@@ -384,6 +384,10 @@ llm_coding_hygiene_behavior_cases = "fixtures/skill-eval/llm-coding-hygiene-beha
 legacy_senior_coding_hygiene_behavior_cases = "fixtures/skill-eval/senior-coding-hygiene-behavior-cases.json"
 ui_design_skill = "ui-design-expert/SKILL.md"
 ui_design_agent = "ui-design-expert/agents/openai.yaml"
+ui_design_ant_behavior_cases = "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
+ui_design_ant_responses = "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl"
+ui_design_ant_scores = "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl"
+ui_design_visual_reproduction_behavior_cases = "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
 ui_design_workflow = "ui-design-expert/references/design-and-review-workflow.md"
 ui_design_source_map = "ui-design-expert/references/source-map.md"
 ui_design_foundations = "ui-design-expert/references/design-foundations.md"
@@ -5688,10 +5692,12 @@ expected_handling_has(
     "product-architecture-expert-should-plan-cross-application-prototype-requirements",
     (
         "需求覆盖矩阵",
+        "应用界面基线",
         "页面清单",
         "产品级页面标注",
         "多端差异",
         "跨应用衔接",
+        "不决定组件样式、token 或实现 API",
         "不直接绘制界面",
     ),
 )
@@ -10923,6 +10929,41 @@ check(
             "优先使用 `资深架构师`",
             "先反推角色、对象、流程、规则、状态和验收",
             "不要只描述页面控件",
+        ],
+    ),
+)
+check(
+    "product owns cross-application prototype requirement planning",
+    has_all(
+        product_skill,
+        [
+            "跨应用、多端客户端和页面承接",
+            "跨应用原型需求规划",
+            "产品级页面标注",
+            "ui-design-expert",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "跨应用 / 多端原型需求规划",
+            "需求覆盖矩阵",
+            "多端差异",
+            "跨应用衔接",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "跨应用原型需求规划",
+            "应用、客户端、页面与非页面能力",
+            "需求覆盖矩阵",
+            "页面清单",
+            "产品级页面标注",
+            "多端差异矩阵",
+            "跨应用衔接",
+            "原型覆盖追踪",
+            "scripts/check_product_deliverable.py --kind prototype-scope-plan",
         ],
     ),
 )
@@ -22790,6 +22831,119 @@ expected_handling_has(
         "宽窄视口、键盘、焦点、长内容、控制台和溢出",
         "真实系统接管点",
         "不是生产代码、容量安全或发布就绪证据",
+    ),
+)
+expected_handling_has(
+    "ui-design-expert-should-scope-ant-design-by-application",
+    (
+        "Ant Design Adoption Profile",
+        "运营平台 Web",
+        "跨端只共享业务语义、语义 tokens 和组件行为",
+        "C 端浏览器与 H5 保留独立品牌、密度、导航、页面模板和触控节奏",
+        "Ant Design Mobile 作为独立候选评估",
+        "React 18 及以上",
+        "不安装、不升级",
+    ),
+)
+
+check(
+    "UI and product experts keep Ant Design B+ adoption boundary",
+    has_all(
+        ui_design_skill,
+        ["Ant Design 跨应用采用", "运营 / 管理 Web 可完整采用", "C 端浏览器与 H5 默认只共享语义和组件行为"],
+    )
+    and has_all(
+        ui_design_landscape,
+        [
+            "Ant Design B+ 采用边界",
+            "Ant Design Adoption Profile",
+            "共享内核",
+            "运营 / 管理 Web",
+            "C 端浏览器 / H5",
+            "版本与兼容门禁",
+            "Ant Design Mobile",
+            "组件规范最小字段",
+        ],
+    )
+    and has_all(
+        ui_design_prototype,
+        ["设计系统姿态", "组件规范最小字段", "跨端只共享已经确认的语义和行为"],
+    )
+    and has_all(
+        product_prd,
+        ["应用界面基线", "设计系统姿态", "品牌与密度边界", "产品专家不在此定义组件样式"],
+    ),
+)
+
+check(
+    "UI Ant Design B+ behavior evidence stays wired",
+    (ROOT / ui_design_ant_behavior_cases).exists()
+    and (ROOT / ui_design_ant_responses).exists()
+    and (ROOT / ui_design_ant_scores).exists()
+    and has_all(
+        ui_design_ant_behavior_cases,
+        [
+            '"mode": "improvement"',
+            "ui-design-ant-should-scope-adoption-by-application",
+            "ui-design-ant-should-stop-on-unknown-version-and-upgrade-pressure",
+            "ui-design-ant-should-produce-checkable-component-spec",
+            "ui-design-ant-should-evaluate-mobile-separately",
+            "ui-design-ant-should-preserve-existing-consumer-system",
+            "ui-design-ant-adoption-current",
+            "candidate_weighted_score_must_improve",
+            "high_risk_candidate_criteria_min_pass_rate",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"',
+            'fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl',
+            'fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
+        ],
+    ),
+)
+
+check(
+    "UI visual reproduction keeps Figma primary and thin source adapters",
+    (ROOT / ui_design_visual_reproduction_behavior_cases).exists()
+    and has_all(
+        ui_design_agent,
+        [
+            "Figma/墨刀设计稿契约",
+            "Figma、墨刀或截图交付",
+        ],
+    )
+    and has_all(
+        "ui-design-expert/references/design-draft-fidelity-review.md",
+        [
+            "figma",
+            "mockingbot",
+            "screenshot",
+            "runtime",
+            "get_design_context",
+            "厂商生成的 HTML / Vue / React 代码只是工程起点",
+        ],
+    )
+    and has_all(
+        ui_design_visual_reproduction_behavior_cases,
+        [
+            '"mode": "improvement"',
+            "ui-design-reproduction-should-require-exact-figma-node",
+            "ui-design-reproduction-should-use-figma-structured-main-path",
+            "ui-design-reproduction-should-use-mockingbot-thin-adapter",
+            "ui-design-reproduction-should-downgrade-static-screenshot",
+            "ui-design-reproduction-should-not-install-storybook-by-default",
+            "ui-design-visual-reproduction-current",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"',
+        ],
     ),
 )
 

@@ -4751,6 +4751,21 @@
       "expected_handling": "先核对项目是否已有设计系统、React 版本、任务和组件覆盖、a11y、tokens/theme、维护、迁移及许可，不按 stars 或截图给总冠军。严格区分 Ant Design / Carbon 的完整企业设计体系、React Aria / Radix 的无样式行为原语和 shadcn/ui 的开放代码分发；明确后两类不提供完整视觉系统、页面模式或治理。对财务运营高密度工作台给出有条件的主选与备选，用一个含表格、筛选、表单、错误恢复和键盘焦点的真实路径试片，安装或迁移仍需授权，官方 a11y 声明不替代项目验证。"
     },
     {
+      "id": "ui-design-expert-should-scope-ant-design-by-application",
+      "skill": "ui-design-expert",
+      "query": "产品已经确定运营平台 Web 完整采用 Ant Design，C 端浏览器和 H5 保留独立品牌。请规划共享组件规范、各端 UI 边界和原型交付；项目当前 Ant Design 主版本尚未确认，不要安装或升级。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "按应用 / 客户端建立 Ant Design Adoption Profile，记录项目当前版本、采用深度、主题策略、组件映射、偏离项、Owner 和兼容性证据。运营平台 Web 在版本兼容时完整采用当前项目 Ant Design 的表格、表单、筛选、分页、Tabs、Drawer、Modal 和反馈模式，通过受支持的 theme 与 tokens 定制；跨端只共享业务语义、语义 tokens 和组件行为，不暴露内部 token 名、class 或 DOM。C 端浏览器与 H5 保留独立品牌、密度、导航、页面模板和触控节奏，不复制后台结构；Ant Design Mobile 作为独立候选评估。版本未知时止于方案和双路径试片；若涉及 v6，核对 React 18 及以上、现代浏览器与 CSS variables、icons 版本和内部选择器依赖；不安装、不升级，项目组合仍验证键盘、焦点、状态和失败恢复。"
+    },
+    {
       "id": "ui-design-expert-should-use-eastern-aesthetics-with-boundaries",
       "skill": "ui-design-expert",
       "query": "使用 $ui-design-expert 为中国器物数字展陈设计 Web 首页和藏品详情页。需要东方审美，但不要仿古或套国风模板；请给出视觉方向、响应式、可访问性和验证方式。",
@@ -4868,7 +4883,7 @@
     {
       "id": "product-architecture-expert-should-plan-cross-application-prototype-requirements",
       "skill": "product-architecture-expert",
-      "query": "一个会员权益需求同时涉及运营平台、C 端浏览器、桌面客户端和 H5。请先规划需求分别落在哪些应用、客户端和页面，列页面清单、跨端差异、跨应用衔接及逐页产品标注；暂不画界面，也不生成可点击原型。",
+      "query": "一个会员权益需求同时涉及运营平台、C 端浏览器、桌面客户端和 H5。请先规划需求分别落在哪些应用、客户端和页面，列页面清单、各应用/客户端的设计系统姿态、跨端差异、跨应用衔接及逐页产品标注；暂不画界面，也不生成可点击原型。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -4877,12 +4892,12 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "由 product-architecture-expert 持有跨应用原型需求规划，先区分应用、客户端、页面和非页面能力，再输出需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接与验收追踪；只定义必须呈现、可操作和可观察的产品事实，不直接绘制界面或生成可点击原型。"
+      "expected_handling": "由 product-architecture-expert 持有跨应用原型需求规划，先区分应用、客户端、页面和非页面能力，再输出需求覆盖矩阵、应用界面基线、页面清单、产品级页面标注、多端差异、跨应用衔接与验收追踪；应用界面基线声明各应用 / 客户端是完整采用、继承参考、独立体系还是待确认，并记录品牌与密度边界、例外和 Owner，只定义必须呈现、可操作和可观察的产品事实，不决定组件样式、token 或实现 API，不直接绘制界面或生成可点击原型。"
     },
     {
       "id": "ui-design-expert-negative-cross-application-prototype-requirement-planning",
       "skill": "ui-design-expert",
-      "query": "一个会员权益需求同时涉及运营平台、C 端浏览器、桌面客户端和 H5。请先规划需求分别落在哪些应用、客户端和页面，列页面清单、跨端差异、跨应用衔接及逐页产品标注；暂不画界面，也不生成可点击原型。",
+      "query": "一个会员权益需求同时涉及运营平台、C 端浏览器、桌面客户端和 H5。请先规划需求分别落在哪些应用、客户端和页面，列页面清单、各应用/客户端的设计系统姿态、跨端差异、跨应用衔接及逐页产品标注；暂不画界面，也不生成可点击原型。",
       "should_trigger": false,
       "preferred_skill": "product-architecture-expert",
       "difficulty": "hard_negative",

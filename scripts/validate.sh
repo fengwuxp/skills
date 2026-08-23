@@ -419,8 +419,26 @@ python3 ui-design-expert/scripts/test_check_design_draft_review.py
 python3 ui-design-expert/scripts/test_check_figma_design_plan.py
 python3 ui-design-expert/scripts/check_ui_source.py --self-test
 python3 ui-design-expert/scripts/verify_fixtures.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
+ui_design_ant_eval_dir="${tmp_dir}/ui-design-ant-adoption-eval"
+mkdir -p "${ui_design_ant_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json" \
+  --responses "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl" \
+  --output "${ui_design_ant_eval_dir}/blind.jsonl" \
+  --key-output "${ui_design_ant_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json" \
+    --scores "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl" \
+    --key "${ui_design_ant_eval_dir}/key.json" \
+    --blind "${ui_design_ant_eval_dir}/blind.jsonl" \
+    --output "${ui_design_ant_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
 
 echo "==> security engineering deliverable checker"
 python3 security-engineering-expert/scripts/check_security_deliverable.py --self-test
