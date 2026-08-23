@@ -2171,6 +2171,136 @@ check(
     ),
 )
 
+check(
+    "project-owned grill-me keeps upstream core and wise-agent boundary",
+    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
+    and has_none(
+        wise_agent_skill,
+        [
+            "grill-me 决策快照，只保留",
+            "执行 / 写文件 / 生成计划前必须先做执行前对账",
+        ],
+    )
+    and has_all(
+        wise_agent_delivery_lifecycle,
+        [
+            "轻量问询结论",
+            "`grill-me` 盘问结论",
+            *DECISION_GRILL_BOUNDARY_TERMS,
+            "装载这一独立 Skill",
+            "完整盘问、问题台账、历史去重、自决和决策快照由该 Skill 负责",
+            "Loop 推进中适时装载 `grill-me`",
+            "执行前对账读 `delivery-execution-control.md`",
+        ],
+    )
+    and has_none(
+        wise_agent_delivery_lifecycle,
+        ["grill-me 退出后形成决策快照", "被排除方案不得复活"],
+    )
+    and has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "盘问、问题台账、历史去重和决策快照由独立 `grill-me` 负责",
+            "完整盘问、问题台账、历史去重、自决和红线规则",
+            "本节只消费决策快照并做执行前对账",
+            "已确认选择、被排除方案、待确认项、red_lines、下一阶段输入和写回位置",
+            "被排除方案不得复活",
+            "待确认项不得脑补",
+            "快照缺失或不一致时停止并问 Owner",
+            "领域知识分流",
+            "只有 Owner 已确认",
+            "冲突证据与影响范围",
+            "按业务域或模块写入术语与对象表、证据地图或领域知识卡",
+            "难以逆转",
+            "缺少背景会令人困惑",
+            "真实方案取舍",
+            "未获写入授权时只输出候选回流位置",
+            "不创建 `CONTEXT.md`、ADR 或知识库目录",
+            "任务树真相源",
+            "Task Tree / 任务树",
+            "目标、输入、owner、验收标准、依赖、状态和停止条件",
+            "不默认安装或依赖外部服务",
+        ],
+    )
+    and has_all(
+        wise_agent_superpowers_library,
+        [
+            "Matt Pocock 与 grill-me",
+            "复杂或模糊计划的升级盘问能力",
+            "一次一个问题",
+            "Facts 先查",
+            "Decisions 等 owner",
+            "关键分叉未决、回答含糊或连续返工时升级",
+            "不得重复问同一问题",
+            "项目自有独立 Skill",
+            "问题台账、历史去重、自决边界、红线与决策快照",
+            "上游只作来源参考",
+            "不安装全仓库",
+        ],
+    )
+    and has_all(
+        grill_me_source_map,
+        [
+            "Matt Pocock skills",
+            "2026-08-07 核验上游 `main`",
+            "CHANGELOG 当前版本为 `1.2.3`",
+            "2026-07-16",
+            "每轮询问整个 frontier",
+            "_4exXmzaNRbCqPgUFSvnKw",
+            "一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding",
+            "项目自有独立 `grill-me`",
+            "这是主动分歧，不随上游同步",
+            "不把文章中的固定五阶段链路、工具排名、模型表现、最佳配置或 TDD 阶段调整设为默认规则",
+            "不安装上游全仓库",
+            "不保留 `/grilling` alias",
+        ],
+    )
+    and has_none(
+        wise_agent_superpowers_library,
+        [
+            "入口 alias",
+            "快捷触发别名",
+            "转入 `grill-me`",
+            "安装 `grill-me` 与 `grilling`",
+        ],
+    )
+    and has_none(
+        grill_me_source_map,
+        [
+            "安装最小 Markdown 对 `grill-me` 与 `grilling`",
+        ],
+    )
+    and has_all(
+        product_skill,
+        [
+            "正式交付只留结论",
+            "讨论、轻量问询、被拒方案和推理轨迹留在任务计划或评审记录",
+            "产品上下文交接卡",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "范围与结果收敛",
+            "任务文档和正式设计只留最终结论",
+            "交接卡可消费才行动",
+            "不重开产品流程",
+        ],
+    )
+    and has_all(
+        "README.md",
+        [
+            "决策澄清门禁只处理真正未决的 Decisions",
+            "`grill-me` 是升级盘问，不是每个任务的必经流程",
+            "复杂或模糊任务一次只问一个主 blocker",
+            "Facts 先从材料、源码、测试或日志自答",
+            "Decisions 才问 owner",
+            "路径：[grill-me](./grill-me)",
+            "已确认或已排除的问题不得换个说法重问",
+            "自决不扩大授权",
+        ],
+    ),
+)
 
 check(
     "project-owned grill-me keeps stateful handoff boundaries",
@@ -2804,6 +2934,118 @@ check(
             "创可贴式修复需要退回根因分析",
             "复现 / 根因 / 同类影响 / 独立验证",
             "不得把模型自述、补丁候选、局部 guard、放宽断言或工具告警写成已修复、测试通过、CR 结论、合并判断或上线审批",
+        ],
+    ),
+)
+check(
+    "wise agent keeps three-card handoff protocol",
+    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
+    and has_all(
+        wise_agent_product_to_engineering,
+        [
+            "3A. 三卡交接协议",
+            "3B. 产品-架构-知止者阶段责任矩阵",
+            "Product Context Card / 产品上下文交接卡",
+            "Engineering Handoff Card / 工程执行交接卡",
+            "生产交付卡 / 生产 Loop 交接卡",
+            "规范主题 / 产品文档路径:",
+            "规范主题 / 产品文档路径 / 目标系分文档路径:",
+            "同一能力从产品到系分必须保持规范主题和精确路径",
+            "三卡都不是 Execution Grant",
+            "三卡必须区分事实、推断、待确认和范围外不做",
+            "产品专家裁决产品语义",
+            "架构师裁决工程设计与实现",
+            "独立 Checker 裁决验证",
+            "知止者只维持顺序、状态、Owner、证据和停止条件",
+        ],
+    )
+    and has_all(
+        wise_agent_planning_execution_admission,
+        [
+            "三卡交接结论",
+            "7A. 三卡到架构师的消费规则",
+            "Product Context Card",
+            "Engineering Handoff Card",
+            "生产交付卡",
+            "缺失时回 `产品架构专家`",
+            "缺失时停在知止者",
+            "缺失时只标记 Loop Candidate",
+        ],
+    )
+    and has_all(
+        product_skill,
+        [
+            "交接不转责",
+            "只交 Product Context Card",
+            "承载事实、规则、验收种子、风险和待确认",
+            "不判定工程准入、测试通过、Execution Grant 或上线审批",
+        ],
+    )
+    and has_all(
+        product_ai_native_context,
+        [
+            "Product Context Card / 产品上下文交接卡",
+            "不生成 Engineering Handoff Card、生产交付卡或 Execution Grant",
+            "产品专家不输出 Engineering Handoff Card、生产交付卡、Plan Grant、Execution Grant 或上线批准",
+        ],
+    )
+    and has_all(
+        senior_skill,
+        [
+            "Product Context Card",
+            "Engineering Handoff Card",
+            "生产交付卡",
+            "不把交接卡当成 Execution Grant、测试通过、Git 授权或上线审批",
+            "交接卡可消费才行动",
+            "声明视角并分离 Maker/Checker",
+            "独立 Checker 的证据不能由同一视角自证",
+        ],
+    )
+    and has_all(
+        ai_engineering,
+        [
+            "AI Native 交接卡消费结论",
+            "1D. AI Native 交接卡消费协议",
+            "1E. 工程实施切片与 Requirement-Diff Review",
+            "Product Context Card",
+            "Engineering Handoff Card",
+            "生产交付卡",
+            "三卡都不是 Plan Grant / Execution Grant、测试通过、CR 结论、生产审批或 Git 授权",
+            "业务锚点 -> 应用 / 模块 -> 接口 / 事件 -> 状态 / 模型 / 表 -> 测试",
+            "done / partial / todo / changed / blocked",
+            "不强制新建 requirement.md 或命令树",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "产品需求切片与实现后语义验收",
+            "需求 ID / 业务身份 / 目标与非目标 / 对象与状态 / 规则与业务事件",
+            "不设计内部接口、模型或表",
+            "产品契约变化还是实现偏离",
+            "不能把当前代码自动升级为产品事实",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "三卡交接",
+            "Product Context Card",
+            "Engineering Handoff Card",
+            "生产交付卡",
+            "不让任一卡替代 Execution Grant、测试通过或上线审批",
+        ],
+    )
+    and has_none(
+        wise_agent_planning_execution_admission,
+        [
+            "Execution Handoff Card",
+        ],
+    )
+    and has_none(
+        "fixtures/skill-eval/prompt-cases.json",
+        [
+            "Execution Handoff Card",
         ],
     ),
 )
@@ -11668,6 +11910,91 @@ check(
             "https://www.airwallex.com/docs",
             "https://www.nacha.org/rules/operating-rules",
             "https://mp.weixin.qq.com/s/vHJ7LlePC8o5qV84XVtU4Q",
+        ],
+    ),
+)
+check(
+    "product expert routes business architecture planning",
+    has_all(
+        product_skill,
+        [
+            "业务架构规划",
+            "业务 IT 对齐",
+            "战略落项目",
+            "项目组合治理",
+            "能力-项目-系统映射",
+            "business-architecture-planning.md",
+            "在六种受检视图中声明选用项并逐项说明其余视图为何跳过",
+            "最小且完整的视图组合",
+            "参考性工作基线",
+            "不替代组织设计、系统架构、Execution Grant 或上线审批",
+        ],
+    )
+    and has_all(
+        product_agent,
+        [
+            "业务架构规划",
+            "能力提供者视角",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "业务架构规划",
+            "业务 IT 对齐",
+            "战略落项目",
+            "项目组合治理",
+            "投资取舍",
+            "重复建设识别",
+            "能力-项目-系统映射",
+            "business-architecture-planning.md",
+            "复杂图形化表达加读 `diagram-output.md`",
+            "选用视图、跳过视图及理由",
+            "最小且完整的视图组合",
+            "不固定要求能力地图、价值流、业务流程或项目组合全部产出",
+            "不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant",
+        ],
+    )
+    and has_reference_header(product_business_architecture)
+    and has_task_reading_index(product_business_architecture)
+    and has_all(
+        product_business_architecture,
+        [
+            "# 业务架构规划",
+            "候选产物与视图声明",
+            "选用视图：",
+            "跳过视图及理由：",
+            "不再用总述、清单和结尾重复复述同一判断",
+            "触发和结束条件必须与准入卡的范围边界一致",
+            "业务架构准入卡",
+            "业务能力地图",
+            "三视角工作基线",
+            "参考性工作基线",
+            "不是普遍标准规定的固定“核心视图”",
+            "价值流回答",
+            "业务能力回答",
+            "业务流程回答",
+            "多对多映射",
+            "核心对象与规则卡",
+            "能力-项目-系统映射",
+            "差距 / 依赖 / 优先级矩阵",
+            "项目组合 / 路线图",
+            "## 5A. 图形化辅助路由",
+            "diagram-output.md",
+            "战略到能力：业务能力地图",
+            "价值如何形成与交付：价值流",
+            "业务如何实际运行：跨角色流程图",
+            "能力落地现状：能力-项目-系统-数据映射图",
+            "投资取舍：差距 / 依赖 / 路线图",
+            "工程交接：产品到系统上下文图",
+            "高风险对象：对象生命周期 / 状态机 / 规则决策图",
+            "正式图形化交付默认只生成 SVG",
+            "图不能替代业务确认、产品判断、工程设计、Execution Grant 或上线审批",
+            "按业务域或模块分区保存",
+            "知识库规划卡",
+            "Product Context Card",
+            "被选中的视图才必须完整",
+            "这些交接卡都不是 Execution Grant、测试通过、CR 结论、上线审批或 Git 授权",
         ],
     ),
 )
