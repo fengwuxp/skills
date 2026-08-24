@@ -79,6 +79,8 @@ description: |
 
 当用户要求写作、生成、完善、补全、改写 PRD、产品需求文档、需求说明书、需求文档模板、PRD 模板、产品方案模板，或要求“输出一份可评审的产品文档”时，必须读取 `references/product-prd-template.md`，并结合 `references/product-design-and-prd.md` 输出可复制、可评审、可开发、可测试、可运营的 PRD；复杂 PRD、AI 生成方案、原型候选、多方争议或用户要求多个 AI/PM/Reviewer/产品大师/MAGI 合议评审时，加读 `references/product-deliberation-workflow.md`；正式评审或提交前自检继续读取 `references/product-prd-quality-gates.md`，运营后台、通知、数据指标、埋点、报表和发布运营场景继续读取 `references/product-prd-operations-and-data.md`；支付资金 PRD 由 `payment-expert` 提供专项事实，本 Skill 只协同通用主文档；不要只给提纲或说明。
 
+当用户要求把访谈、会议纪要、业务原话或技术问题改成准确业务表达、正式产品需求或业务规则时，读取 `references/product-design-and-prd.md` 的 Business Expression Contract、Requirement Statement Contract 和 Business Rule Contract；三种契约的详细字段不在 `SKILL.md`、模板或方法论中另建权威。
+
 当用户要求跨应用原型需求规划、把同一需求分配到运营平台与 C 端，或规划浏览器、桌面客户端、H5 等形态的页面范围和产品级页面标注时，读取 `references/product-design-and-prd.md` 的“跨应用原型需求规划”。本 Skill 持有应用 / 客户端 / 页面范围、业务状态、多端差异和跨应用衔接；`ui-design-expert` 在这些产品事实确认后负责 Web 信息架构、交互与原型绘制，非 Web 客户端按真实运行形态交对应平台能力，缺少该能力时止于产品规划，浏览器代码实现交给 `senior-software-architect`。
 
 当用户要求按 PC、手机、浏览器、APP、H5 或其他运行形态优化原型、交互、响应式、可用性或用户体验时，先读取 `references/product-client-interaction.md`，建立客户端交互契约和状态矩阵，再回到 `product-design-and-prd.md` 完成应用 / 页面 / 非页面承接。产品专家持有任务、端形态、交互约束、跨端差异和验收；`ui-design-expert` 再决定视觉、布局、组件、tokens、响应式细节和 L0 / L1 / L2 原型表达。

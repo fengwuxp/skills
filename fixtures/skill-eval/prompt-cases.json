@@ -4895,6 +4895,35 @@
       "negative_reason": "任务核心是形成 PRD 产品语义，并明确排除正式报告排版；应由 product-architecture-expert 负责，不触发 document-authoring。"
     },
     {
+      "id": "product-architecture-expert-should-translate-technical-questions-to-business-requirements",
+      "skill": "product-architecture-expert",
+      "query": "研发问幂等键、callback retry、source of truth 和 state machine 怎么定。我只负责业务，请把这些技术问题改写成我能确认的业务决策、原子需求和业务规则；本轮不做系统设计或代码实现。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "由 product-architecture-expert 把重复提交、通知失败、状态冲突和对象生命周期翻译成业务问题，区分事实、待确认和 Owner；按 Business Expression Contract、Requirement Statement Contract 和 Business Rule Contract 形成产品可确认的行为、边界、规则和验收，不提前设计幂等键、重试任务、数据库或状态机实现。"
+    },
+    {
+      "id": "product-architecture-expert-negative-direct-retry-implementation",
+      "skill": "product-architecture-expert",
+      "query": "请直接实现审核服务的数据库表、消息队列、幂等键、callback 重试代码和自动化测试；产品语义、PRD 和业务规则都已经确认，本轮只要工程落地。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality"
+      ],
+      "negative_reason": "产品语义已经确认，目标是数据库、消息、幂等、重试代码和测试实现，应由 senior-software-architect 主责；product-architecture-expert 不接管工程落地。"
+    },
+    {
       "id": "competition-product-prd-owner-ui-design",
       "skill": "ui-design-expert",
       "query": "请把用户访谈和现有后台页面整理成会员管理 PRD，重点定义主体、对象、状态、业务规则和验收标准；本轮不做页面交互设计，也不做正式报告排版。",

@@ -18,6 +18,30 @@ CASES = (
         False,
         {"scenario_contract_missing", "rule_scope_missing", "acceptance_scenario_missing"},
     ),
+    (
+        "prd",
+        FIXTURES / "prd-invalid-ambiguous-rule.md",
+        False,
+        {"ambiguous_rule_language"},
+    ),
+    (
+        "prd",
+        FIXTURES / "prd-invalid-requirement-contract.md",
+        False,
+        {"requirement_contract_incomplete"},
+    ),
+    (
+        "prd",
+        FIXTURES / "prd-invalid-external-rule.md",
+        False,
+        {"external_rule_governance_missing"},
+    ),
+    (
+        "prd",
+        FIXTURES / "prd-invalid-success-metric.md",
+        False,
+        {"success_metric_incomplete"},
+    ),
     ("business-architecture", FIXTURES / "business-architecture-valid.md", True, set()),
     ("business-architecture", FIXTURES / "business-architecture-invalid.md", False, set()),
     ("product-review", FIXTURES / "product-review-valid.md", True, set()),
@@ -40,6 +64,12 @@ CASES = (
         },
     ),
 )
+EXACT_FAILURE_CASES = {
+    "prd-invalid-ambiguous-rule.md",
+    "prd-invalid-requirement-contract.md",
+    "prd-invalid-external-rule.md",
+    "prd-invalid-success-metric.md",
+}
 
 
 def main() -> int:
@@ -63,6 +93,11 @@ def main() -> int:
         elif not expected_missing.issubset(set(missing)):
             failures.append(
                 f"fixture failure reason mismatch: {path.name}: "
+                f"expected={','.join(sorted(expected_missing))}, missing={','.join(missing) or 'none'}"
+            )
+        elif path.name in EXACT_FAILURE_CASES and set(missing) != expected_missing:
+            failures.append(
+                f"fixture has non-target failures: {path.name}: "
                 f"expected={','.join(sorted(expected_missing))}, missing={','.join(missing) or 'none'}"
             )
         else:

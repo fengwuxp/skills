@@ -326,6 +326,7 @@ product_business_architecture_behavior_cases = "fixtures/skill-eval/product-busi
 product_business_architecture_responses = "fixtures/skill-eval/product-business-architecture-responses.jsonl"
 product_business_architecture_scores = "fixtures/skill-eval/product-business-architecture-scores.jsonl"
 product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
+product_business_expression_requirements_behavior_cases = "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 
 payment_skill = "payment-expert/SKILL.md"
 payment_agent = "payment-expert/agents/openai.yaml"
@@ -6176,6 +6177,88 @@ check(
             "product-client-interaction-should-handoff-ui-boundary",
             "静态 fixture 只固定预期行为",
             "真实 runner/model",
+        ],
+    ),
+)
+check(
+    "product business expression requirements and rules stay single-authority and behavior-covered",
+    (ROOT / product_business_expression_requirements_behavior_cases).exists()
+    and has_all(
+        product_skill,
+        [
+            "Business Expression Contract",
+            "Requirement Statement Contract",
+            "Business Rule Contract",
+            "三种契约的详细字段不在 `SKILL.md`、模板或方法论中另建权威",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "## 0.A 业务表达、产品需求与业务规则契约",
+            "### Business Expression Contract",
+            "### Requirement Statement Contract",
+            "### Business Rule Contract",
+            "适切",
+            "原子",
+            "无歧义",
+            "可验证",
+        ],
+    )
+    and has_all(
+        product_prd_template,
+        [
+            "#### 5.3 产品需求陈述",
+            "边界结果",
+            "禁止结果",
+            "失败后的可观察状态",
+            "规则卡、规则矩阵和决策表都使用第 7.1 节",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "事实、判断、决策、承诺和待确认",
+            "适切、必要、原子、无歧义、自包含、可理解、可验证和可追踪",
+            "规则独立于流程和执行机制",
+        ],
+    )
+    and has_all(
+        "product-architecture-expert/scripts/check_product_deliverable.py",
+        [
+            "ambiguous_rule_language",
+            "requirement_contract_incomplete",
+            "external_rule_governance_missing",
+            "success_metric_incomplete",
+        ],
+    )
+    and has_all(
+        product_business_expression_requirements_behavior_cases,
+        [
+            '"mode": "improvement"',
+            '"candidate_weighted_score_must_improve": true',
+            "product-expression-should-separate-fact-judgment-and-pending",
+            "product-expression-should-translate-technical-question-to-business-decision",
+            "product-requirement-should-rewrite-ambiguous-language",
+            "product-requirement-should-split-compound-outcomes",
+            "product-rule-should-resolve-overlapping-rules",
+            "product-rule-should-block-stale-external-rule",
+            "product-requirement-should-keep-lightweight-scope",
+            "product-requirement-negative-marketing-or-implementation",
+            "真实 runner/model 重复响应",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "IREB CPRE Foundation Level Syllabus 3.3.0",
+            "Business Rules Manifesto",
+            "OMG DMN 1.5",
+            "Cucumber Example Mapping",
+            "product-on-purpose/pm-skills",
+            "linyindong/platform-product-skills",
+            "microsoft/hve-core",
+            "mattpocock/skills",
         ],
     ),
 )
@@ -13353,7 +13436,7 @@ check(
             "文档过厚、过薄、未更新、未评审",
             "## 2. 文档治理门禁",
             "文档目标、目标读者和文档类型清楚",
-            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计 -> 关键流程 -> 业务规则 -> 接口抽象 -> 验收摘要",
+            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（场景、能力对象、产品需求陈述）-> 关键流程 -> 业务规则 -> 接口抽象 -> 验收摘要",
             "复杂执行细节拆到实施计划、附录或图",
             "图形化视图选择合理",
             "图文一致",
@@ -19115,7 +19198,7 @@ check(
             "研发",
             "测试 / 运营",
             "作者口头补充",
-            "修正文或图",
+            "修正文、规则或图",
         ],
     )
     and has_all(

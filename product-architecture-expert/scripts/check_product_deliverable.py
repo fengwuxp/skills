@@ -132,6 +132,40 @@ SCENARIO_FIELD_GROUPS = (
     ("observable_result", ("完成证据与验收种子", "完成证据", "可观察结果", "完成定义")),
     ("exception_closure", ("逆向、异常与停止", "异常与人工兜底", "异常处理")),
 )
+REQUIREMENT_FIELD_GROUPS = (
+    ("requirement_name", ("需求名称",)),
+    ("requirement_type", ("需求类型",)),
+    ("responsible_subject", ("责任主体", "主体")),
+    ("requirement_context", ("场景 / 前置状态", "场景/前置状态", "前置状态", "前置条件")),
+    ("normative_force", ("规范强度",)),
+    ("required_outcome", ("要求的行为或业务结果", "行为或结果", "业务结果")),
+    ("requirement_boundary", ("度量、时限或边界", "度量 / 时限 / 边界", "需求边界")),
+    ("requirement_source", ("来源与可靠性", "来源 / 可靠性", "需求来源")),
+    ("acceptance_example", ("验收样例", "验收引用")),
+)
+RULE_FIELD_GROUPS = (
+    ("rule_name", ("规则名称",)),
+    ("rule_type", ("规则性质",)),
+    ("rule_motivation", ("业务动机",)),
+    ("rule_scope", ("适用对象与范围", "适用场景 / 步骤", "适用场景/步骤")),
+    ("rule_input_facts", ("输入事实",)),
+    ("rule_condition", ("当", "触发与判断条件", "条件")),
+    ("rule_outcome", ("则", "处理结果", "结论")),
+    ("rule_owner", ("Owner", "规则 Owner", "规则 owner")),
+    ("rule_examples", ("正例 / 边界例 / 反例", "验收样例")),
+)
+AMBIGUOUS_BUSINESS_PHRASES = (
+    "按相关规则处理",
+    "视情况",
+    "必要时",
+    "适当",
+    "及时",
+    "合理",
+    "尽快",
+    "原则上",
+    "包括但不限于",
+)
+NORMATIVE_FORCES = {"必须", "不得", "应", "可"}
 PRD_STRENGTHS = {"轻量", "标准", "增强"}
 SCENARIO_CONTRACT_STRENGTHS = {"标准", "增强"}
 PRD_SECTION_ORDER = [
@@ -140,6 +174,7 @@ PRD_SECTION_ORDER = [
     ("section_qualitative", ("定性与范围", "定性、范围")),
     ("section_overview", ("概要设计",)),
     ("section_detail", ("详细设计",)),
+    ("section_requirements", ("产品需求陈述",)),
     ("section_flow", ("关键流程", "业务流程")),
     ("section_rules_and_interface", ("业务规则与接口抽象", "业务规则和接口抽象")),
     ("section_risk", ("数据与风险", "数据、权限、风险", "风险与待确认")),
@@ -178,7 +213,8 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "文档强度：标准。\n"
         "## 阅读摘要\n当前结论：统一审核入口；产品定义 / 产品视图：为运营提供可追踪的审核能力；主链路：提交、审核、通知；核心对象与边界：申请单由平台管理，不改变交易订单。\n"
         "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
-        "## 二、目标与非目标\n目标：提升运营效率；非目标：不改结算规则。\n"
+        "## 二、目标与非目标\n目标：缩短审核处理时间；非目标：不改结算规则。"
+        "成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。\n"
         "## 三、定性与范围\n产品定性：存量审核流程治理；总体判断：先统一口径；范围和产品边界为后台审核。\n"
         "## 四、概要设计\n概要设计：核心方案是统一审核入口和能力布局，并说明总体流程。\n"
         "核心名相：审核任务；定义：等待运营判断的申请；不是什么：交易订单；归属主体：平台。"
@@ -192,9 +228,21 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "适用规则：跨场景不变量和审批规则适用于裁决步骤。\n"
         "完成证据与验收种子：审核结论、操作者和时间可查询，重复处理不改变终态。\n"
         "逆向、异常与停止：材料不足时驳回补充，外部来源不可用时停止裁决并转人工处理。\n"
+        "### 产品需求陈述\n"
+        "需求名称：保存唯一审核结论。\n需求类型：功能。\n责任主体：审核平台。\n"
+        "场景 / 前置状态：SCN-001，申请处于待审状态。\n规范强度：必须。\n"
+        "要求的行为或业务结果：审核平台必须保存唯一的当前审核结论并向审核员反馈。\n"
+        "度量、时限或边界：同一申请重复裁决不得改变已形成的终态。\n"
+        "来源与可靠性：运营审核规则，已确认。\n关联规则：R-001。\n"
+        "验收样例：重复提交裁决时仍返回原终态和原审计记录。\n"
         "## 六、关键流程\n主流程：提交、审核、通知；异常流程：重复提交；人工处理：补录；流程图：审核路径。\n"
         "## 七、业务规则与接口抽象\n"
-        "规则性质：场景裁决规则。适用场景 / 步骤：SCN-001 / 审核裁决。触发与判断条件：只有待审申请可裁决；审批结论必须记录版本和验收样例。产品接口抽象说明业务契约、输入、输出和失败语义。\n"
+        "规则编号：R-001。规则名称：待审申请裁决。规则性质：场景裁决规则。"
+        "业务动机：防止终态被重复操作覆盖。适用场景 / 步骤：SCN-001 / 审核裁决。"
+        "适用对象与范围：待审申请。输入事实：申请状态和材料完整性。"
+        "当：申请处于待审状态且材料完整。则：记录通过或驳回结论。"
+        "Owner：运营负责人。正例 / 边界例 / 反例：待审申请可裁决；终态重复提交保持原结果；非待审申请不得生成新结论。"
+        "产品接口抽象说明业务契约、输入、输出和失败语义。\n"
         "## 八、数据与风险\n数据：指标、报表、审计和追溯。"
         "风险：外部依赖待确认，确认方为业务，影响范围是审核上线。\n"
         "## 九、验收摘要\n对应场景：SCN-001。正常结果：通过或驳回结论、操作者和时间可查询；关键边界：重复裁决不改变终态；异常与兜底：来源不可用时停止并转人工；红线：不得生成无审计记录的结论。",
@@ -477,6 +525,50 @@ def table_records(text: str, columns: dict[str, tuple[str, ...]]) -> list[dict[s
     return []
 
 
+def contract_table_records(
+    text: str,
+    groups: tuple[tuple[str, tuple[str, ...]], ...],
+    anchor_aliases: tuple[str, ...],
+) -> list[dict[str, str]]:
+    normalized_groups = {
+        name: {normalize(alias) for alias in aliases}
+        for name, aliases in groups
+    }
+    normalized_anchors = {normalize(alias) for alias in anchor_aliases}
+    lines = text.splitlines()
+    records: list[dict[str, str]] = []
+    for index, line in enumerate(lines):
+        if not line.strip().startswith("|"):
+            continue
+        headers = [cell.strip().strip("`*_").strip() for cell in line.strip().strip("|").split("|")]
+        if not any(normalize(header) in normalized_anchors for header in headers):
+            continue
+        positions = {
+            name: next(
+                (position for position, header in enumerate(headers) if normalize(header) in aliases),
+                None,
+            )
+            for name, aliases in normalized_groups.items()
+        }
+        for row in lines[index + 1 :]:
+            if not row.strip().startswith("|"):
+                break
+            cells = [cell.strip().strip("`*_").strip() for cell in row.strip().strip("|").split("|")]
+            if all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+                continue
+            records.append({
+                **{
+                    name: cells[position] if position is not None and position < len(cells) else ""
+                    for name, position in positions.items()
+                },
+                "__text__": "\n".join(
+                    f"{header}: {cells[position] if position < len(cells) else ''}"
+                    for position, header in enumerate(headers)
+                ),
+            })
+    return records
+
+
 def valid_stable_id(value: str) -> bool:
     return bool(re.fullmatch(r"[\w.:-]+", value, re.UNICODE)) and bool(meaningful_values([value]))
 
@@ -625,6 +717,184 @@ def declared_prd_strength(text: str) -> str | None:
     return normalized if normalized in PRD_STRENGTHS else "invalid"
 
 
+def contract_group_values(text: str, aliases: tuple[str, ...]) -> list[str]:
+    values = [value for alias in aliases for value in field_values(text, alias)]
+    values.extend(table_column_values(text, aliases))
+    return meaningful_values(values)
+
+
+def labeled_record_blocks(text: str, anchor_aliases: tuple[str, ...]) -> list[str]:
+    anchors = "|".join(re.escape(alias) for alias in anchor_aliases)
+    pattern = re.compile(
+        rf"(?m)^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*"
+        rf"(?:{anchors})\s*(?:\*\*|__|`)?\s*[：:]"
+    )
+    matches = list(pattern.finditer(text))
+    if not matches:
+        return []
+    return [
+        text[match.start() : matches[index + 1].start() if index + 1 < len(matches) else len(text)]
+        for index, match in enumerate(matches)
+    ]
+
+
+def contract_records(
+    text: str,
+    groups: tuple[tuple[str, tuple[str, ...]], ...],
+    anchor_aliases: tuple[str, ...],
+) -> list[dict[str, str]]:
+    rows = contract_table_records(text, groups, anchor_aliases)
+    narrative_text = "\n".join(
+        line for line in text.splitlines() if not line.strip().startswith("|")
+    )
+    blocks = labeled_record_blocks(narrative_text, anchor_aliases)
+    if not rows and not blocks:
+        blocks = [narrative_text]
+    narrative_records = [
+        {
+            **{
+                name: " ".join(contract_group_values(block, aliases))
+                for name, aliases in groups
+            },
+            "__text__": block,
+        }
+        for block in blocks
+    ]
+    return rows + narrative_records
+
+
+def business_rule_records(text: str) -> list[dict[str, str]]:
+    rows = contract_table_records(text, RULE_FIELD_GROUPS, ("规则编号", "规则名称"))
+    narrative = "\n".join(line for line in text.splitlines() if not line.strip().startswith("|"))
+    blocks = labeled_record_blocks(narrative, ("规则编号", "规则名称"))
+    merged: list[str] = []
+    pending_identifier = ""
+    numbered = re.compile(
+        r"^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*规则编号\s*(?:\*\*|__|`)?\s*[：:]"
+    )
+    for block in blocks:
+        starts_with_number = bool(numbered.match(block))
+        identifier_only = starts_with_number and not any(
+            contract_group_values(block, aliases) for _, aliases in RULE_FIELD_GROUPS
+        )
+        if pending_identifier and starts_with_number:
+            merged.append(pending_identifier)
+            pending_identifier = ""
+        if identifier_only:
+            pending_identifier = block
+            continue
+        if pending_identifier:
+            block = f"{pending_identifier}\n{block}"
+            pending_identifier = ""
+        merged.append(block)
+    if pending_identifier:
+        merged.append(pending_identifier)
+    if not rows and not merged:
+        merged = [narrative]
+    return rows + [
+        {
+            **{
+                name: " ".join(contract_group_values(block, aliases))
+                for name, aliases in RULE_FIELD_GROUPS
+            },
+            "__text__": block,
+        }
+        for block in merged
+    ]
+
+
+def phrase_is_defined(text: str, phrase: str) -> bool:
+    numeric_definition = re.search(
+        rf"{re.escape(phrase)}\s*(?:定义为|是指|[：:])\s*[^。；;\n]{{0,40}}"
+        rf"\d+(?:\.\d+)?\s*(?:毫秒|秒|分钟|小时|天|次|个|%|％)",
+        text,
+        re.IGNORECASE,
+    )
+    named_deadline = re.search(
+        rf"{re.escape(phrase)}\s*(?:定义为|是指|[：:])\s*"
+        rf"(?:当日|次日|本工作日|下一个工作日|SLA\s*[-:：]?\s*\w+|[^。；;\n]{{1,30}}(?:之前|结束前|开始前))",
+        text,
+        re.IGNORECASE,
+    )
+    return bool(numeric_definition or named_deadline)
+
+
+def ambiguous_business_phrases(text: str) -> list[str]:
+    phrases: list[str] = []
+    for phrase in AMBIGUOUS_BUSINESS_PHRASES:
+        candidate = text.replace("合理推断", "") if phrase == "合理" else text
+        if contains_term(candidate, phrase) and not phrase_is_defined(candidate, phrase):
+            phrases.append(phrase)
+    return phrases
+
+
+def requirement_contract_issues(text: str) -> list[str]:
+    requirements = section_body(text, ("产品需求陈述",))
+    if not requirements.strip():
+        return ["requirement_contract_missing"]
+    issues: list[str] = []
+    records = contract_records(requirements, REQUIREMENT_FIELD_GROUPS, ("需求名称",))
+    if any(any(not record[name] for name, _ in REQUIREMENT_FIELD_GROUPS) for record in records):
+        issues.append("requirement_contract_incomplete")
+    if any(
+        normalize(record["normative_force"]).rstrip("。.") not in NORMATIVE_FORCES
+        for record in records
+        if record["normative_force"]
+    ):
+        issues.append("normative_force_invalid")
+    if any(ambiguous_business_phrases(record["__text__"]) for record in records):
+        issues.append("ambiguous_requirement_language")
+    return issues
+
+
+def business_rule_contract_issues(text: str) -> list[str]:
+    rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
+    issues: list[str] = []
+    records = business_rule_records(rules)
+    if any(any(not record[name] for name, _ in RULE_FIELD_GROUPS) for record in records):
+        issues.append("rule_contract_incomplete")
+    if any(ambiguous_business_phrases(record["__text__"]) for record in records):
+        issues.append("ambiguous_rule_language")
+
+    for record in records:
+        if "版本化" not in record["rule_type"] and "外部规则" not in record["rule_type"]:
+            continue
+        external_groups = (
+            ("来源",),
+            ("版本",),
+            ("生效期", "生效范围"),
+            ("Owner", "规则 Owner", "规则 owner"),
+            ("未确认前处理", "失效时处理", "外部不可用"),
+        )
+        if any(not contract_group_values(record["__text__"], aliases) for aliases in external_groups):
+            issues.append("external_rule_governance_missing")
+            break
+    return issues
+
+
+def success_metric_issues(text: str) -> list[str]:
+    goals = section_body(text, ("目标与非目标",))
+    marker = goals.find("成功指标")
+    if marker < 0:
+        return ["success_metric_incomplete"]
+    normalized = normalize(goals[marker:])
+
+    def has_value(pattern: str) -> bool:
+        match = re.search(pattern, normalized)
+        return bool(match and meaningful_values([match.group(1)]))
+
+    has_baseline = has_value(r"基线(?:值)?\s*(?:为|[：:])\s*([^；;。]+)")
+    has_target = bool(
+        has_value(r"(?<!非)目标(?:值|状态)?\s*(?:为|降至|达到|提升至|[：:])\s*([^；;。，,]+)")
+        or has_value(r"(?:降至|提升至|达到)\s*([^；;。，,]+)")
+    )
+    has_window = has_value(r"观察窗口\s*(?:为|[：:])\s*([^；;。]+)") or bool(
+        re.search(r"上线(?:后)?\s*\d+\s*(?:天|小时|周|个月)内", normalized)
+    )
+    has_owner = has_value(r"(?:owner|负责人)\s*(?:为|[：:])\s*([^；;。]+)")
+    return [] if all((has_baseline, has_target, has_window, has_owner)) else ["success_metric_incomplete"]
+
+
 def has_rule_scope(text: str) -> bool:
     rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
     rule_types = field_values(rules, "规则性质") or table_column_values(rules, ("规则性质",))
@@ -718,6 +988,8 @@ def warning_groups(kind: str, text: str) -> list[str]:
         warnings.append("product_view_late")
     if any(contains_term(text, term) for term in IMPLEMENTATION_LANGUAGE_TERMS):
         warnings.append("implementation_language")
+    if declared_prd_strength(text) == "轻量" and ambiguous_business_phrases(text):
+        warnings.append("ambiguous_business_language")
     return warnings
 
 
@@ -795,6 +1067,9 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.append("keyword_shell")
         if strength in SCENARIO_CONTRACT_STRENGTHS:
             missing.extend(scenario_contract_issues(text))
+            missing.extend(success_metric_issues(text))
+            missing.extend(requirement_contract_issues(text))
+            missing.extend(business_rule_contract_issues(text))
             if not has_rule_scope(text):
                 missing.append("rule_scope_missing")
             missing.extend(rule_scenario_issues(text))
@@ -993,6 +1268,221 @@ def run_self_test() -> int:
     invalid_strength_prd = SELF_TESTS["prd"][0].replace("文档强度：标准", "文档强度：非标准", 1)
     if "document_strength_invalid" not in missing_groups("prd", invalid_strength_prd):
         failures.append("prd: non-enum document strength unexpectedly passed")
+    missing_requirement_prd = SELF_TESTS["prd"][0].replace(
+        "### 产品需求陈述", "### 未命名内容", 1
+    )
+    if "requirement_contract_missing" not in missing_groups("prd", missing_requirement_prd):
+        failures.append("prd: missing requirement contract unexpectedly passed")
+    ambiguous_rule_prd = SELF_TESTS["prd"][0].replace(
+        "当：申请处于待审状态且材料完整。",
+        "当：按相关规则处理并视情况及时裁决。",
+        1,
+    )
+    if "ambiguous_rule_language" not in missing_groups("prd", ambiguous_rule_prd):
+        failures.append("prd: ambiguous business rule unexpectedly passed")
+    external_rule_prd = SELF_TESTS["prd"][0].replace(
+        "规则性质：场景裁决规则。", "规则性质：版本化 / 外部规则。", 1
+    )
+    if "external_rule_governance_missing" not in missing_groups("prd", external_rule_prd):
+        failures.append("prd: incomplete external rule governance unexpectedly passed")
+    vague_metric_prd = SELF_TESTS["prd"][0].replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。",
+        "目标：提升审核效率；非目标：不改结算规则；成功指标为处理效率可观察。",
+        1,
+    )
+    if "success_metric_incomplete" not in missing_groups("prd", vague_metric_prd):
+        failures.append("prd: vague success metric unexpectedly passed")
+    defined_timely_rule_prd = SELF_TESTS["prd"][0].replace(
+        "当：申请处于待审状态且材料完整。",
+        "当：申请需要及时裁决，及时：30 分钟内。",
+        1,
+    )
+    if "ambiguous_rule_language" in missing_groups("prd", defined_timely_rule_prd):
+        failures.append("prd: quantified business term unexpectedly failed")
+    reasonable_inference_prd = SELF_TESTS["prd"][0].replace(
+        "来源与可靠性：运营审核规则，已确认。",
+        "来源与可靠性：运营审核规则，合理推断，待 Owner 确认。",
+        1,
+    )
+    if "ambiguous_requirement_language" in missing_groups("prd", reasonable_inference_prd):
+        failures.append("prd: reasonable inference label unexpectedly failed")
+    split_requirement_prd = re.sub(
+        r"(?ms)^### 产品需求陈述.*?(?=^## 六、关键流程)",
+        """### 产品需求陈述
+
+需求名称：需求 A。
+需求类型：功能。
+责任主体：审核平台。
+场景 / 前置状态：SCN-001，申请处于待审状态。
+
+需求名称：需求 B。
+规范强度：必须。
+要求的行为或业务结果：平台保存结论。
+度量、时限或边界：重复裁决不改变终态。
+来源与可靠性：运营规则，已确认。
+验收样例：重复提交返回原终态。
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "requirement_contract_incomplete" not in missing_groups("prd", split_requirement_prd):
+        failures.append("prd: incomplete requirement records unexpectedly completed each other")
+    multiple_requirement_tables_prd = re.sub(
+        r"(?ms)^### 产品需求陈述.*?(?=^## 六、关键流程)",
+        """### 产品需求陈述
+
+| 需求名称 | 需求类型 | 责任主体 | 场景 / 前置状态 | 规范强度 | 要求的行为或业务结果 | 度量、时限或边界 | 来源与可靠性 | 验收样例 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 保存结论 | 功能 | 审核平台 | SCN-001 / 待审 | 必须 | 保存唯一结论 | 重复裁决不改变终态 | 运营规则，已确认 | 重复提交返回原终态 |
+
+第二个场景：
+
+| 需求名称 | 需求类型 | 责任主体 | 场景 / 前置状态 | 规范强度 | 要求的行为或业务结果 | 度量、时限或边界 | 验收样例 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 发送通知 | 功能 | 审核平台 | SCN-001 / 已裁决 | 应 | 通知审核员 | 裁决后发送 | 通知结果可查询 |
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "requirement_contract_incomplete" not in missing_groups("prd", multiple_requirement_tables_prd):
+        failures.append("prd: incomplete later requirement table unexpectedly passed")
+    mixed_requirement_prd = re.sub(
+        r"(?ms)^### 产品需求陈述.*?(?=^## 六、关键流程)",
+        """### 产品需求陈述
+
+需求名称：未完成的叙述需求。
+需求类型：功能。
+
+| 需求名称 | 需求类型 | 责任主体 | 场景 / 前置状态 | 规范强度 | 要求的行为或业务结果 | 度量、时限或边界 | 来源与可靠性 | 验收样例 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 保存结论 | 功能 | 审核平台 | SCN-001 / 待审 | 必须 | 保存唯一结论 | 重复裁决不改变终态 | 运营规则，已确认 | 重复提交返回原终态 |
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "requirement_contract_incomplete" not in missing_groups("prd", mixed_requirement_prd):
+        failures.append("prd: complete table unexpectedly hid incomplete narrative requirement")
+    split_rule_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+规则名称：规则 A。
+规则性质：场景裁决规则。
+适用场景 / 步骤：SCN-001 / 审核裁决。
+当：申请处于待审状态。
+
+规则名称：规则 B。
+则：记录通过或驳回结论。
+Owner：运营负责人。
+正例 / 边界例 / 反例：待审可裁决；终态保持；非待审禁止。
+
+产品接口抽象说明业务契约、输入、输出、失败语义和责任边界。
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "rule_contract_incomplete" not in missing_groups("prd", split_rule_prd):
+        failures.append("prd: incomplete rule records unexpectedly completed each other")
+    multiple_rule_tables_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+| 规则名称 | 规则性质 | 业务动机 | 适用场景 / 步骤 | 输入事实 | 当 | 则 | Owner | 正例 / 边界例 / 反例 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 审核裁决 | 场景裁决规则 | 防止终态被覆盖 | SCN-001 / 审核裁决 | 申请状态 | 申请待审 | 记录结论 | 运营负责人 | 待审可裁决；终态保持；非待审禁止 |
+
+第二个场景：
+
+| 规则名称 | 规则性质 | 业务动机 | 适用场景 / 步骤 | 输入事实 | 当 | 则 | 正例 / 边界例 / 反例 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 审核通知 | 场景裁决规则 | 告知裁决结果 | SCN-001 / 通知 | 审核结论 | 已形成结论 | 发送通知 | 已裁决发送；重复发送保持；无结论禁止 |
+
+产品接口抽象说明业务契约、输入、输出、失败语义和责任边界。
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "rule_contract_incomplete" not in missing_groups("prd", multiple_rule_tables_prd):
+        failures.append("prd: incomplete later rule table unexpectedly passed")
+    mixed_rule_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+规则名称：未完成的叙述规则。
+规则性质：场景裁决规则。
+
+| 规则名称 | 规则性质 | 业务动机 | 适用场景 / 步骤 | 输入事实 | 当 | 则 | Owner | 正例 / 边界例 / 反例 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 审核裁决 | 场景裁决规则 | 防止终态被覆盖 | SCN-001 / 审核裁决 | 申请状态 | 申请待审 | 记录结论 | 运营负责人 | 待审可裁决；终态保持；非待审禁止 |
+
+产品接口抽象说明业务契约、输入、输出、失败语义和责任边界。
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "rule_contract_incomplete" not in missing_groups("prd", mixed_rule_prd):
+        failures.append("prd: complete table unexpectedly hid incomplete narrative rule")
+    numbered_table_and_unnumbered_rule_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+| 规则编号 | 规则名称 | 规则性质 | 业务动机 | 适用对象与范围 | 输入事实 | 当 | 则 | Owner | 正例 / 边界例 / 反例 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| R-001 | 审核裁决 | 场景裁决规则 | 防止终态被覆盖 | SCN-001 / 待审申请 | 申请状态 | 申请待审 | 记录结论 | 运营负责人 | 待审可裁决；终态保持；非待审禁止 |
+
+规则名称：未完成的无编号规则。
+规则性质：场景裁决规则。
+
+产品接口抽象说明业务契约、输入、输出、失败语义和责任边界。
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if "rule_contract_incomplete" not in missing_groups("prd", numbered_table_and_unnumbered_rule_prd):
+        failures.append("prd: numbered table unexpectedly hid an incomplete unnumbered rule")
+    state_metric_prd = SELF_TESTS["prd"][0].replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。",
+        "目标：保证审核结论可追溯；非目标：不优化处理时长。成功指标：基线为部分通过结论无审计记录；目标状态为所有通过结论均有审计记录；观察窗口为上线首个发布周期；Owner 为运营负责人。",
+        1,
+    )
+    if "success_metric_incomplete" in missing_groups("prd", state_metric_prd):
+        failures.append("prd: state-based success metric unexpectedly failed")
+    non_goal_target_prd = SELF_TESTS["prd"][0].replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。",
+        "目标：保证审核结论可追溯；非目标为不改结算规则。成功指标：当前基线为 12%；观察窗口为上线 30 天内；Owner 为运营负责人。",
+        1,
+    )
+    if "success_metric_incomplete" not in missing_groups("prd", non_goal_target_prd):
+        failures.append("prd: non-goal text unexpectedly satisfied success target")
+    goal_leak_metric_prd = SELF_TESTS["prd"][0].replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。",
+        "目标为缩短审核处理时间；非目标：不改结算规则。成功指标：当前基线为 24 小时；观察窗口为上线后连续 30 天；Owner 为运营负责人。",
+        1,
+    )
+    if "success_metric_incomplete" not in missing_groups("prd", goal_leak_metric_prd):
+        failures.append("prd: section goal unexpectedly satisfied the success metric target")
+    empty_metric_fields_prd = SELF_TESTS["prd"][0].replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。",
+        "目标：缩短审核处理时间；非目标：不改结算规则。成功指标：基线：；目标值：；观察窗口：；Owner：。",
+        1,
+    )
+    if "success_metric_incomplete" not in missing_groups("prd", empty_metric_fields_prd):
+        failures.append("prd: empty success metric fields unexpectedly passed")
+    scoped_ambiguous_rule_prd = SELF_TESTS["prd"][0].replace(
+        "规则编号：R-001。规则名称：待审申请裁决。规则性质：场景裁决规则。业务动机：防止终态被重复操作覆盖。适用场景 / 步骤：SCN-001 / 审核裁决。适用对象与范围：待审申请。输入事实：申请状态和材料完整性。当：申请处于待审状态且材料完整。则：记录通过或驳回结论。Owner：运营负责人。正例 / 边界例 / 反例：待审申请可裁决；终态重复提交保持原结果；非待审申请不得生成新结论。",
+        "规则编号：R-001。规则名称：高优先级裁决。规则性质：场景裁决规则。业务动机：缩短高优先级申请等待。适用场景 / 步骤：SCN-001 / 审核裁决。适用对象与范围：高优先级待审申请。输入事实：申请状态和优先级。当：申请需要及时裁决，及时：30 分钟内。则：记录通过或驳回结论。Owner：运营负责人。正例 / 边界例 / 反例：高优先级待审可裁决；终态保持；非待审禁止。\n"
+        "规则编号：R-002。规则名称：普通申请裁决。规则性质：场景裁决规则。业务动机：形成普通申请结论。适用场景 / 步骤：SCN-001 / 审核裁决。适用对象与范围：普通待审申请。输入事实：申请状态和优先级。当：申请需要及时裁决。则：记录通过或驳回结论。Owner：运营负责人。正例 / 边界例 / 反例：普通待审可裁决；终态保持；非待审禁止。",
+        1,
+    )
+    if "ambiguous_rule_language" not in missing_groups("prd", scoped_ambiguous_rule_prd):
+        failures.append("prd: one rule definition unexpectedly covered another rule")
+    precise_deadline_rule_prd = SELF_TESTS["prd"][0].replace(
+        "当：申请处于待审状态且材料完整。",
+        "当：申请需要及时裁决，及时：当日营业结束前。",
+        1,
+    )
+    if "ambiguous_rule_language" in missing_groups("prd", precise_deadline_rule_prd):
+        failures.append("prd: precise nonnumeric deadline unexpectedly failed")
     named_scenario_prd = (
         SELF_TESTS["prd"][0]
         .replace("### SCN-001 运营审核申请", "### 业务场景：运营审核申请", 1)
@@ -1011,23 +1501,50 @@ def run_self_test() -> int:
     dangling_acceptance_prd = SELF_TESTS["prd"][0].replace("对应场景：SCN-001", "对应场景：SCN-999", 1)
     if "undefined_scenario_reference" not in missing_groups("prd", dangling_acceptance_prd):
         failures.append("prd: undefined acceptance scenario unexpectedly passed")
-    unbound_rule_prd = SELF_TESTS["prd"][0].replace(
-        "规则性质：场景裁决规则。适用场景 / 步骤：SCN-001 / 审核裁决。",
-        "规则说明：相关规则见场景中的跨场景不变量说明。",
-        1,
+    unbound_rule_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+规则编号：R-001。规则名称：待审申请裁决。规则性质：场景裁决规则。
+当：申请处于待审状态。则：记录通过或驳回结论。Owner：运营负责人。
+正例 / 边界例 / 反例：待审可裁决；终态保持；非待审禁止。
+产品接口抽象说明业务契约、输入、输出、失败语义和责任边界。
+
+""",
+        SELF_TESTS["prd"][0],
     )
     if "rule_scope_missing" not in missing_groups("prd", unbound_rule_prd):
         failures.append("prd: rule scope outside the rule section unexpectedly passed")
-    matrix_rule_prd = SELF_TESTS["prd"][0].replace(
-        "规则性质：场景裁决规则。适用场景 / 步骤：SCN-001 / 审核裁决。触发与判断条件：只有待审申请可裁决；审批结论必须记录版本和验收样例。产品接口抽象说明业务契约、输入、输出和失败语义。\n",
-        "| 规则编号 | 规则名称 | 规则性质 | 适用场景 / 步骤 | 触发条件 | 判断逻辑 | 验收样例 |\n"
-        "| --- | --- | --- | --- | --- | --- | --- |\n"
-        "| R-001 | 审核裁决 | 场景裁决规则 | SCN-001 / 审核裁决 | 申请待审 | 记录结论版本 | 重复审批不改变终态 |\n"
-        "产品接口抽象说明业务契约、输入、输出和失败语义。\n",
-        1,
+    matrix_rule_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+| 规则编号 | 规则名称 | 规则性质 | 业务动机 | 适用场景 / 步骤 | 适用对象与范围 | 输入事实 | 当 | 则 | Owner | 正例 / 边界例 / 反例 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| R-001 | 审核裁决 | 场景裁决规则 | 防止终态被覆盖 | SCN-001 / 审核裁决 | 待审申请 | 申请状态 | 申请待审 | 记录结论 | 运营负责人 | 待审可裁决；终态保持；非待审禁止 |
+
+产品接口抽象说明业务契约、输入、输出和失败语义。
+
+""",
+        SELF_TESTS["prd"][0],
     )
     if missing_groups("prd", matrix_rule_prd):
         failures.append("prd: rule matrix with scenario scope unexpectedly failed")
+    external_matrix_rule_prd = re.sub(
+        r"(?ms)^## 七、业务规则与接口抽象.*?(?=^## 八、数据与风险)",
+        """## 七、业务规则与接口抽象
+
+| 规则编号 | 规则名称 | 规则性质 | 业务动机 | 适用场景 / 步骤 | 适用对象与范围 | 输入事实 | 当 | 则 | Owner | 正例 / 边界例 / 反例 | 来源 | 版本 | 生效期 | 未确认前处理 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| R-EXT-001 | 外部资质审核 | 版本化 / 外部规则 | 使用有效政策裁决 | SCN-001 / 审核裁决 | 待审申请 | 申请材料和规则状态 | 规则有效且材料完整 | 记录结论 | 业务负责人 | 有效时通过；失效时待确认；缺材料驳回 | 外部政策 | 2026.1 | 2026-08-01 起 | 保持待专业确认 |
+
+产品接口抽象说明业务契约、输入、输出和失败语义。
+
+""",
+        SELF_TESTS["prd"][0],
+    )
+    if missing_groups("prd", external_matrix_rule_prd):
+        failures.append("prd: complete external rule matrix unexpectedly failed")
     dangling_rule_prd = SELF_TESTS["prd"][0].replace(
         "适用场景 / 步骤：SCN-001 / 审核裁决",
         "适用场景 / 步骤：SCN-999 / 审核裁决",

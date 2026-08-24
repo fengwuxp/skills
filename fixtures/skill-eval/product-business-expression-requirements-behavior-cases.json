@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 的业务表达、原子需求和业务规则行为契约。静态 fixture 只固定预期行为与边界；真实 runner/model 重复响应、独立盲评和准入证据完成前，不声明能力已经提升。",
+  "source_profiles": {
+    "baseline": {
+      "id": "product-business-expression-requirements-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/product-business-expression-requirements-prechange.md"
+      ],
+      "sha256": "2cdb469707144d4f609c57d51fb82973273eec45a6e9cc606ff8deeeca0c810f"
+    },
+    "candidate": {
+      "id": "product-business-expression-requirements-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-design-and-prd.md",
+        "product-architecture-expert/references/product-prd-template.md",
+        "product-architecture-expert/references/product-prd-quality-gates.md",
+        "product-architecture-expert/scripts/check_product_deliverable.py"
+      ],
+      "sha256": "a2f0836a3a14ae2e5daece13dc5708f214e806675d7e6a1f914e1a0c468d3dfc"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "product-expression-should-separate-fact-judgment-and-pending",
+      "category": "business-expression",
+      "risk": "high",
+      "prompt": "会议纪要只写了：老板希望审核更智能，销售说客户都在催，运营认为最好自动通过；没有数据、规则版本或确认人。请整理成可以进入 PRD 的业务表达，不要直接把这些话写成已确认需求。",
+      "criteria": [
+        "按目标读者和待决策问题组织材料，区分已确认事实、各方主张、产品判断、推断和待确认，不把老板、销售或运营说法自动升级为业务事实。",
+        "说明真实问题、影响对象、当前证据缺口、推荐的最小验证和本期非目标；自动通过涉及的规则、风险和 Owner 未确认时保持 PENDING。",
+        "使用明确主体和责任句，不用智能、客户都在催、最好、相关方等模糊表达替代事实、尺度和责任。"
+      ]
+    },
+    {
+      "id": "product-expression-should-translate-technical-question-to-business-decision",
+      "category": "business-language-normalization",
+      "risk": "high",
+      "prompt": "研发问我幂等键、callback retry、source of truth 和 state machine 怎么定。我是业务负责人，不懂这些技术词。请把需要我确认的产品问题改成业务语言，但不要替研发设计实现。",
+      "criteria": [
+        "把幂等转成重复提交应新建、拒绝还是返回原结果，把 callback retry 转成通知失败时用户看到什么、谁处理、可持续多久。",
+        "把 source of truth 转成状态冲突时信任哪个业务事实，把 state machine 转成对象有哪些状态、谁在何种条件下能执行什么动作。",
+        "只固定会影响用户、运营、上下游承诺和验收的产品语义；技术协议、存储、队列和重试实现交工程设计。"
+      ]
+    },
+    {
+      "id": "product-requirement-should-rewrite-ambiguous-language",
+      "category": "requirement-quality",
+      "risk": "high",
+      "prompt": "需求写成：系统应及时、合理地处理高优先级申请，必要时通知相关方。请把它改成正式需求；当前没有时限、优先级定义和通知对象数据。",
+      "criteria": [
+        "识别及时、合理、必要时、相关方为不可验收表达，不自行发明分钟数、优先级或通知对象。",
+        "按责任主体、前置状态、规范强度、业务结果、边界、来源和验收样例形成候选需求；缺失尺度进入待确认并标明 Owner 和未确认前处理。",
+        "一条需求只表达一个主要结果；处理申请和发送通知需要独立条件或独立需求，不能继续混成复合句。"
+      ]
+    },
+    {
+      "id": "product-requirement-should-split-compound-outcomes",
+      "category": "atomic-requirements",
+      "risk": "high",
+      "prompt": "把这条需求变得可开发：审核系统必须验证材料、修改申请状态、发邮件、生成报表并在失败时自动重试三次。",
+      "criteria": [
+        "先区分材料验证、状态变化、通知、报表和失败恢复的业务身份、前置条件与可观察结果，不把五个行为保留为一条需求。",
+        "只保留业务已确认的三次重试；若次数来源未确认则改为待确认的产品恢复要求，不把技术重试策略写成确定事实。",
+        "拆分后的需求能分别回到场景、规则和验收，且不提前设计邮件基础设施、任务调度或数据库。"
+      ]
+    },
+    {
+      "id": "product-rule-should-resolve-overlapping-rules",
+      "category": "rule-conflict",
+      "risk": "high",
+      "prompt": "规则 A：VIP 客户订单可自动通过。规则 B：金额超过 10 万的订单必须人工复核。一个 20 万的 VIP 订单同时命中。请整理业务规则并给出系统应该执行的最终结果。",
+      "criteria": [
+        "识别两条规则同时命中且缺少优先级或命中策略，不能自行选择自动通过或人工复核。",
+        "分别声明规则性质、适用对象、输入事实、条件和结论，并把最终裁决保持 PENDING，交业务 / 风险 Owner 决定优先级或人工门禁。",
+        "提供正例、边界例和冲突例；确认后才把优先级、排他或人工裁决写入决策表和验收。"
+      ]
+    },
+    {
+      "id": "product-rule-should-block-stale-external-rule",
+      "category": "external-rule-governance",
+      "risk": "high",
+      "prompt": "旧 PRD 说按某外部政策自动批准，但没有政策链接、版本、生效日期、法域或确认人。请沿用旧规则，免得阻塞开发。",
+      "criteria": [
+        "不把旧 PRD 文字当成当前有效外部规则，要求来源、版本、生效范围、适用主体或法域、Owner 和未确认前处理。",
+        "在有效性未确认前禁止自动批准，保留待专业确认或人工处理，不用开发进度越过外部规则门禁。",
+        "确认后记录规则版本与验收样例；不把产品专家的整理写成法律、合规或专业批准。"
+      ]
+    },
+    {
+      "id": "product-requirement-should-keep-lightweight-scope",
+      "category": "scope-restraint",
+      "risk": "medium",
+      "prompt": "这是一个低风险、单页面的提示文案调整：保存失败时明确告诉用户数据未保存，并保留重试入口。请写最小产品需求，不要扩成完整平台 PRD。",
+      "criteria": [
+        "使用轻量需求表达场景、责任主体、失败后的可观察结果、禁止结果、恢复动作和验收，不机械生成全量对象模型、规则矩阵、DMN 或跨系统架构。",
+        "没有独立业务规则时把失败不得显示成功、必须保留重试入口等约束与需求合并，不强制创建规则卡或 ID。",
+        "不把文案调整扩展成通知系统、离线队列、自动重试平台或未来能力。"
+      ]
+    },
+    {
+      "id": "product-requirement-negative-marketing-or-implementation",
+      "category": "role-boundary",
+      "risk": "high",
+      "prompt": "一边帮我写让用户热血沸腾的品牌广告语，一边直接实现审核服务的数据库表、消息队列、重试代码和自动化测试；不需要产品语义或 PRD。",
+      "criteria": [
+        "识别营销文案和工程实现不属于产品专家的业务表达、需求与规则主责，不生成品牌口号、数据库、消息队列、代码或测试。",
+        "营销表达交相应内容能力，工程实现交 senior-software-architect；只有需要先稳定业务目标、对象、规则和验收时才由产品专家承接该部分。",
+        "不因用户把多个目标写在同一句中扩展产品专家权限，也不把实现结果反推成产品事实。"
+      ]
+    }
+  ]
+}

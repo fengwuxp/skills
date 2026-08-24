@@ -146,7 +146,15 @@
 - NN/g 文章《Service Blueprints: Definition》：`https://www.nngroup.com/articles/service-blueprints-definition/`。2026-06-01 已读取公开页面；公开内容用于参考服务蓝图把客户动作、前台动作、后台动作、支撑流程和证据/物料关联到特定用户旅程；不复制文章图示、案例、模板或课程材料。
 - draw.io 官方 GitHub 集成文档：`https://www.drawio.com/docs/integrations/github/`。2026-06-01 已读取公开页面；公开内容用于参考可编辑图资产与代码/文档同库维护、GitHub 权限边界和文件大小提示；不复制工具文档、集成步骤或品牌表达。
 - NASA SWE-052 Bidirectional Traceability：`https://swehb.nasa.gov/x/AwIfBg`。公开内容用于参考需求、设计、代码和测试之间的双向追踪；本仓库只吸收需求ID、验收种子ID、质量属性ID 和后续验证资产映射，不复制 NASA 流程或表述。
-- GitHub 仓库 `microsoft/hve-core` 的 `requirements-author`：`https://github.com/microsoft/hve-core/tree/main/skills/requirements-author`。2026-08-21 已读取公开 `SKILL.md`、`references/traceability-naming.md` 和 `references/traceability-matrix.md`，仓库声明许可证为 CC-BY-4.0。公开内容用于参考沿用项目稳定 ID、用 `required / target / informational / optional` 表达关系姿态，以及在交接前检查漏追踪和未知引用；本仓库将其收敛为跨应用原型范围规划的三张本地 Markdown 表与 fail-closed 检查，不安装该 Skill，不复制原文、模板、平台字段或其完整需求工程流程。
+- GitHub 仓库 `microsoft/hve-core` 的 `requirements-author`：`https://github.com/microsoft/hve-core/tree/main/.github/skills/project-planning/requirements-author`。2026-08-21 已读取公开 Skill 与追踪 reference；2026-08-24 复核当前路径、Skill 1.1、CC-BY-4.0 声明、BRD/PRD 生命周期、需求-验收-目标追踪和 EARS 可选表达。公开内容用于参考稳定 ID、关系姿态、漏追踪检查、原子需求和验收连接；不安装该 Skill，不复制模板、阈值、状态机、平台字段或完整治理流程。
+- IREB CPRE Foundation Level Syllabus 3.3.0：`https://hub.ireb.org/media/pages/resources/cpre-foundation-level-syllabus/9c084b1cfd-1787039954/cpre_foundationlevel_syllabus_en_v.3.3.0.pdf`。2026-08-24 实际读取公开 PDF。吸收需求适切、必要、无歧义、自包含、可理解、可验证，以及多需求一致、非冗余、可修改、可追踪等质量维度；吸收短句、统一术语、避免模糊表达和模板不能替代内容判断的边界，不复制课程正文、图表或完整方法。
+- Business Rules Manifesto：`https://www.businessrulesgroup.org/brmanifesto.htm`。2026-08-24 实际读取公开正文。吸收规则独立于流程、基于术语和事实、声明式表达、业务可校验和规则间一致性；不复制正文，不引入形式逻辑、规则引擎或规则执行平台。
+- OMG DMN 1.5：`https://www.omg.org/spec/DMN/1.5`。2026-08-24 读取官方规范页和公开 PDF 中的决策、输入、知识来源与决策表示例。只吸收复杂规则使用输入、输出、规则行和命中策略的可选表达；不要求所有 PRD 使用 DMN，不绑定工具或实现平台。
+- RFC 2119：`https://datatracker.ietf.org/doc/rfc2119/`。2026-08-24 读取 IETF 官方页面。只借用绝对要求、默认要求和可选行为的规范强度分级，并转译为本项目中文约定；不宣称 RFC 写作规则直接适用于所有 PRD。
+- Cucumber Example Mapping：`https://cucumber.io/docs/bdd/example-mapping/`。2026-08-24 读取公开正文。吸收故事、规则、具体例子和未决问题的澄清关系；不安装 Cucumber，不强制 Gherkin、固定会议形式或彩色卡片。
+- GitHub 仓库 `product-on-purpose/pm-skills`：`https://github.com/product-on-purpose/pm-skills`。2026-08-24 读取 `deliver-prd`、`deliver-acceptance-criteria`、`deliver-edge-cases` 的公开 Skill，仓库声明 Apache-2.0。吸收 PRD、故事级验收和全功能边界场景的职责分离，以及条件式输出；不复制模板、示例、完整 Skill 包或外部记忆写回流程。
+- GitHub 仓库 `linyindong/platform-product-skills`：`https://github.com/linyindong/platform-product-skills`。2026-08-24 读取 `platform-prd-builder`、`platform-prd-reviewer` 和 `platform-flow-modeler`。吸收 PM Input Normalizer、把技术问题翻译成业务问题、具体矛盾优先评审和 flow evidence；未单独核验许可证，不复制正文或实现，不安装仓库。
+- `mattpocock/skills` 的 `to-prd`：`https://www.skills.sh/mattpocock/skills/to-prd`。2026-08-24 读取 skills.sh 展示的 Skill 正文并核对 GitHub 源仓库。只参考项目领域词汇和现有事实源优先；拒绝“不访谈直接合成”、自动发布 Issue 和自动加标签等越过事实补齐与外部写入授权的行为，不安装该 Skill。
 
 ## 提炼边界
 
