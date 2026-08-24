@@ -1,4 +1,11 @@
 {
-  "status": "installable",
-  "blockers": []
+  "status": "candidate",
+  "updated_at": "2026-08-24",
+  "blockers": [
+    {
+      "id": "DA-001",
+      "summary": "通俗视觉讲解尚无同一 runner/model 的 baseline/candidate 重复响应、独立盲评与目标读者理解证据",
+      "owner": "仓库 Owner / 独立 Checker / 目标读者"
+    }
+  ]
 }

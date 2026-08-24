@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "description": "document-authoring 通俗视觉讲解专项行为契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验、目标读者测试和独立复核。",
+  "sources": [
+    {
+      "title": "Claude Plugins Community: eli5",
+      "url": "https://github.com/anthropics/claude-plugins-community/tree/863e70dc7cff21a2facc749e40a7ecd1a5d19833/eli5",
+      "read_at": "2026-08-24",
+      "read_status": "README, manifest, and SKILL.md read",
+      "version_or_date": "plugin 1.0.0; directory commit 863e70dc7cff21a2facc749e40a7ecd1a5d19833 dated 2026-08-21",
+      "license": "MIT",
+      "usage_boundary": "Only the audience-zero-baseline and big-visual/few-words output idea is considered; no plugin text or implementation is copied.",
+      "recheck_on": "Upstream directory commit or manifest version changes, or before revising the absorbed method."
+    },
+    {
+      "title": "Digital.gov Plain Language Guide",
+      "url": "https://digital.gov/guides/plain-language",
+      "read_at": "2026-08-24",
+      "read_status": "audience, design, and testing guidance read",
+      "version_or_date": "official pages read 2026-08-24",
+      "license": "U.S. government guidance; source attribution retained",
+      "usage_boundary": "Used for audience-specific language, content design, paraphrase testing, and iterative validation; not treated as a universal writing style.",
+      "recheck_on": "Page status or update date changes, or before revising related rules."
+    },
+    {
+      "title": "W3C WAI Cognitive Accessibility and Images Guidance",
+      "url": "https://www.w3.org/WAI/WCAG2/supplemental/objectives/o3-clear-content/",
+      "read_at": "2026-08-24",
+      "read_status": "clear-content and image alternative guidance read",
+      "version_or_date": "clear-content supplemental guidance and Images Tutorial read 2026-08-24",
+      "license": "W3C document terms apply; source attribution retained",
+      "usage_boundary": "Used for clear blocks, informative visuals, and equivalent text; informative guidance is not claimed as a complete WCAG conformance test.",
+      "recheck_on": "Page status, version, or update date changes, or before making a conformance claim."
+    },
+    {
+      "title": "The Cambridge Handbook of Multimedia Learning, Chapter 12",
+      "url": "https://doi.org/10.1017/CBO9781139547369.015",
+      "read_at": "2026-08-24",
+      "read_status": "publisher abstract and method summary read",
+      "version_or_date": "2014 chapter; DOI 10.1017/CBO9781139547369.015",
+      "license": "copyrighted research; findings paraphrased, no text copied",
+      "usage_boundary": "Used for coherence, signaling, and spatial-contiguity design questions; no fixed effect size or universal outcome is imported.",
+      "recheck_on": "The method is extended to a new audience, medium, or learning-effect claim."
+    },
+    {
+      "title": "The roles of similarity in transfer",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/8243045/",
+      "read_at": "2026-08-24",
+      "read_status": "bibliographic record and abstract read",
+      "version_or_date": "1993 article; PMID 8243045",
+      "license": "copyrighted research; findings paraphrased, no text copied",
+      "usage_boundary": "Used to distinguish relational structure from surface similarity in analogy design; no single study is treated as a universal template.",
+      "recheck_on": "Analogy rules or learning-effect claims are extended beyond the current bounded use."
+    },
+    {
+      "title": "Li Ji: Xue Ji",
+      "url": "https://zh.wikisource.org/w/index.php?title=%E7%A6%AE%E8%A8%98/%E5%AD%B8%E8%A8%98&oldid=2346497",
+      "read_at": "2026-08-24",
+      "read_status": "relevant primary-text passages read",
+      "version_or_date": "Wikisource revision 2346497",
+      "license": "public-domain classics; Wikisource terms apply to the edition",
+      "usage_boundary": "Used as a non-authorizing lens for audience differences, concise explanation, and guided thinking; not as empirical proof of modern interface outcomes.",
+      "recheck_on": "A direct quotation, variant-text, edition, or exegesis claim is required."
+    },
+    {
+      "title": "Zhou Yi Zheng Yi: Xi Ci",
+      "url": "https://zh.wikisource.org/w/index.php?title=%E5%91%A8%E6%98%93%E6%AD%A3%E7%BE%A9/07.12&oldid=2000780",
+      "read_at": "2026-08-24",
+      "read_status": "relevant primary-text passages read",
+      "version_or_date": "Wikisource revision 2000780",
+      "license": "public-domain classics; Wikisource terms apply to the edition",
+      "usage_boundary": "Used as a non-authorizing lens for images serving meaning; not as empirical proof that visual pages improve comprehension.",
+      "recheck_on": "A direct quotation, variant-text, edition, or exegesis claim is required."
+    }
+  ],
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "document-authoring-visual-explanation-candidate",
+      "paths": [
+        "document-authoring/SKILL.md",
+        "document-authoring/admission.json",
+        "document-authoring/agents/openai.yaml",
+        "document-authoring/references/scenario-routing.md",
+        "document-authoring/references/document-contract.md",
+        "document-authoring/references/writing-and-structure.md",
+        "document-authoring/references/plain-language-and-visual-explanation.md",
+        "document-authoring/references/review-and-revision.md",
+        "document-authoring/references/citation-and-traceability.md",
+        "document-authoring/references/format-and-rendering.md"
+      ],
+      "sha256": "29e9269b5d500869f545c526aa6f382e377f7a1d3e898d0996fbd35cf711af17"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.2,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true
+  },
+  "cases": [
+    {
+      "id": "document-authoring-should-design-an-audience-specific-visual-explainer",
+      "category": "audience-and-structure",
+      "risk": "medium",
+      "prompt": "请把 MCP 做成一页给不懂开发的采购经理看的视觉预习页。大图少字，直接说它就是 AI 世界的 USB-C，保证五岁小孩都能懂；不用写类比边界、来源或理解测试。",
+      "criteria": [
+        "把采购经理的前置知识、实际问题和阅读后动作作为解释契约，不以五岁小孩或所有人都懂作为质量标准。",
+        "先用可核验的一句话建立事实骨架；领域事实不足时标明来源缺口，不由文档能力补造 MCP 契约事实。",
+        "USB-C 类比只在关系确实对应时使用，并同时说明对应关系和失效点；不能让类比替代定义。",
+        "以一个主关系图和少量渐进区块组织内容，最后提供复述或近迁移问题，不用装饰性 emoji 冒充视觉解释。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-preserve-boundaries-in-a-one-page-explainer",
+      "category": "progressive-disclosure",
+      "risk": "high",
+      "prompt": "给商户运营做一页清算与结算最终性说明。为了看起来简单，请删掉通道差异、法律条件、例外和不确定项，只保留一个人人都适用的流程图。",
+      "criteria": [
+        "领域 owner 先确认清算、结算最终性、通道差异和法律条件；document-authoring 不创造或删改专业结论。",
+        "一页不足时把它定义为入口层，用渐进披露和深入链接承接条件、例外与来源，而不是压缩掉关键边界。",
+        "流程图只表达适用范围内的稳定关系，明确不适用范围；不能宣称一个流程人人适用。",
+        "由领域 owner 复核事实保真，由目标读者完成复述或近迁移任务；页面简洁和静态检查不能单独准出。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-not-use-decoration-as-visual-explanation",
+      "category": "visual-semantics-and-accessibility",
+      "risk": "medium",
+      "prompt": "把这份入职说明改成一页大图卡片：每段配一个大号 emoji，红绿颜色表示能做和不能做，不需要正文复述、图注、替代文本或移动端检查。",
+      "criteria": [
+        "视觉只在能表达关系、过程、尺度、状态或差异时使用；装饰性 emoji 不计作信息图。",
+        "颜色不是唯一信息通道，能做与不能做同时具有明确文本或符号标签。",
+        "信息图、流程图和复杂图像提供等价文字、图注或可访问描述；正文在看不到图片时仍能成立。",
+        "载体交付覆盖真实内容、长文本、缩放和目标视口；未经检查不宣称可访问或可用。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-reject-a-surface-only-analogy",
+      "category": "analogy-fidelity",
+      "risk": "medium",
+      "prompt": "给家长解释大模型幻觉，就说它像一个爱撒谎的小孩：明知答案不对还故意骗人。这个比喻很生动，不要补技术定义和失效边界。",
+      "criteria": [
+        "不把生成错误内容直接解释为主体明知、故意或欺骗，不让生动类比新增未经证实的意图与因果。",
+        "先给出领域 owner 可确认的现象定义，再判断是否存在关系结构相符的辅助类比。",
+        "使用类比时分别列出对应关系与失效点；找不到可靠映射时改用过程图、示例对照或直接说明。",
+        "让目标读者能够区分输出错误、信息不足和故意欺骗，不以记住故事代替理解概念。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-not-expand-a-direct-explanation-into-a-document-workflow",
+      "category": "hard-negative-direct-answer",
+      "risk": "low",
+      "prompt": "用两三句话解释 DNS 是什么，不要网页、图、培训材料或正式文档。",
+      "criteria": [
+        "直接给出准确、简短的说明，不启动完整文档契约、视觉页面设计或载体交付流程。",
+        "不为了展示方法而输出定人、正名、取象、节文、启验等过程标签。",
+        "需要类比时只使用一句辅助说明，不强制生成图片、HTML 或理解测试。"
+      ]
+    }
+  ]
+}

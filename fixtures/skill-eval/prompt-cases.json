@@ -3900,6 +3900,35 @@
       "negative_reason": "任务先要求发明支付领域事实与统一状态，文档撰写不能越权；应由 payment-expert 基于当前来源、法域和 Owner 稳定领域口径，document-authoring 只能在事实确认后组织培训材料。"
     },
     {
+      "id": "document-authoring-should-trigger-visual-explainer",
+      "skill": "document-authoring",
+      "query": "MCP 的定义、能力边界和来源已经由技术 Owner 确认。请整理成一页给不懂开发的采购经理看的视觉预习页，让他能够解释 MCP 解决什么问题、USB-C 类比哪里成立和哪里失效，并完成一个近迁移判断。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "进入 document-authoring 的通俗视觉讲解路径，读取 plain-language-and-visual-explanation.md；以采购经理的前置知识、实际问题和阅读后动作建立讲解契约，在技术 Owner 已确认事实内完成一句正名、主关系图和渐进信息区块。USB-C 只作为辅助类比，明确目标概念关系、对应关系和失效点，不以类比替代定义；视觉必须表达关系而非只放大 emoji。最后提供复述或近迁移任务，并区分事实保真、目标读者理解、视觉语义和真实载体检查。"
+    },
+    {
+      "id": "document-authoring-negative-direct-short-explanation",
+      "skill": "document-authoring",
+      "query": "用两三句话解释 DNS 是什么，不要网页、图、培训材料或正式文档。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "negative_reason": "用户只要准确的简短解释，并明确排除网页、图、培训和正式文档；当前 Agent 直接回答，不加载 document-authoring 的文档契约、视觉讲解和载体验证流程。"
+    },
+    {
       "id": "document-authoring-should-review-and-deliver-docx",
       "skill": "document-authoring",
       "query": "使用 $document-authoring 合并两份制度草案，先指出冲突并形成最终版，再输出 DOCX；需要保留引用和版本信息，并逐页检查表格、分页和文本截断。",

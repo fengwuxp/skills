@@ -245,6 +245,7 @@ echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
 document-authoring/scripts/check_document_style.py --self-test
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-visual-explanation-behavior-cases.json"
 document_humanization_eval_dir="${tmp_dir}/document-humanization-eval"
 mkdir -p "${document_humanization_eval_dir}"
 if scripts/evaluate-skill-behavior.py blind \

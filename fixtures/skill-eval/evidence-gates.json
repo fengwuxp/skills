@@ -12,6 +12,9 @@
         "responses": "fixtures/skill-eval/document-authoring-humanization-responses.jsonl",
         "scores": "fixtures/skill-eval/document-authoring-humanization-scores.jsonl",
         "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/document-authoring-visual-explanation-behavior-cases.json"
       }
     ],
     "fiction-visual-designer": [

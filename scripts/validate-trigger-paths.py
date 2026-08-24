@@ -361,6 +361,7 @@ ui_design_responsive_media_behavior_cases = "fixtures/skill-eval/ui-design-respo
 codegen_skill = "java-service-code-generator/SKILL.md"
 document_skill = "document-authoring/SKILL.md"
 document_agent = "document-authoring/agents/openai.yaml"
+document_admission = "document-authoring/admission.json"
 document_checker = "document-authoring/scripts/check_document_deliverable.py"
 document_style_checker = "document-authoring/scripts/check_document_style.py"
 document_routing = "document-authoring/references/scenario-routing.md"
@@ -1178,11 +1179,20 @@ check(
         for path in [
             product_agent,
             senior_agent,
-            document_agent,
             hanzi_agent,
             "java-service-code-generator/agents/openai.yaml",
             wind_skill_agent,
         ]
+    )
+    and (
+        (
+            json.loads(read(document_admission)).get("status") == "installable"
+            and contains(document_agent, "allow_implicit_invocation: true")
+        )
+        or (
+            json.loads(read(document_admission)).get("status") == "candidate"
+            and contains(document_agent, "allow_implicit_invocation: false")
+        )
     )
     and has_all(
         wise_agent_skill,
