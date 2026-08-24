@@ -40,6 +40,8 @@ description: |
 
 ## 场景路由
 
+- **Figma 与代码双向对账**：用户要求先改设计再改代码、代码写回 Figma、逐节点对齐或恢复跨轮 writeback 时，读取 references/design-code-reconciliation.md，先声明权威端、同步方向、exact node、code anchor、版本、Owner 和授权；双端均变化时标为 conflict，不互相覆盖。单向新建设计不强制生成对账契约。
+
 - **新界面或重设计**：读取 `references/design-and-review-workflow.md` 的“一、任务与变更类型”至“七、交付契约”，先稳定 brief、结构和方向，再进入实现。
 - **局部优化或现有页面 CR**：读取同一 reference 的“评审路径”，保留既有产品语义和设计权威，按严重度给出证据与修复建议。
 - **设计基础或常见业务界面**：按需读取 `references/design-foundations.md` 或 `references/common-scenario-patterns.md`；模式用于暴露结构、状态和风险，不作为页面模板。

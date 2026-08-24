@@ -20,6 +20,8 @@
 
 ## 需要继续读取的 reference
 
+- Figma 与代码多轮双向同步、节点级漂移和待写回状态读取 design-code-reconciliation.md。
+
 - 任务结构与设计契约读取 `design-and-review-workflow.md`。
 - 完整网站的来源权威、页面命名、Page Manifest 和跨页一致性读取 `figma-design-contract.md`。
 - Figma 文件骨架、组件、变量、Auto Layout、资产登记和代码映射读取 `figma-file-engineering.md`。
@@ -118,6 +120,8 @@
 MCP 输出不是生产代码。它提供结构化上下文和参考实现信息；代码仍需适配项目、测试和工程审查。像素一致也不能替代任务、语义、状态和失败恢复验证。
 
 ## 七、代码到画布回环
+
+当回环不是一次性的单向捕获，而是 Figma 与代码都可能继续变化时，先读取 design-code-reconciliation.md。每个页面或区段必须声明 authoritative_surface、sync_mode、exact node、code anchor、版本、Owner、授权和 pending target；双方均有独立变化时保持 conflict，不能先后互相覆盖。
 
 已有可运行界面需要设计评审时，可采用官方 code-to-canvas 回环：运行目标页面，把真实 UI 捕获为可编辑 Figma frame，设计者批注或修改，再把精确 frame 链接交回工程实现。该回环适合消除“静态稿与真实代码状态不同步”，但不自动证明捕获页面覆盖了全部状态或数据。
 

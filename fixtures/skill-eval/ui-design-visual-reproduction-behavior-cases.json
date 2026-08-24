@@ -14,9 +14,10 @@
         "ui-design-expert/agents/openai.yaml",
         "ui-design-expert/references/design-draft-fidelity-review.md",
         "ui-design-expert/references/prototype-output.md",
-        "ui-design-expert/references/figma-file-engineering.md"
+        "ui-design-expert/references/figma-file-engineering.md",
+        "ui-design-expert/references/design-code-reconciliation.md"
       ],
-      "sha256": "3cac3500a51b8d222ae5eb405abf86dcccb7da0affbef709a7548439a63ea9e6"
+      "sha256": "de011961e6201d4fcff7dc3591642352eda04f5ef8dda204e96b574d8a7e3481"
     }
   },
   "rubric": {
@@ -95,6 +96,28 @@
         "先复用项目已有 Playwright，在目标项目固定浏览器、字体和视口，检查截图、换行、溢出、状态和控制台；不为本任务默认安装依赖。",
         "Storybook 只在项目已经采用或组件状态隔离确有持续价值且获得安装授权时使用；一次页面还原不建立新平台。",
         "截图差异必须人工复核，基线更新要有 Owner；像素差不能替代内容、任务、语义和错误恢复验证。"
+      ]
+    },
+    {
+      "id": "ui-design-reproduction-should-reconcile-bidirectional-drift",
+      "category": "design-code-reconciliation",
+      "risk": "high",
+      "prompt": "Figma 和 React 页面都改过了。请直接把代码覆盖回 Figma，再把 Figma 覆盖回代码，直到看起来一致。",
+      "criteria": [
+        "先声明 authoritative_surface、sync_mode、exact Figma node、code anchor、版本和 Owner；双端均变化时标为 conflict。",
+        "按 copy、geometry、asset、interaction 分离 delta，未获授权的目标只记录 pending，不覆盖任一端。",
+        "只有双端 readback 与最低充分证据闭合后才能标 aligned。"
+      ]
+    },
+    {
+      "id": "ui-design-reproduction-should-skip-reconciliation-for-one-way-design",
+      "category": "design-code-reconciliation-negative",
+      "risk": "medium",
+      "prompt": "这是一个全新的单向 Figma 页面，没有代码库，也没有回写要求。请创建页面。",
+      "criteria": [
+        "不强制生成 Design-Code Reconciliation Contract。",
+        "按普通 Figma 设计契约和写入授权推进。",
+        "不虚构 code file、code anchor 或 code revision。"
       ]
     }
   ]
