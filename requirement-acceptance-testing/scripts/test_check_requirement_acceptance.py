@@ -66,6 +66,11 @@ class RequirementAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "ui-interaction"):
             VALIDATOR.parse_report(path.read_text(encoding="utf-8"))
 
+    def test_source_contract_cannot_prove_visual_fidelity(self) -> None:
+        path = SKILL_ROOT / "fixtures" / "acceptance-invalid-source-contract-overclaim.md"
+        with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "visual-fidelity"):
+            VALIDATOR.parse_report(path.read_text(encoding="utf-8"))
+
     def test_high_risk_pass_requires_independent_reviewer(self) -> None:
         text = VALID.read_text(encoding="utf-8").replace(
             "independent_reviewer: acceptance-checker", "independent_reviewer: none"

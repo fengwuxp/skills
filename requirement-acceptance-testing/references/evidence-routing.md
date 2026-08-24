@@ -36,6 +36,19 @@
 - 视觉验收声明具体视口、字体、内容和状态；检查缺图、裁切、重叠、溢出、意外换行和跨页不一致。
 - 截图差异需要人工复核；更新基线是验收基线变更，必须由 Owner 确认。
 
+### 3.1 静态 UI 源码契约的边界
+
+对静态 JSX、TSX、HTML 或 CSS 的源码契约可以补充检查 section 范围、语义文案、route、breakpoint token 和明确禁止项。为减少假阳性，断言应限定目标 section 或同一对象边界，并至少用一个 mutation 证明目标错误会使检查失败。
+
+这类证据仍只观察实现结构：
+
+- 不能证明浏览器实际字体、换行、裁切、重叠、滚动或响应式布局。
+- 不能证明点击、键盘、焦点、错误恢复或数据副作用。
+- 组件重构后实现细节断言可能失效，即使用户可见行为未变。
+- 不得单独把 visual-fidelity 或 ui-interaction 判为 pass。
+
+视觉通过仍需要 design-context、声明视口的 runtime-screenshot 和独立 visual-review；交互通过仍需要 browser-trace 或 browser-assertion。缺少这些证据时按 required 条件输出 blocked 或 cant-tell，不用源码契约补成 Pass。
+
 ## 四、需求到示例
 
 复杂规则先列：规则、具体正反例、未决问题、范围外项。`Given / When / Then` 可用于表达可执行示例，但不要求引入 Cucumber，也不能用格式完整掩盖需求未定。

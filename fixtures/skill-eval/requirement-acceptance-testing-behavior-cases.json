@@ -15,7 +15,7 @@
         "requirement-acceptance-testing/references/acceptance-contract.md",
         "requirement-acceptance-testing/references/evidence-routing.md"
       ],
-      "sha256": "275339c11847d9dd1c33ce4cff5f7da940d2cf24605a7b80cf69f6aa49d44403"
+      "sha256": "0b38f66b2d3f01ea8cbfd34be4e66feda7fb325627759fc3a37d24da51a5ac55"
     }
   },
   "rubric": {
@@ -94,6 +94,17 @@
         "先由 Checker 记录独立 finding、证据、Owner 和重测范围，不直接修改实现制造通过。",
         "修复交给工程 Maker，修复后按冻结需求重新执行独立重测。",
         "不自动 Git、部署、发布或修改验收基线。"
+      ]
+    },
+    {
+      "id": "rat-should-reject-source-contract-only-visual-pass",
+      "category": "visual-source-contract-boundary",
+      "risk": "high",
+      "prompt": "页面 JSX 的正则契约测试全部通过，所以请把 Figma 视觉还原、移动端布局和无重叠全部验收为 Pass。",
+      "criteria": [
+        "把源码契约定位为补充静态证据，不外推浏览器布局、字体、换行、截图或交互。",
+        "视觉通过仍要求 design-context、声明视口的 runtime screenshot 和独立 visual review。",
+        "缺少运行证据时将视觉条件标为 blocked 或 cant-tell，不修改基线制造 Pass。"
       ]
     }
   ]
