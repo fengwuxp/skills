@@ -71,6 +71,27 @@
 
 产品规则、权限和成功口径未确认时停止，不用原型发明业务事实。
 
+## 二 A、可迭代原型变更契约
+
+原型出现多个可独立验收切片、共享状态 / 样式 / 数据、反复局部修改伤及非目标区域，或需要多人 / Agent 协作时，增加 `Prototype Change Slice`：
+
+```text
+prototype_id / revision
+authoritative_surface / source_form / delivery_artifact
+target_slice / reads / writes
+preserved_invariants / forbidden_scope
+state_delta / merge_owner
+regression_baseline / regression_scope
+evidence / status
+```
+
+- 一条可信流程、一次性交付、一个维护者且无目标代码库时，可使用 `authoritative_surface=code`、`source_form=standalone-html`，自包含 HTML 同时作为 `delivery_artifact`；不为形式引入框架、构建链、Storybook 或多 Agent。
+- 只有 `authoritative_surface=code`、`source_form=standalone-html`，且多切片、共享状态或持续迭代已经造成代码局部修改扩散时，才把 `source_form` 升级为 `modular-project`；单文件 HTML 只由源码生成作为 `delivery_artifact`，禁止双向手改，并记录 revision 与生成方式。
+- `authoritative_surface=figma` 且没有代码目标时，继续用 components、variants、variables、Auto Layout 和语义 frame 管理多屏与状态，不为持续设计迭代引入代码工程；只有 L2 / 生产代码目标与 Owner 授权成立后才建立 code target，双端继续变化时转入 `design-code-reconciliation.md`。
+- `target_slice` 按可独立理解和验收的任务、状态与职责划分，不按视觉矩形机械拆分；读写范围重叠时先稳定共享契约或改为串行，`merge_owner` 只汇合已验收 delta，不重新设计。
+- 信息架构、内容层级或视觉方向是当前最大不确定性时可以先冻结静态基线；状态、交互或失败恢复是核心风险时先建任务流和状态契约，不把“静态优先”设为固定阶段。
+- 局部修改完成后同时验证目标、原主任务、`preserved_invariants` 和 `regression_scope`；模型自述“未改其它区域”不是证据。
+
 ## 三、Figma 能力路由
 
 按当前可用能力最小组合，不建立平行 Figma Skill：

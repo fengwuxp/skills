@@ -390,6 +390,7 @@ ui_design_ant_behavior_cases = "fixtures/skill-eval/ui-design-ant-adoption-behav
 ui_design_ant_responses = "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl"
 ui_design_ant_scores = "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl"
 ui_design_visual_reproduction_behavior_cases = "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
+ui_design_prototype_evolution_behavior_cases = "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
 ui_design_workflow = "ui-design-expert/references/design-and-review-workflow.md"
 ui_design_source_map = "ui-design-expert/references/source-map.md"
 ui_design_foundations = "ui-design-expert/references/design-foundations.md"
@@ -23363,6 +23364,73 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"',
+        ],
+    ),
+)
+
+check(
+    "UI prototype evolution preserves source authority and non-target regressions",
+    (ROOT / ui_design_prototype_evolution_behavior_cases).exists()
+    and has_all(
+        ui_design_prototype,
+        [
+            "可迭代原型变更契约",
+            "Prototype Change Slice",
+            "authoritative_surface",
+            "source_form",
+            "delivery_artifact",
+            "preserved_invariants",
+            "forbidden_scope",
+            "regression_scope",
+            "禁止双向手改",
+        ],
+    )
+    and has_all(
+        ui_design_usability,
+        [
+            "变更隔离",
+            "非目标区域",
+            "全局 CSS / tokens",
+            "共享路由、数据或状态键",
+        ],
+    )
+    and has_all(
+        "senior-software-architect/references/ai-assisted-engineering.md",
+        [
+            "Prototype Change Slice",
+            "全局样式",
+            "共享路由、状态和数据结构",
+            "非目标回归",
+        ],
+    )
+    and has_all(
+        ui_design_source_map,
+        [
+            "让 AI 写原型，最怕的不是写不出来，而是改一处崩一片",
+            "VxRV9aYKSFV0omBpd649oA",
+            "产品wbp",
+            "Storybook",
+            "Playwright",
+            "GOV.UK",
+        ],
+    )
+    and has_all(
+        ui_design_prototype_evolution_behavior_cases,
+        [
+            '"mode": "non_regression"',
+            "ui-prototype-evolution-should-escalate-code-source-form",
+            "ui-prototype-evolution-should-preserve-non-target-invariants",
+            "ui-prototype-evolution-should-keep-simple-single-flow",
+            "ui-prototype-evolution-should-preserve-figma-authority",
+            "ui-prototype-evolution-should-serialize-overlapping-writes",
+            "ui-prototype-evolution-should-choose-baseline-by-uncertainty",
+            "静态 fixture 只固定源码权威",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"',
         ],
     ),
 )

@@ -181,6 +181,15 @@
 
 归位结论：Figma 是结构化主路径；墨刀、截图和 PDF 进入统一 Review Contract，但不统一各工具内部节点。该取舍以名实、时位和知止校准：证据名称必须对应实际能力，按当前工具成熟度选择不同路径，并在来源不可访问或证据不足时停止升级结论。
 
+### 四轮公开核验：可迭代原型与变更隔离（2026-08-24）
+
+- 微信文章 [《让 AI 写原型，最怕的不是写不出来，而是改一处崩一片》](https://mp.weixin.qq.com/s/VxRV9aYKSFV0omBpd649oA)：作者 `产品wbp`，账号 `深度产品手记`，页面显示发布时间为 2026-08-20 08:33；2026-08-24 常规网页读取未取得正文，随后通过 Codex in-app Browser 读取标题、作者、账号、发布时间和正文。只吸收原型源码 / 交付形态分离、局部变更读写与保护边界、非目标回归和条件化静态基线；不复制文章提示词、示例页面、图片或作者表达，也不把固定三阶段、多 AI 分工、主控人格或单文件回迁写成通用流程。
+- [Storybook interaction tests](https://storybook.js.org/docs/writing-tests/interaction-testing) 与 [visual tests](https://storybook.js.org/docs/writing-tests/visual-testing)：2026-08-24 实际读取当前公开页面。吸收 story 的初始 props / context / state、play function 用户交互和 baseline 视觉比较；不默认安装 Storybook、Vitest addon 或 Chromatic，也不把组件截图替代页面任务和业务验收。
+- [Playwright visual comparisons](https://playwright.dev/docs/test-snapshots)：2026-08-24 实际读取。吸收同一浏览器、系统、字体和渲染环境下生成与复核 baseline；不把像素差写成语义、状态或非目标区域完整性证明。
+- [GOV.UK Design System prototyping](https://design-system.service.gov.uk/get-started/prototyping/)：2026-08-24 实际读取。吸收 Prototype Kit / Design System 版本边界、现有组件复用和保存预览；不复制 GOV.UK 品牌、组件代码或工具链，也不把原型 Kit 写成所有项目的依赖。
+
+归位结论：`ui-design-expert` 持有 Prototype Change Slice、原型源码 / 分享产物和 Design QA；`senior-software-architect` 持有文件、组件、全局样式、路由、状态、数据结构与测试映射；产品专家不承担代码模块边界，`wise-agent` 也不新增主控角色。
+
 ### Responsive Media Contract（2026-08-22）
 
 - [MDN Responsive Images](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images) 与 [`<picture>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/picture)：实际读取。吸收 Art Direction 与 Resolution Switching 的区分、`picture/source/img` fallback、`srcset` 和 `sizes`；不把示例断点或素材当项目标准。

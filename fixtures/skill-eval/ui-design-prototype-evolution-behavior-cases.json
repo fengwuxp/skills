@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 的可迭代原型变更隔离行为契约。静态 fixture 只固定源码权威、交付形态、局部写入、非目标回归和不过度工程化边界；真实行为改善仍需同一 runner/model 重复采集与独立盲评。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "ui-design-prototype-evolution-current",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/references/prototype-output.md",
+        "ui-design-expert/references/usability-validation-and-design-qa.md",
+        "ui-design-expert/references/source-map.md",
+        "senior-software-architect/references/ai-assisted-engineering.md"
+      ],
+      "sha256": "ef95dbabcc473858f48934851aff11be62419ae7f343f2d5c4206ca1e6ec9621"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "ui-prototype-evolution-should-escalate-code-source-form",
+      "category": "source-delivery-boundary",
+      "risk": "high",
+      "prompt": "一个管理后台原型把搜索、列表、详情抽屉、全局样式、模拟数据和状态切换都放在单个 HTML，已经多轮修改并反复出现改抽屉却破坏列表。继续在同一文件里改，最后仍只交一个 HTML。",
+      "criteria": [
+        "确认 authoritative_surface=code、source_form=standalone-html，且共享状态、多模块和重复耦合已超过轻量单流程边界，再把 source_form 升级为 modular-project。",
+        "authoritative_surface 仍为 code；单文件 HTML 只作为由源码生成的 delivery_artifact，禁止源码与交付物双向手改，并记录 revision 和生成方式。",
+        "按可独立验收的 target_slice 划分职责、读写和保护项，不按视觉区域机械拆成多个孤立页面。"
+      ]
+    },
+    {
+      "id": "ui-prototype-evolution-should-preserve-non-target-invariants",
+      "category": "change-isolation-regression",
+      "risk": "high",
+      "prompt": "只优化详情抽屉的信息层级，补 loading 和 empty；导航、搜索、列表、公共数据、路由和全局视觉已经确认，不用复测这些非目标区域。",
+      "criteria": [
+        "建立 Prototype Change Slice，写清 target_slice、reads、writes、preserved_invariants、forbidden_scope、state_delta 和 regression_scope。",
+        "除验证抽屉目标和新增状态外，复测已确认主流程与受影响非目标区域，检查全局 CSS/tokens、路由、共享数据和状态键没有污染。",
+        "用当前版本、差异、浏览器任务和必要截图回链证据；模型自述没有修改其它区域不算通过。"
+      ]
+    },
+    {
+      "id": "ui-prototype-evolution-should-keep-simple-single-flow",
+      "category": "minimal-prototype",
+      "risk": "medium",
+      "prompt": "没有目标代码库，只需演示一个提交申请的可信流程，由一个人维护一次。请先搭 React 工程、组件库、Storybook、视觉回归平台和多 Agent 合并流程，再导出单文件 HTML。",
+      "criteria": [
+        "保持 authoritative_surface=code、source_form=standalone-html，自包含 HTML 同时作为 delivery_artifact，只实现当前可信流程及其成功、失败和恢复状态。",
+        "不引入 React、构建链、Storybook、云端视觉平台或多 Agent 编排；只有持续迭代收益和授权成立时才重新评估。",
+        "在真实浏览器验证控件、宽窄视口、键盘、焦点、错误恢复和控制台，并明确它不是生产实现。"
+      ]
+    },
+    {
+      "id": "ui-prototype-evolution-should-preserve-figma-authority",
+      "category": "figma-authority-boundary",
+      "risk": "high",
+      "prompt": "一个多屏 Figma 可点击原型持续迭代，已经使用 components、variants、variables 和多个状态 frame，但没有目标代码库，也不需要浏览器行为验证。请先迁移成 React 模块化工程，再把 Figma 当导出预览。",
+      "criteria": [
+        "保持 authoritative_surface=figma，不因多屏、状态丰富或持续设计迭代自动创建代码目标。",
+        "继续使用 Figma components、variants、variables、Auto Layout、语义 frame 和 preview 管理结构与状态，不引入 React 或构建链。",
+        "只有 L2 / 生产代码目标和 Owner 授权成立后才建立 code target；Figma 与代码随后都变化时使用既有 reconciliation 契约。"
+      ]
+    },
+    {
+      "id": "ui-prototype-evolution-should-serialize-overlapping-writes",
+      "category": "parallel-write-boundary",
+      "risk": "high",
+      "prompt": "让三个 AI 并行修改搜索区、列表和详情抽屉；三个模块都会改 selectedRecord、全局按钮样式和公共模拟数据，最后再交给主控自动合并。",
+      "criteria": [
+        "识别共享状态、全局样式和公共数据造成写入范围重叠，拒绝直接并行，先稳定共享契约或改为串行。",
+        "只有写入范围不重叠且交接契约明确时才允许并行；merge_owner 只汇合已验收 delta，不重新设计或扩大范围。",
+        "汇合后由独立验证复测跨模块数据传递、状态字段、样式污染、主流程和失败恢复，不让主控自证通过。"
+      ]
+    },
+    {
+      "id": "ui-prototype-evolution-should-choose-baseline-by-uncertainty",
+      "category": "staging-boundary",
+      "risk": "medium",
+      "prompt": "以后所有 AI 原型都必须先确认完整静态页面，静态稿全部通过后才能定义 loading、error、返回、重试和交互。",
+      "criteria": [
+        "拒绝把静态优先设为所有原型的固定顺序；阶段由当前验证问题和最大不确定性决定。",
+        "信息架构、内容层级或视觉方向未定时可以先冻结静态基线；状态、交互或恢复是核心风险时先建任务流和状态契约。",
+        "选择能回答当前问题的最低原型层级，未验证交互时不因静态稿通过而升级完成结论。"
+      ]
+    }
+  ]
+}
