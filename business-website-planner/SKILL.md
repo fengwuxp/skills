@@ -30,6 +30,8 @@ description: |
 
 ## 场景路由
 
+- **多页职责重叠**：Home、Services、About、How It Works 或 Cases 重复展开同一套内容时，读取 references/business-website-contract.md 的跨页面职责契约，为每页声明主要问题、客户价值、内容深度和 handoff，并对重复模块选择共享、摘要、深链、合并或删除；单页官网和纯视觉调整不触发拆页。
+
 - **广告、采购、电商、SaaS、制造、物流等常用业务**：读取 `references/business-type-patterns.md` 中唯一命中的适配器，不套用跨行业页面模板。
 - **公开搜索与参考学习**：读取 `references/reference-research-and-distinctiveness.md`；`public` 模式正文不可读时停止吸收，`none` 模式允许不提供 reference 记录。
 - **建议模块、指标和交接契约**：读取 `references/business-website-contract.md`；指标只使用“指标项、业务意义、参考示例值、使用者确认值”。

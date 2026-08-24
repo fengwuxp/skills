@@ -26,6 +26,31 @@
 
 关键声明必须回到业务权威、Owner 确认、真实案例、资质或其他可复核材料。`Leading`、`Global`、`Official Partner`、效果承诺、市场覆盖和客户 Logo 等强声明没有证据时删除。
 
+### 3.1 跨页面职责契约
+
+多页官网的每个模块除基础字段外，还要声明：
+
+~~~text
+page_role
+primary_question
+client_value
+content_depth: summary | decision-support | detailed
+handoff_to
+overlap_with
+overlap_disposition: none | keep-shared | summarize | deep-link | merge | remove
+~~~
+
+- page_role 表示模块主要服务的页面职责，不固定页面数量或名称。
+- primary_question 是该模块主要回答的一个客户问题；同一问题不能在多个页面以 detailed 重复展开。
+- content_depth 区分首页摘要、决策支持和详细说明，不用字数机械判断。
+- handoff_to 指向客户完成本模块后应继续阅读或执行的模块；没有下一步写 none。
+- overlap_with 使用模块 id；没有重复写 none。
+- 有 overlap_with 时必须选择非 none 的 overlap_disposition；没有重复时两项都写 none。
+- Header、Footer、品牌和共享 CTA 可以 keep-shared；业务流程、服务详情和公司说明仍需按页面职责判断。
+- 单页官网不因本契约被强制拆页；纯视觉调整不重新定义页面职责。
+
+规划结果至少能形成 Page Role Matrix 和 Module Overlap Matrix。每个页面应能用一句话说明主要问题和客户价值，且不存在未声明的 detailed 重复。
+
 ## 四、简单指标建议
 
 按业务类型和公司成熟度给出三至六项：

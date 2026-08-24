@@ -146,6 +146,43 @@ class BusinessWebsitePlanTests(unittest.TestCase):
         with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "target_viewports"):
             VALIDATOR.parse_plan(text)
 
+    def test_valid_modules_have_distinct_page_roles(self) -> None:
+        parts = VALIDATOR.parse_plan(VALID.read_text(encoding="utf-8"))
+        self.assertEqual(
+            {item["page_role"] for item in parts.modules},
+            {"home", "services", "shared"},
+        )
+
+    def test_detailed_duplicate_primary_question_is_rejected(self) -> None:
+        path = SKILL_ROOT / "fixtures" / "business-website-plan-invalid-overlap.md"
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "primary_question.*detailed"):
+            VALIDATOR.parse_plan(path.read_text(encoding="utf-8"))
+
+    def test_overlap_reference_must_name_known_module(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "overlap_with: positioning, services",
+            "overlap_with: missing-module",
+        )
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "overlap_with.*unknown"):
+            VALIDATOR.parse_plan(text)
+
+    def test_overlap_requires_non_none_disposition(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "overlap_disposition: keep-shared",
+            "overlap_disposition: none",
+        )
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "overlap_disposition"):
+            VALIDATOR.parse_plan(text)
+
+    def test_handoff_reference_must_name_known_module(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "handoff_to: services",
+            "handoff_to: missing-module",
+            1,
+        )
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "handoff_to.*unknown"):
+            VALIDATOR.parse_plan(text)
+
 
 if __name__ == "__main__":
     unittest.main()

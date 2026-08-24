@@ -25,6 +25,13 @@ required: true
 placement: homepage section
 evidence: missing-business-authority
 owner: commerce-owner
+page_role: home
+primary_question: What marketplace support is available
+client_value: understand the marketplace operations scope
+content_depth: summary
+handoff_to: none
+overlap_with: none
+overlap_disposition: none
 [/module]
 ```
 

@@ -42,7 +42,22 @@ CONTRACT_KEYS = (
     "owner",
     "status",
 )
-MODULE_KEYS = ("id", "kind", "role", "required", "placement", "evidence", "owner")
+MODULE_KEYS = (
+    "id",
+    "kind",
+    "role",
+    "required",
+    "placement",
+    "evidence",
+    "owner",
+    "page_role",
+    "primary_question",
+    "client_value",
+    "content_depth",
+    "handoff_to",
+    "overlap_with",
+    "overlap_disposition",
+)
 METRIC_KEYS = (
     "name",
     "business_meaning",
@@ -90,6 +105,8 @@ ORGANIZATION_MODES = {"single-page", "core-plus-conditional", "multi-business"}
 REFERENCE_MODES = {"none", "public", "user-provided"}
 PLAN_STATUSES = {"draft", "ready-for-owner", "ready-for-ui", "superseded"}
 MODULE_KINDS = {"suggested", "conditional"}
+CONTENT_DEPTHS = {"summary", "decision-support", "detailed"}
+OVERLAP_DISPOSITIONS = {"none", "keep-shared", "summarize", "deep-link", "merge", "remove"}
 READ_STATUSES = {"body-read", "body-read-with-limitations", "user-provided"}
 
 
@@ -187,7 +204,45 @@ def validate_modules(modules: list[dict[str, str]]) -> None:
             raise WebsitePlanError(f"{scope} kind 必须是 suggested 或 conditional")
         if module["required"] not in {"true", "false"}:
             raise WebsitePlanError(f"{scope} required 必须是 true 或 false")
+        for field in ("page_role", "primary_question", "client_value"):
+            if is_empty(module[field]):
+                raise WebsitePlanError(f"{scope} {field} 不能为空或占位")
+        if module["content_depth"] not in CONTENT_DEPTHS:
+            raise WebsitePlanError(f"{scope} content_depth 不受支持")
+        if module["overlap_disposition"] not in OVERLAP_DISPOSITIONS:
+            raise WebsitePlanError(f"{scope} overlap_disposition 不受支持")
     validate_unique(modules, "id", "module")
+
+    module_ids = {module["id"] for module in modules}
+    detailed_questions: dict[str, list[str]] = {}
+    for module in modules:
+        scope = f"module[{module['id']}]"
+        handoff_to = module["handoff_to"].strip()
+        if handoff_to.casefold() != "none" and handoff_to not in module_ids:
+            raise WebsitePlanError(f"{scope} handoff_to unknown module id: {handoff_to}")
+        overlap_refs = (
+            []
+            if module["overlap_with"].strip().casefold() == "none"
+            else [item.strip() for item in module["overlap_with"].split(",") if item.strip()]
+        )
+        unknown = sorted(set(overlap_refs) - module_ids)
+        if unknown:
+            raise WebsitePlanError(f"{scope} overlap_with unknown module ids: {', '.join(unknown)}")
+        disposition = module["overlap_disposition"]
+        if overlap_refs and disposition == "none":
+            raise WebsitePlanError(f"{scope} overlap_disposition 不能为 none")
+        if not overlap_refs and disposition != "none":
+            raise WebsitePlanError(f"{scope} 无 overlap_with 时 overlap_disposition 必须为 none")
+        if module["content_depth"] == "detailed":
+            question = module["primary_question"].strip().casefold()
+            detailed_questions.setdefault(question, []).append(module["id"])
+
+    for question, module_ids_for_question in detailed_questions.items():
+        if len(module_ids_for_question) > 1:
+            raise WebsitePlanError(
+                "primary_question 重复且均为 detailed: "
+                f"{question} ({', '.join(module_ids_for_question)})"
+            )
 
 
 def validate_metrics(metrics: list[dict[str, str]]) -> None:

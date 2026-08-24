@@ -25,6 +25,13 @@ required: true
 placement: homepage section
 evidence: owner-approved-sourcing-brief.md#scope
 owner: sourcing-owner
+page_role: home
+primary_question: What sourcing support is available
+client_value: understand the sourcing scope
+content_depth: summary
+handoff_to: none
+overlap_with: none
+overlap_disposition: none
 [/module]
 ```
 

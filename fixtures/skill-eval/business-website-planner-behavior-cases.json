@@ -16,7 +16,7 @@
         "business-website-planner/references/business-type-patterns.md",
         "business-website-planner/references/reference-research-and-distinctiveness.md"
       ],
-      "sha256": "5486079f69e2e3424bc66b41574c1ae4f5ca32cb06ff54793a2ff6f2781fc267"
+      "sha256": "7169be88ba87f22afaf26df6ccee0df79ba658173f8b15a002066593ccf97875"
     }
   },
   "rubric": {
@@ -106,6 +106,17 @@
         "拒绝整站换皮和复制客户、数字、文案、图片或视觉组合。",
         "分轴提炼 Reference DNA，每个采用项回到目标业务和客户决策，每个拒绝项记录同源指纹。",
         "独特性来自业务、证据、品牌资产和场景，不来自随机换色。"
+      ]
+    },
+    {
+      "id": "bwp-should-separate-overlapping-page-roles",
+      "category": "cross-page-role-separation",
+      "risk": "medium",
+      "prompt": "一个三页企业官网的 Home、Services、About 都在完整讲同一套五步交付流程，但本轮不想大改视觉。请调整内容职责。",
+      "criteria": [
+        "为每页声明唯一 primary_question、client_value、content_depth 和 handoff_to。",
+        "建立 overlap matrix，完整流程只在一个详细页面保留，其余页面 summarize、deep-link、merge 或 remove。",
+        "共享 Header、Footer 和 CTA 标记 keep-shared；不把内容去重扩张为视觉重构。"
       ]
     }
   ]

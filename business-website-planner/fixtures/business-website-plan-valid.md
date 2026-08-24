@@ -25,6 +25,13 @@ required: true
 placement: homepage hero or opening section
 evidence: owner-approved-business-brief-v1.md#positioning
 owner: business-owner
+page_role: home
+primary_question: What business does the company provide and for whom
+client_value: understand the business category and relevance
+content_depth: summary
+handoff_to: services
+overlap_with: none
+overlap_disposition: none
 [/module]
 
 [module]
@@ -35,6 +42,13 @@ required: true
 placement: homepage section or separate business page
 evidence: owner-approved-business-brief-v1.md#scope
 owner: service-owner
+page_role: services
+primary_question: What support is included and how responsibilities are divided
+client_value: evaluate service fit and delivery boundaries
+content_depth: detailed
+handoff_to: inquiry
+overlap_with: none
+overlap_disposition: none
 [/module]
 
 [module]
@@ -45,6 +59,13 @@ required: false
 placement: page-end section or contact page
 evidence: inquiry-data-brief-v1.md
 owner: operations-owner
+page_role: shared
+primary_question: How can an interested client start a conversation
+client_value: know the next contact step
+content_depth: decision-support
+handoff_to: none
+overlap_with: positioning, services
+overlap_disposition: keep-shared
 [/module]
 ```
 
