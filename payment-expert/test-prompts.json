@@ -18,6 +18,12 @@
     "expected": {"skill": "payment-expert", "method": "M02", "decision": "pending", "must_include": ["稳定内部事实", "通道差异", "正式契约"]}
   },
   {
+    "id": "PT-044",
+    "kind": "should_stop",
+    "query": "两家厂商都把收款产品叫 VA / Global Account。文章说它们都是主账户下的影子账户、可以百分之百自动核销，并能保持同一对客账号跨银行静默切换。能否据此合并成一个通用账户模型？",
+    "expected": {"skill": "payment-expert", "method": "M02", "decision": "stop", "must_include": ["账户权利与资金归属", "wallet/ledger 与真实资金", "未归因与迁移契约"]}
+  },
+  {
     "id": "PT-007",
     "kind": "should_ask",
     "query": "原路退款超期后，付款通道只返回受理中，能否把退款单改为成功？",

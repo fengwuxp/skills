@@ -217,6 +217,7 @@ python3 payment-expert/scripts/verify_behavior_cases.py --prepare-eval-batches "
 python3 scripts/evaluate-skill-behavior.py validate --cases "${public_core_eval_dir}/candidate-comparison.json"
 python3 scripts/evaluate-skill-behavior.py validate --cases "${public_core_eval_dir}/post-merge-forward.json"
 python3 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/payment-domain-foundations-behavior-cases.json"
+python3 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/payment-channel-routing-behavior-cases.json"
 python3 payment-expert/scripts/verify_fixtures.py
 
 echo "==> product deliverable checker"
