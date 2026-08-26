@@ -402,6 +402,7 @@ ui_design_prototype = "ui-design-expert/references/prototype-output.md"
 ui_design_checker = "ui-design-expert/scripts/check_ui_design_deliverable.py"
 ui_design_source_checker = "ui-design-expert/scripts/check_ui_source.py"
 ui_design_fixture_verifier = "ui-design-expert/scripts/verify_fixtures.py"
+simple_design_behavior_cases = "fixtures/skill-eval/product-ui-simple-design-behavior-cases.json"
 security_skill = "security-engineering-expert/SKILL.md"
 security_agent = "security-engineering-expert/agents/openai.yaml"
 security_scenarios = "security-engineering-expert/references/security-scenario-routing.md"
@@ -5957,6 +5958,15 @@ expected_handling_has(
         "跨应用衔接",
         "不决定组件样式、token 或实现 API",
         "不直接绘制界面",
+    ),
+)
+expected_handling_has(
+    "product-design-should-start-with-minimum-validated-slice",
+    (
+        "最小可验证产品切片",
+        "本期目标 / 非目标",
+        "最少主体、对象、流程和页面",
+        "不为未确认的未来想象制作过渡设计",
     ),
 )
 negative_reason_has(
@@ -14760,6 +14770,42 @@ check(
     ),
 )
 check(
+    "product and UI design keep simple scope and reject transition overbuild",
+    (ROOT / simple_design_behavior_cases).exists()
+    and has_all(
+        product_architecture,
+        [
+            "简单优先与过渡设计门禁",
+            "最小可验证产品切片",
+            "不为未确认的未来想象制作过渡设计",
+        ],
+    )
+    and has_all(
+        ui_design_workflow,
+        [
+            "简单优先与过渡设计门禁",
+            "最低原型层级",
+            "不为未来页面、角色或技术迁移预埋过渡结构",
+        ],
+    )
+    and has_all(
+        simple_design_behavior_cases,
+        [
+            '"mode": "improvement"',
+            "product-design-should-start-with-minimum-validated-slice",
+            "ui-prototype-should-start-with-minimum-validated-flow",
+            "candidate_weighted_score_must_improve",
+            "source_profiles",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-ui-simple-design-behavior-cases.json"',
+        ],
+    )
+)
+check(
     "senior skill exposes deterministic architecture deliverable checker",
     has_all(
         senior_skill,
@@ -23301,6 +23347,15 @@ expected_handling_has(
         "宽窄视口、键盘、焦点、长内容、控制台和溢出",
         "真实系统接管点",
         "不是生产代码、容量安全或发布就绪证据",
+    ),
+)
+expected_handling_has(
+    "ui-prototype-should-start-with-minimum-validated-flow",
+    (
+        "最低原型层级",
+        "一条可信流程",
+        "范围 / 非目标",
+        "不为未来页面、角色或技术迁移预埋过渡结构",
     ),
 )
 expected_handling_has(

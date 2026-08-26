@@ -2946,6 +2946,21 @@
       "expected_handling": "进入产品架构路径，先把页面和模块想法拉回业务目标、用户/主体、核心用例、对象状态、规则矩阵、变化频率、验收场景和技术架构交接包，而不是直接按页面列功能。"
     },
     {
+      "id": "product-design-should-start-with-minimum-validated-slice",
+      "skill": "product-architecture-expert",
+      "query": "我要做一个会员服务平台，先把三年内所有角色、端、模块、扩展点和一层过渡架构都规划出来，最后再决定首版做什么。请给产品方案。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "进入产品架构路径，但先收敛为最小可验证产品切片：明确本期目标 / 非目标、最少主体、对象、流程和页面，以及可观察验收；必要的权限、异常、人工兜底和审计仍保留在最小闭环。未确认的未来角色、端、模块和扩展点只作为待观察或候选，不提前平台化或拆分边界；不为未确认的未来想象制作过渡设计，只有迁移本身属于本期目标且来源 / 目标、owner、期限、移除条件和验证方式已确认时才建立过渡结构。"
+    },
+    {
       "id": "product-should-business-driven-architecture-handoff",
       "skill": "product-architecture-expert",
       "query": "会员权益产品方案准备交给架构师继续做系统设计，帮我补一版业务驱动架构交接包，重点要有目标、参与方、核心行为、对象状态、规则矩阵、验收样例和质量属性种子。",
@@ -4696,6 +4711,21 @@
         "variance_check"
       ],
       "expected_handling": "识别为无目标代码库的轻量 L2 浏览器原型；ui-design-expert 先稳定设计契约，再由 senior-software-architect 用一个自包含 HTML 文件实现一条可信流程，内联必要 CSS/JS，不依赖构建、认证、真实 API 或外部服务。原型覆盖成功、失败与恢复等相关状态，控件无死链，并在真实浏览器验证宽窄视口、键盘、焦点、长内容、控制台和溢出；交付绝对路径、已验证任务与真实系统接管点，明确它不是生产代码、容量安全或发布就绪证据。"
+    },
+    {
+      "id": "ui-prototype-should-start-with-minimum-validated-flow",
+      "skill": "ui-design-expert",
+      "query": "只需要验证一个新用户提交资料的 Web 流程。请先做完整网站的 Figma 页面、全套设计系统、未来多端角色和一个迁移过渡层，再回头决定首个原型。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "识别为 UI 设计与原型任务，先选择能回答当前问题的最低原型层级，明确范围 / 非目标，收敛到一条可信流程及必要的成功、失败、恢复、权限、键盘和响应式状态；不为未来页面、角色或技术迁移预埋过渡结构。只有迁移本身属于当前任务且来源 / 目标、Owner、存续期限、移除条件和验证方式已确认时才建立过渡层；否则不扩成整站 Figma、完整设计系统或多端矩阵，先用最小证据走查当前流程。"
     },
     {
       "id": "ui-design-expert-should-diversify-expressive-page-structure",
