@@ -28,6 +28,7 @@
 | `S6` | 2026-08-10 读取 [Stripe capabilities](https://docs.stripe.com/connect/account-capabilities)、[Stripe onboarding](https://docs.stripe.com/connect/onboarding)、[Adyen onboarding](https://docs.adyen.com/platforms/onboard-users)、[Adyen payment reconciliation](https://docs.adyen.com/platforms/reconciliation-use-cases/reconcile-payments)、[Adyen payout reconciliation](https://docs.adyen.com/platforms/payout-reconciliation)、[EMV 3DS](https://www.emvco.com/emv-technologies/3d-secure/) 与 [PCI DSS](https://www.pcisecuritystandards.org/standards/pci-dss/) 官方正文 | 商户验证与能力激活、Hosted/API 入网责任、卡非面对面认证、支付与 payout 对账证据的 D1 对齐 | 厂商对象/状态/报表通则、目标账户 capability、PCI 适用范围、法域责任或生产准入 |
 | `S7` | 用户显式提供的本地支付知识库；2026-08-11 完成结构扫描与相关专题详读；`read-with-limitations` | 企业卡与费用管理分层、支付开放平台交付面、支付事故/补偿证据链及专业培训情景设计的 D1 候选 | 不能支持当前监管、合同、厂商能力、目标项目契约或生产事实；不复制正文、图表、练习答案、人物故事线或作者表达；当前读取授权不外推为 Git、同步、共享或公开发布授权 |
 | `S8` | 陈天宇宙《支付之门》极简版公开长页；2026-08-20 通过 Codex 应用内浏览器 DOM 读取 14 章与跨境支付附篇；提取的章节正文 31,735 字符，SHA-256 `8857c5d4103a0503a7f47d279c585a368b6fb64e14439115e747ac3ec82d5097` | 支付基础、会计基础、支付清算生态、交易、支付执行、清结算、账务、对账、资金处理、钱包和产品方法论的 D1 知识骨架候选 | 原书全文、当前监管/会计/卡组织/机构规则、精确费率限额时效、作者授权、目标项目契约或生产事实 |
+| `S9` | 微信公众号文章《万字长文：从交易到记账，一文看懂支付结算系统核心流程》；作者 Wetoo；页面显示 2025-09-13 12:12；2026-08-26 常规网页读取失败后，通过本机 Chrome headless（Playwright）读取标题、作者、发布时间和 17,817 字符正文 | 机构角色影响支付系统边界、业务/资金流反推账户设计、收银台前后端联合观测的 D1 产品检查候选 | 交易类型/模式通用分类、具体会计分录、D+1、二清/账户分类/备付金/跨境本地出款结论、清结算完整方案、当前监管或生产规则 |
 
 S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取或泄露客户数据、密钥、生产配置和未提交工作区。
 
@@ -123,6 +124,7 @@ S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取�
 - 微信公众号文章《万里汇，太牛了！AI出海的全球资金管理，算是让它玩明白了》：`https://mp.weixin.qq.com/s/mTLMJVO4_NNlENZP8utZGA`。2026-05-29 已通过移动端公开 HTML，并使用本机 Chrome headless 作为 Playwright 等价浏览器读取标题、作者、发布时间和正文；公开内容用于参考 AI 出海资金管理的场景问题，不支持厂商能力、覆盖范围或当前商业结论。
 - 微信公众号文章《一笔支付，要记哪些账？搞懂这些分录，秒变账务大师！》：`https://mp.weixin.qq.com/s/XlG7JnJu8Orjmxp4PScgIg`。2026-08-03 已通过 Codex 应用内浏览器 DOM 读取标题、作者“陈天宇宙”、页面显示发布时间“2026年8月3日 08:38”和正文；图片资源读取超时，未将图中未见文本作为证据。公开内容仅用于多主体账簿边界和分阶段证据的 D1 检查，不支持具体分录、会计政策、监管或生产结论。
 - 微信公众号文章《一套真正的收单平台，到底应该包含什么？》：`https://mp.weixin.qq.com/s/xZzHwaiOztu0QjUJbuK9Aw`。作者 Scott 薛，页面显示发布时间 2026-08-08 20:08；2026-08-08 已通过 Codex 应用内浏览器 DOM 读取标题、作者、发布时间和正文。公开内容仅用于收单产品完整性问题、能力维度和准入检查的 D1 候选；文章中的 Source URL 共享和不设置 Store 属特定产品设计，不作为通用 Merchant/Store/MID 模型，也不支持厂商成熟度、法律、会计、卡组织规则或生产结论。
+- 微信公众号文章《万字长文：从交易到记账，一文看懂支付结算系统核心流程》：`https://mp.weixin.qq.com/s/oG5dBHfRggoXnNoiNXx4lQ`。作者 Wetoo，页面显示发布时间 2025-09-13 12:12；2026-08-26 常规网页读取未取得正文，随后通过本机 Chrome headless（Playwright）读取标题、作者、发布时间和 17,817 字符正文。公开内容仅用于机构角色定界、从业务/资金流反推产品对象，以及收银台前后端联合观测的 D1 候选；正文未独立展开完整清结算。文章中的交易类型/模式分类、具体分录、D+1、二清、账户分类、备付金和跨境本地出款表述不得作为通则，须由当前官方规则、目标合同及财务、合规、持牌机构 Owner 复核。
 
 以下为外部来源导航。未标明已读日期的条目在 2026-07-31 未联网复核，状态为 `PENDING`；Stripe、Airwallex、Highnote 的公共核心事实已于 2026-08-03 读取并归位到 `provider-facts.md`，使用时仍须复核目标环境与版本：
 
