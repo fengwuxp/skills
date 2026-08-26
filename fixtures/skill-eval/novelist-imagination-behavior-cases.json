@@ -35,7 +35,7 @@
         "huaxia-practical-wisdom/SKILL.md",
         "novelist/references/worldbuilding-and-research.md"
       ],
-      "sha256": "3ef64692e3a3a5179afe40bc7ba2bad88443c002f2d3708af4e6c727e23bc2ec"
+      "sha256": "a3ae451824d04a9ce874fce3972f06a03ac29e6816a32b9448574e54d94d8020"
     }
   },
   "cases": [
@@ -125,6 +125,17 @@
         "先说明归来目的，保护‘桥影每次少一孔’的不可替代奇异点，并让异常改变一个人物的普通行动、不可回避选择、实际代价和延迟或非预期后果。",
         "明确异常只新增有限观察，不能鉴定旧契真伪、证明桥的完整旧址、授予经营权、裁定责任或替人物给出正确处置；不同主体仍可形成有利益差异的解释。",
         "只把幻想核标为已确认；异象是否发生、触发与代价、具体人物事件及跨地点或时代通则均保持候选，不因成形可写而升级正典。"
+      ]
+    },
+    {
+      "id": "novelist-imagination-should-separate-qualitative-gates-from-quantitative-evidence",
+      "category": "regression-and-backflow-governance",
+      "risk": "high",
+      "prompt": "请评审一轮幻想归来候选的回归证据：已有一次真实使用、若干静态 case、三次同配置评分和一次独立 CR。请设计准出与回流，不要把分数直接当成正典确认，也不要因为一次成功回答自动修改 novelist。",
+      "criteria": [
+        "先分开定性硬门禁与定量比较：检查路由、幻想核保真、归来目的、生活后果、证明上限和正典状态；硬 blocker 未清零时不能被加权均分覆盖。",
+        "定量报告至少区分加权分、逐维回归、重复试验方差和证据完整性，并说明同一 runner/model、重复次数、盲评和 source/case digest 的适用边界；数字只比较 candidate 与 baseline，不衡量作者是否确认正典。",
+        "回流必须从可复核失败或重复反馈定位到最小 Skill/reference/fixture/script 落点，先形成 candidate、再静态与行为回归、独立复核和 Owner 裁决；不自动刷新 hash、改 Skill、提交、同步或发布。"
       ]
     }
   ]
