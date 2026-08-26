@@ -28,6 +28,12 @@ TABLE_HEADER = (
     "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
 )
 HEADER = "Time Axis: `TEST`\n\n" + TABLE_HEADER
+DURATION_TABLE_HEADER = (
+    "| Event ID | Authority | Canon Status | Record Status | Open Fields | "
+    "T Anchor | Line Role | Time Relation | Depends On | Interface | State Delta | "
+    "P Anchor | Natural Duration |\n"
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
+)
 
 
 class TimelineTests(unittest.TestCase):
@@ -235,6 +241,146 @@ class TimelineTests(unittest.TestCase):
 
             self.assertEqual([], errors)
             self.assertIn("0 cross-line interfaces", output.getvalue())
+
+    def test_scoped_readiness_allows_non_blocking_fields_and_ignores_overlap_blocker(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#seal | confirmed | aligned | executor-count-and-names | "
+                "T010~020.01.010 | main | overlap:EV-020 | - | environment | "
+                "seal continues | P010 |\n"
+                "| EV-020 | canon.md#fight | confirmed | aligned | blocker:combat | "
+                "T015.01.020 | main | same-window | - | - | fight continues | P020 |\n",
+            )
+
+            self.assertEqual(
+                [],
+                MODULE.check(
+                    project,
+                    timeline,
+                    require_ready=True,
+                    ready_events=("EV-010",),
+                ),
+            )
+            full_errors = MODULE.check(project, timeline, require_ready=True)
+            self.assertTrue(any("EV-020 has open blocker" in error for error in full_errors))
+
+    def test_scoped_readiness_checks_dependency_status_but_not_dependency_blockers(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#approach | candidate | conflict | blocker:route | "
+                "T010.01.010 | main | same-window | - | - | approach pending | P010 |\n"
+                "| EV-020 | canon.md#scene | confirmed | aligned | - | "
+                "T020.01.020 | main | same-window | EV-010 | - | scene starts | P020 |\n",
+            )
+
+            errors = MODULE.check(
+                project,
+                timeline,
+                require_ready=True,
+                ready_events=("EV-020",),
+            )
+
+            self.assertTrue(
+                any("ready dependency EV-010 canon status is candidate" in error for error in errors)
+            )
+            self.assertTrue(
+                any("ready dependency EV-010 record status is conflict" in error for error in errors)
+            )
+            self.assertFalse(any("EV-010 has open blocker" in error for error in errors))
+
+    def test_scoped_readiness_rejects_unknown_events_and_requires_ready_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#scene | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | event happens | P010 |\n",
+            )
+
+            unknown_errors = MODULE.check(
+                project,
+                timeline,
+                require_ready=True,
+                ready_events=("EV-999",),
+            )
+            self.assertIn("ready event EV-999 does not exist", unknown_errors)
+            self.assertIn(
+                "ready events require --require-ready",
+                MODULE.check(project, timeline, ready_events=("EV-010",)),
+            )
+            self.assertIn(
+                "duplicate ready event ID EV-010",
+                MODULE.check(
+                    project,
+                    timeline,
+                    require_ready=True,
+                    ready_events=("EV-010", "EV-010"),
+                ),
+            )
+
+    def test_scoped_readiness_does_not_hide_full_table_structural_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#scene | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | selected event | P010 |\n"
+                "| EV-020 | missing.md#scene | confirmed | aligned | blocker:other | "
+                "T020.01.020 | main | same-window | EV-010 | - | other event | P020 |\n",
+            )
+
+            errors = MODULE.check(
+                project,
+                timeline,
+                require_ready=True,
+                ready_events=("EV-010",),
+            )
+
+            self.assertTrue(
+                any("authority path does not exist for EV-020" in error for error in errors)
+            )
+            self.assertFalse(any("EV-020 has open blocker" in error for error in errors))
+
+    def test_scoped_readiness_requires_non_empty_optional_natural_duration(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(project, "")
+            timeline.write_text(
+                "Time Axis: `TEST`\n\n"
+                + DURATION_TABLE_HEADER
+                + "| EV-010 | canon.md#scene | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | event happens | P010 | - |\n",
+                encoding="utf-8",
+            )
+
+            errors = MODULE.check(
+                project,
+                timeline,
+                require_ready=True,
+                ready_events=("EV-010",),
+            )
+            self.assertIn("EV-010 has empty Natural Duration", errors)
+
+            timeline.write_text(
+                "Time Axis: `TEST`\n\n"
+                + DURATION_TABLE_HEADER
+                + "| EV-010 | canon.md#scene | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | event happens | P010 | unknown |\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                [],
+                MODULE.check(
+                    project,
+                    timeline,
+                    require_ready=True,
+                    ready_events=("EV-010",),
+                ),
+            )
 
 
 if __name__ == "__main__":
