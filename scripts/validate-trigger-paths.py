@@ -432,10 +432,14 @@ novelist_world = "novelist/references/worldbuilding-and-research.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_continuity_checker = "novelist/scripts/check-novelist-continuity-ledger.py"
 novelist_continuity_checker_test = "novelist/scripts/test-check-novelist-continuity-ledger.py"
+novelist_timeline_checker = "novelist/scripts/check-novelist-timeline.py"
+novelist_timeline_checker_test = "novelist/scripts/test-check-novelist-timeline.py"
+novelist_timeline_behavior_cases = "fixtures/skill-eval/novelist-logical-timeline-behavior-cases.json"
 novelist_publication = "novelist/references/publication-and-content-governance.md"
 novelist_source_map = "novelist/references/source-map.md"
 novelist_craft_cases = "novelist/references/craft-case-library.md"
 novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
+novelist_imagination_behavior_cases = "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
 novelist_planning_behavior_cases = "fixtures/skill-eval/novelist-planning-behavior-cases.json"
 novelist_planning_responses = "fixtures/skill-eval/novelist-planning-responses.jsonl"
 novelist_planning_scores = "fixtures/skill-eval/novelist-planning-scores.jsonl"
@@ -20251,21 +20255,31 @@ check(
         novelist_skill,
         [
             "scripts/check-novelist-continuity-ledger.py",
+            "scripts/check-novelist-timeline.py",
             "RW-nnn",
             "--root",
             "--ledger",
+            "--timeline",
         ],
     )
     and (ROOT / novelist_continuity_checker).is_file()
     and (ROOT / novelist_continuity_checker_test).is_file()
+    and (ROOT / novelist_timeline_checker).is_file()
+    and (ROOT / novelist_timeline_checker_test).is_file()
+    and (ROOT / novelist_timeline_behavior_cases).is_file()
     and not (ROOT / "scripts/check-novelist-continuity-ledger.py").exists()
     and not (ROOT / "scripts/test-check-novelist-continuity-ledger.py").exists()
+    and not (ROOT / "scripts/check-novelist-timeline.py").exists()
+    and not (ROOT / "scripts/test-check-novelist-timeline.py").exists()
     and has_all(
         "scripts/validate.sh",
         [
             "python3 scripts/validate-codex-agent-profiles.py --self-test",
             "python3 -m py_compile novelist/scripts/check-novelist-continuity-ledger.py",
+            "python3 -m py_compile novelist/scripts/check-novelist-timeline.py",
             "python3 novelist/scripts/test-check-novelist-continuity-ledger.py",
+            "python3 novelist/scripts/test-check-novelist-timeline.py",
+            "fixtures/skill-eval/novelist-logical-timeline-behavior-cases.json",
         ],
     )
     and has_none("scripts/validate-codex-agent-profiles.py", ["danger-full-access"])
@@ -20284,6 +20298,7 @@ check(
 check(
     "novelist behavior cases cover domain capability and collaboration boundaries",
     (ROOT / novelist_behavior_cases).exists()
+    and (ROOT / novelist_imagination_behavior_cases).exists()
     and (ROOT / novelist_planning_behavior_cases).exists()
     and (ROOT / novelist_planning_responses).exists()
     and (ROOT / novelist_planning_scores).exists()
@@ -20305,6 +20320,29 @@ check(
             "静态 fixture 不等于真实行为证据",
             "source_profiles",
             "require_auditable_judgments",
+        ],
+    )
+    and has_all(
+        novelist_imagination_behavior_cases,
+        [
+            "novelist-imagination-should-enter-pure-divergence-before-grounding",
+            "novelist-imagination-should-preserve-core-before-return",
+            "novelist-imagination-should-test-return-through-lived-consequence",
+            "novelist-imagination-should-compose-historical-fantasy-without-smothering-it",
+            "novelist-imagination-should-return-to-divergence-after-loss-of-strangeness",
+            "novelist-imagination-should-not-misroute-historical-fiction-as-fantasy-return",
+            "同一 runner/model",
+            "静态 fixture 只固定预期行为",
+            '"source_profiles"',
+            '"id": "no-skill"',
+            '"id": "novelist-imagination-current"',
+        ],
+    )
+    and has_none(
+        "fixtures/skill-eval/evidence-gates.json",
+        [
+            "novelist-imagination-responses.jsonl",
+            "novelist-imagination-scores.jsonl",
         ],
     )
     and has_all(
@@ -20440,6 +20478,7 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-imagination-behavior-cases.json"',
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"',
             'fixtures/skill-eval/novelist-planning-responses.jsonl',
             'fixtures/skill-eval/novelist-planning-scores.jsonl',

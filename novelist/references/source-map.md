@@ -64,6 +64,14 @@
 - 可迁移：题材/卖点/主角处境/故事发动机/体量分层，以及开篇、单章、连载中期的持续力诊断。
 - 拒绝：原始语料、抓取正文、示例摘录、作者模仿、固定开篇字数、黄金三章和逐章强制配额。
 
+### SRC-NOVEL-05 幻想、想象与创造认知公开来源
+
+- 核验日期：2026-08-26。实际读取了刘勰《文心雕龙·神思》的公开文本页、Runco 与 Jaeger 2012 年论文正文、Finke 1996 年论文摘要、Beaty 等 2015 年论文正文、Sio 与 Ormerod 2009 年元分析摘要，以及 Ursula K. Le Guin 官方站的 `Plausibility Revisited` 与 `The Carrier Bag Theory of Fiction` 页面；未把检索摘要冒充全文通读。
+- 来源：[`《文心雕龙·神思》`](https://ctext.org/wenxin-diaolong/shen-si/zh)、[`The Standard Definition of Creativity`](https://doi.org/10.1080/10400419.2012.650092)、[`Imagery, Creativity, and Emergent Structure`](https://doi.org/10.1006/ccog.1996.0024)、[`Default and Executive Network Coupling Supports Creative Idea Production`](https://doi.org/10.1038/srep10964)、[`Does incubation enhance problem solving?`](https://doi.org/10.1037/a0014212)、[`Plausibility Revisited`](https://www.ursulakleguin.com/plausibility-revisited)、[`The Carrier Bag Theory of Fiction`](https://www.ursulakleguin.com/the-carrier-bag-theory-of-fiction)。
+- 可迁移：区分想象生成、幻想候选、成形探索与作品准入；发散期保护原创核，成形期再检查适切性；自发联想与认知控制采用同一创作主体内的动态往返，不拆成固定人格或 Agent；幻想可以违背外部现实的可行性，但须保持作品内部一致、人物选择与后果连续；故事不必缩成线性英雄征服结构。
+- 华夏镜片：以《神思》的积学、感物与神思远行为文学参照，以变与不变、有无相用和正名校准幻想核、留白、成形与正典状态；这些只提供创作追问，不是现代实验结论、古义定论或题材古风化要求。
+- 不吸收：论文和创作者原文、案例、固定模板、作者口吻、神经脑区还原论、发散测试分数、机械阶段论、用现实有用性提前扼杀文学候选，以及把孵化解释成无需准备或验证的神秘灵感。
+
 ## 证据与维护边界
 
 - 来源行只证明“读过什么、允许借鉴什么”，不证明方法有效，更不证明真实写作行为已经提升。

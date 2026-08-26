@@ -197,6 +197,7 @@ python3 -m py_compile scripts/audit-source-map.py
 python3 -m py_compile scripts/evaluate-skill-behavior.py
 python3 -m py_compile scripts/test-evaluate-skill-behavior.py
 python3 -m py_compile novelist/scripts/check-novelist-continuity-ledger.py
+python3 -m py_compile novelist/scripts/check-novelist-timeline.py
 python3 -m py_compile scripts/evaluate-skills.py
 python3 -m py_compile scripts/test-evaluate-skills.py
 python3 -m py_compile scripts/skillx_export_adapter.py
@@ -274,7 +275,10 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 
 echo "==> novelist behavior cases"
 python3 novelist/scripts/test-check-novelist-continuity-ledger.py
+python3 novelist/scripts/test-check-novelist-timeline.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-logical-timeline-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"
 novelist_planning_eval_dir="${tmp_dir}/novelist-planning-eval"
 mkdir -p "${novelist_planning_eval_dir}"

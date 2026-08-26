@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "description": "novelist 递增逻辑锚、并发场景组、权威状态与呈现顺序控制的行为契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "novelist-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/continuity-and-revision.md",
+        "novelist/assets/character-dynamic-profile-template.md"
+      ],
+      "sha256": "5968d6607bc62b9da68f6f5e09b2e20fb70145d627368e4ff4c7bac6fc73eed5"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-not-turn-design-order-into-story-order",
+      "category": "logical-time-vs-design-order",
+      "risk": "high",
+      "prompt": "作者已经确认事件 EV-020 发生在前置场景。多轮讨论后来才开始设计 EV-020 的具体动作，并先完成了下游战斗 EV-060。助手因此建议把 EV-020 挪到 EV-060 之后，方便接着写。请审查并给出最小处理。",
+      "criteria": [
+        "明确区分讨论或设计顺序、事件发生顺序与正文呈现顺序，不能因为后来讨论就移动已确认事件。",
+        "保留 EV-020 的稳定事件身份和既有发生锚；具体动作仍开放时只更新 Open Fields，不另造事件或改写上游事实。",
+        "若现行摘要已经把 EV-020 移到下游，标记记录冲突或待回写，并阻断依赖错误位置的正文准入。",
+        "检查 EV-020 到后续场景之间的移动、自然时距和状态接口，不用一句随后发生掩盖缺口。"
+      ]
+    },
+    {
+      "id": "novelist-should-anchor-main-and-side-scenes-in-one-window",
+      "category": "parallel-scene-group",
+      "risk": "high",
+      "prompt": "作者已经确认同一场暴雨黄昏的三线高层事件：主线人物在城外抢修堤坝，支线官员在城中决定是否开仓，另一支线信使仍被塌方困在山路。城外人物不知道城中决定，读者可以在下一次切线时先看到；具体场内动作尚未关闭。请建立可交叉呈现的规划，不写正文；不要用一句与此同时，也不要让支线在切走后停止行动。",
+      "criteria": [
+        "建立共同全局时间窗并为三条线分配稳定线路编号和各自递增的局部场景锚，线路主次另行记录而不写死在编号中。",
+        "分别维护三线的地点、目标、知情、资源、自然历时、选择、离场状态和状态增量；支线离开正文视野后仍继续演进。",
+        "按证据把关系标为 same-window、overlap、exact-sync 或 unknown-order，不把同一黄昏伪装成精确同时。",
+        "另给正文 P 锚安排交叉剪辑；读者可以先看到城中决定，城外人物仍须等真实消息接口才能知情，呈现重排不得改变事件发生轴。",
+        "先以正典守门、时序和人物视图完成事实完整性复核，再按读者呈现需求安排 P 锚；具体场内动作未关闭时保留场景 blocker，不为凑固定六视图提前展开场景写作，也不把角色视图保存成长期台账。"
+      ]
+    },
+    {
+      "id": "novelist-should-merge-only-required-parallel-branches",
+      "category": "selective-cross-line-merge",
+      "risk": "high",
+      "prompt": "主线战局停顿后，对手循声音抵达形成会合；与此同时，远处医者仍在救治伤员，尚未与主线发生联系。请锚定会合，不要为了同步高潮让医者也结束救治或赶到现场。",
+      "criteria": [
+        "会合使用共同或汇合节点，只依赖战局已经形成窗口和对手已经完成移动两项必要分支末端。",
+        "跨线依赖写清人物移动、声音或其它真实接口，并核对移动历时与最早抵达时点。",
+        "医者线没有参与会合时不进入依赖，不被强行结束、到场、共享信息或同步高潮。",
+        "会合后的状态增量分别回写参与线路，未相交支线继续继承自己的离场状态。"
+      ]
+    },
+    {
+      "id": "novelist-should-not-reopen-confirmed-causality",
+      "category": "confirmed-vs-open-fields",
+      "risk": "high",
+      "prompt": "作者已确认高层因果：甲先护救乙，丙到场后先压制甲，乙主动留下或折返救甲而入局。仍待设计的是护救动作、丙的压制手段，以及乙选择留下还是折返。下一轮应如何推进？",
+      "criteria": [
+        "把已确认高层因果绑定权威指针和 confirmed 状态，不再询问乙是否主动入局或是否由丙救下二人。",
+        "只从 Open Fields 中选择一个当前主分叉，例如留下或折返，不把具体动作开放误写成高层因果未定。",
+        "每个具体动作沿既有发生锚承接人物所知、能力、距离、伤势和时限，不改变已确认先后。",
+        "新动作一旦改变权威事实或下游状态，先过效力门和承续门；普通表现选择不复制第二份正典。"
+      ]
+    },
+    {
+      "id": "novelist-should-block-authority-conflict-before-timeline-writing",
+      "category": "authority-and-record-state",
+      "risk": "high",
+      "prompt": "旧稿正文显示关键物件在场景 A 被人物取得；现行卷纲却把它移到后续场景 C。作者刚明确纠正：应保留 A。卷纲、人物档和伏笔表还没有完成回写。请判断能否直接按 C 写正文。",
+      "criteria": [
+        "不能直接按 C 写正文；先区分作者纠正的当前效力、旧稿证据和仍未清理的现行载体，不用多数文件投票裁决。",
+        "保留同一稳定事件 ID，把当前记录标为 pending-writeback 或 conflict，并列出真实受影响载体与下游依赖。",
+        "恢复 A 后检查 A 到后续剧情之间的移动、自然时距、人物持有状态和知情接口，缺失项保留 blocker。",
+        "清理完成前阻断受影响正文准入；不得只改时间数字、重新命名事件或用合理想象把 C 包装成现行事实。"
+      ]
+    },
+    {
+      "id": "novelist-should-separate-event-identity-axis-and-placement",
+      "category": "identity-axis-and-placement",
+      "risk": "high",
+      "prompt": "一部长篇同时维护王朝史年表和第一卷剧情表，两张表原先都从 T0 开始；另有一件确定会发生但尚未决定落在哪一卷的事件。请统一锚定，既消除两个 T0 的歧义，也不要为了排表给未落卷事件编造精确位置。",
+      "criteria": [
+        "先区分稳定事件身份、所属时间轴、发生坐标和落位状态；事件号只标识事件，不因改卷、补写或重排而改号，也不以编号大小推断发生顺序。",
+        "给并存时间轴使用项目内唯一且可辨认的轴名；相同局部坐标只有在轴内比较，跨轴先后或同步必须有显式对齐证据。",
+        "未落卷事件保留 unplaced 或项目等价状态，并记录已知上下界、依赖和 placement blocker；没有证据时不分配伪精确 T 锚、卷次或章节。",
+        "不把新建索引表自动提升成事实权威；锚表引用既有权威，项目尚无权威裁决时保持待确认。"
+      ]
+    },
+    {
+      "id": "novelist-should-separate-sync-trigger-and-staggered-completion",
+      "category": "sync-causality-and-branch-completion",
+      "risk": "high",
+      "prompt": "同一黄昏，甲抵达山口时远处机关恰好启动，乙先被送往一处，过了一会儿丙才从同一次启动中完成另一条路径。旧摘要把甲抵达写成触发条件，又把丙到达写成第二次回震。请校正时序与因果。",
+      "criteria": [
+        "把甲抵达与机关启动记录为有证据支持的同窗或精准同步；时间同步本身不证明甲是触发条件、参与者或机制承受者。",
+        "机关只记录一次启动；乙与丙分别拥有自己的局部历时、完成时点和离场状态，两个到达结果不反推两次启动。",
+        "丙较晚完成只能写成同一激活下的延迟分支结果，除非另有证据才新增回震、二次触发或第二机制事件。",
+        "清理摘要中的错误因果动词，同时保留尚未确认的触发机制、路径细节和时间差为开放项。"
+      ]
+    },
+    {
+      "id": "novelist-should-link-character-card-without-promoting-conditional-event",
+      "category": "character-timeline-backlink",
+      "risk": "high",
+      "prompt": "事件表只确认甲正在寻找乙，人物卡却写成“甲将在后卷再遇乙”。项目要求人物经历能够回查时间线，但不希望人物卡成为第二份时间线。请给出最小修订。",
+      "criteria": [
+        "人物卡引用已确认的寻找事件 ID、发生锚或当前时间线权威指针，不复制整条时序，也不另建人物专属正典。",
+        "只因寻找已确认，不能推出再遇必然发生；删除“将在后卷再遇”，改为条件式可能、开放项或未确认结果。",
+        "不得仅凭寻找事实给再遇创建 confirmed 事件或发生锚；项目允许管理候选时，也须保留 candidate、条件、placement blocker 和未生效边界。",
+        "只给承担承重剧情经历的人物或经历增加锚引用，背景人物和无时序承重项不强制补表。"
+      ]
+    },
+    {
+      "id": "novelist-should-clean-causal-verbs-across-current-authority",
+      "category": "causal-verb-writeback",
+      "risk": "high",
+      "prompt": "作者已经纠正一件承重事件：物件只是在同一次冲突中被震飞，意外落到路过者附近；当前卷纲已改正，但摘要、人物卡和准备度清单仍写着“物件感应后召来此人”“后续回震把此人卷走”。历史决策记录还保留旧说法。请完成连续性 CR。",
+      "criteria": [
+        "除地点、人物和事件名外，专项检查召来、感应、触发、卷走、再遇等会暗示主体、机制、因果或必然性的动词。",
+        "沿事实权威、卷章规划、摘要、人物卡、伏笔或准备材料与准入门逐项清理当前有效旧值，不以只改卷纲代替影响传播。",
+        "历史审计记录可以保留旧说法，但必须显式标记 retired、已废止或等价状态，并指向当前裁决；不得让历史行重新参与现行事实投票。",
+        "清理未完成时将相关记录标为 pending-writeback 或 conflict，并阻断依赖错误机制的正文准入；不补写作者尚未确认的新机制。"
+      ]
+    },
+    {
+      "id": "novelist-should-separate-event-authority-stage-gates-and-ongoing-constraints",
+      "category": "authority-stage-and-ongoing-constraint",
+      "risk": "high",
+      "prompt": "某长篇的卷纲负责事件调度，关系文件负责双方关系变化，人物档负责个人选择与长期伤势。外侧共同体从 T620 至 T670 持续封路，完整行动写在卷纲；主线对质在 T630 继续、激战在 T640 发生，封路从开始时就让退路失效。临时时间表因为高潮发生在二人之间，把封路事件 Authority 指向关系文件，并准备让主线 Depends On 封路完成。作者已确认高层事件，但七个文件尚未全部回写；战斗能力、伤势部位与走位仍待定。实际封路历时三小时，人物还要在残境守过一夜。请修正时序记录，判断结构校验与正文准入，并决定是否另建时间线文件；不要修改脚本。",
+      "criteria": [
+        "Authority 指向保存封路主要行动事实的卷纲或既有事件权威；关系文件与人物档只维护各自状态增量。作者确认使 Canon Status 为 confirmed，载体未清理完时 Record Status 仍为 pending-writeback 或 conflict，不能提前写 aligned。",
+        "战斗能力、伤势部位和走位若阻断正文就继续保留 blocker；即使 confirmed 且最终 aligned，也只证明高层因果与记录一致。结构校验、写回对齐和正文准入分开报告；一张局部锚表优先嵌入现有卷纲，不建立第二正典。",
+        "用 overlap 与环境 Interface 表达进行中的封路持续约束主线；Depends On 只表示需要前置事件完成，若主线只要求封路已经开始，则拆出起效点，或以 overlap、Interface 与 State Delta 明示开始即生效，不让主线等待封路结束；起效点与持续范围不得伪写 exact-sync，精准同步只用于点对点。",
+        "T 锚与数字间隔只用于逻辑定位，不编码三小时或一夜；自然历时另写在事件卡的必要历时，复杂表需要时可增加非强制 Natural Duration 列。区分封路动作三小时完成与退路失效状态是否持续一夜；证据不足时保留 natural-time blocker。现有校验器不能证明持续约束接口正确时保留人工 CR，不为变绿而移动事件或删除真实并发。",
+        "承重修订先用正典守门、时序、人物和影响回写视图完成事实完整性轮；载体仍未对齐且场景 blocker 未关闭时，不得用读者呈现或场景效果把它判成可写。默认选择二至四种视图不是硬上限，确需进入章卡或正文时再开启写作准入轮；只交付冲突、状态差异和停止线，不生成六张持久角色表。"
+      ]
+    }
+  ]
+}

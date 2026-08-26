@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "description": "novelist 幻想与想象双循环的专项 baseline/candidate 契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验、盲评和独立复核。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true
+  },
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "novelist-imagination-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/worldbuilding-and-research.md"
+      ],
+      "sha256": "b07aeed0894d5b0ed8941e60e80ae105cd5fb680647e0e01788be5349a8f52fe"
+    }
+  },
+  "cases": [
+    {
+      "id": "novelist-imagination-should-enter-pure-divergence-before-grounding",
+      "category": "pure-divergence-routing",
+      "risk": "high",
+      "prompt": "这一轮只做天马行空。围绕‘月亮每天清晨从某个人身体里醒来’给出八个真正不同、允许互相矛盾的幻想方向；不要选择、解释、统一世界观、补人物主线、增加代价或写成正典。",
+      "criteria": [
+        "除区分用户原话、外部事实、文学虚构和授权边界外，直接进入天马行空，不先用现实可行性、人物因果、世界规则、代价或正典准入筛选候选。",
+        "八个方向至少在主体、关系、因果、时空、感知、规则或叙事声音上形成真正差异，不只是替换名称、颜色、地点或背景皮肤。",
+        "本轮止于文学虚构候选，不排序、不推荐、不统一原因；一次性纯发散不强制填写幻想核卡。"
+      ]
+    },
+    {
+      "id": "novelist-imagination-should-preserve-core-before-return",
+      "category": "fantasy-core-preservation",
+      "risk": "high",
+      "prompt": "作者选中了‘河记得所有被改过的名字’，准备把它写进当前卷。协作者建议解释成古代水文仪器留下的编码，方便显得科学可信。请先保护幻想核，再给出成形方向；作者尚未确认具体规则。",
+      "criteria": [
+        "先记录原始表达、不可替代的奇异点、暂不解释的未知和会毁掉幻想的解释；不得把河的记忆降格为仪器编码、幻觉、常见血统或万能规则。",
+        "只选择故事真正调用的归来方向，使幻想进入人物、关系、生活、历史遗痕或异文中的必要部分，不机械补齐五层和完整百科。",
+        "所有具体规则、人物和事件仍是候选；成形方案不能因写得通而自动升级正典。"
+      ]
+    },
+    {
+      "id": "novelist-imagination-should-test-return-through-lived-consequence",
+      "category": "fantasy-return-validation",
+      "risk": "high",
+      "prompt": "一件旧外衣会对长期照护过它的人产生微弱回应。请把这个幻想做成可写的最小场景，但不要让衣服验血、认亲、判清白或直接证明谁更爱主人。",
+      "criteria": [
+        "用一个人物、一个普通行动、一次不可回避的选择、一项实际代价和一个延迟或非预期后果完成最小试片。",
+        "微弱回应改变当场动作、关系、信任、分配或后续条件，但保留不同人物基于身份、知识和感情形成不同解释，不替人物裁决血缘、清白、孝义或继承权。",
+        "执行删除测试：若去掉幻想后人物选择、关系、生活和下游条件均不改变，就判定仍是奇观或装饰并退回归人或远游。"
+      ]
+    },
+    {
+      "id": "novelist-imagination-should-compose-historical-fantasy-without-smothering-it",
+      "category": "historical-fantasy-composition",
+      "risk": "high",
+      "prompt": "用地方水利史、船工生活、祭河传说和原创幻想设计一段历史幻想。史料存在空白，传说有三种异文；不要把史料换名成剧情，不要用幻想填平未知，也不要先做完整神系和年表。",
+      "criteria": [
+        "按定骨、生肉、着皮、塑形、验生往返：事实和现实条件定边界，人文与共同生活形成血肉，传说说明讲述者、流变和遮蔽，幻想重新组合而不填补证据空白。",
+        "事实、传统说法、合理推演和文学虚构保持各自身份；异文可以长期并存，不因成形需要确定唯一史实或幕后真相。",
+        "最终用人物、普通生活、选择、代价、记录分流和后世承接检验设计，不以名词、典故、神系或年表丰富冒充幻想活起来。"
+      ]
+    },
+    {
+      "id": "novelist-imagination-should-return-to-divergence-after-loss-of-strangeness",
+      "category": "loss-of-strangeness-recovery",
+      "risk": "high",
+      "prompt": "最初的幻想核是‘一个人的名字被所有人彻底遗忘后，会化成真实山河’，现在方案逐渐变成血脉觉醒、等级升级和统一力量表。请评审并给出下一步，不要只在现方案上继续补规则。",
+      "criteria": [
+        "对照原始表达和不可替代的奇异点，指出血脉、升级与力量表怎样把遗忘、名字和山河的关系改成常见机制，而不是仅评价设定详略。",
+        "失去奇异性时退回天马行空，给出少量真正不同的重新发散方向；不以更多规则、科学解释或隐藏血统修补失真。",
+        "现方案和新方向均保持候选，作者选择前不改正典；后续成形仍须重新经过归人、验生和承续。"
+      ]
+    },
+    {
+      "id": "novelist-imagination-should-not-misroute-historical-fiction-as-fantasy-return",
+      "category": "fantasy-return-negative-routing",
+      "risk": "high",
+      "prompt": "一部虚构王朝故事正在推演：统军者得知地方治水官先修堤复路、只提交可复核工程记录，却拒绝把道路、流民和运输者纳入军功封赏后会怎样反应。当前题面没有调用河神回应、神异机制或已选幻想核。请判断本轮创作路由并给出人物选择候选；不要因为作品带有幻想背景就自动进入幻想归来。",
+      "criteria": [
+        "将本轮定为历史融合与人物选择推演，不因题材名称、世界中另有神异或内容属于文学虚构而自动进入幻想归来。",
+        "只有当前任务实际调用作者已选的不可替代幻想核、非常规则或神异机制，并让其改变人物、生活、选择或后果时，才启动幻想归来；存在但未调用的神异设定不构成路由依据。",
+        "把工程记录、道路责任和军功封赏视为政治冲突与作品立意，不冒充幻想核、既有法条或世界规则；新增行动、程序、名称和后果保持候选，不写回正典。"
+      ]
+    }
+  ]
+}
