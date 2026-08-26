@@ -30,6 +30,9 @@ CONDITIONS = ("baseline", "candidate")
 LABELS = ("A", "B")
 DIMENSIONS = ("correctness", "autonomy", "actionability", "safety", "concision")
 RISKS = ("low", "medium", "high")
+UNRESOLVED_MODEL_IDENTITIES = frozenset(
+    {"<unset>", "auto", "configured-default", "current", "default", "latest", "unknown"}
+)
 EXECUTION_EVIDENCE_PATTERN = re.compile(
     r"^(?:(?:tool|validation):[a-z0-9](?:[a-z0-9._-]{0,62}[a-z0-9])?"
     r"|artifact:[0-9a-f]{64}):(passed|failed|completed|skipped)$"
@@ -94,6 +97,13 @@ def _non_empty_string(value: Any, label: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ContractError(f"{label}: expected a non-empty string")
     return value.strip()
+
+
+def _model_identity(value: Any, label: str) -> str:
+    model = _non_empty_string(value, label)
+    if model.casefold() in UNRESOLVED_MODEL_IDENTITIES:
+        raise ContractError(f"{label}: expected a resolved model identity")
+    return model
 
 
 def _finite_number(value: Any) -> bool:
@@ -444,7 +454,7 @@ def blind_responses(
             )
         _validate_execution_evidence(row, f"responses[{index}]")
         runner = _non_empty_string(row.get("runner"), f"responses[{index}].runner")
-        model = _non_empty_string(row.get("model"), f"responses[{index}].model")
+        model = _model_identity(row.get("model"), f"responses[{index}].model")
         if isinstance(source_profiles, dict) or isinstance(input_profile, dict):
             case_sha256 = _non_empty_string(
                 row.get("case_sha256"), f"responses[{index}].case_sha256"
@@ -659,7 +669,7 @@ def score_judgments(
                 raise ContractError(
                     f"scores[{index}].judge: independent judge must differ from response runner"
                 )
-            judge_model = _non_empty_string(
+            judge_model = _model_identity(
                 row.get("judge_model"), f"scores[{index}].judge_model"
             )
             judged_at = _non_empty_string(

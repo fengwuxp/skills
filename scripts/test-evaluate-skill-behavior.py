@@ -270,6 +270,28 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         with self.assertRaises(MODULE.ContractError):
             MODULE.blind_responses(self.case_data, drifted, seed=731)
 
+    def test_rejects_unresolved_maker_and_judge_model_identities(self) -> None:
+        unresolved_responses = self.response_rows()
+        for row in unresolved_responses:
+            row["model"] = "configured-default"
+        with self.assertRaisesRegex(MODULE.ContractError, "resolved model identity"):
+            MODULE.blind_responses(self.case_data, unresolved_responses, seed=731)
+
+        case_data = self.source_bound_case_data()
+        blind_rows, key = MODULE.blind_responses(
+            case_data, self.response_rows(case_data), seed=731
+        )
+        unresolved_scores = self.score_rows(key)
+        for row in unresolved_scores:
+            row["judge_model"] = "configured-default"
+        with self.assertRaisesRegex(MODULE.ContractError, "resolved model identity"):
+            MODULE.score_judgments(
+                case_data,
+                unresolved_scores,
+                key,
+                blind_rows=blind_rows,
+            )
+
     def test_execution_evidence_rejects_unblinding_and_unredacted_text(self) -> None:
         rows = self.response_rows()
         safe_evidence = [
