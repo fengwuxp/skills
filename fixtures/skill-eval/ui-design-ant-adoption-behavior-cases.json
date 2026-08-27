@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "ui-design-expert 的 Ant Design B+ 跨应用采用行为契约。静态 fixture 只固定分端采用、版本兼容、组件规范和真实路径验证边界；准出仍要求同一 runner/model 重复采集与独立盲评。",
+  "description": "ui-design-expert 的 Ant Design B+ 跨应用采用行为契约。静态 fixture 只固定分端采用、版本兼容、组件规范和真实路径验证边界；历史 responses/scores 因 source 漂移不作为当前准出证据，恢复评分前须按当前 source 重新采集、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -15,7 +15,7 @@
         "ui-design-expert/references/ui-library-landscape.md",
         "ui-design-expert/references/prototype-output.md"
       ],
-      "sha256": "1cea08f83291fc3b295335f124ab5df3669c89e02c8d1a452c3de4e5298d739c"
+      "sha256": "08eefed43491690ba56c6537f243796e917b573f0f9b2ec05a51d21d2c7facb9"
     }
   },
   "rubric": {

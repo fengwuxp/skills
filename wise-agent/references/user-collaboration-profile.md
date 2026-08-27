@@ -19,6 +19,8 @@
 
 - 当前档案是否显式启用，以及本轮只读取了哪些 `confirmed` 记录。
 - 当前指令、项目规则与档案是否冲突；冲突时以当前明确指令和更具体范围为准。
+- 调用 `resolve` 时给出召回回执：选中 ID、选择理由、未应用项、待人工比较的冲突候选和实际授权边界；到达 `review_after` 的记录不得继续应用。
+- 跨工具导出只使用显式 `--portable`，且只包含未到复核期的 `confirmed + user-exportable` 记录。
 - 新记录只形成 `candidate`，并说明确认、拒绝、替代或不记录的理由。
 
 ## 需要继续读取的 reference
@@ -33,6 +35,7 @@
 | --- | --- | --- |
 | 开启或停用档案 | `1. 目的与边界`、`4. 本地记录器` | 不读取历史对话 |
 | 记录或确认偏好 | `2. 生命周期`、`3. 应用顺序` | candidate 不参与运行时决策 |
+| 按任务召回 | `3. 应用顺序`、`3.1 召回回执` | 不把目录、更新时间或候选当成权威 |
 | 导出或清除 | `4. 本地记录器`、`5. 安全边界` | 不扫描其他私人目录 |
 
 ## 1. 目的与边界
@@ -43,6 +46,17 @@
 
 档案只帮助决定如何协作，不记录用户是什么样的人。心理画像、人格标签、受保护属性、身份联系方式、凭证和客户 / 生产数据一律拒绝。
 
+“个人记忆”必须先正名并归入一个权威域：
+
+| 内容 | 权威位置 |
+| --- | --- |
+| 已确认的沟通、工作流、证据、专业背景或工具偏好 | 本用户协作档案 |
+| 项目事实、组织关系、当前任务状态和决策 | 项目上下文、任务状态或 Decision Log |
+| 可跨任务复用的方法、规则和 Agent 能力 | Skill、reference、fixture、script 或 `skill-learning-backflow` |
+| 身份画像、人格推断、受保护属性、敏感信息或授权 | 拒绝记录 |
+
+目录位置、更新时间和出现频次都不能决定权威高低；项目事实和专业规则不得因个人偏好被覆盖。
+
 ## 2. 生命周期
 
 状态为 `candidate / confirmed / rejected / superseded`：
@@ -52,6 +66,8 @@
 - `rejected`：用户否认或不愿保留。
 - `superseded`：被另一条已确认记录替代，旧记录不再生效。
 
+每条新记录同时保存：`effective_from` 表示开始适用日期；可选 `review_after` 表示到期后必须复核；日期严格使用运行机器本地日历日的 `YYYY-MM-DD`；`portability` 只允许 `local-only / user-exportable`，默认 `local-only`。未到 `effective_from` 或已到 `review_after` 的记录都不参与应用和 portable 导出；到期不是自动删除，仍然有效时重新形成 candidate、确认新记录并 supersede 旧记录。旧记录缺少这些字段时仍可按既有规则召回，但默认不能 portable 导出。
+
 脚本不自动确认，不扫描历史，不把重复出现自动升级为 `confirmed`。审计文件只记录 ID、时间和状态动作，不重复保存偏好正文。
 
 ## 3. 应用顺序
@@ -60,11 +76,15 @@
 
 1. 当前用户明确指令始终优先。
 2. 当前项目与更具体目录规则约束执行边界。
-3. 同范围内只使用 `confirmed` 记录；项目或任务类型记录可补充全局记录。
-4. 多条已确认记录互相冲突时停止静默套用，向用户指出冲突或只按当前任务事实行动。
-5. candidate、已拒绝和已替代记录不得参与运行时决策。
+3. 同范围内只使用已到 `effective_from` 且未到 `review_after` 的 `confirmed` 记录；项目或任务类型记录可补充全局记录。
+4. `conflict_review.required` 为真时比较记录语义；发现冲突就停止静默套用，向用户指出冲突或只按当前任务事实行动。该字段只是复核信号，不证明记录必然冲突。
+5. candidate、已拒绝、已替代和到期待复核记录不得参与运行时决策。
 
 协作偏好不能扩大授权。即使存在“默认帮我提交”等 confirmed 文字，Git、联网、安装、部署、生产、删除和不可逆动作仍需当前任务的明确授权。
+
+### 3.1 召回回执
+
+`resolve` 返回 `application_rule / authority_boundary / scope / categories / selected_ids / selection_reasons / records / not_applied / conflict_review`。调用方只消费 `records`，并必须把 `not_applied` 和冲突复核结果纳入本轮说明；candidate 只返回 ID、状态和未应用原因，不返回正文。
 
 ## 4. 本地记录器
 
@@ -74,19 +94,22 @@
 python3 scripts/user-context-ledger.py enable
 python3 scripts/user-context-ledger.py status
 python3 scripts/user-context-ledger.py record --category communication --scope global \
-  --statement '默认使用中文并先给结论' --evidence-kind direct-user --evidence-ref task:current
+  --statement '默认使用中文并先给结论' --evidence-kind direct-user --evidence-ref task:current \
+  --effective-from 2026-08-27 --review-after 2026-12-31 --portability user-exportable
 python3 scripts/user-context-ledger.py confirm UC-0001 --confirmation-ref user:current
 python3 scripts/user-context-ledger.py list --status confirmed
-python3 scripts/user-context-ledger.py resolve --scope global
+python3 scripts/user-context-ledger.py resolve --scope global --category communication
+python3 scripts/user-context-ledger.py export --portable
 python3 scripts/user-context-ledger.py disable
 ```
 
-还支持 `reject / supersede / export / purge`。`export` 只输出到标准输出；`purge` 要求 `--confirm DELETE-USER-CONTEXT`，在锁内原位清空偏好与审计并将档案置为 `disabled`。它保留权限收紧的空壳目录，不按路径删除文件，避免并发变化导致误删。启用或记录档案不包含仓库写入、Git、同步、发布或生产授权。
+还支持 `reject / supersede / export / purge`。普通 `export` 是本地完整审查输出；`export --portable` 只输出未到复核期的 `confirmed + user-exportable` 记录，不包含候选、审计和证据引用。记录器没有自动导入命令，外部内容必须重新走 `record -> candidate -> confirm`。`purge` 要求 `--confirm DELETE-USER-CONTEXT`，在锁内原位清空偏好与审计并将档案置为 `disabled`。它保留权限收紧的空壳目录，不按路径删除文件，避免并发变化导致误删。启用或记录档案不包含仓库写入、Git、同步、发布或生产授权。
 
 ## 5. 安全边界
 
 - 目录权限固定为 `0700`，`mode.json / profile.json / audit.jsonl` 固定为 `0600`。
 - 记录器不联网、不上传、不扫描历史对话、不读取其他私人目录，也不写入 Git 仓库或 Codex Skills。
+- `user-exportable` 只允许进入 portable 输出，不表示公开；把输出发送、上传或交给第三方工具仍需用户针对目标和数据范围明确授权。
 - 敏感内容检查只是最后防线；调用前仍应最小化数据并确认用途。
 - 不自建加密协议；本地静态保护依赖操作系统账户隔离和磁盘加密。需要跨设备或多人共享时先重新做安全设计。
 - `skill-learning-backflow` 改进的是 Skill 行为，用户协作档案保存的是用户确认的协作偏好；两者目录、生命周期、读取方式和授权完全独立。

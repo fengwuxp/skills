@@ -1,6 +1,14 @@
 {
   "version": 1,
   "skills": {
+    "senior-software-architect": [
+      {
+        "cases": "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json",
+        "responses": "fixtures/skill-eval/senior-system-design-principles-responses.jsonl",
+        "scores": "fixtures/skill-eval/senior-system-design-principles-scores.jsonl",
+        "seed": 731
+      }
+    ],
     "business-website-planner": [
       {
         "cases": "fixtures/skill-eval/business-website-planner-behavior-cases.json"
@@ -8,10 +16,7 @@
     ],
     "document-authoring": [
       {
-        "cases": "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json",
-        "responses": "fixtures/skill-eval/document-authoring-humanization-responses.jsonl",
-        "scores": "fixtures/skill-eval/document-authoring-humanization-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/document-authoring-visual-explanation-behavior-cases.json"
@@ -24,43 +29,25 @@
     ],
     "novelist": [
       {
-        "cases": "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json",
-        "responses": "fixtures/skill-eval/novelist-draft-continuation-responses.jsonl",
-        "scores": "fixtures/skill-eval/novelist-draft-continuation-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/novelist-historical-closure-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json",
-        "responses": "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl",
-        "scores": "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/novelist-planning-behavior-cases.json",
-        "responses": "fixtures/skill-eval/novelist-planning-responses.jsonl",
-        "scores": "fixtures/skill-eval/novelist-planning-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/novelist-planning-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json",
-        "responses": "fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl",
-        "scores": "fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json",
-        "responses": "fixtures/skill-eval/novelist-plot-progression-responses.jsonl",
-        "scores": "fixtures/skill-eval/novelist-plot-progression-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json",
-        "responses": "fixtures/skill-eval/novelist-scene-construction-responses.jsonl",
-        "scores": "fixtures/skill-eval/novelist-scene-construction-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [
@@ -71,21 +58,27 @@
         "seed": 731
       },
       {
-        "cases": "fixtures/skill-eval/product-simple-design-behavior-cases.json"
+        "cases": "fixtures/skill-eval/product-simple-design-behavior-cases.json",
+        "responses": "fixtures/skill-eval/product-simple-design-responses.jsonl",
+        "scores": "fixtures/skill-eval/product-simple-design-scores.jsonl",
+        "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
       }
     ],
     "ui-design-expert": [
       {
-        "cases": "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json",
-        "responses": "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl",
-        "scores": "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
       }
     ]
   }

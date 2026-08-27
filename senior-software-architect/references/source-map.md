@@ -205,6 +205,24 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 - 不把三原则写成替代性完整架构方法论；正式架构仍必须结合业务 driver、质量属性、安全合规、生产约束、团队能力和验证证据。
 - 不把“合适、简单、演化”理解为拒绝复杂架构；当业务规模、风险、合规、安全或运行证据真实触发时，仍应通过 ADR、测试、压测、监控、迁移和发布门禁升级架构形态。
 
+### 微信公众号文章：什么是好的系统设计（译）
+- 来源：`https://mp.weixin.qq.com/s/o4qoBL61AG87-qjbsYichQ`
+- 标题：`什么是好的系统设计（译）`
+- 公众号：`木栖迟`
+- 读取日期：2026-08-27
+- 读取状态：已通过公开 HTML 读取标题、作者和约 8,028 字符正文；文中引用的英文原文 `https://www.seangoedecke.com/good-system-design` 本轮 DNS 不可达，未独立核验翻译与原文差异。
+- 许可证：未见明确复用许可证；只保留来源链接、结构化提炼和应用边界，不复制译文、原文、图片或作者表达。
+应用记录：
+| 应用位置 | 已吸收内容 |
+| --- | --- |
+| `architecture.md` | 新增 `5.2.2 状态源与热路径优先`，并在可靠性段补充按业务语境选择 `fail-open` / `fail-closed`、记录异常决策分支与原因；要求说明状态写入 Owner、热路径证据、同步/异步边界、API 与事件的使用理由，以及新增节点和边的故障面、观测、回滚和复审条件。 |
+| `fixtures/skill-eval/prompt-cases.json` | 扩充 `senior-should-push-back-tech-first-architecture` 的期望处理，覆盖状态源、热路径、后台任务、事件理由和复杂度取舍。 |
+| `fixtures/skill-eval/senior-system-design-principles-behavior-cases.json` | 建立 5 个行为 contract，覆盖状态/热路径、同步/后台、API/事件/缓存、重试/幂等/失败模式和异常决策观测；`senior-article-final-blind-20260827-r2` 使用同一 runner/model 完成 3 次 baseline/candidate 重复采集与独立盲评，candidate weighted score `4.9`（baseline `4.3`）、blockers `0`，评分文件已绑定当前 source profile。 |
+未吸收内容：
+- 不把“状态组件越少越好”、读副本、缓存克制、事件少用、限流 fail-open 或固定响应时延写成无条件规则；仍需按业务不变量、数据一致性、流量、风险和运行证据裁决。
+- 不把文章中的数据库、队列、缓存、事件、Rails、Redis、Kafka 示例、性能数字或作者经验写成项目事实、架构准入、生产 SLO 或技术选型结论。
+- 不把文章译文替代现有 `architecture.md`、`distributed-consistency.md`、`production-readiness.md` 和项目源码/运行证据；真实变更仍需对应测试、监控、回滚和 Owner 确认。
+
 ### 微信公众号文章：架构师底层思维能力要求
 - 来源：`https://mp.weixin.qq.com/s/Veb3P2ug8XVmyBFmIoDJ7Q`
 - 标题：`架构师底层思维能力要求-这7种尽早练习`

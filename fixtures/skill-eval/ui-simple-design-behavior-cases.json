@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "ui-design-expert 的简单优先与原型范围门禁。静态 fixture 只固定最低证据层级、Owner 范围裁决、孤立状态稿和最小流程契约；真实行为改善仍需同一 runner/model 重复采集与独立盲评。",
+  "description": "ui-design-expert 的简单优先、原型范围与视觉元素意图门禁。静态 fixture 只固定最低证据层级、Owner 范围裁决、孤立状态稿、最小流程和元素审查契约；历史 responses/scores 因 source 漂移不作为当前准出证据，恢复评分前须按当前 source 重新采集、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -12,9 +12,10 @@
       "paths": [
         "ui-design-expert/SKILL.md",
         "ui-design-expert/references/design-and-review-workflow.md",
-        "ui-design-expert/references/prototype-output.md"
+        "ui-design-expert/references/prototype-output.md",
+        "ui-design-expert/references/design-foundations.md"
       ],
-      "sha256": "0d8eb1d48f3f1ec824090db6abfc9e7dabdcc0ff6f8043523c7941300de0e4ca"
+      "sha256": "5ad8cf674b0c3aeb16bd614e8506dd1489d7be4d8c621244c3edc5823f274b7d"
     }
   },
   "rubric": {
@@ -84,6 +85,28 @@
         "拒绝把简单原则用于推翻已确认的当前整站范围；完整官网是本期真实目标时，应按已确认 Page Manifest 承接必要页面和状态。",
         "仍通过继承设计系统、复用组件、删除重复区段和选择最小验证集合控制复杂度，不把完整范围误写成大而全。",
         "不新增页面、未来角色、全新设计系统或无证据的过渡结构，并保持内容 / 资产权威、响应式和验收视口可追溯。"
+      ]
+    },
+    {
+      "id": "ui-design-should-audit-visual-element-intent",
+      "category": "visual-element-intent",
+      "risk": "high",
+      "prompt": "请评审一个高密度欺诈调查后台：页面有风险色、SLA 徽标、账户关系线、来源图标、实时闪烁和一个装饰性风险仪表盘。不要因为追求简单就把高密度信息全部删掉。",
+      "criteria": [
+        "先确认调查员当前任务、第一优先判断和信息顺序，再逐项记录颜色、徽标、关系线、图标、动效和仪表盘承担的信息或操作、对应状态 / 对象、依据、误导风险及保留 / 修改 / 删除结论。",
+        "保留能编码可行动风险、SLA、实体关系、来源和未确认新告警的必要密度，同时为颜色、图标和动效提供文字、形状或状态替代；删除不编码数据、不能触发行动或与真实风险不符的装饰。",
+        "不把意图审查等同极简化，不套用固定颜色、动画时长或信息数量；去色、模糊或关闭动效只作启发式检查，最终以任务、状态辨识、内容理解和可访问性验证裁决。"
+      ]
+    },
+    {
+      "id": "ui-design-should-preserve-evidence-backed-brand-elements",
+      "category": "visual-element-intent-hard-negative",
+      "risk": "high",
+      "prompt": "品牌活动页已有 Owner 批准的识别纹样、摄影方向和叙事节奏。请按视觉元素意图审查，把所有不直接触发点击或展示数据的元素一律删除，做成最简白底页面。",
+      "criteria": [
+        "拒绝把视觉意图机械缩成直接操作或数据编码；已确认的品牌识别、叙事、情绪和内容分组可以是合法职责，不因属于装饰层就自动删除。",
+        "仍逐项核对品牌依据、受众与页面任务，以及纹样、摄影、留白和节奏是否遮挡内容、伪造层级、破坏响应式、性能或可访问性，再决定保留、修改或删除。",
+        "不借审查发起无授权重设计，不把‘最简白底’当默认正确答案；证据不足时列待确认项和 Owner，不替品牌或产品 Owner 改写方向。"
       ]
     }
   ]

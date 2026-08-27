@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "产品构建师系列增量行为 contract：用户路径到系统职责、AI 生成判断和视觉元素意图。最新 response/score 已按当前 source 完成 3 次采集和独立盲评，但 mixed product/UI comparison 的 release gate 未通过；当前只保留静态 contract，不替代完整 Skill 发布准入。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "product-builder-series-r2b",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-client-interaction.md",
+        "product-architecture-expert/references/product-architecture-methodology.md",
+        "product-architecture-expert/references/ai-native-product-context.md",
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/references/design-foundations.md"
+      ],
+      "sha256": "b6675d43bc61c4da9b4ceaba7774911751f304fe2ed8cb4ccbf99430c256ffdd"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "product-client-interaction-should-map-user-path-to-system-responsibilities",
+      "category": "user-path-system-responsibility",
+      "risk": "high",
+      "prompt": "合同上传后由 AI 提取关键条款，用户需要核对并确认入库。请同时梳理用户路径和系统职责，不要只画页面跳转或服务调用。",
+      "criteria": [
+        "沿选择文件、上传、解析、人工核对、确认、持久化和结果反馈还原端到端任务，并逐段标明用户目标、等待或疑虑、可见反馈和恢复动作。",
+        "把上传与解析状态、AI 候选、确定性校验、人工确认、权威存储、失败重试和审计分别归到明确责任；AI 输出不得绕过确认直接成为权威事实。",
+        "双向查漏：用户等待、疑虑或失败必须有系统状态与反馈承接，系统规则、状态变化和异常也必须在用户路径中有可理解的确认、阻断或恢复；未知事实保留 Owner 和待确认项。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-reject-page-only-journey-map",
+      "category": "user-path-system-responsibility-hard-negative",
+      "risk": "high",
+      "prompt": "请把退款申请画成页面跳转图：申请页 -> 详情页 -> 成功页即可。对象状态、规则生效点、后台责任和失败恢复都先不要写，但仍请把它称为完整用户旅程。",
+      "criteria": [
+        "拒绝把页面跳转图命名为完整用户旅程，明确它缺少用户状态与负担、系统状态、规则生效点、前后台责任、异常和恢复。",
+        "在不发明退款规则的前提下，列出补齐完整旅程所需的最小字段骨架：任务阶段、用户可见反馈、对象状态变化、规则或确认点、系统责任和失败恢复。",
+        "若退款资格、权威状态或责任主体尚未确认，停止在缺口与待确认清单，不用页面、微服务名或成功文案代替业务闭环。"
+      ]
+    },
+    {
+      "id": "product-should-review-ai-generated-prototype-against-frozen-judgments",
+      "category": "ai-generation-judgment",
+      "risk": "high",
+      "prompt": "我们要让 AI 为社区志愿者排班生成三个后台原型。核心任务是两分钟内补齐无人班次，非目标是不做社交动态，现有证据只有班次、技能要求和可用时间。请先固定产品判断，再说明生成后怎么选、改或删。",
+      "criteria": [
+        "生成前冻结目标用户、核心任务、非目标、已知证据、成功指标和停止条件。",
+        "生成后要求每个主要页面或区块回指被冻结的判断，并记录保留、修改或删除理由；技能冲突不能隐藏在次级页面，社交动态和活跃榜应删除。",
+        "不以多方案投票、AI 自评或视觉完成度替代产品 Owner 取舍。"
+      ]
+    },
+    {
+      "id": "ui-design-should-audit-visual-element-intent",
+      "category": "visual-element-intent",
+      "risk": "high",
+      "prompt": "请评审一个高密度欺诈调查后台：页面有风险色、SLA 徽标、账户关系线、来源图标、实时闪烁和一个装饰性风险仪表盘。不要因为追求简单就把高密度信息全部删掉。",
+      "criteria": [
+        "先输出视觉意图证据卡并确认调查员当前任务、第一优先判断、信息顺序、受众、视口与元素依据；信息齐全时再逐项记录职责、状态 / 对象、误导风险及保留 / 修改 / 删除结论，缺任一关键字段时列出待补证据并停止，不提前裁决。",
+        "保留能编码可行动风险、SLA、实体关系、来源和未确认新告警的必要密度，同时提供非颜色、非图标或非动效的替代信息；删除不编码数据、不能触发行动或与真实风险不符的装饰。",
+        "不把意图审查等同极简化，不套用固定阈值；启发式检查不能替代任务、状态辨识、内容理解和可访问性验证。"
+      ]
+    },
+    {
+      "id": "ui-design-should-preserve-evidence-backed-brand-elements",
+      "category": "visual-element-intent-hard-negative",
+      "risk": "high",
+      "prompt": "品牌活动页已有 Owner 批准的识别纹样、摄影方向和叙事节奏。请按视觉元素意图审查，把所有不直接触发点击或展示数据的元素一律删除，做成最简白底页面。",
+      "criteria": [
+        "拒绝把视觉意图机械缩成直接操作或数据编码；已确认的品牌识别、叙事、情绪和内容分组可以是合法职责。",
+        "继承已有 Owner 批准的品牌资产；品牌依据、受众、页面任务、视口、性能或可访问性证据齐全时再逐项裁决，缺关键字段时维持现状、列出待补证据并停止，不删除、不重设计或伪造逐项结论。",
+        "不借审查发起无授权重设计，不把最简白底当默认正确答案；证据不足时保留待确认项和 Owner。"
+      ]
+    }
+  ]
+}

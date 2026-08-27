@@ -20,7 +20,7 @@ import stat
 import sys
 import tempfile
 from contextlib import redirect_stdout
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Callable, Sequence
 
@@ -29,7 +29,9 @@ ALLOWED_CATEGORIES = {"communication", "workflow", "evidence", "expertise", "too
 FORBIDDEN_CATEGORIES = {"psychological", "personality", "protected-trait", "authorization"}
 EVIDENCE_KINDS = {"direct-user", "repeated-observation"}
 ACTIVE_STATUSES = {"candidate", "confirmed"}
+PORTABILITY_VALUES = {"local-only", "user-exportable"}
 SCOPE_RE = re.compile(r"^(?:global|project:[a-zA-Z0-9._/-]+|task-type:[a-zA-Z0-9._-]+)$")
+ISO_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 SENSITIVE_PATTERNS = (
     re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     re.compile(r"(?i)\b(?:api[_-]?key|access[_-]?token|password|secret)\s*[:=]\s*\S+"),
@@ -252,6 +254,34 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def iso_date(name: str, value: str) -> str:
+    if not ISO_DATE_RE.fullmatch(value):
+        raise ValueError(f"{name} must use YYYY-MM-DD")
+    try:
+        parsed = date.fromisoformat(value)
+    except ValueError as exc:
+        raise ValueError(f"{name} must use YYYY-MM-DD") from exc
+    return parsed.isoformat()
+
+
+def review_due(record: dict[str, object], as_of: date | None = None) -> bool:
+    value = record.get("review_after")
+    if value is None:
+        return False
+    if not isinstance(value, str):
+        raise ValueError(f"record {record.get('id', '<unknown>')} has invalid review_after")
+    return date.fromisoformat(iso_date("review_after", value)) <= (as_of or date.today())
+
+
+def not_yet_effective(record: dict[str, object], as_of: date | None = None) -> bool:
+    value = record.get("effective_from")
+    if value is None:
+        return False
+    if not isinstance(value, str):
+        raise ValueError(f"record {record.get('id', '<unknown>')} has invalid effective_from")
+    return date.fromisoformat(iso_date("effective_from", value)) > (as_of or date.today())
+
+
 def append_audit(root: Path, record_id: str, action: str) -> None:
     path = audit_path(root)
     fd = open_regular(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
@@ -444,6 +474,24 @@ def record(root: Path, args: argparse.Namespace) -> None:
         raise ValueError("unsupported evidence kind")
     if args.evidence_kind == "repeated-observation" and len(refs) < 2:
         raise ValueError("repeated-observation requires two distinct current-task evidence refs")
+    effective_from_value = getattr(args, "effective_from", None)
+    review_after_value = getattr(args, "review_after", None)
+    portability_value = getattr(args, "portability", None)
+    effective_from = (
+        date.today().isoformat()
+        if effective_from_value is None
+        else iso_date("effective-from", effective_from_value)
+    )
+    review_after = (
+        None
+        if review_after_value is None
+        else iso_date("review-after", review_after_value)
+    )
+    if review_after is not None and date.fromisoformat(review_after) < date.fromisoformat(effective_from):
+        raise ValueError("review-after must not precede effective-from")
+    portability = portability_value or "local-only"
+    if portability not in PORTABILITY_VALUES:
+        raise ValueError("unsupported portability")
 
     def update(profile: dict[str, object]) -> TransactionUpdate:
         require_enabled(root)
@@ -453,6 +501,20 @@ def record(root: Path, args: argparse.Namespace) -> None:
             if not isinstance(existing, dict) or existing.get("status") not in ACTIVE_STATUSES:
                 continue
             if existing.get("category") == args.category and existing.get("scope") == args.scope and " ".join(str(existing.get("statement", "")).casefold().split()) == normalized:
+                metadata_changed = (
+                    effective_from_value is not None
+                    and existing.get("effective_from") != effective_from
+                ) or (
+                    review_after_value is not None
+                    and existing.get("review_after") != review_after
+                ) or (
+                    portability_value is not None
+                    and existing.get("portability", "local-only") != portability
+                )
+                if metadata_changed or (
+                    existing.get("status") == "confirmed" and review_due(existing)
+                ):
+                    continue
                 return None, None, None, f"SKIP duplicate {existing['id']}"
 
         record_id = next_id(records)
@@ -466,6 +528,9 @@ def record(root: Path, args: argparse.Namespace) -> None:
             "statement": statement,
             "evidence_kind": args.evidence_kind,
             "evidence_refs": refs,
+            "effective_from": effective_from,
+            "review_after": review_after,
+            "portability": portability,
             "status": "candidate",
             "created_at": timestamp,
             "updated_at": timestamp,
@@ -530,23 +595,125 @@ def list_records(root: Path, status: str | None, scope: str | None) -> None:
     print(json.dumps({"records": selected}, ensure_ascii=False, indent=2))
 
 
-def resolve(root: Path, scope: str) -> None:
+def resolve(root: Path, scope: str, categories: Sequence[str] | None = None) -> None:
     validate_home(root)
     require_enabled(root)
     if not SCOPE_RE.fullmatch(scope):
         raise ValueError("invalid scope")
+    requested_categories = set(categories or ())
+    if requested_categories - ALLOWED_CATEGORIES:
+        raise ValueError("unsupported category")
     profile = read_profile(root)
     records = profile["records"]
     assert isinstance(records, list)
     scopes = {"global", scope}
-    selected = [item for item in records if isinstance(item, dict) and item.get("status") == "confirmed" and item.get("scope") in scopes]
-    print(json.dumps({"application_rule": "current-instruction-first", "records": selected}, ensure_ascii=False, indent=2))
+    relevant = [
+        item
+        for item in records
+        if isinstance(item, dict)
+        and item.get("scope") in scopes
+        and (not requested_categories or item.get("category") in requested_categories)
+    ]
+    as_of = date.today()
+    selected: list[dict[str, object]] = []
+    not_applied: list[dict[str, object]] = []
+    for item in relevant:
+        status = item.get("status")
+        if status != "confirmed":
+            not_applied.append(
+                {
+                    "id": item.get("id"),
+                    "status": status,
+                    "reason": "status-not-confirmed",
+                }
+            )
+        elif not_yet_effective(item, as_of):
+            not_applied.append(
+                {
+                    "id": item.get("id"),
+                    "status": status,
+                    "reason": "not-effective-yet",
+                    "effective_from": item.get("effective_from"),
+                }
+            )
+        elif review_due(item, as_of):
+            not_applied.append(
+                {
+                    "id": item.get("id"),
+                    "status": status,
+                    "reason": "review-due",
+                    "review_after": item.get("review_after"),
+                }
+            )
+        else:
+            selected.append(item)
+    selected_ids = [str(item.get("id")) for item in selected]
+    print(
+        json.dumps(
+            {
+                "application_rule": "current-instruction-first",
+                "authority_boundary": "collaboration-only-no-authority-grant",
+                "scope": scope,
+                "categories": sorted(requested_categories),
+                "selected_ids": selected_ids,
+                "selection_reasons": [
+                    {"id": record_id, "reason": "confirmed-and-scope-matched"}
+                    for record_id in selected_ids
+                ],
+                "records": selected,
+                "not_applied": not_applied,
+                "conflict_review": {
+                    "required": len(selected_ids) > 1,
+                    "record_ids": selected_ids,
+                },
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
 
-def export_profile(root: Path) -> None:
+def export_profile(root: Path, portable: bool = False) -> None:
     validate_home(root)
     mode = read_mode(root)
     profile = read_profile(root)
+    if portable:
+        require_enabled(root)
+        records = profile["records"]
+        assert isinstance(records, list)
+        as_of = date.today()
+        fields = (
+            "id",
+            "category",
+            "scope",
+            "statement",
+            "effective_from",
+            "review_after",
+            "portability",
+            "updated_at",
+        )
+        selected = [
+            {field: item.get(field) for field in fields}
+            for item in records
+            if isinstance(item, dict)
+            and item.get("status") == "confirmed"
+            and item.get("portability") == "user-exportable"
+            and not not_yet_effective(item, as_of)
+            and not review_due(item, as_of)
+        ]
+        print(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "export_kind": "portable-confirmed",
+                    "authority_boundary": "collaboration-only-no-authority-grant",
+                    "records": selected,
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return
     print(json.dumps({"mode": mode, "records": profile["records"]}, ensure_ascii=False, indent=2))
 
 
@@ -632,6 +799,9 @@ def build_parser() -> argparse.ArgumentParser:
     record_parser.add_argument("--statement", required=True)
     record_parser.add_argument("--evidence-kind", required=True)
     record_parser.add_argument("--evidence-ref", action="append", required=True)
+    record_parser.add_argument("--effective-from")
+    record_parser.add_argument("--review-after")
+    record_parser.add_argument("--portability", choices=sorted(PORTABILITY_VALUES))
     confirm = commands.add_parser("confirm")
     confirm.add_argument("record_id")
     confirm.add_argument("--confirmation-ref", required=True)
@@ -647,7 +817,9 @@ def build_parser() -> argparse.ArgumentParser:
     listing.add_argument("--scope")
     resolving = commands.add_parser("resolve")
     resolving.add_argument("--scope", required=True)
-    commands.add_parser("export")
+    resolving.add_argument("--category", action="append", choices=sorted(ALLOWED_CATEGORIES))
+    exporting = commands.add_parser("export")
+    exporting.add_argument("--portable", action="store_true")
     deleting = commands.add_parser("purge")
     deleting.add_argument("--confirm", required=True)
     return parser
@@ -1236,6 +1408,190 @@ def run_self_test() -> None:
         assert json.loads(output.getvalue())["records"][0]["id"] == "UC-0001"
         assert "默认使用中文" not in audit_path(root).read_text(encoding="utf-8")
 
+        recall_root = Path(temp_dir) / "recall-receipt"
+        enable(recall_root)
+        stale = argparse.Namespace(
+            category="tooling",
+            scope="project:alpha",
+            statement="alpha 项目使用 ToolA v1。",
+            evidence_kind="direct-user",
+            evidence_ref=["task:alpha-old"],
+            effective_from="2000-01-01",
+            review_after="2000-02-01",
+            portability="user-exportable",
+        )
+        record(recall_root, stale)
+        transition(recall_root, "UC-0001", "confirmed", "user:alpha-old")
+        fresh = argparse.Namespace(**vars(stale))
+        fresh.statement = "alpha 项目先核对依赖再推进。"
+        fresh.evidence_ref = ["task:alpha-current"]
+        fresh.effective_from = "2026-08-01"
+        fresh.review_after = "9999-12-31"
+        record(recall_root, fresh)
+        transition(recall_root, "UC-0002", "confirmed", "user:alpha-current")
+        pending = argparse.Namespace(**vars(fresh))
+        pending.statement = "允许自动提交 Git。"
+        pending.evidence_ref = ["task:alpha-pending"]
+        pending.portability = "local-only"
+        record(recall_root, pending)
+        future = argparse.Namespace(**vars(fresh))
+        future.statement = "alpha 项目切换到 ToolB。"
+        future.evidence_ref = ["task:alpha-future"]
+        future.effective_from = "9999-01-01"
+        future.review_after = "9999-12-31"
+        record(recall_root, future)
+        transition(recall_root, "UC-0004", "confirmed", "user:alpha-future")
+
+        recall_profile = read_profile(recall_root)
+        recall_records = recall_profile["records"]
+        assert isinstance(recall_records, list)
+        assert recall_records[0]["effective_from"] == "2000-01-01"
+        assert recall_records[0]["review_after"] == "2000-02-01"
+        assert recall_records[0]["portability"] == "user-exportable"
+        output = io.StringIO()
+        with redirect_stdout(output):
+            resolve(recall_root, "project:alpha")
+        receipt = json.loads(output.getvalue())
+        assert receipt["selected_ids"] == ["UC-0002"]
+        assert receipt["selection_reasons"] == [
+            {"id": "UC-0002", "reason": "confirmed-and-scope-matched"}
+        ]
+        assert receipt["not_applied"] == [
+            {
+                "id": "UC-0001",
+                "status": "confirmed",
+                "reason": "review-due",
+                "review_after": "2000-02-01",
+            },
+            {
+                "id": "UC-0003",
+                "status": "candidate",
+                "reason": "status-not-confirmed",
+            },
+            {
+                "id": "UC-0004",
+                "status": "confirmed",
+                "reason": "not-effective-yet",
+                "effective_from": "9999-01-01",
+            },
+        ]
+        assert receipt["conflict_review"] == {
+            "required": False,
+            "record_ids": ["UC-0002"],
+        }
+        assert receipt["authority_boundary"] == "collaboration-only-no-authority-grant"
+
+        local_only = argparse.Namespace(**vars(fresh))
+        local_only.statement = "默认保留完整验证证据。"
+        local_only.evidence_ref = ["task:alpha-local"]
+        local_only.portability = "local-only"
+        record(recall_root, local_only)
+        transition(recall_root, "UC-0005", "confirmed", "user:alpha-local")
+        output = io.StringIO()
+        with redirect_stdout(output):
+            export_profile(recall_root, portable=True)
+        portable = json.loads(output.getvalue())
+        assert portable["export_kind"] == "portable-confirmed"
+        assert [item["id"] for item in portable["records"]] == ["UC-0002"]
+        assert set(portable["records"][0]) == {
+            "id",
+            "category",
+            "scope",
+            "statement",
+            "effective_from",
+            "review_after",
+            "portability",
+            "updated_at",
+        }
+        output = io.StringIO()
+        with redirect_stdout(output):
+            export_profile(recall_root)
+        full_export = json.loads(output.getvalue())
+        assert set(full_export) == {"mode", "records"}
+        assert len(full_export["records"]) == 5
+        invalid_metadata = (
+            ("effective_from", ""),
+            ("effective_from", "2026/08/01"),
+            ("effective_from", "20260801"),
+            ("effective_from", "2026-W31-5"),
+            ("review_after", ""),
+            ("review_after", "2026-07-31"),
+            ("portability", "public"),
+        )
+        for field, value in invalid_metadata:
+            invalid = argparse.Namespace(**vars(fresh))
+            setattr(invalid, field, value)
+            try:
+                record(recall_root, invalid)
+            except ValueError:
+                pass
+            else:
+                raise AssertionError(f"record accepted invalid {field}")
+        renewed = argparse.Namespace(**vars(stale))
+        renewed.evidence_ref = ["task:alpha-renewed"]
+        renewed.effective_from = "2026-08-27"
+        renewed.review_after = "9999-12-31"
+        record(recall_root, renewed)
+        renewed_records = read_profile(recall_root)["records"]
+        assert isinstance(renewed_records, list)
+        assert renewed_records[-1]["id"] == "UC-0006"
+        assert renewed_records[-1]["status"] == "candidate"
+
+        expiry_only_root = Path(temp_dir) / "expiry-only-renewal"
+        enable(expiry_only_root)
+        record(expiry_only_root, stale)
+        transition(expiry_only_root, "UC-0001", "confirmed", "user:expired")
+        expiry_only = argparse.Namespace(**vars(stale))
+        expiry_only.evidence_ref = ["task:expired-renewal"]
+        record(expiry_only_root, expiry_only)
+        expiry_only_records = read_profile(expiry_only_root)["records"]
+        assert isinstance(expiry_only_records, list)
+        assert [item["id"] for item in expiry_only_records] == ["UC-0001", "UC-0002"]
+
+        candidate_revision_root = Path(temp_dir) / "candidate-revision"
+        enable(candidate_revision_root)
+        candidate_local = argparse.Namespace(**vars(fresh))
+        candidate_local.portability = "local-only"
+        record(candidate_revision_root, candidate_local)
+        candidate_exportable = argparse.Namespace(**vars(candidate_local))
+        candidate_exportable.portability = "user-exportable"
+        record(candidate_revision_root, candidate_exportable)
+        candidate_revisions = read_profile(candidate_revision_root)["records"]
+        assert isinstance(candidate_revisions, list)
+        assert [item["id"] for item in candidate_revisions] == ["UC-0001", "UC-0002"]
+        assert all(item["status"] == "candidate" for item in candidate_revisions)
+
+        legacy_root = Path(temp_dir) / "legacy-profile"
+        enable(legacy_root)
+        legacy_record = {
+            "id": "UC-0001",
+            "category": "communication",
+            "scope": "global",
+            "statement": "旧版已确认偏好。",
+            "evidence_kind": "direct-user",
+            "evidence_refs": ["task:legacy"],
+            "status": "confirmed",
+            "created_at": "2026-01-01T00:00:00+00:00",
+            "updated_at": "2026-01-01T00:00:00+00:00",
+            "decision_ref": "user:legacy",
+        }
+        write_json(
+            profile_path(legacy_root),
+            {"schema_version": 1, "records": [legacy_record]},
+        )
+        output = io.StringIO()
+        with redirect_stdout(output):
+            resolve(legacy_root, "global")
+        assert json.loads(output.getvalue())["selected_ids"] == ["UC-0001"]
+        output = io.StringIO()
+        with redirect_stdout(output):
+            export_profile(legacy_root, portable=True)
+        assert json.loads(output.getvalue())["records"] == []
+        output = io.StringIO()
+        with redirect_stdout(output):
+            export_profile(legacy_root)
+        assert json.loads(output.getvalue())["records"] == [legacy_record]
+
         forbidden = argparse.Namespace(**vars(args))
         forbidden.category = "psychological"
         try:
@@ -1350,9 +1706,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         elif args.command == "list":
             list_records(root, args.status, args.scope)
         elif args.command == "resolve":
-            resolve(root, args.scope)
+            resolve(root, args.scope, args.category)
         elif args.command == "export":
-            export_profile(root)
+            export_profile(root, args.portable)
         elif args.command == "purge":
             purge(root, args.confirm)
     except (OSError, ValueError, json.JSONDecodeError) as exc:

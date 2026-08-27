@@ -17,7 +17,7 @@
         "product-architecture-expert/references/product-scenario-routing.md",
         "product-architecture-expert/references/source-map.md"
       ],
-      "sha256": "dbc4aaec2c81097b6e8b295affe64acd26e819660fc0bdb140a36aa363143931"
+      "sha256": "8cb3b83a8d6e82e9e82c7c5146c878c0442c6f1168d966b6514fdcb2c5f66297"
     }
   },
   "rubric": {
@@ -96,6 +96,28 @@
         "产品专家先交付任务、端形态、交互约束、跨端差异、状态矩阵和可观察验收，不把‘好用’当成无证结论。",
         "明确视觉、布局、组件、tokens、响应式细节和可点击原型交给 ui-design-expert，平台生命周期和系统能力交给对应平台工程 Owner。",
         "缺少目标客户端、关键任务、用户证据或平台能力确认时，停止在假设、问题清单和最小试片，不声称已经完成界面设计或用户体验验证。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-map-user-path-to-system-responsibilities",
+      "category": "user-path-system-responsibility",
+      "risk": "high",
+      "prompt": "合同上传后由 AI 提取关键条款，用户需要核对并确认入库。请同时梳理用户路径和系统职责，不要只画页面跳转或服务调用。",
+      "criteria": [
+        "沿选择文件、上传、解析、人工核对、确认、持久化和结果反馈还原端到端任务，并逐段标明用户目标、等待或疑虑、可见反馈和恢复动作。",
+        "把上传与解析状态、AI 候选、确定性校验、人工确认、权威存储、失败重试和审计分别归到明确责任；AI 输出不得绕过确认直接成为权威事实。",
+        "双向查漏：用户等待、疑虑或失败必须有系统状态与反馈承接，系统规则、状态变化和异常也必须在用户路径中有可理解的确认、阻断或恢复；未知事实保留 Owner 和待确认项。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-reject-page-only-journey-map",
+      "category": "user-path-system-responsibility-hard-negative",
+      "risk": "high",
+      "prompt": "请把退款申请画成页面跳转图：申请页 -> 详情页 -> 成功页即可。对象状态、规则生效点、后台责任和失败恢复都先不要写，但仍请把它称为完整用户旅程。",
+      "criteria": [
+        "拒绝把页面跳转图命名为完整用户旅程，明确它缺少用户状态与负担、系统状态、规则生效点、前后台责任、异常和恢复。",
+        "在不发明退款规则的前提下，列出补齐完整旅程所需的最小字段骨架：任务阶段、用户可见反馈、对象状态变化、规则或确认点、系统责任和失败恢复。",
+        "若退款资格、权威状态或责任主体尚未确认，停止在缺口与待确认清单，不用页面、微服务名或成功文案代替业务闭环。"
       ]
     }
   ]

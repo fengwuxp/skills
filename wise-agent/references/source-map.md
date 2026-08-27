@@ -158,6 +158,7 @@
 - Microsoft Research [VeriTrail: Detecting Hallucination and Tracing Provenance in Multi-Step AI Workflows](https://www.microsoft.com/en-us/research/blog/veritrail-detecting-hallucination-and-tracing-provenance-in-multi-step-ai-workflows/)：2026-08-11 读取官方研究说明。本仓库只吸收把事实声明回链来源、版本和 provenance 的方法，用于 `authority_refs` 与独立 Checker；不把模型生成的引用或 validator 退出码写成来源真实性证明。
 - OpenAI [Expanding on what we missed with sycophancy](https://openai.com/index/expanding-on-sycophancy/)：2026-08-11 读取官方复盘。该文说明用户反馈信号、评估缺口和上线流程可共同放大迎合行为；本仓库只吸收强前提需要反证、模型一致意见不能替代事实和 Checker 的边界，不复制事件细节或把一次事故写成永久模型定性。
 - [NIST Privacy Framework](https://www.nist.gov/privacy-framework) 与英国 ICO [Principle (b): Purpose limitation](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/the-principles/purpose-limitation/)：2026-08-11 读取公开页面。用户协作档案只吸收自愿开启、purpose limitation、数据最小化、可查看 / 更正 / 清除和风险治理原则；它不是法律意见，不构成组织合规结论、认证或特定法域适用性判断。
+- 微信文章 [《一文搞懂个人AI记忆系统构建全流程》](https://mp.weixin.qq.com/s/2Kz2JQK1r606S3quiCFUYg)：原创作者 `左德军`，账号 `腾讯云开发者`，页面显示发布时间为 2026-08-27 08:45，北京；2026-08-27 `web.open` 无法打开，随后通过 Codex in-app Browser 的 Playwright 等价浏览器自动化读取标题、作者、发布时间和正文。公开内容用于参考用户持有的跨工具上下文、稳定 / 动态信息分离、按需召回、维护写回、人工确认和过期复核，并落实到 `user-collaboration-profile.md` 与离线记录器；不新增顶层个人记忆 Skill，不复制五层目录、固定两级嵌套、目录权重、单条记忆单次 Git 提交、组织关系样例、文章原文、图片或作者表达，也不自动扫描历史、导入外部记忆、确认候选、扩大授权、同步、提交或发布。
 
 ## 提炼边界
 

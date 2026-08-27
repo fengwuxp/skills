@@ -20,7 +20,14 @@ class RequiredGroup(NamedTuple):
     min_hits: int = 1
 
 
+class RequiredTable(NamedTuple):
+    name: str
+    fields: tuple[tuple[str, ...], ...]
+    min_rows: int
+
+
 CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
+    "ant-adoption": (),
     "design-brief": (
         RequiredGroup("facts_goal_scope", ("用户", "场景", "主任务", "成功", "非目标", "产品规则"), 4),
         RequiredGroup("information_architecture", ("信息架构", "关键路径", "页面层级", "导航"), 2),
@@ -100,6 +107,138 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
             ("成功", "失败", "验证", "证据", "版本", "任务走查", "停止", "残余风险", "不宣称", "不证明"),
             5,
         ),
+    ),
+}
+
+ANT_ADOPTION_SCENARIOS = (
+    "cross-application",
+    "version-upgrade",
+    "component-spec",
+    "mobile-candidate",
+    "existing-system",
+)
+
+ANT_ADOPTION_CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
+    "cross-application": (
+        RequiredGroup("shared_semantics", ("共享语义", "语义 tokens", "组件行为"), 2),
+        RequiredGroup("client_independence", ("品牌", "密度", "导航", "页面模板", "触控", "内容节奏"), 4),
+        RequiredGroup("path_states", ("loading", "empty", "error", "success", "disabled", "focus"), 6),
+        RequiredGroup("template_pollution", ("模板污染",)),
+    ),
+    "version-upgrade": (
+        RequiredGroup(
+            "current_engineering_info",
+            ("精确主版本", "React", "浏览器", "@ant-design/icons", "主题入口", "内部 DOM", "class"),
+            6,
+        ),
+        RequiredGroup("react_18", ("React 18",)),
+        RequiredGroup("modern_browser_css", ("现代浏览器", "CSS variables"), 2),
+        RequiredGroup("icons_6", ("@ant-design/icons", "6 及以上"), 2),
+        RequiredGroup("internal_dependency", ("内部 DOM", "内部 class", "内部选择器")),
+        RequiredGroup("no_dependency_trial", ("不改依赖", "试片", "错误", "恢复", "成功"), 4),
+        RequiredGroup("upgrade_authority", ("工程 Owner", "不联网", "不安装", "不升级", "停止"), 4),
+    ),
+    "component-spec": (
+        RequiredGroup("component_states", ("loading", "empty", "error", "disabled", "focus", "success"), 6),
+        RequiredGroup("deviation_evidence", ("任务", "品牌", "兼容证据"), 2),
+        RequiredGroup(
+            "static_evidence_boundary",
+            ("静态检查", "官方组件说明", "不能证明", "组合后可用"),
+            3,
+        ),
+    ),
+    "mobile-candidate": (
+        RequiredGroup("independent_candidate", ("独立候选", "不因", "自动采用"), 2),
+        RequiredGroup("candidate_due_diligence", ("技术", "维护", "许可", "任务覆盖", "迁移成本", "退出条件"), 5),
+        RequiredGroup(
+            "mobile_real_path",
+            ("真实", "目标设备", "长内容", "弱网", "错误恢复", "触控", "键盘", "焦点", "停止"),
+            7,
+        ),
+        RequiredGroup("mobile_owner", ("H5 Owner", "移动 Owner")),
+    ),
+    "existing-system": (
+        RequiredGroup(
+            "framework_neutral_boundary",
+            ("业务语义", "语义 tokens", "组件行为", "内部 token", "class", "DOM", "桌面模板"),
+            5,
+        ),
+        RequiredGroup("migration_gate", ("迁移 Owner", "成本", "回退", "停止条件", "维持", "证据"), 4),
+    ),
+}
+
+ANT_ADOPTION_SECTION_ORDER: dict[str, tuple[tuple[str, tuple[str, ...]], ...]] = {
+    "cross-application": (
+        ("section_adoption_profile", ("Adoption Profile",)),
+        ("section_real_paths", ("真实路径验证", "真实路径")),
+    ),
+    "version-upgrade": (
+        ("section_current_engineering", ("当前工程信息",)),
+        ("section_v6_gate", ("v6 兼容门禁", "v6兼容门禁")),
+        ("section_trial_authority", ("最小试片与授权", "最小试片")),
+    ),
+    "component-spec": (
+        ("section_component_contract", ("组件契约",)),
+        ("section_paths_evidence", ("真实路径与证据边界", "真实路径")),
+    ),
+    "mobile-candidate": (
+        ("section_independent_candidate", ("独立候选核验", "独立候选")),
+        ("section_mobile_path", ("H5 真实路径与停止条件", "真实路径与停止条件")),
+    ),
+    "existing-system": (
+        ("section_adoption_profile", ("Adoption Profile",)),
+        ("section_real_paths", ("两端真实路径", "真实路径")),
+        ("section_migration_gate", ("迁移门禁",)),
+    ),
+}
+
+PROFILE_TABLE_FIELDS = (
+    ("应用", "客户端"),
+    ("项目当前版本", "当前版本"),
+    ("采用深度",),
+    ("主题策略", "主题"),
+    ("组件映射",),
+    ("偏离项", "偏离"),
+    ("Owner",),
+    ("兼容性证据", "证据"),
+)
+REAL_PATH_TABLE_FIELDS = (
+    ("应用", "客户端", "端"),
+    ("真实任务", "路径"),
+    ("状态",),
+    ("键盘", "焦点", "触控"),
+    ("证据",),
+    ("停止条件", "停止"),
+    ("Owner",),
+)
+COMPONENT_TABLE_FIELDS = (
+    ("组件", "来源"),
+    ("语义 tokens",),
+    ("状态",),
+    ("交互与反馈",),
+    ("响应式",),
+    ("可访问性",),
+    ("偏离项", "偏离"),
+    ("Owner",),
+)
+ANT_ADOPTION_TABLES: dict[str, tuple[RequiredTable, ...]] = {
+    "cross-application": (
+        RequiredTable("adoption_profile_table", PROFILE_TABLE_FIELDS, 3),
+        RequiredTable(
+            "real_path_table",
+            REAL_PATH_TABLE_FIELDS + (("模板污染",),),
+            2,
+        ),
+    ),
+    "version-upgrade": (),
+    "component-spec": (
+        RequiredTable("component_contract_table", COMPONENT_TABLE_FIELDS, 2),
+        RequiredTable("real_path_table", REAL_PATH_TABLE_FIELDS, 2),
+    ),
+    "mobile-candidate": (),
+    "existing-system": (
+        RequiredTable("adoption_profile_table", PROFILE_TABLE_FIELDS, 2),
+        RequiredTable("real_path_table", REAL_PATH_TABLE_FIELDS, 2),
     ),
 }
 
@@ -213,6 +352,124 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+def markdown_tables(text: str) -> list[tuple[tuple[str, ...], int]]:
+    lines = text.splitlines()
+    tables: list[tuple[tuple[str, ...], int]] = []
+    for index in range(len(lines) - 1):
+        header = lines[index].strip()
+        separator = lines[index + 1].strip()
+        if "|" not in header or "|" not in separator:
+            continue
+        separator_cells = [cell.strip().replace(" ", "") for cell in separator.strip("|").split("|")]
+        if len(separator_cells) < 2 or not all(re.fullmatch(r":?-{3,}:?", cell) for cell in separator_cells):
+            continue
+        header_cells = tuple(normalize(cell) for cell in header.strip("|").split("|"))
+        row_count = 0
+        for row in lines[index + 2 :]:
+            if "|" not in row:
+                break
+            if row.strip():
+                row_count += 1
+        tables.append((header_cells, row_count))
+    return tables
+
+
+def table_matches(
+    headers: tuple[str, ...],
+    required_fields: tuple[tuple[str, ...], ...],
+) -> bool:
+    return all(
+        any(normalize(alias) in cell for alias in aliases for cell in headers)
+        for aliases in required_fields
+    )
+
+
+def section_body(matches: list[re.Match[str]], position: int, text: str) -> str:
+    current_level = len(matches[position].group(0)) - len(matches[position].group(0).lstrip("#"))
+    body_end = len(text)
+    for following in matches[position + 1 :]:
+        following_level = len(following.group(0)) - len(following.group(0).lstrip("#"))
+        if following_level <= current_level:
+            body_end = following.start()
+            break
+    return text[matches[position].end() : body_end]
+
+
+def missing_ant_adoption_sections(scenario: str, text: str) -> list[str]:
+    matches = list(HEADING_PATTERN.finditer(text))
+    headings = [normalize(match.group(1)) for match in matches]
+    missing: list[str] = []
+    positions: list[int] = []
+    for name, aliases in ANT_ADOPTION_SECTION_ORDER[scenario]:
+        position = next(
+            (index for index, heading in enumerate(headings) if any(normalize(alias) in heading for alias in aliases)),
+            None,
+        )
+        if position is None:
+            missing.append(name)
+            continue
+        positions.append(position)
+        body = re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", normalize(section_body(matches, position, text)))
+        if len(body) < 12:
+            missing.append(f"{name}_content")
+    if not missing and positions != sorted(positions):
+        missing.append("section_order")
+    return missing
+
+
+def has_keyword_only_ant_section(scenario: str, text: str) -> bool:
+    matches = list(HEADING_PATTERN.finditer(text))
+    keywords = sorted(
+        {
+            normalize(alias)
+            for group in ANT_ADOPTION_CHECKS[scenario]
+            for alias in group.aliases
+        }
+        | {
+            normalize(alias)
+            for _, aliases in ANT_ADOPTION_SECTION_ORDER[scenario]
+            for alias in aliases
+        },
+        key=len,
+        reverse=True,
+    )
+    required_headings = [alias for _, aliases in ANT_ADOPTION_SECTION_ORDER[scenario] for alias in aliases]
+    for position, match in enumerate(matches):
+        heading = normalize(match.group(1))
+        if not any(normalize(alias) in heading for alias in required_headings):
+            continue
+        body = normalize(section_body(matches, position, text))
+        for keyword in keywords:
+            body = body.replace(keyword, "")
+        if len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", body)) < 12:
+            return True
+    return False
+
+
+def missing_ant_adoption(scenario: str | None, text: str) -> list[str]:
+    if scenario not in ANT_ADOPTION_SCENARIOS:
+        return ["ant_adoption_scenario"]
+    normalized = normalize(text)
+    missing = [
+        group.name
+        for group in ANT_ADOPTION_CHECKS[scenario]
+        if sum(1 for alias in group.aliases if normalize(alias) in normalized) < group.min_hits
+    ]
+    missing.extend(missing_ant_adoption_sections(scenario, text))
+    tables = markdown_tables(text)
+    for required in ANT_ADOPTION_TABLES[scenario]:
+        if not any(
+            row_count >= required.min_rows and table_matches(headers, required.fields)
+            for headers, row_count in tables
+        ):
+            missing.append(required.name)
+    if has_keyword_only_ant_section(scenario, text):
+        missing.append("keyword_only_section")
+    if PLACEHOLDER_PATTERN.search(text):
+        missing.append("placeholder_fields")
+    return list(dict.fromkeys(missing))
+
+
 def missing_sections(kind: str, text: str) -> list[str]:
     headings = [normalize(match.group(1)) for match in HEADING_PATTERN.finditer(text)]
     missing: list[str] = []
@@ -271,7 +528,9 @@ def has_keyword_only_section(kind: str, text: str) -> bool:
     return False
 
 
-def missing_groups(kind: str, text: str) -> list[str]:
+def missing_groups(kind: str, text: str, scenario: str | None = None) -> list[str]:
+    if kind == "ant-adoption":
+        return missing_ant_adoption(scenario, text)
     normalized = normalize(text)
     missing = [
         group.name
@@ -343,6 +602,16 @@ def run_self_test() -> int:
     for invalid_kind, invalid_name in invalid_cases:
         if not missing_groups(invalid_kind, (fixtures / invalid_name).read_text(encoding="utf-8")):
             failures.append(f"{invalid_kind}: invalid fixture unexpectedly passed: {invalid_name}")
+    for scenario in ANT_ADOPTION_SCENARIOS:
+        valid_path = fixtures / f"ant-adoption-{scenario}-valid.md"
+        invalid_path = fixtures / f"ant-adoption-{scenario}-invalid.md"
+        if missing := missing_groups("ant-adoption", valid_path.read_text(encoding="utf-8"), scenario):
+            failures.append(f"ant-adoption {scenario}: {', '.join(missing)}")
+        if not missing_groups("ant-adoption", invalid_path.read_text(encoding="utf-8"), scenario):
+            failures.append(f"ant-adoption {scenario}: invalid fixture unexpectedly passed")
+    keyword_stuffed = fixtures / "ant-adoption-version-upgrade-keyword-stuffed-invalid.md"
+    if not missing_groups("ant-adoption", keyword_stuffed.read_text(encoding="utf-8"), "version-upgrade"):
+        failures.append("ant-adoption version-upgrade: keyword-stuffed fixture unexpectedly passed")
     l1_text = (fixtures / "prototype-plan-valid.md").read_text(encoding="utf-8")
     no_code_handoff = re.sub(
         r"交接给 AI 编码时提供 exact node.*?由 `senior-software-architect` 负责。",
@@ -370,6 +639,7 @@ def run_self_test() -> int:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kind", choices=sorted(CHECKS))
+    parser.add_argument("--scenario", choices=ANT_ADOPTION_SCENARIOS)
     source = parser.add_mutually_exclusive_group()
     source.add_argument("--text")
     source.add_argument("--file")
@@ -384,16 +654,24 @@ def main() -> int:
     if not args.kind:
         print("FAIL UI design deliverable: --kind is required", file=sys.stderr)
         return 2
+    if args.kind == "ant-adoption" and not args.scenario:
+        print("FAIL UI design deliverable: --scenario is required for ant-adoption", file=sys.stderr)
+        return 2
+    if args.kind != "ant-adoption" and args.scenario:
+        print("FAIL UI design deliverable: --scenario only applies to ant-adoption", file=sys.stderr)
+        return 2
     try:
         text = read_input(args)
     except (OSError, UnicodeError) as error:
         print(f"ERROR UI design deliverable: {error}", file=sys.stderr)
         return 2
-    missing = missing_groups(args.kind, text)
+    missing = missing_groups(args.kind, text, args.scenario)
     if missing:
-        print(f"FAIL UI design deliverable {args.kind}: missing {', '.join(missing)}")
+        suffix = f"/{args.scenario}" if args.scenario else ""
+        print(f"FAIL UI design deliverable {args.kind}{suffix}: missing {', '.join(missing)}")
         return 1
-    print(f"OK UI design deliverable {args.kind}")
+    suffix = f"/{args.scenario}" if args.scenario else ""
+    print(f"OK UI design deliverable {args.kind}{suffix}")
     return 0
 
 

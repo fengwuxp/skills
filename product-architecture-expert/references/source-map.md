@@ -55,6 +55,13 @@
 - `archive_id` 只能作为本机私有证据定位符，不代表公开来源仍可访问；需要引用或复核时仍要优先重新读取公开页面或官方来源。
 - 删除、验证页、空正文或无法复核的条目，即使存在本地归档，也不得写成“公开内容用于参考”，只能说明归档证据来源、读取日期、当前复核状态和剩余风险。
 
+## 当前行为证据状态（2026-08-27）
+
+- `product-business-architecture-behavior-cases.json`：已按当前 source profile 完成 3 次 baseline/candidate 采集、盲评与评分；`product-business-final-blind-20260827-r2` candidate weighted score `4.82`、criteria `43/45`、blockers `0`，active gate 使用 `product-business-architecture-responses.jsonl` / `product-business-architecture-scores.jsonl`。
+- `product-simple-design-behavior-cases.json`：已按当前 source profile 完成 3 次 baseline/candidate 采集、盲评与评分；`product-simple-final-blind-20260827-r6` candidate weighted score `4.61`、criteria `41/45`、blockers `0`，active gate 使用 `product-simple-design-responses.jsonl` / `product-simple-design-scores.jsonl`。
+- `product-builder-series-increment-behavior-cases.json`：2026-08-27 按当前 source profile `c9bf70766582126000e983bbfa6c1420e87fa58aa692e889db3aab3a498d4755` 完成 3 次采集和独立盲评；`product-builder-final-blind-20260827-r3` candidate weighted score `4.73`、criteria `41/45`、blockers `0`，但品牌元素场景出现逐 pair correctness/safety 回退，release gate 未通过。该 contract 混合产品与 UI 职责，当前保持 cases-only，response/score 不作为 product-architecture-expert 准出证据；后续应拆分 comparison 轴或补充独立 Owner 证据，不继续叠加通用产品规则。
+- 评分文件只证明本轮指定 runner/model、题集和 rubric 下的行为样本；不证明业务事实、产品质量、工程可行性、合规或上线结果。
+
 ## 来源主题索引
 
 - 支付与资金专项来源：使用 `payment-expert/references/source-map.md`；本文不重复维护支付来源。

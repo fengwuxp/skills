@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "document-authoring 正式文档保真去模板化 baseline/candidate 契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验和独立复核。",
+  "description": "document-authoring 正式文档保真去模板化 baseline/candidate 契约。静态 fixture 只固定预期行为；历史 responses/scores 因 source 漂移不作为当前准出证据，恢复评分前须由同一 runner/model 按当前 source 重新采集、盲评和独立复核。",
   "sources": [
     {
       "title": "MrGeDiao/shuorenhua",
@@ -37,7 +37,7 @@
         "document-authoring/references/citation-and-traceability.md",
         "document-authoring/references/format-and-rendering.md"
       ],
-      "sha256": "c1387388846692cd3edf50d8dc617881288003d06961674c176df5a59bbccbb9"
+      "sha256": "c90a1394f6aee1f48f0504a2b3b42d202288a926e30aea949803d0e715495cce"
     }
   },
   "rubric": {

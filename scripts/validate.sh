@@ -115,6 +115,8 @@ run_gate python3 scripts/validate-trigger-paths.py
 
 echo "==> grill-me install validator"
 python3 scripts/validate-grill-me-install.py --self-test
+python3 scripts/test-grill-me-process-assets.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases fixtures/skill-eval/grill-me-resolution-and-intent-behavior-cases.json
 if [[ "${VALIDATE_GRILL_ME_INSTALL:-}" == "1" ]]; then
   python3 scripts/validate-grill-me-install.py
 fi
@@ -227,6 +229,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
 product_business_architecture_eval_dir="${tmp_dir}/product-business-architecture-eval"
 mkdir -p "${product_business_architecture_eval_dir}"
 if scripts/evaluate-skill-behavior.py blind \
@@ -244,29 +247,29 @@ if scripts/evaluate-skill-behavior.py blind \
 else
   validation_failed=1
 fi
+product_simple_design_eval_dir="${tmp_dir}/product-simple-design-eval"
+mkdir -p "${product_simple_design_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json" \
+  --responses "fixtures/skill-eval/product-simple-design-responses.jsonl" \
+  --output "${product_simple_design_eval_dir}/blind.jsonl" \
+  --key-output "${product_simple_design_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json" \
+    --scores "fixtures/skill-eval/product-simple-design-scores.jsonl" \
+    --key "${product_simple_design_eval_dir}/key.json" \
+    --blind "${product_simple_design_eval_dir}/blind.jsonl" \
+    --output "${product_simple_design_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
 
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
 document-authoring/scripts/check_document_style.py --self-test
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-visual-explanation-behavior-cases.json"
-document_humanization_eval_dir="${tmp_dir}/document-humanization-eval"
-mkdir -p "${document_humanization_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json" \
-  --responses "fixtures/skill-eval/document-authoring-humanization-responses.jsonl" \
-  --output "${document_humanization_eval_dir}/blind.jsonl" \
-  --key-output "${document_humanization_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json" \
-    --scores "fixtures/skill-eval/document-authoring-humanization-scores.jsonl" \
-    --key "${document_humanization_eval_dir}/key.json" \
-    --blind "${document_humanization_eval_dir}/blind.jsonl" \
-    --output "${document_humanization_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 
 echo "==> resource capability candidate checker"
 resource-capability-distiller/scripts/check_capability_candidate.py --self-test
@@ -282,42 +285,8 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"
-novelist_planning_eval_dir="${tmp_dir}/novelist-planning-eval"
-mkdir -p "${novelist_planning_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json" \
-  --responses "fixtures/skill-eval/novelist-planning-responses.jsonl" \
-  --output "${novelist_planning_eval_dir}/blind.jsonl" \
-  --key-output "${novelist_planning_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json" \
-    --scores "fixtures/skill-eval/novelist-planning-scores.jsonl" \
-    --key "${novelist_planning_eval_dir}/key.json" \
-    --blind "${novelist_planning_eval_dir}/blind.jsonl" \
-    --output "${novelist_planning_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"
-novelist_narrative_expression_eval_dir="${tmp_dir}/novelist-narrative-expression-eval"
-mkdir -p "${novelist_narrative_expression_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json" \
-  --responses "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl" \
-  --output "${novelist_narrative_expression_eval_dir}/blind.jsonl" \
-  --key-output "${novelist_narrative_expression_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json" \
-    --scores "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl" \
-    --key "${novelist_narrative_expression_eval_dir}/key.json" \
-    --blind "${novelist_narrative_expression_eval_dir}/blind.jsonl" \
-    --output "${novelist_narrative_expression_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-historical-closure-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-civilization-responsibility-behavior-cases.json"
@@ -325,76 +294,8 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"
-novelist_draft_continuation_eval_dir="${tmp_dir}/novelist-draft-continuation-eval"
-mkdir -p "${novelist_draft_continuation_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json" \
-  --responses "fixtures/skill-eval/novelist-draft-continuation-responses.jsonl" \
-  --output "${novelist_draft_continuation_eval_dir}/blind.jsonl" \
-  --key-output "${novelist_draft_continuation_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json" \
-    --scores "fixtures/skill-eval/novelist-draft-continuation-scores.jsonl" \
-    --key "${novelist_draft_continuation_eval_dir}/key.json" \
-    --blind "${novelist_draft_continuation_eval_dir}/blind.jsonl" \
-    --output "${novelist_draft_continuation_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
-novelist_scene_eval_dir="${tmp_dir}/novelist-scene-eval"
-mkdir -p "${novelist_scene_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json" \
-  --responses "fixtures/skill-eval/novelist-scene-construction-responses.jsonl" \
-  --output "${novelist_scene_eval_dir}/blind.jsonl" \
-  --key-output "${novelist_scene_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json" \
-    --scores "fixtures/skill-eval/novelist-scene-construction-scores.jsonl" \
-    --key "${novelist_scene_eval_dir}/key.json" \
-    --blind "${novelist_scene_eval_dir}/blind.jsonl" \
-    --output "${novelist_scene_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"
-novelist_plot_eval_dir="${tmp_dir}/novelist-plot-eval"
-mkdir -p "${novelist_plot_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json" \
-  --responses "fixtures/skill-eval/novelist-plot-progression-responses.jsonl" \
-  --output "${novelist_plot_eval_dir}/blind.jsonl" \
-  --key-output "${novelist_plot_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json" \
-    --scores "fixtures/skill-eval/novelist-plot-progression-scores.jsonl" \
-    --key "${novelist_plot_eval_dir}/key.json" \
-    --blind "${novelist_plot_eval_dir}/blind.jsonl" \
-    --output "${novelist_plot_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json"
-novelist_plot_inheritance_eval_dir="${tmp_dir}/novelist-plot-inheritance-eval"
-mkdir -p "${novelist_plot_inheritance_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json" \
-  --responses "fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl" \
-  --output "${novelist_plot_inheritance_eval_dir}/blind.jsonl" \
-  --key-output "${novelist_plot_inheritance_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json" \
-    --scores "fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl" \
-    --key "${novelist_plot_inheritance_eval_dir}/key.json" \
-    --blind "${novelist_plot_inheritance_eval_dir}/blind.jsonl" \
-    --output "${novelist_plot_inheritance_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
 
 echo "==> wise-agent module deliberation behavior cases"
@@ -411,6 +312,24 @@ echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
+senior_system_design_eval_dir="${tmp_dir}/senior-system-design-principles-eval"
+mkdir -p "${senior_system_design_eval_dir}"
+if scripts/evaluate-skill-behavior.py blind \
+  --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json" \
+  --responses "fixtures/skill-eval/senior-system-design-principles-responses.jsonl" \
+  --output "${senior_system_design_eval_dir}/blind.jsonl" \
+  --key-output "${senior_system_design_eval_dir}/key.json" \
+  --seed 731; then
+  run_gate scripts/evaluate-skill-behavior.py score \
+    --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json" \
+    --scores "fixtures/skill-eval/senior-system-design-principles-scores.jsonl" \
+    --key "${senior_system_design_eval_dir}/key.json" \
+    --blind "${senior_system_design_eval_dir}/blind.jsonl" \
+    --output "${senior_system_design_eval_dir}/report.json"
+else
+  validation_failed=1
+fi
 
 echo "==> business website planner"
 run_gate python3 business-website-planner/scripts/test_check_business_website_plan.py
@@ -432,23 +351,6 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
-ui_design_ant_eval_dir="${tmp_dir}/ui-design-ant-adoption-eval"
-mkdir -p "${ui_design_ant_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json" \
-  --responses "fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl" \
-  --output "${ui_design_ant_eval_dir}/blind.jsonl" \
-  --key-output "${ui_design_ant_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json" \
-    --scores "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl" \
-    --key "${ui_design_ant_eval_dir}/key.json" \
-    --blind "${ui_design_ant_eval_dir}/blind.jsonl" \
-    --output "${ui_design_ant_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
 
 echo "==> security engineering deliverable checker"
 python3 security-engineering-expert/scripts/check_security_deliverable.py --self-test
@@ -523,13 +425,13 @@ echo "==> installed skill parity self-test"
 parity_home="${tmp_dir}/parity-home"
 CODEX_HOME="${parity_home}" ./sync-skills.sh all >/dev/null
 CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh
-mode_probe="${parity_home}/skills/document-authoring/scripts/check_document_deliverable.py"
+mode_probe="${parity_home}/skills/product-architecture-expert/scripts/check_product_deliverable.py"
 chmod -x "${mode_probe}"
 if CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh >/dev/null 2>&1; then
   echo "FAIL installed skill parity ignored executable-bit drift" >&2
   exit 1
 fi
-CODEX_HOME="${parity_home}" ./sync-skills.sh document-authoring >/dev/null
+CODEX_HOME="${parity_home}" ./sync-skills.sh product-architecture-expert >/dev/null
 CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh
 if [[ "${VALIDATE_INSTALLED_SKILLS:-}" == "1" ]]; then
   scripts/validate-installed-skills.sh

@@ -292,6 +292,9 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_client_interaction_behavior_cases = "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
+product_builder_series_increment_behavior_cases = "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
+product_builder_series_increment_responses = "fixtures/skill-eval/product-builder-series-increment-responses.jsonl"
+product_builder_series_increment_scores = "fixtures/skill-eval/product-builder-series-increment-scores.jsonl"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_business_architecture = "product-architecture-expert/references/business-architecture-planning.md"
 product_concept_lifecycle = "product-architecture-expert/references/product-concept-lifecycle.md"
@@ -327,6 +330,8 @@ product_business_architecture_responses = "fixtures/skill-eval/product-business-
 product_business_architecture_scores = "fixtures/skill-eval/product-business-architecture-scores.jsonl"
 product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
 product_business_expression_requirements_behavior_cases = "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
+product_simple_design_responses = "fixtures/skill-eval/product-simple-design-responses.jsonl"
+product_simple_design_scores = "fixtures/skill-eval/product-simple-design-scores.jsonl"
 
 payment_skill = "payment-expert/SKILL.md"
 payment_agent = "payment-expert/agents/openai.yaml"
@@ -384,6 +389,7 @@ llm_coding_hygiene_admission = "llm-coding-hygiene/admission.json"
 llm_coding_hygiene_source_map = "llm-coding-hygiene/references/source-map.md"
 llm_coding_hygiene_behavior_cases = "fixtures/skill-eval/llm-coding-hygiene-behavior-cases.json"
 legacy_senior_coding_hygiene_behavior_cases = "fixtures/skill-eval/senior-coding-hygiene-behavior-cases.json"
+senior_system_design_principles_behavior_cases = "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
 ui_design_skill = "ui-design-expert/SKILL.md"
 ui_design_agent = "ui-design-expert/agents/openai.yaml"
 ui_design_ant_behavior_cases = "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
@@ -5949,6 +5955,15 @@ negative_reason_has(
     ),
 )
 expected_handling_has(
+    "product-should-review-ai-generated-prototype-against-frozen-judgments",
+    (
+        "生成前冻结目标用户、核心任务、非目标、已知证据、成功指标和停止条件",
+        "保留、修改或删除理由",
+        "不以多方案投票、AI 自评或视觉完成度替代产品 Owner 取舍",
+        "直接路由 ui-design-expert，不重复 discovery",
+    ),
+)
+expected_handling_has(
     "product-architecture-expert-should-plan-cross-application-prototype-requirements",
     (
         "需求覆盖矩阵",
@@ -5995,7 +6010,7 @@ check(
         product_skill,
         [
             "运行时按三步加载",
-            "复杂产品问题先读 `references/product-scenario-routing.md`",
+            "未被止损的复杂产品问题再读 `references/product-scenario-routing.md`",
             "只读取当前任务必要的 reference",
         ],
     ),
@@ -6136,7 +6151,7 @@ check(
     "product openai yaml keeps concise product scope",
     has_all(
         product_agent,
-        ["$product-architecture-expert", "产品判断", "业务架构规划", "跨应用原型范围", "待确认"],
+        ["$product-architecture-expert", "产品判断", "业务架构规划", "跨应用产品责任范围", "待确认"],
     ),
 )
 check(
@@ -6173,6 +6188,8 @@ check(
             "PC / 手机",
             "浏览器 / H5 / APP",
             "交互状态矩阵",
+            "用户路径—系统责任双向表",
+            "证据 / Owner",
             "不替代 `ui-design-expert`",
             "用户体验好",
         ],
@@ -6191,8 +6208,40 @@ check(
             "product-client-interaction-should-recover-mobile-interruption",
             "product-client-interaction-should-degrade-h5-capabilities",
             "product-client-interaction-should-handoff-ui-boundary",
+            "product-client-interaction-should-map-user-path-to-system-responsibilities",
+            "product-client-interaction-should-reject-page-only-journey-map",
             "静态 fixture 只固定预期行为",
             "真实 runner/model",
+        ],
+    ),
+)
+check(
+    "product builder series increment static contract stays wired",
+    (ROOT / product_builder_series_increment_behavior_cases).exists()
+    and has_all(
+        product_builder_series_increment_behavior_cases,
+        [
+            '"mode": "improvement"',
+            "product-builder-series-r2b",
+            "product-client-interaction-should-map-user-path-to-system-responsibilities",
+            "product-client-interaction-should-reject-page-only-journey-map",
+            "product-should-review-ai-generated-prototype-against-frozen-judgments",
+            "ui-design-should-audit-visual-element-intent",
+            "ui-design-should-preserve-evidence-backed-brand-elements",
+            "最新 response/score 已按当前 source 完成 3 次采集",
+            "release gate 未通过",
+        ],
+    )
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        [
+            product_builder_series_increment_behavior_cases,
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"',
         ],
     ),
 )
@@ -11288,7 +11337,7 @@ check(
     has_all(
         product_skill,
         [
-            "跨应用、多端客户端和页面承接",
+            "规划跨应用、多端产品责任与业务承接",
             "跨应用原型需求规划",
             "产品级页面标注",
             "ui-design-expert",
@@ -11741,6 +11790,9 @@ check(
             "低成本生成场景的约束",
             "每个功能、页面、实验或自动生成方案必须回到目标、假设、非目标、成功指标和停止条件",
             "是否存在更低成本、注意力消耗更小的验证方式",
+            "先输出一张不可留空的冻结卡",
+            "回指的冻结判断 | 保留 / 修改 / 删除 | 理由",
+            "最终取舍仍由产品 Owner 承担",
         ],
     ),
 )
@@ -14782,6 +14834,43 @@ check(
         ],
     )
     and has_all(
+        product_skill,
+        [
+            "## 快速止损门",
+            "不读取任何 reference",
+            "一个会改变首版边界的 Owner blocker",
+            "未通过快速止损门时不得进入 reference 路由",
+            "仍是任何首版切片成立条件",
+            "## 最小切片底线",
+            "权限边界、主要失败处理、人工责任或兜底、最小审计事实和可观察验收",
+            "不预建字段、接口或扩展点",
+            "本期迁移方案必须安排过渡结构退役",
+            "没有本轮实际工具输出时，不得声称检查器已运行、通过或返回具体结果",
+        ],
+    )
+    and has_all(
+        product_business_architecture,
+        [
+            "### 投资决策输出门禁",
+            "必须输出 `当前决策 | 范围 | Owner | 证据 | 验收` 准入卡",
+            "可以先给有界、可撤销的条件结论",
+            "不得先下无条件确定结论",
+            "不得用一张“合成图”、同一节点或一条单向箭头链同时承载价值阶段、稳定能力和一次运行活动",
+            "列出至少一个一对多或多对多实例",
+            "已有行业标准、组织方法或权威元模型时，以其定义优先",
+        ],
+    )
+    and all(
+        term in frontmatter(product_skill)
+        for term in [
+            "明确要求从原型或页面材料反推产品语义",
+            "仅设计、绘制或验证已确认产品语义的 Web UI",
+            "仅把未来整站、多端角色或迁移层作为要拒绝的 UI 过度设计",
+        ]
+    )
+    and has_all(product_agent, ["产品 / 业务架构", "跨应用产品责任范围"])
+    and has_none(product_agent, ["多端原型交互"])
+    and has_all(
         product_simple_design_behavior_cases,
         [
             '"mode": "improvement"',
@@ -14793,17 +14882,27 @@ check(
             "product-design-should-allow-bounded-current-transition",
             "candidate_weighted_score_must_improve",
             "source_profiles",
+            "product-scenario-routing.md",
+            "business-architecture-planning.md",
         ],
     )
     and has_none(product_simple_design_behavior_cases, ["ui-design-expert/"])
     and has_all(
         "fixtures/skill-eval/evidence-gates.json",
-        ["fixtures/skill-eval/product-simple-design-behavior-cases.json"],
+        [
+            "fixtures/skill-eval/product-simple-design-behavior-cases.json",
+            "fixtures/skill-eval/product-simple-design-responses.jsonl",
+            "fixtures/skill-eval/product-simple-design-scores.jsonl",
+        ],
     )
     and has_all(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"',
+            'fixtures/skill-eval/product-simple-design-responses.jsonl',
+            'fixtures/skill-eval/product-simple-design-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
         ],
     )
 )
@@ -14834,6 +14933,20 @@ check(
         ],
     )
     and has_all(
+        ui_design_skill,
+        [
+            "## 硬门禁",
+            "同一请求同时声称“流程 / 可操作原型”和“只做孤立成功页或静态状态稿”时，只问一个 Owner blocker",
+            "静态状态稿只能证明该状态的内容与层级",
+            "已确认的整站范围、Page Manifest、内容或品牌 Owner 不能被“简单”改成首页",
+            "视觉元素意图审查先输出不可省略的证据卡",
+            "真实页面 / 页面任务 | 首要判断 | 信息优先级 | 目标受众 | 目标视口 / 设备 | 元素 Owner / 依据",
+            "缺任一关键字段时只列待补证据并停止",
+            "已有 Owner 批准或有真实职责的品牌、图像、留白、装饰和视觉权重维持现状",
+            "字段齐全后再逐项记录元素职责",
+        ],
+    )
+    and has_all(
         ui_simple_design_behavior_cases,
         [
             '"mode": "improvement"',
@@ -14843,8 +14956,21 @@ check(
             "ui-prototype-should-honor-isolated-success-state-choice",
             "ui-prototype-should-honor-minimal-flow-choice",
             "ui-design-should-preserve-confirmed-whole-site-scope",
+            "ui-design-should-audit-visual-element-intent",
+            "ui-design-should-preserve-evidence-backed-brand-elements",
             "candidate_weighted_score_must_improve",
             "source_profiles",
+        ],
+    )
+    and has_all(
+        ui_design_foundations,
+        [
+            "### 视觉元素意图审查",
+            "受众 / 跨视口 / 性能 / 可访问性影响",
+            "误导或噪音风险 | 保留 / 修改 / 删除",
+            "密度、装饰和品牌表达不是自动删除项",
+            "保留前仍须核对目标受众、响应式变化、加载与动效成本、替代信息和辅助技术语义",
+            "没有真实页面、页面任务或信息优先级时，停止元素级裁决",
         ],
     )
     and has_none(ui_simple_design_behavior_cases, ["product-architecture-expert/"])
@@ -14974,6 +15100,41 @@ check(
         [
             "senior-software-architect/scripts/check_architecture_deliverable.py --self-test",
             "senior-software-architect/scripts/verify_fixtures.py",
+        ],
+    ),
+)
+check(
+    "senior article principles behavior contract stays statically wired",
+    (ROOT / senior_system_design_principles_behavior_cases).exists()
+    and has_all(
+        senior_system_design_principles_behavior_cases,
+        [
+            "行为 contract",
+            "senior-should-reject-tech-first-with-state-and-hot-path",
+            "senior-should-bound-sync-and-background-work",
+            "senior-should-choose-api-event-and-cache-by-evidence",
+            "senior-should-pair-retry-with-idempotency-and-recovery",
+            "senior-should-log-abnormal-decisions-and-tail-latency",
+            "已绑定同一 runner/model",
+            "独立评分",
+        ],
+    )
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        [
+            senior_system_design_principles_behavior_cases,
+            "fixtures/skill-eval/senior-system-design-principles-responses.jsonl",
+            "fixtures/skill-eval/senior-system-design-principles-scores.jsonl",
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"',
+            'fixtures/skill-eval/senior-system-design-principles-responses.jsonl',
+            'fixtures/skill-eval/senior-system-design-principles-scores.jsonl',
+            'scripts/evaluate-skill-behavior.py blind',
+            'scripts/evaluate-skill-behavior.py score',
         ],
     ),
 )
@@ -19836,11 +19997,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/document-authoring-humanization-behavior-cases.json"',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
-            'fixtures/skill-eval/document-authoring-humanization-responses.jsonl',
-            'fixtures/skill-eval/document-authoring-humanization-scores.jsonl',
-            '--seed 731',
         ],
     )
     and has_all(
@@ -20591,9 +20747,6 @@ check(
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-imagination-behavior-cases.json"',
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"',
-            'fixtures/skill-eval/novelist-planning-responses.jsonl',
-            'fixtures/skill-eval/novelist-planning-scores.jsonl',
-            '--blind "${novelist_planning_eval_dir}/blind.jsonl"',
         ],
     ),
 )
@@ -20767,8 +20920,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"',
-            '--responses "fixtures/skill-eval/novelist-narrative-expression-responses.jsonl"',
-            '--scores "fixtures/skill-eval/novelist-narrative-expression-scores.jsonl"',
         ],
     ),
 )
@@ -21179,10 +21330,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-progression-behavior-cases.json"',
-            'fixtures/skill-eval/novelist-plot-progression-responses.jsonl',
-            'fixtures/skill-eval/novelist-plot-progression-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
         ],
     ),
 )
@@ -21234,10 +21381,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-inheritance-behavior-cases.json"',
-            'fixtures/skill-eval/novelist-plot-inheritance-responses.jsonl',
-            'fixtures/skill-eval/novelist-plot-inheritance-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
         ],
     ),
 )
@@ -21311,10 +21454,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"',
-            'scripts/evaluate-skill-behavior.py blind',
-            'fixtures/skill-eval/novelist-draft-continuation-responses.jsonl',
-            'scripts/evaluate-skill-behavior.py score',
-            'fixtures/skill-eval/novelist-draft-continuation-scores.jsonl',
         ],
     ),
 )
@@ -21525,10 +21664,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"',
-            'fixtures/skill-eval/novelist-scene-construction-responses.jsonl',
-            'fixtures/skill-eval/novelist-scene-construction-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
         ],
     ),
 )
@@ -23478,10 +23613,6 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"',
-            'fixtures/skill-eval/ui-design-ant-adoption-responses.jsonl',
-            'fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
         ],
     ),
 )
@@ -23633,6 +23764,8 @@ check(
             "scripts/check_ui_design_deliverable.py --kind ui-review",
             "scripts/check_ui_design_deliverable.py --kind usability-plan",
             "scripts/check_ui_design_deliverable.py --kind prototype-plan",
+            "--kind ant-adoption --scenario <scenario>",
+            "最多修复两轮",
             "scripts/check_ui_source.py",
             "“一、任务与变更类型”至“七、交付契约”",
             "原生 iOS / Android",
@@ -23646,6 +23779,13 @@ check(
             "ui-review",
             "usability-plan",
             "prototype-plan",
+            "ant-adoption",
+            "ANT_ADOPTION_SCENARIOS",
+            "cross-application",
+            "version-upgrade",
+            "component-spec",
+            "mobile-candidate",
+            "existing-system",
             "PROTOTYPE_LEVEL_CHECKS",
             "prototype_level",
             "PROTOTYPE_MIN_NON_KEYWORD_SECTION_CHARS",
@@ -23683,6 +23823,9 @@ check(
             "prototype-plan-invalid.md",
             "prototype-plan-keyword-stuffed-invalid.md",
             "prototype-plan-level-invalid.md",
+            "ant-adoption-{scenario}-valid.md",
+            "ant-adoption-{scenario}-invalid.md",
+            "ant-adoption-version-upgrade-keyword-stuffed-invalid.md",
             "source-valid.tsx",
             "source-invalid.tsx",
         ],

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "product-architecture-expert 的简单优先与过渡设计门禁。静态 fixture 只固定最小产品切片、必要控制、按决策扩展和当前迁移边界；真实行为改善仍需同一 runner/model 重复采集与独立盲评。",
+  "description": "product-architecture-expert 的简单优先与过渡设计行为 contract。已绑定同一 runner/model 的 baseline/candidate 三次重复采集与独立盲评；本文件仍不替代业务 Owner、源码、测试、发布或上线准出。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -11,9 +11,11 @@
       "id": "product-simple-design-current",
       "paths": [
         "product-architecture-expert/SKILL.md",
-        "product-architecture-expert/references/product-architecture-methodology.md"
+        "product-architecture-expert/references/product-architecture-methodology.md",
+        "product-architecture-expert/references/product-scenario-routing.md",
+        "product-architecture-expert/references/business-architecture-planning.md"
       ],
-      "sha256": "d16e92701a51d0cd2a04e2e0e4c0273bae4d3262b8ce064c26ff8e43cffbc6a2"
+      "sha256": "148aca3fe5e2892b1e9db4e05f1fb4ef20095a5b9938d2f45609085be4ba0f41"
     }
   },
   "rubric": {
@@ -47,7 +49,7 @@
       "risk": "high",
       "prompt": "董事会要决定是否整合多个客户中心项目，需要一份业务架构方案支持投资取舍。请判断这次是否需要全域能力、项目和系统视图。",
       "criteria": [
-        "先确认当前决策、范围、owner、证据和验收，再判断是否需要扩展视图；不把大而全作为默认标准。",
+        "明确当前决策、范围、owner、证据和验收，并把视图判断绑定到这些条件；允许先给有界、可撤销的条件结论，但不先下无条件确定结论后再把关键缺口仅列为待确认，也不把大而全作为默认标准。",
         "若投资取舍确实需要全局视图，选择与该决策直接相关的最小完整组合，并明确本期切片、关联支撑视图和跳过项。",
         "不因为未来平台化或迁移想象提前拆分能力、页面或过渡层；任何过渡设计都必须有当前迁移目标、owner、期限、移除条件和验证方式。"
       ]

@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "grill-me 的设计分辨率、延期队列、意图与结果分离行为 contract。baseline 冻结修复前契约，candidate 指向当前源码；同一 runner/model 重复响应、独立盲评和门禁通过前不构成安装、发布或行为提升证明。",
+  "source_profiles": {
+    "baseline": {
+      "id": "grill-me-pre-resolution",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/grill-me-pre-resolution.md"
+      ],
+      "sha256": "0b094989249f4a00d1e27f9a51c04e38f278058f0a443c0b9c446459aab49691"
+    },
+    "candidate": {
+      "id": "grill-me-resolution-current",
+      "paths": [
+        "grill-me/SKILL.md",
+        "grill-me/references/question-ledger.md"
+      ],
+      "sha256": "8d0f6187182108436d345f05326e05dde4339c752605d85e463c965cf9809b85"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "grill-should-defer-details-below-current-resolution",
+      "category": "resolution-stop",
+      "risk": "high",
+      "prompt": "我们正在确认长篇小说第一卷的卷级因果，火云虎退守、主角折返救人和最终受控已经确定。刚才已经开始问具体卸招、命中和控制媒介，但这些战斗细节到时候进入章卡再统一设计吧。请继续 grill。",
+      "criteria": [
+        "识别当前交付仍是卷级因果或场景骨架，不继续追问卸招、命中、控制媒介、距离或逐招动作；明确本分支在当前设计分辨率已经知止。",
+        "把未决战斗细节保留为最终结论 pending、queue_state deferred，并给出可观察的 deferred_until，例如进入完整章卡且地形、伤势、POV 和能力边界就绪；延期不写成拒绝、确认或 superseded。",
+        "保留已经确认的上层因果和过程资产，不因延期删除细节或重开旧问题；写回只触及问题记录、过程资产和必要的唯一权威，不要求立即扇出全部派生摘要。"
+      ]
+    },
+    {
+      "id": "grill-should-separate-mixed-intent-from-outcome",
+      "category": "intent-result-boundary",
+      "risk": "high",
+      "prompt": "当前问题有两个选项：A 是先接近并带人撤开，B 是直接攻击阻路者。我选择 A + 部分 B。请记录结论并继续。",
+      "criteria": [
+        "把 A 作为主目标，把 B 仅记录为受阻后朝阻路者短促出手、试图争取空隙；不擅自扩成先手决斗或完整采用 B。",
+        "显式分开行动意图与结果：不推定已经命中、逼退、截断、解除控制或成功带人离开；没有额外证据或 Owner 确认时结果保持 pending。",
+        "后续只把仍会改变当前交付且处于 active 的一个 blocker 交给 Owner；若结果细节低于当前设计分辨率，则连同具体招式一起 deferred，而不是继续逐项下钻。"
+      ]
+    },
+    {
+      "id": "grill-should-not-resume-deferred-before-trigger",
+      "category": "deferred-recovery",
+      "risk": "high",
+      "prompt": "恢复上次 Grill：Q-017 最终结论 pending、queue_state deferred，deferred_until 是进入完整章卡且地形与伤势就绪。现在仍在卷纲阶段，请继续。",
+      "criteria": [
+        "读取同一问题的最终结论与 queue_state，识别 deferred_until 尚未满足，不重新询问 Q-017，也不新建语义重复编号。",
+        "只恢复延期条件和已经确认的上层结论；不把 deferred 误写成 rejected、confirmed、superseded 或已经解决。",
+        "转向当前交付中真正 active 的 blocker；若没有则输出快照并知止，不为维持对话制造新问题。"
+      ]
+    },
+    {
+      "id": "grill-should-reactivate-original-question-when-trigger-is-met",
+      "category": "deferred-reactivation",
+      "risk": "high",
+      "prompt": "此前 Q-017 延期到完整章卡设计。现在已经进入该章卡，地形、双方伤势、POV 和能力边界都已确认，请恢复战斗细节 Grill。",
+      "criteria": [
+        "判断 deferred_until 已满足，将 Q-017 的 queue_state 从 deferred 改为 active，并沿用原问题记录而不是创建新编号。",
+        "恢复相关过程资产、已确认选择、排除项和 red_lines，只问当前设计分辨率真正需要关闭的一个主 blocker。",
+        "不把重新激活本身当作最终结论变化；Q-017 在 Owner 裁决前仍为 pending。"
+      ]
+    },
+    {
+      "id": "grill-should-batch-derived-writeback-at-a-checkpoint",
+      "category": "writeback-checkpoint",
+      "risk": "medium",
+      "prompt": "一个场景动作的优先级刚确认，项目里有一份唯一权威、一个决策台账和十份派生摘要。请记录并继续 Grill；项目没有要求每轮立即同步全部摘要。",
+      "criteria": [
+        "先更新同一问题记录和相关过程资产；确认内容需要进入领域事实时只更新唯一权威，不因一个微小回答立即改写十份派生摘要。",
+        "明确派生摘要的写回检查点，例如场景、主题或阶段收口；不得把批量同步延期误解为可以延迟必要的唯一权威修复。",
+        "不创建第二正典、新台账或额外工作流；继续提问前仍执行设计分辨率和 active / deferred 判断。"
+      ]
+    },
+    {
+      "id": "grill-should-not-defer-a-current-hard-blocker-and-continue",
+      "category": "hard-blocker-deferral-boundary",
+      "risk": "high",
+      "prompt": "我们马上要实现支付超时自动重试，但幂等责任和重复扣款处置还没决定。负责人说这些以后再统一讨论，先把重试和其他功能做起来。请继续 grill 并给出执行结论。",
+      "criteria": [
+        "识别幂等责任与重复扣款处置是当前自动重试交付的必要前提和资金风险硬阻塞，不能因为 Owner 要求以后讨论就将其延期后继续依赖实现。",
+        "若当前交付继续推进，该问题保持 pending + active 并只问这一个 Owner blocker；若 Owner 坚持延期，可以记录 pending + deferred，但必须同时冻结自动重试及依赖该结论的执行，不得给出实施授权或伪造安全默认值。",
+        "允许与该硬阻塞无依赖的工作按既有授权继续，但须明确依赖边界；不得把 shared understanding、过程资产或 queue_state 写成资金安全、测试通过、发布或生产准入。"
+      ]
+    }
+  ]
+}

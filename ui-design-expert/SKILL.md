@@ -35,9 +35,16 @@ description: |
 6. **定义响应式与可访问性**：说明不同视口的结构变化、触控与键盘行为、焦点顺序、语义、对比、缩放、减弱动效和内容扩展策略。
 7. **交付并验证**：交付设计 brief、结构/交互说明、状态矩阵、视觉约束和验证计划；需要证明可用性或核对实现时，声明证据等级并执行任务测试或 Design QA。
 
+## 硬门禁
+
+- 同一请求同时声称“流程 / 可操作原型”和“只做孤立成功页或静态状态稿”时，只问一个 Owner blocker：`A：孤立页面 / 静态状态稿`，流程验证保持 blocked；`B：最小流程原型`，必须保留主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界。不能用笼统的“补齐页面”代替这些契约，也不得并行追问无关的品牌、文案或技术问题。
+- 静态状态稿只能证明该状态的内容与层级；响应式、键盘 / 焦点、流程、失败恢复和可用性均标为 `blocked / cant-tell`，不得称为已验证或已定义完成。没有本轮工具输出时，不得声称已运行 checker、扫描器或验证任务，也不得虚构项目、文件、数据、编号或时间。
+- 已确认的整站范围、Page Manifest、内容或品牌 Owner 不能被“简单”改成首页、占位入口或白底重设计；只在既定范围内删重复、继承 tokens / 组件并选择最小验证集，范围变更必须由既有 Owner 明确批准。
+- 视觉元素意图审查先输出不可省略的证据卡：`真实页面 / 页面任务 | 首要判断 | 信息优先级 | 目标受众 | 目标视口 / 设备 | 元素 Owner / 依据`。缺任一关键字段时只列待补证据并停止，不给逐元素保留 / 修改 / 删除结论；已有 Owner 批准或有真实职责的品牌、图像、留白、装饰和视觉权重维持现状，不因证据未补齐而删除或发起重设计。字段齐全后再逐项记录元素职责、对象 / 状态、依据、跨视口 / 性能 / 可访问性影响、误导风险和裁决。去色、模糊、关闭动效只属于启发式检查，不能替代任务、内容理解和可访问性验证。
+
 详细场景路由、设计契约和评审清单读取 `references/design-and-review-workflow.md`。建立视觉基础时读 `references/design-foundations.md`，复用常见业务模式时读 `references/common-scenario-patterns.md`，选择设计系统或 UI 资产时读 `references/ui-library-landscape.md`，建立视觉风格或东方审美方向时读 `references/visual-style-directions.md`，规划任务测试或实现后 Design QA 时读 `references/usability-validation-and-design-qa.md`，输出可操作原型或做 Figma 工程交接时读 `references/prototype-output.md`。审查设计稿的内容真实性、布局变形、文字换行、溢出和资产一致性时读取 `references/design-draft-fidelity-review.md`。需要规划完整网站、页面权威、命名和跨页一致性时读取 `references/figma-design-contract.md`；需要组织 Figma 文件、组件、变量、Auto Layout 或代码交接时读取 `references/figma-file-engineering.md`。需要复核外部方法来源、许可证和未吸收内容时读取 `references/source-map.md`。
 
-正式、完整、可评审、提交前或触发验证场景下，使用 `scripts/check_ui_design_deliverable.py --kind design-brief`、`scripts/check_ui_design_deliverable.py --kind ui-review`、`scripts/check_ui_design_deliverable.py --kind usability-plan` 或 `scripts/check_ui_design_deliverable.py --kind prototype-plan` 检查设计契约、UI 评审、可用性验证计划或原型交付计划的结构完整性。涉及完整网站 Figma 规划时，再运行 `scripts/check_figma_design_plan.py --file plan.md`；涉及设计稿保真审查时运行 `scripts/check_design_draft_review.py --file review.md`。审查 HTML、CSS、JSX、TSX、Vue 或 Svelte 源码时，可运行 `scripts/check_ui_source.py <path>` 检查少量高置信反模式。脚本只读取显式本地文本或文件，不写文件、不联网、不读取密钥；通过只表示未命中这些窄规则，不判断视觉质量、语义完整性、实际可用性或 WCAG 合规。无法运行时说明原因、人工检查结果和残余风险。
+正式、完整、可评审、提交前或触发验证场景下，使用 `scripts/check_ui_design_deliverable.py --kind design-brief`、`scripts/check_ui_design_deliverable.py --kind ui-review`、`scripts/check_ui_design_deliverable.py --kind usability-plan` 或 `scripts/check_ui_design_deliverable.py --kind prototype-plan` 检查设计契约、UI 评审、可用性验证计划或原型交付计划的结构完整性；Ant Design 采用稿使用 `--kind ant-adoption --scenario <scenario>`。涉及完整网站 Figma 规划时，再运行 `scripts/check_figma_design_plan.py --file plan.md`；涉及设计稿保真审查时运行 `scripts/check_design_draft_review.py --file review.md`。审查 HTML、CSS、JSX、TSX、Vue 或 Svelte 源码时，可运行 `scripts/check_ui_source.py <path>` 检查少量高置信反模式。脚本只读取显式本地文本或文件，不写文件、不联网、不读取密钥；通过只表示未命中这些窄规则，不判断视觉质量、语义完整性、实际可用性或 WCAG 合规。无法运行时说明原因、人工检查结果和残余风险。
 
 ## 场景路由
 
@@ -47,7 +54,12 @@ description: |
 - **局部优化或现有页面 CR**：读取同一 reference 的“评审路径”，保留既有产品语义和设计权威，按严重度给出证据与修复建议。
 - **设计基础或常见业务界面**：按需读取 `references/design-foundations.md` 或 `references/common-scenario-patterns.md`；模式用于暴露结构、状态和风险，不作为页面模板。
 - **设计系统或 UI 资产选型**：读取 `references/ui-library-landscape.md`，先继承现状并区分完整设计体系、组件库、无样式行为原语与开放代码分发；未经授权不安装、升级或迁移。
-- **Ant Design 跨应用采用**：读取同一 reference 的“Ant Design B+ 采用边界”；运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为，不复制后台密度、导航与页面模板，Ant Design Mobile 另行评估。
+- **Ant Design 跨应用采用**：读取同一 reference 的“Ant Design B+ 采用边界”；运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为，不复制后台密度、导航与页面模板，Ant Design Mobile 另行评估。只按当前任务填写命中的硬槽位：
+  - 跨端或混合采用：按 reference 原表头逐端填写 Adoption Profile 和真实路径，每端一行。
+  - 组件规范：按原表头逐组件填写契约行，列不得合并或省略；附范围内真实路径，并明确静态检查或官方说明不能证明组合后可用。
+  - v6 或升级：列出当前工程信息、该节的具体 v6 兼容项，以及不改依赖的最小试片与工程 Owner 补证；不得概括为“待核验版本”。
+  - Ant Design Mobile 或既有体系替换：作为独立候选核验，分别给出当前 Profile、真实路径、Owner、成本、回退和停止条件；证据不足时维持现状。
+  - 正式稿按场景运行 checker：依次映射为 `cross-application`、`version-upgrade`、`component-spec`、`mobile-candidate` 或 `existing-system`。失败后只补 checker 返回的缺失项并复检，最多修复两轮；仍失败时报告缺失项并停止，不宣称结构完整。
 - **东方或中国文化视觉方向**：仅在用户明确提出相关设计目标时读取 `references/visual-style-directions.md`；以真实内容和资产为依据，不把水墨、米色、红金、书法或传统符号当默认答案。
 - **参考页面或截图的设计学习**：读取 `references/visual-style-directions.md` 的“参考设计学习”；先按来源模式输出设计 DNA 诊断和采用边界，采用轴未明确且会改变结果时才询问 Owner，已明确采用轴或已授权自决时直接推进；不做像素复刻或源码、品牌、文案、素材复制。
 - **任务测试或实现后 Design QA**：读取 `references/usability-validation-and-design-qa.md`；先声明 E1-E4 证据等级，再按验证问题选择认知走查、目标用户任务测试、浏览器 Design QA 或运行观察，不用截图和主观偏好冒充可用性证据。

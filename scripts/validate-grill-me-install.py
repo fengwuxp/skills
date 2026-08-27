@@ -22,6 +22,14 @@ REQUIRED_SKILL_MARKERS = (
     "ask-owner",
     "问题保真度",
     "决策包",
+    "过程资产",
+    "过程资产索引",
+    "仅交接，不构成正典",
+    "设计分辨率",
+    "queue_state",
+    "deferred_until",
+    "意图与结果",
+    "写回检查点",
     "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`",
     "未确认前不执行",
 )
@@ -37,9 +45,24 @@ REQUIRED_LEDGER_MARKERS = (
     "命题类型",
     "置信边界",
     "裁决动作到最终结论的确定映射",
-    "历史恢复、语义去重和决策快照只读取最终结论",
+    "最终结论决定问题状态",
+    "相关过程资产供恢复/交接核对",
     "保真度与媒介路由",
     "决策包与交接",
+    "过程资产索引",
+    "资产 ID",
+    "正典效力",
+    "升格条件",
+    "领域载荷",
+    "相关过程资产供恢复/交接核对",
+    "替代记录 / replacement",
+    "当前交付",
+    "设计分辨率",
+    "queue_state: active / deferred",
+    "deferred_until",
+    "行动意图",
+    "结果 / 后果",
+    "写回检查点",
     "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`",
 )
 
@@ -140,13 +163,14 @@ def self_test() -> None:
             "问题 ID / 决策主题 / 已查证据 / 最终结论 / red_lines / 语义重复\n"
             "证据先行的问询裁决 / 命题类型 / 置信边界\n"
             "裁决动作到最终结论的确定映射\n"
-            "历史恢复、语义去重和决策快照只读取最终结论\n"
+            "最终结论决定问题状态；相关过程资产供恢复/交接核对\n"
             "保真度与媒介路由\n"
             "决策包与交接\n"
             "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`\n",
         )
         errors = validate_install(codex_home)
         assert any("source map" in error for error in errors), errors
+        assert any("过程资产" in error for error in errors), errors
 
     with TemporaryDirectory() as tmp:
         codex_home = Path(tmp)
@@ -170,15 +194,22 @@ def self_test() -> None:
                 "一次只问一个问题并给推荐答案，Facts 先查，Decisions 再问。\n"
                 "先做证据裁决，只有 ask-owner 才提问。\n"
                 "先判断问题保真度；高保真问题形成决策包再取证。\n"
+                "记录过程资产和过程资产索引；过程资产仅交接，不构成正典。\n"
+                "先写当前交付和设计分辨率；用 queue_state 和 deferred_until 延期。\n"
+                "分开行动意图与结果；到写回检查点再同步派生摘要。\n"
                 "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`。\n"
                 "维护问题台账，达到 shared understanding 前未确认前不执行。\n"
             ),
             "问题 ID / 决策主题 / 已查证据 / 最终结论 / red_lines / 语义重复\n"
             "证据先行的问询裁决 / 命题类型 / 置信边界\n"
             "裁决动作到最终结论的确定映射\n"
-            "历史恢复、语义去重和决策快照只读取最终结论\n"
+            "最终结论决定问题状态；相关过程资产供恢复/交接核对\n"
             "保真度与媒介路由\n"
             "决策包与交接\n"
+            "过程资产索引 资产 ID 正典效力 升格条件 领域载荷 相关过程资产供恢复/交接核对\n"
+            "替代记录 / replacement\n"
+            "当前交付 设计分辨率 queue_state: active / deferred deferred_until\n"
+            "行动意图 结果 / 后果 写回检查点\n"
             "每条记录都必须原样包含 `裁决动作：<action>` 和 `最终结论：<state>`\n",
             "mattpocock/skills / 项目自有独立 `grill-me` / 不安装上游全仓库\n",
         )

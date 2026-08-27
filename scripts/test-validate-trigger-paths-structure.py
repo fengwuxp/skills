@@ -47,6 +47,8 @@ class TriggerValidatorStructureTests(unittest.TestCase):
 
         self.assertIn("scripts/check-skill-evidence.py", sync_script)
         self.assertIn("Skill evidence is not current", sync_script)
+        self.assertIn("Cannot sync all: evidence is not current", sync_script)
+        self.assertIn("All sync aborted before writing", sync_script)
 
 
 if __name__ == "__main__":

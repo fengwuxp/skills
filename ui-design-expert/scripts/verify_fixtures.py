@@ -7,7 +7,7 @@ from pathlib import Path
 
 try:
     from check_design_draft_review import parse_review
-    from check_ui_design_deliverable import CHECKS, missing_groups
+    from check_ui_design_deliverable import ANT_ADOPTION_SCENARIOS, CHECKS, missing_groups
     from check_ui_source import scan_file
 except ModuleNotFoundError:
     print("FAIL UI fixture verification: missing UI checker")
@@ -35,6 +35,14 @@ INVALID_CASES = [
     ("prototype-plan", FIXTURES / "prototype-plan-keyword-stuffed-invalid.md"),
     ("prototype-plan", FIXTURES / "prototype-plan-level-invalid.md"),
 ]
+ANT_ADOPTION_VALID_CASES = [
+    (scenario, FIXTURES / f"ant-adoption-{scenario}-valid.md")
+    for scenario in ANT_ADOPTION_SCENARIOS
+]
+ANT_ADOPTION_INVALID_CASES = [
+    (scenario, FIXTURES / f"ant-adoption-{scenario}-invalid.md")
+    for scenario in ANT_ADOPTION_SCENARIOS
+] + [("version-upgrade", FIXTURES / "ant-adoption-version-upgrade-keyword-stuffed-invalid.md")]
 SOURCE_VALID = FIXTURES / "source-valid.tsx"
 SOURCE_INVALID = FIXTURES / "source-invalid.tsx"
 DESIGN_REVIEW_VALID = [
@@ -74,6 +82,17 @@ def main() -> int:
             failures.append(f"invalid fixture unexpectedly passed: {invalid_kind} {invalid_path.name}")
         else:
             print(f"OK negative UI design fixture {invalid_kind} {invalid_path.name}")
+
+    for scenario, path in ANT_ADOPTION_VALID_CASES:
+        if missing := missing_groups("ant-adoption", read_fixture(path), scenario):
+            failures.append(f"valid Ant adoption fixture failed: {scenario}: {', '.join(missing)}")
+        else:
+            print(f"OK Ant adoption fixture {scenario}")
+    for scenario, path in ANT_ADOPTION_INVALID_CASES:
+        if not missing_groups("ant-adoption", read_fixture(path), scenario):
+            failures.append(f"invalid Ant adoption fixture unexpectedly passed: {scenario}")
+        else:
+            print(f"OK negative Ant adoption fixture {scenario}")
 
     if findings := scan_file(SOURCE_VALID):
         failures.append(f"valid source fixture failed: {', '.join(finding.rule for finding in findings)}")

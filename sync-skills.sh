@@ -172,18 +172,27 @@ select_with_dependencies() {
 
 select_all() {
   local i
+  local blocked=false
   for i in "${!skill_dirs[@]}"; do
     if [[ "${skill_statuses[$i]}" == "installable" ]]; then
-      if [[ "${skill_dependency_statuses[$i]}" == "ready" ]] \
-        && [[ "${skill_evidence_statuses[$i]}" == "ready" ]]; then
-        select_with_dependencies "${skill_dirs[$i]}"
+      if [[ "${skill_dependency_statuses[$i]}" != "ready" ]]; then
+        echo "Cannot sync all: required Skill is not installable for ${skill_dirs[$i]}" >&2
+        blocked=true
       elif [[ "${skill_evidence_statuses[$i]}" != "ready" ]]; then
-        echo "Skip ${skill_dirs[$i]}: evidence is not current" >&2
-      else
-        echo "Skip ${skill_dirs[$i]}: required Skill is not installable" >&2
+        echo "Cannot sync all: evidence is not current for ${skill_dirs[$i]}" >&2
+        blocked=true
       fi
     else
       echo "Skip ${skill_dirs[$i]}: admission status ${skill_statuses[$i]}" >&2
+    fi
+  done
+  if [[ "${blocked}" == "true" ]]; then
+    echo "All sync aborted before writing: fix blocked installable Skills or choose explicit Skills." >&2
+    exit 1
+  fi
+  for i in "${!skill_dirs[@]}"; do
+    if [[ "${skill_statuses[$i]}" == "installable" ]]; then
+      select_with_dependencies "${skill_dirs[$i]}"
     fi
   done
 }

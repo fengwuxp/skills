@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "description": "senior-software-architect 对“好的系统设计”文章原则的行为 contract。当前已绑定同一 runner/model 的 baseline/candidate 响应、重复采集、盲评与独立评分；本文件仍不替代源码、测试、监控、发布或 Owner 准出。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "senior-article-principles-current",
+      "paths": [
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/architecture.md",
+        "senior-software-architect/references/adr-and-tradeoff.md",
+        "senior-software-architect/references/production-readiness.md",
+        "senior-software-architect/references/distributed-consistency.md",
+        "senior-software-architect/references/coding-review-deep-dive.md"
+      ],
+      "sha256": "e5a3f406fd7b1aea7975ee837438cbee2e84fee7f59ad6018051f7b3f2992c64"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": false,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0
+  },
+  "cases": [
+    {
+      "id": "senior-should-reject-tech-first-with-state-and-hot-path",
+      "category": "state-and-hot-path",
+      "risk": "high",
+      "prompt": "团队先画了网关、三套微服务、缓存、读副本和消息总线，再寻找业务用途。请做架构评审。",
+      "criteria": [
+        "先回到核心用例、业务不变量、状态源和唯一写入责任，再判断是否需要新增节点或通信边。",
+        "用真实流量、数据量、延迟、错误率或事故证据定位热路径，不为冷路径预先优化。",
+        "对保留的每个节点或边说明收益、状态与故障面、观测、回滚和复审条件；证据不足时保留简单实现。"
+      ]
+    },
+    {
+      "id": "senior-should-bound-sync-and-background-work",
+      "category": "sync-async-boundary",
+      "risk": "high",
+      "prompt": "用户提交后要立即看到最小结果，同时系统还要做大批量转换、汇总和长期调度。请给出处理边界。",
+      "criteria": [
+        "同步路径只完成用户继续任务所需的最少有用工作，并明确用户可见状态和查询口径。",
+        "慢操作进入可持久、可重试、可观测的后台任务，说明重启、重放、积压、补偿和人工接管。",
+        "不能只因削峰引入队列；新增异步边界必须说明它解决的业务问题和失败责任。"
+      ]
+    },
+    {
+      "id": "senior-should-choose-api-event-and-cache-by-evidence",
+      "category": "communication-and-cache",
+      "risk": "medium",
+      "prompt": "为了统一架构，方案要求所有模块都通过事件通信并给每个查询加缓存。请评审是否合理。",
+      "criteria": [
+        "调用方需要立即知道结果时优先评估直接 API；事件只在发布方不关心消费者动作或确有吞吐、松耦合和延迟容忍时使用。",
+        "缓存必须说明派生关系、读写路径、失效与回源保护；核心事实不能只依赖缓存。",
+        "不能把统一事件化或缓存化当作默认架构，需给出删除、延后或局部采用的条件。"
+      ]
+    },
+    {
+      "id": "senior-should-pair-retry-with-idempotency-and-recovery",
+      "category": "failure-and-idempotency",
+      "risk": "high",
+      "prompt": "外部调用偶发超时，团队想无条件重试并在失败时继续返回成功。请评审方案。",
+      "criteria": [
+        "重试必须绑定业务幂等键、唯一约束或去重策略，并说明上限、退避和重复副作用风险。",
+        "明确超时、状态不明、部分成功、补偿、告警和人工接管路径，不能用最终一致掩盖未闭合责任。",
+        "按业务不变量、用户影响和安全边界选择 `fail-open` 或 `fail-closed`，记录分支理由、Owner、回滚或人工接管条件。"
+      ]
+    },
+    {
+      "id": "senior-should-log-abnormal-decisions-and-tail-latency",
+      "category": "observability",
+      "risk": "medium",
+      "prompt": "系统有降级、重试和人工兜底，但线上只能看到错误总数和平均响应时间。请给出观测 CR。",
+      "criteria": [
+        "异常路径日志记录最终决策分支、原因类别、结果和关联 ID，避免敏感原文，并能支持回放排障。",
+        "接口和任务分别观察 P95/P99、错误/超时、重试、死信、积压和补偿结果，不能只看平均值。",
+        "每个告警绑定 Owner、阈值、持续时间、处置动作和 Runbook；指标必须能支撑暂停、回滚、降级或人工介入。"
+      ]
+    }
+  ]
+}
