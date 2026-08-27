@@ -20368,6 +20368,7 @@ check(
             "--root",
             "--ledger",
             "--timeline",
+            "--ready-events",
         ],
     )
     and (ROOT / novelist_continuity_checker).is_file()

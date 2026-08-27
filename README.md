@@ -394,6 +394,8 @@ python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior
 python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --blind /tmp/skill-behavior-judge.jsonl --output /tmp/skill-behavior-report.json
 ```
 
+行为 criteria 应区分用户可见语义与执行过程：事实判断、方案选择、停止结论和风险说明由 `response` 评分；实际读取范围、工具调用、验证和是否发生外部或权威写入由成对 `execution_evidence` 证明。不得为了让内部过程“可见”而强迫用户回答复述检查步骤、未发生的写回动作或固定授权话术；也不得用自述证据替代回答中本应明确的事实、选择和结论。两种 condition 必须同时提供或同时不提供执行证据，证据标识不得泄露 condition、私有路径、prompt、token 或密钥。
+
 所有独立评分都须从 blind 文件原样保留 `blind_sha256`，`score` 始终核对 seed 映射、blind 正文与 scores；cases 声明 `source_profiles` 时，response 还必须原样保留 `prepare` 生成的 `case_sha256` 与 `source_sha256`。外部项目评测可声明 `input_profile={id,root,paths,sha256}`：`root` 必须是绝对目录，`paths` 只列显式文件且不得越界，response 必须保留 `case_sha256` 与 `input_sha256`；评测器会在 `prepare`、`blind`、`score` 时重新核对内容指纹。外部路径只进入 Maker 任务；任何会进入 blind 的 case 字段或 response 含 `root`、输入文件路径或其解析后绝对路径时直接拒绝，blind 与最终报告只保留 `id` 和 `sha256`。任一漂移即拒绝。
 
 默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
