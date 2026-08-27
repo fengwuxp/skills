@@ -12,6 +12,10 @@ description: |
 
 它不负责定义产品业务语义、规则和验收口径，也不替代前端工程实现、源码 CR 或生产发布。需要跨产品、设计和工程推进时，由 `wise-agent` 持有目标；产品事实由 `product-architecture-expert` 稳定，界面设计由本 Skill 负责，代码实现与工程验证由 `senior-software-architect` 负责。
 
+## 快速止损门
+
+加载任何 reference 前，先判断请求是否只验证一个当前 Web 页面或流程，却要求把完整 Figma / 整站、全套设计系统、未来角色 / 多端或迁移层作为前置。若这些扩展没有已确认的当前目标、Design Contract / Page Manifest、迁移来源与目标、Owner 和独立验收问题，则不读取任何 reference，也不得进入 Figma、整站、设计系统或迁移路由；只区分事实、推断、待确认与范围外不做，选择能回答当前问题的最低原型层级，保留主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界后停止。
+
 ## 核心原则
 
 1. **先任务后画面**：先确认用户、场景、主任务、成功结果和失败恢复，再决定页面结构与视觉表达。
@@ -42,35 +46,20 @@ description: |
 - 已确认的整站范围、Page Manifest、内容或品牌 Owner 不能被“简单”改成首页、占位入口或白底重设计；只在既定范围内删重复、继承 tokens / 组件并选择最小验证集，范围变更必须由既有 Owner 明确批准。
 - 视觉元素意图审查先输出不可省略的证据卡：`真实页面 / 页面任务 | 首要判断 | 信息优先级 | 目标受众 | 目标视口 / 设备 | 元素 Owner / 依据`。缺任一关键字段时只列待补证据并停止，不给逐元素保留 / 修改 / 删除结论；已有 Owner 批准或有真实职责的品牌、图像、留白、装饰和视觉权重维持现状，不因证据未补齐而删除或发起重设计。字段齐全后再逐项记录元素职责、对象 / 状态、依据、跨视口 / 性能 / 可访问性影响、误导风险和裁决。去色、模糊、关闭动效只属于启发式检查，不能替代任务、内容理解和可访问性验证。
 
-详细场景路由、设计契约和评审清单读取 `references/design-and-review-workflow.md`。建立视觉基础时读 `references/design-foundations.md`，复用常见业务模式时读 `references/common-scenario-patterns.md`，选择设计系统或 UI 资产时读 `references/ui-library-landscape.md`，建立视觉风格或东方审美方向时读 `references/visual-style-directions.md`，规划任务测试或实现后 Design QA 时读 `references/usability-validation-and-design-qa.md`，输出可操作原型或做 Figma 工程交接时读 `references/prototype-output.md`。审查设计稿的内容真实性、布局变形、文字换行、溢出和资产一致性时读取 `references/design-draft-fidelity-review.md`。需要规划完整网站、页面权威、命名和跨页一致性时读取 `references/figma-design-contract.md`；需要组织 Figma 文件、组件、变量、Auto Layout 或代码交接时读取 `references/figma-file-engineering.md`。需要复核外部方法来源、许可证和未吸收内容时读取 `references/source-map.md`。
+## 参考路由
 
-正式、完整、可评审、提交前或触发验证场景下，使用 `scripts/check_ui_design_deliverable.py --kind design-brief`、`scripts/check_ui_design_deliverable.py --kind ui-review`、`scripts/check_ui_design_deliverable.py --kind usability-plan` 或 `scripts/check_ui_design_deliverable.py --kind prototype-plan` 检查设计契约、UI 评审、可用性验证计划或原型交付计划的结构完整性；Ant Design 采用稿使用 `--kind ant-adoption --scenario <scenario>`。涉及完整网站 Figma 规划时，再运行 `scripts/check_figma_design_plan.py --file plan.md`；涉及设计稿保真审查时运行 `scripts/check_design_draft_review.py --file review.md`。审查 HTML、CSS、JSX、TSX、Vue 或 Svelte 源码时，可运行 `scripts/check_ui_source.py <path>` 检查少量高置信反模式。脚本只读取显式本地文本或文件，不写文件、不联网、不读取密钥；通过只表示未命中这些窄规则，不判断视觉质量、语义完整性、实际可用性或 WCAG 合规。无法运行时说明原因、人工检查结果和残余风险。
+未命中快速止损门时，只读取当前任务必要的 reference；详细字段和分支由 reference 单一持有：
 
-## 场景路由
+- 新界面、重设计、局部优化、页面 CR：`references/design-and-review-workflow.md`；新界面读“一、任务与变更类型”至“七、交付契约”。
+- 排版、tokens、响应式媒体、视觉元素意图：`references/design-foundations.md`；数据工作台、表单、审批等模式读 `references/common-scenario-patterns.md`。
+- 设计系统与 UI 资产选型：`references/ui-library-landscape.md`。Ant Design 跨应用采用遵循其“Ant Design B+ 采用边界”：运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为；正式稿使用 `--kind ant-adoption --scenario <scenario>`，最多修复两轮。
+- 视觉风格、东方审美、参考页面或截图、设计 DNA：`references/visual-style-directions.md`。
+- 任务测试、证据等级、实现后 Design QA：`references/usability-validation-and-design-qa.md`。
+- 可操作原型、Figma 交接：`references/prototype-output.md`；整站 Page Manifest 读 `references/figma-design-contract.md`，文件工程读 `references/figma-file-engineering.md`，跨轮代码对账读 `references/design-code-reconciliation.md`。
+- Figma / 墨刀 / 截图保真审查：`references/design-draft-fidelity-review.md`；来源、版本、许可和吸收边界读 `references/source-map.md`。
+- 原生 iOS / Android 不适用；已有确认设计到代码或需要前端代码时交 `senior-software-architect`，本 Skill 不重新设计。
 
-- **Figma 与代码双向对账**：用户要求先改设计再改代码、代码写回 Figma、逐节点对齐或恢复跨轮 writeback 时，读取 references/design-code-reconciliation.md，先声明权威端、同步方向、exact node、code anchor、版本、Owner 和授权；双端均变化时标为 conflict，不互相覆盖。单向新建设计不强制生成对账契约。
-
-- **新界面或重设计**：读取 `references/design-and-review-workflow.md` 的“一、任务与变更类型”至“七、交付契约”，先稳定 brief、结构和方向，再进入实现。
-- **局部优化或现有页面 CR**：读取同一 reference 的“评审路径”，保留既有产品语义和设计权威，按严重度给出证据与修复建议。
-- **设计基础或常见业务界面**：按需读取 `references/design-foundations.md` 或 `references/common-scenario-patterns.md`；模式用于暴露结构、状态和风险，不作为页面模板。
-- **设计系统或 UI 资产选型**：读取 `references/ui-library-landscape.md`，先继承现状并区分完整设计体系、组件库、无样式行为原语与开放代码分发；未经授权不安装、升级或迁移。
-- **Ant Design 跨应用采用**：读取同一 reference 的“Ant Design B+ 采用边界”；运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为，不复制后台密度、导航与页面模板，Ant Design Mobile 另行评估。只按当前任务填写命中的硬槽位：
-  - 跨端或混合采用：按 reference 原表头逐端填写 Adoption Profile 和真实路径，每端一行。
-  - 组件规范：按原表头逐组件填写契约行，列不得合并或省略；附范围内真实路径，并明确静态检查或官方说明不能证明组合后可用。
-  - v6 或升级：列出当前工程信息、该节的具体 v6 兼容项，以及不改依赖的最小试片与工程 Owner 补证；不得概括为“待核验版本”。
-  - Ant Design Mobile 或既有体系替换：作为独立候选核验，分别给出当前 Profile、真实路径、Owner、成本、回退和停止条件；证据不足时维持现状。
-  - 正式稿按场景运行 checker：依次映射为 `cross-application`、`version-upgrade`、`component-spec`、`mobile-candidate` 或 `existing-system`。失败后只补 checker 返回的缺失项并复检，最多修复两轮；仍失败时报告缺失项并停止，不宣称结构完整。
-- **东方或中国文化视觉方向**：仅在用户明确提出相关设计目标时读取 `references/visual-style-directions.md`；以真实内容和资产为依据，不把水墨、米色、红金、书法或传统符号当默认答案。
-- **参考页面或截图的设计学习**：读取 `references/visual-style-directions.md` 的“参考设计学习”；先按来源模式输出设计 DNA 诊断和采用边界，采用轴未明确且会改变结果时才询问 Owner，已明确采用轴或已授权自决时直接推进；不做像素复刻或源码、品牌、文案、素材复制。
-- **任务测试或实现后 Design QA**：读取 `references/usability-validation-and-design-qa.md`；先声明 E1-E4 证据等级，再按验证问题选择认知走查、目标用户任务测试、浏览器 Design QA 或运行观察，不用截图和主观偏好冒充可用性证据。
-- **Figma / 墨刀 / 截图设计稿保真审查**：读取 `references/design-draft-fidelity-review.md`，先核对 `source_kind`、精确定位、版本、访问方式、内容 / 资产权威和视口集合，再检查 `content-source`、`content-completeness`、`layout-fit`、`text-wrap`、`overflow`、`responsive` 与状态覆盖；不能从单一截图或厂商 D2C 代码外推其它视口、浏览器行为或生产实现。
-- **整站 Figma 页面规划与一致性**：读取 `references/figma-design-contract.md`，先建立 `Design Contract`、`Page Manifest` 和导航映射，明确参考稿 / 目标稿角色、页面命名、状态覆盖、内容来源和 Owner；通过 `scripts/check_figma_design_plan.py --file plan.md` 后再进入 Figma。
-- **可操作原型或 Figma 交付**：读取 `references/prototype-output.md` 和 `references/figma-file-engineering.md`，选择能回答验证问题的最低原型层级；同一请求同时声称验证流程 / 可操作原型和只做孤立页面时，先只问一个 Owner blocker：`A：孤立页面 / 静态状态稿`，流程验证保持 blocked；`B：最小流程原型`，设计契约必须定义主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界。当前原型层级不能验证的契约标为 blocked / cant-tell，不得列为范围外。Owner 选择后再设计，不替其缩小或扩大目标。本 Skill 稳定页面、状态与交互契约，Figma 操作按 `figma-create-new-file`、`figma-use`、`figma-generate-design` 等当前能力路由，代码实现仍由工程能力负责。
-- **组件状态与交接回归**：读取 `references/figma-file-engineering.md`，输出 `state_matrix`、`component_playground`、`ready_for_dev` 和 reviewer 证据；有目标代码库时可用 Storybook 或同类 explorer 隔离状态，但不把工具安装或截图回归当作业务可用性证明。
-- **原生 iOS / Android**：本 Skill 不负责原生界面设计；路由到对应平台能力，不把 WCAG、HTML 或浏览器验证契约机械套用为原生标准。
-- **已有 Figma 设计到代码**：设计已确认时不由本 Skill 重新设计；读取 `references/figma-file-engineering.md`，路由到工程能力，并按 `references/prototype-output.md` 的精确 node、Code Connect、design context、screenshot 和浏览器验证契约使用 Figma design-to-code 工具。没有目标代码库时止于 L0/L1 设计交付，不宣称生产代码或线上收益。
-- **需要在 Figma 创建或维护设计**：本 Skill 先稳定 `Design Contract` / `Page Manifest`，再按 `references/prototype-output.md` 和 `references/figma-file-engineering.md` 路由当前 Figma 执行能力；工具不替代设计判断。
-- **需要前端代码**：本 Skill 提供设计契约，`senior-software-architect` 负责实现、测试和代码质量；完成后本 Skill 可复核视觉与可用性。
+正式交付按目标运行 `scripts/check_ui_design_deliverable.py --kind design-brief`、`--kind ui-review`、`--kind usability-plan` 或 `--kind prototype-plan`；整站规划运行 `scripts/check_figma_design_plan.py --file plan.md`，保真审查运行 `scripts/check_design_draft_review.py --file review.md`，源码窄规则检查运行 `scripts/check_ui_source.py <path>`。脚本不写文件、不联网、不读取密钥；通过不证明视觉质量、语义完整性、实际可用性或 WCAG 合规。
 
 ## 最小输出
 

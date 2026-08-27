@@ -5785,10 +5785,6 @@ check(
 check(
     "UI reference learning proceeds directly when axes are fixed or self-decision is authorized",
     has_all(
-        "ui-design-expert/SKILL.md",
-        ["采用轴未明确且会改变结果时才询问 Owner", "已明确采用轴或已授权自决时直接推进"],
-    )
-    and has_all(
         "ui-design-expert/references/visual-style-directions.md",
         ["采用轴未明确且会改变结果时才询问 Owner", "已明确或已授权自决时直接进入设计"],
     ),
@@ -14920,6 +14916,10 @@ check(
     and has_all(
         ui_design_skill,
         [
+            "## 快速止损门",
+            "不读取任何 reference",
+            "不得进入 Figma、整站、设计系统或迁移路由",
+            "主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
             "简单不等于不完整",
             "最小闭环至少包含主路径、一条主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
             "必须拒绝以流程或可操作原型名义交付",
@@ -14928,7 +14928,6 @@ check(
             "只问一个 Owner blocker",
             "A：孤立页面 / 静态状态稿",
             "B：最小流程原型",
-            "当前原型层级不能验证的契约标为 blocked / cant-tell，不得列为范围外",
             "有证据不适用",
         ],
     )
@@ -23743,6 +23742,9 @@ check(
     and has_all(
         ui_design_skill,
         [
+            "## 参考路由",
+            "只读取当前任务必要的 reference",
+            "详细字段和分支由 reference 单一持有",
             "Web UI 或浏览器应用界面",
             "信息架构",
             "交互状态",
@@ -23761,9 +23763,9 @@ check(
             "references/prototype-output.md",
             "references/source-map.md",
             "scripts/check_ui_design_deliverable.py --kind design-brief",
-            "scripts/check_ui_design_deliverable.py --kind ui-review",
-            "scripts/check_ui_design_deliverable.py --kind usability-plan",
-            "scripts/check_ui_design_deliverable.py --kind prototype-plan",
+            "--kind ui-review",
+            "--kind usability-plan",
+            "--kind prototype-plan",
             "--kind ant-adoption --scenario <scenario>",
             "最多修复两轮",
             "scripts/check_ui_source.py",
@@ -23771,7 +23773,10 @@ check(
             "原生 iOS / Android",
         ],
     )
-    and has_none(ui_design_skill, ["Web/App UI", "“设计路径”"])
+    and has_none(
+        ui_design_skill,
+        ["Web/App UI", "“设计路径”", "只按当前任务填写命中的硬槽位"],
+    )
     and has_all(
         ui_design_checker,
         [
