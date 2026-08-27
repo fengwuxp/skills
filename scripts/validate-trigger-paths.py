@@ -402,7 +402,8 @@ ui_design_prototype = "ui-design-expert/references/prototype-output.md"
 ui_design_checker = "ui-design-expert/scripts/check_ui_design_deliverable.py"
 ui_design_source_checker = "ui-design-expert/scripts/check_ui_source.py"
 ui_design_fixture_verifier = "ui-design-expert/scripts/verify_fixtures.py"
-simple_design_behavior_cases = "fixtures/skill-eval/product-ui-simple-design-behavior-cases.json"
+product_simple_design_behavior_cases = "fixtures/skill-eval/product-simple-design-behavior-cases.json"
+ui_simple_design_behavior_cases = "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
 security_skill = "security-engineering-expert/SKILL.md"
 security_agent = "security-engineering-expert/agents/openai.yaml"
 security_scenarios = "security-engineering-expert/references/security-scenario-routing.md"
@@ -14770,8 +14771,8 @@ check(
     ),
 )
 check(
-    "product and UI design keep simple scope and reject transition overbuild",
-    (ROOT / simple_design_behavior_cases).exists()
+    "product design keeps simple scope and bounded transition behavior",
+    (ROOT / product_simple_design_behavior_cases).exists()
     and has_all(
         product_architecture,
         [
@@ -14781,6 +14782,35 @@ check(
         ],
     )
     and has_all(
+        product_simple_design_behavior_cases,
+        [
+            '"mode": "improvement"',
+            "product-simple-design-current",
+            "product-design-should-start-with-minimum-validated-slice",
+            "product-design-should-expand-only-for-a-current-decision",
+            "product-design-should-record-future-options-without-building-them",
+            "product-design-should-keep-required-controls-in-minimum-slice",
+            "product-design-should-allow-bounded-current-transition",
+            "candidate_weighted_score_must_improve",
+            "source_profiles",
+        ],
+    )
+    and has_none(product_simple_design_behavior_cases, ["ui-design-expert/"])
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        ["fixtures/skill-eval/product-simple-design-behavior-cases.json"],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"',
+        ],
+    )
+)
+check(
+    "UI design keeps simple scope and Owner-controlled prototype behavior",
+    (ROOT / ui_simple_design_behavior_cases).exists()
+    and has_all(
         ui_design_workflow,
         [
             "简单优先与过渡设计门禁",
@@ -14789,19 +14819,43 @@ check(
         ],
     )
     and has_all(
-        simple_design_behavior_cases,
+        ui_design_skill,
+        [
+            "简单不等于不完整",
+            "最小闭环至少包含主路径、一条主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
+            "必须拒绝以流程或可操作原型名义交付",
+            "可正名为孤立页面 / 静态状态稿",
+            "流程验证保持 blocked",
+            "只问一个 Owner blocker",
+            "A：孤立页面 / 静态状态稿",
+            "B：最小流程原型",
+            "当前原型层级不能验证的契约标为 blocked / cant-tell，不得列为范围外",
+            "有证据不适用",
+        ],
+    )
+    and has_all(
+        ui_simple_design_behavior_cases,
         [
             '"mode": "improvement"',
-            "product-design-should-start-with-minimum-validated-slice",
+            "ui-simple-design-current",
             "ui-prototype-should-start-with-minimum-validated-flow",
+            "ui-prototype-should-ask-owner-to-resolve-scope-conflict",
+            "ui-prototype-should-honor-isolated-success-state-choice",
+            "ui-prototype-should-honor-minimal-flow-choice",
+            "ui-design-should-preserve-confirmed-whole-site-scope",
             "candidate_weighted_score_must_improve",
             "source_profiles",
         ],
     )
+    and has_none(ui_simple_design_behavior_cases, ["product-architecture-expert/"])
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        ["fixtures/skill-eval/ui-simple-design-behavior-cases.json"],
+    )
     and has_all(
         "scripts/validate.sh",
         [
-            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-ui-simple-design-behavior-cases.json"',
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-simple-design-behavior-cases.json"',
         ],
     )
 )

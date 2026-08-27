@@ -226,7 +226,7 @@ python3 product-architecture-expert/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
-run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-ui-simple-design-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"
 product_business_architecture_eval_dir="${tmp_dir}/product-business-architecture-eval"
 mkdir -p "${product_business_architecture_eval_dir}"
 if scripts/evaluate-skill-behavior.py blind \
@@ -431,6 +431,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
 ui_design_ant_eval_dir="${tmp_dir}/ui-design-ant-adoption-eval"
 mkdir -p "${ui_design_ant_eval_dir}"
 if scripts/evaluate-skill-behavior.py blind \

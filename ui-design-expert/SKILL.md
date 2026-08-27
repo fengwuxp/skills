@@ -17,12 +17,13 @@ description: |
 1. **先任务后画面**：先确认用户、场景、主任务、成功结果和失败恢复，再决定页面结构与视觉表达。
 2. **先继承后创造**：先读现有设计系统、tokens、组件、页面和品牌资产；局部需求继承现状，只有明确的新界面或重设计才建立新方向。
 3. **结构先于装饰**：信息架构、阅读顺序、操作路径、状态反馈和内容范围未稳定前，不用视觉润色掩盖问题。
-4. **情境决定表达**：任务型界面优先扫描、比较、重复操作效率和熟悉感；转化、阅读或展示界面再按目的提高表现力。
-5. **状态属于设计**：default、hover、focus、active、disabled、loading、empty、error、success、权限、弱网、溢出和本地化不是实现补丁，而是设计契约。
-6. **可访问性是底线**：默认以 WCAG 2.2 AA 为设计基线，优先原生语义；自定义组件按 ARIA APG 核对名称、角色、状态、键盘和焦点。未经验证不得宣称符合标准。
-7. **视觉必须有依据**：字体、颜色、密度、间距、图像和动效服务于产品、受众和使用情境，不套用通用模板，也不为“独特”破坏熟悉的操作方式。
-8. **名实与文质相称**：名称、视觉层级和可操作性必须符合真实任务；文化或品牌形式帮助内容被理解，不能雅化风险、隐藏状态或牺牲效率。
-9. **证据决定完成**：设计稿、代码或截图不是完成证据；关键任务、桌面与移动布局、键盘/焦点、错误恢复、长内容和真实数据状态必须被验证。
+4. **简单不等于不完整**：按当前验证问题选择最低原型层级和最少页面 / 状态；凡目标名为流程或可操作原型，最小闭环至少包含主路径、一条主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界。用户要求整体省略这些契约时，必须拒绝以流程或可操作原型名义交付；若用户只授权局部状态稿，可正名为孤立页面 / 静态状态稿，但流程验证保持 blocked，不得把它降名后宣称完成。只有有证据不适用的单项才可裁剪并说明理由。
+5. **情境决定表达**：任务型界面优先扫描、比较、重复操作效率和熟悉感；转化、阅读或展示界面再按目的提高表现力。
+6. **状态属于设计**：default、hover、focus、active、disabled、loading、empty、error、success、权限、弱网、溢出和本地化不是实现补丁，而是设计契约。
+7. **可访问性是底线**：默认以 WCAG 2.2 AA 为设计基线，优先原生语义；自定义组件按 ARIA APG 核对名称、角色、状态、键盘和焦点。未经验证不得宣称符合标准。
+8. **视觉必须有依据**：字体、颜色、密度、间距、图像和动效服务于产品、受众和使用情境，不套用通用模板，也不为“独特”破坏熟悉的操作方式。
+9. **名实与文质相称**：名称、视觉层级和可操作性必须符合真实任务；文化或品牌形式帮助内容被理解，不能雅化风险、隐藏状态或牺牲效率。
+10. **证据决定完成**：设计稿、代码或截图不是完成证据；关键任务、桌面与移动布局、键盘/焦点、错误恢复、长内容和真实数据状态必须被验证。
 
 ## 工作流
 
@@ -52,7 +53,7 @@ description: |
 - **任务测试或实现后 Design QA**：读取 `references/usability-validation-and-design-qa.md`；先声明 E1-E4 证据等级，再按验证问题选择认知走查、目标用户任务测试、浏览器 Design QA 或运行观察，不用截图和主观偏好冒充可用性证据。
 - **Figma / 墨刀 / 截图设计稿保真审查**：读取 `references/design-draft-fidelity-review.md`，先核对 `source_kind`、精确定位、版本、访问方式、内容 / 资产权威和视口集合，再检查 `content-source`、`content-completeness`、`layout-fit`、`text-wrap`、`overflow`、`responsive` 与状态覆盖；不能从单一截图或厂商 D2C 代码外推其它视口、浏览器行为或生产实现。
 - **整站 Figma 页面规划与一致性**：读取 `references/figma-design-contract.md`，先建立 `Design Contract`、`Page Manifest` 和导航映射，明确参考稿 / 目标稿角色、页面命名、状态覆盖、内容来源和 Owner；通过 `scripts/check_figma_design_plan.py --file plan.md` 后再进入 Figma。
-- **可操作原型或 Figma 交付**：读取 `references/prototype-output.md` 和 `references/figma-file-engineering.md`，选择能回答验证问题的最低原型层级；本 Skill 稳定页面、状态与交互契约，Figma 操作按 `figma-create-new-file`、`figma-use`、`figma-generate-design` 等当前能力路由，代码实现仍由工程能力负责。
+- **可操作原型或 Figma 交付**：读取 `references/prototype-output.md` 和 `references/figma-file-engineering.md`，选择能回答验证问题的最低原型层级；同一请求同时声称验证流程 / 可操作原型和只做孤立页面时，先只问一个 Owner blocker：`A：孤立页面 / 静态状态稿`，流程验证保持 blocked；`B：最小流程原型`，设计契约必须定义主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界。当前原型层级不能验证的契约标为 blocked / cant-tell，不得列为范围外。Owner 选择后再设计，不替其缩小或扩大目标。本 Skill 稳定页面、状态与交互契约，Figma 操作按 `figma-create-new-file`、`figma-use`、`figma-generate-design` 等当前能力路由，代码实现仍由工程能力负责。
 - **组件状态与交接回归**：读取 `references/figma-file-engineering.md`，输出 `state_matrix`、`component_playground`、`ready_for_dev` 和 reviewer 证据；有目标代码库时可用 Storybook 或同类 explorer 隔离状态，但不把工具安装或截图回归当作业务可用性证明。
 - **原生 iOS / Android**：本 Skill 不负责原生界面设计；路由到对应平台能力，不把 WCAG、HTML 或浏览器验证契约机械套用为原生标准。
 - **已有 Figma 设计到代码**：设计已确认时不由本 Skill 重新设计；读取 `references/figma-file-engineering.md`，路由到工程能力，并按 `references/prototype-output.md` 的精确 node、Code Connect、design context、screenshot 和浏览器验证契约使用 Figma design-to-code 工具。没有目标代码库时止于 L0/L1 设计交付，不宣称生产代码或线上收益。

@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 的简单优先与过渡设计门禁。静态 fixture 只固定最小产品切片、必要控制、按决策扩展和当前迁移边界；真实行为改善仍需同一 runner/model 重复采集与独立盲评。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "product-simple-design-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-architecture-methodology.md"
+      ],
+      "sha256": "d16e92701a51d0cd2a04e2e0e4c0273bae4d3262b8ce064c26ff8e43cffbc6a2"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "product-design-should-start-with-minimum-validated-slice",
+      "category": "product-scope-gate",
+      "risk": "high",
+      "prompt": "我要做一个会员服务平台，先把三年内所有角色、端、模块、扩展点和一层过渡架构都规划出来，最后再决定首版做什么。请给产品方案。",
+      "criteria": [
+        "先检查主商业形态是否足以决定主体、权限、数据与价值闭环；关键形态未提供时只关闭这一个 blocker，停在候选切片条件，不把未来平台缩略图当成首版方案。",
+        "事实足够时明确本期目标 / 非目标、最少主体、对象、流程和页面；事实不足时不虚构这些字段，但仍说明进入首版切片的条件，并保留权限、异常、人工兜底、审计和可观察验收作为必要契约。",
+        "未确认的未来角色、端、模块和扩展点只作为待观察或候选；不为未确认的未来想象制作过渡设计，只有迁移本身属于当前目标且来源 / 目标、owner、期限、移除 / 退出 / 退役条件和验证方式已确认时才建立过渡结构。"
+      ]
+    },
+    {
+      "id": "product-design-should-expand-only-for-a-current-decision",
+      "category": "conditional-completeness",
+      "risk": "high",
+      "prompt": "董事会要决定是否整合多个客户中心项目，需要一份业务架构方案支持投资取舍。请判断这次是否需要全域能力、项目和系统视图。",
+      "criteria": [
+        "先确认当前决策、范围、owner、证据和验收，再判断是否需要扩展视图；不把大而全作为默认标准。",
+        "若投资取舍确实需要全局视图，选择与该决策直接相关的最小完整组合，并明确本期切片、关联支撑视图和跳过项。",
+        "不因为未来平台化或迁移想象提前拆分能力、页面或过渡层；任何过渡设计都必须有当前迁移目标、owner、期限、移除条件和验证方式。"
+      ]
+    },
+    {
+      "id": "product-design-should-record-future-options-without-building-them",
+      "category": "future-option-boundary",
+      "risk": "medium",
+      "prompt": "首版只服务一个地区的单一角色，但产品负责人希望先把多地区、多角色、插件市场和兼容旧系统的过渡层全部留好，免得以后返工。",
+      "criteria": [
+        "围绕首版真实主体、对象、流程和验收定义最小产品边界，把多地区、多角色和插件市场记录为待观察或候选。",
+        "说明未来选项可以记录约束和复审条件，但没有当前证据时不将其实现为平台能力、扩展点或页面。",
+        "拒绝无 owner、期限、移除 / 退出 / 退役条件和验证方式的兼容 / 过渡层；等价退场语义均可，不要求固定词形；保持当前方案直接可用，未来变化在有证据后重新评估。"
+      ]
+    },
+    {
+      "id": "product-design-should-keep-required-controls-in-minimum-slice",
+      "category": "minimum-not-incomplete",
+      "risk": "high",
+      "prompt": "首版只做一个运营人员处理会员申请的审批闭环。为了简单，请把权限拒绝、审批失败、人工兜底和审计都删掉，只保留审批成功。",
+      "criteria": [
+        "接受单角色、单审批闭环的范围收敛，但拒绝把简单解释为只保留理想成功路径。",
+        "只保留当前闭环成立所需的最小权限边界、主要失败处理、人工兜底、审计事实和可观察验收；不扩展成通用权限平台、流程引擎或全量运营后台。",
+        "有证据不适用的控制可以裁剪并说明理由，不能因用户要求或实现成本把必要风险责任静默移出本期。"
+      ]
+    },
+    {
+      "id": "product-design-should-allow-bounded-current-transition",
+      "category": "legitimate-transition-design",
+      "risk": "high",
+      "prompt": "现有会员系统将在三个月内迁移到新系统，当前必须双写并逐批切流。旧系统、目标系统、迁移 Owner、截止日期、回退条件和验收口径都已确认。请设计本期产品过渡方案。",
+      "criteria": [
+        "识别迁移本身就是当前目标，不机械拒绝所有过渡设计；围绕三个月迁移窗口给出最小过渡范围。",
+        "明确来源 / 目标、双写与切流责任、数据和状态口径、用户 / 运营可见影响、Owner、截止日期、回退、移除 / 退役条件和验证。",
+        "过渡结构不得获得永久平台地位；不借迁移扩建无证据的通用同步平台、插件体系或未来多系统能力。"
+      ]
+    }
+  ]
+}
