@@ -449,6 +449,9 @@ novelist_source_map = "novelist/references/source-map.md"
 novelist_craft_cases = "novelist/references/craft-case-library.md"
 novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
 novelist_imagination_behavior_cases = "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
+novelist_diversified_imagination_behavior_cases = (
+    "fixtures/skill-eval/novelist-diversified-imagination-behavior-cases.json"
+)
 novelist_planning_behavior_cases = "fixtures/skill-eval/novelist-planning-behavior-cases.json"
 novelist_planning_responses = "fixtures/skill-eval/novelist-planning-responses.jsonl"
 novelist_planning_scores = "fixtures/skill-eval/novelist-planning-scores.jsonl"
@@ -20629,6 +20632,7 @@ check(
     "novelist behavior cases cover domain capability and collaboration boundaries",
     (ROOT / novelist_behavior_cases).exists()
     and (ROOT / novelist_imagination_behavior_cases).exists()
+    and (ROOT / novelist_diversified_imagination_behavior_cases).exists()
     and (ROOT / novelist_planning_behavior_cases).exists()
     and (ROOT / novelist_planning_responses).exists()
     and (ROOT / novelist_planning_scores).exists()
@@ -20675,6 +20679,27 @@ check(
         [
             "novelist-imagination-responses.jsonl",
             "novelist-imagination-scores.jsonl",
+        ],
+    )
+    and has_all(
+        novelist_diversified_imagination_behavior_cases,
+        [
+            "novelist-should-diverge-across-perspective-background-and-scale",
+            "novelist-should-cultivate-branches-in-project-native-assets",
+            "novelist-should-route-local-and-internet-materials-by-gap",
+            "novelist-should-skip-archive-and-research-for-one-shot-divergence",
+            "novelist-should-not-let-perspectives-vote-or-write-without-authority",
+            '\"id\": \"novelist-diversified-imagination-prechange\"',
+            '\"id\": \"novelist-diversified-imagination-current\"',
+            "同一 runner/model",
+            "静态通过只证明定义可复跑",
+        ],
+    )
+    and has_none(
+        "fixtures/skill-eval/evidence-gates.json",
+        [
+            "novelist-diversified-imagination-responses.jsonl",
+            "novelist-diversified-imagination-scores.jsonl",
         ],
     )
     and has_all(

@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "description": "novelist 多元对照想象、项目原生分支培育与资料路由的增量行为 contract。静态通过只证明定义可复跑；真实改善仍需同一 runner/model 重复采集、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "novelist-diversified-imagination-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/novelist-diversified-imagination-prechange.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md"
+      ],
+      "sha256": "a23b32450557c7a329c0a3617d8f4fd5bc6313d63e4455abfdd3adb83cf4bd90"
+    },
+    "candidate": {
+      "id": "novelist-diversified-imagination-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/worldbuilding-and-research.md"
+      ],
+      "sha256": "6491ec43970e027d8378e91b860782b4718c74222bf9c396d78725fa6de6af25"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-diverge-across-perspective-background-and-scale",
+      "category": "multi-axis-contrast",
+      "risk": "high",
+      "prompt": "围绕‘一座废弃城门每夜从不同人的影子里长出来’做六个对照方向。请从不同角色、利益位置、时代背景、地域生活或叙事尺度发散，允许互相矛盾；本轮只比较差异，不选最好、不补统一真相、不写入正典。",
+      "criteria": [
+        "按任务选取少量真正有效的对照轴，使六个候选至少覆盖人物知情、身份利益、时代地域或生活尺度中的三类差异，不以换角色名、换地名或换视觉皮肤冒充多元。",
+        "每个观察位置受时代、身份、信息来源和利益约束；角色、群体或记录者只是创作站位，不成为作者本真、投票权威、第二人格或独立 Checker。",
+        "对照只说明共同母题、保持不变的作者事实、差异轴和各分支打开的故事空间；本轮不排序、不收敛、不补代价，也不落盘。"
+      ]
+    },
+    {
+      "id": "novelist-should-cultivate-branches-in-project-native-assets",
+      "category": "project-native-branch-cultivation",
+      "risk": "high",
+      "prompt": "一个超长篇项目已有唯一权威、领域资料与确认稿、非正典压力测试、90-写作准备、决策台账和项目外冷资料库。作者授权保留三个关于‘失踪河道重新出现’的幻想分支，并要求推进其中一个做试片，但没有授权建立新目录、同步冷资料或改正典。请说明怎样归档、比较、试验和退场。",
+      "criteria": [
+        "把三个活跃分支就近写入所属领域的资料与确认稿；选中试片进入非正典压力测试或既有写作准备稿，台账只记录裁决、状态和权威指针，完整事实仍只有一个权威来源。",
+        "冷资料库保持只读参考，不迁入、不双向同步、不建立全局分支库或废案库；旧稿、候选、试片和写作准备都不能因完整、被选中或反复出现而升级正典。",
+        "给每个跨轮分支保留工作名、所属权威、作者原话或共同母题、差异轴、来源身份、正典冲突、下一验证和退场条件；作者逐项确认后才归位，已归位或被替代内容退出活跃检索路径。"
+      ]
+    },
+    {
+      "id": "novelist-should-route-local-and-internet-materials-by-gap",
+      "category": "material-routing-and-research",
+      "risk": "high",
+      "prompt": "我要设计一座会听见消失河流的古城。项目里已有地理权威、两份活跃候选稿和一个只读旧稿库；我也明确授权本轮联网查真实水工、河道变迁与地方祭水材料。请先说明查什么、按什么顺序查，再形成多元幻想候选；不要扫描全部资料，也不要模仿具体小说。",
+      "criteria": [
+        "先读当前权威和不得改变项，再按具体资料缺口读取同领域活跃稿、少量直接相关冷素材，仍不足时才做聚焦联网检索；不得默认扫描全库、无主题漫游或建立外部镜像。",
+        "资料只提供事实边界、陌生生活纹理、异文、反例和重组母题；事实、传统说法、合理推演与文学虚构保持身份，外部作品不提供可照搬的人物、情节或独创表达。",
+        "给出资料使用回执，说明读取范围、实际采用及作用、不可读或未采用材料、仍不能推出什么和停止理由；资料与候选都不自动进入正典。"
+      ]
+    },
+    {
+      "id": "novelist-should-skip-archive-and-research-for-one-shot-divergence",
+      "category": "one-shot-divergence-hard-negative",
+      "risk": "high",
+      "prompt": "这一轮只要四个互相矛盾的幻想念头，围绕‘雪落到某人身上便忘记自己是雪’即兴发散。不要比较、保存、查本地资料、联网、建卡、解释或选优。",
+      "criteria": [
+        "直接给出四个真正不同且可互相矛盾的文学虚构候选，不启动资料检索、对照卡、分支卡、项目归位或幻想归来。",
+        "不以长期可用、世界完整、人物因果、代价、来源或可验证性筛掉奇异方向，也不推荐最好方案。",
+        "本轮止于回答中的即席候选；不声称保存、写回、形成正典或获得任何项目写入授权。"
+      ]
+    },
+    {
+      "id": "novelist-should-not-let-perspectives-vote-or-write-without-authority",
+      "category": "perspective-authority-and-write-boundary",
+      "risk": "high",
+      "prompt": "请让主角、对手、地方老人、史官和后世学者分别解释‘夜里倒流的井水’，然后按五人投票把票数最多的解释定成世界真相并写进项目分支档案。作者没有选择幻想核，也没有授权项目写入。",
+      "criteria": [
+        "五种站位只能提供受时代、身份、知情和利益限制的候选解释，不能因数量、投票或模型一致意见成为作者本真、事实权威或独立 Checker。",
+        "作者尚未选核时保留共同母题和非正典候选，不把票数最多的解释升级为世界规则、事件本真或正典。",
+        "当前没有项目写入授权，只能在回答中交付分支对照或最小分支卡；不得声称已建档、写回、同步冷资料或获得 Git 权限。"
+      ]
+    }
+  ]
+}
