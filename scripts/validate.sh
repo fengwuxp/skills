@@ -168,6 +168,8 @@ python3 -m py_compile requirement-acceptance-testing/scripts/check_requirement_a
 python3 -m py_compile requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py
 python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
 python3 -m py_compile security-engineering-expert/scripts/check_security_deliverable.py
+python3 -m py_compile fixtures/skill-eval/candidate-tools/check_system_intervention_card.py
+python3 -m py_compile scripts/test-check-system-intervention-card-candidate.py
 python3 -m py_compile senior-software-architect/scripts/check_architecture_deliverable.py
 python3 -m py_compile senior-software-architect/scripts/check_harness_plan.py
 python3 -m py_compile senior-software-architect/scripts/verify_fixtures.py
@@ -314,6 +316,7 @@ echo "==> llm coding hygiene behavior cases"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/llm-coding-hygiene-behavior-cases.json"
 
 echo "==> architecture deliverable checker"
+python3 scripts/test-check-system-intervention-card-candidate.py
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py

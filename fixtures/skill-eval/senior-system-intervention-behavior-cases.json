@@ -19,9 +19,10 @@
         "senior-software-architect/references/architecture.md",
         "huaxia-practical-wisdom/SKILL.md",
         "huaxia-practical-wisdom/references/classical-lenses.md",
-        "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md"
+        "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md",
+        "fixtures/skill-eval/candidate-tools/check_system_intervention_card.py"
       ],
-      "sha256": "82fe9641101b9f4a19ec1381af7465a81b11318b7b0d458ac19c913d51518851"
+      "sha256": "6b7b742fe1c12ef1c1994a35e6c0f21d711627aeb0dd26a95a42d7657bcba015"
     }
   },
   "rubric": {

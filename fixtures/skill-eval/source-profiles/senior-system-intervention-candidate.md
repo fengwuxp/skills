@@ -29,6 +29,21 @@
 最小可逆干预、Owner、反馈与停止：
 ```
 
+## 确定性结构门候选
+
+仅在行为评测 candidate 中，把系统干预卡写成 JSON 后通过 stdin 交给：
+
+```bash
+python3 fixtures/skill-eval/candidate-tools/check_system_intervention_card.py < card.json
+```
+
+- `mode=feedback` 校验问题、证据、强化环、平衡环、延迟、杠杆点和最小干预。
+- `mode=backcasting` 校验问题、证据、至少两个情景、早期信号、复核条件、Owner、可控性、前向校验和最小干预。
+- `mode=combined` 同时执行两组校验。
+- 退出码 `0` 只证明字段结构完整；`1` 表示结构缺失；`2` 表示输入不是合法 JSON。报告固定声明 `proof_limit=structure_only`，不得据此声称因果成立、方案正确、已获授权或可生产准出。
+
+该脚本仍是候选评测资产，不是已安装 Skill 的运行时入口。根因已定位的线性局部 Bug 不构造此卡，也不调用该脚本。
+
 ## 来源边界
 
 - 微信文章《系统思维：解决复杂问题的7种工具》只作为二次整理入口，不作为完整方法或有效性证据。
