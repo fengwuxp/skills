@@ -67,6 +67,9 @@
         "responses": "fixtures/skill-eval/product-simple-design-responses.jsonl",
         "scores": "fixtures/skill-eval/product-simple-design-scores.jsonl",
         "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
       }
     ],
     "ui-design-expert": [

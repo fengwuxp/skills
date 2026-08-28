@@ -330,6 +330,7 @@ product_business_architecture_responses = "fixtures/skill-eval/product-business-
 product_business_architecture_scores = "fixtures/skill-eval/product-business-architecture-scores.jsonl"
 product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
 product_business_expression_requirements_behavior_cases = "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
+product_reference_fast_gate_behavior_cases = "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
 product_simple_design_responses = "fixtures/skill-eval/product-simple-design-responses.jsonl"
 product_simple_design_scores = "fixtures/skill-eval/product-simple-design-scores.jsonl"
 
@@ -14845,6 +14846,41 @@ check(
             'fixtures/skill-eval/product-business-architecture-scores.jsonl',
             'scripts/evaluate-skill-behavior.py blind',
             'scripts/evaluate-skill-behavior.py score',
+        ],
+    ),
+)
+check(
+    "product bounded semantic review stops before reference fanout",
+    (ROOT / product_reference_fast_gate_behavior_cases).exists()
+    and has_all(
+        product_skill,
+        [
+            "题面已经显式给出当前切片的主体、对象、核心规则、候选状态 / 结果边界和验收问题",
+            "槽位存在但有矛盾或缺口",
+            "不读取任何 reference，也不运行 checker",
+            "单说“评审”不构成正式交付触发",
+            "事实、矛盾 / 缺口、合理推断、待确认和非目标",
+        ],
+    )
+    and has_all(
+        product_reference_fast_gate_behavior_cases,
+        [
+            "product-reference-fast-gate-current",
+            "product-fast-gate-should-stop-on-complete-bounded-review",
+            "product-fast-gate-should-treat-conflicts-as-findings",
+            "product-fast-gate-should-route-formal-prd",
+            "product-fast-gate-should-route-business-architecture",
+            "product-fast-gate-should-stop-on-bounded-review-wording",
+        ],
+    )
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        [product_reference_fast_gate_behavior_cases],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"'
         ],
     ),
 )

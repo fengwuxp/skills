@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 局部语义评审 reference 快速门 cases-only 契约。静态 fixture 只固定适用边界；真实成本和行为改善仍需同一 runner/model 的 memory-free repeated crossover 与独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "product-reference-fast-gate-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md"
+      ],
+      "sha256": "0e4066e5eef9066fb6b6ad33bb0542d69f5569208133f21e2ce2e024c3290113"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "product-fast-gate-should-stop-on-complete-bounded-review",
+      "category": "bounded-semantic-review",
+      "risk": "high",
+      "prompt": "这是完全虚构的 HelioPermit 许可申请流程。题面已给出 Applicant、Sponsor、Reviewer，PermitRequest、RequirementSet、Decision、Restriction，六个候选状态、四条核心规则和验收问题。请只做当前语义评审，输出事实、推断、待确认和非目标。",
+      "criteria": [
+        "仅依据题面完成局部语义评审，不读取或声称需要产品方法论、PRD 质量门禁、场景路由或 checker。",
+        "输出事实、矛盾或缺口、合理推断、待确认和非目标，并保持题面主体、对象、规则与候选状态边界。",
+        "把缺失状态迁移、对象关系、Owner 和异常闭环列为 findings 后停止，不扩成正式 PRD、业务架构或技术方案。"
+      ]
+    },
+    {
+      "id": "product-fast-gate-should-treat-conflicts-as-findings",
+      "category": "bounded-semantic-conflict",
+      "risk": "high",
+      "prompt": "一个虚构审批切片已给出主体、对象、规则、候选状态和验收，但 ACTIVE Restriction 与申请状态集合冲突，APPROVED 后 Decision 是否持续有效也未确认。请评审这些矛盾。",
+      "criteria": [
+        "将 ACTIVE 归属、Decision 有效性和状态迁移矛盾直接列为当前 findings，不因存在冲突而加载 reference。",
+        "区分题面事实、合理推断与 Owner 待确认，不替用户补成完整生命周期或合规规则。",
+        "给出受影响验收与停止条件后结束，不运行或声称运行正式产品 checker。"
+      ]
+    },
+    {
+      "id": "product-fast-gate-should-route-formal-prd",
+      "category": "formal-prd-boundary",
+      "risk": "medium",
+      "prompt": "基于现有访谈和审批流程，重写一份正式、完整、可提交评审并可交开发测试的 PRD，包含模板要求和提交前质量检查。",
+      "criteria": [
+        "识别为正式 PRD 交付，不套用局部语义快速门。",
+        "进入 PRD 模板、设计方法与质量门禁 reference，并在真实运行前不虚构 checker 通过。",
+        "最终范围、规则、异常、验收、Owner 和待确认项满足正式文档边界。"
+      ]
+    },
+    {
+      "id": "product-fast-gate-should-route-business-architecture",
+      "category": "business-architecture-boundary",
+      "risk": "medium",
+      "prompt": "董事会要判断三套重复系统和多个在建项目应该继续、合并还是停止，请做有证据的业务架构与投资取舍分析。",
+      "criteria": [
+        "识别为当前投资决策，进入业务架构 reference，不误用局部语义快速门。",
+        "选择最小必要视图并明确范围、Owner、证据、验收和跳过项。",
+        "证据不足时给有界条件结论，不生成无依据的全景平台方案。"
+      ]
+    },
+    {
+      "id": "product-fast-gate-should-stop-on-bounded-review-wording",
+      "category": "review-wording-negative-trigger",
+      "risk": "high",
+      "prompt": "对一个已给齐主体、对象、规则、候选状态、异常样例和验收问题的单流程做一轮产品评审；不写 PRD，不做跨应用规划，也不需要正式评审稿。",
+      "criteria": [
+        "不因出现‘评审’二字自动加载 PRD quality gates、product-design-and-prd 或 checker。",
+        "直接输出当前事实、矛盾或缺口、推断、待确认和非目标。",
+        "不扩大为全量产品架构、业务架构、原型规划或工程实现。"
+      ]
+    }
+  ]
+}
