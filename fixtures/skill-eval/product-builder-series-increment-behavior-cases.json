@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "产品构建师系列增量行为 contract：用户路径到系统职责、AI 生成判断和视觉元素意图。最新 response/score 已按当前 source 完成 3 次采集和独立盲评，但 mixed product/UI comparison 的 release gate 未通过；当前只保留静态 contract，不替代完整 Skill 发布准入。",
+  "description": "产品与 UI 跨域比较 contract：用户路径到系统职责、AI 生成判断和视觉元素意图。当前 source 尚未完成重复采集、盲评和独立复核；当前只保留静态 contract，不接入任一单 Skill evidence gate，也不替代完整 Skill 发布准入或单域成本证据。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -17,7 +17,7 @@
         "ui-design-expert/SKILL.md",
         "ui-design-expert/references/design-foundations.md"
       ],
-      "sha256": "b6675d43bc61c4da9b4ceaba7774911751f304fe2ed8cb4ccbf99430c256ffdd"
+      "sha256": "f7090c55198f35f48fdeca8d20c2539d5f3d0cae706ae61b3b65fe31aa64058c"
     }
   },
   "rubric": {

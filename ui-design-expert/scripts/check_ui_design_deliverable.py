@@ -8,6 +8,7 @@ the network, write files, inspect secrets, or judge visual and usability quality
 from __future__ import annotations
 
 import argparse
+import csv
 import re
 import sys
 from pathlib import Path
@@ -352,6 +353,16 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+def markdown_cells(row: str) -> tuple[str, ...]:
+    cells = csv.reader(
+        [row.strip().strip("|")],
+        delimiter="|",
+        escapechar="\\",
+        quoting=csv.QUOTE_NONE,
+    )
+    return tuple(normalize(cell) for cell in next(cells))
+
+
 def markdown_tables(text: str) -> list[tuple[tuple[str, ...], int]]:
     lines = text.splitlines()
     tables: list[tuple[tuple[str, ...], int]] = []
@@ -360,15 +371,16 @@ def markdown_tables(text: str) -> list[tuple[tuple[str, ...], int]]:
         separator = lines[index + 1].strip()
         if "|" not in header or "|" not in separator:
             continue
-        separator_cells = [cell.strip().replace(" ", "") for cell in separator.strip("|").split("|")]
+        separator_cells = [cell.replace(" ", "") for cell in markdown_cells(separator)]
         if len(separator_cells) < 2 or not all(re.fullmatch(r":?-{3,}:?", cell) for cell in separator_cells):
             continue
-        header_cells = tuple(normalize(cell) for cell in header.strip("|").split("|"))
+        header_cells = markdown_cells(header)
         row_count = 0
         for row in lines[index + 2 :]:
             if "|" not in row:
                 break
-            if row.strip():
+            row_cells = markdown_cells(row)
+            if len(row_cells) == len(header_cells) and all(row_cells):
                 row_count += 1
         tables.append((header_cells, row_count))
     return tables

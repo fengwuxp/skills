@@ -59,7 +59,7 @@
 
 - `product-business-architecture-behavior-cases.json`：已按当前 source profile 完成 3 次 baseline/candidate 采集、盲评与评分；`product-business-final-blind-20260827-r2` candidate weighted score `4.82`、criteria `43/45`、blockers `0`，active gate 使用 `product-business-architecture-responses.jsonl` / `product-business-architecture-scores.jsonl`。
 - `product-simple-design-behavior-cases.json`：已按当前 source profile 完成 3 次 baseline/candidate 采集、盲评与评分；`product-simple-final-blind-20260827-r6` candidate weighted score `4.61`、criteria `41/45`、blockers `0`，active gate 使用 `product-simple-design-responses.jsonl` / `product-simple-design-scores.jsonl`。
-- `product-builder-series-increment-behavior-cases.json`：2026-08-27 按当前 source profile `c9bf70766582126000e983bbfa6c1420e87fa58aa692e889db3aab3a498d4755` 完成 3 次采集和独立盲评；`product-builder-final-blind-20260827-r3` candidate weighted score `4.73`、criteria `41/45`、blockers `0`，但品牌元素场景出现逐 pair correctness/safety 回退，release gate 未通过。该 contract 混合产品与 UI 职责，当前保持 cases-only，response/score 不作为 product-architecture-expert 准出证据；后续应拆分 comparison 轴或补充独立 Owner 证据，不继续叠加通用产品规则。
+- `product-builder-series-increment-behavior-cases.json`：该 contract 混合产品与 UI 职责，历史临时复评未通过 release gate，仓库未登记可复核 artifact，因此不保留精确分数。它只作为跨域 cases-only 审计资产，不接入 product 或 UI 的单 Skill evidence gate，也不作为单域成本证据。
 - 评分文件只证明本轮指定 runner/model、题集和 rubric 下的行为样本；不证明业务事实、产品质量、工程可行性、合规或上线结果。
 
 ## 来源主题索引

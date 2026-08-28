@@ -478,6 +478,8 @@ grill_me_skill = "grill-me/SKILL.md"
 grill_me_agent = "grill-me/agents/openai.yaml"
 grill_me_question_ledger = "grill-me/references/question-ledger.md"
 grill_me_source_map = "grill-me/references/source-map.md"
+grill_me_resolution_behavior_cases = "fixtures/skill-eval/grill-me-resolution-and-intent-behavior-cases.json"
+grill_me_resolution_responses = "fixtures/skill-eval/grill-me-resolution-and-intent-responses.jsonl"
 wise_agent_skill = "wise-agent/SKILL.md"
 wise_agent_agent = "wise-agent/agents/openai.yaml"
 wise_agent_global_kernel = "wise-agent/assets/codex-global-agents.md"
@@ -2351,6 +2353,31 @@ check(
             "Shared Context",
             "Issue / PR",
             "Hand-off Prompt",
+        ],
+    ),
+)
+
+check(
+    "grill-me resolution behavior contract stays current and cases-only",
+    (ROOT / grill_me_resolution_behavior_cases).exists()
+    and not (ROOT / grill_me_resolution_responses).exists()
+    and has_all(
+        grill_me_resolution_behavior_cases,
+        [
+            "当前 source 尚未完成重复采集、盲评和独立复核",
+            "当前只保留静态 contract",
+            "B 只在撤离受阻时朝阻路者短促出手",
+            "不替代安装、发布或行为提升证明",
+        ],
+    )
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        [grill_me_resolution_behavior_cases],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            "scripts/evaluate-skill-behavior.py validate --cases fixtures/skill-eval/grill-me-resolution-and-intent-behavior-cases.json"
         ],
     ),
 )
@@ -6224,11 +6251,14 @@ check(
             "product-should-review-ai-generated-prototype-against-frozen-judgments",
             "ui-design-should-audit-visual-element-intent",
             "ui-design-should-preserve-evidence-backed-brand-elements",
-            "最新 response/score 已按当前 source 完成 3 次采集",
-            "release gate 未通过",
+            "当前 source 尚未完成重复采集、盲评和独立复核",
+            "当前只保留静态 contract",
+            "不替代完整 Skill 发布准入",
         ],
     )
-    and has_all(
+    and not (ROOT / product_builder_series_increment_responses).exists()
+    and not (ROOT / product_builder_series_increment_scores).exists()
+    and has_none(
         "fixtures/skill-eval/evidence-gates.json",
         [
             product_builder_series_increment_behavior_cases,

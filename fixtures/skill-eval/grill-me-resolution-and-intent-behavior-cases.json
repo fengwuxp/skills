@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "grill-me 的设计分辨率、延期队列、意图与结果分离行为 contract。baseline 冻结修复前契约，candidate 指向当前源码；同一 runner/model 重复响应、独立盲评和门禁通过前不构成安装、发布或行为提升证明。",
+  "description": "grill-me 的设计分辨率、延期队列、意图与结果分离行为 contract。baseline 冻结修复前契约，candidate 指向当前源码；当前 source 尚未完成重复采集、盲评和独立复核，当前只保留静态 contract，不替代安装、发布或行为提升证明。",
   "source_profiles": {
     "baseline": {
       "id": "grill-me-pre-resolution",
@@ -15,7 +15,7 @@
         "grill-me/SKILL.md",
         "grill-me/references/question-ledger.md"
       ],
-      "sha256": "8d0f6187182108436d345f05326e05dde4339c752605d85e463c965cf9809b85"
+      "sha256": "9bc2b17dfe66ae68c933aac439b629c93b839eb028562a6fd4b178ed3aca6b9b"
     }
   },
   "rubric": {
@@ -47,7 +47,7 @@
       "id": "grill-should-separate-mixed-intent-from-outcome",
       "category": "intent-result-boundary",
       "risk": "high",
-      "prompt": "当前问题有两个选项：A 是先接近并带人撤开，B 是直接攻击阻路者。我选择 A + 部分 B。请记录结论并继续。",
+      "prompt": "当前问题有两个选项：A 是先接近并带人撤开，B 是直接攻击阻路者。我选择 A + 部分 B：A 是主目标；B 只在撤离受阻时朝阻路者短促出手，尝试争取空隙，不是先手决斗。请记录结论并继续。",
       "criteria": [
         "把 A 作为主目标，把 B 仅记录为受阻后朝阻路者短促出手、试图争取空隙；不擅自扩成先手决斗或完整采用 B。",
         "显式分开行动意图与结果：不推定已经命中、逼退、截断、解除控制或成功带人离开；没有额外证据或 Owner 确认时结果保持 pending。",

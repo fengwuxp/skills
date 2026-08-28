@@ -79,6 +79,10 @@
 - 外部仓库不作为运行时依赖；创作时只读取本仓库已经归位的方法和合成案例。
 - 静态案例可发现不等于真实写作行为提升。真实提升需在同一 runner/model 下做 baseline/candidate 多次执行、盲评或可复现评分，并保持高风险 blocker 为零。
 
+### 当前行为复评（2026-08-27）
+
+- 曾按 `novelist-current` source profile 对 6 组 contract 做临时 baseline/candidate 复评，但仓库未登记可复核 artifact，因此不保留精确分数或逐组结论。所有组继续保持 `cases-only`；重新激活前须按当前 source 重新采集、盲评并定位失败机制，不能只放宽 gate 或刷新指纹。
+
 ## 需要继续读取的 reference
 
 - 需要方法正文时，按 `SKILL.md` 的场景路由读取对应专项 reference。

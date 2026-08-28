@@ -42,7 +42,10 @@ ANT_ADOPTION_VALID_CASES = [
 ANT_ADOPTION_INVALID_CASES = [
     (scenario, FIXTURES / f"ant-adoption-{scenario}-invalid.md")
     for scenario in ANT_ADOPTION_SCENARIOS
-] + [("version-upgrade", FIXTURES / "ant-adoption-version-upgrade-keyword-stuffed-invalid.md")]
+] + [
+    ("cross-application", FIXTURES / "ant-adoption-cross-application-empty-rows-invalid.md"),
+    ("version-upgrade", FIXTURES / "ant-adoption-version-upgrade-keyword-stuffed-invalid.md"),
+]
 SOURCE_VALID = FIXTURES / "source-valid.tsx"
 SOURCE_INVALID = FIXTURES / "source-invalid.tsx"
 DESIGN_REVIEW_VALID = [
@@ -88,6 +91,31 @@ def main() -> int:
             failures.append(f"valid Ant adoption fixture failed: {scenario}: {', '.join(missing)}")
         else:
             print(f"OK Ant adoption fixture {scenario}")
+    cross_application = read_fixture(FIXTURES / "ant-adoption-cross-application-valid.md")
+    indented_cross_application = "\n".join(
+        f"  {line}  " if line.startswith("|") else line
+        for line in cross_application.splitlines()
+    )
+    if missing := missing_groups(
+        "ant-adoption", indented_cross_application, "cross-application"
+    ):
+        failures.append(
+            "valid indented Ant adoption fixture failed: " + ", ".join(missing)
+        )
+    else:
+        print("OK indented Ant adoption fixture cross-application")
+    escaped_pipe_cross_application = cross_application.replace(
+        "订单入口到筛选、编辑、失败恢复和成功",
+        r"订单入口 \| 筛选、编辑、失败恢复和成功",
+    )
+    if missing := missing_groups(
+        "ant-adoption", escaped_pipe_cross_application, "cross-application"
+    ):
+        failures.append(
+            "valid escaped-pipe Ant adoption fixture failed: " + ", ".join(missing)
+        )
+    else:
+        print("OK escaped-pipe Ant adoption fixture cross-application")
     for scenario, path in ANT_ADOPTION_INVALID_CASES:
         if not missing_groups("ant-adoption", read_fixture(path), scenario):
             failures.append(f"invalid Ant adoption fixture unexpectedly passed: {scenario}")

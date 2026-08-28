@@ -46,6 +46,8 @@
 
 同日后续小说实践又暴露三项边界：过程资产模式会沿场景无限下钻、组合答案会把行动意图误写成既成效果、每个微小确认会反复扇出派生文档。项目据此补充“当前交付 + 设计分辨率”门槛、独立 `queue_state: active / deferred` 与 `deferred_until`、行动意图和结果分离、写回检查点。新增行为 contract 只建立可复跑用例；没有同一 runner/model 的基线与候选响应、独立盲评和安装同步前，不宣称行为提升或发布准入。
 
+2026-08-27 曾执行 R1-R4 临时行为复评，但仓库未登记可复核 artifact，因此不保留精确分数，只记录高风险 criteria 未全部通过。该结果不进入 scored release gate；cases 仅接入 `evidence-gates.json` 的 cases-only 门禁，重新评测前不得据此声称行为提升或发布准入。
+
 ## 不吸收边界
 
 - 不安装上游全仓库，不保留 `/grilling` alias，不运行 npm、Claude plugin、hooks、Trellis、外部任务系统或跳过权限模式。

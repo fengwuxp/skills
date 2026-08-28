@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "grill-me": [
+      {
+        "cases": "fixtures/skill-eval/grill-me-resolution-and-intent-behavior-cases.json"
+      }
+    ],
     "senior-software-architect": [
       {
         "cases": "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json",
@@ -62,9 +67,6 @@
         "responses": "fixtures/skill-eval/product-simple-design-responses.jsonl",
         "scores": "fixtures/skill-eval/product-simple-design-scores.jsonl",
         "seed": 731
-      },
-      {
-        "cases": "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
       }
     ],
     "ui-design-expert": [
@@ -75,10 +77,13 @@
         "cases": "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
+        "cases": "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
+        "cases": "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
       }
     ]
   }
