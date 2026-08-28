@@ -452,6 +452,12 @@ novelist_imagination_behavior_cases = "fixtures/skill-eval/novelist-imagination-
 novelist_diversified_imagination_behavior_cases = (
     "fixtures/skill-eval/novelist-diversified-imagination-behavior-cases.json"
 )
+novelist_diversified_imagination_local_material = (
+    "fixtures/skill-eval/source-profiles/novelist-diversified-imagination-local-material.md"
+)
+novelist_local_material_behavior_cases = (
+    "fixtures/skill-eval/novelist-local-material-use-behavior-cases.json"
+)
 novelist_planning_behavior_cases = "fixtures/skill-eval/novelist-planning-behavior-cases.json"
 novelist_planning_responses = "fixtures/skill-eval/novelist-planning-responses.jsonl"
 novelist_planning_scores = "fixtures/skill-eval/novelist-planning-scores.jsonl"
@@ -20633,6 +20639,8 @@ check(
     (ROOT / novelist_behavior_cases).exists()
     and (ROOT / novelist_imagination_behavior_cases).exists()
     and (ROOT / novelist_diversified_imagination_behavior_cases).exists()
+    and (ROOT / novelist_diversified_imagination_local_material).exists()
+    and (ROOT / novelist_local_material_behavior_cases).exists()
     and (ROOT / novelist_planning_behavior_cases).exists()
     and (ROOT / novelist_planning_responses).exists()
     and (ROOT / novelist_planning_scores).exists()
@@ -20695,11 +20703,42 @@ check(
             "静态通过只证明定义可复跑",
         ],
     )
+    and has_all(
+        novelist_local_material_behavior_cases,
+        [
+            "novelist-local-material-should-read-authorized-input-before-planning",
+            "novelist-local-material-should-stop-before-internet-when-local-is-enough",
+            "novelist-local-material-should-reject-conflicting-cold-copy",
+            "novelist-local-material-should-not-write-candidates-without-authority",
+            "novelist-local-material-should-report-use-without-overclaim",
+            novelist_diversified_imagination_local_material,
+            '\"id\": \"novelist-local-material-use-prechange\"',
+            '\"id\": \"novelist-local-material-use-current\"',
+        ],
+    )
+    and has_all(
+        novelist_diversified_imagination_local_material,
+        [
+            "城址北高南低，旧河自西北入城、向东南离城",
+            "东门附近没有已确认河槽、水门或引水设施",
+            "该句与现行东门地理权威冲突",
+        ],
+    )
+    and has_all(
+        novelist_world,
+        [
+            "先在当前任务已授权的项目根内",
+            "读取状态声明",
+            "未实际读取时不写成资料使用回执",
+        ],
+    )
     and has_none(
         "fixtures/skill-eval/evidence-gates.json",
         [
             "novelist-diversified-imagination-responses.jsonl",
             "novelist-diversified-imagination-scores.jsonl",
+            "novelist-local-material-use-responses.jsonl",
+            "novelist-local-material-use-scores.jsonl",
         ],
     )
     and has_all(
