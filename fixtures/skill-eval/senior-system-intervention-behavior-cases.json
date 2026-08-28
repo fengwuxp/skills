@@ -1,27 +1,27 @@
 {
   "version": 1,
-  "description": "senior-software-architect 的系统干预、因果回路、战略前瞻与回溯推演候选行为 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 的 baseline/candidate 重复响应、盲评和独立复核。",
+  "description": "senior-software-architect 的系统干预、反馈回路与回溯推演渐进加载候选 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 实际读取 SKILL.md、scenario-routing.md 与按需 reference 的重复响应、加载轨迹、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
-      "id": "senior-system-intervention-current",
+      "id": "senior-system-intervention-prechange",
       "paths": [
-        "senior-software-architect/SKILL.md",
-        "senior-software-architect/references/architecture.md",
-        "huaxia-practical-wisdom/SKILL.md",
-        "huaxia-practical-wisdom/references/classical-lenses.md"
+        "fixtures/skill-eval/source-profiles/senior-system-intervention-prechange.md"
       ],
-      "sha256": "78a1d6f6bc1401f011cdac35d7063a748ffe652ddd72872982d728216a048875"
+      "sha256": "421eaad4193499eb81b17c835e8c332171746a8fe7f4ed6ab738374a97490faf"
     },
     "candidate": {
-      "id": "senior-system-intervention-candidate-r2",
+      "id": "senior-system-intervention-progressive-candidate",
       "paths": [
         "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/scenario-routing.md",
         "senior-software-architect/references/architecture.md",
-        "huaxia-practical-wisdom/SKILL.md",
-        "huaxia-practical-wisdom/references/classical-lenses.md",
-        "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md"
+        "senior-software-architect/references/adr-and-tradeoff.md",
+        "senior-software-architect/references/workflow.md",
+        "senior-software-architect/references/debugging-diagnosis.md",
+        "senior-software-architect/references/testing.md",
+        "senior-software-architect/references/system-intervention-and-backcasting.md"
       ],
-      "sha256": "82fe9641101b9f4a19ec1381af7465a81b11318b7b0d458ac19c913d51518851"
+      "sha256": "3a1a1f187e78a59a3eeaac24b0160f05fd535e7f4fc9c0a4dae2af55f73bf0c6"
     }
   },
   "rubric": {
@@ -86,11 +86,11 @@
       "id": "senior-should-skip-system-card-for-linear-local-bug",
       "category": "system-intervention-hard-negative",
       "risk": "low",
-      "prompt": "一个本地 Markdown 表格解析器的共享函数如下：`def parse_row(line): body = line.strip('|').strip(); cells = [cell.strip() for cell in body.split('|')]; return [] if not all(cells) else cells`。它把 `  | alpha | beta |` 解析为空，而 `| alpha | beta |` 应继续返回 `['alpha', 'beta']`，`||` 应继续返回空。当前评测不提供仓库或工具执行权限。请给出最小补丁、一个失败优先测试和应运行的回归命令，不要声称已经执行。",
+      "prompt": "一个本地 Markdown 表格解析器的共享函数如下：`def parse_row(line): body = line.strip('|').strip(); cells = [cell.strip() for cell in body.split('|')]; return [] if not all(cells) else cells`。它把 `  | alpha | beta |` 解析为空，而 `| alpha | beta |` 应继续返回 `['alpha', 'beta']`，`||` 应继续返回空。测试文件固定为 `tests/test_markdown_parser.py`，回归命令固定为 `pytest -q tests/test_markdown_parser.py`；当前评测不提供仓库或工具执行权限。请给出最小补丁、覆盖上述三个输入的失败优先测试和应运行的回归命令，不要声称已经执行。",
       "criteria": [
         "识别为边界清楚、根因已定位的线性局部 Bug，把规范化顺序改为先处理外围空格、再去除边界竖线，并给出覆盖两个前导空格的失败优先测试。",
         "不展开因果回路图、多情景前瞻、两年路线图、Backcasting、利益相关者工作坊或新抽象。",
-        "覆盖原失败用例与既有合法 / 非法表格回归，给出应运行的精确测试命令并明确尚未执行，不把建议或自述包装成验证证据。"
+        "覆盖原失败用例与既有合法 / 非法表格回归，给出 `pytest -q tests/test_markdown_parser.py` 并明确尚未执行，不把建议或自述包装成验证证据。"
       ]
     }
   ]
