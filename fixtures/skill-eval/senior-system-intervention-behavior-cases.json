@@ -13,7 +13,7 @@
       "sha256": "78a1d6f6bc1401f011cdac35d7063a748ffe652ddd72872982d728216a048875"
     },
     "candidate": {
-      "id": "senior-system-intervention-candidate-r1",
+      "id": "senior-system-intervention-candidate-r2",
       "paths": [
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/architecture.md",
@@ -21,7 +21,7 @@
         "huaxia-practical-wisdom/references/classical-lenses.md",
         "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md"
       ],
-      "sha256": "a6d3d925ed6be389eb83224ba965273a7a8aa733bfca46128897f3c53b7efc85"
+      "sha256": "82fe9641101b9f4a19ec1381af7465a81b11318b7b0d458ac19c913d51518851"
     }
   },
   "rubric": {
@@ -86,11 +86,11 @@
       "id": "senior-should-skip-system-card-for-linear-local-bug",
       "category": "system-intervention-hard-negative",
       "risk": "low",
-      "prompt": "一个本地 Markdown 表格解析器因为先 strip('|')、后处理外围空格，导致带两个前导空格的合法数据行被判为空。调用方、期望行为和回归命令都已明确。请修复这个问题。",
+      "prompt": "一个本地 Markdown 表格解析器的共享函数如下：`def parse_row(line): body = line.strip('|').strip(); cells = [cell.strip() for cell in body.split('|')]; return [] if not all(cells) else cells`。它把 `  | alpha | beta |` 解析为空，而 `| alpha | beta |` 应继续返回 `['alpha', 'beta']`，`||` 应继续返回空。当前评测不提供仓库或工具执行权限。请给出最小补丁、一个失败优先测试和应运行的回归命令，不要声称已经执行。",
       "criteria": [
-        "识别为边界清楚、根因已定位的线性局部 Bug，直接围绕共享解析函数建立失败测试并做最小修复。",
+        "识别为边界清楚、根因已定位的线性局部 Bug，把规范化顺序改为先处理外围空格、再去除边界竖线，并给出覆盖两个前导空格的失败优先测试。",
         "不展开因果回路图、多情景前瞻、两年路线图、Backcasting、利益相关者工作坊或新抽象。",
-        "验证原失败用例与既有合法 / 非法表格回归，报告实际命令和残余边界，不把简单修复升级为系统改造。"
+        "覆盖原失败用例与既有合法 / 非法表格回归，给出应运行的精确测试命令并明确尚未执行，不把建议或自述包装成验证证据。"
       ]
     }
   ]
