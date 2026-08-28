@@ -1,27 +1,27 @@
 {
   "version": 1,
-  "description": "senior-software-architect 的系统干预、反馈回路与回溯推演渐进加载候选 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 实际读取 SKILL.md、scenario-routing.md 与按需 reference 的重复响应、加载轨迹、盲评和独立复核。",
+  "description": "senior-software-architect 的系统干预、因果回路、战略前瞻与回溯推演候选行为 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 的 baseline/candidate 重复响应、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
-      "id": "senior-system-intervention-prechange",
-      "paths": [
-        "fixtures/skill-eval/source-profiles/senior-system-intervention-prechange.md"
-      ],
-      "sha256": "421eaad4193499eb81b17c835e8c332171746a8fe7f4ed6ab738374a97490faf"
-    },
-    "candidate": {
-      "id": "senior-system-intervention-progressive-candidate",
+      "id": "senior-system-intervention-current",
       "paths": [
         "senior-software-architect/SKILL.md",
-        "senior-software-architect/references/scenario-routing.md",
         "senior-software-architect/references/architecture.md",
-        "senior-software-architect/references/adr-and-tradeoff.md",
-        "senior-software-architect/references/workflow.md",
-        "senior-software-architect/references/debugging-diagnosis.md",
-        "senior-software-architect/references/testing.md",
-        "senior-software-architect/references/system-intervention-and-backcasting.md"
+        "huaxia-practical-wisdom/SKILL.md",
+        "huaxia-practical-wisdom/references/classical-lenses.md"
       ],
-      "sha256": "3a1a1f187e78a59a3eeaac24b0160f05fd535e7f4fc9c0a4dae2af55f73bf0c6"
+      "sha256": "78a1d6f6bc1401f011cdac35d7063a748ffe652ddd72872982d728216a048875"
+    },
+    "candidate": {
+      "id": "senior-system-intervention-candidate-r2",
+      "paths": [
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/architecture.md",
+        "huaxia-practical-wisdom/SKILL.md",
+        "huaxia-practical-wisdom/references/classical-lenses.md",
+        "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md"
+      ],
+      "sha256": "82fe9641101b9f4a19ec1381af7465a81b11318b7b0d458ac19c913d51518851"
     }
   },
   "rubric": {

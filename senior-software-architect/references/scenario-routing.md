@@ -34,7 +34,6 @@
 | 写测试、补测试或 TDD | `快速路由表` 中测试行，`组合场景处理` 中 DDD/分层架构 + 测试行，再读 `testing.md` | 不以内部实现细节作为测试通过条件 |
 | 图形化、系分、ADR 或生产变更 | `快速路由表` 中图形、系分、选型、上线行，再读对应专项 reference | 不用图或 ADR 掩盖缺少验证的设计 |
 | 非标工程问题 / 无标准答案问题 | `快速路由表` 中非标工程问题行，再读 `architecture.md` 的“1.3 非标工程问题” | 不把复杂问题拆成机械执行清单 |
-| 系统反馈、政策阻力、战略前瞻或 Backcasting | `快速路由表` 中系统干预行，再读 `system-intervention-and-backcasting.md` | 根因已定位的线性局部 Bug 不加载系统干预 reference |
 | 外部依赖、AI 协作或多 Agent 推进 | `快速路由表` 中外部 API、AI 编码协作行，再读 `workflow.md`、`ai-assisted-engineering.md`；中大型项目继续读 `ai-large-project-orchestration.md` | 不凭模型记忆处理时效性外部规则，不照搬外部工作流命令 |
 
 ## 使用顺序
@@ -51,7 +50,6 @@
 | --- | --- | --- |
 | 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
 | 非标工程问题 / 无标准答案 / 跨模块跨团队 / 复杂遗留问题 / AI 编码失控 | `architecture.md`、`adr-and-tradeoff.md`、`workflow.md`；涉及测试或编码时加读 `testing.md`，涉及生产时加读 `production-readiness.md` | 先输出非标工程问题卡：问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、决策标准和停止条件；不直接进入大范围改造。 |
-| 症状反复 / 多主体反馈 / 政策阻力 / 时间延迟 / 战略前瞻 / Backcasting | `system-intervention-and-backcasting.md`；进入编码或生产动作时再加读 `testing.md`、`workflow.md` 或 `production-readiness.md` | 输出待验证的反馈模型或回溯路径，以及一个有 Owner、观察窗口、成功 / 失败信号、停止和回退的最小可逆干预；线性局部 Bug 直接走 Bug 修复。 |
 | PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构 | `product-design.md`、`architecture.md`、`system-analysis-design.md`；AI Native 端到端产品到研发流程先由 `wise-agent` 编排，产品侧缺口回 `产品架构专家` 的 `ai-native-product-context.md`；涉及验收种子、TDD 或测试计划时加读 `testing.md` | 先校准产品目标、核心业务用例、对象状态、规则矩阵、验收场景和风险 owner；架构师只消费已确认的 Hardened Candidate 或 AI Native 交接结论，再把业务 driver 转成服务/模块边界、质量属性场景、接口、数据、测试、监控、发布和取舍；需要 TDD 时输出业务驱动验证到测试资产映射。 |
 | 支付/资金/账本/清结算/对账系统设计、代码、测试或生产变更 | `product-design.md`、`architecture.md`、`system-analysis-design.md`、`testing.md`；领域事实、不变量和停止条件消费 `payment-expert` | 架构师主责工程实现；不得用工程默认值补支付 Owner、法域、原事实、金额口径、幂等冲突、账本平衡、结算或对账规则。 |
 | 架构图 / 流程图 / 时序图 / 状态机 / ER 图 / 类图 / 部署图 / 迁移图 / 可视化产物 | `diagram-output.md`，按场景再读 `architecture.md`、`system-analysis-design.md`、`production-readiness.md` 或专项 reference | 图形目标、图形类型、工程落点、默认 SVG 输出、验证动作和剩余风险；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出。 |
