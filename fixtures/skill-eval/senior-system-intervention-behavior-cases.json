@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "description": "senior-software-architect 的系统干预、因果回路、战略前瞻与回溯推演候选行为 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 的 baseline/candidate 重复响应、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "senior-system-intervention-current",
+      "paths": [
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/architecture.md",
+        "huaxia-practical-wisdom/SKILL.md",
+        "huaxia-practical-wisdom/references/classical-lenses.md"
+      ],
+      "sha256": "78a1d6f6bc1401f011cdac35d7063a748ffe652ddd72872982d728216a048875"
+    },
+    "candidate": {
+      "id": "senior-system-intervention-candidate-r1",
+      "paths": [
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/architecture.md",
+        "huaxia-practical-wisdom/SKILL.md",
+        "huaxia-practical-wisdom/references/classical-lenses.md",
+        "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md"
+      ],
+      "sha256": "a6d3d925ed6be389eb83224ba965273a7a8aa733bfca46128897f3c53b7efc85"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "senior-should-find-evidence-drift-feedback-and-leverage",
+      "category": "system-feedback-evidence-governance",
+      "risk": "high",
+      "prompt": "一个 Skills 仓库反复出现：修改 Skill 后 source digest 漂移；全量验证失败；维护者为尽快恢复绿色继续补 guard 或刷新静态 hash；几轮后 validator、manifest 和历史 responses 越来越多，CR 仍不断发现证据口径不一致。请诊断真正机制并给出最小干预，不要只说补测试或更新 hash。",
+      "criteria": [
+        "先界定行为随时间的变化、证据范围和系统边界，区分静态 contract、行为证据与发布准入；把图和关系明确标为待验证模型，不冒充因果事实。",
+        "至少识别一个强化环、一个平衡环和一个时间延迟，解释规则 / source 扇出、漂移、快速修复压力、证据债与同步阻断如何相互作用，并指出真正杠杆点。",
+        "给出一个最小可逆干预，包含 Owner、反馈源、成功 / 失败信号和停止条件；不得用刷新 hash、增加无主流程或伪造评分恢复绿色。"
+      ]
+    },
+    {
+      "id": "senior-should-break-context-bloat-reinforcing-loop",
+      "category": "system-feedback-context-governance",
+      "risk": "high",
+      "prompt": "一个 UI Skill 为防止遗漏不断把详细场景、工具步骤和硬槽位塞进 SKILL.md。上下文越来越长，模型开始跳过正文、路由失误，团队于是继续往入口补说明。请判断该从哪里干预，并保留真正不能下沉的红线。",
+      "criteria": [
+        "描述正文膨胀、上下文噪声、跳读 / 路由失误和继续补正文之间的强化环，同时识别 reference 单一权威、快速止损门和按需加载形成的平衡环。",
+        "区分必须常驻的触发边界 / 红线与可下沉的场景字段 / 工具步骤，不把简单原则用于删除授权、安全、可访问性、失败恢复或证据边界。",
+        "给出最小迁移动作、回归检查和停止条件；不新建平级 Skill、不一次性重写全部 reference，也不以字数下降证明行为改善。"
+      ]
+    },
+    {
+      "id": "senior-should-backcast-and-forward-check-under-uncertainty",
+      "category": "foresight-backcasting",
+      "risk": "high",
+      "prompt": "团队希望两年后把一个单区域服务演进为可在三个地区独立运营的系统，但监管、数据驻留、团队规模和客户量都不确定。请从目标态反推当前行动，同时避免把两年路线图写成确定预测。",
+      "criteria": [
+        "先列出多个可能情景、关键不确定性、早期信号和复核条件，明确战略前瞻不是预测唯一未来。",
+        "在目标态和 Owner 边界内反推关键差距、里程碑、前置条件及可控 / 部分可控 / 不可控因素，再从当前向前校验路径和外部依赖。",
+        "只承诺当前最小可逆试片，写明反馈、停止和回退；不提前建设多区域平台、固定监管结论或用 Backcasting 替代产品、合规和生产证据。"
+      ]
+    },
+    {
+      "id": "senior-should-diagnose-metric-policy-resistance",
+      "category": "system-feedback-policy-resistance",
+      "risk": "high",
+      "prompt": "客服团队把平均关单时长设为唯一核心指标后，表面 SLA 变好，但工单被提前关闭、重复打开、客户投诉和一线负荷持续上升。管理层准备进一步压缩关单时长。请判断该改指标、流程还是系统。",
+      "criteria": [
+        "从客户、一线客服、管理者和系统记录等视角界定行为随时间的变化，不把单期 SLA 改善当成真实服务质量提升。",
+        "识别指标压力、提前关单、重开 / 投诉、工作负荷和更强指标压力构成的强化环，说明延迟与政策阻力，并保留待核数据。",
+        "提出一个最小可逆干预和配套平衡指标，写明 Owner、观察窗口、成功 / 失败信号与停止条件；不把问题归咎个人，也不直接发起客服系统重写。"
+      ]
+    },
+    {
+      "id": "senior-should-skip-system-card-for-linear-local-bug",
+      "category": "system-intervention-hard-negative",
+      "risk": "low",
+      "prompt": "一个本地 Markdown 表格解析器因为先 strip('|')、后处理外围空格，导致带两个前导空格的合法数据行被判为空。调用方、期望行为和回归命令都已明确。请修复这个问题。",
+      "criteria": [
+        "识别为边界清楚、根因已定位的线性局部 Bug，直接围绕共享解析函数建立失败测试并做最小修复。",
+        "不展开因果回路图、多情景前瞻、两年路线图、Backcasting、利益相关者工作坊或新抽象。",
+        "验证原失败用例与既有合法 / 非法表格回归，报告实际命令和残余边界，不把简单修复升级为系统改造。"
+      ]
+    }
+  ]
+}

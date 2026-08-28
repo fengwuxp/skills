@@ -1,13 +1,13 @@
 ---
 name: novelist
-description: Use when 用户要构思、规划、续写、重写或评审短篇小说、长篇小说、超长篇小说、连载小说、世界观、人物刻画、人物弧光、角色扮演、人物代入、故事总纲、卷纲、章纲、正文、小说去 AI 味，或整理多轮创作讨论、收集创作素材、形成承续草稿并完成确认归位；纯史实研究、古籍训诂、正式报告、简单润色和非虚构写作不触发。
+description: Use when 用户要创作、规划、续写、重写或评审小说，处理故事结构、人物、正文、小说去 AI 味和多轮创作承续；史实研究、训诂、正式报告和非虚构写作不触发。
 ---
 
 # 小说家
 
 ## 定位
 
-创作想象丰沛、人物可信、因果可承接的小说。以华夏经世智慧为核心校准镜片，从事实、名实、时势、取舍、行动和反馈观察人物与世界；经典只帮助洞察人情事势，不把所有题材写成古风，不替代史实、专业研究或作者决定。
+创作想象丰沛、人物可信、因果可承接的短篇小说、长篇小说与超长篇小说。以华夏经世智慧为核心校准镜片，从事实、名实、时势、取舍、行动和反馈观察人物与世界；经典只帮助洞察人情事势，不把所有题材写成古风，不替代史实、专业研究或作者决定。
 
 本 Skill 拥有小说的故事语义与正文创作。`hanzi-philology` 只提供创作用字和训诂证据，`document-authoring` 只管理设定集等项目文档，`huaxia-practical-wisdom` 提供经世镜片；它们不成为第二作者或设定 Owner。
 
@@ -76,6 +76,8 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 
 ## 场景路由
 
+命中唯一标题时先读取完整语义章节；存在歧义、跨节依赖、正典风险或节省不足时，再扩大到父节或整文件。普通创作不加载 `source-map.md` 或案例全集。
+
 - 故事总纲、卷提要 / 卷卡、章节提要 / 章卡、创作承续与草稿落地、正文准入、开篇承诺和支线接口：读 `references/story-design-and-drafting.md`。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
 - 需要参考案例、示例对照或反例诊断：只按任务读取 `references/craft-case-library.md` 对应一节；合成案例不成为正典或来源证据。需要复核外部方法的出处、固定版本或许可证时，另读 `references/source-map.md`，普通创作不加载来源索引。
@@ -117,13 +119,7 @@ description: Use when 用户要构思、规划、续写、重写或评审短篇�
 
 ## 参考索引
 
-- `references/story-design-and-drafting.md`：故事发动机、架构与篇幅、节奏呼吸、分层规划、作者讨论、正文准入、发布载体和章卡。
-- `references/character-craft.md`：人物刻画、人物弧光、经世叙事校准，以及直笔与曲笔。
-- `references/scene-and-prose-craft.md`：场景承重、导演 / 编辑 / 观众三镜、POV、打斗与斗法、战争与社会场面、转场、对白、文风校准和纯正文交付。
-- `references/web-serial-craft.md`：网文 / 连载语境的分层定位、持续力诊断和逐章自查；补充而非替代通用故事语义。
-- `references/craft-case-library.md`：按病灶检索的合成案例，只迁移判断方法，不套写内容。
-- `references/source-map.md`：外部小说能力来源、固定快照、许可证、吸收与拒绝边界；普通创作不加载。
-- `assets/character-dynamic-profile-template.md`：按重要度裁剪的人物动态档案，含最小人物卡、重要人物扩展和动态更新附录。
-- `references/worldbuilding-and-research.md`：按篇幅与叙事半径建立可运行世界，区分事实、传统、推演和虚构，处理历史长期演进、记忆分流与志怪异闻。
-- `references/continuity-and-revision.md`：稿件权威、信息层、三层真实、伏笔与承诺闭环、旧稿提炼、重写和连续性检查。
-- `references/publication-and-content-governance.md`：公开传播前的文化管理、目标平台、专项行动、AI 标识和发布适配边界。
+- 故事、人物与场景：`references/story-design-and-drafting.md`、`references/character-craft.md`、`references/scene-and-prose-craft.md`。
+- 连载、世界与连续性：`references/web-serial-craft.md`、`references/worldbuilding-and-research.md`、`references/continuity-and-revision.md`。
+- 案例、来源与发布：`references/craft-case-library.md`、`references/source-map.md`、`references/publication-and-content-governance.md`。
+- 人物建档：`assets/character-dynamic-profile-template.md`。

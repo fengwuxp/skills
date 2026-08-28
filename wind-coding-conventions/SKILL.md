@@ -35,6 +35,8 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 8. 如果涉及 Open Code Review / OCR，只说明哪些 Wind 约规可作为 `.opencodereview/rule.json` 或 `--background` 的规则输入；OCR 输出仍交 `senior-software-architect` 做源码级判读。
 9. 需要低成本结构守卫时，普通 Java 项目运行 `scripts/check_wind_conventions.py --profile java --root <project>`，Wind 项目运行默认的 `--profile wind`；脚本只检查高信号红线，不替代源码级 CR、测试或项目本地规则。
 
+命中任务索引或唯一标题时，先读取完整语义章节；存在歧义、跨节依赖、工程风险语境不全或节省不足时，再扩大到父节或整文件。普通规则检查不加载 `source-map.md`、模板或示例全集。
+
 ## Reference 路由
 
 - `references/java-coding-conventions.md`：所有 Java 项目的通用入口；Java/Spring 编码、契约、异常日志、Lombok/MapStruct、数据库、MyBatis Flex、安全和测试代码细则按依赖与任务读取；普通 Java `AGENTS.md` 初始化也只从本文件提炼最小项目 patch。

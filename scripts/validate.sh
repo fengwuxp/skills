@@ -144,6 +144,7 @@ python3 wise-agent/scripts/user-context-ledger.py --self-test
 
 echo "==> wise-agent reference section reader"
 python3 wise-agent/scripts/read-reference-sections.py --self-test
+python3 scripts/test-read-reference-sections-integration.py
 
 echo "==> wise-agent skill usage observability"
 python3 wise-agent/scripts/skill-usage-observability.py --self-test
@@ -180,6 +181,7 @@ python3 -m py_compile ui-design-expert/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
 python3 -m py_compile wise-agent/scripts/read-reference-sections.py
+python3 -m py_compile scripts/test-read-reference-sections-integration.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
 python3 -m py_compile wise-agent/scripts/skill-usage-observability.py
 python3 -m py_compile wise-agent/scripts/test_skill_usage_observability.py
@@ -313,6 +315,7 @@ senior-software-architect/scripts/check_architecture_deliverable.py --self-test
 senior-software-architect/scripts/check_harness_plan.py --self-test
 senior-software-architect/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
 senior_system_design_eval_dir="${tmp_dir}/senior-system-design-principles-eval"
 mkdir -p "${senior_system_design_eval_dir}"
 if scripts/evaluate-skill-behavior.py blind \
