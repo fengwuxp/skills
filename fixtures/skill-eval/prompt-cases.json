@@ -4735,7 +4735,7 @@
         "efficiency_metrics",
         "variance_check"
       ],
-      "expected_handling": "识别为无目标代码库的轻量 L2 浏览器原型；ui-design-expert 先稳定设计契约，再由 senior-software-architect 用一个自包含 HTML 文件实现一条可信流程，内联必要 CSS/JS，不依赖构建、认证、真实 API 或外部服务。原型覆盖成功、失败与恢复等相关状态，控件无死链，并在真实浏览器验证宽窄视口、键盘、焦点、长内容、控制台和溢出；交付绝对路径、已验证任务与真实系统接管点，明确它不是生产代码、容量安全或发布就绪证据。"
+      "expected_handling": "识别为无目标代码库的轻量 L2 浏览器原型；ui-design-expert 先稳定设计契约，再由 senior-software-architect 用一个自包含 HTML 文件实现一条可信流程，内联必要 CSS/JS，不依赖构建、认证、真实 API 或外部服务。原型覆盖成功、失败与恢复等相关状态，控件无死链，按产品事实 ID 内嵌同 revision 的标注 JSON，默认 experience 模式保持干净并提供有可访问名称的审阅入口；运行 check_ui_source.py --require-prototype-annotations 检查真实载体，再在浏览器走查体验 / 审阅模式、宽窄视口、键盘、焦点、长内容、控制台和溢出，确认切换不改变输入、路由或业务状态。交付绝对路径、已验证任务与真实系统接管点，明确它不是生产代码、容量安全或发布就绪证据。"
     },
     {
       "id": "ui-prototype-should-start-with-minimum-validated-flow",

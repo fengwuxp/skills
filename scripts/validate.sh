@@ -130,6 +130,9 @@ fi
 echo "==> wise-agent behavior smoke parser"
 scripts/smoke-wise-agent-behavior.sh --self-test
 
+echo "==> agent output actionability behavior cases"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/agent-output-actionability-behavior-cases.json"
+
 echo "==> wise-agent state contract"
 python3 wise-agent/scripts/check_state_contract.py --self-test
 

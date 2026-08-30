@@ -70,6 +70,9 @@
       },
       {
         "cases": "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
       }
     ],
     "ui-design-expert": [

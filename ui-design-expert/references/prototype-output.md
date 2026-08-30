@@ -53,6 +53,8 @@
 - 在真实浏览器验证宽窄视口、键盘、焦点、长内容、控制台和溢出；交付绝对路径、已验证任务、已知缺口和真实系统接管点。
 - 原型只证明所走查的交互，不证明生产代码、容量、安全、真实集成或发布就绪。
 
+产品规划以 `原型交付形态：standalone-html` 声明自包含 HTML 后，UI 执行载体对应 `source_form=standalone-html`，L2 交付必须实现其 HTML 原型标注契约：默认体验模式保持无标注，审阅入口展示有可访问名称的标记与面板，内嵌 JSON 使用同 revision 的产品标注 ID、可解析目标、显示内容和事实状态。最终运行 `python3 ui-design-expert/scripts/check_ui_source.py --require-prototype-annotations <prototype.html>`；再在真实浏览器分别走查体验 / 审阅模式、窄屏、键盘、焦点、主任务和失败恢复，确认切换模式不改变输入、路由或业务状态。静态 checker 只证明载体存在和引用可解析，不证明交互实际成立。
+
 ## 二、最小原型契约
 
 开始画布操作前至少稳定：

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN" data-prototype-mode="experience">
+<head>
+  <meta charset="utf-8">
+  <title>会员权益原型</title>
+</head>
+<body>
+  <button type="button" data-prototype-review-toggle aria-label="查看产品标注" aria-controls="prototype-review-panel">审阅</button>
+  <button id="claim-button" type="button">领取权益</button>
+  <div data-carrier-id="claim-success">领取成功</div>
+  <aside id="prototype-review-panel" aria-label="产品标注" hidden></aside>
+  <script id="prototype-annotations" type="application/json">
+    {
+      "revision": "r1",
+      "annotations": [
+        {
+          "id": "ANN-001",
+          "target": "#claim-button",
+          "content": "会员已登录且权益可领时可以领取。",
+          "status": "confirmed"
+        },
+        {
+          "id": "ANN-002",
+          "target": "[data-carrier-id=\"claim-success\"]",
+          "content": "领取成功后展示领取时间。",
+          "status": "confirmed"
+        }
+      ]
+    }
+  </script>
+</body>
+</html>

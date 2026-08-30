@@ -20,6 +20,16 @@ EVIDENCE_FUNCTIONS = {
 
 
 class TriggerValidatorStructureTests(unittest.TestCase):
+    def test_repo_agents_delegates_conditional_detail(self) -> None:
+        agents_rules = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+
+        self.assertIn("resource-capability-distiller/references/distillation-contract.md", agents_rules)
+        self.assertIn("wise-agent/references/engineering-governance.md", agents_rules)
+        self.assertIn("wise-agent/references/skill-learning-backflow.md", agents_rules)
+        self.assertIn("wise-agent/references/code-delivery.md", agents_rules)
+        self.assertNotIn("1. `library / API reference`", agents_rules)
+        self.assertNotIn("目标 Skill:\n触发样例:", agents_rules)
+
     def test_behavior_evidence_is_not_owned_by_trigger_validator(self) -> None:
         tree = ast.parse(VALIDATOR.read_text(encoding="utf-8"))
         definitions = {

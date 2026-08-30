@@ -573,6 +573,180 @@ def valid_stable_id(value: str) -> bool:
     return bool(re.fullmatch(r"[\w.:-]+", value, re.UNICODE)) and bool(meaningful_values([value]))
 
 
+def is_standalone_html_prototype(text: str) -> bool:
+    value = labeled_value(text, "原型交付形态")
+    return bool(
+        value
+        and normalize(value)
+        in {"standalone-html", "standalone html", "自包含 html"}
+    )
+
+
+def valid_html_annotation_anchor(value: str) -> bool:
+    return bool(
+        re.fullmatch(r"#[A-Za-z][A-Za-z0-9_-]*", value)
+        or re.fullmatch(r'\[data-[a-z0-9-]+="[A-Za-z0-9_.:-]+"\]', value)
+    )
+
+
+def html_annotation_contract_issues(
+    text: str,
+    requirement_pairs: set[tuple[str, str]],
+    carriers: list[dict[str, str]],
+    traces: list[dict[str, str]],
+) -> list[str]:
+    if not is_standalone_html_prototype(text):
+        return []
+
+    body = section_body(text, ("HTML 原型标注契约",))
+    if not body:
+        return ["html_annotation_contract_missing"]
+
+    issues: list[str] = []
+    contract_values = {
+        "默认模式": "experience",
+        "审阅入口": "review-query-or-toggle",
+        "标注数据源": "embedded-json",
+        "模式隔离": "preserve-task-state",
+        "可访问性": "keyboard-and-name",
+    }
+    if not has_meaningful_labeled_value(body, "原型修订") or any(
+        not has_meaningful_labeled_value(body, label) for label in contract_values
+    ):
+        issues.append("html_annotation_contract_incomplete")
+    elif any(
+        normalize(labeled_value(body, label) or "") != expected
+        for label, expected in contract_values.items()
+    ):
+        issues.append("html_annotation_contract_invalid")
+
+    product_annotations = table_records(
+        section_body(text, ("产品级页面标注",)),
+        {
+            "annotation_id": ("标注 ID",),
+            "carrier_id": ("承接 ID",),
+            "business_object": ("业务对象", "字段或内容"),
+            "rule": ("前置条件 / 规则", "前置条件/规则"),
+            "permission": ("权限",),
+            "action_state": ("动作与状态变化",),
+            "feedback": ("必须反馈的结果 / 异常", "必须反馈的结果/异常"),
+            "data_source": ("数据来源 / 时效", "数据来源/时效"),
+            "audit": ("埋点 / 审计", "埋点/审计"),
+            "acceptance_id": ("AC", "AC ID"),
+        },
+    )
+    if not product_annotations or any(
+        not valid_stable_id(row["annotation_id"])
+        or not valid_stable_id(row["carrier_id"])
+        or not valid_stable_id(row["acceptance_id"])
+        or not all(
+            meaningful_values([row[field]])
+            for field in (
+                "business_object",
+                "rule",
+                "permission",
+                "action_state",
+                "feedback",
+                "data_source",
+                "audit",
+            )
+        )
+        for row in product_annotations
+    ):
+        issues.append("html_annotation_product_facts_invalid")
+    product_annotation_ids = [row["annotation_id"] for row in product_annotations]
+    if len(product_annotation_ids) != len(set(product_annotation_ids)):
+        issues.append("duplicate_product_annotation_id")
+
+    annotations = table_records(
+        body,
+        {
+            "annotation_id": ("标注 ID",),
+            "carrier_id": ("承接 ID",),
+            "anchor": ("HTML 锚点",),
+            "annotation_type": ("类型", "标注类型"),
+            "fact_status": ("事实状态",),
+            "requirement_id": ("需求 ID",),
+            "acceptance_id": ("AC ID",),
+            "owner": ("Owner", "负责人"),
+        },
+    )
+    if not annotations:
+        return issues + ["html_annotation_table_missing"]
+
+    if any(
+        not all(
+            valid_stable_id(row[field])
+            for field in ("annotation_id", "carrier_id", "requirement_id", "acceptance_id")
+        )
+        or normalize(row["annotation_type"])
+        not in {"scope", "范围", "content", "内容", "rule", "规则", "interaction", "交互", "trace", "追踪"}
+        or normalize(row["fact_status"])
+        not in {"confirmed", "已确认", "inferred", "推断", "pending", "待确认"}
+        or not meaningful_values([row["owner"]])
+        for row in annotations
+    ):
+        issues.append("html_annotation_invalid")
+    if any(not valid_html_annotation_anchor(row["anchor"]) for row in annotations):
+        issues.append("html_annotation_anchor_invalid")
+
+    annotation_ids = [row["annotation_id"] for row in annotations]
+    if len(annotation_ids) != len(set(annotation_ids)):
+        issues.append("duplicate_html_annotation_id")
+
+    product_annotations_by_id = {
+        row["annotation_id"]: row
+        for row in product_annotations
+        if meaningful_values([row["annotation_id"]])
+    }
+    if set(annotation_ids) != set(product_annotations_by_id) or any(
+        row["annotation_id"] in product_annotations_by_id
+        and (
+            row["carrier_id"] != product_annotations_by_id[row["annotation_id"]]["carrier_id"]
+            or row["acceptance_id"] != product_annotations_by_id[row["annotation_id"]]["acceptance_id"]
+        )
+        for row in annotations
+    ):
+        issues.append("html_annotation_fact_reference_missing")
+
+    carrier_ids = {row["carrier_id"] for row in carriers}
+    annotation_pairs = {(row["requirement_id"], row["acceptance_id"]) for row in annotations}
+    annotation_triples = {
+        (row["requirement_id"], row["acceptance_id"], row["carrier_id"])
+        for row in annotations
+    }
+    trace_triples = {
+        (row["requirement_id"], row["acceptance_id"], row["carrier_id"])
+        for row in traces
+        if meaningful_values([row["carrier_id"]])
+    }
+    if {row["carrier_id"] for row in annotations} - carrier_ids:
+        issues.append("unknown_html_annotation_carrier")
+    if annotation_pairs - requirement_pairs:
+        issues.append("unknown_html_annotation_requirement")
+    if annotation_triples - trace_triples:
+        issues.append("html_annotation_trace_mismatch")
+
+    carrier_types = {row["carrier_id"]: normalize(row["carrier_type"]) for row in carriers}
+    page_carrier_types = {"页面", "page", "页面状态", "状态", "state"}
+    if any(
+        row["carrier_id"] in carrier_types
+        and carrier_types[row["carrier_id"]] not in page_carrier_types
+        for row in annotations
+    ):
+        issues.append("html_annotation_non_page_carrier")
+    required_page_triples = {
+        (row["requirement_id"], row["acceptance_id"], row["carrier_id"])
+        for row in traces
+        if normalize(row["posture"]) in {"required", "必需"}
+        and normalize(row["coverage"]) in {"已覆盖", "covered"}
+        and carrier_types.get(row["carrier_id"]) in page_carrier_types
+    }
+    if required_page_triples - annotation_triples:
+        issues.append("html_annotation_required_coverage_missing")
+    return issues
+
+
 def prototype_scope_issues(text: str) -> list[str]:
     requirements = table_records(
         text,
@@ -674,6 +848,7 @@ def prototype_scope_issues(text: str) -> list[str]:
         issues.append("unresolved_coverage_owner_missing")
     if any(not meaningful_values([row["handling"]]) for row in unresolved):
         issues.append("unresolved_coverage_handling_missing")
+    issues.extend(html_annotation_contract_issues(text, requirement_pairs, carriers, traces))
     return issues
 
 

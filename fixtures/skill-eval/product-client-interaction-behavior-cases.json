@@ -17,7 +17,7 @@
         "product-architecture-expert/references/product-scenario-routing.md",
         "product-architecture-expert/references/source-map.md"
       ],
-      "sha256": "c07e9f9efca90d656b697534d8da1c0355146adf54d211fb2235e23c16575aed"
+      "sha256": "4b8324080923c615b6faecc4ea9e39897c0b6eafe0199b6ff1825acd2b6d552d"
     }
   },
   "rubric": {
@@ -118,6 +118,17 @@
         "拒绝把页面跳转图命名为完整用户旅程，明确它缺少用户状态与负担、系统状态、规则生效点、前后台责任、异常和恢复。",
         "在不发明退款规则的前提下，列出补齐完整旅程所需的最小字段骨架：任务阶段、用户可见反馈、对象状态变化、规则或确认点、系统责任和失败恢复。",
         "若退款资格、权威状态或责任主体尚未确认，停止在缺口与待确认清单，不用页面、微服务名或成功文案代替业务闭环。"
+      ]
+    },
+    {
+      "id": "product-client-interaction-should-annotate-standalone-html",
+      "category": "html-prototype-review-annotations",
+      "risk": "high",
+      "prompt": "请规划一个自包含 HTML 会员权益原型，既要让用户正常操作，也要让产品、设计和研发直接查看业务标注。标注不要另写成一份容易过期的说明文档。",
+      "criteria": [
+        "显式声明原型交付形态为 standalone-html；产品级页面标注用稳定唯一的标注 ID 持有业务对象、规则、权限、状态变化、反馈异常和 AC，HTML 标注表按同一 ID、承接 ID 与 AC 引用这些事实。",
+        "填写非空原型修订，并使用 experience、review-query-or-toggle、embedded-json、preserve-task-state、keyboard-and-name 规范值；默认体验模式不显示标注，审阅层不改变输入、路由或任务状态，并满足键盘、可访问名称、非颜色唯一表达和窄屏不遮挡主任务。",
+        "最终 HTML 内嵌同 revision 的标注 JSON，提供非空内容、confirmed / inferred / pending 状态及可解析的元素 ID 或 data-* 目标；required 页面 / 页面状态全部覆盖，非页面能力不进入标注表，并交由 UI source checker 与真实浏览器任务走查验证。"
       ]
     }
   ]
