@@ -384,7 +384,7 @@ python3 scripts/evaluate-skills.py \
 
 上例覆盖用户 Skill 与 `.codex/skills/.system`，不覆盖插件缓存。需要供应链候选补扫时可追加 `--catalog-root "plugin-cache=${CODEX_HOME:-$HOME/.codex}/plugins/cache"`；缓存可能包含未启用或多版本插件，不得把扫描结果直接写成当前运行时启用清单。
 
-跨 Skill 的 baseline/candidate 对照使用离线行为评测入口；它不调用 Agent 或网络，只准备同题任务、校验同一 runner/model 的成对回答、分离盲评材料与映射密钥，并根据独立评分执行准出门禁：
+跨 Skill 的 baseline/candidate 对照使用离线行为评测入口；它不调用 Agent 或网络，只准备同题任务、校验同一 runner/model 的成对回答、分离盲评材料与映射密钥，并根据独立评分执行准出门禁。收集响应时必须固定 runner、model、prompt、source digest 和输入，并用独立 `CODEX_HOME` 或等价隔离排除未声明的全局 Skill、插件、`SessionStart` / `UserPromptSubmit` Hook、memory 与用户配置，同时记录各 arm 的实际加载来源；任一 arm 读取非声明来源、Hook 偷渡候选规则或运行环境不等价时，结果作废，不得用于行为准入、成本结论或 Skill 晋升：
 
 ```bash
 python3 scripts/evaluate-skill-behavior.py prepare --trials 3 --output /tmp/skill-behavior-plan.jsonl
