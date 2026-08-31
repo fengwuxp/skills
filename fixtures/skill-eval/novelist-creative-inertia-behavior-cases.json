@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "description": "novelist 跨轮创作惯性、生成校准分离与人物去脸谱的 cases-only 行为契约。candidate source profile 绑定本套件实际覆盖路由的最小并集，只用于准备可复跑输入，不证明安装态会逐案加载全部 reference；只有同一 runner/model 的改动前与改动后响应经过重复试验、盲评和可复核门禁后，才可声称能力改善。",
+  "source_profiles": {
+    "baseline": {
+      "id": "novelist-creative-inertia-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/novelist-creative-inertia-prechange.md"
+      ],
+      "sha256": "b0d6a0f6a9b97372c085a529a734975ccb2bc580cb5aa1dd93613fd6872c9be1"
+    },
+    "candidate": {
+      "id": "novelist-creative-inertia-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/references/creative-inertia.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/character-craft.md",
+        "novelist/references/scene-and-prose-craft.md",
+        "novelist/references/worldbuilding-and-research.md",
+        "novelist/references/continuity-and-revision.md",
+        "huaxia-practical-wisdom/SKILL.md"
+      ],
+      "sha256": "def5e2fe8bb731f8e2587b5f6f2d4ef360d16583122157a133a2edb4dac2be0c"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-detect-cross-round-causal-isomorphism",
+      "category": "cross-round-causal-isomorphism",
+      "risk": "high",
+      "prompt": "同一长篇最近写过四名领袖：甲在灾后救人取得信任，乙护送伤者获得名位，丙保住账册纠正旧案，丁代众人受罚后被推举。现在继续沿用项目既有气质，设计一名被旧家逐出的女性如何在机缘巧合下成为一个残破宗门的宗主，给三个可供选择的文学虚构候选。身份、逐出经历和最终成为宗主是硬正典，作者尚未选具体路径。",
+      "criteria": [
+        "三个新候选不再复用旧方案共享的‘承担公共危机或代价 -> 赢得信任 -> 获得名位’发动机；不把救人、伤者、账册、受罚换成舟船、道路、仪式、面具或另一种证物便称为新设计。",
+        "三个候选须在发动主体、人物私欲、冲突机制、幻想规则、情绪温度、不可逆选择或结局关系中形成实质差异，不以换专名和视觉外壳冒充多元，也不机械填满全部轴。",
+        "形式名位可以依候选中的荒诞规则、程序、血统、神器、祖训或仪式偶然到手，但实际承责、宗门关系与名位意义须由人物欲望、判断和选择继续完成；换成另一名正面人物后行动链或关系后果应实质改变。",
+        "硬正典保持不变，三个方向均标为待作者选择的文学虚构候选，不擅自写回或统一成一个真相。"
+      ]
+    },
+    {
+      "id": "novelist-should-separate-generation-from-calibration",
+      "category": "generation-calibration-separation",
+      "risk": "high",
+      "prompt": "项目近十轮主要通过救援、照护、道路舟渡、记录互证、公共承责和事后追责，把文化与幻想落进日常生活。请保持这一长篇的整体气质，为‘一座宗门每逢月缺便少掉一间屋子’做第一轮幻想，给五个方向。正典只规定宗门真实存在且房屋确会减少；本轮不选优、不写回。",
+      "criteria": [
+        "只冻结宗门存在与房屋减少两个硬约束；输入列出的救援、照护、舟渡、互证和追责不再支配五个候选，也不被宣布为永久禁词。",
+        "首轮先生成奇异、互相矛盾且可继续生长的方向，不急着逐案补救人、受损者、证明上限、记录复核、治理方案、公共代价或普通生活验收。",
+        "候选不能都把减少解释成同一种惩罚、保护、历史留证或责任机制；至少有方向由欲望、审美、游戏、身体感受、关系误读、时间或空间本身发动。",
+        "候选保持非正典状态，不把纯发散写成落地后也可免除正典、人物与后果校验的永久规则；本轮不因尚未选核而提前补齐这些内容。"
+      ]
+    },
+    {
+      "id": "novelist-should-make-a-character-irreplaceable-beyond-duty",
+      "category": "cast-decaricature",
+      "risk": "high",
+      "prompt": "同一故事已有四名核心正面人物：甲失去家人后凡事自己扛，常以沉默行动保护别人；乙曾错失至亲，此后遇险总先代人决定，后来学会交还选择；丙背着师门旧债，少说多做，最终接受共同承责；丁因一次救援失败而害怕再失去谁，常把关心做成控制。请设计第五名重要女性领袖，也要善良可靠，并给出人物核、一个无危机生活场景和一次承重选择。不得新增更惨的创伤，也不要把她反向写成自私反派。",
+      "criteria": [
+        "新人物不再沿用 `重大失去 -> 少说多做 -> 独担过责 -> 学会交还` 的共享心理发动机，同时仍可承接作品关于善良与可靠的主题回响。",
+        "人物拥有不服务公共责任的私人欲望、乐趣、虚荣、厌烦、审美或关系需求之一，并在无危机生活场景中通过注意对象、社交距离、动作与语言可被认出；这些细节不必都成为伏笔。",
+        "承重选择由她独有的欲望、判断以及材料支持的技能、关系或盲区推出；换成既有四人之一时，行动链或关系后果必须实质改变，不要求机械填满人物维度。",
+        "她仍可善良可靠，但善良不自动等于救人、疗伤、自我牺牲或替人作主；不新增创伤来解释差异，也不把复杂写成隐藏恶意。"
+      ]
+    },
+    {
+      "id": "novelist-should-not-turn-every-fantasy-into-governance-evidence",
+      "category": "fantasy-purpose-diversity",
+      "risk": "high",
+      "prompt": "项目已有三种日用神异：旧衣保留亡者动作余感，促使后人复看旧事；旧碗留下荒年分食记忆，引出多方核验；旧屋在雨夜显出曾经住过的人，使一桩责任争议重开。它们都只是弱响应，不能认亲、判罪或确定产权。请沿用这种克制、落入日常的风格，再幻想四种日用神异；本轮只发散，不选优。",
+      "criteria": [
+        "四个候选不再共同沿用 `留下弱痕迹 -> 触发复看 -> 服务核验` 的功能骨架；保留不越权边界，但不把它当成每个神异的用途。",
+        "候选中须有实质方向不承担证物、认亲、追责、历史复原或制度纠偏功能，可以只改变游戏、审美、身体感受、亲密关系、劳动节奏、梦或无目的的日常经验；不设固定数量配额。",
+        "奇异性来自感知、关系、时空、材料或主体规则的变化，不只是把旧衣、旧碗、旧屋替换成灯、镜、鞋、梳等新器物。",
+        "仍明确日用神异不能自动裁定身份、权利、清白或完整历史；本轮候选不写回正典，也不因暂时无治理用途而被筛掉。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-canon-required-rescue",
+      "category": "canon-required-motif-hard-negative",
+      "risk": "high",
+      "prompt": "本章已经确认必须写决堤夜救援：主角会下水救出一个孩子，并因此错过追赶仇人的唯一窗口。前文虽已多次出现救援、水路和伤者，但作者现在要把这个已确认分支做成章卡，不要重新提供剧情方向。请推进。",
+      "criteria": [
+        "承认救援、水路和错失追敌均为本章已确认硬正典，不因跨轮母题重复而回避、替换、降格或重新发散。",
+        "去同构只用于执行层：优先通过输入已有的主角欲望、判断、能力限制、当场误判、关系反应或选择代价使场景不可替换；输入没有提供足够人物事实时，明确列为章卡准入缺口且不擅自补造，不强塞无关奇观或新秘密。",
+        "章卡承接入水救人、错过窗口及其离场后果，后果进入下一章行动条件；不把孩子、伤势或洪水再升级成身份证明、万能线索或新主谜底。",
+        "不把本轮临时降权母题变成固定禁词、配额或全项目规则，也不借去模板化修改作者已经确认的因果。"
+      ]
+    },
+    {
+      "id": "novelist-should-fit-imagination-to-the-active-scene",
+      "category": "scene-fit-before-fantasy-return",
+      "risk": "high",
+      "prompt": "当前章从一名受伤的渡口学徒近距离视角开始：他要在天黑前把一封普通家书交给对岸的母亲，右手麻木，渡船只剩一班；题面只确认河面有月光、岸边有人争吵，尚未确认争吵原因。请围绕‘月光会把未说出口的话折回写信人的手背’做幻想设计，并说明怎样推进。不要补造争吵真相、母子前史或新的超凡组织。",
+      "criteria": [
+        "进入幻想前先锁定当前视角、地点时段、即时目标、身体与交通限制、已知与未知；不把未确认的争吵、家书内容或人物前史补成事实。",
+        "区分纯发散与场景成形：若推进当前章，说明幻想候选如何改变学徒此刻的注意、动作、选择、关系、信息、资源或风险；若只发散，则不强行加完整规则、主线谜底或治理用途。",
+        "对被选的成形方向给出最小触发、范围、代价、失败或误用边界，并保留家书、月光和回应的多种解释；不能让幻想替学徒送信、判断争吵责任或自动解决渡船冲突。",
+        "幻想须实际改变学徒的注意、动作、选择、理解或风险并留下后续接口；若没有这种差异就留在素材层，不为了贴合而制造新秘密、证物或组织。"
+      ]
+    }
+  ]
+}

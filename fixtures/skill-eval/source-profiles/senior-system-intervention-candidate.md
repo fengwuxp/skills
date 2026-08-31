@@ -40,7 +40,9 @@ python3 fixtures/skill-eval/candidate-tools/check_system_intervention_card.py < 
 - `mode=feedback` 校验问题、证据、强化环、平衡环、延迟、杠杆点和最小干预。
 - `mode=backcasting` 校验问题、证据、至少两个情景、早期信号、复核条件、Owner、可控性、前向校验和最小干预。
 - `mode=combined` 同时执行两组校验。
-- 退出码 `0` 只证明字段结构完整；`1` 表示结构缺失；`2` 表示输入不是合法 JSON。报告固定声明 `proof_limit=structure_only`，不得据此声称因果成立、方案正确、已获授权或可生产准出。
+- `problem.non_negotiable_constraints` 必须逐项收集用户任务与 source 明示的不可退让边界，例如唯一权威、授权、安全、可访问性、失败恢复和证据边界；不得用 `N/A`、概括性“遵守红线”或遗漏代替，渲染时原样保留。
+- 退出码 `0` 时必须以报告中的 `rendered_markdown` 作为最终回答骨架，不得再次摘要掉强化环、平衡环、延迟、可控性、Owner、观察窗口、信号、停止或回退字段；允许去除与当前 mode 无关的章节，不改变事实状态和证明边界。
+- 退出码 `0` 只证明字段结构完整；`1` 表示结构缺失；`2` 表示输入不是合法 JSON。报告固定声明 `proof_limit=structure_only`；`rendered_markdown` 只是确定性转写，不得据此声称因果成立、方案正确、已获授权或可生产准出。
 
 该脚本仍是候选评测资产，不是已安装 Skill 的运行时入口。根因已定位的线性局部 Bug 不构造此卡，也不调用该脚本。
 

@@ -39,6 +39,13 @@ def problem() -> dict[str, object]:
     return {
         "behavior_over_time": "规则和 guard 增长，证据口径持续分叉",
         "system_boundary": "Skill source、manifest、validator 与 CR",
+        "non_negotiable_constraints": [
+            "reference 是下沉细节的单一权威",
+            "授权与安全边界常驻入口",
+            "可访问性不可下沉",
+            "失败恢复不可删除",
+            "证据边界不可弱化",
+        ],
         "evidence": [
             {
                 "statement": "三轮 CR 均发现 source digest 口径冲突",
@@ -120,7 +127,38 @@ class CandidateSystemInterventionCardTests(unittest.TestCase):
         self.assertEqual("structure_only", report["proof_limit"])
 
     def test_valid_feedback_card_passes(self) -> None:
-        self.assert_passed(run_checker(feedback_card()), "feedback")
+        completed = run_checker(feedback_card())
+        self.assert_passed(completed, "feedback")
+        rendered = json.loads(completed.stdout)["rendered_markdown"]
+        for marker in ("不可退让约束：", "### 反馈模型", "强化环：", "平衡环：", "时间延迟：", "杠杆点：", "Owner：", "回退："):
+            self.assertIn(marker, rendered)
+        for constraint in feedback_card()["problem"]["non_negotiable_constraints"]:
+            self.assertIn(constraint, rendered)
+        self.assertNotIn("### 前瞻与回溯", rendered)
+
+    def test_card_requires_non_negotiable_constraints(self) -> None:
+        card = feedback_card()
+        del card["problem"]["non_negotiable_constraints"]
+
+        completed = run_checker(card)
+
+        self.assertEqual(1, completed.returncode)
+        report = json.loads(completed.stdout)
+        self.assertIn("problem.non_negotiable_constraints", report["errors"])
+        self.assertEqual("", report["rendered_markdown"])
+
+    def test_card_rejects_placeholder_non_negotiable_constraints(self) -> None:
+        for placeholder in ("N/A", "遵守红线"):
+            with self.subTest(placeholder=placeholder):
+                card = feedback_card()
+                card["problem"]["non_negotiable_constraints"] = [placeholder]
+
+                completed = run_checker(card)
+
+                self.assertEqual(1, completed.returncode)
+                report = json.loads(completed.stdout)
+                self.assertIn("problem.non_negotiable_constraints", report["errors"])
+                self.assertEqual("", report["rendered_markdown"])
 
     def test_feedback_card_requires_balancing_loop(self) -> None:
         card = feedback_card()
@@ -132,9 +170,15 @@ class CandidateSystemInterventionCardTests(unittest.TestCase):
         report = json.loads(completed.stdout)
         self.assertEqual("failed", report["status"])
         self.assertIn("feedback_model.balancing_loop", report["errors"])
+        self.assertEqual("", report["rendered_markdown"])
 
     def test_valid_backcasting_card_passes(self) -> None:
-        self.assert_passed(run_checker(backcasting_card()), "backcasting")
+        completed = run_checker(backcasting_card())
+        self.assert_passed(completed, "backcasting")
+        rendered = json.loads(completed.stdout)["rendered_markdown"]
+        for marker in ("### 前瞻与回溯", "可控：", "部分可控：", "不可控：", "前向校验：", "Owner：", "回退："):
+            self.assertIn(marker, rendered)
+        self.assertNotIn("### 反馈模型", rendered)
 
     def test_backcasting_card_requires_rollback(self) -> None:
         card = backcasting_card()
@@ -153,7 +197,11 @@ class CandidateSystemInterventionCardTests(unittest.TestCase):
         card["foresight"] = copy.deepcopy(backcasting["foresight"])
         card["target"] = copy.deepcopy(backcasting["target"])
 
-        self.assert_passed(run_checker(card), "combined")
+        completed = run_checker(card)
+        self.assert_passed(completed, "combined")
+        rendered = json.loads(completed.stdout)["rendered_markdown"]
+        self.assertIn("### 反馈模型", rendered)
+        self.assertIn("### 前瞻与回溯", rendered)
 
     def test_invalid_json_is_an_input_error(self) -> None:
         completed = run_checker("{", raw=True)

@@ -438,6 +438,7 @@ novelist_story = "novelist/references/story-design-and-drafting.md"
 novelist_character = "novelist/references/character-craft.md"
 novelist_scene = "novelist/references/scene-and-prose-craft.md"
 novelist_world = "novelist/references/worldbuilding-and-research.md"
+novelist_creative_inertia = "novelist/references/creative-inertia.md"
 novelist_continuity = "novelist/references/continuity-and-revision.md"
 novelist_continuity_checker = "novelist/scripts/check-novelist-continuity-ledger.py"
 novelist_continuity_checker_test = "novelist/scripts/test-check-novelist-continuity-ledger.py"
@@ -451,6 +452,9 @@ novelist_behavior_cases = "fixtures/skill-eval/novelist-behavior-cases.json"
 novelist_imagination_behavior_cases = "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
 novelist_diversified_imagination_behavior_cases = (
     "fixtures/skill-eval/novelist-diversified-imagination-behavior-cases.json"
+)
+novelist_creative_inertia_behavior_cases = (
+    "fixtures/skill-eval/novelist-creative-inertia-behavior-cases.json"
 )
 novelist_diversified_imagination_local_material = (
     "fixtures/skill-eval/source-profiles/novelist-diversified-imagination-local-material.md"
@@ -20629,6 +20633,8 @@ check(
     (ROOT / novelist_behavior_cases).exists()
     and (ROOT / novelist_imagination_behavior_cases).exists()
     and (ROOT / novelist_diversified_imagination_behavior_cases).exists()
+    and (ROOT / novelist_creative_inertia_behavior_cases).exists()
+    and (ROOT / novelist_creative_inertia).exists()
     and (ROOT / novelist_diversified_imagination_local_material).exists()
     and (ROOT / novelist_local_material_behavior_cases).exists()
     and (ROOT / novelist_planning_behavior_cases).exists()
@@ -20865,6 +20871,7 @@ check(
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"',
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-imagination-behavior-cases.json"',
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-creative-inertia-behavior-cases.json"',
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"',
         ],
     ),

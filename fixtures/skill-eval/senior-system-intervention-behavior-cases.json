@@ -22,7 +22,7 @@
         "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md",
         "fixtures/skill-eval/candidate-tools/check_system_intervention_card.py"
       ],
-      "sha256": "6b7b742fe1c12ef1c1994a35e6c0f21d711627aeb0dd26a95a42d7657bcba015"
+      "sha256": "c72eee5b3fefd9054bf403517d4ce92556bdf9ee2f86acccf44b689980cb878b"
     }
   },
   "rubric": {

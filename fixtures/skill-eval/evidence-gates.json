@@ -40,6 +40,12 @@
         "cases": "fixtures/skill-eval/novelist-historical-closure-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/novelist-civilization-responsibility-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-creative-inertia-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/novelist-narrative-expression-behavior-cases.json"
       },
       {
