@@ -63,9 +63,11 @@
 ### UI/UX Pro Max
 
 - 来源：`https://github.com/nextlevelbuilder/ui-ux-pro-max-skill`
-- 核验日期：2026-07-30。
-- 读取状态：README、`.claude/skills/ui-ux-pro-max/SKILL.md` 与许可证已读取；仓库声明 MIT License。
-- 使用范围：只参考把设计系统、风格、排版、配色和场景建议组织成可检索设计情报的方式；不复制 CLI、数据集、脚本或持久化产物。
+- 初次核验：2026-07-30 读取 README、`.claude/skills/ui-ux-pro-max/SKILL.md` 与 MIT 许可证，只参考把设计系统、风格、排版、配色和场景建议组织成可检索设计情报的方式。
+- 当前受控快照：2026-08-31 下载并实际读取 commit `8bd29e775453ebcae52b6e6514fbf134df0c5770` 的 `LICENSE`、`src/ui-ux-pro-max/data/styles.csv`、`catalog-summary.json` 和 `gallery/` 源码目录；未执行上游代码或安装依赖。MIT 许可 SHA-256 为 `738f69dfa83db5c347c678fb9d90e560877059f0de93a327c39001bff92dc014`，`styles.csv` SHA-256 为 `a93a4d9d7025856575d7b7583bda020be9043013432c5af7c58af9dbdfb206b7`。
+- 版本事实：该快照有 88 条 style 记录，其中 79 条 searchable、50 条 active、29 条 supplemental、9 条 deprecated；因此文章中的“84”不是稳定契约。Landing Page 八条在当前 `styles.csv` 中均为 deprecated，本项目不把它们重新提升为视觉风格。
+- 当前吸收：`assets/style-gallery/` 分两批保留 24 个试点条目的 ID、类型、active / supplemental 状态和经过本项目重写的可观察变量、使用边界与本地 tokens，并保留 MIT notice；HTML 由本项目标准库脚本生成。第二批继续只落入 `visual-language`、`data-task`、`mobile-system` 三类，明确未把上游 `Platform/Material` 的 Liquid Glass 或交互模式 AI-Native UI 填入视觉语言。未复制上游 Next.js gallery、CLI、脚本、完整数据行、AI Prompt、字体、图标、品牌资产或持久化产物，也不把上游风格建议当产品适配、可访问性或生产证据。
+- 二手启发：微信文章 `https://mp.weixin.qq.com/s/JFYgEoTc64LgMtqcxof_7w`，《我把 UI/UX Pro Max 的 84 种 UI 风格，全部做成了打开即逛的 HTML 页面》，作者 / 账号为“程序员凯凯”，页面显示发布时间 2026-07-08 14:00、修改于 2026-07-09；2026-08-31 常规网页接口无法打开，随后通过 Codex Browser 连接 Chrome 实际读取标题、作者、发布时间和完整正文。只吸收“机器可检索的风格数据还需要转成人可比较的视觉证据”这一方法；文章未提供画廊源码与许可，不复制其页面、CSS、图片、文案、成本、模型宣传或数量结论。
 
 ### Google Stitch Skills
 

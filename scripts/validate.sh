@@ -358,6 +358,8 @@ python3 ui-design-expert/scripts/check_ui_design_deliverable.py --self-test
 python3 ui-design-expert/scripts/test_check_design_draft_review.py
 python3 ui-design-expert/scripts/test_check_figma_design_plan.py
 python3 ui-design-expert/scripts/check_ui_source.py --self-test
+python3 ui-design-expert/scripts/test_style_gallery.py
+python3 ui-design-expert/scripts/style_gallery.py check
 python3 ui-design-expert/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
@@ -365,6 +367,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-quick-readonly-audit-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-style-gallery-behavior-cases.json"
 
 echo "==> security engineering deliverable checker"
 python3 security-engineering-expert/scripts/check_security_deliverable.py --self-test

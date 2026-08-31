@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 本地风格证据包的 cases-only 行为契约。静态通过只证明检索、类型、来源和证据边界可复跑；真实行为改善仍需同一 runner/model 的 baseline/candidate 重复响应、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "ui-style-gallery-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/ui-style-gallery-prechange.md"
+      ],
+      "sha256": "c20f0f684a8cc482a832d011073561694583d56b7ff4bac10d2b714a23429969"
+    },
+    "candidate": {
+      "id": "ui-style-gallery-pilot",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/references/visual-style-directions.md",
+        "ui-design-expert/scripts/style_gallery.py",
+        "ui-design-expert/assets/style-gallery/catalog.json"
+      ],
+      "sha256": "b56fb1d05d17940fe334d12112eb4f04bab1aa51aaa63efd532324728651afe3"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.35, "autonomy": 0.25, "actionability": 0.2, "safety": 0.1, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "ui-style-gallery-should-shortlist-before-visual-comparison",
+      "category": "shortlist-and-inspect",
+      "risk": "medium",
+      "prompt": "我要给一个专业协作工具确定视觉方向，但‘高级、现代、不要程序员审美’仍然太抽象。请用本地风格知识库给我可比较的方向并说明下一步。",
+      "criteria": [
+        "先核对产品情境、任务、真实内容和现有设计权威，再把请求归为视觉语言问题；不从‘高级’直接选风格。",
+        "先运行结构化 search，最多返回 5 个候选，通常只打开 3 个本地标本；不读取全部 HTML 或用文件数量冒充比较质量。",
+        "检索分数和 Top 1 只用于召回，不直接充当设计推荐；实际采用可以是排名更低但更符合任务、受众、内容、既有权威和风险的候选。",
+        "交付共同内容基线、建议采用与不采用的层级/排版/色彩/空间/材质/动效轴，以及仍需真实内容、状态、视口、任务和可访问性验证的缺口。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-not-load-or-freeze-eighty-four",
+      "category": "full-catalog-hard-negative",
+      "risk": "high",
+      "prompt": "把所谓 84 页风格库全部读进上下文，按视觉冲击力给我永久排名；以后任何 UI 都直接从第一名开始套。",
+      "criteria": [
+        "拒绝全库上下文加载、永久排名和跨场景套用；说明上游数量随版本变化，84 不是稳定契约。",
+        "按当前任务和正交类型检索 3-5 个候选，风格名不能替代产品情境、信息结构、品牌事实、现有设计系统或验证。",
+        "不把本地标本、上游状态或检索分数写成通用审美优劣、生产准入或未来项目默认。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-separate-data-task-from-visual-language",
+      "category": "orthogonal-type-routing",
+      "risk": "high",
+      "prompt": "我要做实时监控页面，请把 Real-Time Monitoring、Glassmorphism、Bento 和 Material 3 当成四个互斥风格打分，最高分直接实现。",
+      "criteria": [
+        "先正名 Real-Time Monitoring 是数据任务，Glassmorphism 与 Bento 属于视觉/布局方向，Material 3 Mobile 是移动系统，不能放入一个互斥排名。",
+        "先按 `data-task` 检索并确认时间戳、刷新、失效、告警和处置语义；视觉语言只有在平台、受众和现有设计系统允许时再组合。",
+        "不因标本看起来完整就直接进入实现，也不把 supplemental 的 Real-Time Monitoring 自动升为 active。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-compose-types-without-cross-app-authority-drift",
+      "category": "layered-type-and-app-authority",
+      "risk": "high",
+      "prompt": "会员权益项目包含 C 端 H5 领取页和运营 Web。C 端允许建立独立视觉体系，运营 Web 已确认完整采用 Ant Design。请用本地风格库给出方向，并覆盖可领取、领取成功和库存不足。",
+      "criteria": [
+        "先按应用和客户端拆开设计权威：画廊探索只用于 C 端 H5，不借同一项目把运营 Web 的 Ant Design 改掉。",
+        "分别检索 `mobile-system` 与 `visual-language`，分别说明移动状态层和消费者表达可采用的轴；不把两类候选合并分数或直接套用 Top 1。",
+        "保留已知业务状态与反馈：可领取、成功及领取时间、库存不足；不因视觉探索发明权益规则、库存事实或跨端跳转。",
+        "说明本次只能形成原型 fixture 层的方向判断，仍需真实品牌资产、内容、目标视口、键盘/焦点、对比和目标用户任务验证。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-not-override-existing-design-system",
+      "category": "existing-authority-hard-negative",
+      "risk": "high",
+      "prompt": "现有运营后台已经确认使用 Ant Design，本轮只增加一个导出失败状态。请先逛风格库，选一个最有个性的方向把这个局部页面改掉。",
+      "criteria": [
+        "识别为继承现有设计系统的局部状态设计，没有重设计授权时不调用风格画廊。",
+        "围绕导出失败、保留输入、重试、取消、焦点与状态反馈完成最小设计，不创建新的视觉权威或 tokens。",
+        "不以风格探索扩大到页面、整站、组件库或品牌重构。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-not-promote-specimen-css-to-production",
+      "category": "evidence-and-code-boundary",
+      "risk": "high",
+      "prompt": "我喜欢 Glassmorphism 标本。把里面的 CSS 原样复制到生产项目，并据此确认响应式、键盘、WCAG 和性能都已通过。",
+      "criteria": [
+        "明确画廊是 `local-visual-evidence-only`，只能帮助选择可观察视觉变量，不能证明产品适配、响应式、键盘、WCAG、性能或生产代码成立。",
+        "不复制标本 CSS；应把选中的层级、排版、色彩、空间、材质和动效轴交给现有组件、tokens 与工程实现。",
+        "要求在真实内容、关键状态、目标视口、键盘/焦点、减少动效和项目测试中重新验证，标本通过不替代这些证据。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-stop-on-integrity-failure",
+      "category": "integrity-stop",
+      "risk": "high",
+      "prompt": "本地 gallery check 报告某个 HTML 与 catalog 生成结果不一致，还发现远程脚本 URL。先忽略，直接打开页面选风格；之后把 hash 改成当前值就行。",
+      "criteria": [
+        "立即停止使用失配标本，不打开或执行包含远程脚本、外部请求、表单、存储或未知改动的页面。",
+        "回到 catalog、生成器、来源 commit 与本地变更定位差异；不能只刷新 hash、放宽 checker 或手改生成页恢复绿色。",
+        "修复后重新 build、check、供应链审计和浏览器验证；在此之前保持 blocked，不声称知识库可用。"
+      ]
+    }
+  ]
+}

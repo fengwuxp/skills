@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "proof_limit": "deterministic-relevance-only",
+  "cases": [
+    {
+      "id": "professional-grid-workspace",
+      "query": "专业 文档 网格",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "minimalism-and-swiss-style",
+      "required_ids": ["minimalism-and-swiss-style"],
+      "forbidden_ids": ["cyberpunk-ui", "claymorphism"]
+    },
+    {
+      "id": "transparent-layered-saas",
+      "query": "透明 模糊 SaaS",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "glassmorphism",
+      "required_ids": ["glassmorphism"],
+      "forbidden_ids": ["real-time-monitoring", "material-you-md3-mobile"]
+    },
+    {
+      "id": "creative-hard-border",
+      "query": "创意 粗边框 撞色",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "neubrutalism",
+      "required_ids": ["neubrutalism"],
+      "forbidden_ids": ["minimalism-and-swiss-style", "enterprise-saas-mobile"]
+    },
+    {
+      "id": "natural-wellness",
+      "query": "自然 健康 可持续",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "organic-biophilic",
+      "required_ids": ["organic-biophilic"],
+      "forbidden_ids": ["cyberpunk-ui", "data-dense-dashboard"]
+    },
+    {
+      "id": "live-operations",
+      "query": "实时 监控 告警 dashboard",
+      "type": "data-task",
+      "limit": 3,
+      "expected_first": "real-time-monitoring",
+      "required_ids": ["real-time-monitoring", "data-dense-dashboard"],
+      "forbidden_ids": ["glassmorphism", "bento-box-grid"]
+    },
+    {
+      "id": "dense-table-kpi",
+      "query": "数据密集 表格 KPI",
+      "type": "data-task",
+      "limit": 3,
+      "expected_first": "data-dense-dashboard",
+      "required_ids": ["data-dense-dashboard"],
+      "forbidden_ids": ["material-you-md3-mobile", "editorial-grid-magazine"]
+    },
+    {
+      "id": "android-material-state",
+      "query": "Android Material 状态层",
+      "type": "mobile-system",
+      "limit": 3,
+      "expected_first": "material-you-md3-mobile",
+      "required_ids": ["material-you-md3-mobile"],
+      "forbidden_ids": ["glassmorphism", "data-dense-dashboard"]
+    },
+    {
+      "id": "enterprise-mobile-approval",
+      "query": "企业 B2B 审批 任务",
+      "type": "mobile-system",
+      "limit": 3,
+      "expected_first": "enterprise-saas-mobile",
+      "required_ids": ["enterprise-saas-mobile"],
+      "forbidden_ids": ["cyberpunk-ui", "claymorphism"]
+    },
+    {
+      "id": "oled-low-light",
+      "query": "OLED 夜间 纯黑 低光",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "dark-mode-oled",
+      "required_ids": ["dark-mode-oled"],
+      "forbidden_ids": ["e-ink-paper", "financial-dashboard"]
+    },
+    {
+      "id": "flat-cross-platform-mvp",
+      "query": "扁平 二维 跨平台 MVP",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "flat-design",
+      "required_ids": ["flat-design"],
+      "forbidden_ids": ["hud-sci-fi-fui", "bauhaus"]
+    },
+    {
+      "id": "vibrant-youth-consumer",
+      "query": "鲜艳 块状 青年 消费",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "vibrant-and-block-based",
+      "required_ids": ["vibrant-and-block-based"],
+      "forbidden_ids": ["dark-mode-oled", "executive-dashboard"]
+    },
+    {
+      "id": "memphis-music-geometry",
+      "query": "孟菲斯 80s 几何 音乐",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "memphis-design",
+      "required_ids": ["memphis-design"],
+      "forbidden_ids": ["minimalism-and-swiss-style", "financial-dashboard"]
+    },
+    {
+      "id": "hud-wireframe-fui",
+      "query": "HUD 科幻 FUI 线框",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "hud-sci-fi-fui",
+      "required_ids": ["hud-sci-fi-fui"],
+      "forbidden_ids": ["e-ink-paper", "enterprise-saas-mobile"]
+    },
+    {
+      "id": "pixel-retro-game",
+      "query": "像素 8-bit 复古 游戏",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "pixel-art",
+      "required_ids": ["pixel-art"],
+      "forbidden_ids": ["editorial-grid-magazine", "executive-dashboard"]
+    },
+    {
+      "id": "eink-reading-writing",
+      "query": "电子纸 单色 阅读 写作",
+      "type": "visual-language",
+      "limit": 3,
+      "expected_first": "e-ink-paper",
+      "required_ids": ["e-ink-paper"],
+      "forbidden_ids": ["cyberpunk-ui", "real-time-monitoring"]
+    },
+    {
+      "id": "executive-strategy-summary",
+      "query": "高管 战略 KPI 摘要",
+      "type": "data-task",
+      "limit": 3,
+      "expected_first": "executive-dashboard",
+      "required_ids": ["executive-dashboard"],
+      "forbidden_ids": ["real-time-monitoring", "material-you-md3-mobile"]
+    },
+    {
+      "id": "drilldown-hierarchy-breadcrumb",
+      "query": "下钻 层级 面包屑 分析",
+      "type": "data-task",
+      "limit": 3,
+      "expected_first": "drill-down-analytics",
+      "required_ids": ["drill-down-analytics"],
+      "forbidden_ids": ["real-time-monitoring", "bento-box-grid"]
+    },
+    {
+      "id": "financial-budget-profit-loss",
+      "query": "财务 损益 预算 金额",
+      "type": "data-task",
+      "limit": 3,
+      "expected_first": "financial-dashboard",
+      "required_ids": ["financial-dashboard"],
+      "forbidden_ids": ["cyberpunk-ui", "material-you-md3-mobile"]
+    },
+    {
+      "id": "bauhaus-mobile-poster",
+      "query": "包豪斯 几何 原色 海报",
+      "type": "mobile-system",
+      "limit": 3,
+      "expected_first": "bauhaus",
+      "required_ids": ["bauhaus"],
+      "forbidden_ids": ["data-dense-dashboard", "glassmorphism"]
+    },
+    {
+      "id": "monochrome-mobile-editorial",
+      "query": "黑白 单色 编辑 高对比",
+      "type": "mobile-system",
+      "limit": 3,
+      "expected_first": "minimalist-monochrome",
+      "required_ids": ["minimalist-monochrome"],
+      "forbidden_ids": ["vibrant-and-block-based", "financial-dashboard"]
+    }
+  ]
+}

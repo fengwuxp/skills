@@ -99,6 +99,9 @@
       },
       {
         "cases": "fixtures/skill-eval/ui-quick-readonly-audit-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/ui-style-gallery-behavior-cases.json"
       }
     ]
   }
