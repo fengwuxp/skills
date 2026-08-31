@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate candidate system-intervention card structure.
+"""Validate a system-intervention card read from stdin.
 
-Input is one JSON document on stdin. Output is a JSON report on stdout. The
-checker is offline and read-only; it proves structural completeness
-only, not causality, solution quality, authorization, or production readiness.
+Input is one JSON document. Output is a JSON report on stdout. The checker is
+offline and read-only; it proves structural completeness only, not causality,
+solution quality, authorization, or production readiness.
 """
 
 from __future__ import annotations

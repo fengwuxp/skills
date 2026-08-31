@@ -1,28 +1,28 @@
 {
   "version": 1,
-  "description": "senior-software-architect 的系统干预、因果回路、战略前瞻与回溯推演候选行为 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 的 baseline/candidate 重复响应、盲评和独立复核。",
+  "description": "senior-software-architect 的系统干预、反馈回路与回溯推演 post-promotion 行为 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 实际读取运行时 route/reference、按需执行结构门并完成重复响应、工具轨迹、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
+      "id": "senior-system-intervention-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/senior-system-intervention-prechange.md"
+      ],
+      "sha256": "bfd91ce107d6a84aaec5a3339381e2efc0fa1d06fda93df6c0e86dd8a4f1929a"
+    },
+    "candidate": {
       "id": "senior-system-intervention-current",
       "paths": [
         "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/scenario-routing.md",
         "senior-software-architect/references/architecture.md",
-        "huaxia-practical-wisdom/SKILL.md",
-        "huaxia-practical-wisdom/references/classical-lenses.md"
+        "senior-software-architect/references/adr-and-tradeoff.md",
+        "senior-software-architect/references/workflow.md",
+        "senior-software-architect/references/debugging-diagnosis.md",
+        "senior-software-architect/references/testing.md",
+        "senior-software-architect/references/system-intervention-and-backcasting.md",
+        "senior-software-architect/scripts/check_system_intervention_card.py"
       ],
-      "sha256": "78a1d6f6bc1401f011cdac35d7063a748ffe652ddd72872982d728216a048875"
-    },
-    "candidate": {
-      "id": "senior-system-intervention-candidate-r2",
-      "paths": [
-        "senior-software-architect/SKILL.md",
-        "senior-software-architect/references/architecture.md",
-        "huaxia-practical-wisdom/SKILL.md",
-        "huaxia-practical-wisdom/references/classical-lenses.md",
-        "fixtures/skill-eval/source-profiles/senior-system-intervention-candidate.md",
-        "fixtures/skill-eval/candidate-tools/check_system_intervention_card.py"
-      ],
-      "sha256": "c72eee5b3fefd9054bf403517d4ce92556bdf9ee2f86acccf44b689980cb878b"
+      "sha256": "6c752c53b9401a63981e1d695fd9a4b274204befb31dc507026fc5537592c7e4"
     }
   },
   "rubric": {

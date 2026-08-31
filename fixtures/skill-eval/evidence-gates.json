@@ -12,6 +12,12 @@
         "responses": "fixtures/skill-eval/senior-system-design-principles-responses.jsonl",
         "scores": "fixtures/skill-eval/senior-system-design-principles-scores.jsonl",
         "seed": 731
+      },
+      {
+        "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json",
+        "responses": "fixtures/skill-eval/senior-system-intervention-responses.jsonl",
+        "scores": "fixtures/skill-eval/senior-system-intervention-scores.jsonl",
+        "seed": 731
       }
     ],
     "business-website-planner": [
