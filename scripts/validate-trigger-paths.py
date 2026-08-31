@@ -15061,6 +15061,10 @@ check(
         ui_design_workflow,
         [
             "快速只读体检",
+            "Contract",
+            "Runtime",
+            "Correction",
+            "反证复核",
             "证据面",
             "blocked / cant-tell",
             "不修改源码、Figma、tokens 或设计系统",
@@ -15083,6 +15087,7 @@ check(
             "ui-quick-readonly-audit-current",
             "ui-quick-audit-should-review-existing-page-without-redesign",
             "ui-quick-audit-should-bound-source-only-evidence",
+            "ui-quick-audit-should-prove-contract-runtime-and-correction",
             "ui-quick-audit-should-preserve-evidence-backed-brand-expression",
             "ui-quick-audit-should-not-replace-new-interface-design",
             "ui-quick-audit-should-not-mutate-implementation",

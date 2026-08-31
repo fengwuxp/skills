@@ -107,9 +107,22 @@
 ### ui-skills：按需路由与快速只读体检
 
 - 二手文章：`https://mp.weixin.qq.com/s/0C3qSMvgRHTQby56_hrH_Q`，《又一个神级 UI skill，夯爆了》，账号“沐言Agent”，页面显示发布时间为 2026-08-30 07:30；2026-08-31 常规网页抓取未返回正文，随后通过 Codex in-app Browser 实际读取标题、账号、发布时间和正文。
-- 一手来源：`https://github.com/ibelick/ui-skills`；2026-08-31 通过 GitHub API 确认仓库根目录包含 `skills/`、`bin/`、`tests/`、`DESIGN.md` 和 `LICENSE`，但原始 README 与具体 Skill 正文因网络超时未读到，因此文章列出的命令、路由上限和单项规则仍视为二手描述，许可证内容也未据此采用。
-- 使用范围：只吸收 metadata-first、按任务选择最小能力，以及把现有页面的快速清理与只读审计从完整重设计中分开的组织方法；本项目将其归入既有 `ui-design-expert` 的**快速只读体检**，不新建平级 UI Skill。
-- 边界：不复制外部 Skill、CLI、MCP、安装器、规则正文或固定阈值；不把紫色渐变、圆角、发光、动画时长和触控尺寸写成跨场景绝对禁令，也不让 UI 体检接管 metadata / SEO、代码实现、业务交互裁决或完整视觉系统生成。
+- 一手快照：`https://github.com/ibelick/ui-skills` 的 GitHub zipball 短 revision `f2dadf2`；2026-08-31 下载后实际读取 README、LICENSE、`package.json`、CLI / registry 源码和 7 个 `SKILL.md`，未执行上游代码或安装依赖。归档 SHA-256 为 `2cc76ddae6fdc888336af2da817efb48fa25713703ce1b197d511b55d3cf25d5`，MIT LICENSE SHA-256 为 `c615621c4cc1676ccde194e7a01b6469ba477780251bd71e007fc473a49c2c2b`；快照含 199 个文件、7 个 Skill、0 个符号链接，npm 包版本为 `0.2.4`。7 个 Skill 分别做离线预扫均通过；这只证明未命中本仓库确定性高风险规则，不是安装或行为准入。
+- 运行风险：`ui-skills-root` 指示运行未固定版本的 `npx ui-skills`；CLI 默认访问 `ui-skills.com` 在线 registry，再加载多个第三方仓库 `main` 分支的 Skill 文本，没有固定 revision 或本地 digest。整套在线路由保持 `ENGINEERING_BLOCKED`，不作为本项目运行依赖。
+- 本地知识锚与处置：
+
+| 上游 Skill | 本地状态 | 归位 / 边界 |
+| --- | --- | --- |
+| `ui-skills-root` | 不吸收正文 / 不安装 | metadata-first 与最小按需加载已由 `AGENTS.md`、`SKILL.md` 三级加载持有；拒绝固定“最多 3 条”和动态 registry 运行依赖 |
+| `baseline-ui` | 部分已覆盖 | 层级、内容韧性、可访问性和模板化装饰检查归 `design-foundations.md`；拒绝 Tailwind、`motion/react`、`cn`、200ms、禁渐变等跨项目绝对规则 |
+| `improve-ui` | 吸收方法 | `design-and-review-workflow.md` 持有只读快速体检、`Contract / Runtime / Correction` finding 证明与反证复核；不创建 `design-plans/` 第二过程目录 |
+| `fixing-accessibility` | 已覆盖 | WCAG、ARIA APG、键盘、焦点、表单错误和证据上限由现有 UI reference / checker 持有，不重复复制规则表 |
+| `fixing-motion-performance` | 工程候选 | 只有真实动画卡顿、布局读写或合成层失败重复出现时，才向 `senior-software-architect` 提炼最小工程规则；当前不在 UI Skill 固化实现机制 |
+| `fixing-metadata` | 路由到相邻能力 | title、Open Graph、canonical、JSON-LD 属于网站 / 工程任务，不扩大 UI Skill |
+| `create-design-md` | 不吸收 / 不安装 | 会创建根 `DESIGN.md` 并调用未固定版本的 `npx @google/design.md`；本项目继续使用既有设计契约和单一权威，不建立第二 token schema |
+
+- 复核触发：上游 revision、registry 来源、安装方式或许可证变化，或本项目出现重复 motion / metadata / DESIGN.md 失败证据时重新审查；未经新证据不改变上述状态。
+- 边界：不复制外部 Skill、CLI、MCP、安装器、规则正文或固定阈值；不把紫色渐变、圆角、发光、动画时长和触控尺寸写成跨场景绝对禁令，也不让 UI 体检接管代码实现、业务交互裁决或完整视觉系统生成。
 
 ### 产品构建师：视觉层级与视觉元素意图
 

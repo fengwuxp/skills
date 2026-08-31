@@ -15,7 +15,7 @@
         "ui-design-expert/references/design-foundations.md",
         "ui-design-expert/scripts/check_ui_source.py"
       ],
-      "sha256": "e952c6db14f933b4d3d6730a7dea730ba34364463a872124b214d4216c2b23cf"
+      "sha256": "5208c9720b2bd0c299a91e94f37434a3f4acd24d4d9033e3f4b901936566c805"
     }
   },
   "rubric": {
@@ -52,6 +52,17 @@
         "只对源码可观察的高置信问题给出 findings，并明确浏览器布局、移动端、真实键盘焦点、视觉层级和可用性为 blocked / cant-tell。",
         "允许运行现有只读源码 checker，但必须报告实际命令和结果；没有运行时不得声称扫描通过。",
         "不因源码未发现窄规则问题就宣称页面可用、响应式正确、符合 WCAG 或生产就绪。"
+      ]
+    },
+    {
+      "id": "ui-quick-audit-should-prove-contract-runtime-and-correction",
+      "category": "finding-proof-gate",
+      "risk": "high",
+      "prompt": "当前产品的已批准设计契约明确规定主操作按钮使用现有 token `--radius-action`；订单确认页实际渲染路径已追到共享 `Button`，但该页面又用局部 `rounded-full` 覆盖了圆角。请做快速只读体检；不要修改代码，也不要新建按钮组件或 token。",
+      "criteria": [
+        "分别给出 Contract、Runtime、Correction：契约约束当前主操作按钮；共享 Button 与局部覆盖确实到达该页面；最小修复是删除局部覆盖并复用 `--radius-action`。",
+        "finding 必须同时具备约束、到达当前表面的运行关系和由证据唯一支持的修复；缺任一项或存在多个同等修复时降为候选 / 待确认。",
+        "不从一次局部差异推导全仓重构、设计系统迁移、新 primitive 或品牌结论；保持只读并说明实现与浏览器复核仍需工程授权。"
       ]
     },
     {
