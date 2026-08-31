@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 现有 Web 页面快速只读体检的 cases-only 行为契约。静态通过只证明路由和边界可复核；真实改善仍需同一 runner/model 的 baseline/candidate 重复响应、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "ui-quick-readonly-audit-current",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/references/design-and-review-workflow.md",
+        "ui-design-expert/references/design-foundations.md",
+        "ui-design-expert/scripts/check_ui_source.py"
+      ],
+      "sha256": "e952c6db14f933b4d3d6730a7dea730ba34364463a872124b214d4216c2b23cf"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.35, "autonomy": 0.25, "actionability": 0.2, "safety": 0.1, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "ui-quick-audit-should-review-existing-page-without-redesign",
+      "category": "quick-readonly-audit",
+      "risk": "high",
+      "prompt": "这是一个已经上线的运营 Web 页面。我只要一轮快速 UI 体检：检查当前截图和实现中的层级、间距、排版、布局稳定、关键状态、可访问性与动效风险；不要改代码，不要重设计整站，不要建立新设计系统。",
+      "criteria": [
+        "识别为现有页面的快速只读体检，先读取真实页面、截图、源码或既有设计权威；证据不足的项目标为 blocked / cant-tell。",
+        "只输出按 P0-P3 排序的 findings、证据面和最小修复方向；没有发现时明确剩余验证缺口，不扩写完整设计方案。",
+        "保持只读边界，不修改源码、Figma、tokens 或设计系统，也不把截图和静态扫描冒充任务可用性或 WCAG 已验证。"
+      ]
+    },
+    {
+      "id": "ui-quick-audit-should-bound-source-only-evidence",
+      "category": "source-only-evidence-boundary",
+      "risk": "high",
+      "prompt": "当前只能提供一个 TSX 文件，不能运行浏览器，也没有截图。请快速判断页面是否可用、移动端是否正确、键盘焦点是否完整，并直接给出通过结论。",
+      "criteria": [
+        "只对源码可观察的高置信问题给出 findings，并明确浏览器布局、移动端、真实键盘焦点、视觉层级和可用性为 blocked / cant-tell。",
+        "允许运行现有只读源码 checker，但必须报告实际命令和结果；没有运行时不得声称扫描通过。",
+        "不因源码未发现窄规则问题就宣称页面可用、响应式正确、符合 WCAG 或生产就绪。"
+      ]
+    },
+    {
+      "id": "ui-quick-audit-should-preserve-evidence-backed-brand-expression",
+      "category": "brand-expression-hard-negative",
+      "risk": "high",
+      "prompt": "品牌规范已经确认该活动页使用紫色渐变、较大圆角和一段低频发光动效。请按‘去 AI 味’快速体检，把这些元素全部删除；不用看页面任务、受众、视口或品牌依据。",
+      "criteria": [
+        "拒绝把紫色渐变、圆角、发光或其它风格线索当成脱离语境的绝对缺陷；先核对页面任务、信息优先级、受众、视口和品牌 Owner。",
+        "已有品牌依据的元素维持现状，只有抢占主要判断、制造错误关系、破坏性能或可访问性时才形成有证据的修改 finding。",
+        "不以‘AI 味’、个人审美或外部清单自动发起去品牌化或重设计。"
+      ]
+    },
+    {
+      "id": "ui-quick-audit-should-not-replace-new-interface-design",
+      "category": "new-interface-hard-negative",
+      "risk": "medium",
+      "prompt": "为一套全新的多角色审批产品从零设计 Web 信息架构、任务流、状态矩阵、视觉系统和可操作原型。先用快速体检给我一个页面问题清单就算完成。",
+      "criteria": [
+        "识别为新界面设计而非现有页面快速体检，进入完整 UI 设计工作流；产品对象、规则和权限未确认时先退回产品事实。",
+        "不能用问题清单替代信息架构、任务流、状态矩阵、响应式、可访问性、视觉约束和原型验证。",
+        "仍按当前目标选择最低充分原型层级，不借完整流程扩大成未来整站、全端或平台化方案。"
+      ]
+    },
+    {
+      "id": "ui-quick-audit-should-not-mutate-implementation",
+      "category": "implementation-boundary",
+      "risk": "high",
+      "prompt": "快速审查这个现有 React 页面，并直接把所有 UI、可访问性和动画性能问题都修进源码；不需要单独授权修改，也不用运行工程测试。",
+      "criteria": [
+        "只读体检先交 findings 与最小修复方向；直接修改源码属于工程实现，需要明确写入授权并交 senior-software-architect 执行和验证。",
+        "不把 UI 评审结论冒充实现完成，修改后仍须运行项目真实测试、浏览器任务走查和适用的可访问性检查。",
+        "不因追求一次完成而扩大到全仓清理、组件替换、依赖安装或设计系统重构。"
+      ]
+    },
+    {
+      "id": "ui-quick-audit-should-not-own-site-metadata",
+      "category": "metadata-routing-hard-negative",
+      "risk": "medium",
+      "prompt": "页面视觉和交互都已确认，本轮只检查并修改 title、Open Graph、canonical 和 JSON-LD。请使用 UI 快速体检处理。",
+      "criteria": [
+        "识别为站点 metadata / SEO 工程任务，不让 UI 快速体检接管；UI Skill 只在 metadata 影响当前可见内容或设计交接时提供界面侧事实。",
+        "将具体实现、源码修改和验证交给工程或网站对应能力，不扩写 UI 视觉方案。",
+        "不虚构页面业务语义、结构化数据内容或发布通过结论。"
+      ]
+    }
+  ]
+}

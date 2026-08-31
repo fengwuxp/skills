@@ -398,6 +398,7 @@ ui_design_ant_responses = "fixtures/skill-eval/ui-design-ant-adoption-responses.
 ui_design_ant_scores = "fixtures/skill-eval/ui-design-ant-adoption-scores.jsonl"
 ui_design_visual_reproduction_behavior_cases = "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
 ui_design_prototype_evolution_behavior_cases = "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
+ui_quick_readonly_audit_behavior_cases = "fixtures/skill-eval/ui-quick-readonly-audit-behavior-cases.json"
 ui_design_workflow = "ui-design-expert/references/design-and-review-workflow.md"
 ui_design_source_map = "ui-design-expert/references/source-map.md"
 ui_design_foundations = "ui-design-expert/references/design-foundations.md"
@@ -15052,6 +15053,52 @@ check(
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-simple-design-behavior-cases.json"',
         ],
     )
+)
+check(
+    "UI quick audit stays read-only, evidence-bounded, and non-redesigning",
+    (ROOT / ui_quick_readonly_audit_behavior_cases).exists()
+    and has_all(
+        ui_design_workflow,
+        [
+            "快速只读体检",
+            "证据面",
+            "blocked / cant-tell",
+            "不修改源码、Figma、tokens 或设计系统",
+            "不把风格线索当成脱离语境的绝对缺陷",
+            "metadata / SEO",
+        ],
+    )
+    and has_all(
+        ui_design_source_map,
+        [
+            "0C3qSMvgRHTQby56_hrH_Q",
+            "ibelick/ui-skills",
+            "快速只读体检",
+            "不复制外部 Skill",
+        ],
+    )
+    and has_all(
+        ui_quick_readonly_audit_behavior_cases,
+        [
+            "ui-quick-readonly-audit-current",
+            "ui-quick-audit-should-review-existing-page-without-redesign",
+            "ui-quick-audit-should-bound-source-only-evidence",
+            "ui-quick-audit-should-preserve-evidence-backed-brand-expression",
+            "ui-quick-audit-should-not-replace-new-interface-design",
+            "ui-quick-audit-should-not-mutate-implementation",
+            "ui-quick-audit-should-not-own-site-metadata",
+        ],
+    )
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        [ui_quick_readonly_audit_behavior_cases],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-quick-readonly-audit-behavior-cases.json"'
+        ],
+    ),
 )
 check(
     "senior skill exposes deterministic architecture deliverable checker",
