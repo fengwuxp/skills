@@ -104,7 +104,10 @@
         "cases": "fixtures/skill-eval/ui-simple-design-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/ui-quick-readonly-audit-behavior-cases.json"
+        "cases": "fixtures/skill-eval/ui-quick-readonly-audit-behavior-cases.json",
+        "responses": "fixtures/skill-eval/ui-quick-readonly-audit-responses.jsonl",
+        "scores": "fixtures/skill-eval/ui-quick-readonly-audit-scores.jsonl",
+        "seed": 731
       },
       {
         "cases": "fixtures/skill-eval/ui-style-gallery-behavior-cases.json"
