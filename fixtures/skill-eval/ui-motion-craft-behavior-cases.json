@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 的 Web 动效取舍、审计、术语、可中断交互和减少动效 cases-only 行为 contract。静态通过只证明题集与 source 身份可复跑；真实改善仍需同一 runner/model 重复采集、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "ui-motion-craft-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/ui-motion-craft-prechange.md"
+      ],
+      "sha256": "915bdb18ce699b38d649eec6f23c6d862239925929f21e1a1bf1340c20a0223b"
+    },
+    "candidate": {
+      "id": "ui-motion-craft-candidate",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/references/design-and-review-workflow.md",
+        "ui-design-expert/references/design-foundations.md",
+        "fixtures/skill-eval/source-profiles/ui-motion-craft-candidate.md",
+        "ui-design-expert/references/usability-validation-and-design-qa.md"
+      ],
+      "sha256": "e6f31a237f54b93b192d4bc8508e8fc8ec7ac42da9ec5016b8382b83c73ce001"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "ui-motion-should-reject-high-frequency-command-palette-animation",
+      "category": "motion-opportunity-gate",
+      "risk": "high",
+      "prompt": "一个运营后台的命令面板每天被键盘打开上百次。产品经理希望加 500ms 弹簧入场和退出动画，觉得更像 Apple、更高级。请给出动效设计决定和验收要求。",
+      "criteria": [
+        "以高频、键盘驱动和等待成本为证据拒绝装饰性长转场，不因 Apple 风格或高级感增加用户等待；全部拒绝也是有效设计结论。",
+        "保留即时按键 / 焦点 / 打开结果反馈，必要的微弱状态变化继承项目现有 motion token；不臆造固定时长、spring 或新依赖。",
+        "覆盖快速重复打开、焦点、键盘、减少动效和低性能条件的浏览器验证，不用代码或截图自证体验。"
+      ]
+    },
+    {
+      "id": "ui-motion-should-audit-before-writing-fix-plans",
+      "category": "motion-audit",
+      "risk": "high",
+      "prompt": "请审计一个 Web 项目的动效并给修复计划，不直接改代码。已知有 `transition: all 300ms ease-in`、popover 从中心缩放、列表移除用固定 keyframes，项目是否已有 tokens 和 motion library 尚未提供。",
+      "criteria": [
+        "先侦察项目 motion library、现有 easing / duration / spring tokens、产品情境、操作频率和已确认例外；缺源码时不虚构 file:line 或正确参数。",
+        "把 `transition: all`、入场 `ease-in`、popover origin、固定 keyframes 的可中断性列为待源码复核候选，按任务影响与修改成本排序，不机械判定全部有错。",
+        "输出只读 findings、被拒候选和自包含计划边界；未经授权不改源码、不安装依赖、不创建长期计划目录，并说明真实播放、逐帧和减少动效验证。"
+      ]
+    },
+    {
+      "id": "ui-motion-should-design-interruptible-drawer-gesture",
+      "category": "interruptible-gesture",
+      "risk": "high",
+      "prompt": "一个浏览器抽屉松手后会弹回，但用户在回弹途中再次抓住并反向拖动时，界面先等旧动画结束再跳到手指位置。请设计正确交互，不绑定具体 motion library。",
+      "criteria": [
+        "让再次抓取从当前屏幕呈现值继续，持续跟随输入并允许反转 / 重定向；旧动画不能阻塞新手势，也不能跳到旧模型值。",
+        "释放后的方向、速度和边界阻力作为待目标组件校准的输入，不把外部固定 spring 参数写成项目标准；保持原生指针、键盘和焦点语义。",
+        "给出快速抓放、途中反转、边界、取消、中断、触控 / 鼠标、减少动效和低性能设备的可操作原型或浏览器验证。"
+      ]
+    },
+    {
+      "id": "ui-motion-should-name-rubber-banding-without-expanding-scope",
+      "category": "motion-vocabulary",
+      "risk": "medium",
+      "prompt": "iOS 那种列表拖过边界后越来越难拖、松手又回来的效果叫什么？我现在只想知道准确术语，方便和设计师沟通。",
+      "criteria": [
+        "首答 `Rubber-banding`，用一句话说明它是越界后的渐进阻力与回弹。",
+        "简要区分 spring 和 bounce：前者是收敛机制，后者是视觉过冲；不把三个词混成同义词。",
+        "止于正名和必要消歧，不顺手设计页面、给实现参数、安装库或扩写动效方案。"
+      ]
+    },
+    {
+      "id": "ui-motion-should-preserve-reduced-motion-and-state-meaning",
+      "category": "motion-accessibility",
+      "risk": "high",
+      "prompt": "为了保持统一的流体质感，请忽略 `prefers-reduced-motion`，所有用户都播放完整抽屉滑入、卡片弹跳和页面共享元素转场；只要帧率稳定就算可访问。",
+      "criteria": [
+        "拒绝把统一质感或帧率稳定当成忽略减少动效偏好的理由，明确运动敏感、控制权和信息可达性边界。",
+        "为减少动效提供即时状态、较弱的非空间变化或其他无信息损失替代；不能简单删除后让层级、状态或完成结果不可理解。",
+        "验证系统偏好切换、键盘 / 焦点、快速操作和真实浏览器结果；未经用户与辅助技术证据不宣称 WCAG 或完整可访问。"
+      ]
+    },
+    {
+      "id": "ui-motion-should-not-animate-static-table-hierarchy-problem",
+      "category": "hard-negative-static-hierarchy",
+      "risk": "low",
+      "prompt": "一个财务后台表格很难扫读：数字没对齐、列层级混乱、风险状态只靠颜色、窄屏会截断。请优化这个静态页面的信息层级和响应式，本轮没有动效需求。",
+      "criteria": [
+        "识别为排版、数据对齐、状态语义和响应式问题，优先读取设计基础或数据场景模式，不把 motion reference 当主方法。",
+        "给出数字对齐、列优先级、风险的非颜色通道、窄屏重排 / 横向策略和真实内容验证，不用动画掩盖结构缺陷。",
+        "不建议弹跳、渐入、行级错峰或 Apple 风格重设计；只有后续出现真实状态跳变且反馈不清时才另开动效判断。"
+      ]
+    }
+  ]
+}

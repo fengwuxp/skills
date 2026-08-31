@@ -11,6 +11,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "wise-agent" / "scripts" / "read-reference-sections.py"
+MOTION_CANDIDATE = (
+    ROOT
+    / "fixtures"
+    / "skill-eval"
+    / "source-profiles"
+    / "ui-motion-craft-candidate.md"
+)
 SPEC = importlib.util.spec_from_file_location("read_reference_sections", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODULE
@@ -58,6 +65,52 @@ class ReferenceSelectionIntegrationTests(unittest.TestCase):
         )
 
         self.assertEqual("not-found", result["status"])
+
+    def test_motion_audit_selects_motion_craft_reference(self) -> None:
+        self.assertTrue(MOTION_CANDIDATE.is_file())
+        result = MODULE.build_package(
+            MOTION_CANDIDATE,
+            "审计 Web 动效、缓动、可中断性和减少动效",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertEqual("动效审计、缓动、可中断与减少动效 / 修复计划", result["matched_task"])
+        self.assertIn("动效决策门", result["content"])
+        self.assertIn("被拒候选", result["content"])
+
+    def test_motion_candidate_routes_interruptible_drawer_language(self) -> None:
+        self.assertTrue(MOTION_CANDIDATE.is_file())
+        result = MODULE.build_package(
+            MOTION_CANDIDATE,
+            "抽屉拖拽回弹途中再次抓住并反向拖动",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertEqual(
+            "抽屉拖拽回弹途中再次抓住并反向拖动 / 可中断交互",
+            result["matched_task"],
+        )
+        self.assertIn("连续与可中断", result["content"])
+
+    def test_motion_candidate_routes_vocabulary_language(self) -> None:
+        self.assertTrue(MOTION_CANDIDATE.is_file())
+        result = MODULE.build_package(
+            MOTION_CANDIDATE,
+            "iOS 列表拖过边界后越来越难拖、松手又回来的效果叫什么",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertEqual(
+            "拖过边界后越来越难拖、松手回来的效果叫什么 / Rubber-banding",
+            result["matched_task"],
+        )
+        self.assertIn("Rubber-banding", result["content"])
+
+    def test_motion_candidate_stays_outside_installable_skill(self) -> None:
+        self.assertTrue(MOTION_CANDIDATE.is_file())
+        self.assertFalse(
+            (ROOT / "ui-design-expert" / "references" / "motion-and-interaction-craft.md").exists()
+        )
 
 
 if __name__ == "__main__":

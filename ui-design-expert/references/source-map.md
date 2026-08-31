@@ -28,6 +28,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 复核候选 Skill | `一、候选 Skill`、`五、供应链判断` | 不执行安装命令或 Hooks |
+| 复核 Web 动效工艺来源 | `一、候选 Skill` 的 Emil Kowalski 小节、`七、未吸收` | 不把 Apple 风格或固定参数写成通用标准 |
 | 复核标准与评审依据 | `二、开放标准与评审依据` | 不把自动检查或启发式等同于合规 |
 | 复核 Figma 原型与工程交接 | `二、开放标准与评审依据` 的 Figma 小节 | 不把 MCP 输出当生产代码 |
 | 复核 UI 生态选型 | `三、设计系统与 UI 生态` | 不输出永久排名或自动安装 |
@@ -59,6 +60,14 @@
 - 核验版本：Skill metadata `1.0.0`；核验日期 2026-07-30。
 - 读取状态：Skill 正文与规则正文已读取；上游仓库声明 MIT License。
 - 使用范围：核对语义 HTML、焦点、表单、动效、内容范围、导航状态、触控、本地化和 UI 代码评审线索。
+
+### Emil Kowalski Design Engineering Skills
+
+- 二次入口：微信文章 [《专治AI审美廉价！这套Apple设计Skill，拯救所有粗糙UI》](https://mp.weixin.qq.com/s/Z_rFngC5Tcss_7y1lUkNCQ)，标记原创，作者 / 账号为 `iOS研究院`，页面显示发布时间 2026-07-30 15:08、重庆；2026-08-31 常规网页读取未取得正文，随后通过 Codex Browser 连接 Chrome 实际读取标题、作者、时间和完整正文。文章只用于发现候选方向，不以 Star 数、SpaceX、安装说明、“一键修复”或营销结论支撑能力准入。
+- 一手实现：[emilkowalski/skills](https://github.com/emilkowalski/skills)，2026-08-31 实际读取 README、`improve-animations`、`find-animation-opportunities`、`animation-vocabulary` 与仓库 LICENSE；`apple-design`、`prototype` 只取得公开页面片段，未完成全文逐项复核。仓库当前声明 MIT License，未安装、克隆或执行上游 Skill / 脚本。
+- 可迁移方法：按频率、目的、等待成本和功能影响筛选动效机会；审计前读取 motion library、tokens、产品情境、频率和既有例外；将 findings、被拒候选、计划和执行分开；用准确术语消歧；把可中断、减少动效、性能和真实播放作为交互正确性证据。
+- 归因边界：`apple-design` 是作者对 Apple WWDC 设计内容的 Web 转译，本轮未逐项读取 Apple 官方视频或校验其固定 easing、duration、spring 数值。相关参数只可作为上游候选和检索线索，具体项目优先继承现有 tokens、组件和真实验证，不写成 Apple 官方标准或跨项目默认值。
+- 许可边界：MIT 适用于仓库代码与文档，但不自动授予 Apple 商标、WWDC 影像、第三方案例、字体、图标或品牌资产的使用权。本项目只吸收方法与边界，不复制上游 Skill 正文、术语全集、示例代码、计划目录、安装命令或品牌表达。
 
 ### UI/UX Pro Max
 
@@ -288,6 +297,8 @@
 - 未吸收 Hallmark 的批量主题/结构目录、精确门禁数量、`.hallmark/log.json`、强制 `tokens.css`、CSS 自评分注释或自动项目记忆。
 - 未把“禁用某字体、颜色或构图”写成跨场景绝对规则；任务型产品、既有品牌和用户明确 brief 优先。
 - 未把 star 数、厂商宣传、自动 detector 或静态截图当作设计质量和可访问性已经成立的证据。
+- 未把 Apple 风格当作高级 UI 的通用答案，未吸收固定 easing、duration、scale、spring 参数、SpaceX 案例或文章中的效果承诺；Apple 官方来源未逐项核验前不得把上游转译写成官方规范。
+- 未安装 `emilkowalski/skills`，也未采用其默认全仓扫描、固定 subagent 数量、`plans/` 写入、执行命令或项目状态约定；当前只在 `fixtures/skill-eval/source-profiles/ui-motion-craft-candidate.md` 形成评测 overlay 和 cases-only 行为契约，不进入 `ui-design-expert` 安装目录。行为评测通过前不晋升运行时 reference 或入口路由。
 - 未安装或复制上述候选 Skill、设计系统、组件库、CLI、Stitch / MCP 或 Figma 资产，也未授权项目升级、迁移和依赖变更；运行时只在当前环境已提供且任务需要时路由官方 Figma 能力。
 - 未把水墨、米色、红金、书法、印章、窗棂或屏风写成东方审美默认答案。
 - 未复制或维护 50 项 UI 风格百科，也不把风格名写成互斥单选、固定模板、质量评分或自动生成提示词。

@@ -111,6 +111,9 @@
       },
       {
         "cases": "fixtures/skill-eval/ui-style-gallery-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/ui-motion-craft-behavior-cases.json"
       }
     ]
   }
