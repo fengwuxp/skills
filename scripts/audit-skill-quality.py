@@ -19,6 +19,7 @@ DESCRIPTION_WARN_CHARS = 260
 DESCRIPTION_INFO_CHARS = 180
 BODY_WARN_LINES = 200
 BODY_HARD_HINT_LINES = 500
+BODY_RECOMMENDED_TOKENS = 5000
 DEFAULT_PROMPT_WARN_CHARS = 190
 DEFAULT_PROMPT_WORKFLOW_MARKERS = (
     "正式正文按",
@@ -26,6 +27,7 @@ DEFAULT_PROMPT_WORKFLOW_MARKERS = (
     "完整工作流",
     "逐步执行以下流程",
 )
+CJK_RE = re.compile(r"[\u3400-\u9fff]")
 
 
 def read_text(path: Path) -> str:
@@ -63,6 +65,16 @@ def count_list_markers(description: str) -> int:
     return description.count("、") + description.count("/") + description.count("；")
 
 
+def estimate_tokens(text: str) -> dict[str, int]:
+    """Return a conservative mixed-text range, not model billing telemetry."""
+    cjk = len(CJK_RE.findall(text))
+    ascii_count = sum(ord(char) < 128 for char in text)
+    other = len(text) - cjk - ascii_count
+    low = round(cjk * 0.5 + ascii_count / 4.5 + other * 0.5)
+    high = round(cjk + ascii_count / 2.5 + other)
+    return {"low": low, "high": high, "midpoint": round((low + high) / 2)}
+
+
 def extract_default_prompt(text: str) -> str:
     for raw_line in text.splitlines():
         stripped = raw_line.strip()
@@ -80,6 +92,7 @@ def analyze_skill(skill_md: Path) -> list[str]:
     meta = extract_frontmatter(text)
     description = meta.get("description", "")
     body_lines = len(text.splitlines())
+    token_estimate = estimate_tokens(text)
     warnings: list[str] = []
     rel = skill_md.as_posix()
 
@@ -109,6 +122,12 @@ def analyze_skill(skill_md: Path) -> list[str]:
     elif body_lines > BODY_WARN_LINES:
         warnings.append(
             f"INFO {rel}: SKILL.md is {body_lines} lines; consider moving scenario details to references"
+        )
+    if token_estimate["midpoint"] > BODY_RECOMMENDED_TOKENS:
+        warnings.append(
+            f"WARN {rel}: SKILL.md is estimated at {token_estimate['midpoint']} tokens "
+            f"(range {token_estimate['low']}-{token_estimate['high']}); "
+            "review progressive disclosure; estimate is not billing telemetry"
         )
 
     return warnings

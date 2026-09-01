@@ -27,6 +27,9 @@ HEADING_RE = re.compile(r"^(#{2,3})\s+(.+?)\s*$")
 FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 BACKTICK_RE = re.compile(r"`([^`]+)`")
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
+PRIMARY_TASK_SCORE = 0.45
+FALLBACK_TASK_SCORE = 0.3
+FALLBACK_TASK_MIN_OVERLAP = 2
 
 
 @dataclass(frozen=True)
@@ -224,12 +227,24 @@ def task_score(query: str, task: str) -> float:
     return len(query_terms & task_terms) / len(task_terms)
 
 
+def task_overlap_count(query: str, task: str) -> int:
+    return len(character_terms(query) & character_terms(task))
+
+
 def match_task(query: str, rows: list[dict[str, Any]]) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
     ranked = sorted(
         ({**row, "score": round(task_score(query, row["task"]), 3)} for row in rows),
         key=lambda row: (-row["score"], row["task"]),
     )
-    candidates = [row for row in ranked if row["score"] >= 0.45][:3]
+    candidates = [
+        row
+        for row in ranked
+        if row["score"] >= PRIMARY_TASK_SCORE
+        or (
+            row["score"] >= FALLBACK_TASK_SCORE
+            and task_overlap_count(query, row["task"]) >= FALLBACK_TASK_MIN_OVERLAP
+        )
+    ][:3]
     if not candidates:
         return None, []
     if len(candidates) > 1 and candidates[0]["score"] == candidates[1]["score"]:
@@ -333,6 +348,10 @@ def build_package(
                     selected_sections.append(section)
                 elif not section:
                     followups.append(requested)
+        else:
+            section = find_section(sections, query)
+            if section:
+                selected_sections.append(section)
 
     selected_sections = prune_nested_sections(selected_sections)
     too_many_sections = len(selected_sections) > max_sections

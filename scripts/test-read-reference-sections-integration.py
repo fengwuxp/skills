@@ -26,6 +26,45 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ReferenceSelectionIntegrationTests(unittest.TestCase):
+    def test_unique_heading_query_selects_section_without_task_row(self) -> None:
+        result = MODULE.build_package(
+            ROOT / "wise-agent" / "references" / "delivery-execution-control.md",
+            "状态载体优先级",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertIsNone(result["matched_task"])
+        self.assertEqual(
+            ["2B. 状态载体优先级"],
+            result["selections"][0]["heading_path"],
+        )
+
+    def test_low_confidence_paraphrase_selects_only_clear_task(self) -> None:
+        result = MODULE.build_package(
+            ROOT / "wise-agent" / "references" / "delivery-execution-control.md",
+            "限制自动循环的成本，给出预算上限和无进展停止条件",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertEqual("控制成本与停止", result["matched_task"])
+        self.assertEqual(
+            ["6. 预算和停止条件"],
+            result["selections"][0]["heading_path"],
+        )
+
+    def test_low_confidence_task_tie_returns_ambiguity_candidates(self) -> None:
+        matched, candidates = MODULE.match_task(
+            "控制停止",
+            [
+                {"task": "控制成本与停止"},
+                {"task": "控制预算与停止"},
+            ],
+        )
+
+        self.assertIsNone(matched)
+        self.assertEqual(2, len(candidates))
+        self.assertEqual(candidates[0]["score"], candidates[1]["score"])
+
     def test_payment_method_card_selects_one_method(self) -> None:
         result = MODULE.build_package(
             ROOT / "payment-expert" / "references" / "payment-method-cards.md",

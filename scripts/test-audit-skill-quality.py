@@ -22,7 +22,7 @@ SPEC.loader.exec_module(MODULE)
 
 class SkillQualityAuditTests(unittest.TestCase):
     @staticmethod
-    def write_skill(root: Path, default_prompt: str) -> None:
+    def write_skill(root: Path, default_prompt: str, body: str = "# Sample\n") -> None:
         skill = root / "sample-skill"
         (skill / "agents").mkdir(parents=True)
         (skill / "SKILL.md").write_text(
@@ -30,7 +30,7 @@ class SkillQualityAuditTests(unittest.TestCase):
             "name: sample-skill\n"
             "description: Use when reviewing a sample Skill package and its metadata.\n"
             "---\n\n"
-            "# Sample\n",
+            f"{body.rstrip()}\n",
             encoding="utf-8",
         )
         (skill / "agents" / "openai.yaml").write_text(
@@ -77,6 +77,19 @@ class SkillQualityAuditTests(unittest.TestCase):
 
             self.assertTrue(
                 any("default_prompt" in warning and "chars" in warning for warning in warnings)
+            )
+
+    def test_mixed_text_skill_over_recommended_token_budget_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            rule = "处理复杂业务事实、约束、失败恢复和验证证据。"
+            body = "# Sample\n\n" + f"- {rule * 4}\n" * 80
+            self.write_skill(root, "Use $sample-skill 完成当前范围内的样例审查。", body)
+
+            warnings = MODULE.audit(root)
+
+            self.assertTrue(
+                any("SKILL.md" in warning and "tokens" in warning for warning in warnings)
             )
 
 
