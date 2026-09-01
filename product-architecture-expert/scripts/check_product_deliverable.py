@@ -33,7 +33,7 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("definition_and_boundary", ["核心名相", "定义", "不是什么", "归属主体", "产品边界"], 2),
         RequiredGroup("actors_and_roles", ["用户", "主体", "角色", "验收方", "责任边界"], 2),
         RequiredGroup("detail_design", ["详细设计", "场景", "功能", "对象", "状态", "生命周期", "不变量", "状态机图"], 3),
-        RequiredGroup("flows", ["主流程", "逆向流程", "异常流程", "人工处理", "业务流程", "用例图", "流程图", "泳道图"], 2),
+        RequiredGroup("flows", ["主流程", "逆向流程", "异常流程", "人工处理", "业务流程", "责任推进", "异常与收口", "用例图", "流程图", "泳道图"], 2),
         RequiredGroup("rules", ["规则", "权限", "审批", "额度", "计费", "版本", "验收样例"], 2),
         RequiredGroup("interface_abstraction", ["接口抽象", "产品接口", "业务契约", "输入", "输出", "失败语义", "责任边界"], 3),
         RequiredGroup("data_and_audit", ["数据", "指标", "报表", "埋点", "审计", "追溯"], 2),
@@ -131,6 +131,12 @@ SCENARIO_SHORT_FIELD_GROUPS = (
     ("exception_handling", ("异常处理",)),
     ("rules_and_acceptance", ("规则与验收",)),
 )
+SCENARIO_NARRATIVE_FIELD_GROUPS = (
+    ("business_context", ("业务情境",)),
+    ("responsibility_flow", ("责任推进",)),
+    ("decision_and_state", ("裁决与状态",)),
+    ("exception_and_closure", ("异常与收口",)),
+)
 SCENARIO_LEGACY_FIELD_GROUPS = (
     ("business_problem", ("业务问题与期望结果", "业务问题", "真实问题")),
     ("participants", ("参与者与责任", "参与者", "业务主体")),
@@ -151,6 +157,13 @@ REQUIREMENT_FIELD_GROUPS = (
     ("requirement_source", ("来源与可靠性", "来源 / 可靠性", "需求来源")),
     ("acceptance_example", ("验收样例", "验收引用")),
 )
+REQUIREMENT_COMPACT_FIELD_GROUPS = (
+    ("name_and_type", ("需求名称 / 类型", "需求名称/类型")),
+    ("subject_and_context", ("责任主体 / 场景 / 前置状态", "责任主体/场景/前置状态")),
+    ("force_and_outcome", ("规范强度 / 行为或业务结果", "规范强度/行为或业务结果")),
+    ("boundary", ("度量、时限或边界",)),
+    ("source_rule_acceptance", ("来源与可靠性 / 关联规则 / 验收样例", "来源与可靠性/关联规则/验收样例")),
+)
 RULE_FIELD_GROUPS = (
     ("rule_name", ("规则名称",)),
     ("rule_type", ("规则性质",)),
@@ -161,6 +174,36 @@ RULE_FIELD_GROUPS = (
     ("rule_outcome", ("则", "处理结果", "结论")),
     ("rule_owner", ("Owner", "规则 Owner", "规则 owner")),
     ("rule_examples", ("正例 / 边界例 / 反例", "验收样例")),
+)
+RULE_COMPACT_FIELD_GROUPS = (
+    ("name_type_motivation", ("规则名称 / 性质 / 业务动机", "规则名称/性质/业务动机")),
+    ("scenario_scope", ("适用场景 / 步骤", "适用场景/步骤")),
+    ("object_and_facts", ("适用对象与范围 / 输入事实", "适用对象与范围/输入事实")),
+    ("condition_outcome_owner", ("当 / 则 / Owner", "当/则/Owner")),
+    ("examples", ("正例 / 边界例 / 反例",)),
+)
+DOCUMENT_CONTROL_FIELD_GROUPS = (
+    ("current_version", ("当前版本",)),
+    ("document_status", ("文档状态",)),
+    ("product_owner", ("产品 owner", "产品 Owner")),
+    ("business_owner", ("业务 owner", "业务 Owner")),
+    ("updated_at", ("更新时间",)),
+    ("authority_source", ("权威来源",)),
+)
+ARCHITECTURE_SPINE_FIELD_GROUPS = (
+    ("architecture_spine", ("产品架构主脊",)),
+    ("core_capability", ("核心能力",)),
+    ("core_object_relation", ("核心对象与关系",)),
+    ("interaction_boundary", ("关键交互与边界",)),
+    ("view_choice", ("关键图 / 不画图理由", "关键图/不画图理由")),
+)
+PRODUCT_INTERFACE_FIELD_GROUPS = (
+    ("interface_name", ("产品接口名称",)),
+    ("interface_consumer", ("接口使用方",)),
+    ("interface_input", ("接口输入与前置条件",)),
+    ("interface_output", ("接口业务输出与副作用",)),
+    ("interface_failure", ("接口失败语义",)),
+    ("interface_boundary", ("接口责任边界",)),
 )
 AMBIGUOUS_BUSINESS_PHRASES = (
     "按相关规则处理",
@@ -183,7 +226,6 @@ PRD_SECTION_ORDER = [
     ("section_overview", ("概要设计",)),
     ("section_detail", ("详细设计",)),
     ("section_requirements", ("产品需求陈述",)),
-    ("section_flow", ("关键流程", "业务流程")),
     ("section_rules_and_interface", ("业务规则与接口抽象", "业务规则和接口抽象")),
     ("section_risk", ("数据与风险", "数据、权限、风险", "风险与待确认")),
     ("section_acceptance", ("验收摘要",)),
@@ -218,13 +260,20 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "战略意图：提升效率。业务能力地图：客户管理。",
     ),
     "prd": (
-        "文档强度：标准。\n"
-        "## 阅读摘要\n当前结论：统一审核入口；产品定义 / 产品视图：为运营提供可追踪的审核能力；主链路：提交、审核、通知；核心对象与边界：申请单由平台管理，不改变交易订单。\n"
+        "当前版本：1.0。\n文档状态：评审中。\n文档强度：标准。\n"
+        "产品 owner：审核产品负责人。\n业务 owner：运营负责人。\n"
+        "更新时间：2026-09-01 09:00 +08:00。\n权威来源：当前 PRD。\n"
+        "## 阅读摘要\n当前结论：统一审核入口；产品定义 / 产品架构主脊：为运营提供可追踪的审核能力；主链路：提交、审核、通知；核心对象与边界：申请单由平台管理，不改变交易订单。\n"
         "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
         "## 二、目标与非目标\n目标：缩短审核处理时间；非目标：不改结算规则。"
         "成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。\n"
         "## 三、定性与范围\n产品定性：存量审核流程治理；总体判断：先统一口径；范围和产品边界为后台审核。\n"
         "## 四、概要设计\n概要设计：核心方案是统一审核入口和能力布局，并说明总体流程。\n"
+        "产品架构主脊：缩短审核时长 -> SCN-001 -> 审核裁决能力 -> 申请状态 -> R-001 -> 可查询结论。\n"
+        "核心能力：待审查询、审核裁决、异常转人工和审计查询。\n"
+        "核心对象与关系：申请单产生当前审核任务，审核任务持有当前结论。\n"
+        "关键交互与边界：审核员裁决，平台保存事实，运营处理异常。\n"
+        "关键图 / 不画图理由：无需单独画图，单场景和三状态可由编号流程复述。\n"
         "核心名相：审核任务；定义：等待运营判断的申请；不是什么：交易订单；归属主体：平台。"
         "用户：运营；主体：平台；角色：审核员；验收方：产品和运营。\n"
         "## 五、详细设计\n以下场景说明申请单如何形成可追踪的审核结论。\n"
@@ -250,7 +299,11 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "适用对象与范围：待审申请。输入事实：申请状态和材料完整性。"
         "当：申请处于待审状态且材料完整。则：记录通过或驳回结论。"
         "Owner：运营负责人。正例 / 边界例 / 反例：待审申请可裁决；终态重复提交保持原结果；非待审申请不得生成新结论。"
-        "产品接口抽象说明业务契约、输入、输出和失败语义。\n"
+        "产品接口名称：审核申请裁决。接口使用方：审核员。"
+        "接口输入与前置条件：待审申请、材料和权限。"
+        "接口业务输出与副作用：形成结论、变更状态并记录审计。"
+        "接口失败语义：非待审返回原结论，来源不可用时保持待审。"
+        "接口责任边界：平台保存事实，运营处理异常。\n"
         "## 八、数据与风险\n数据：指标、报表、审计和追溯。"
         "风险：外部依赖待确认，确认方为业务，影响范围是审核上线。\n"
         "## 九、验收摘要\n对应场景：SCN-001。正常结果：通过或驳回结论、操作者和时间可查询；关键边界：重复裁决不改变终态；异常与兜底：来源不可用时停止并转人工；红线：不得生成无审计记录的结论。",
@@ -873,6 +926,7 @@ def scenario_contract_issues(text: str) -> list[str]:
 
     if any(
         not complete(body, SCENARIO_SHORT_FIELD_GROUPS)
+        and not complete(body, SCENARIO_NARRATIVE_FIELD_GROUPS)
         and not complete(body, SCENARIO_LEGACY_FIELD_GROUPS)
         for _, body in blocks
     ):
@@ -1015,11 +1069,50 @@ def ambiguous_business_phrases(text: str) -> list[str]:
     return phrases
 
 
+def slash_group_complete(values: list[str], expected_parts: int) -> bool:
+    for value in values:
+        parts = [part.strip().strip("。") for part in value.split("/")]
+        if len(parts) < expected_parts or any(
+            not meaningful_values([part]) for part in parts[:expected_parts]
+        ):
+            return False
+    return bool(values)
+
+
 def requirement_contract_issues(text: str) -> list[str]:
     requirements = section_body(text, ("产品需求陈述",))
     if not requirements.strip():
         return ["requirement_contract_missing"]
     issues: list[str] = []
+    compact_values = {
+        name: [
+            value
+            for alias in aliases
+            for value in field_values(requirements, alias)
+        ]
+        for name, aliases in REQUIREMENT_COMPACT_FIELD_GROUPS
+    }
+    if all(compact_values.values()):
+        if any(len(values) != 1 for values in compact_values.values()):
+            return ["requirement_contract_incomplete"]
+        expected_parts = {
+            "name_and_type": 2,
+            "subject_and_context": 3,
+            "force_and_outcome": 2,
+            "boundary": 1,
+            "source_rule_acceptance": 3,
+        }
+        if any(
+            not slash_group_complete(compact_values[name], count)
+            for name, count in expected_parts.items()
+        ):
+            issues.append("requirement_contract_incomplete")
+        force = compact_values["force_and_outcome"][0]
+        if re.match(r"\s*(必须|不得|应|可)(?:\s*/|$)", force) is None:
+            issues.append("normative_force_invalid")
+        if ambiguous_business_phrases(requirements):
+            issues.append("ambiguous_requirement_language")
+        return issues
     records = contract_records(requirements, REQUIREMENT_FIELD_GROUPS, ("需求名称",))
     if any(any(not record[name] for name, _ in REQUIREMENT_FIELD_GROUPS) for record in records):
         issues.append("requirement_contract_incomplete")
@@ -1037,6 +1130,46 @@ def requirement_contract_issues(text: str) -> list[str]:
 def business_rule_contract_issues(text: str) -> list[str]:
     rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
     issues: list[str] = []
+    compact_values = {
+        name: [
+            value
+            for alias in aliases
+            for value in field_values(rules, alias)
+        ]
+        for name, aliases in RULE_COMPACT_FIELD_GROUPS
+    }
+    if all(compact_values.values()):
+        if any(len(values) != 1 for values in compact_values.values()):
+            return ["rule_contract_incomplete"]
+        expected_parts = {
+            "name_type_motivation": 3,
+            "scenario_scope": 2,
+            "object_and_facts": 2,
+            "condition_outcome_owner": 3,
+            "examples": 3,
+        }
+        if any(
+            not slash_group_complete(compact_values[name], count)
+            for name, count in expected_parts.items()
+        ):
+            issues.append("rule_contract_incomplete")
+        if ambiguous_business_phrases(rules):
+            issues.append("ambiguous_rule_language")
+        rule_identity = compact_values["name_type_motivation"][0]
+        if "版本化" in rule_identity or "外部规则" in rule_identity:
+            external_groups = (
+                ("来源",),
+                ("版本",),
+                ("生效期", "生效范围"),
+                ("Owner", "规则 Owner", "规则 owner"),
+                ("未确认前处理", "失效时处理", "外部不可用"),
+            )
+            if any(
+                not contract_group_values(rules, aliases)
+                for aliases in external_groups
+            ):
+                issues.append("external_rule_governance_missing")
+        return issues
     records = business_rule_records(rules)
     if any(any(not record[name] for name, _ in RULE_FIELD_GROUPS) for record in records):
         issues.append("rule_contract_incomplete")
@@ -1057,6 +1190,58 @@ def business_rule_contract_issues(text: str) -> list[str]:
             issues.append("external_rule_governance_missing")
             break
     return issues
+
+
+def cross_scenario_flow_issues(text: str) -> list[str]:
+    scenarios = scenario_blocks(section_body(text, ("详细设计",)))
+    if len(scenarios) <= 1:
+        return []
+    shared_flow = section_body(text, ("关键流程", "业务流程"))
+    return [] if shared_flow.strip() else ["cross_scenario_flow_missing"]
+
+
+def conditional_flow_order_issues(text: str) -> list[str]:
+    headings = [normalize(heading) for heading, _ in markdown_sections(text)]
+    flows = matching_heading_positions(headings, ("关键流程", "业务流程"))
+    if not flows:
+        return []
+    details = matching_heading_positions(headings, ("详细设计",))
+    rules = matching_heading_positions(
+        headings, ("业务规则与接口抽象", "业务规则和接口抽象")
+    )
+    if (
+        len(flows) != 1
+        or len(details) != 1
+        or len(rules) != 1
+        or not details[0] < flows[0] < rules[0]
+    ):
+        return ["conditional_flow_order"]
+    return []
+
+
+def document_control_issues(text: str) -> list[str]:
+    return ["document_control_incomplete"] if any(
+        not has_meaningful_alias_value(text, aliases)
+        for _, aliases in DOCUMENT_CONTROL_FIELD_GROUPS
+    ) else []
+
+
+def architecture_spine_issues(text: str) -> list[str]:
+    overview = section_body(text, ("概要设计",))
+    return ["architecture_spine_incomplete"] if any(
+        not has_meaningful_alias_value(overview, aliases)
+        for _, aliases in ARCHITECTURE_SPINE_FIELD_GROUPS
+    ) else []
+
+
+def product_interface_contract_issues(text: str) -> list[str]:
+    rules_and_interface = section_body(
+        text, ("业务规则与接口抽象", "业务规则和接口抽象")
+    )
+    return ["product_interface_contract_incomplete"] if any(
+        not has_meaningful_alias_value(rules_and_interface, aliases)
+        for _, aliases in PRODUCT_INTERFACE_FIELD_GROUPS
+    ) else []
 
 
 def success_metric_issues(text: str) -> list[str]:
@@ -1084,7 +1269,12 @@ def success_metric_issues(text: str) -> list[str]:
 
 def has_rule_scope(text: str) -> bool:
     rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
-    rule_types = field_values(rules, "规则性质") or table_column_values(rules, ("规则性质",))
+    rule_types = (
+        field_values(rules, "规则性质")
+        or field_values(rules, "规则名称 / 性质 / 业务动机")
+        or field_values(rules, "规则名称/性质/业务动机")
+        or table_column_values(rules, ("规则性质",))
+    )
     scopes = (
         field_values(rules, "适用场景 / 步骤")
         + field_values(rules, "适用场景/步骤")
@@ -1170,7 +1360,10 @@ def warning_groups(kind: str, text: str) -> list[str]:
         return []
     warnings: list[str] = []
     detail_design = re.search(r"(?m)^#{2,6}\s+.*详细设计.*$", text)
-    product_view = re.search(r"产品定义\s*/\s*产品视图|产品视图", text)
+    product_view = re.search(
+        r"产品定义\s*/\s*(?:产品视图|产品架构主脊)|产品视图|产品架构主脊",
+        text,
+    )
     if detail_design and product_view and product_view.start() > detail_design.start():
         warnings.append("product_view_late")
     if any(contains_term(text, term) for term in IMPLEMENTATION_LANGUAGE_TERMS):
@@ -1240,6 +1433,7 @@ def missing_groups(kind: str, text: str) -> list[str]:
         missing.append("placeholder_fields")
     if kind == "prd":
         strength = declared_prd_strength(text)
+        missing.extend(document_control_issues(text))
         if strength is None:
             missing.append("document_strength_missing")
         elif strength == "invalid":
@@ -1253,7 +1447,11 @@ def missing_groups(kind: str, text: str) -> list[str]:
         if strength == "轻量" and is_keyword_shell("prd", text):
             missing.append("keyword_shell")
         if strength in SCENARIO_CONTRACT_STRENGTHS:
+            missing.extend(architecture_spine_issues(text))
+            missing.extend(product_interface_contract_issues(text))
             missing.extend(scenario_contract_issues(text))
+            missing.extend(cross_scenario_flow_issues(text))
+            missing.extend(conditional_flow_order_issues(text))
             missing.extend(success_metric_issues(text))
             missing.extend(requirement_contract_issues(text))
             missing.extend(business_rule_contract_issues(text))
@@ -1392,8 +1590,8 @@ def run_self_test() -> int:
         failures.append("prd: wrong section order unexpectedly passed")
     reused_heading_prd = (
         SELF_TESTS["prd"][0]
-        .replace("## 五、详细设计\n", "## 五、详细设计与关键流程\n", 1)
-        .replace("## 六、关键流程\n", "", 1)
+        .replace("## 五、详细设计\n", "## 五、详细设计与产品需求陈述\n", 1)
+        .replace("### 产品需求陈述\n", "", 1)
     )
     if "section_heading_reused" not in missing_groups("prd", reused_heading_prd):
         failures.append("prd: one heading satisfied multiple sections")
@@ -1428,7 +1626,9 @@ def run_self_test() -> int:
     if "scenario_contract_missing" not in missing_groups("prd", abstract_prd):
         failures.append("prd: abstract complete document unexpectedly passed without a scenario contract")
     light_prd = (
-        "文档强度：轻量。\n"
+        "当前版本：1.0。\n文档状态：评审中。\n文档强度：轻量。\n"
+        "产品 owner：审核产品负责人。\n业务 owner：运营负责人。\n"
+        "更新时间：2026-09-01 09:00 +08:00。\n权威来源：当前 PRD。\n"
         "## 一、背景、问题与目标\n背景：审核积压；问题：处理路径不清；目标：缩短时长；非目标：不改交易。\n"
         "## 二、定性、范围与概要\n产品定性：流程治理；总体判断：统一入口；范围和产品边界为后台审核。"
         "概要设计采用统一入口；方案概述说明申请如何流转。核心名相为审核任务，定义是待处理申请。"
@@ -1725,7 +1925,7 @@ Owner：运营负责人。
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | R-001 | 审核裁决 | 场景裁决规则 | 防止终态被覆盖 | SCN-001 / 审核裁决 | 待审申请 | 申请状态 | 申请待审 | 记录结论 | 运营负责人 | 待审可裁决；终态保持；非待审禁止 |
 
-产品接口抽象说明业务契约、输入、输出和失败语义。
+产品接口名称：审核申请裁决。接口使用方：审核员。接口输入与前置条件：待审申请、材料和权限。接口业务输出与副作用：形成结论、变更状态并记录审计。接口失败语义：非待审返回原结论。接口责任边界：平台保存事实，运营处理异常。
 
 """,
         SELF_TESTS["prd"][0],
@@ -1740,7 +1940,7 @@ Owner：运营负责人。
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | R-EXT-001 | 外部资质审核 | 版本化 / 外部规则 | 使用有效政策裁决 | SCN-001 / 审核裁决 | 待审申请 | 申请材料和规则状态 | 规则有效且材料完整 | 记录结论 | 业务负责人 | 有效时通过；失效时待确认；缺材料驳回 | 外部政策 | 2026.1 | 2026-08-01 起 | 保持待专业确认 |
 
-产品接口抽象说明业务契约、输入、输出和失败语义。
+产品接口名称：资质申请裁决。接口使用方：审核员。接口输入与前置条件：待审申请、材料、权限和规则版本。接口业务输出与副作用：形成结论、记录版本并变更状态。接口失败语义：规则不明时待专业确认。接口责任边界：平台保存事实，业务负责人确认规则。
 
 """,
         SELF_TESTS["prd"][0],
@@ -1775,14 +1975,18 @@ Owner：运营负责人。
         if warning_checker("prd", SELF_TESTS["prd"][0]):
             failures.append("prd: clean fixture unexpectedly warned")
         late_product_view_prd = SELF_TESTS["prd"][0].replace(
-            "产品定义 / 产品视图：为运营提供可追踪的审核能力；",
+            "产品定义 / 产品架构主脊：为运营提供可追踪的审核能力；",
+            "",
+            1,
+        ).replace(
+            "产品架构主脊：缩短审核时长 -> SCN-001 -> 审核裁决能力 -> 申请状态 -> R-001 -> 可查询结论。\n",
             "",
             1,
         ) + "\n产品视图：审核能力。"
         if "product_view_late" not in warning_checker("prd", late_product_view_prd):
             failures.append("prd: late product view warning missing")
         product_view_before_detail_prd = SELF_TESTS["prd"][0].replace(
-            "产品定义 / 产品视图：为运营提供可追踪的审核能力；",
+            "产品定义 / 产品架构主脊：为运营提供可追踪的审核能力；",
             "",
             1,
         ).replace(

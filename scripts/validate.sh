@@ -167,6 +167,8 @@ python3 -m py_compile payment-expert/scripts/verify_behavior_cases.py
 python3 -m py_compile payment-expert/scripts/verify_fixtures.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_qualification.py
+python3 -m py_compile product-architecture-expert/scripts/check_prd_readability_evaluation.py
+python3 -m py_compile product-architecture-expert/scripts/test_check_prd_readability_evaluation.py
 python3 -m py_compile product-architecture-expert/scripts/test_check_product_qualification.py
 python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
 python3 -m py_compile requirement-acceptance-testing/scripts/check_requirement_acceptance.py
@@ -233,6 +235,9 @@ python3 payment-expert/scripts/verify_fixtures.py
 
 echo "==> product deliverable checker"
 product-architecture-expert/scripts/check_product_deliverable.py --self-test
+python3 product-architecture-expert/scripts/test_check_prd_readability_evaluation.py
+python3 product-architecture-expert/scripts/check_prd_readability_evaluation.py validate --contract product-architecture-expert/fixtures/prd-readability-evaluation.json
+python3 product-architecture-expert/scripts/check_prd_readability_evaluation.py validate-report --contract product-architecture-expert/fixtures/prd-readability-evaluation.json --responses fixtures/skill-eval/product-prd-readability-r1-reader-evidence.jsonl --report fixtures/skill-eval/product-prd-readability-r1-report.json
 python3 product-architecture-expert/scripts/test_check_product_qualification.py
 python3 product-architecture-expert/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-client-interaction-behavior-cases.json"

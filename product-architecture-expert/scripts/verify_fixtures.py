@@ -13,7 +13,9 @@ from check_product_qualification import check as qualification_issues
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "fixtures"
 CASES = (
+    ("prd", FIXTURES / "prd-light-readable-valid.md", True, set()),
     ("prd", FIXTURES / "prd-valid.md", True, set()),
+    ("prd", FIXTURES / "prd-enhanced-readable-valid.md", True, set()),
     (
         "prd",
         FIXTURES / "prd-invalid.md",
@@ -111,6 +113,121 @@ def main() -> int:
             )
         else:
             print(f"OK product fixture {path.name}")
+
+    current_prd = (FIXTURES / "prd-valid.md").read_text(encoding="utf-8")
+    contract_cases = (
+        (
+            current_prd.replace("当前版本：1.0。\n", "", 1),
+            "document_control_incomplete",
+            "formal PRD without document control",
+        ),
+        (
+            current_prd.replace(
+                "- 产品架构主脊：缩短审核时长 -> SCN-001 -> 审核裁决能力 -> 申请 / 审核任务及状态 -> R-001 -> 可查询且不可覆盖的结论。\n",
+                "",
+                1,
+            ),
+            "architecture_spine_incomplete",
+            "standard PRD without an architecture spine",
+        ),
+        (
+            current_prd.replace("- 产品接口名称：审核申请裁决。\n", "", 1),
+            "product_interface_contract_incomplete",
+            "generic product interface claim",
+        ),
+    )
+    for candidate, expected_issue, label in contract_cases:
+        if expected_issue not in missing_groups("prd", candidate):
+            failures.append(f"{label} unexpectedly passed")
+
+    if "## 六、关键流程" in current_prd:
+        failures.append("single-scenario fixture kept a redundant shared-flow section")
+    readable_single_missing = missing_groups("prd", current_prd)
+    if readable_single_missing:
+        failures.append(
+            "readable single-scenario PRD unexpectedly failed: "
+            + ",".join(readable_single_missing)
+        )
+
+    compact_requirement_prd = current_prd
+    if "requirement_contract_incomplete" in missing_groups(
+        "prd", compact_requirement_prd
+    ):
+        failures.append("compact requirement projection unexpectedly failed")
+    incomplete_compact_requirement = compact_requirement_prd.replace(
+        "保存唯一审核结论 / 功能。",
+        "保存唯一审核结论。",
+        1,
+    )
+    if "requirement_contract_incomplete" not in missing_groups(
+        "prd", incomplete_compact_requirement
+    ):
+        failures.append("compact requirement without a type unexpectedly passed")
+    repeated_compact_requirement = compact_requirement_prd.replace(
+        "- 责任主体 / 场景 / 前置状态：审核平台 / SCN-001 / 申请待审。\n",
+        "- 责任主体 / 场景 / 前置状态：审核平台 / SCN-001 / 申请待审。\n"
+        "- 需求名称 / 类型：发送审核通知 / 功能。\n",
+        1,
+    )
+    if "requirement_contract_incomplete" not in missing_groups(
+        "prd", repeated_compact_requirement
+    ):
+        failures.append("multiple compact requirements unexpectedly completed each other")
+
+    compact_rule_prd = current_prd
+    if "rule_contract_incomplete" in missing_groups("prd", compact_rule_prd):
+        failures.append("compact rule projection unexpectedly failed")
+    incomplete_compact_rule = compact_rule_prd.replace(
+        "申请待审且材料完整 / 记录通过或驳回结论并保留操作者和时间 / 运营负责人。",
+        "申请待审且材料完整 / 记录通过或驳回结论并保留操作者和时间。",
+        1,
+    )
+    if "rule_contract_incomplete" not in missing_groups(
+        "prd", incomplete_compact_rule
+    ):
+        failures.append("compact rule without an Owner unexpectedly passed")
+    repeated_compact_rule = compact_rule_prd.replace(
+        "- 适用场景 / 步骤：SCN-001 / 审核裁决。\n",
+        "- 适用场景 / 步骤：SCN-001 / 审核裁决。\n"
+        "- 规则名称 / 性质 / 业务动机：审核通知 / 场景裁决规则 / 告知结果。\n",
+        1,
+    )
+    if "rule_contract_incomplete" not in missing_groups("prd", repeated_compact_rule):
+        failures.append("multiple compact rules unexpectedly completed each other")
+
+    scenario = re.search(
+        r"(?ms)^### SCN-001 运营审核申请\n.*?(?=^### 产品需求陈述)",
+        current_prd,
+    )
+    if scenario is None:
+        failures.append("readable scenario fixture missing")
+    else:
+        two_scenarios_without_flow = current_prd.replace(
+            "### 产品需求陈述",
+            scenario.group(0).replace("SCN-001", "SCN-002", 1)
+            + "### 产品需求陈述",
+            1,
+        )
+    if "cross_scenario_flow_missing" not in missing_groups(
+        "prd", two_scenarios_without_flow
+    ):
+        failures.append("multiple scenarios without a shared flow unexpectedly passed")
+
+    enhanced_prd = (FIXTURES / "prd-enhanced-readable-valid.md").read_text(encoding="utf-8")
+    shared_flow = re.search(
+        r"(?ms)^## 六、关键流程\n.*?(?=^## 七、业务规则与接口抽象)",
+        enhanced_prd,
+    )
+    if shared_flow is None:
+        failures.append("enhanced fixture shared flow missing")
+    else:
+        misplaced_flow = enhanced_prd.replace(shared_flow.group(0), "", 1).replace(
+            "## 九、验收摘要",
+            shared_flow.group(0) + "## 九、验收摘要",
+            1,
+        )
+        if "conditional_flow_order" not in missing_groups("prd", misplaced_flow):
+            failures.append("misplaced conditional flow unexpectedly passed")
 
     incomplete_scenario = re.sub(
         r"(?ms)^### SCN-001 运营审核申请\n.*?(?=^### 产品需求陈述)",

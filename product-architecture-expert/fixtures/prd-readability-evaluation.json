@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "description": "轻量、标准、增强 PRD 的五角色模拟阅读验收合同。只验证当前文档能否被复述、定位和跨角色一致理解，不比较不存在的历史三强度基线。",
+  "proof_limit": "simulated-reader-evidence-only",
+  "evidence": {
+    "status": "complete",
+    "reader_model": "gpt-5.6-sol",
+    "judge_model": "gpt-5.6-terra",
+    "collector_payload_sha256": "d944aec08cfe281a81af452db527b0bd90d13217f6e34b5ec240e74808e8ce16",
+    "collector_launcher_sha256": "c5fe29ae6ef184f3a5906d95b13466f165d5d1e877ec96fe26f262a6e1a380ad",
+    "response_sha256": "ae1f04878c77dbb09d156d6366fad42c0cdb41680fc02e66113ddd0ad1a44261",
+    "judge_payload_sha256": "7e1892db871321993118c3c6af0fc868448ddbdd6433d4b0ddffb7778952f580",
+    "judge_launcher_sha256": "df03a6d22ded1705ca8580ee82cbc3ab8a8e9ad9d0989cf3467a23bdf3de0920",
+    "report_sha256": "064767ae6ac9f6d25e3eaaf54eb9281c8e007bddc52c030c77c20db3e945c00d",
+    "responses_path": "fixtures/skill-eval/product-prd-readability-r1-reader-evidence.jsonl"
+  },
+  "thresholds": {
+    "static_min": 62,
+    "behavior_min": 24,
+    "total_min": 86,
+    "hard_dimension_min": 7
+  },
+  "source_profile": {
+    "id": "product-prd-readability-current-r1",
+    "paths": [
+      "product-architecture-expert/fixtures/prd-light-readable-valid.md",
+      "product-architecture-expert/fixtures/prd-valid.md",
+      "product-architecture-expert/fixtures/prd-enhanced-readable-valid.md"
+    ],
+    "sha256": "c78723aeebb3436e31faa1e8ef4de60f3ffe204629d83f95a30c1d032b63ec8b"
+  },
+  "samples": [
+    {
+      "id": "light-save-failure",
+      "strength": "light",
+      "path": "product-architecture-expert/fixtures/prd-light-readable-valid.md"
+    },
+    {
+      "id": "standard-review-task",
+      "strength": "standard",
+      "path": "product-architecture-expert/fixtures/prd-valid.md"
+    },
+    {
+      "id": "enhanced-external-qualification",
+      "strength": "enhanced",
+      "path": "product-architecture-expert/fixtures/prd-enhanced-readable-valid.md"
+    }
+  ],
+  "roles": {
+    "business": {
+      "focus": "为什么现在要做、期望业务结果、非目标、主要风险和未决责任。",
+      "criteria": [
+        "准确复述真实问题、期望业务结果和本期非目标，不把页面或技术机制当成业务目标。",
+        "指出主要业务风险、待确认项、Owner 和未确认前处理；正文没有的信息保持未知。",
+        "给出可定位章节或标签，答案无需作者口头补充。"
+      ]
+    },
+    "product": {
+      "focus": "定性、范围、产品架构主脊、规则责任和成功/验收边界。",
+      "criteria": [
+        "准确复述定性对象、本期变化、责任边界和产品架构主脊。",
+        "区分成功指标、交付验收、非目标和待确认项，不混入实现设计。",
+        "说明核心规则及 Owner，并给出可定位章节或标签。"
+      ]
+    },
+    "engineering": {
+      "focus": "触发与前置、对象状态变化、产品接口输出/副作用、失败语义和责任边界。",
+      "criteria": [
+        "从正文恢复触发条件、输入事实、对象和关键状态变化。",
+        "说明产品接口的业务输出、副作用、失败语义和人工承接，不提前设计内部实现。",
+        "指出仍需工程验证但不能由代码反向改写的产品边界，并给出证据锚点。"
+      ]
+    },
+    "testing": {
+      "focus": "正常、边界、禁止、失败、恢复和完成证据。",
+      "criteria": [
+        "推导至少一个正常结果、一个边界或重复结果、一个禁止结果。",
+        "说明失败后的可观察状态、恢复或人工路径及完成证据。",
+        "只使用正文可验证事实并给出证据锚点，不用‘测试通过’代替结果。"
+      ]
+    },
+    "operations": {
+      "focus": "异常发现、人工承接、恢复、通知、审计和 SLA/截止边界。",
+      "criteria": [
+        "准确说明运营何时介入、看到什么状态、采取什么动作以及何时收口。",
+        "指出通知、审计、报表或事件证据，以及缺失的 SLA/截止时间。",
+        "区分平台、运营和专业 Owner 责任，给出可定位章节或标签。"
+      ]
+    }
+  },
+  "reader_output_schema": {
+    "summary": "用目标角色语言给出不超过 120 字的主线复述。",
+    "key_facts": "列出回答角色关注点所需的已确认事实。",
+    "evidence_anchors": "列出章节、场景、规则或字段标签；不得虚构行号。",
+    "uncertainties": "列出正文未说明、待确认或需要其他 Owner/工程验证的内容。"
+  },
+  "tasks": [
+    {"id": "light-business", "sample_id": "light-save-failure", "role": "business", "prompt": "以业务负责人身份阅读指定轻量 PRD，复述为什么做、业务结果、非目标和主要风险。"},
+    {"id": "light-product", "sample_id": "light-save-failure", "role": "product", "prompt": "以产品负责人身份阅读指定轻量 PRD，复述定性、范围、核心方案、规则和验收边界。"},
+    {"id": "light-engineering", "sample_id": "light-save-failure", "role": "engineering", "prompt": "以研发负责人身份阅读指定轻量 PRD，恢复触发、状态、输出、副作用、失败语义和交接边界。"},
+    {"id": "light-testing", "sample_id": "light-save-failure", "role": "testing", "prompt": "以测试负责人身份阅读指定轻量 PRD，推导正常、边界、禁止、失败恢复和证据。"},
+    {"id": "light-operations", "sample_id": "light-save-failure", "role": "operations", "prompt": "以运营负责人身份阅读指定轻量 PRD，说明何时介入、如何恢复、通知与审计证据。"},
+    {"id": "standard-business", "sample_id": "standard-review-task", "role": "business", "prompt": "以业务负责人身份阅读指定标准 PRD，复述为什么做、业务结果、非目标和主要风险。"},
+    {"id": "standard-product", "sample_id": "standard-review-task", "role": "product", "prompt": "以产品负责人身份阅读指定标准 PRD，复述定性、范围、架构主脊、规则和验收边界。"},
+    {"id": "standard-engineering", "sample_id": "standard-review-task", "role": "engineering", "prompt": "以研发负责人身份阅读指定标准 PRD，恢复触发、对象状态、接口输出、副作用、失败语义和交接边界。"},
+    {"id": "standard-testing", "sample_id": "standard-review-task", "role": "testing", "prompt": "以测试负责人身份阅读指定标准 PRD，推导正常、边界、禁止、失败恢复和完成证据。"},
+    {"id": "standard-operations", "sample_id": "standard-review-task", "role": "operations", "prompt": "以运营负责人身份阅读指定标准 PRD，说明异常承接、恢复、通知、审计和截止边界。"},
+    {"id": "enhanced-business", "sample_id": "enhanced-external-qualification", "role": "business", "prompt": "以业务负责人身份阅读指定增强 PRD，复述为什么做、业务结果、非目标、专业责任和主要风险。"},
+    {"id": "enhanced-product", "sample_id": "enhanced-external-qualification", "role": "product", "prompt": "以产品负责人身份阅读指定增强 PRD，复述定性、范围、架构主脊、版本规则和验收边界。"},
+    {"id": "enhanced-engineering", "sample_id": "enhanced-external-qualification", "role": "engineering", "prompt": "以研发负责人身份阅读指定增强 PRD，恢复两场景触发、状态变化、接口副作用、失败语义和专业交接。"},
+    {"id": "enhanced-testing", "sample_id": "enhanced-external-qualification", "role": "testing", "prompt": "以测试负责人身份阅读指定增强 PRD，推导正常、版本边界、禁止放行、人工恢复和审计证据。"},
+    {"id": "enhanced-operations", "sample_id": "enhanced-external-qualification", "role": "operations", "prompt": "以运营负责人身份阅读指定增强 PRD，说明待专业确认、SLA 升级、通知、重新排队和审计责任。"}
+  ]
+}
