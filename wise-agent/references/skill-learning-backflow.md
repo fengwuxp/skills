@@ -33,6 +33,7 @@
 | 开启或关闭模式 | `1. 模式与授权`、`5. 确定性记录器` | 不读取历史候选正文 |
 | 任务收口记录候选 | `2. 候选门禁`、`3. 生命周期`、`4. 去重与字段` | 不扫描历史对话或全部 Skill |
 | 评审候选并生成改进 diff | `3. 生命周期`、`6. 晋升门禁`，再读 `code-delivery.md` | 候选不充当运行时指令 |
+| 行为评测采集、失败归因与恢复 | `7. 行为评测 Harness 归因与恢复` | 不把 Harness 错误计为 Skill 得分 |
 
 ## 1. 模式与授权
 
@@ -90,3 +91,27 @@ Owner 确认候选后，人工评审结论为 `confirmed`，candidate 账本文�
 独立验证通过后，Owner 才能在任务证据中裁决为 `promoted`；Git、同步和发布仍需单独授权。
 
 候选涉及隐私、金融、合规、安全、生产上线、权限边界或未来默认行为时，即使证据充分也必须人工确认。无法确定权威落点、验证方式或旧值清除范围时停止晋升。
+
+## 7. 行为评测 Harness 归因与恢复
+
+行为评测同时区分三种状态，不能用一个 `PASS / FAIL` 覆盖：
+
+| 状态 | 含义 | 后续动作 |
+| --- | --- | --- |
+| `HARNESS_ERROR` | payload 漂移、模型或运行环境不一致、隔离逃逸、启动失败、launcher 与 source 冲突，或轨迹解析器误判。 | 停止评分，保留脱敏失败证据；修正 Harness 后按恢复规则处理。 |
+| `BEHAVIOR_OBSERVED` | 单个任务已得到完整响应和原始轨迹；工具可以失败、重试或修正。 | 只记录行为事实，不由 collector 判断 Skill 优劣。 |
+| `EVIDENCE_COMPLETE` | 同一 runner/model、source/input digest 和 payload 下的全量成对响应已完成盲化、独立 Judge 与 release gate。 | 才能进入当前 evidence gate 或 Owner 晋升裁决。 |
+
+### 7.1 Collector、Judge 与触发语义
+
+- Collector 只冻结并核对 payload，执行隔离、采集响应与原始轨迹，记录实际 source 读取、工具尝试、退出码和结果；缺响应、缺轨迹、越界读取、模型漂移或输入身份不一致时停止。
+- Collector 不按 case ID、arm、关键词或预期答案复制专业 Skill 的工具触发规则，也不要求工具成功才保存响应。工具是否应调用，回到被测 source 中可观察的语义谓词，例如正式、完整、可评审或触发验证。
+- Launcher 只声明入口、允许读取范围、隔离、授权和证明边界；不得成为第二领域权威。工具失败、修正后成功和未调用都作为行为事实保留，由盲化后的 Judge 按任务 criteria 裁决。
+- `execution_evidence` 只使用 baseline/candidate 对称、不会泄露 arm 的安全摘要；原始轨迹与 blind key 分开保存，Maker、Judge 和 Owner 不互相替代。
+
+### 7.2 续跑、重采与轨迹归一
+
+- 恢复键至少包含 `payload_sha256 + case_id + trial + condition + runner/model + source/input digest`。这些值完全相同，且响应与原始轨迹均完整可复核时，才允许跳过已完成项继续采集；不得重复请求或补造轨迹。
+- Launcher、prompt、任务集、source、允许文件、模型或其它已冻结外发内容发生变化时生成新 payload digest，从零重采；不同 payload 的部分结果不得合并。启动前网络错误或授权审查失败属于 `HARNESS_ERROR`，不产生响应证据。
+- 仅修正离线轨迹解析且未改变外发 payload 时，可以从原始响应与轨迹恢复同一任务。轨迹归一必须检查完成事件、退出码和聚合输出，覆盖直接命令、复合 shell 与交互 shell；不能只看外层命令字符串，也不能摘要掉“先失败、后修正通过”的过程。
+- 全量采集前不生成盲评结论；盲评和 release gate 前再次核对当前 source/case digest。任一当前权威已变化时，将本轮标为 stale，不刷新 hash、不覆盖已有证据。

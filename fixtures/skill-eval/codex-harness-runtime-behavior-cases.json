@@ -11,13 +11,14 @@
       "id": "codex-harness-runtime-current",
       "paths": [
         "wise-agent/references/code-delivery.md",
+        "wise-agent/references/skill-learning-backflow.md",
         "wise-agent/references/skill-usage-observability.md",
         "wise-agent/references/source-map.md",
         "senior-software-architect/references/ai-assisted-engineering.md",
         "product-architecture-expert/references/ai-native-product-context.md",
         "huaxia-practical-wisdom/SKILL.md"
       ],
-      "sha256": "fc5a85da32611ad6b1622ff782ac6c74e14d243c51ed293f1f1970dc8fe8ed5b"
+      "sha256": "cff95e0ef2a231c8348875d03ce30572c273bf1b431492f2c4e8f9a38a220899"
     }
   },
   "rubric": {
@@ -74,6 +75,28 @@
         "拒绝把二手 benchmark、固定涨幅或 token 倍数设为本地通用阈值；来源未完成一手核验时只保留候选。",
         "本地对照固定任务集、模型、推理强度、工具环境、运行时版本、试验次数和验证门槛，只改变预声明的 Harness condition。",
         "同时比较最终正确性或 pass^k、总 token、工具失败与重试、恢复成本、人工接管和独立产物质量；证据不足时结论为 insufficient。"
+      ]
+    },
+    {
+      "id": "codex-harness-should-derive-tool-trigger-from-source",
+      "category": "behavior-collection-boundary",
+      "risk": "high",
+      "prompt": "一次 Skill 行为评测为了稳定工具轨迹，在 collector 中规定只有 case-5 可以调用 checker。另一个 case 明确要求输出可评审文档，Agent 按 Skill 规则调用 checker 后，collector 把本轮判成 candidate FAIL。请判断失败归因并设计修复边界。",
+      "criteria": [
+        "把按 case ID 硬编码工具触发识别为 Harness Contract / collector 错误，不写成 Skill FAIL；collector 记录实际读取、工具尝试、退出码和结果，Judge 才按回答与 criteria 判断质量。",
+        "工具触发条件回到被测 source 中可观察的语义谓词，例如正式、完整、可评审或触发验证；launcher 只声明隔离、允许范围和证明边界，不按题号、arm 或预期答案复制领域规则。",
+        "修订 launcher、source、prompt、任务集或其它已冻结 payload 内容时生成新 digest，旧 payload 的部分响应不得混入；需要联网重采时重新取得覆盖新 digest 的明确授权。"
+      ]
+    },
+    {
+      "id": "codex-harness-should-distinguish-resume-restart-and-harness-error",
+      "category": "behavior-evidence-recovery",
+      "risk": "high",
+      "prompt": "30 题行为评测中，r1 收到 3 条响应后发现 launcher 错误，r2 收到 6 条后再次修改 launcher；另一次请求在启动前返回 405，还有一次 checker 先失败、随后在交互 shell 中修正通过，但轨迹解析器只看直调命令而误判失败。现在能否把各轮结果合并后继续评分？",
+      "criteria": [
+        "拒绝合并不同 payload、launcher、source 或 runner/model 的部分结果；r1/r2、启动前 405 和轨迹解析假阴性分别保留为 Harness ERROR，不计为 Skill baseline/candidate 得分。",
+        "只有 payload、source、runner/model 和任务键完全相同，且已完成响应与原始轨迹可复核时，才按精确 case_id + trial + condition 恢复并跳过已完成项；不得重复请求或伪造缺失轨迹。",
+        "区分 HARNESS_ERROR、BEHAVIOR_OBSERVED 与 EVIDENCE_COMPLETE：工具失败或修正过程可以作为行为事实保留，只有全量成对响应、盲化、独立 Judge 和 release gate 闭合后才能进入当前证据或能力晋升。"
       ]
     },
     {
