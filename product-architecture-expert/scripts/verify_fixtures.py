@@ -207,11 +207,79 @@ def main() -> int:
             scenario.group(0).replace("SCN-001", "SCN-002", 1)
             + "### 产品需求陈述",
             1,
+        ).replace("对应场景：SCN-001。", "对应场景：SCN-001、SCN-002。", 1)
+        independent_scenarios = two_scenarios_without_flow.replace(
+            "以下场景说明申请单如何形成可追踪的审核结论。",
+            "场景关系：独立。以下场景分别形成审核结论。",
+            1,
         )
-    if "cross_scenario_flow_missing" not in missing_groups(
-        "prd", two_scenarios_without_flow
-    ):
-        failures.append("multiple scenarios without a shared flow unexpectedly passed")
+        if missing_groups("prd", independent_scenarios):
+            failures.append("independent scenarios without a shared flow unexpectedly failed")
+
+        missing_relationship = missing_groups("prd", two_scenarios_without_flow)
+        if "scenario_relationship_missing" not in missing_relationship:
+            failures.append("multiple scenarios without a relationship unexpectedly passed")
+
+        serial_scenarios = two_scenarios_without_flow.replace(
+            "以下场景说明申请单如何形成可追踪的审核结论。",
+            "场景关系：串联。SCN-001 完成后进入 SCN-002。",
+            1,
+        )
+        if "cross_scenario_flow_missing" not in missing_groups(
+            "prd", serial_scenarios
+        ):
+            failures.append("related scenarios without an end-to-end flow unexpectedly passed")
+
+        embedded_flow_section = (
+            "### 跨场景端到端流程\n\n"
+            "1. SCN-001 形成审核结论后，平台把申请交给 SCN-002 继续处理。\n"
+            "2. SCN-002 完成后保存最终状态并通知运营。\n\n"
+        )
+        related_scenarios_with_flow = serial_scenarios.replace(
+            "### 产品需求陈述",
+            embedded_flow_section + "### 产品需求陈述",
+            1,
+        )
+        related_missing = missing_groups("prd", related_scenarios_with_flow)
+        if related_missing:
+            failures.append(
+                "related scenarios with an embedded end-to-end flow unexpectedly failed: "
+                + ",".join(related_missing)
+            )
+
+        misplaced_embedded_flow = related_scenarios_with_flow.replace(
+            embedded_flow_section,
+            "",
+            1,
+        ).replace(
+            "## 九、验收摘要",
+            embedded_flow_section + "## 九、验收摘要",
+            1,
+        )
+        if "conditional_flow_order" not in missing_groups(
+            "prd", misplaced_embedded_flow
+        ):
+            failures.append("misplaced embedded end-to-end flow unexpectedly passed")
+
+        invalid_relationship = two_scenarios_without_flow.replace(
+            "以下场景说明申请单如何形成可追踪的审核结论。",
+            "场景关系：循环。两个场景相互依赖。",
+            1,
+        )
+        if "scenario_relationship_invalid" not in missing_groups(
+            "prd", invalid_relationship
+        ):
+            failures.append("unsupported scenario relationship unexpectedly passed")
+
+        negated_relationship = two_scenarios_without_flow.replace(
+            "以下场景说明申请单如何形成可追踪的审核结论。",
+            "场景关系：非独立。两个场景需要另行判断。",
+            1,
+        )
+        if "scenario_relationship_invalid" not in missing_groups(
+            "prd", negated_relationship
+        ):
+            failures.append("negated scenario relationship unexpectedly passed")
 
     enhanced_prd = (FIXTURES / "prd-enhanced-readable-valid.md").read_text(encoding="utf-8")
     shared_flow = re.search(

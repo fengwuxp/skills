@@ -219,6 +219,7 @@ AMBIGUOUS_BUSINESS_PHRASES = (
 NORMATIVE_FORCES = {"必须", "不得", "应", "可"}
 PRD_STRENGTHS = {"轻量", "标准", "增强"}
 SCENARIO_CONTRACT_STRENGTHS = {"标准", "增强"}
+SCENARIO_RELATIONSHIPS = ("串联", "并行", "分支", "互斥", "独立")
 PRD_SECTION_ORDER = [
     ("section_background", ("背景与问题",)),
     ("section_goal", ("目标与非目标",)),
@@ -1192,28 +1193,82 @@ def business_rule_contract_issues(text: str) -> list[str]:
     return issues
 
 
+def declared_scenario_relationship(detail: str) -> str | None:
+    values = field_values(detail, "场景关系")
+    if len(values) != 1:
+        return None
+    normalized = normalize(values[0])
+    matches = [
+        relation
+        for relation in SCENARIO_RELATIONSHIPS
+        if normalized.startswith(normalize(relation))
+    ]
+    return matches[0] if len(matches) == 1 else None
+
+
+def scenario_relationship_issues(text: str) -> list[str]:
+    detail = section_body(text, ("详细设计",))
+    if len(scenario_blocks(detail)) <= 1:
+        return []
+    values = field_values(detail, "场景关系")
+    if not values:
+        legacy_flow = any(
+            "关键流程" in heading and "跨场景" not in heading
+            for heading, _ in markdown_sections(text)
+        )
+        return [] if legacy_flow else ["scenario_relationship_missing"]
+    return [] if declared_scenario_relationship(detail) else ["scenario_relationship_invalid"]
+
+
 def cross_scenario_flow_issues(text: str) -> list[str]:
-    scenarios = scenario_blocks(section_body(text, ("详细设计",)))
+    detail = section_body(text, ("详细设计",))
+    scenarios = scenario_blocks(detail)
     if len(scenarios) <= 1:
         return []
-    shared_flow = section_body(text, ("关键流程", "业务流程"))
+    relationship_issues = scenario_relationship_issues(text)
+    if relationship_issues:
+        return []
+    if declared_scenario_relationship(detail) == "独立":
+        return []
+    shared_flow = section_body(detail, ("跨场景端到端流程", "跨场景关键流程"))
+    if not shared_flow.strip():
+        shared_flow = section_body(text, ("关键流程",))
     return [] if shared_flow.strip() else ["cross_scenario_flow_missing"]
 
 
 def conditional_flow_order_issues(text: str) -> list[str]:
-    headings = [normalize(heading) for heading, _ in markdown_sections(text)]
-    flows = matching_heading_positions(headings, ("关键流程", "业务流程"))
+    heading_matches = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", text))
+    headings = [normalize(match.group(2)) for match in heading_matches]
+    flows = matching_heading_positions(
+        headings, ("跨场景端到端流程", "跨场景关键流程", "关键流程")
+    )
     if not flows:
         return []
     details = matching_heading_positions(headings, ("详细设计",))
+    requirements = matching_heading_positions(headings, ("产品需求陈述",))
     rules = matching_heading_positions(
         headings, ("业务规则与接口抽象", "业务规则和接口抽象")
+    )
+    embedded_flow = "跨场景" in headings[flows[0]] if len(flows) == 1 else False
+    legacy_order_valid = (
+        len(flows) == 1
+        and len(details) == 1
+        and len(rules) == 1
+        and details[0] < flows[0] < rules[0]
+    )
+    embedded_order_valid = (
+        legacy_order_valid
+        and len(requirements) == 1
+        and flows[0] < requirements[0]
+        and len(heading_matches[flows[0]].group(1))
+        > len(heading_matches[details[0]].group(1))
     )
     if (
         len(flows) != 1
         or len(details) != 1
         or len(rules) != 1
-        or not details[0] < flows[0] < rules[0]
+        or (embedded_flow and not embedded_order_valid)
+        or (not embedded_flow and not legacy_order_valid)
     ):
         return ["conditional_flow_order"]
     return []
@@ -1450,6 +1505,7 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.extend(architecture_spine_issues(text))
             missing.extend(product_interface_contract_issues(text))
             missing.extend(scenario_contract_issues(text))
+            missing.extend(scenario_relationship_issues(text))
             missing.extend(cross_scenario_flow_issues(text))
             missing.extend(conditional_flow_order_issues(text))
             missing.extend(success_metric_issues(text))
