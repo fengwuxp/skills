@@ -336,6 +336,12 @@ product_qualification_behavior_cases = "fixtures/skill-eval/product-qualificatio
 product_reference_fast_gate_behavior_cases = "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
 product_simple_design_responses = "fixtures/skill-eval/product-simple-design-responses.jsonl"
 product_simple_design_scores = "fixtures/skill-eval/product-simple-design-scores.jsonl"
+fiction_visual_skill = "fiction-visual-designer/SKILL.md"
+fiction_visual_method = "fiction-visual-designer/references/visual-design-method.md"
+fiction_visual_character_rendering = "fiction-visual-designer/references/character-rendering.md"
+fiction_visual_sheet = "fiction-visual-designer/assets/visual-design-sheet-template.md"
+fiction_visual_source_map = "fiction-visual-designer/references/source-map.md"
+fiction_visual_behavior_cases = "fixtures/skill-eval/fiction-visual-designer-behavior-cases.json"
 
 payment_skill = "payment-expert/SKILL.md"
 payment_agent = "payment-expert/agents/openai.yaml"
@@ -5642,6 +5648,39 @@ check(
         "$fiction-visual-designer" in case.get("query", "")
         for case in skill_eval_cases_by_id.values()
         if case.get("skill") == "fiction-visual-designer" and case.get("should_trigger") is True
+    ),
+)
+check(
+    "fiction visual designer keeps reference-image reverse analysis relational and bounded",
+    has_all(
+        fiction_visual_skill,
+        ["参考图关系反推", "不冒充原始 Prompt 恢复或 1:1 复刻"],
+    )
+    and has_all(
+        fiction_visual_method,
+        [
+            "可见事实 -> 关系建模 -> 优先级 -> 生成交接 -> 返图归因",
+            "观者坐标",
+            "空间骨架 > 动作与接触 > 光色材质 > 装饰细节",
+            "观察遗漏 / 交接表达 / 模型执行",
+            "语义色卡",
+        ],
+    )
+    and has_all(
+        fiction_visual_character_rendering,
+        ["头部朝向、脸部朝向、虹膜方向", "手、道具、接触、遮挡", "不通过随机抽图"],
+    )
+    and has_all(
+        fiction_visual_sheet,
+        ["参考图关系反推（条件展开）", "可见事实 / 推断禁区", "关系优先级 / 允许探索"],
+    )
+    and has_all(
+        fiction_visual_source_map,
+        ["Z76Aw-pncUg91a0WvxHYWA", "不复制完整提示词、图片、安装命令或模型推荐"],
+    )
+    and has_all(
+        fiction_visual_behavior_cases,
+        ["观者坐标", "观察遗漏 / 交接表达 / 模型执行"],
     ),
 )
 llm_hygiene_auto_bugfix = skill_eval_cases_by_id.get(
