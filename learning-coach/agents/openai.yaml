@@ -1,0 +1,6 @@
+interface:
+  display_name: "持续学习教练"
+  short_description: "把知识主题变成可动手、可复述、可续接的单块学习"
+  default_prompt: "Use $learning-coach 带我用一个可验证学习块掌握这个主题，并从真实错误安排后续复训。"
+policy:
+  allow_implicit_invocation: false
