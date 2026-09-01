@@ -14,6 +14,12 @@
         "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/senior-public-contract-migration-behavior-cases.json",
+        "responses": "fixtures/skill-eval/senior-public-contract-migration-responses.jsonl",
+        "scores": "fixtures/skill-eval/senior-public-contract-migration-scores.jsonl",
+        "seed": 731
+      },
+      {
         "cases": "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"
       }
     ],

@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "description": "senior-software-architect 对公共契约硬切、校验边界迁移与真实构建证据的 cases-only 行为 contract。场景来自已复核的真实工程失败；静态通过只证明契约可复跑，真实改善仍需同一 runner/model 的重复响应、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "senior-public-contract-migration-current",
+      "paths": [
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/refactoring-design-template.md",
+        "senior-software-architect/references/testing-practices-java-spring-common.md"
+      ],
+      "sha256": "8fa7f48d1a65e52c26a7159e12ea269f2740463537822d15e2a6dc869f158c4c"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0,
+    "high_risk_pairwise_non_regression": false
+  },
+  "cases": [
+    {
+      "id": "senior-should-freeze-public-contract-closure-before-coding",
+      "category": "public-contract-admission",
+      "risk": "high",
+      "prompt": "一个跨 Route、Transaction、Ledger 的公共指令接口有 30 个 nullable getter。团队准备把其中 12 个字段收敛成两个 record，并要求现在直接改代码，测试失败了再补调用方。请判断如何推进。",
+      "criteria": [
+        "先冻结字段当前来源、目标 Owner、生产读取方、builder / converter、测试和 API 治理闭包；无法枚举时保持代码冻结。",
+        "字段清单、Owner 或 caller 证据不足时不编造精确白名单，保持代码冻结，并列出待补齐的 ADD / MODIFY / DELETE / non-write 槽位、行为不变量、immutable RED、预期 Green、停止和扩围条件。",
+        "区分稳定上游动作事实与 Route / Ledger 派生结果，不因当前 DTO 方便把派生字段永久固化进 Core。"
+      ]
+    },
+    {
+      "id": "senior-should-preserve-downstream-defense-after-validation-moves-earlier",
+      "category": "validation-boundary-migration",
+      "risk": "high",
+      "prompt": "公共 immutable builder 新增 tenant 非空构造校验后，Ledger 层原有的缺 tenant 防御测试已无法构造非法对象。有人建议删除该测试，或在 production 留一个仅供测试的旁路。请处理。",
+      "criteria": [
+        "构造边界测试证明第一道非空契约；若 Ledger 仍承担二次防御，保留真实 Ledger 调用和零副作用断言。",
+        "可在测试侧使用受控 public-interface test double，仅覆盖目标非法字段并委托其余合法行为；不得给 production 加测试旁路。",
+        "若下游责任确实已退役，必须由契约 Owner 明确裁决并更新测试目标，不得因测试难构造而静默删除或放宽断言。"
+      ]
+    },
+    {
+      "id": "senior-should-reject-success-without-fresh-surefire-evidence",
+      "category": "fresh-test-evidence",
+      "risk": "high",
+      "prompt": "完整验证命令返回成功，但 clean 后目标模块没有 target/surefire-reports。此前工作区曾有一批旧 XML。团队准备沿用命令退出码宣布 1200 多个测试通过。请给出结论。",
+      "criteria": [
+        "拒绝测试通过结论，把当前状态标为测试未执行或证据不足，不使用旧 XML 或生命周期成功冒充。",
+        "检查实际测试 recipe、skip 参数、模块和报告路径，重新运行并只汇总本轮 fresh Surefire XML 的 tests / failures / errors / skipped。",
+        "没有 fresh 报告时，只检查测试入口、Runner、配置、模块和外部运行条件证据，不把当前问题归为业务断言失败，也不提出修改生产实现；取得 fresh 报告后再按真实失败归因。"
+      ]
+    },
+    {
+      "id": "senior-should-prove-offline-mode-reaches-build-child-process",
+      "category": "offline-build-evidence",
+      "risk": "medium",
+      "prompt": "任务要求 Maven 全程 offline。调用方把离线 wrapper 放进 PATH 后执行 just compile，但日志开始访问私有 metadata；默认 Just recipe 本身没有 -o。请判断这次执行是否可作为编译证据。",
+      "criteria": [
+        "立即中止意外 metadata 访问，本次执行不计入正式编译、测试或 PMD 证据。",
+        "核验任务运行器实际启动的子进程、PATH / 环境传播和最终 Maven 参数，不因外层声明 offline 就假定子进程已离线。",
+        "使用项目已有且可审计的 offline 入口重新执行，并以新产物和 fresh 报告证明结果；不为此安装依赖或改业务源码。"
+      ]
+    },
+    {
+      "id": "senior-should-skip-heavy-entry-card-for-private-local-refactor",
+      "category": "local-refactor-hard-negative",
+      "risk": "low",
+      "prompt": "一个私有方法只在同类两处调用，重命名后行为不变，现有单测能覆盖，公共 API、数据和模块边界均不变化。请给出最小推进方式。",
+      "criteria": [
+        "识别为局部、行为保持且可测试的重构，用短答或现有任务说明直接推进，并明确不创建公共契约 Entry Card 或独立重构设计。",
+        "只修改方法名和真实调用点，运行相关单测并检查 diff，不扩成模块重构、API baseline 或迁移计划。",
+        "输出收口到定性、最小修改、相关测试与 diff、发现隐式消费时重新定级；不机械增加 Owner、全仓 caller closure、OpenSpec revision 或多阶段授权。"
+      ]
+    }
+  ]
+}

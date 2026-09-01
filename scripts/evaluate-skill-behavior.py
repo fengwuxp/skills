@@ -356,6 +356,11 @@ def validate_cases(data: dict[str, Any]) -> None:
     require_auditable = gate.get("require_auditable_judgments", False)
     if not isinstance(require_auditable, bool):
         raise ContractError("release_gate.require_auditable_judgments: expected a boolean")
+    pairwise_non_regression = gate.get("high_risk_pairwise_non_regression", True)
+    if not isinstance(pairwise_non_regression, bool):
+        raise ContractError(
+            "release_gate.high_risk_pairwise_non_regression: expected a boolean"
+        )
     high_risk_min_pass_rate = gate.get("high_risk_candidate_criteria_min_pass_rate")
     if high_risk_min_pass_rate is not None and (
         isinstance(high_risk_min_pass_rate, bool)
@@ -805,6 +810,8 @@ def score_judgments(
     ):
         if raw_means["candidate"][dimension] + gate[field] < raw_means["baseline"][dimension]:
             reasons.append(f"candidate {dimension} regressed beyond {gate[field]}")
+        if not gate.get("high_risk_pairwise_non_regression", True):
+            continue
         for pair_id, labels in mappings.items():
             case_id = pair_id.rsplit(":", 1)[0]
             if cases_by_id[case_id]["risk"] != "high":

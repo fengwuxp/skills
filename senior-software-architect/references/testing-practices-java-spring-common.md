@@ -36,7 +36,8 @@
 | 公共测试基类和基础设施 | 3 | HTTP 断言细节 |
 | SpringBoot 测试减负 | 4 | 业务流程样例 |
 | 测试底座红线 | 5 | 具体业务断言 |
-| Maven / Surefire 结果核验 | 6 | 不重复业务断言设计 |
+| 校验边界前移后的分层防御 | 6 | 不展开 Maven 证据 |
+| Maven / Surefire 结果核验 | 7 | 不重复业务断言设计 |
 
 ## 1. Java/Spring 测试核心判断
 
@@ -89,9 +90,21 @@ abstract class AbstractExampleSpringTest {
 - 不让线程上下文、租户、静态工具、缓存、锁或审计配置污染其他测试。
 - 不把外部系统不可用变成单元测试失败原因。
 
-## 6. Maven / Surefire 测试证据
+## 6. 校验边界前移后的分层防御
+
+构造器、immutable builder、值对象或公共命令新增 fail-fast 校验后，先判断下游 Service / Adapter / Ledger 的拒绝是否仍是独立责任，不因非法 fixture 已无法构造就删除防御测试或给 production 留旁路：
+
+- 新构造边界测试证明第一道契约，RED 冻结失败类型、业务语义和副作用边界，Green 不改测试目标或放宽断言。
+- 下游仍承担二次防御时，测试侧用受控 public-interface test double 只覆盖目标非法字段，其余行为委托合法对象；继续调用真实下游入口并断言拒绝结果与零持久化、零资金副作用等原保护事实。
+- test double 不替代核心业务链路，也不扩成通用 Mock；生产代码不新增 test-only constructor、兼容 alias、fallback 或跳过校验分支。
+- 下游责任确已退役时，由契约 Owner 明确裁决并更新需求 / OpenSpec 和测试层级；“现在构造不出来”本身不是删除理由。
+
+## 7. Maven / Surefire 测试证据
+
+Maven false green、无 fresh 报告或 offline 声明失真时，回答按四槽收口：`状态` 只取通过、业务失败、未执行或证据不足；`归因` 明确业务断言 / 测试启动后失败、Harness 失败或环境边界；`动作` 只修复对应执行入口并用项目已有入口重跑；`完成证据` 回读实际子进程、最终参数、新产物和 fresh 报告，并给出停止条件。四槽未闭合前不展开通用 Maven 教程。
 
 - 执行前检查本轮命令、目标模块、父子 `pom.xml`、激活 profile 和命令行属性是否设置 `maven.test.skip` 或 `skipTests`；不能只看默认配置或最终退出码。
 - `BUILD SUCCESS` 只说明 Maven 生命周期成功结束。输出出现 `Tests are skipped`、`No tests to run`，或者目标模块本轮没有新生成 Surefire 报告时，结论只能是测试未执行或证据不足，不能写“测试通过”。
 - 从目标模块的 `target/surefire-reports/TEST-*.xml` 核对预期测试类，并读取 `testsuite` / `testsuites` 的 `tests`、`failures`、`errors`、`skipped`；报告必须由本轮命令新生成，旧 XML / TXT、根模块汇总或其他模块报告不得冒充目标测试证据。
-- 自定义 Runner、脚本或包装命令若因类路径、依赖、配置、权限或启动错误而未进入目标测试，标记为 Harness 失败；它既不是业务断言失败，也不构成通过证据。修复 Harness 后重新运行目标测试并核对新报告。
+- 先按 fresh 证据归因：Runner 已进入目标测试且新报告出现 `failures` / `errors`，才是业务断言或测试启动后的失败；类路径、依赖、配置、权限或启动错误导致未进入目标测试，是 Harness 失败；沙箱、网络、外部依赖或目标运行时不可用且不属于被测契约，是环境边界。未产出 fresh 报告前只修复执行入口、Harness 或环境，不因“没有绿灯”修改生产实现；取得 fresh 失败后再按真实断言定位。
+- 要求 Maven offline 时，必须核对任务运行器实际启动的子进程、环境传播和最终 Maven 参数；外层 PATH wrapper、环境变量或任务名不能证明 `-o` 已到达子进程。日志出现 metadata、plugin descriptor 或远程仓库访问时立即中止，该次结果不计正式证据；改用项目已有且可审计的 offline 入口重跑，并重新核对 fresh 报告。

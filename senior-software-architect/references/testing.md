@@ -166,6 +166,8 @@ TDD 的价值不在“先写测试”这个动作，而在用可执行行为约�
 
 Bug 修复时，先读 `debugging-diagnosis.md` 建立稳定失败反馈环；本节负责把失败反馈环转化成合适层级的回归测试。
 
+Java/Spring 构造器、immutable builder 或公共命令把校验边界前移时，由 `testing-practices.md` 路由到 `testing-practices-java-spring-common.md` 处理分层防御测试；本文件不复制其 test double、下游责任裁决和生产旁路边界。
+
 ## 5. 测试用例落地流程
 
 写测试前先完成用例定性，不允许直接从“覆盖这个方法”开始。

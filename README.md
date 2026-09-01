@@ -398,7 +398,7 @@ python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-sc
 
 所有独立评分都须从 blind 文件原样保留 `blind_sha256`，`score` 始终核对 seed 映射、blind 正文与 scores；cases 声明 `source_profiles` 时，response 还必须原样保留 `prepare` 生成的 `case_sha256` 与 `source_sha256`。外部项目评测可声明 `input_profile={id,root,paths,sha256}`：`root` 必须是绝对目录，`paths` 只列显式文件且不得越界，response 必须保留 `case_sha256` 与 `input_sha256`；评测器会在 `prepare`、`blind`、`score` 时重新核对内容指纹。外部路径只进入 Maker 任务；任何会进入 blind 的 case 字段或 response 含 `root`、输入文件路径或其解析后绝对路径时直接拒绝，blind 与最终报告只保留 `id` 和 `sha256`。任一漂移即拒绝。
 
-默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
+默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。高风险 correctness / safety 默认还要求逐 pair 不回退；只有 fixture 明确以 `high_risk_pairwise_non_regression: false` 选择多轮聚合裁决时才跳过该层，aggregate 回退、criteria 和 blocker 门禁仍保留。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
 
 ```bash
 scripts/smoke-wise-agent-behavior.sh --mode all --output-dir /tmp/wise-agent-smoke

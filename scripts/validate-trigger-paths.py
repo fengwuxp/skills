@@ -11152,13 +11152,27 @@ check(
     and has_all(
         testing_java_spring_common,
         [
-            "## 6. Maven / Surefire 测试证据",
+            "## 7. Maven / Surefire 测试证据",
             "`maven.test.skip`",
             "`skipTests`",
             "`target/surefire-reports/TEST-*.xml`",
             "`tests`、`failures`、`errors`、`skipped`",
             "报告必须由本轮命令新生成",
-            "标记为 Harness 失败",
+            "先按 fresh 证据归因",
+            "是 Harness 失败",
+            "Maven offline",
+        ],
+    ),
+)
+check(
+    "testing practice index routes validation boundary and Maven evidence",
+    has_all(
+        "senior-software-architect/references/testing-practices.md",
+        [
+            "校验边界前移",
+            "Maven / Surefire",
+            "offline",
+            "`testing-practices-java-spring-common.md`",
         ],
     ),
 )

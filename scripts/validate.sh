@@ -301,6 +301,7 @@ python3 senior-software-architect/scripts/test_check_system_intervention_card.py
 senior-software-architect/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-public-contract-migration-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"
 echo "==> business website planner"
 run_gate python3 business-website-planner/scripts/test_check_business_website_plan.py

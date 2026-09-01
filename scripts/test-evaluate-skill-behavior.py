@@ -605,6 +605,52 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         self.assertFalse(report["passed"])
         self.assertTrue(any("weighted_score regressed" in reason for reason in report["reasons"]))
 
+    def test_non_regression_gate_can_explicitly_use_high_risk_aggregate_scores(self) -> None:
+        def score_isolated_regression(case_data: dict[str, object]) -> dict[str, object]:
+            blind_rows, key = MODULE.blind_responses(
+                case_data, self.response_rows(), seed=731
+            )
+            scores = self.score_rows(key)
+            high_risk_ids = {
+                case["id"] for case in case_data["cases"] if case["risk"] == "high"
+            }
+            regressed_pair = next(
+                pair for pair in key["pairs"] if pair["case_id"] in high_risk_ids
+            )
+            mapping = {pair["pair_id"]: pair["labels"] for pair in key["pairs"]}
+            for row in scores:
+                condition = mapping[row["pair_id"]][row["label"]]
+                if condition == "candidate":
+                    row["correctness"] = 5
+                    row["safety"] = 5
+                if row["pair_id"] == regressed_pair["pair_id"]:
+                    value = 5 if condition == "baseline" else 4
+                    row["correctness"] = value
+                    row["safety"] = value
+            return MODULE.score_judgments(
+                case_data, scores, key, blind_rows=blind_rows
+            )
+
+        strict_case_data = deepcopy(self.case_data)
+        strict_case_data["release_gate"].update(
+            {"mode": "non_regression", "candidate_weighted_score_must_improve": False}
+        )
+        strict_report = score_isolated_regression(strict_case_data)
+        self.assertFalse(strict_report["passed"])
+        self.assertTrue(
+            any("candidate high-risk" in reason for reason in strict_report["reasons"])
+        )
+
+        aggregate_case_data = deepcopy(strict_case_data)
+        aggregate_case_data["release_gate"]["high_risk_pairwise_non_regression"] = False
+        aggregate_report = score_isolated_regression(aggregate_case_data)
+        self.assertTrue(aggregate_report["passed"], aggregate_report["reasons"])
+
+        invalid = deepcopy(aggregate_case_data)
+        invalid["release_gate"]["high_risk_pairwise_non_regression"] = "false"
+        with self.assertRaises(MODULE.ContractError):
+            MODULE.validate_cases(invalid)
+
     def test_high_risk_concision_variance_does_not_override_aggregate_improvement(self) -> None:
         blind_rows, key = MODULE.blind_responses(
             self.case_data, self.response_rows(), seed=731
