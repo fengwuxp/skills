@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 的产品定性、PRD 强度与核心概念投影 cases-only 行为契约。静态通过不证明模型行为改善、术语事实正确或 Owner 已确认。",
+  "source_profiles": {
+    "baseline": {
+      "id": "product-qualification-and-concepts-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/product-qualification-and-concepts-prechange.md"
+      ],
+      "sha256": "28f920fe07afa02f9f461fc52f71674767387dd538aafac5a9425374c943b2a0"
+    },
+    "candidate": {
+      "id": "product-qualification-and-concepts-current",
+      "paths": [
+        "product-architecture-expert/references/product-design-and-prd.md",
+        "product-architecture-expert/references/product-prd-template.md",
+        "product-architecture-expert/references/product-prd-quality-gates.md"
+      ],
+      "sha256": "bc4411567885b6ec05ec05ae002f8d8599c52bfcbdcdf4d675d46879512c65a8"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "product-qualification-should-not-promote-technical-mechanism",
+      "category": "semantic-type",
+      "risk": "high",
+      "prompt": "我们准备引入 Redis 缓存并增加一个缓存管理页面。请把它定性成新的平台产品，写进 PRD。",
+      "criteria": [
+        "把缓存识别为技术机制，页面是交互载体；没有独立目标主体、稳定价值、Owner、生命周期和成功口径时，不定性为产品或平台能力。",
+        "若缓存会改变用户或上下游承诺，只在 PRD 固定可观察的时效、性能、失败和恢复边界，内部实现交工程设计。",
+        "输出定性对象、本期变化、责任边界和文档强度依据，不因产品、系统或平台后缀升级层级。"
+      ]
+    },
+    {
+      "id": "product-qualification-should-distinguish-offering-from-product",
+      "category": "offering-boundary",
+      "risk": "medium",
+      "prompt": "会员套餐包含费率和功能权益。它是不是一个独立产品？请直接定性并决定 PRD 强度。",
+      "criteria": [
+        "优先定性为商业供给候选；只有具备独立目标主体、价值、责任边界、生命周期和成功口径时，才进一步认定为独立产品。",
+        "证据不足时保持候选或待确认，并明确需要的 Owner、业务模式、服务责任和验收事实，不从名称直接下结论。",
+        "PRD 强度按风险、复杂度和协作面决定，不因被称为套餐或产品直接映射为轻量、标准或增强。"
+      ]
+    },
+    {
+      "id": "product-qualification-should-hold-ambiguous-card-product",
+      "category": "ambiguous-concept",
+      "risk": "high",
+      "prompt": "文档里写了卡产品，但有人理解为可售卖卡方案，有人理解为 BIN、限额和交易控制的配置模板。请继续按完整产品设计。",
+      "criteria": [
+        "识别同一术语对应商业供给和配置模板两个不同业务概念，在 Owner 裁决前保持 PENDING，不继续按完整产品扩写。",
+        "分别说明两个候选概念的目标主体、价值、对象关系、责任边界和验收影响，并记录不等于什么。",
+        "术语、业务概念和系统别名分层；当前代码、页面或历史叫法不能自动成为业务定义。"
+      ]
+    },
+    {
+      "id": "product-qualification-should-stop-on-conflicting-declarations",
+      "category": "qualification-conflict",
+      "risk": "high",
+      "prompt": "同一份 PRD 的摘要写‘定性对象：产品’，详细设计又写‘定性对象：技术机制’。两处都有 Owner 留言，请直接选一个继续补功能。",
+      "criteria": [
+        "识别同一定性轴存在冲突声明，在权威 Owner 裁决前停止扩写，不按出现顺序、篇幅或模型偏好选一个。",
+        "列出两个候选定性对目标主体、价值、责任边界、生命周期、成功口径和下游验收的影响。",
+        "把冲突记为阻断正式评审的概念问题，给出裁决 Owner、权威来源和未确认前处理。"
+      ]
+    },
+    {
+      "id": "product-qualification-should-use-canonical-semantic-types",
+      "category": "canonical-terms",
+      "risk": "medium",
+      "prompt": "为了文档短一点，把定性对象统一写成‘对象’、‘流程’、‘规则’或‘载体’，让读者自己理解这是业务还是技术吧。",
+      "criteria": [
+        "拒绝使用会丢失语义边界的简称，使用业务对象、业务流程、业务规则、交互载体或技术机制等规范类型。",
+        "对于无法从当前证据判断业务或技术归属的条目，保持待确认并说明 Owner 与影响，不用模糊简称掩盖未决。",
+        "可以在普通叙述中使用短语，但定性字段、概念表和交接卡保持规范语义类型。"
+      ]
+    },
+    {
+      "id": "product-concept-should-not-revive-deprecated-carrier",
+      "category": "concept-lifecycle",
+      "risk": "high",
+      "prompt": "术语库把租户端域名标为已作废，但旧页面仍有入口。请直接把它加入新 PRD 的当前产品范围。",
+      "criteria": [
+        "把已作废识别为概念或载体状态，不因旧页面仍存在就恢复为当前产品事实。",
+        "只有迁移或退役本身是当前目标，且 Owner、期限、用户影响、退出条件和验收明确时，才进入 PRD。",
+        "概念投影保留状态、权威来源和替代关系；代码或页面只能作为现状证据，不能反向裁决产品定义。"
+      ]
+    },
+    {
+      "id": "product-prd-strength-should-follow-risk-not-size",
+      "category": "document-strength",
+      "risk": "high",
+      "prompt": "同一个会员产品有两个改动：失败提示文案调整，以及允许运营查看敏感身份信息的权限规则。两个都只改一个页面，请统一使用轻量 PRD。",
+      "criteria": [
+        "分别定性两个变化：低风险可逆的交互载体调整可用轻量 PRD；涉及敏感信息和权限边界的规则变化必须进入增强 PRD 和专业确认。",
+        "说明页面数量、开发量和产品名称不能决定文档强度，风险、不可逆性、公共契约和协作面才是依据。",
+        "两项仍保留责任边界、失败处理和可观察验收，不把轻量解释为删除必要控制。"
+      ]
+    },
+    {
+      "id": "product-concept-projection-should-stay-minimal",
+      "category": "prd-concept-projection",
+      "risk": "medium",
+      "prompt": "把术语库里租户、用户、缓存、卡片、资金账户、优惠券、工单、Webhook 等全部复制到这份优惠券 PRD，确保完整。",
+      "criteria": [
+        "拒绝复制完整术语库，只投影会改变本期主体、对象、状态、规则、指标、责任或验收的核心概念。",
+        "PRD 概念投影使用定义、语义类型、边界或不等于、当前状态、Owner 和权威来源；其它术语只引用当前有效术语库。",
+        "技术机制、无关领域概念和未命中术语不进入主文档；轻量 PRD 可以用短段落而不强制概念表或 ID。"
+      ]
+    }
+  ]
+}

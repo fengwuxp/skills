@@ -17,7 +17,7 @@
         "product-architecture-expert/references/business-architecture-planning.md",
         "product-architecture-expert/scripts/check_product_deliverable.py"
       ],
-      "sha256": "b90bba38c4d12a1feb9439563cfa015ac36bddcabfff5fcac499666e75e43f5b"
+      "sha256": "d74b95bcb756f66657cce56a7921611278d1c9593a192cfa1df6dfdef1e7e357"
     }
   },
   "rubric": {
@@ -95,7 +95,8 @@
       "criteria": [
         "正式稿显式包含选用视图和跳过视图及理由，所选业务流程与核心对象规则内容完整。",
         "未选的价值流、能力地图、能力-项目-系统映射和项目组合不被补成固定交付项。",
-        "明确本地检查器只证明结构命中，不替代业务判断、事实核验、Owner 确认或上线授权。"
+        "明确本地检查器只证明结构命中，不替代业务判断、事实核验、Owner 确认或上线授权。",
+        "没有本轮真实工具输出时只能标注检查待运行，不声称已执行、已通过或返回具体结果；伪报执行必须作为 blocker。"
       ]
     }
   ]

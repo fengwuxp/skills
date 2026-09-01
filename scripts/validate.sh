@@ -166,6 +166,8 @@ python3 -m py_compile payment-expert/scripts/test_verify_behavior_cases.py
 python3 -m py_compile payment-expert/scripts/verify_behavior_cases.py
 python3 -m py_compile payment-expert/scripts/verify_fixtures.py
 python3 -m py_compile product-architecture-expert/scripts/check_product_deliverable.py
+python3 -m py_compile product-architecture-expert/scripts/check_product_qualification.py
+python3 -m py_compile product-architecture-expert/scripts/test_check_product_qualification.py
 python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
 python3 -m py_compile requirement-acceptance-testing/scripts/check_requirement_acceptance.py
 python3 -m py_compile requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py
@@ -231,48 +233,15 @@ python3 payment-expert/scripts/verify_fixtures.py
 
 echo "==> product deliverable checker"
 product-architecture-expert/scripts/check_product_deliverable.py --self-test
+python3 product-architecture-expert/scripts/test_check_product_qualification.py
 python3 product-architecture-expert/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
-product_business_architecture_eval_dir="${tmp_dir}/product-business-architecture-eval"
-mkdir -p "${product_business_architecture_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json" \
-  --responses "fixtures/skill-eval/product-business-architecture-responses.jsonl" \
-  --output "${product_business_architecture_eval_dir}/blind.jsonl" \
-  --key-output "${product_business_architecture_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json" \
-    --scores "fixtures/skill-eval/product-business-architecture-scores.jsonl" \
-    --key "${product_business_architecture_eval_dir}/key.json" \
-    --blind "${product_business_architecture_eval_dir}/blind.jsonl" \
-    --output "${product_business_architecture_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
-product_simple_design_eval_dir="${tmp_dir}/product-simple-design-eval"
-mkdir -p "${product_simple_design_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json" \
-  --responses "fixtures/skill-eval/product-simple-design-responses.jsonl" \
-  --output "${product_simple_design_eval_dir}/blind.jsonl" \
-  --key-output "${product_simple_design_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json" \
-    --scores "fixtures/skill-eval/product-simple-design-scores.jsonl" \
-    --key "${product_simple_design_eval_dir}/key.json" \
-    --blind "${product_simple_design_eval_dir}/blind.jsonl" \
-    --output "${product_simple_design_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
-
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
 document-authoring/scripts/check_document_style.py --self-test

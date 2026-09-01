@@ -123,14 +123,22 @@ SCENARIO_HEADING_PATTERN = re.compile(
     r"(?i)(?:\b(?:SCN|UC)-[A-Z0-9-]+\b|(?:业务)?场景(?:契约|设计)?\s*[：:]\s*\S+)"
 )
 SCENARIO_ID_PATTERN = re.compile(r"(?i)\b(?:SCN|UC)-[A-Z0-9-]+\b")
-SCENARIO_FIELD_GROUPS = (
+SCENARIO_SHORT_FIELD_GROUPS = (
+    ("scenario_statement", ("场景说明",)),
+    ("participants", ("参与者", "参与者与责任")),
+    ("flow", ("流程",)),
+    ("business_result", ("业务结果",)),
+    ("exception_handling", ("异常处理",)),
+    ("rules_and_acceptance", ("规则与验收",)),
+)
+SCENARIO_LEGACY_FIELD_GROUPS = (
     ("business_problem", ("业务问题与期望结果", "业务问题", "真实问题")),
     ("participants", ("参与者与责任", "参与者", "业务主体")),
     ("trigger_context", ("触发与前置事实", "触发条件", "前置事实", "前置条件")),
     ("main_path", ("主路径与状态变化", "主路径", "状态变化", "能力编排")),
     ("rule_scope", ("适用规则", "规则引用")),
-    ("observable_result", ("完成证据与验收种子", "完成证据", "可观察结果", "完成定义")),
-    ("exception_closure", ("逆向、异常与停止", "异常与人工兜底", "异常处理")),
+    ("observable_result", ("完成证据与验收种子", "完成证据")),
+    ("exception_closure", ("逆向、异常与停止", "异常与人工兜底")),
 )
 REQUIREMENT_FIELD_GROUPS = (
     ("requirement_name", ("需求名称",)),
@@ -860,8 +868,12 @@ def scenario_contract_issues(text: str) -> list[str]:
     issues: list[str] = []
     if len(scenario_ids) != len(set(scenario_ids)):
         issues.append("duplicate_scenario_ids")
+    def complete(body: str, groups: tuple[tuple[str, tuple[str, ...]], ...]) -> bool:
+        return all(has_meaningful_alias_value(body, aliases) for _, aliases in groups)
+
     if any(
-        not all(has_meaningful_alias_value(body, aliases) for _, aliases in SCENARIO_FIELD_GROUPS)
+        not complete(body, SCENARIO_SHORT_FIELD_GROUPS)
+        and not complete(body, SCENARIO_LEGACY_FIELD_GROUPS)
         for _, body in blocks
     ):
         issues.append("scenario_contract_incomplete")
@@ -1666,6 +1678,21 @@ Owner：运营负责人。
     )
     if missing_groups("prd", named_scenario_prd):
         failures.append("prd: named scenario without an id unexpectedly failed")
+    simplified_scenario_prd = re.sub(
+        r"(?ms)^### SCN-001 运营审核申请\n.*?(?=^### 产品需求陈述)",
+        """### SCN-001 运营审核申请
+场景说明：审核员在申请已提交且处于待审状态时完成判断，使申请形成可追踪结论。
+参与者：审核员处理，平台持有申请事实，运营承接异常。
+流程：审核员核对材料并裁决，申请由待审变为通过或驳回，产品反馈结果。
+业务结果：审核结论、操作者和时间可查询，重复处理不改变终态。
+异常处理：材料不足时要求补充，外部来源不可用时停止裁决并转人工。
+规则与验收：引用 R-001；正常裁决可追踪，终态不得被重复覆盖。
+""",
+        SELF_TESTS["prd"][0],
+        count=1,
+    )
+    if "scenario_contract_incomplete" in missing_groups("prd", simplified_scenario_prd):
+        failures.append("prd: simplified readable scenario contract unexpectedly failed")
     duplicate_scenario_prd = SELF_TESTS["prd"][0].replace(
         "## 六、关键流程",
         "### SCN-001 重复场景\n业务问题与期望结果：重复定义用于验证。\n\n## 六、关键流程",

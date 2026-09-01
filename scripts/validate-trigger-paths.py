@@ -324,12 +324,15 @@ payment_checklists = "payment-expert/references/payment-design-checklists.md"
 product_skill_tree = "product-architecture-expert/references/skill-tree.md"
 product_source_map = "product-architecture-expert/references/source-map.md"
 product_deliverable_checker = "product-architecture-expert/scripts/check_product_deliverable.py"
+product_qualification_checker = "product-architecture-expert/scripts/check_product_qualification.py"
+product_qualification_tests = "product-architecture-expert/scripts/test_check_product_qualification.py"
 product_fixture_verifier = "product-architecture-expert/scripts/verify_fixtures.py"
 product_business_architecture_behavior_cases = "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
 product_business_architecture_responses = "fixtures/skill-eval/product-business-architecture-responses.jsonl"
 product_business_architecture_scores = "fixtures/skill-eval/product-business-architecture-scores.jsonl"
 product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
 product_business_expression_requirements_behavior_cases = "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
+product_qualification_behavior_cases = "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
 product_reference_fast_gate_behavior_cases = "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
 product_simple_design_responses = "fixtures/skill-eval/product-simple-design-responses.jsonl"
 product_simple_design_scores = "fixtures/skill-eval/product-simple-design-scores.jsonl"
@@ -10097,7 +10100,7 @@ check(
     has_all(
         product_prd_template,
         [
-            "核心名相",
+            "核心概念 / 术语与系统别名",
             "场景与流程",
             "业务规则与接口抽象",
             "Product Context Card",
@@ -13407,10 +13410,11 @@ check(
             "描述可靠性必须可见",
             "表达结构选择",
             "图形化视图选择",
-            "用例图：用于说明角色、系统边界、核心用例和责任主体",
-            "流程图：用于说明主流程、逆向流程、异常流程和人工兜底",
-            "泳道图：用于说明用户、运营、风控、财务、外部机构和系统之间的交接",
-            "状态机图：用于说明对象生命周期、状态迁移、触发事件、守卫条件、终态和回滚",
+            "单一角色、线性路径",
+            "条件判断、循环或失败分支",
+            "多角色、跨团队交接和 SLA",
+            "核心对象生命周期和禁止迁移",
+            "用例图不表达先后顺序和异常分支",
             "每张图必须说明图形目标、目标读者、对应 PRD 章节、关键假设、待确认项和与验收/规则的追踪关系",
             "表格只用于比较、矩阵或追踪",
             "真实问题",
@@ -13523,6 +13527,86 @@ check(
             "核心概念与业务抽象",
             "哪些能力、规则或关系需要抽象",
             "覆盖问题背景、用户故事、功能范围、核心概念、业务抽象、业务规则",
+        ],
+    ),
+)
+check(
+    "product qualification separates semantic type change intent and PRD strength",
+    has_all(
+        product_skill,
+        [
+            "check_product_qualification.py",
+            "check_product_deliverable.py",
+        ],
+    )
+    and has_all(
+        product_prd_template,
+        [
+            "定性对象",
+            "本期变化",
+            "责任边界",
+            "文档强度：轻量 / 标准 / 增强；依据",
+            "核心概念与业务口径（条件必填）",
+            "本 PRD 中的定义",
+            "Owner / 权威来源",
+            "当前 / 候选 / 废弃 / 迁移中",
+            "术语/系统别名",
+            "替代、退役或复审条件",
+            "定性对象 / 本期变化 / 责任边界 / 文档强度依据",
+            "核心概念 / 术语与系统别名 / 用户 / 主体 / 对象",
+            "check_product_qualification.py",
+        ],
+    )
+    and has_all(
+        product_prd,
+        [
+            "## 0.B 产品定性与概念投影",
+            "定性对象回答“当前讨论的是什么”",
+            "本期变化回答“这次改变什么”",
+            "文档强度回答“PRD 需要写多深”",
+            "术语是概念的名称",
+            "系统别名是代码、字段、接口或历史系统的称呼",
+            "已废弃概念不得因旧页面或代码仍存在而恢复为当前产品事实",
+        ],
+    )
+    and has_all(
+        product_prd_quality_gates,
+        [
+            "定性对象、本期变化、责任边界和文档强度依据分开表达",
+            "核心概念投影区分术语、业务概念和系统别名",
+            "概念含义、边界、状态或关系变化按产品语义变更治理",
+            "check_product_qualification.py",
+        ],
+    )
+    and has_all(
+        product_qualification_checker,
+        [
+            "qualification_object_missing",
+            "change_type_invalid",
+            "document_strength_rationale_missing",
+            "concept_status_invalid",
+            "concept_authority_missing",
+            "does not access the network",
+        ],
+    )
+    and has_all(
+        product_qualification_tests,
+        [
+            "test_accepts_qualified_prd_with_concept_projection",
+            "test_rejects_unknown_qualification_object",
+            "test_requires_concept_authority",
+        ],
+    )
+    and has_all(
+        product_qualification_behavior_cases,
+        [
+            "product-qualification-should-not-promote-technical-mechanism",
+            "product-qualification-should-distinguish-offering-from-product",
+            "product-qualification-should-stop-on-conflicting-declarations",
+            "product-qualification-should-use-canonical-semantic-types",
+            "product-concept-should-not-revive-deprecated-carrier",
+            "product-prd-strength-should-follow-risk-not-size",
+            "product-concept-projection-should-stay-minimal",
         ],
     ),
 )
@@ -14688,25 +14772,24 @@ check(
     has_all(
         product_skill,
         [
+            "scripts/check_product_qualification.py",
             "scripts/check_product_deliverable.py",
-            "PRD、业务架构规划、产品架构方案、图形 brief 和产品合议评审报告",
+            "正式 PRD 先运行",
+            "继续使用 `check_product_deliverable.py` 的对应 `--kind`",
             "正式、完整、可评审、提交前、CR 或触发验证场景",
             "不写文件、不访问网络、不上传文件、不读取密钥",
-            "不读取密钥或判断方案业务质量",
-            "无法运行脚本时必须说明原因、人工检查结果和残余风险",
+            "不证明产品定性、概念事实",
+            "无法运行时必须说明原因、人工检查结果和残余风险",
         ],
     )
     and has_all(
         product_routing,
         [
+            "scripts/check_product_qualification.py",
             "scripts/check_product_deliverable.py",
             "--kind prd",
-            "--kind business-architecture",
-            "--kind product-architecture",
-            "--kind diagram-brief",
-            "--kind product-review",
-            "必须运行",
-            "只做本地文本完整性检查",
+            "对应 `--kind`",
+            "只做本地文本结构检查",
             "不联网、不写文件",
             "无法运行时必须说明原因、人工检查结果和残余风险",
         ],
@@ -14714,10 +14797,11 @@ check(
     and has_all(
         product_prd,
         [
+            "scripts/check_product_qualification.py",
             "scripts/check_product_deliverable.py --kind prd",
             "scripts/check_product_deliverable.py --kind product-architecture",
-            "必须运行",
-            "不替代产品判断、业务确认或合规审查",
+            "脚本只检查可发现结构",
+            "不替代产品定性、概念事实、业务判断或合规审查",
         ],
     )
     and has_all(
@@ -14810,7 +14894,7 @@ check(
     ),
 )
 check(
-    "product business architecture behavior evidence stays wired",
+    "product business architecture behavior contract invalidates stale active evidence",
     (ROOT / product_business_architecture_behavior_cases).exists()
     and (ROOT / product_business_architecture_responses).exists()
     and (ROOT / product_business_architecture_scores).exists()
@@ -14825,6 +14909,7 @@ check(
             "product-business-architecture-should-not-invent-joint-standard",
             "product-business-architecture-should-separate-value-and-process",
             "product-business-architecture-should-emit-checkable-selection",
+            "伪报执行必须作为 blocker",
             "静态 fixture 只固定预期行为",
             "source_profiles",
             "product-business-architecture-prechange",
@@ -14843,12 +14928,21 @@ check(
     )
     and has_all(
         "scripts/validate.sh",
+        ['scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"'],
+    )
+    and has_none(
+        "scripts/validate.sh",
         [
-            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"',
             'fixtures/skill-eval/product-business-architecture-responses.jsonl',
             'fixtures/skill-eval/product-business-architecture-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "原 `responses` / `scores` 只作历史证据",
+            "退出 active gate",
+            "重新完成 3 轮采集、盲评和独立复核",
         ],
     ),
 )
@@ -14955,20 +15049,28 @@ check(
     and has_none(product_simple_design_behavior_cases, ["ui-design-expert/"])
     and has_all(
         "fixtures/skill-eval/evidence-gates.json",
-        [
-            "fixtures/skill-eval/product-simple-design-behavior-cases.json",
-            "fixtures/skill-eval/product-simple-design-responses.jsonl",
-            "fixtures/skill-eval/product-simple-design-scores.jsonl",
-        ],
+        ["fixtures/skill-eval/product-simple-design-behavior-cases.json"],
     )
     and has_all(
         "scripts/validate.sh",
+        ['scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"'],
+    )
+    and has_none(
+        "scripts/validate.sh",
         [
-            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"',
             'fixtures/skill-eval/product-simple-design-responses.jsonl',
             'fixtures/skill-eval/product-simple-design-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
+        ],
+    )
+    and has_all(
+        product_simple_design_behavior_cases,
+        ["candidate 源集变化已退出 active gate", "cases-only"],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "原 `product-simple-design-responses.jsonl` / `product-simple-design-scores.jsonl` 只作历史证据",
+            "当前仅为 cases-only",
         ],
     )
 )
@@ -19396,7 +19498,7 @@ check(
             "复审条件",
             "成功标准衡量上线后",
             "验收摘要判断产品是否按当前定义正确交付",
-            "原型或页面锚点",
+            "原型索引",
             "产品语义变化",
             "排期、任务状态",
         ],
@@ -19579,10 +19681,12 @@ check(
     and has_all(
         product_prd_quality_gates,
         [
-            "读者走读",
-            "业务 / 产品 Owner",
-            "研发",
-            "测试 / 运营",
+            "复述验收",
+            "业务 Owner",
+            "产品 Owner",
+            "研发能复述",
+            "测试能推导",
+            "运营能说明",
             "作者口头补充",
             "修正文、规则或图",
         ],

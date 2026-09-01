@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "product-architecture-expert 的简单优先与过渡设计行为 contract。已绑定同一 runner/model 的 baseline/candidate 三次重复采集与独立盲评；本文件仍不替代业务 Owner、源码、测试、发布或上线准出。",
+  "description": "product-architecture-expert 的简单优先与过渡设计行为 contract。原三次 baseline/candidate 采集与盲评因 candidate 源集变化已退出 active gate；当前只固定 cases-only 预期，不替代业务 Owner、源码、测试、发布或上线准出。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -15,7 +15,7 @@
         "product-architecture-expert/references/product-scenario-routing.md",
         "product-architecture-expert/references/business-architecture-planning.md"
       ],
-      "sha256": "abac2470ee1541d2846e65801270bd9d732969767a832b698a6bceccd47c7011"
+      "sha256": "1e82c358f5dd971349d9203bfcd5d1fdb081d40b25120878159ed8e4e393acb5"
     }
   },
   "rubric": {

@@ -55,10 +55,10 @@
 - `archive_id` 只能作为本机私有证据定位符，不代表公开来源仍可访问；需要引用或复核时仍要优先重新读取公开页面或官方来源。
 - 删除、验证页、空正文或无法复核的条目，即使存在本地归档，也不得写成“公开内容用于参考”，只能说明归档证据来源、读取日期、当前复核状态和剩余风险。
 
-## 当前行为证据状态（2026-08-27）
+## 当前行为证据状态（2026-08-31）
 
-- `product-business-architecture-behavior-cases.json`：已按当前 source profile 完成 3 次 baseline/candidate 采集、盲评与评分；`product-business-final-blind-20260827-r2` candidate weighted score `4.82`、criteria `43/45`、blockers `0`，active gate 使用 `product-business-architecture-responses.jsonl` / `product-business-architecture-scores.jsonl`。
-- `product-simple-design-behavior-cases.json`：已按当前 source profile 完成 3 次 baseline/candidate 采集、盲评与评分；`product-simple-final-blind-20260827-r6` candidate weighted score `4.61`、criteria `41/45`、blockers `0`，active gate 使用 `product-simple-design-responses.jsonl` / `product-simple-design-scores.jsonl`。
+- `product-business-architecture-behavior-cases.json`：2026-08-31 历史轮次使用本机配置的 `gpt-5.6-sol` 完成过 3 次 baseline/candidate 采集和盲评，原 rubric 报告为 candidate weighted score `4.8567`、criteria `45/45`、blockers `0`。本轮 CR 发现 2/3 candidate 在没有工具输出时声称检查已通过，因此题集已增加伪报执行 blocker；原 `responses` / `scores` 只作历史证据，退出 active gate。只有按新题集重新完成 3 轮采集、盲评和独立复核后才能恢复准出证据。
+- `product-simple-design-behavior-cases.json`：历史轮次 `product-simple-final-blind-20260827-r6` 报告为 candidate weighted score `4.61`、criteria `41/45`、blockers `0`。本轮正式 PRD 准出路由改动了 candidate 源集，原 `product-simple-design-responses.jsonl` / `product-simple-design-scores.jsonl` 只作历史证据，退出 active gate；重新完成 3 轮采集、盲评和独立复核前，当前仅为 cases-only。
 - `product-builder-series-increment-behavior-cases.json`：该 contract 混合产品与 UI 职责，历史临时复评未通过 release gate，仓库未登记可复核 artifact，因此不保留精确分数。它只作为跨域 cases-only 审计资产，不接入 product 或 UI 的单 Skill evidence gate，也不作为单域成本证据。
 - 评分文件只证明本轮指定 runner/model、题集和 rubric 下的行为样本；不证明业务事实、产品质量、工程可行性、合规或上线结果。
 

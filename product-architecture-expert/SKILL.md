@@ -112,7 +112,7 @@ description: |
 
 当用户只要求评审 PRD、需求评审、评审会前 AI 预扫描、找问题或给修改建议时，优先读取 `references/product-prd-quality-gates.md` 和 `references/product-design-and-prd.md` 输出问题清单、必改项、待确认项、owner 和验收影响；不要默认重写全文。用户明确要求“按评审结论重写/整理最终版”时，再进入 PRD 产出工作流。
 
-产品架构交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下用 `scripts/check_product_deliverable.py` 做本地结构完整性检查。适用于 PRD、业务架构规划、产品架构方案、图形 brief 和产品合议评审报告；跨应用原型范围规划使用 `--kind prototype-scope-plan`。该脚本输入为 `--kind` + `--text`、`--file` 或标准输入，业务架构声明未知受检视图、漏列未选视图或缺少所选视图内容，跨应用原型规划存在需求 / AC 漏承接、无来源载体、未闭合待覆盖项，或 `standalone-html` 缺少有效标注契约时，其他交付物缺少其必要结构，或图形 brief 缺少架构类型、业务锚点、类型语义、视图状态 / 层级和图形结构时返回非 0。它不证明组织、指标等关联支撑视角完整，也不写文件、不访问网络、不上传文件、不读取密钥或判断方案业务质量；无法运行脚本时必须说明原因、人工检查结果和残余风险。
+产品架构交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下做本地结构检查：正式 PRD 先运行 `scripts/check_product_qualification.py`，再运行 `scripts/check_product_deliverable.py --kind prd`；业务架构、产品架构方案、图形 brief、产品合议评审报告和跨应用原型范围规划继续使用 `check_product_deliverable.py` 的对应 `--kind`。脚本只检查可发现结构，不证明产品定性、概念事实、组织、指标或业务结论正确，也不写文件、不访问网络、不上传文件、不读取密钥；无法运行时必须说明原因、人工检查结果和残余风险。
 
 当用户明确要求画图、流程图、能力地图、状态机、关系图、资金流图、产品架构图、运营后台结构图或可视化产物时，读取 `references/diagram-output.md`，正式图形化交付默认只生成 SVG；仅当用户明确要求 Mermaid/Markdown 草图、PNG、PDF、截图或其他格式时才额外处理并报告验证结论。
 

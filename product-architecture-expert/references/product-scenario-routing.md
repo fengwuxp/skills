@@ -117,7 +117,7 @@
 
 正式、完整、可评审、提交前或触发验证场景中，支付外部规则由 `payment-expert` 运行其完整性检查器；其他外部规则必须记录来源、版本、范围、核验日期和确认方。检查结果不替代规则真实性、适用性或可上线性的专业确认；无法核验时必须说明原因、人工检查结果和残余风险。
 
-正式、完整、可评审、提交前、CR 或触发验证场景中，PRD、业务架构规划、产品架构方案、图形 brief 或产品合议评审报告必须运行 `scripts/check_product_deliverable.py --kind prd`、`--kind business-architecture`、`--kind product-architecture`、`--kind diagram-brief` 或 `--kind product-review`；跨应用原型范围规划运行 `--kind prototype-scope-plan`。该脚本只做本地文本完整性检查；其中原型范围规划还检查显式引用关系。脚本不联网、不写文件，不替代产品判断、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
+正式、完整、可评审、提交前、CR 或触发验证场景中，PRD 先运行 `scripts/check_product_qualification.py`，再运行 `scripts/check_product_deliverable.py --kind prd`；业务架构规划、产品架构方案、图形 brief、产品合议评审报告和跨应用原型范围规划继续运行 `check_product_deliverable.py` 的对应 `--kind`。脚本只做本地文本结构检查，不联网、不写文件，不替代产品定性、概念事实、业务确认、合规审查或图形质量评审；无法运行时必须说明原因、人工检查结果和残余风险。
 
 ## 快速路由表
 

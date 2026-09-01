@@ -3,9 +3,11 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from check_product_deliverable import missing_groups
+from check_product_qualification import check as qualification_issues
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -85,6 +87,13 @@ def main() -> int:
             failures.append(f"fixture kind not supported: {kind}")
             continue
         passed = not missing
+        if kind == "prd" and should_pass:
+            qualification_missing = qualification_issues(text)
+            if qualification_missing:
+                failures.append(
+                    f"fixture qualification failed: {path.name}: "
+                    f"issues={','.join(qualification_missing)}"
+                )
         if passed != should_pass:
             failures.append(
                 f"fixture expectation failed: {path.name}: "
@@ -102,6 +111,24 @@ def main() -> int:
             )
         else:
             print(f"OK product fixture {path.name}")
+
+    incomplete_scenario = re.sub(
+        r"(?ms)^### SCN-001 运营审核申请\n.*?(?=^### 产品需求陈述)",
+        """### SCN-001 运营审核申请
+
+- 场景说明：审核员处理申请。
+- 参与者：审核员。
+- 流程：执行审核。
+- 业务结果：申请结束。
+- 异常处理：失败时停止。
+- 适用规则：R-001。
+
+""",
+        (FIXTURES / "prd-valid.md").read_text(encoding="utf-8"),
+        count=1,
+    )
+    if "scenario_contract_incomplete" not in missing_groups("prd", incomplete_scenario):
+        failures.append("scenario without explicit acceptance unexpectedly passed")
 
     html_plan = (FIXTURES / "prototype-scope-plan-valid.md").read_text(encoding="utf-8").replace(
         "Owner：产品负责人。",

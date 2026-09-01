@@ -69,22 +69,19 @@
     ],
     "product-architecture-expert": [
       {
-        "cases": "fixtures/skill-eval/product-business-architecture-behavior-cases.json",
-        "responses": "fixtures/skill-eval/product-business-architecture-responses.jsonl",
-        "scores": "fixtures/skill-eval/product-business-architecture-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/product-simple-design-behavior-cases.json",
-        "responses": "fixtures/skill-eval/product-simple-design-responses.jsonl",
-        "scores": "fixtures/skill-eval/product-simple-design-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/product-simple-design-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
       }
     ],
     "ui-design-expert": [
