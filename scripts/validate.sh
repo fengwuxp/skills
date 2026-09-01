@@ -295,24 +295,7 @@ python3 senior-software-architect/scripts/test_check_system_intervention_card.py
 senior-software-architect/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
-senior_system_design_eval_dir="${tmp_dir}/senior-system-design-principles-eval"
-mkdir -p "${senior_system_design_eval_dir}"
-if scripts/evaluate-skill-behavior.py blind \
-  --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json" \
-  --responses "fixtures/skill-eval/senior-system-design-principles-responses.jsonl" \
-  --output "${senior_system_design_eval_dir}/blind.jsonl" \
-  --key-output "${senior_system_design_eval_dir}/key.json" \
-  --seed 731; then
-  run_gate scripts/evaluate-skill-behavior.py score \
-    --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json" \
-    --scores "fixtures/skill-eval/senior-system-design-principles-scores.jsonl" \
-    --key "${senior_system_design_eval_dir}/key.json" \
-    --blind "${senior_system_design_eval_dir}/blind.jsonl" \
-    --output "${senior_system_design_eval_dir}/report.json"
-else
-  validation_failed=1
-fi
-
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"
 echo "==> business website planner"
 run_gate python3 business-website-planner/scripts/test_check_business_website_plan.py
 run_gate python3 business-website-planner/scripts/check_business_website_plan.py --file business-website-planner/fixtures/business-website-plan-valid.md

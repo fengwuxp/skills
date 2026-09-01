@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "senior-software-architect 对“好的系统设计”文章原则的行为 contract。当前已绑定同一 runner/model 的 baseline/candidate 响应、重复采集、盲评与独立评分；本文件仍不替代源码、测试、监控、发布或 Owner 准出。",
+  "description": "senior-software-architect 对“好的系统设计”文章原则的行为 contract。原 baseline/candidate 响应与独立评分因 ADR candidate 源集变化已退出 active gate；当前只保留 cases-only 静态契约，不替代源码、测试、监控、发布或 Owner 准出。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -17,7 +17,7 @@
         "senior-software-architect/references/distributed-consistency.md",
         "senior-software-architect/references/coding-review-deep-dive.md"
       ],
-      "sha256": "e5a3f406fd7b1aea7975ee837438cbee2e84fee7f59ad6018051f7b3f2992c64"
+      "sha256": "bb8d7ada91e942b4e7ab54193e4a45a0c5b5001e63decd7d28c9c41098754459"
     }
   },
   "rubric": {

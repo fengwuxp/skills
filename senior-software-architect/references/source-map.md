@@ -217,7 +217,11 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 | --- | --- |
 | `architecture.md` | 新增 `5.2.2 状态源与热路径优先`，并在可靠性段补充按业务语境选择 `fail-open` / `fail-closed`、记录异常决策分支与原因；要求说明状态写入 Owner、热路径证据、同步/异步边界、API 与事件的使用理由，以及新增节点和边的故障面、观测、回滚和复审条件。 |
 | `fixtures/skill-eval/prompt-cases.json` | 扩充 `senior-should-push-back-tech-first-architecture` 的期望处理，覆盖状态源、热路径、后台任务、事件理由和复杂度取舍。 |
-| `fixtures/skill-eval/senior-system-design-principles-behavior-cases.json` | 建立 5 个行为 contract，覆盖状态/热路径、同步/后台、API/事件/缓存、重试/幂等/失败模式和异常决策观测；`senior-article-final-blind-20260827-r2` 使用同一 runner/model 完成 3 次 baseline/candidate 重复采集与独立盲评，candidate weighted score `4.9`（baseline `4.3`）、blockers `0`，评分文件已绑定当前 source profile。 |
+| `fixtures/skill-eval/senior-system-design-principles-behavior-cases.json` | 建立 5 个行为 contract，覆盖状态/热路径、同步/后台、API/事件/缓存、重试/幂等/失败模式和异常决策观测。历史轮次 `senior-article-final-blind-20260827-r2` 报告为 candidate weighted score `4.9`（baseline `4.3`）、blockers `0`；2026-09-01 因 `adr-and-tradeoff.md` 源集变化，原 responses / scores 只作历史证据并退出 active gate，重新采集、盲评与独立复核前当前仅为 cases-only。 |
+
+`senior-system-intervention-behavior-cases.json` 同样因共享 `adr-and-tradeoff.md` 变化而退出 active gate；原 post-promotion responses / scores 只作历史证据，不证明当前 ADR 契约下的行为。
+
+`senior-adr-governance-behavior-cases.json` 以 cases-only 方式覆盖 ADR 准入、Owner 拒绝、双向替代、冲突裁决、并发命名和写入授权。它只固定当前预期，未执行 baseline/candidate 重复采集与独立盲评，不声称行为改善。
 未吸收内容：
 - 不把“状态组件越少越好”、读副本、缓存克制、事件少用、限流 fail-open 或固定响应时延写成无条件规则；仍需按业务不变量、数据一致性、流量、风险和运行证据裁决。
 - 不把文章中的数据库、队列、缓存、事件、Rails、Redis、Kafka 示例、性能数字或作者经验写成项目事实、架构准入、生产 SLO 或技术选型结论。

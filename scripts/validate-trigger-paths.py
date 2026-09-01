@@ -394,6 +394,7 @@ llm_coding_hygiene_source_map = "llm-coding-hygiene/references/source-map.md"
 llm_coding_hygiene_behavior_cases = "fixtures/skill-eval/llm-coding-hygiene-behavior-cases.json"
 legacy_senior_coding_hygiene_behavior_cases = "fixtures/skill-eval/senior-coding-hygiene-behavior-cases.json"
 senior_system_design_principles_behavior_cases = "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
+senior_adr_governance_behavior_cases = "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"
 ui_design_skill = "ui-design-expert/SKILL.md"
 ui_design_agent = "ui-design-expert/agents/openai.yaml"
 ui_design_ant_behavior_cases = "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
@@ -2286,14 +2287,17 @@ check(
         grill_me_source_map,
         [
             "Matt Pocock skills",
-            "2026-08-07 核验上游 `main`",
-            "CHANGELOG 当前版本为 `1.2.3`",
-            "2026-07-16",
-            "每轮询问整个 frontier",
+            "2026-09-01 重新实际读取上游 `main`",
+            "包版本仍为 `1.2.3`",
+            "`grilling + domain-modeling`",
+            "每轮询问所有前置已关闭的 frontier",
+            "ADR 编号并发重复",
+            "旧词条失效",
             "_4exXmzaNRbCqPgUFSvnKw",
             "一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding",
             "项目自有独立 `grill-me`",
             "这是主动分歧，不随上游同步",
+            "不新增平级 `grill-with-docs`",
             "不把文章中的固定五阶段链路、工具排名、模型表现、最佳配置或 TDD 阶段调整设为默认规则",
             "不安装上游全仓库",
             "不保留 `/grilling` alias",
@@ -2385,6 +2389,10 @@ check(
             "当前 source 尚未完成重复采集、盲评和独立复核",
             "当前只保留静态 contract",
             "B 只在撤离受阻时朝阻路者短促出手",
+            "grill-should-route-resolved-term-to-existing-authority",
+            "grill-should-admit-only-consequential-tradeoff-to-adr",
+            "grill-should-keep-reversible-detail-as-process-asset",
+            "grill-should-surface-authority-code-and-adr-conflicts",
             "不替代安装、发布或行为提升证明",
         ],
     )
@@ -15337,26 +15345,53 @@ check(
             "senior-should-choose-api-event-and-cache-by-evidence",
             "senior-should-pair-retry-with-idempotency-and-recovery",
             "senior-should-log-abnormal-decisions-and-tail-latency",
-            "已绑定同一 runner/model",
-            "独立评分",
+            "ADR candidate 源集变化已退出 active gate",
+            "cases-only 静态契约",
         ],
     )
     and has_all(
         "fixtures/skill-eval/evidence-gates.json",
+        [senior_system_design_principles_behavior_cases],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        ['scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"'],
+    ),
+)
+check(
+    "senior ADR governance stays owner-scoped and behavior-covered",
+    (ROOT / senior_adr_governance_behavior_cases).exists()
+    and has_all(
+        adr_tradeoff,
         [
-            senior_system_design_principles_behavior_cases,
-            "fixtures/skill-eval/senior-system-design-principles-responses.jsonl",
-            "fixtures/skill-eval/senior-system-design-principles-scores.jsonl",
+            "三个条件必须同时成立",
+            "proposed -> accepted / rejected",
+            "`rejected` 与 `superseded` 是终态",
+            "supersedes",
+            "superseded_by",
+            "并发分支",
         ],
+    )
+    and has_all(
+        senior_adr_governance_behavior_cases,
+        [
+            "senior-adr-should-reject-reversible-detail",
+            "senior-adr-should-record-owner-rejection",
+            "senior-adr-should-supersede-with-bidirectional-links",
+            "senior-adr-should-stop-on-conflicting-active-records",
+            "senior-adr-should-avoid-parallel-sequence-collision",
+            "senior-adr-should-not-write-without-authorization",
+            "cases-only",
+        ],
+    )
+    and has_all(
+        "fixtures/skill-eval/evidence-gates.json",
+        [senior_adr_governance_behavior_cases],
     )
     and has_all(
         "scripts/validate.sh",
         [
-            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"',
-            'fixtures/skill-eval/senior-system-design-principles-responses.jsonl',
-            'fixtures/skill-eval/senior-system-design-principles-scores.jsonl',
-            'scripts/evaluate-skill-behavior.py blind',
-            'scripts/evaluate-skill-behavior.py score',
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"'
         ],
     ),
 )

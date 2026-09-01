@@ -32,7 +32,8 @@
 
 ## 公开来源
 
-- [Matt Pocock skills](https://github.com/mattpocock/skills)：2026-08-07 核验上游 `main` 的 README、CHANGELOG、`grill-me`、`grilling`、`grill-with-docs` 和 `domain-modeling`；CHANGELOG 当前版本为 `1.2.3`。上游 `grill-me` 仍只调用 `/grilling`，而 `/grilling` 已于 2026-07-16 通过提交 [`a4b2009`](https://github.com/mattpocock/skills/commit/a4b2009a1a3ac9575506c10b4c84f08f9bba7a38) 从一次一问改为每轮询问整个 frontier。
+- [Matt Pocock skills](https://github.com/mattpocock/skills)：2026-09-01 重新实际读取上游 `main` 的 [`grill-with-docs`](https://github.com/mattpocock/skills/blob/main/skills/engineering/grill-with-docs/SKILL.md)、[`grilling`](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md)、[`domain-modeling`](https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/SKILL.md)、[`CONTEXT-FORMAT.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/CONTEXT-FORMAT.md)、[`ADR-FORMAT.md`](https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/ADR-FORMAT.md) 和 `package.json`；包版本仍为 `1.2.3`、MIT。`grill-with-docs` 本体只组合 `grilling + domain-modeling`；`grilling` 当前每轮询问所有前置已关闭的 frontier，`domain-modeling` 把已收口领域词写入纯词汇表 `CONTEXT.md`，并仅在难逆、无背景会意外、真实取舍同时成立时建议 ADR。这些是方法来源，不是本项目安装权威或写入授权。
+- 上游失败信号：[`#134`](https://github.com/mattpocock/skills/issues/134) 记录过 Grill 结束后未经额外授权开始实施；[`#799`](https://github.com/mattpocock/skills/issues/799) 报告并发分支扫描最高顺序号时出现 ADR 编号并发重复；[`#827`](https://github.com/mattpocock/skills/issues/827) 指出旧词条失效后缺少反向复审；[`#847`](https://github.com/mattpocock/skills/discussions/847) 指出冲突 ADR 无明确优先级时 Agent 可能自选结论。这些都只作失败类别和 fixture 线索，不把单个 Issue 当成普遍性或已修复证明。
 - 微信文章 [《热门Skill研究：Grill-Me，凭什么火遍整个开发者圈？》](https://mp.weixin.qq.com/s/K4CN1LxsZgFR2FYv7f8Y3w)：2026-07-08 通过移动端微信 UA 公开 HTML 读取标题、账号、页面时间字段和正文，只吸收一次一问、推荐答案、Facts 自查、Decisions 等 Owner 和 shared understanding。
 - 微信文章 [《如何看待 grill-me（拷问我）这个 Skill？》](https://mp.weixin.qq.com/s/jw7pqTwco_lLGnN_KmExig)：作者 / 账号为 `LastWhisperDev`，页面显示发布时间为 2026-07-10 15:50；2026-07-13 通过本机 Chrome headless 等价浏览器读取标题、作者、发布时间和正文，只吸收 Taste Injection、Shared Context、Issue / PR、Hand-off Prompt 和执行前 Finalize 的可迁移方法。
 - 微信文章 [《grill-me SKILL 的失败模式》](https://mp.weixin.qq.com/s/9keJ9vfryl3RAmhVWTZnFA)：作者 / 账号为 `徐道AI` / `老徐`，页面显示发布时间为 2026-07-24；2026-07-29 通过浏览器读取标题、作者、发布时间和正文，只吸收高保真问题先观察、按独立决策包交接与并行、人与 Agent 共同收敛的可迁移方法。文中约 120k token 的说法只属作者经验，不作为固定阈值或项目事实。
@@ -48,10 +49,15 @@
 
 2026-08-27 曾执行 R1-R4 临时行为复评，但仓库未登记可复核 artifact，因此不保留精确分数，只记录高风险 criteria 未全部通过。该结果不进入 scored release gate；cases 仅接入 `evidence-gates.json` 的 cases-only 门禁，重新评测前不得据此声称行为提升或发布准入。
 
+2026-09-01 对 `grill-with-docs` 的吸收重点是“收口后不让名相和取舍随会话蒸发”，不复制其载体约定。本项目不新增平级 `grill-with-docs`，而在现有 `grill-me` 中加入领域名相 / 产品概念 / 工程决策 / 过程细节四类写回路由；产品语义仍由 `product-architecture-expert` 的 PRD 和 Concept Lifecycle Card 持有，工程 ADR 仍由 `senior-software-architect` 持有。经世智慧只校准名实、时效、取舍门槛与反馈，对外产物保留现实字段，不古典化。
+
 ## 不吸收边界
 
 - 不安装上游全仓库，不保留 `/grilling` alias，不运行 npm、Claude plugin、hooks、Trellis、外部任务系统或跳过权限模式。
 - 不复制上游 Skill 或文章原文、图片、示例、作者口吻和传播性结论。
 - 不把文章中的固定五阶段链路、工具排名、模型表现、最佳配置或 TDD 阶段调整设为默认规则。
 - 不把盘问、自决或 shared understanding 写成执行、Git、发布、生产、测试通过、CR 通过或 Owner 授权。
+- 不把 `CONTEXT.md` 或 `docs/adr/` 设成所有仓库的默认新权威；优先复用项目已有 PRD、Spec、术语库、Decision Log 和 ADR 规则，没有授权时只输出 writeback candidate。
+- 不吸收上游的 frontier 批量提问；本项目继续一次一个主 blocker，以保证用户可核对和同一 Owner 决策串行。
+- 不采用“每个术语立即扇出全部文档”或“扫描最高 ADR 编号即视为全局唯一”；沿用写回检查点、状态替代和并发冲突检查。
 - 上游版本变化只有形成真实行为差异、失败样例和最小验证路径时才进入升级评审。

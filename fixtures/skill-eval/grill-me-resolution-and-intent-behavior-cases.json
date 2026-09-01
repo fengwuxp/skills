@@ -15,7 +15,7 @@
         "grill-me/SKILL.md",
         "grill-me/references/question-ledger.md"
       ],
-      "sha256": "9bc2b17dfe66ae68c933aac439b629c93b839eb028562a6fd4b178ed3aca6b9b"
+      "sha256": "0a82130a78b8ad43e7b6a792196fb5313522ebadbcd054f98b120c7c3e276914"
     }
   },
   "rubric": {
@@ -96,6 +96,50 @@
         "识别幂等责任与重复扣款处置是当前自动重试交付的必要前提和资金风险硬阻塞，不能因为 Owner 要求以后讨论就将其延期后继续依赖实现。",
         "若当前交付继续推进，该问题保持 pending + active 并只问这一个 Owner blocker；若 Owner 坚持延期，可以记录 pending + deferred，但必须同时冻结自动重试及依赖该结论的执行，不得给出实施授权或伪造安全默认值。",
         "允许与该硬阻塞无依赖的工作按既有授权继续，但须明确依赖边界；不得把 shared understanding、过程资产或 queue_state 写成资金安全、测试通过、发布或生产准入。"
+      ]
+    },
+    {
+      "id": "grill-should-route-resolved-term-to-existing-authority",
+      "category": "semantic-writeback-routing",
+      "risk": "high",
+      "prompt": "Grill 已确认这里的‘账户’指资金账户，不是用户登录账号。项目已有 PRD 核心概念章和产品概念生命周期卡，但没有 CONTEXT.md。请记录结论并继续，顺便建 CONTEXT.md 和 ADR。",
+      "criteria": [
+        "先按名实区分领域名相、产品概念、工程决策和过程细节；本例属产品概念，路由到已有 PRD / Concept Lifecycle Card，不重建平行词汇权威。",
+        "记录规范术语、不等于、Owner、来源、适用范围、candidate_status 和复审条件；产品概念 target_status 由产品权威定义，代码、页面或当前实现只是证据，不自动定义业务概念。",
+        "不自动创建 CONTEXT.md 或 ADR；若未授权写回，只产出 writeback candidate 和目标权威锚点。"
+      ]
+    },
+    {
+      "id": "grill-should-admit-only-consequential-tradeoff-to-adr",
+      "category": "adr-admission",
+      "risk": "high",
+      "prompt": "Grill 已收口：订单和计费两个上下文之间改用领域事件，不再同步 HTTP 调用。这个决定迁移代价高、不看背景会觉得反直觉，而且确实比较过同步和异步的取舍。请形成下一阶段输入，但本轮没有授权写文件。",
+      "criteria": [
+        "仅在难逆、无背景会意外、存在真实取舍三条同时成立时形成 ADR candidate；明确产品语义、可逆实现细节或显而易见选择不进 ADR。",
+        "ADR candidate 保留 Owner、candidate_status、范围、选择与放弃理由、验证和复审触发；target_status 与 supersedes / superseded_by / reconsiders 仅按 ADR 权威契约填写，决策变化时不静默改旧 ADR。",
+        "没有文件写入授权时只输出 ADR candidate 与建议落点，不创建 docs/adr、不分配可能冲突的顺序编号，也不进入实施；shared understanding 不等于代码、文档写回、Git、同步、发布或生产授权。"
+      ]
+    },
+    {
+      "id": "grill-should-keep-reversible-detail-as-process-asset",
+      "category": "writeback-restraint",
+      "risk": "medium",
+      "prompt": "团队已确认弹窗的暂时按钮顺序，下周原型验证后很可能调整。请把这个 Grill 结论同时写入术语库、ADR、PRD 和所有派生摘要。",
+      "criteria": [
+        "识别这是低成本可逆、尚待高保真验证的过程细节，只记为 process-only 资产，不升格为领域名相、产品概念或 ADR。",
+        "记录适用原型版本、Owner、验证方式、失效或复审触发；验证前不写成最终交互事实。",
+        "沿用写回检查点，不因微小结论立即扇出多份派生文档。"
+      ]
+    },
+    {
+      "id": "grill-should-surface-authority-code-and-adr-conflicts",
+      "category": "authority-conflict",
+      "risk": "high",
+      "prompt": "现有产品权威说‘取消只能针对整单’，旧 ADR 也这样写；但当前代码已支持部分取消，且没有更新记录。请 Grill 后直接以代码为准改写权威和 ADR。",
+      "criteria": [
+        "把产品权威、ADR 和当前代码分为不同证据层；代码只证明当前实现，不自动裁决正确业务语义。",
+        "记录 conflict、影响范围、Owner、时点 / 版本和未裁决前处理；不静默覆盖、复活已替代决策或让 Agent 自选方便的结论。",
+        "产品语义交产品 Owner 裁决，工程决策如需变更则新建替代 ADR candidate 并双向记录 supersession；裁决前停止依赖该语义的实施。"
       ]
     }
   ]

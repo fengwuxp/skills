@@ -113,6 +113,34 @@ def main() -> int:
                 "行动意图",
                 "结果 / 后果",
                 "写回检查点",
+                "名相与决策写回路由",
+                "领域名相",
+                "产品概念",
+                "工程决策",
+                "过程细节",
+                "ADR candidate",
+                "难逆",
+                "无背景会意外",
+                "真实取舍",
+                "writeback candidate",
+                "candidate_status",
+                "target_status",
+                "目标权威支持版本替代时",
+                "不自动创建 `CONTEXT.md`",
+            ),
+        )
+    )
+    errors.extend(
+        require_markers(
+            ROOT / "grill-me" / "references" / "source-map.md",
+            (
+                "2026-09-01",
+                "grill-with-docs",
+                "domain-modeling",
+                "CONTEXT.md",
+                "ADR 编号并发",
+                "旧词条失效",
+                "不新增平级 `grill-with-docs`",
             ),
         )
     )

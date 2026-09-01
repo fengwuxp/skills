@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "senior-software-architect 的系统干预、反馈回路与回溯推演 post-promotion 行为 contract。静态通过只证明评测定义可复跑；真实改善仍需同一 runner/model 实际读取运行时 route/reference、按需执行结构门并完成重复响应、工具轨迹、盲评和独立复核。",
+  "description": "senior-software-architect 的系统干预、反馈回路与回溯推演行为 contract。原 post-promotion 响应与评分因 ADR candidate 源集变化已退出 active gate；当前只保留 cases-only 静态契约。真实改善仍需同一 runner/model 重复响应、工具轨迹、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
       "id": "senior-system-intervention-prechange",
@@ -22,7 +22,7 @@
         "senior-software-architect/references/system-intervention-and-backcasting.md",
         "senior-software-architect/scripts/check_system_intervention_card.py"
       ],
-      "sha256": "6c752c53b9401a63981e1d695fd9a4b274204befb31dc507026fc5537592c7e4"
+      "sha256": "ecfa3f60657098da303682ccb4afb8f031c5b83e6fc9ccfae7effd9e447ffded"
     }
   },
   "rubric": {

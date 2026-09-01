@@ -4,13 +4,31 @@
 
 ## 使用时机
 
-以下情况建议或必须产出 ADR 风格结论：
+以下情况先进入 ADR candidate 判断，不因命中类型就自动新建 ADR：
 
 - 数据库、缓存、MQ、搜索、网关、框架、云服务、SDK 等关键技术选型。
 - 单体、模块化单体、微服务、事件驱动、CQRS、规则引擎等架构形态选择。
 - 公共 API、消息体、数据模型、错误码、权限模型或状态机发生重要变化。
 - 方案有多个可行选项，且会影响长期维护、成本、性能、安全或团队协作。
 - 决策不可逆、回滚成本高，或需要跨团队达成共识。
+
+## ADR 准入与生命周期
+
+正式新增 ADR 时，三个条件必须同时成立：
+
+1. **难逆**：变更或退出的成本、风险或协作影响显著。
+2. **无背景会意外**：未来读者只看代码或系统现状，会合理地质疑为何这样选。
+3. **真实取舍**：存在可行备选，并基于明确约束选择其中一个。
+
+任一条不成立时，将内容放入当前系分 / Spec 约束、Decision Log、任务计划或过程资产；可逆实现细节、显而易见的必然约束和没有备选的事实不制造 ADR。Grill、评审或模型输出只能生成 ADR candidate，正式状态由工程 Owner 与项目规则裁决。
+
+`proposed / accepted / rejected / deprecated / superseded` 状态必填。最小迁移为：`proposed -> accepted / rejected`；`accepted -> deprecated / superseded`；`deprecated -> superseded`。`rejected` 与 `superseded` 是终态，不原地复活；新证据需要重考 rejected 选项时，创建新 proposed ADR，填 `reconsiders` 回链旧记录并保留 Owner 核准。`deprecated` 表示曾经生效但已不建议新用，不用于表示 Owner 从未接受的候选。
+
+已接受 ADR 的决策语义不静默改写；重新裁决时创建新 ADR，新记录填 `supersedes`，旧记录填 `superseded_by`，并保留原决策、时点和原因。冲突 ADR 无法根据状态、范围、时点和替代关系裁决时，必须标记 conflict 并交 Owner，不让 Agent 自选有利结论。
+
+### 编号与并发
+
+先服从仓库已有命名规则。在并发分支、多 worktree 或多 Agent 环境中，不得仅扫描当前 `docs/adr/` 的最高顺序号就假定全局唯一。项目保留顺序编号时，提交前还要检查当前分支 / PR 冲突；没有既有约规且并发冲突概率高时，优先使用 `YYYYMMDD-slug.md` 或项目已采用的另一稳定唯一标识，并依然在写入前检查目标路径。
 
 ## 按任务读取索引
 
@@ -25,8 +43,13 @@
 
 ```text
 标题：一句话说明决策。
-状态：提议中 / 已接受 / 已废弃 / 已替代。
+状态：proposed / accepted / rejected / deprecated / superseded（可附中文显示，协议值保持英文）。
 日期：YYYY-MM-DD。
+Owner：决策与复审责任人。
+适用范围 / 版本：模块、上下文、系统或时间边界。
+supersedes：被本 ADR 替代的记录；无则为空。
+superseded_by：已替代本 ADR 的记录；仅在状态为已替代时填写。
+reconsiders：重考的 rejected ADR；仅在新证据与 Owner 核准重开时填写。
 背景：业务目标、技术约束、问题现状和非目标。
 决策：选择什么方案，不选择什么方案。
 备选方案：
@@ -106,3 +129,5 @@
 3. 不得忽略迁移成本、回滚条件、验证方式和长期维护责任。
 4. 不得用 ADR 为既定结论背书；如果结论已定，必须如实说明约束来源。
 5. 不得为未知未来引入平台化、插件化、规则引擎、微服务或复杂扩展点。
+6. 不得静默改写已接受 ADR 的决策语义，不得忽略 `supersedes / superseded_by` 而让新旧决策并列生效。
+7. 不得把 shared understanding、盘问结论或 ADR candidate 写成已授权实施、提交、发布或生产准入。
