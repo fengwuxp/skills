@@ -199,6 +199,12 @@ AI 注释去噪 / 可读性门禁:
 
 没有明确状态载体时，Loop 只能做单轮分析或执行；不能跨轮承诺持续推进。
 
+### 任务文件的可选准入
+
+外部方法推荐的 `task_plan.md`、`findings.md`、`progress.md` 等文件只是任务级载体候选，不是本仓库的默认三件套。创建前必须先证明现有项目执行规范、Harness Plan、Spec 或任务文档无法保存本轮恢复所需的目标、决策、证据、失败和下一入口；“步骤较多”或“工具调用较多”本身不是准入理由。
+
+获准后，任务文件必须声明 `owner / write_scope / authority_ref / retention_or_cleanup / recovery_entry`，只记录当前任务的增量，并回链唯一权威状态源。若任务文件与项目执行规范发生冲突，以权威状态源为准并停止推进，不能靠手工改文件或刷新摘要消除冲突。没有状态缺口证据、写入授权或清理条件时，继续使用现有载体或停在单轮任务。
+
 跨轮或上下文压缩前，需要确定性审计时，把上述载体投影为 `wise-agent/scripts/check_state_contract.py` 可校验的 JSON；投影只用于检查 项目执行规范、决策集合、执行依据、预算、停止和恢复字段，不替代 项目执行规范、Spec、Issue 或任务文档本身。简单线性流程不生成 `work_graph`，使用轻量能力交接契约：`step / consumes / produces / acceptance / next / checkpoint / failure`。任务契约传递目标、约束和权限；同一会话立即消费且无需独立审阅的短内容可以内联，长内容、跨轮状态、可复用或需独立验收的事实与产物使用版本化产物指针，并保留来源、版本、新鲜度和指纹。只有稳定、可独立审阅的输出才成为交接产物，临时草稿留在步骤内部；人工检查点放在语义取舍、外部写入和高风险授权前，不把所有判断都交给人。
 ## 2B.1 认知完整性门禁
 长任务、多轮会商、上下文压缩 / 恢复、模型或工具配置变化及权威材料更新时，复用同一状态载体，不新增 `Drift Mode`、记忆库、向量库或第二真相源。运行顺序为慎始回读、版本对账、一事一验、慎终归复：每个原子切片按任务指针 just-in-time 回读 项目执行规范、成功标准、非目标、red lines、授权、确认 / 排除 / 待确认项及一手来源，摘要只作索引；投影 `state_revision / authority_refs / decision_transitions / execution_transition?` 并与 previous 对账，结论只取 `aligned / stale / conflict / insufficient`；仅承重项全部 aligned 才推进一个切片并只回写 delta，否则停止补证或交还 Owner。`state_revision` 每次持久化递增 1；承重 项目执行规范 字段变化时，`execution_transition` 精确列出 `changed_fields / owner / reason / evidence_ref / evidence_fingerprint`。决策集合互斥且 `execution_basis` 只能引用 confirmed；execution_basis 换轨属于承重 项目执行规范 变化，必须有 execution_transition。跨版决策不得静默删除或换类，新 confirmed / excluded、pending 换类等必须用 `decision_transitions[]` 记录决策、前后状态、Owner 和证据；excluded 不得直接变 confirmed，须先 `excluded -> pending` reopen，再在后续 revision 裁决。`authority_refs[]` 记录 `ref / authority_revision / fingerprint / observed_at / recheck_on / status`，状态只取 current / stale / superseded；revision 或 fingerprint 变化后只能 stale，或由 Checker 回读原始 ref 后补本 revision 新的 `recheck_evidence` 与严格晚于旧时刻的 `observed_at`；被替代来源保留双向 `superseded_by / supersedes` tombstone，整个 entry 跨版不可改写，`Ready / Active / Verified / Closed` 不接受 stale。多方会商把 `context-handoff.md` 的 topic / information / participant authority revision 与 evidence fingerprint 映射到上述字段，任一变化使旧决议 stale，只重开受影响问题。validator 只检查声明结构和迁移；Checker 必须回读 ref、核对 fingerprint，并以最终环境 / 状态复核。多 trial 行为评测比较 `pass^k`，不以一次通过或固定 token / 轮次阈值准出。执行 `python3 wise-agent/scripts/check_state_contract.py <current.json> --previous <previous.json>`；首版省略 previous。压力样例至少覆盖：早期错误假设被新一手证据撤回、上下文中段事实压缩后精确回读、排除项无 Owner reopen 不得复活、来源换版后旧 Ready / Verified 失效、会商 topic / information / authority revision 变化后旧决议失效。

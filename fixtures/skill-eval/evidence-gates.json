@@ -68,6 +68,9 @@
       },
       {
         "cases": "fixtures/skill-eval/novelist-scene-construction-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-public-fiction-learning-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [
