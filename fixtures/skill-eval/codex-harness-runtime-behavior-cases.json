@@ -13,12 +13,11 @@
         "wise-agent/references/code-delivery.md",
         "wise-agent/references/skill-learning-backflow.md",
         "wise-agent/references/skill-usage-observability.md",
-        "wise-agent/references/source-map.md",
         "senior-software-architect/references/ai-assisted-engineering.md",
         "product-architecture-expert/references/ai-native-product-context.md",
         "huaxia-practical-wisdom/SKILL.md"
       ],
-      "sha256": "cff95e0ef2a231c8348875d03ce30572c273bf1b431492f2c4e8f9a38a220899"
+      "sha256": "3da4fc61ecb069071f889d62f19a9195c6dfeca25a8e38b89faab21b8693865a"
     }
   },
   "rubric": {

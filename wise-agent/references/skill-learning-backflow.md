@@ -105,6 +105,7 @@ Owner 确认候选后，人工评审结论为 `confirmed`，candidate 账本文�
 ### 7.1 Collector、Judge 与触发语义
 
 - Collector 只冻结并核对 payload，执行隔离、采集响应与原始轨迹，记录实际 source 读取、工具尝试、退出码和结果；缺响应、缺轨迹、越界读取、模型漂移或输入身份不一致时停止。
+- Collector 回执固定为 `实际 source 读取 | 工具尝试 | 退出码 | 结果 | 原始轨迹指针`；它只记事实，不从 source、case ID 或 arm 推导“应该调用什么工具”，也不把自己的判断写成 Skill PASS / FAIL。
 - Collector 不按 case ID、arm、关键词或预期答案复制专业 Skill 的工具触发规则，也不要求工具成功才保存响应。工具是否应调用，回到被测 source 中可观察的语义谓词，例如正式、完整、可评审或触发验证。
 - Launcher 只声明入口、允许读取范围、隔离、授权和证明边界；不得成为第二领域权威。工具失败、修正后成功和未调用都作为行为事实保留，由盲化后的 Judge 按任务 criteria 裁决。
 - `execution_evidence` 只使用 baseline/candidate 对称、不会泄露 arm 的安全摘要；原始轨迹与 blind key 分开保存，Maker、Judge 和 Owner 不互相替代。
@@ -113,5 +114,6 @@ Owner 确认候选后，人工评审结论为 `confirmed`，candidate 账本文�
 
 - 恢复键至少包含 `payload_sha256 + case_id + trial + condition + runner/model + source/input digest`。这些值完全相同，且响应与原始轨迹均完整可复核时，才允许跳过已完成项继续采集；不得重复请求或补造轨迹。
 - Launcher、prompt、任务集、source、允许文件、模型或其它已冻结外发内容发生变化时生成新 payload digest，从零重采；不同 payload 的部分结果不得合并。启动前网络错误或授权审查失败属于 `HARNESS_ERROR`，不产生响应证据。
+- 新 payload 需要联网重采时，重新取得覆盖新 digest、模型、目的地和文件白名单的明确授权；旧授权不自动延伸到变化后的外发内容。
 - 仅修正离线轨迹解析且未改变外发 payload 时，可以从原始响应与轨迹恢复同一任务。轨迹归一必须检查完成事件、退出码和聚合输出，覆盖直接命令、复合 shell 与交互 shell；不能只看外层命令字符串，也不能摘要掉“先失败、后修正通过”的过程。
 - 全量采集前不生成盲评结论；盲评和 release gate 前再次核对当前 source/case digest。任一当前权威已变化时，将本轮标为 stale，不刷新 hash、不覆盖已有证据。
