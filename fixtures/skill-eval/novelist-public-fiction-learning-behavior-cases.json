@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "description": "novelist 公开小说跨类型学习的最小增量行为契约，只修复群像共同事件在未限定危险级别时自动收敛为灾害、救援、记录与承责的问题。静态 fixture 只固定可复跑标准；真实改善仍须同 runner/model 重复 candidate、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "novelist-public-fiction-learning-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/novelist-public-fiction-learning-prechange.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md"
+      ],
+      "sha256": "c8867071dc5b7e3c154b183c3107915b92a393594d75dcc84f06051956aa1b7d"
+    },
+    "candidate": {
+      "id": "novelist-public-fiction-learning-current",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/creative-inertia.md"
+      ],
+      "sha256": "5d3bf53a6c2d7a0a58f45b9e639a3ca1b5c9487271ca70ddd939bf545244880c"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "novelist-should-route-unspecified-ensemble-incidents-to-proportionate-pressure",
+      "category": "ensemble-event-pressure",
+      "risk": "high",
+      "prompt": "为一部长篇设计同一场地方庆典中的三名重要配角：商贩、年轻官员、落魄艺人。三人必须有不同欲望、知情、说话方式和自己的下一站；同一意外发生后，他们采取不能互换的行动。说明本章立即满足什么、当前卷改变什么、全书留下什么承诺，不能让三人只围绕主角或同一主题发言。",
+      "criteria": [
+        "先分别建立商贩、年轻官员和落魄艺人的欲望、截止时间、资源、有限知情和下一站，再选择能让这些独立时钟发生关系的最小共同事件；三人的成功定义与可接受损失不能互换。",
+        "题面只说地方庆典中的意外，没有提供灾害、伤者或紧急救援承诺，因此共同事件应由交易、错认、名次、失约、座位、表演、时间冲突或物件错置等低风险变化发动，不自动升级为火灾、坍塌、洪水、伤者救援、事故调查或官署追责。",
+        "三人分别按自己的欲望、技能、关系和误判行动，彼此改变条件但不同时做好事、同时承责或证明同一主题；删去主角后各线仍会推进，删除任一配角则至少一项关系、资源或后续承诺不再成立。",
+        "本章、当前卷与全书承诺分别落到当场变化、各自下一站和长期未决选择；不为证明章节重要再补宏大秘密、共同敌人或第二场高危事故。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-confirmed-ensemble-disaster",
+      "category": "ensemble-event-pressure-hard-negative",
+      "risk": "high",
+      "prompt": "地方灯会已经确认发生看台坍塌和火灾，三名重要配角必须在同一章参与紧急处置：掌握货栈钥匙的商贩、能够调动守卒的年轻官员、熟悉高架绳结的落魄艺人。作者已确认事故、伤者和三人的参与，不要重开剧情方向。请形成章卡并保留三人的独立后续。",
+      "criteria": [
+        "承认看台坍塌、火灾、伤者与三人参与均为已确认事实，不为避免灾害救援母题而替换、降级或另造低风险庆典插曲。",
+        "按货权与信用、官署权限与署名责任、高架绳结与身体能力分配不可互换行动；紧迫处置可以暂时压过私人享乐与审美，但不能让三人获得相同欲望、知情和成功定义。",
+        "章卡完整承接危险、处置、伤亡或损失、关系变化和离场状态；商贩、官员、艺人的原有目标与下一站在事故后继续生效，不因一次共同救援自动组成同一调查队或共同体。",
+        "去同构只发生在实际判断、分工、不可兼得与后果，不修改硬正典，不把救援再升级成身份认定、万能证据、统一幕后或新的制度起源。"
+      ]
+    },
+    {
+      "id": "novelist-should-build-family-intersection-from-small-disruption",
+      "category": "family-event-pressure",
+      "risk": "high",
+      "prompt": "一家五口为祖母过生日：祖母想早点散席去看戏，长子想宣布辞职，次女想把新恋人介绍给家人，小孙女只想拿回被大人借走的拍立得。席间发生一个谁都没预料到的小插曲。请设计场景链和离场变化；题面没有疾病、事故、秘密身世或家庭破裂。",
+      "criteria": [
+        "先保留四条已经给出的私人时钟和不同成功定义，再从错送蛋糕、座位误排、照片错取、戏票时间、邻桌认错人或同等级生活变化中选择最小插曲，使各人的计划互相改变。",
+        "不添加疾病、昏倒、火灾、车祸、债主上门、失踪、重大秘密或突然决裂来制造重要性；生日场景可只改变发言次序、亲疏、误会和下一次见面条件。",
+        "祖母、长子、次女和孙女均通过自己在意的事主动行动，不让最年长者、最善良者或唯一知情者代替全家完成选择；插曲后仍有人未达成目标或改变说法。",
+        "离场状态明确谁知道了什么、谁保留了未说之事、谁获得或失去下一步机会；不把生活细节强升为伏笔。"
+      ]
+    },
+    {
+      "id": "novelist-should-build-workplace-ensemble-without-emergency",
+      "category": "workplace-event-pressure",
+      "risk": "high",
+      "prompt": "地方书展闭幕前，摊主想清掉最后一箱书，年轻文化馆员想按时完成撤展，落魄书法家想在离开前争到一次公开题字。临时印错的获奖名单送到现场，三个人都会看到。请设计三条行动与章尾变化；没有违法、受伤、失踪或幕后阴谋。",
+      "criteria": [
+        "印错名单只改变名次、注意力、交易、撤展时间和公开表态机会，不升级成犯罪调查、群体踩踏、纵火、伤者救援或官员问责。",
+        "摊主从库存和顾客行动，馆员从流程、时间和机构口径行动，书法家从名声、技艺与去留行动；三人可以互相利用、误解或拒绝，不形成同一善意小队。",
+        "至少一人的最佳选择会损害另一人的短期目标，且没有全知调停者给出皆大欢喜方案；错误名单不自动证明真实资格或人物品德。",
+        "章尾分别留下生意、职业关系和艺术名声的下一站，三条线以后可以再交叉，但不强制共同调查名单来源。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-confirmed-suspense-pressure",
+      "category": "ensemble-event-pressure-genre-hard-negative",
+      "risk": "high",
+      "prompt": "悬疑长篇已经确认：地方庆典闭幕后，一名评委在锁着的后台失踪，商贩见过他最后一次购物，年轻官员掌握后台钥匙登记，落魄艺人发现舞台机关被动过。三人都必须在本章卷入调查。请规划三线，不要把失踪改成普通误会，也不要让三人立即共享全部信息。",
+      "criteria": [
+        "服从悬疑类型与已确认失踪事实，保留调查压力、证据公平和人物风险，不为避免高危共同事件改写成走错后台、临时离场或日常误会。",
+        "商贩、官员和艺人依据不同接触、权限、知识和私人损益分别形成假设、行动与隐瞒；信息通过真实接触或载体传播，不因同章卷入而立即共享。",
+        "三线可以在证词、钥匙记录或舞台机关处交叉，但各自成功标准与下一站仍不同；不能自动组成互相信任的调查队，也不能只围绕主角递送答案。",
+        "章尾只给当前证据能够支持的更新，不用万能物证、作者全知或统一幕后说明会解决失踪；候选推测不升格作者本真。"
+      ]
+    }
+  ]
+}
