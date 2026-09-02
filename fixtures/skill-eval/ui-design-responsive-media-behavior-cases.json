@@ -10,10 +10,9 @@
     "candidate": {
       "id": "ui-design-responsive-media-current",
       "paths": [
-        "ui-design-expert/references/design-foundations.md",
-        "ui-design-expert/references/source-map.md"
+        "ui-design-expert/references/design-foundations.md"
       ],
-      "sha256": "1ee27ab7aad6ff3e6acb57d8a4fd4d5c3ff95a571f1c8f35aa2658659d86f89d"
+      "sha256": "d2988d947fc6581fb929fd2c3cb6d4ccf8bcdb99670d36f710f5e14f67f8828f"
     }
   },
   "rubric": {

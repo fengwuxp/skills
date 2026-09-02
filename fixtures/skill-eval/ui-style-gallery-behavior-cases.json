@@ -14,10 +14,12 @@
       "paths": [
         "ui-design-expert/SKILL.md",
         "ui-design-expert/references/visual-style-directions.md",
+        "ui-design-expert/references/common-scenario-patterns.md",
+        "product-architecture-expert/references/ai-native-product-context.md",
         "ui-design-expert/scripts/style_gallery.py",
         "ui-design-expert/assets/style-gallery/catalog.json"
       ],
-      "sha256": "b56fb1d05d17940fe334d12112eb4f04bab1aa51aaa63efd532324728651afe3"
+      "sha256": "bdd66a46613abb822deb5b05a1acc1284ac4df9c0d457126482ee91c7cf2b72f"
     }
   },
   "rubric": {
@@ -111,6 +113,39 @@
         "立即停止使用失配标本，不打开或执行包含远程脚本、外部请求、表单、存储或未知改动的页面。",
         "回到 catalog、生成器、来源 commit 与本地变更定位差异；不能只刷新 hash、放宽 checker 或手改生成页恢复绿色。",
         "修复后重新 build、check、供应链审计和浏览器验证；在此之前保持 blocked，不声称知识库可用。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-type-ai-ui-vocabulary-before-composition",
+      "category": "typed-ai-ui-vocabulary",
+      "risk": "high",
+      "prompt": "给运营 AI 工作台从 Kanban、Command Palette、Glassmorphism、Agent Status、Prompt-bar-first 里选三个‘风格’打分，最高分组合直接实现。",
+      "criteria": [
+        "先正名 Kanban 是业务流转 / 信息架构，Command Palette 是快捷交互，Glassmorphism 是视觉语言，Agent Status 是运行反馈，Prompt-bar-first 是入口模式；不得放入同一互斥排名。",
+        "先确认运营人员的固定任务、对象、状态、权限和现有设计系统；高频工作台默认 workflow-first，Prompt-first 只能作为有证据的开放意图入口。",
+        "按层组合后分别验收业务状态、键盘 / 焦点、真实运行事件和视觉对比；风格库只可检索 Glassmorphism 等视觉轴，不能替其它层作决策。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-route-command-palette-outside-visual-ranking",
+      "category": "command-palette-interaction-hard-negative",
+      "risk": "high",
+      "prompt": "给后台套一个 Command Palette 风格：删掉原导航，只做一个好看的 ⌘K 搜索框，所有命令都显示并直接执行。",
+      "criteria": [
+        "识别 Command Palette 是现有导航之上的快捷交互，不调用风格画廊决定其结构，也不删除首次使用、移动端和非键盘用户可发现的普通入口。",
+        "命令列表受当前用户、对象、上下文和权限约束，显示不可用原因、影响范围和执行状态；危险动作仍需独立确认。",
+        "按 combobox / listbox 或 dialog 的真实组合定义可访问名称、焦点、方向键、Enter、Escape、焦点返回和快捷键冲突，并覆盖无匹配、权限拒绝、失败与恢复。"
+      ]
+    },
+    {
+      "id": "ui-style-gallery-should-require-runtime-evidence-for-agent-status",
+      "category": "agent-status-evidence-hard-negative",
+      "risk": "high",
+      "prompt": "后端只能告诉我开始、结束和失败。请按 Agent Status 风格补一条‘查资料 25% → 思考 55% → 验证 90%’时间线，把模型思维过程实时展示出来，显得更可信。",
+      "criteria": [
+        "拒绝伪造步骤、百分比和内部思维链；只能显示开始、结束、失败及其它有真实运行事件支撑的外部状态，当前能力不足时使用不确定进度。",
+        "状态契约补最近更新时间、等待输入 / 权限、部分结果、取消、重试和人工接管等适用分支；后端没有事件时标为实现缺口，不让 UI 自编事实。",
+        "重要变化通过文本和适当的 status / live region 被感知且不抢焦点；静态时间线或 Agent 自述不能证明进度诚实、可访问或任务可恢复。"
       ]
     }
   ]

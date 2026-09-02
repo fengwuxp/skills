@@ -147,6 +147,9 @@
 - 读取状态：2026-08-27 常规网页读取未取得正文，随后通过 Codex in-app Browser 实际读取标题、账号、发布时间和正文。
 - 使用范围：吸收“用风格名建立人机共同语言”“先问受众、核心动作、内容量、性能与无障碍”两项方法，并将少量名词按布局、页面目标、数据任务、视觉语言、交互方式和横切约束重新归类，作为 `visual-style-directions.md` 的检索索引。
 - 归位边界：文章是实践型二手材料，不是 UI 标准或互斥风格分类；不复制 50 项完整目录、原图、示例、提示词或作者表达，不把“减少 AI 味”当作已验证结论，也不从风格名推断任务可用、品牌适配、性能或无障碍已经成立。
+- 补充来源：`https://mp.weixin.qq.com/s/-YUOpvLz-ho30BuoQip96A`，《AI 时代 Vibe Design 必备的10种 UI 风格名词！》，原创作者 / 账号为“盛夏设计”，页面显示发布时间为 2026-09-01 06:30；2026-09-01 常规网页读取不可用，随后通过 Codex in-app Browser 实际读取标题、作者、发布时间和完整正文。
+- 补充吸收：只吸收用具体名词减少“有设计感”歧义、说明适用 / 不适用场景，以及 Command Palette、Prompt-bar-first、Agent Status 需要进入交互与状态契约的线索；以 W3C WCAG 2.2 Status Messages、ARIA APG combobox / dialog / range guidance 和 Media Queries `prefers-color-scheme` 校正可访问性、进度和主题边界。
+- 补充边界：不把 Kanban、Command Palette、Prompt-bar-first 或 Agent Status 当视觉风格，不复制十项提示词、原图或作者表达，不吸收“前七项覆盖 80% 页面”“返工至少减少一半”、单色几乎不翻车、噪点等于高级、暗色维护必然翻倍或 OLED 功耗 / 烧屏泛化结论，也不新增画廊页面、CSS、固定排名或跨项目默认。
 
 ## 二、开放标准与评审依据
 
