@@ -23,6 +23,7 @@
 
 - 可复制 PRD 主模板读 `product-prd-template.md`；PRD 写作标准读 `product-design-and-prd.md`；正式 PRD 依次运行 `scripts/check_product_qualification.py` 和 `scripts/check_product_deliverable.py --kind prd`。
 - 合议式产品评审读 `product-deliberation-workflow.md`；合议评审报告结构完整性用 `scripts/check_product_deliverable.py --kind product-review`。
+- 用户明确要求红队 / 压力测试，或当前方案存在未经验证且会推翻目标、范围、商业成立或关键链路的承重主张时，读取 `product-deliberation-workflow.md` 的“承重假设红队”；普通 PRD 评审不机械升级为红队。
 
 ## 按任务读取索引
 
@@ -31,6 +32,7 @@
 | 提交前自检 | PRD 质量门禁、可验收性门禁 | 已有 PRD 符合性评审输出 |
 | 评审已有 PRD | PRD 质量门禁、可验收性门禁、已有 PRD 符合性评审输出 | 模板正文 |
 | 合议式产品评审 | 文档治理门禁、已有 PRD 符合性评审输出，并读 `product-deliberation-workflow.md` | 不新增独立产品大师 Skill |
+| PRD 红队 / 压力测试 | 评审入口卡，并读 `product-deliberation-workflow.md` 的“承重假设红队” | 不扩成固定条数的通用风险清单 |
 | 生成完整 PRD | PRD 质量门禁、可验收性门禁，并回到 `product-prd-template.md` | 已有 PRD 符合性评审输出，除非用户要求评审 |
 | 文档过厚、过薄、未更新、未评审 | 文档治理门禁、PRD 质量门禁、已有 PRD 符合性评审输出 | 模板正文扩写 |
 | 评审会前 AI 预扫描 / 需求评审 Skill 化 | AI 预扫描四维度、已有 PRD 符合性评审输出 | 不替代正式评审和 owner 决策 |

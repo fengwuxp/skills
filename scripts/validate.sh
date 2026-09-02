@@ -244,6 +244,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-demand-analysis-decision-gates-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
@@ -259,6 +260,10 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/resourc
 
 echo "==> fiction visual designer behavior cases"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/fiction-visual-designer-behavior-cases.json"
+
+echo "==> learning coach"
+run_gate python3 learning-coach/scripts/test_review_queue.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/learning-coach-behavior-cases.json"
 
 echo "==> novelist behavior cases"
 python3 novelist/scripts/test-check-novelist-continuity-ledger.py

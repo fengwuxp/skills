@@ -41,6 +41,11 @@
         "cases": "fixtures/skill-eval/fiction-visual-designer-behavior-cases.json"
       }
     ],
+    "learning-coach": [
+      {
+        "cases": "fixtures/skill-eval/learning-coach-behavior-cases.json"
+      }
+    ],
     "novelist": [
       {
         "cases": "fixtures/skill-eval/novelist-draft-continuation-behavior-cases.json"
@@ -78,6 +83,9 @@
         "cases": "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/product-demand-analysis-decision-gates-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/product-simple-design-behavior-cases.json"
       },
       {
@@ -88,6 +96,11 @@
       },
       {
         "cases": "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
+      }
+    ],
+    "wise-agent": [
+      {
+        "cases": "fixtures/skill-eval/wise-agent-external-capability-behavior-cases.json"
       }
     ],
     "ui-design-expert": [

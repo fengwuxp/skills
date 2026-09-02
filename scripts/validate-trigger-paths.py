@@ -12129,7 +12129,7 @@ check(
             "How the discovery phase works",
             "How the alpha phase works",
             "Opportunity Solution Trees",
-            "skills/identify-assumptions-existing/SKILL.md",
+            "pm-product-discovery/skills/identify-assumptions-existing/SKILL.md",
             "不复制固定画布、固定数量",
         ],
     ),

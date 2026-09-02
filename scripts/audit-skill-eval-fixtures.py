@@ -30,6 +30,7 @@ SKILLS = {
     "hanzi-philology",
     "huaxia-practical-wisdom",
     "java-service-code-generator",
+    "learning-coach",
     "llm-coding-hygiene",
     "novelist",
     "payment-expert",
@@ -44,7 +45,13 @@ SKILLS = {
 }
 EXTERNAL_COMPETITOR_SKILLS = {"ai-slop-detector"}
 KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS | {"imagegen"}
-EXPLICIT_INVOCATION_SKILLS = {"business-website-planner", "fiction-visual-designer", "requirement-acceptance-testing", "wise-agent"}
+EXPLICIT_INVOCATION_SKILLS = {
+    "business-website-planner",
+    "fiction-visual-designer",
+    "learning-coach",
+    "requirement-acceptance-testing",
+    "wise-agent",
+}
 SKILL_MENTIONS = {
     "business-website-planner": ["business-website-planner", "业务官网规划师"],
     "wise-agent": [
@@ -62,6 +69,7 @@ SKILL_MENTIONS = {
         "老祖宗智慧",
     ],
     "java-service-code-generator": ["java-service-code-generator"],
+    "learning-coach": ["learning-coach", "持续学习教练"],
     "llm-coding-hygiene": [
         "llm-coding-hygiene",
         "LLM 编码卫生",

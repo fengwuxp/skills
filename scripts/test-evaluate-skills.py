@@ -38,6 +38,27 @@ class SkillDeliveryGateTests(unittest.TestCase):
         _, warnings = MODULE.score_prompt_fixtures("wise-agent", stats, {"evaluation_dimensions": []})
         self.assertNotIn("wise-agent: positive prompt fixture lacks explicit invocation", warnings)
 
+    def test_learning_coach_is_evaluated_as_explicit_only(self) -> None:
+        stats = MODULE.prompt_fixture_stats(
+            "learning-coach",
+            {
+                "cases": [
+                    {"skill": "learning-coach", "query": "$learning-coach：开始", "should_trigger": True},
+                    {"skill": "learning-coach", "query": "learning-coach，继续", "should_trigger": True},
+                    {"skill": "learning-coach", "query": "持续学习教练，复训", "should_trigger": True},
+                ]
+            },
+        )
+
+        self.assertIn("learning-coach", MODULE.EXPLICIT_INVOCATION_SKILLS)
+        self.assertEqual(stats["positive_without_name_cases"], 0)
+        _, warnings = MODULE.score_prompt_fixtures(
+            "learning-coach", stats, {"evaluation_dimensions": []}
+        )
+        self.assertNotIn(
+            "learning-coach: positive prompt fixture lacks explicit invocation", warnings
+        )
+
     def test_extract_frontmatter_supports_folded_description_blocks(self) -> None:
         frontmatter, _ = MODULE.extract_frontmatter(
             "---\n"

@@ -5922,6 +5922,64 @@
       "expected_handling": "由 wise-agent 在隔离环境用同一 runner / model 和相同任务、验证做消融，对比最小上下文基线与当前候选；不照搬固定半年周期，也不清除安全、授权、数据保护、业务不变量和真实验证门禁。项目执行规范保留目标、约束、退出标准与验证，当前切片内允许模型选择最短可验证路径；只有同类失败重复出现且有失败样例、最小修复和回归证据时才回补规则。静态 fixture 不能冒充真实行为提升。"
     },
     {
+      "id": "learning-coach-should-start-explicit-stable-topic-block",
+      "skill": "learning-coach",
+      "query": "$learning-coach：我想真正学会动态规划，每晚只有 30 分钟，手上已有经典教材和习题。请从第一个可验证学习块开始。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "baseline_comparison",
+        "variance_check"
+      ],
+      "expected_handling": "持续学习教练把动态规划作为 stable 主题，优先使用已有教材，只设计一个 20 至 30 分钟学习块；包含来源锚点、一个主关系、最小练习和一道不带答案的主动回忆题，以能解释、能独立完成、能识别错误中的至少两项作为本块掌握证据，不默认联网或展开完整课程。"
+    },
+    {
+      "id": "learning-coach-should-resume-explicit-due-review",
+      "skill": "learning-coach",
+      "query": "持续学习教练，继续上次的 RAG 学习。已授权的进度文件显示今天有一道到期题，上次把准备阶段和提问阶段混淆了；请先做主动回忆复训。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "output_quality",
+        "efficiency_metrics",
+        "variance_check"
+      ],
+      "expected_handling": "持续学习教练先读取已授权的进度与到期项，只提出一道不带答案的主动回忆题并等待用户作答；答错后才记录具体缺口、答案锚点和明确的下一复训日期，到期项未完成前不生成新学习块，也不因一次答对宣称长期掌握。"
+    },
+    {
+      "id": "learning-coach-negative-implicit-systematic-study",
+      "skill": "learning-coach",
+      "query": "我想系统学习 RAG，每晚有半小时，请从第一块开始带我练习并安排复训。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "learning-coach 当前为 candidate 且 agents/openai.yaml 禁止隐式调用；即使语义匹配，未显式点名时也不能自动加载或创建跨轮状态。"
+    },
+    {
+      "id": "learning-coach-negative-one-shot-transformation",
+      "skill": "learning-coach",
+      "query": "把这篇网页总结成五条并翻译成英文，不要课程、练习、回忆题或后续复训。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "efficiency_metrics"
+      ],
+      "negative_reason": "这是一次摘要和翻译任务，既未显式调用 learning-coach，也明确排除了学习闭环；应按最短路径直接处理，不创建课程、队列或长期状态。"
+    },
+    {
       "id": "llm-coding-hygiene-should-audit-ai-generated-change",
       "skill": "llm-coding-hygiene",
       "query": "$llm-coding-hygiene 请专项审查这份 AI 生成的实现计划和 diff：检查隐藏假设、重复造轮子、无真实变化轴的抽象、范围外清理和没有可运行成功标准的问题；这里只给卫生结论，不直接改代码。",
