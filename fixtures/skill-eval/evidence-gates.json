@@ -95,6 +95,9 @@
         "cases": "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/ui-design-agent-ready-system-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
       },
       {

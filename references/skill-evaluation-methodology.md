@@ -37,6 +37,7 @@
 | 做一轮 Skill 可用性评估 | 评估维度、Prompt 矩阵规则、改进归位 | 公开来源记录 |
 | 新增 prompt fixture | Prompt 矩阵规则、断言与人工评审边界 | 来源提炼边界 |
 | 修改评估脚本 | 确定性脚本边界、指标解释 | 示例 prompt 细节 |
+| UI / 组件体系 Agent-Ready 评估 | `UI / 组件体系专项`、对照实验、方差检查 | 不把组件名写进生成 prompt |
 | 吸收新的 Eval 文章 | 公开来源记录、提炼边界 | 业务 Skill 正文 |
 
 ## 评估维度
@@ -84,6 +85,21 @@
 - 如果不同运行路径差异很大，应先检查路由、默认值、上下文泄漏和输出约束。
 - 不要为了让某个样例通过而堆硬规则；应找出可迁移的缺口。
 
+### UI / 组件体系专项
+
+当评估设计系统、组件库、Agent 文档或“Agent-Ready”声明时，prompt 描述用户体验、真实内容、状态和任务结果，不直接指定待发现的组件、import 或 props。对照条件使用相同 prompt、runner、model、输入、来源版本和运行环境；每个条件隔离上下文，跨条件比较交给独立 Judge，不用生成者自评宣布胜负。
+
+专项观察项按任务选择，不机械全部量化：
+
+- **组件发现正确性**：使用的组件、import、props 和组合是否真实存在、匹配任务；单独记录幻觉、命名混淆和错误恢复。
+- **决策负担**：Agent 为每个元素额外决定的布局、样式、状态和可访问性细节；只比较同题条件，不设通用“最佳”阈值。
+- **语义 token 比例**：语义 tokens / variants 与原始颜色、像素值、任意 utility 的相对使用；高比例不能替代视觉与任务正确性。
+- **escape hatch**：退出组件体系到 raw HTML、CSS、inline style、swizzle 或私有选择器的位置、原因和后果；零逃生口不是目标，无法恢复的逃生口才是风险。
+- **可访问性与运行结果**：语义、标签、键盘、焦点、响应式、状态和视觉层级在目标运行环境的证据；源码结构和厂商自述只是输入。
+- **来源可发现性**：Agent 是否能从当前源码 / 版本生成的 CLI、机器可读文档或本地索引发现正确 API，并在版本变化后重新生成，而不是依赖训练记忆或复制到 `AGENTS.md` 的过期全量清单。
+
+组件数量、官网截图、stars、一次成功生成、厂商分数、文档存在或 `AGENTS.md` 有几条规则都不能单独证明 Agent-Ready。最终报告须区分当前项目试片、上游自测与未验证主张，并保留迁移、安装、联网、许可和 Owner 边界。
+
 ## Prompt 矩阵规则
 
 Prompt fixture 应满足：
@@ -130,3 +146,10 @@ Prompt fixture 应满足：
 - 不引入外部评估工具链、未审查脚本或联网流程。
 - 不把量化策略领域样例迁移为本仓库业务事实。
 - 文章中列出的其他链接本轮未逐篇读取，不作为已吸收来源。
+
+### Astryx Vibe Evaluation 与 Agent-Ready 设计系统
+
+- 来源：[Astryx Vibe Evaluation](https://github.com/facebook/astryx/wiki/Vibe-Evaluation)、[Why StyleX](https://github.com/facebook/astryx/wiki/Why-StyleX) 与 [StyleX 消费策略决策](https://github.com/facebook/astryx/issues/506)；核验日期 2026-09-02。
+- 使用范围：吸收同 UX prompt、条件隔离、独立 Judge、组件 / props 发现、决策负担、语义 token、escape hatch、可访问性和当前源码文档可发现性等 UI 专项观察维度。
+- 证据边界：Astryx 的分数、组件规模、内部应用量、StyleX 冗长度和组件召回提升均为项目自述或项目内评测，不写成跨模型、跨项目阈值，也不证明 Astryx 适合当前项目。
+- 未吸收：不复制其 harness、prompt 模板、固定维度权重、工具链、CLI / MCP、部署报告、Agent 数量或当前榜单；本仓库继续使用既有 source digest、同 runner/model、盲化和独立准出门禁。

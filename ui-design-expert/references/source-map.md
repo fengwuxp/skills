@@ -151,6 +151,15 @@
 - 补充吸收：只吸收用具体名词减少“有设计感”歧义、说明适用 / 不适用场景，以及 Command Palette、Prompt-bar-first、Agent Status 需要进入交互与状态契约的线索；以 W3C WCAG 2.2 Status Messages、ARIA APG combobox / dialog / range guidance 和 Media Queries `prefers-color-scheme` 校正可访问性、进度和主题边界。
 - 补充边界：不把 Kanban、Command Palette、Prompt-bar-first 或 Agent Status 当视觉风格，不复制十项提示词、原图或作者表达，不吸收“前七项覆盖 80% 页面”“返工至少减少一半”、单色几乎不翻车、噪点等于高级、暗色维护必然翻倍或 OLED 功耗 / 烧屏泛化结论，也不新增画廊页面、CSS、固定排名或跨项目默认。
 
+### Astryx 与 Agent-Ready 设计系统（2026-09-02）
+
+- 微信文章：[《Astryx：面向 Agent 的 UI 设计系统》](https://mp.weixin.qq.com/s/z-WHvWXgOsd5G3Xq2Y4HNA)，作者“橙线”，页面显示发布时间为 2026-08-30 15:44；2026-09-02 常规网页读取不可用，随后通过 Codex 浏览器实际读取标题、作者、发布时间和正文。
+- 一手来源：[Astryx 官网](https://astryx.atmeta.com/)、[facebook/astryx](https://github.com/facebook/astryx)、[Astryx Philosophy](https://github.com/facebook/astryx/wiki/Astryx-Philosophy)、[Why StyleX](https://github.com/facebook/astryx/wiki/Why-StyleX)、[Vibe Evaluation](https://github.com/facebook/astryx/wiki/Vibe-Evaluation)、[StyleX 消费策略决策 #506](https://github.com/facebook/astryx/issues/506)、[core package.json](https://github.com/facebook/astryx/blob/main/packages/core/package.json)、[Security Policy](https://github.com/facebook/astryx/blob/main/SECURITY.md) 与 [v0.5.0 迁移说明](https://astryx.atmeta.com/blog/astryx-v0-5-0)。
+- 当前快照：截至 2026-09-02，官网和仓库标记 Beta，要求 React 19+；core / CLI 源版本为 `0.5.2`，官网称 170+ 组件，`@stylexjs/stylex` 仍是 peer dependency，部分包仅 canary，安全策略只维护最新版本。八年内部积累、13,000+ apps、组件规模和 Agent 效果属于 Astryx / Meta 项目自述，不是独立采用证据。
+- 关键校正：StyleX 主要为设计系统作者提供编译期 token、类型和内部样式约束；普通消费者使用预编译 CSS、typed props、CSS variables 与 `className`，可继续使用 Tailwind / CSS Modules / 普通 CSS。项目评测曾发现直接让 LLM 使用 StyleX 相对 shadcn / Tailwind 更冗长，随后移除了消费者的 StyleX 构建要求，因此不吸收“业务侧统一改 StyleX 即可保证 Agent 一致性”的结论。
+- 已吸收：系统作者强约束、消费者保留受控 escape hatch 的分层；Agent-Ready 需要用同 UX prompt、条件隔离、独立 Judge、组件 / props 发现、决策负担、语义 token、escape hatch、可访问性、失败恢复和当前源码文档可发现性来验证；`AGENTS.md` 只保留实际采用后的精简入口。
+- 未吸收：不安装 Astryx、StyleX、CLI 或 MCP，不复制组件、模板、机器文档、评测 harness、固定分数和权重；不采信未找到一手原帖的 Jared Palmer 引述，不把名称偏好、Meta 开源口碑、stars、“大势所趋”或厂商自测写成当前选型、迁移授权或生产准出。
+
 ## 二、开放标准与评审依据
 
 ### WCAG 2.2

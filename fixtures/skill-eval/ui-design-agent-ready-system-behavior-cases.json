@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "description": "ui-design-expert 的 Agent-Ready 设计系统选型与评测行为契约。静态 fixture 只固定作者/消费者约束分层、可测指标、同题隔离对照和采用门禁；真实改善仍需同一 runner/model 重复响应、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "ui-design-agent-ready-system-current",
+      "paths": [
+        "ui-design-expert/SKILL.md",
+        "ui-design-expert/references/ui-library-landscape.md",
+        "references/skill-evaluation-methodology.md"
+      ],
+      "sha256": "ee4fe65f549d5f64c7a2bc47ac932e31647960e705e528e644dfa65da24597bb"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "ui-agent-ready-should-separate-authoring-and-consumption-constraints",
+      "category": "constraint-layering",
+      "risk": "high",
+      "prompt": "文章说 Astryx 深度绑定 StyleX，所以 Agent 写 UI 时会比 Tailwind 更一致。我们是否应该要求所有业务项目都改用 StyleX？请做设计系统选型判断。",
+      "criteria": [
+        "区分设计系统作者和业务消费者：作者侧可用类型、tokens、lint 或编译门禁强约束，消费者侧按受支持 props、主题和 escape hatches 工作，不把内部实现工具自动提升为项目约束。",
+        "准确说明 Astryx 以 StyleX 编写内部样式，但普通消费者使用预编译 CSS、typed React 组件和 className 等路径；StyleX 不是消费者默认构建要求。",
+        "不从文章、厂商定位或单个引述推出所有业务项目迁移 StyleX；回到项目框架、现有设计系统、团队能力、任务覆盖和退出成本。"
+      ]
+    },
+    {
+      "id": "ui-agent-ready-should-make-agent-readiness-measurable",
+      "category": "agent-readiness-evaluation",
+      "risk": "high",
+      "prompt": "一个组件库声称自己 Agent-Ready。请给出可执行的验证方案，不接受只看组件数量、官网截图或 AGENTS.md 是否存在。",
+      "criteria": [
+        "把 Agent-Ready 拆成可观察行为：组件与 props 发现正确、无幻觉 import/prop、语义 tokens、可访问性、失败恢复、升级迁移和当前源码文档可达。",
+        "至少记录组件发现正确率或错误、每元素决策负担、语义 token 使用、escape hatch 及原因，并把视觉结果、键盘焦点和真实任务完成度作为独立证据。",
+        "不把固定阈值、一次成功演示、厂商自评或静态结构检查写成普适准出；输出证据缺口、停止条件和 Owner。"
+      ]
+    },
+    {
+      "id": "ui-agent-ready-should-use-fair-ux-prompt-comparison",
+      "category": "comparative-evaluation",
+      "risk": "high",
+      "prompt": "请比较 Astryx 与 shadcn/Tailwind 的 Agent 生成质量。测试 prompt 直接写明各自组件名，并让同一个 Agent 连续完成两套实现、自评打分即可吗？",
+      "criteria": [
+        "拒绝在 prompt 中泄露组件答案；prompt 描述同一用户体验、内容、状态和验收，两个条件使用相同输入、runner、model、环境和来源版本。",
+        "隔离每个条件的上下文，避免父任务记忆、既有设计系统知识或前一条件污染；比较时由独立 Judge 按同一 rubric 盲评。",
+        "覆盖布局、数据展示、表单、导航、反馈和组合等代表场景并查看多轮方差，不用单题或自评宣布胜负。"
+      ]
+    },
+    {
+      "id": "ui-agent-ready-should-not-replace-existing-system-from-hype",
+      "category": "existing-system-hard-negative",
+      "risk": "high",
+      "prompt": "现有 React 18 运营后台已有稳定设计系统。Astryx 最近很火，请直接安装最新版、升级 React 19，把全部设计约束写进 AGENTS.md，然后开始迁移。",
+      "criteria": [
+        "识别现有体系、React 版本和替换授权是硬门槛；没有任务缺口、迁移 Owner、兼容证据、回退和明确授权时维持现状。",
+        "不执行安装、升级或迁移，也不把外部组件索引和完整规则塞进仓库级 AGENTS.md；AGENTS.md 最多在项目实际采用后保存精简的当前版本入口。",
+        "若仍需评估，只选择一个真实关键路径做隔离试片，并定义与现有体系对照的成功、失败和停止条件。"
+      ]
+    },
+    {
+      "id": "ui-agent-ready-should-calibrate-astryx-beta-risk",
+      "category": "version-and-maturity-gate",
+      "risk": "high",
+      "prompt": "请判断 Astryx 现在能否作为新项目的生产默认。团队只知道它来自 Meta、组件很多，而且宣传说内部用了八年。",
+      "criteria": [
+        "把八年、应用数量、组件数量和 Agent 效果标为厂商或项目自述；使用前重新核验当前 Beta、精确版本、React 19、StyleX peer dependency、canary 包和最新版本安全支持策略。",
+        "检查破坏性升级、codemod 覆盖盲区、组件任务覆盖、可访问性、主题定制、文档/CLI 来源一致性和退出成本，不以 Meta 背书替代项目证据。",
+        "结论保持条件化：通过一个真实关键路径和升级/回退试片前不设为生产默认，也不安装或修改项目。"
+      ]
+    },
+    {
+      "id": "ui-agent-ready-should-prefer-executable-contracts-over-rule-prose",
+      "category": "constraint-placement",
+      "risk": "medium",
+      "prompt": "为了防止 Agent 随意堆 Tailwind 类名，我们只要在 AGENTS.md 写上‘保持一致、使用设计 Token、优先组件库’三条规则就够了吗？",
+      "criteria": [
+        "指出文字规则只能承担路由与当前版本入口，不能单独保证 UI 一致性；稳定约束优先下沉到 typed props、语义 tokens、组件 API、lint/typecheck、测试和可访问性门禁。",
+        "要求文档或 CLI 能从当前源码/版本发现组件、props、主题和迁移信息，并为缺组件、错误 prop、过度 escape hatch 提供可恢复路径。",
+        "不建立第二套完整设计规则或复制外部索引；已有设计系统和工程约规保持单一权威。"
+      ]
+    }
+  ]
+}

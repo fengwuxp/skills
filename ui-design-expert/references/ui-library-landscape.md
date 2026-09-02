@@ -2,7 +2,7 @@
 
 ## 使用时机
 
-当任务需要比较或选择设计系统、组件库、无样式行为原语或开放代码分发方案时读取。本盘点核验于 2026-07-30，Ant Design 专项于 2026-08-21 复核；实际引入前必须重新核验维护状态、当前版本、包级许可证和项目兼容性。
+当任务需要比较或选择设计系统、组件库、无样式行为原语或开放代码分发方案时读取。本盘点核验于 2026-07-30，Ant Design 专项于 2026-08-21、Astryx / Agent-Ready 专项于 2026-09-02 复核；实际引入前必须重新核验维护状态、当前版本、包级许可证和项目兼容性。
 
 ## 不适用场景
 
@@ -30,6 +30,7 @@
 | 现有项目补复杂控件 | `一`、`五` | 不因一个控件替换整套体系 |
 | 中后台或运营工具 | `二` 的企业体系与中文生态、`三` | 不选展示型模板代替系统 |
 | Ant Design 跨应用采用 | `四`、`三` | 不把后台视觉外推到 C 端 / H5 |
+| Agent-Ready / Astryx 评估 | `三 A`、`三` | 不把内部 StyleX、厂商自评或 AGENTS.md 文字当项目准出 |
 | 自有品牌设计系统 | `五`、`三` | 不把无样式原语当完整设计体系 |
 
 ## 一、先分清资产类别
@@ -52,6 +53,7 @@
 | [GOV.UK Design System](https://design-system.service.gov.uk/) | 公共服务设计体系 | 高责任、表单密集的公共服务 | 模式强调完整任务、内容和恢复；品牌样式不外推到其他组织 |
 | [USWDS](https://designsystem.digital.gov/) | 公共服务设计体系 | 美国联邦网站与数字服务 | 可按原则、UX 指南和代码分层采用；项目适用性与法定要求另核验 |
 | [Ant Design](https://ant.design/) | 企业 Web 设计体系 + React 组件库 | 中后台、表单、数据密集业务 | 三层 tokens 和主题算法成熟；服从项目当前主版本，不自动升级 |
+| [Astryx](https://astryx.atmeta.com/) | React 设计体系 + 组件 / 模式 + CLI / MCP | React 19+、希望用一致 API 与语义 tokens 支撑人与 Agent 共用的 Web 项目 | 2026-09-02 为 Beta、core/CLI `0.5.2`；StyleX 约束作者侧且仍为 peer dependency，消费者默认用预编译 CSS、typed props 与 `className`；只维护最新版本安全更新，须单路径试片 |
 | [Fluent 2](https://fluent2.microsoft.design/) | 完整通用设计体系 | Microsoft 生态、生产力工具 | global/alias tokens，支持 light/dark/high-contrast/brand；代码与品牌资产许可分开 |
 | [Carbon](https://carbondesignsystem.com/) | 完整企业设计体系 | 数据密集 B2B、IBM 风格产品 | 有组件、模式、tokens 和可访问性指南；品牌识别较强 |
 | [Spectrum / React Spectrum](https://react-spectrum.adobe.com/) | 完整体系 + React 实现 | 创意工具、复杂专业工作台 | 可访问、响应式和国际化基础完整；深改视觉时评估 React Aria |
@@ -75,6 +77,28 @@
 6. **许可与资产**：代码、字体、图标、Logo、商标、Figma 资源分别核验，MIT/Apache 代码许可不能外推到全部资产。
 7. **采用层级**：按 `原则 -> UX 指南 -> 代码` 判断实际采用深度；复用组件不等于原则、模式、内容和治理已经成熟。
 8. **迁移与退出**：先用一个真实关键路径做试片；定义升级责任、替换成本和不通过时的停止条件。
+
+## 三 A、Agent-Ready 设计系统门禁
+
+`Agent-Ready` 是待验证属性，不是设计系统类别、厂商标签或采用结论。先区分两层约束：
+
+- **系统作者侧**：用 typed props、语义 tokens、统一 API、lint / typecheck、组件测试和可访问性门禁约束进入系统的实现，减少原始值、分叉惯例和隐式行为。
+- **业务消费者侧**：优先使用受支持的组件、props、主题和模式，同时保留明确的 `className`、slot、theme、swizzle 或其它 escape hatch；逃生口必须记录缺口、影响、Owner 和是否应回流系统，不能靠禁止定制掩盖组件缺失。
+
+评估时使用同一组描述**用户体验、内容、状态和任务结果**的 prompt，不在 prompt 中给出组件名或 props 答案；固定 runner、model、输入、来源版本和环境，隔离各条件上下文，再由独立 Judge 横向评审。至少观察：
+
+1. **发现正确性**：是否选到存在且适合的组件、import 和 props，出现哪些幻觉或命名混淆。
+2. **决策负担**：每个 UI 元素还需由 Agent 自行决定多少布局、样式、状态和可访问性细节；只作条件间相对比较，不设跨项目固定阈值。
+3. **语义约束**：语义 tokens、受支持 variants 和组件行为的使用情况，是否散落原始颜色、像素值和重复 CSS。
+4. **escape hatch**：何处退出组件体系、为何退出、是否仍保持主题、键盘、焦点、状态和升级能力；零逃生口不是机械目标。
+5. **真实结果**：目标任务、loading / empty / error / success、长内容、响应式、键盘焦点和可访问性是否在运行环境成立；静态源码和厂商文档不替代运行证据。
+6. **可恢复性**：组件 / props 未发现、API 变化或升级失败时，能否从当前源码生成的 CLI / 机器可读文档、错误信息和 codemod 回到正确路径。
+
+Agent-Ready 结论必须把四层写成一条可执行链：`约束载体 | 当前版本来源入口 | 错误 / 升级恢复路径 | 运行验收证据与 Owner`。只写规则、只加 lint、只提供文档或只展示一次成功都不能替代其余三层；缺组件、错误 prop、API 变化和过度 escape hatch 必须各有可发现、可恢复、可验证的处理路径。
+
+`AGENTS.md` 只保存项目实际采用后的精简入口、当前版本和权威命令，不复制完整组件索引或设计规则。稳定约束应进入组件 API、tokens、类型、lint、测试和构建门禁；外部 CLI / MCP 只能在审查供应链并获得安装或联网授权后使用。
+
+Astryx 的官方材料能证明其当前公开结构和项目自测方法，不能独立证明目标项目效果。采用前填写：`项目当前体系 / React 与渲染范围 | Astryx 精确版本与状态 | 作者侧约束 | 消费侧 API / escape hatch | CLI / 文档 / 源码版本一致性 | 任务覆盖 / a11y / 主题 | breaking changes 与 codemod 覆盖盲区 | canary / 安全支持 | 试片证据 | 退出成本 | Owner`。截至 2026-09-02，它要求 React 19+，core 和 CLI 为 `0.5.2`，仍处 Beta；`@stylexjs/stylex` 是 peer dependency，部分包仅 canary，安全策略只覆盖最新版本。已有体系稳定、版本不兼容、需要大量内部覆盖、组件发现 / 幻觉 props / escape hatch 未改善，或升级与回退不能验证时，不采用或停止扩大。
 
 ## 四、Ant Design B+ 采用边界
 
@@ -113,6 +137,7 @@ shadcn/ui 不是传统组件库，官方定位是组件集合与代码分发平�
 硬门槛 / 排除项：
 领域、技术、状态与 a11y 对照：
 tokens、维护、迁移与许可：
+Agent-Ready 证据（适用时）：
 主选 / 备选及理由：
 真实路径试片：
 停止条件与 Owner：
