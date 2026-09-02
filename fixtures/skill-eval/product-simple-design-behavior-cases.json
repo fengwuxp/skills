@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "product-architecture-expert 的简单优先与过渡设计行为 contract。原三次 baseline/candidate 采集与盲评因 candidate 源集变化已退出 active gate；当前只固定 cases-only 预期，不替代业务 Owner、源码、测试、发布或上线准出。",
+  "description": "product-architecture-expert 的简单优先、过渡设计与 AI 适配性行为 contract。原三次 baseline/candidate 采集与盲评因 candidate 源集变化已退出 active gate；当前只固定 cases-only 预期，不替代业务 Owner、源码、测试、发布或上线准出。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -13,9 +13,10 @@
         "product-architecture-expert/SKILL.md",
         "product-architecture-expert/references/product-architecture-methodology.md",
         "product-architecture-expert/references/product-scenario-routing.md",
-        "product-architecture-expert/references/business-architecture-planning.md"
+        "product-architecture-expert/references/business-architecture-planning.md",
+        "product-architecture-expert/references/ai-native-product-context.md"
       ],
-      "sha256": "1e82c358f5dd971349d9203bfcd5d1fdb081d40b25120878159ed8e4e393acb5"
+      "sha256": "e2fe38ae63373a8a0f4e550edfcbd6f5a6e26e926dee888c28612a11e6b0e2e3"
     }
   },
   "rubric": {
@@ -85,6 +86,18 @@
         "识别迁移本身就是当前目标，不机械拒绝所有过渡设计；围绕三个月迁移窗口给出最小过渡范围。",
         "明确来源 / 目标、双写与切流责任、数据和状态口径、用户 / 运营可见影响、Owner、截止日期、回退、移除 / 退役条件和验证。",
         "过渡结构不得获得永久平台地位；不借迁移扩建无证据的通用同步平台、插件体系或未来多系统能力。"
+      ]
+    },
+    {
+      "id": "product-ai-suitability-should-not-jump-to-rag-or-finetuning",
+      "category": "ai-suitability-and-fallback",
+      "risk": "high",
+      "prompt": "业务方说智能客服解决率太低，要求直接用大模型做得更聪明，并希望现在就在 RAG、微调和小模型里选一个。当前只知道用户经常转人工，没有失败类型、基线、样本、准确率、人工队列容量或隐私边界。请给出产品判断和下一步。",
+      "criteria": [
+        "先把解决率低拆成找不到答案、答案错误、用户看不懂、流程无法完成或其它可观察失败类型，保留当前分母、频率、成本和证据缺口；不从‘更智能’直接写功能或技术方案。",
+        "建立 AI 适配性判断卡，比较当前人工和无 AI / 规则 / 搜索 / 工作流基线，说明候选 AI 作用机制、所需数据 / 知识 / 工具 / 时效、代表性评测与反例、质量 / 成本 / 延迟 / 安全 / 体验指标和停止条件。",
+        "不把效果优先、知识实时、成本或隐私敏感分别机械映射到微调、RAG 或小模型；说明知识库不自动保证实时，模型大小不能证明隐私边界，具体模型、检索、工具或训练能力需按当前供应商事实和工程验证选择。",
+        "降级必须覆盖失败检测、上下文连续、人工队列容量、SLA、升级、审计、限流或暂停和恢复主流程；同时说明半年后的用户任务、运营岗位、团队容量或责任分工应发生什么可验证变化。"
       ]
     }
   ]

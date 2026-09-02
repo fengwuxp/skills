@@ -17,6 +17,7 @@
 - 用户要求判断产品阶段、PMF 前后团队缺什么贡献方式，或讨论产品团队不按岗位分工、原型验证、真实交付、复杂度清扫、增长放大和可靠维护。
 - 用户提到概念膨胀、新旧概念并存、需求只加不减、事实源分裂、旧规则退役、旧入口下线或产品概念生命周期。
 - 用户要求从 AI Native 产品流程、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 或 PRD 可执行上下文中提炼产品侧交接材料。
+- 用户要求判断一个需求是否适合 AI，或在 RAG、微调、小模型、搜索、规则和人工流程之间做产品侧取舍。
 - 用户要求多个 AI、PM / Reviewer、产品大师、MAGI、多视角、合议式评审 PRD / 产品方案 / AI 生成方案 / 原型候选，或希望按阶段确认前置依赖、方案概要、交互和 PRD。
 - 用户要求需求评审、PRD 评审会前扫描、需求评审 Skill、AI 先扫 PRD、完整性 / 一致性 / 可测试性 / 二义性检查。
 - 不确定应进入通用产品架构、PRD 模板、支付资金专项还是能力评估。
@@ -40,6 +41,7 @@
 - 跨应用 / 多端原型需求规划读 `product-design-and-prd.md` 的“跨应用原型需求规划”，输出需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；直接绘制 Web 原型转 `ui-design-expert`。
 - 客户端交互 / 响应式 / 可用性 / 触控键盘 / 弱网恢复设计读 `product-client-interaction.md`，再回到 `product-design-and-prd.md` 完成页面与非页面承接；输出客户端策略表、任务与路由图、交互状态矩阵、多端差异表和每端验收卡，不先决定视觉组件。
 - AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD / 工程执行准入、Harness/Agent 编排由 `wise-agent` 处理。
+- AI 适配性、RAG / 微调 / 小模型等方案倾向或“更智能”诉求读 `ai-native-product-context.md` 的“AI 适配性判断”；先确认任务机制、非 AI 基线、代表性评测、降级和停止条件，具体技术实现交架构师核验。
 - 复杂 PRD、AI 生成方案、原型候选、多方争议、PM / Reviewer / 产品大师 / MAGI 多视角评审读 `product-deliberation-workflow.md`；它只提供产品合议评审流程，不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 业务架构规划、业务能力地图、战略到项目组合、项目组合治理、能力-项目-系统映射和知识库回流读 `business-architecture-planning.md`；复杂图形化表达加读 `diagram-output.md`。
@@ -77,6 +79,7 @@
 | Backlog 决策 / 机会清单优先级 / User Story/AC | 快速路由表、产品语义门禁，并继续读 `po-backlog-manager.md` 和 `product-design-and-prd.md` | 不把洞察清单直接当研发任务 |
 | 产品经理方法论 / 产品专家基础能力补齐 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md` | 不把基础岗位清单替代复杂产品架构 |
 | AI 产品工作成熟度 / AI-shaped readiness / AI 工作流改造 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2A. AI-shaped 产品工作成熟度” | 不安装外部 advisor，不把外部术语当团队结论 |
+| AI 适配性 / RAG / 微调 / 小模型 | 快速路由表、产品语义门禁，并继续读 `ai-native-product-context.md` 的“2A. AI 适配性判断” | 不从技术名词直接生成需求或选型，不把模型大小当隐私结论 |
 | AI Native Product Builder / 业务 dogfooding / MVP harden / 放下 PRD | 快速路由表、产品语义门禁，并继续读 `ai-native-product-context.md` | 不把 AI Demo 直接当需求，不把产品上下文包当 Execution Grant |
 | 业务流程/状态/规则 | 产品语义门禁、快速路由表、通用场景识别问题 | PRD 模板正文 |
 | 业务架构规划 / 战略落项目 / 项目组合治理 | 快速路由表、产品语义门禁，并继续读 `business-architecture-planning.md`；复杂图形化表达加读 `diagram-output.md` | 不画全公司大图，不把部门 / 系统 / 页面当业务能力 |
@@ -176,6 +179,7 @@
 - **用户要产品架构方案**：输出背景、目标、范围、用户、角色、能力地图、对象模型、流程、状态机、规则、权限、数据、运营、风险和验收。
 - **用户要业务架构规划**：读取 `business-architecture-planning.md`，先判断战略意图、真实问题和决策场景，声明选用视图、跳过视图及理由，再按决策问题输出最小且完整的视图组合；价值流、业务能力和业务流程只作为参考性工作基线，不宣称为普遍标准或固定交付清单。若需要图形化表达，继续读 `diagram-output.md`，正式图形化交付默认只生成 SVG；不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant。
 - **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给 AI Native 编排/架构师的产品侧条件；若用户要求端到端流程、Harness/GSD/工程执行准入或 AI 工具协作，转 `wise-agent`。
+- **用户要判断需求是否适合 AI，或直接要求 RAG、微调、小模型、AI 化 / 更智能**：读取 `ai-native-product-context.md` 的“2A. AI 适配性判断”，先输出 AI 适配性判断卡，比较非 AI 基线、候选机制、代表性评测、失败检测、人工容量和半年工作系统变化；不替架构师选择具体模型、检索、工具或训练实现。
 - **用户要交给架构师继续设计或业务驱动架构交接**：正式产品文档保持背景、目标、定性、概要、流程、规则、接口抽象和验收摘要的阅读主线；Product Context Card 或执行计划再承载参与方与 owner、详细验收矩阵、质量属性映射、待确认项和专业确认方，不把交接控制复制进 PRD 正文。
 - **用户要补齐产品经理方法论或产品专家基础能力**：读取 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md`，把基础产品经理知识体系翻译为文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析和知识库沉淀，并说明哪些能力已覆盖、哪些能力需要提升到复杂业务对象、规则、验收和交接。
 - **用户要评估 AI 产品工作成熟度或 AI-shaped readiness**：读取 `product-architecture-methodology.md` 的“2A. AI-shaped 产品工作成熟度”，把外部 advisor 术语翻译成业务优势、流程变化、上下文结构化、任务可追溯、人工责任和验证指标；默认只借鉴方法，不安装或调用外部 Skill。

@@ -334,6 +334,7 @@ product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/pr
 product_business_expression_requirements_behavior_cases = "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 product_qualification_behavior_cases = "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
 product_reference_fast_gate_behavior_cases = "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
+product_simple_design_behavior_cases = "fixtures/skill-eval/product-simple-design-behavior-cases.json"
 product_simple_design_responses = "fixtures/skill-eval/product-simple-design-responses.jsonl"
 product_simple_design_scores = "fixtures/skill-eval/product-simple-design-scores.jsonl"
 fiction_visual_skill = "fiction-visual-designer/SKILL.md"
@@ -13206,6 +13207,45 @@ check(
             "GSD / 工程执行准入结论由 `wise-agent` 编排",
             "产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant",
             "不把“放下 PRD”写成跳过产品语义、评审、留痕、合规和验收",
+        ],
+    ),
+)
+check(
+    "product AI Native context gates AI suitability before solution selection",
+    has_all(
+        product_ai_native_context,
+        [
+            "## 2A. AI 适配性判断",
+            "AI 适配性判断卡",
+            "无 AI / 规则 / 搜索 / 工作流基线",
+            "代表性评测与反例",
+            "半年后的工作系统变化",
+            "不能从效果、实时、成本或隐私单轴直接映射",
+        ],
+    )
+    and has_all(
+        product_source_map,
+        [
+            "DbwaevfER4t32I9bS7qtUg",
+            "来源网络公众号",
+            "Model optimization",
+            "File search",
+        ],
+    )
+    and has_all(
+        product_routing,
+        [
+            "AI 适配性 / RAG / 微调 / 小模型",
+            "先输出 AI 适配性判断卡",
+            "不替架构师选择具体模型、检索、工具或训练实现",
+        ],
+    )
+    and has_all(
+        product_simple_design_behavior_cases,
+        [
+            "product-ai-suitability-should-not-jump-to-rag-or-finetuning",
+            "人工队列容量",
+            "模型大小不能证明隐私边界",
         ],
     ),
 )
