@@ -101,6 +101,9 @@
     "wise-agent": [
       {
         "cases": "fixtures/skill-eval/wise-agent-external-capability-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
       }
     ],
     "ui-design-expert": [

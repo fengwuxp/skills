@@ -546,6 +546,9 @@ wise_agent_source_map = "wise-agent/references/source-map.md"
 wise_agent_hallmark_behavior_cases = (
     "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"
 )
+wise_agent_reusable_workflow_loop_behavior_cases = (
+    "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
+)
 codex_harness_runtime_behavior_cases = "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
 codegen_route = {"codegen", "code-generation-rules.md", "wind-project-patterns.md", "generate_scaffold.py"}
 codegen_safety_route = codegen_route | {"requires-confirmation"}
@@ -4561,11 +4564,19 @@ check(
             "Skill 是复用单位",
             "重复工作发现门禁",
             "证据不足时允许零候选",
+            "事件 / 定时 / 手动 / 混合触发器",
+            "不适用机制直接省略",
+            "投递缺口",
+            "周期对账",
             "Push right",
             "低风险、可逆、可验证的准备工作",
             "决策简报",
             "实施者无需补充未声明的业务决策即可实现",
             "环境、账号、权限和 Owner 决策缺口",
+            "Spec-ready",
+            "Implemented",
+            "Operable",
+            "不新增独立状态库",
             "轻量能力交接契约",
             "step / consumes / produces / acceptance / next / checkpoint / failure",
             "任务契约传递目标、约束和权限",
@@ -4699,6 +4710,27 @@ check(
             "拆分二问",
             "轻量能力交接契约",
             "不把文件路径、并联、循环或“人负责拍板”写成无条件最佳实践",
+        ],
+    ),
+)
+check(
+    "wise agent reusable workflow loop behavior gate stays focused and wired",
+    (ROOT / wise_agent_reusable_workflow_loop_behavior_cases).is_file()
+    and has_all(
+        wise_agent_reusable_workflow_loop_behavior_cases,
+        [
+            '"id": "wise-agent-workflow-loop-should-reject-one-off-work"',
+            '"id": "wise-agent-workflow-loop-should-stop-push-right-before-risky-effects"',
+            '"id": "wise-agent-workflow-loop-should-design-reliable-hybrid-trigger"',
+            '"id": "wise-agent-workflow-loop-should-separate-spec-implementation-operation"',
+            '"id": "wise-agent-workflow-loop-should-keep-brief-decision-complete"',
+            '"id": "wise-agent-workflow-loop-should-omit-inapplicable-reliability-mechanisms"',
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"'
         ],
     ),
 )
@@ -17579,8 +17611,8 @@ expected_handling_has(
 )
 behavior_contract_has(
     "wise-agent-should-reusable-work-asset-loop",
-    ("discovery_gate", "workflow_spec", "checkpoint_policy", "done_gate", "must_not_do"),
-    ("实际重复证据", "允许零候选", "Push right", "外部写入", "决策简报", "未声明的业务决策", "PENDING", "新增 loop-me Skill"),
+    ("discovery_gate", "workflow_spec", "mechanism_selection", "trigger_reliability", "checkpoint_policy", "done_gate", "must_not_do"),
+    ("实际重复证据", "允许零候选", "不适用机制直接省略", "混合触发器", "投递缺口", "周期对账", "Push right", "外部写入", "决策简报", "Spec-ready", "Implemented", "Operable", "PENDING", "新增 loop-me Skill"),
 )
 
 expected_handling_has(
