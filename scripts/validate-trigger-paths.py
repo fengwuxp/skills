@@ -4725,6 +4725,32 @@ check(
             '"id": "wise-agent-workflow-loop-should-separate-spec-implementation-operation"',
             '"id": "wise-agent-workflow-loop-should-keep-brief-decision-complete"',
             '"id": "wise-agent-workflow-loop-should-omit-inapplicable-reliability-mechanisms"',
+            '"id": "wise-agent-workflow-loop-should-define-run-completion-and-final-action"',
+            '"id": "wise-agent-workflow-loop-should-bound-failure-and-repeat-processing"',
+        ],
+    )
+    and has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "单次运行完成信号",
+            "完成动作",
+            "部分结果",
+            "失败策略 / 恢复或回退",
+            "未执行、部分成功与状态未知",
+            "状态未知时不得直接重试",
+            "对账、隔离、补偿、回滚或人工修复",
+            "有界重试、跳过、暂停或人工升级",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/UJwIPYg40TTi-1P_EXY2UQ",
+            "loop-me 专题",
+            "321658273cb1d20b76026717d027d505790106d4",
+            "单次运行完成信号",
+            "部分副作用后的恢复或回退",
+            "不新增顶层 `loop-me` Skill",
         ],
     )
     and has_all(

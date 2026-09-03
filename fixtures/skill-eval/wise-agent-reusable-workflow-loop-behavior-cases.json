@@ -95,6 +95,28 @@
         "确认不存在重复副作用、顺序、漏事件、增量扫描和跨轮恢复风险后，省略 webhook 去重、乱序重放、游标水位、补跑调度和独立状态库，不用 N/A 占位或无主基础设施填满清单。",
         "Brief 只保留本次差异、证据锚点和必要异常；既无时效边界也无高风险外部动作时，不虚构决策截止点或额外人工检查点。"
       ]
+    },
+    {
+      "id": "wise-agent-workflow-loop-should-define-run-completion-and-final-action",
+      "category": "run-completion-boundary",
+      "risk": "high",
+      "prompt": "通知处理 Workflow 的 Trigger、分类步骤和人工 Brief 都写完了，但没有说明什么证据表示本轮完成，也没写人审完后通知要归档、标记已读还是转成 Issue。可以判定规格和本次运行都完成吗？",
+      "criteria": [
+        "区分 Workflow Spec 达到 Spec-ready 与单次运行完成：前者表示没有未声明业务决策，后者必须有可观察的完成信号，不能由 Brief 已生成或 Agent 自述替代。",
+        "补齐单次运行完成信号和检查点后的完成动作，明确通知最终归档、标记、转交或保持待处理；部分结果是否算成功也必须有口径。",
+        "完成动作涉及外部写入时仍需当前权限和人工决策，不因写入 Workflow Spec 而获得执行授权。"
+      ]
+    },
+    {
+      "id": "wise-agent-workflow-loop-should-bound-failure-and-repeat-processing",
+      "category": "run-failure-policy-hard-negative",
+      "risk": "high",
+      "prompt": "自动发布 Workflow 已执行部分外部动作但没拿到成功回执，当前状态未知；它准备一直重试，同一个事件再次投递也重新发布，直到 Agent 觉得成功为止。请把它补成可持续运行的规格。",
+      "criteria": [
+        "先区分未执行、部分成功与状态未知；成功信号不可得或状态未知时不得直接重试，也不允许以 Agent 主观判断结束。",
+        "对已经发生的部分副作用明确对账、隔离、补偿、回滚或人工修复，并按事件唯一标识、幂等或去重防止同一输入重复发布。",
+        "失败策略在恢复事实明确后才能按失败代价、外部系统契约与 Owner 决策选择有界重试、跳过、暂停或人工升级，不机械规定统一次数。"
+      ]
     }
   ]
 }
