@@ -1,114 +1,104 @@
 {
-  "elapsed_ms": 41658,
+  "elapsed_ms": 22209,
   "evaluation_id": "product-prd-readability-r1-judge",
   "judge_model": "gpt-5.6-terra",
   "passed": true,
   "proof_limit": "simulated-reader-evidence-only",
   "reader_model": "gpt-5.6-sol",
-  "response_sha256": "ae1f04878c77dbb09d156d6366fad42c0cdb41680fc02e66113ddd0ad1a44261",
+  "response_sha256": "3c486fb75820d3a9270c40f550d6ed4f892aa5e61b4c30e67122c3f6631c69a5",
   "samples": [
     {
       "behavior_scores": {
-        "cross_role_alignment": 9.4,
-        "evidence_location_quality": 9.5,
-        "recall_consistency": 9.4
+        "cross_role_alignment": 9.0,
+        "evidence_location_quality": 9.0,
+        "recall_consistency": 9.0
       },
-      "behavior_total": 28.3,
+      "behavior_total": 27.0,
       "blockers": [],
       "findings": [
-        "版本有效、失效和待确认与申请通过、驳回、待专业确认的关系明确；待专业确认被明确排除为通过或驳回。",
-        "专业 Owner 确认并发布版本事实、平台执行与留痕、运营通知和 SLA 承接的职责分离清楚，五角色无实质矛盾。",
-        "SCN-001、SCN-002、R-EXT-001、接口和验收摘要互相印证：无有效版本不得通过，版本确认后重新排队，证据包含版本引用与通知记录。"
+        "失败、重试及禁止显示成功的规则在场景、流程和验收中一致出现，五个角色的复述保持一致。"
       ],
-      "hard_dimension_min": 9.1,
+      "hard_dimension_min": 8.0,
       "passed": true,
       "residual_risks": [
-        "人工 SLA 的具体时长、告警升级对象和最终处置时限尚未确定。",
-        "候选版本选择、材料完整性和停止处理后的最终状态仍需在后续执行设计中确定。",
-        "当前版本为待专业确认的 candidate；正文已规定确认前不得形成通过结论。"
-      ],
-      "sample_id": "enhanced-external-qualification",
-      "static_scores": {
-        "concept_object_state": 9.2,
-        "context_and_purpose": 9.3,
-        "flow_causality": 9.2,
-        "reading_load_fluency": 8.6,
-        "result_evidence_observability": 9.3,
-        "rule_exception_determinacy": 9.1,
-        "subject_and_responsibility": 9.4
-      },
-      "static_total": 64.1,
-      "strength": "enhanced",
-      "total": 92.4
-    },
-    {
-      "behavior_scores": {
-        "cross_role_alignment": 9.4,
-        "evidence_location_quality": 9.1,
-        "recall_consistency": 9.3
-      },
-      "behavior_total": 27.8,
-      "blockers": [],
-      "findings": [
-        "单一失败场景的主体、状态、禁止结果和本轮收口完整闭合；五角色均能定位至 SCN-001、接口说明、风险和验收摘要。",
-        "正文对失败原因展示保留了明确的未确认前处理：仅展示通用失败信息，未依赖作者口头补充。",
-        "轻量文档存在必要重复，但未造成规则或责任冲突。"
-      ],
-      "hard_dimension_min": 8.7,
-      "passed": true,
-      "residual_risks": [
-        "保存成功结果、超时和重复提交的协议判定仍需进入工程设计，但不妨碍本期产品规则理解。",
-        "事件保留期限与字段细节未定义；当前仅承诺最小审计时间和结果。"
+        "“保存成功结果”与失败原因摘要的具体判定仍保持未知，工程实现需另行确认。"
       ],
       "sample_id": "light-save-failure",
       "static_scores": {
-        "concept_object_state": 8.7,
-        "context_and_purpose": 9.2,
+        "concept_object_state": 9.0,
+        "context_and_purpose": 9.0,
         "flow_causality": 9.0,
-        "reading_load_fluency": 8.6,
-        "result_evidence_observability": 9.0,
-        "rule_exception_determinacy": 8.7,
+        "reading_load_fluency": 9.0,
+        "result_evidence_observability": 8.0,
+        "rule_exception_determinacy": 9.0,
         "subject_and_responsibility": 9.0
       },
-      "static_total": 62.2,
+      "static_total": 62.0,
       "strength": "light",
-      "total": 90.0
+      "total": 89.0
     },
     {
       "behavior_scores": {
-        "cross_role_alignment": 9.4,
-        "evidence_location_quality": 9.3,
-        "recall_consistency": 9.4
+        "cross_role_alignment": 9.0,
+        "evidence_location_quality": 9.0,
+        "recall_consistency": 9.0
       },
-      "behavior_total": 28.1,
+      "behavior_total": 27.0,
       "blockers": [],
       "findings": [
-        "审核申请、审核任务、唯一当前结论和交易订单的边界清楚；R-001 将正常、重复和禁止结果直接裁决。",
-        "材料或来源不可用时保持待审并转运营、待确认前禁止通过、恢复后重新裁决，形成可定位的异常闭环。",
-        "验收摘要给出了查询、状态、重复提交和人工处理的可观察证据，读者复述一致。"
+        "R-001、状态迁移、异常分支、人工恢复和可查询证据相互对应，角色间没有补写关键业务事实。"
       ],
-      "hard_dimension_min": 8.7,
+      "hard_dimension_min": 9.0,
       "passed": true,
       "residual_risks": [
-        "材料完整性、审核权限及并发裁决的具体判定机制尚未定义，属于后续工程和执行计划边界。",
-        "人工承接和通知没有单申请 SLA；30 天中位时长指标不能替代该运行期规则。"
+        "材料来源确认的具体操作与单笔处理时限保持未知；这不妨碍当前待审和禁止裁决规则的裁决。"
       ],
       "sample_id": "standard-review-task",
       "static_scores": {
-        "concept_object_state": 8.6,
+        "concept_object_state": 9.0,
         "context_and_purpose": 9.0,
         "flow_causality": 9.0,
-        "reading_load_fluency": 8.7,
-        "result_evidence_observability": 9.1,
-        "rule_exception_determinacy": 8.7,
-        "subject_and_responsibility": 9.1
+        "reading_load_fluency": 8.0,
+        "result_evidence_observability": 9.0,
+        "rule_exception_determinacy": 9.0,
+        "subject_and_responsibility": 9.0
       },
-      "static_total": 62.2,
+      "static_total": 62.0,
       "strength": "standard",
-      "total": 90.3
+      "total": 89.0
+    },
+    {
+      "behavior_scores": {
+        "cross_role_alignment": 9.0,
+        "evidence_location_quality": 9.0,
+        "recall_consistency": 9.0
+      },
+      "behavior_total": 27.0,
+      "blockers": [],
+      "findings": [
+        "有效版本裁决、待专业确认、停止终态、SLA升级、通知失败承接和审计证据形成闭环，五角色可一致定位和复述。"
+      ],
+      "hard_dimension_min": 9.0,
+      "passed": true,
+      "residual_risks": [
+        "工作小时日历、通知送达判定和重复裁决语义未定义，属于明确保留的执行细节，不能据此补写规则。"
+      ],
+      "sample_id": "enhanced-external-qualification",
+      "static_scores": {
+        "concept_object_state": 9.0,
+        "context_and_purpose": 9.0,
+        "flow_causality": 9.0,
+        "reading_load_fluency": 8.0,
+        "result_evidence_observability": 9.0,
+        "rule_exception_determinacy": 9.0,
+        "subject_and_responsibility": 9.0
+      },
+      "static_total": 62.0,
+      "strength": "enhanced",
+      "total": 89.0
     }
   ],
-  "source_sha256": "c78723aeebb3436e31faa1e8ef4de60f3ffe204629d83f95a30c1d032b63ec8b",
+  "source_sha256": "be2a2092df6c519131359cbfdc732e21c0a922794d035058a4ab32bcb710a1c8",
   "thresholds": {
     "behavior_min": 24,
     "hard_dimension_min": 7,

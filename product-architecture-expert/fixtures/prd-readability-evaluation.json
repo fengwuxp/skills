@@ -6,12 +6,12 @@
     "status": "complete",
     "reader_model": "gpt-5.6-sol",
     "judge_model": "gpt-5.6-terra",
-    "collector_payload_sha256": "d944aec08cfe281a81af452db527b0bd90d13217f6e34b5ec240e74808e8ce16",
-    "collector_launcher_sha256": "c5fe29ae6ef184f3a5906d95b13466f165d5d1e877ec96fe26f262a6e1a380ad",
-    "response_sha256": "ae1f04878c77dbb09d156d6366fad42c0cdb41680fc02e66113ddd0ad1a44261",
-    "judge_payload_sha256": "7e1892db871321993118c3c6af0fc868448ddbdd6433d4b0ddffb7778952f580",
-    "judge_launcher_sha256": "df03a6d22ded1705ca8580ee82cbc3ab8a8e9ad9d0989cf3467a23bdf3de0920",
-    "report_sha256": "064767ae6ac9f6d25e3eaaf54eb9281c8e007bddc52c030c77c20db3e945c00d",
+    "collector_payload_sha256": "4cdedf6e977f904b41d38ed7c917a0675b217dc57860f375c9276aac8fb09ace",
+    "collector_launcher_sha256": "15c7056be08207a7d40ab7c510e71efab035ce87de92d5111c3cc8014b386c48",
+    "response_sha256": "3c486fb75820d3a9270c40f550d6ed4f892aa5e61b4c30e67122c3f6631c69a5",
+    "judge_payload_sha256": "32634c9095c189e960fbe9dc542ba7fefd63404df9f374082e9488cf48cb4fc2",
+    "judge_launcher_sha256": "15c7056be08207a7d40ab7c510e71efab035ce87de92d5111c3cc8014b386c48",
+    "report_sha256": "4584fc0f76efbbf93b7af8b3def9f7b194c42de97c298dc637da965bcf140360",
     "responses_path": "fixtures/skill-eval/product-prd-readability-r1-reader-evidence.jsonl"
   },
   "thresholds": {
@@ -27,7 +27,7 @@
       "product-architecture-expert/fixtures/prd-valid.md",
       "product-architecture-expert/fixtures/prd-enhanced-readable-valid.md"
     ],
-    "sha256": "c78723aeebb3436e31faa1e8ef4de60f3ffe204629d83f95a30c1d032b63ec8b"
+    "sha256": "be2a2092df6c519131359cbfdc732e21c0a922794d035058a4ab32bcb710a1c8"
   },
   "samples": [
     {

@@ -243,6 +243,7 @@ python3 product-architecture-expert/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-prd-semantic-deep-review-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-demand-analysis-decision-gates-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"
@@ -269,6 +270,7 @@ echo "==> novelist behavior cases"
 python3 novelist/scripts/test-check-novelist-continuity-ledger.py
 python3 novelist/scripts/test-check-novelist-timeline.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-logical-timeline-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-control-and-causal-anchoring-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-diversified-imagination-behavior-cases.json"

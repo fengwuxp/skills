@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from check_product_deliverable import missing_groups
+from check_product_deliverable import missing_groups, warning_groups
 from check_product_qualification import check as qualification_issues
 
 
@@ -140,6 +140,136 @@ def main() -> int:
         if expected_issue not in missing_groups("prd", candidate):
             failures.append(f"{label} unexpectedly passed")
 
+    authority_boundary_prd = current_prd.replace("权威来源：", "权威边界：", 1)
+    if "document_control_incomplete" in missing_groups("prd", authority_boundary_prd):
+        failures.append("authority boundary equivalent document control was rejected")
+
+    combined_owner_prd = current_prd.replace(
+        "产品 owner：审核产品负责人。\n业务 owner：运营负责人。",
+        "owner：审核产品负责人、运营负责人。",
+        1,
+    )
+    if "document_control_incomplete" not in missing_groups("prd", combined_owner_prd):
+        failures.append("combined owner unexpectedly satisfied product and business ownership")
+
+    equivalent_spine_prd = (
+        current_prd
+        .replace("产品架构主脊：", "概要主链：", 2)
+        .replace("核心能力：", "能力地图：", 1)
+        .replace("核心对象与关系：", "核心名相：", 1)
+        .replace("关键交互与边界：", "参与方与责任：", 1)
+        .replace("关键图 / 不画图理由：", "产品视图：", 1)
+    )
+    if "architecture_spine_incomplete" in missing_groups("prd", equivalent_spine_prd):
+        failures.append("equivalent early architecture projection was rejected")
+
+    compact_interface = """### 产品接口抽象
+
+产品接口矩阵只固定业务输入、输出、失败语义和责任边界。
+
+| 产品能力 | 输入与前置 | 输出与失败语义 |
+| --- | --- | --- |
+| 审核申请裁决 | 待审申请、完整材料、审核权限和可用材料来源 | 返回通过或驳回；非待审返回原结论，来源不可用时保持待审并由运营承接。 |
+
+"""
+    compact_interface_prd = re.sub(
+        r"(?ms)^### 产品接口抽象\n.*?(?=^## 七、数据与风险)",
+        compact_interface,
+        current_prd,
+        count=1,
+    )
+    compact_interface_missing = missing_groups("prd", compact_interface_prd)
+    if "product_interface_contract_incomplete" in compact_interface_missing:
+        failures.append("compact product interface matrix was rejected")
+    if "compact_product_interface_contract" not in warning_groups(
+        "prd", compact_interface_prd
+    ):
+        failures.append("compact product interface matrix did not emit compatibility warning")
+
+    goal_mechanism_prd = current_prd.replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。",
+        "目标：通过 resourceId、httpMethod、Provider 路由和 scopeType 并集实现审核权限；非目标：不改结算规则。",
+        1,
+    )
+    if "goal_mechanism_leak" not in warning_groups("prd", goal_mechanism_prd):
+        failures.append("goal containing identifier and aggregation mechanisms was not warned")
+
+    non_goal_current_concept_prd = current_prd.replace(
+        "非目标：不改结算规则。",
+        "非目标：不建设 `OrganizationDirectoryConnection`。",
+        1,
+    ).replace(
+        "## 四、概要设计",
+        """#### 核心概念与业务口径（本期投影）
+
+| 概念 | 类型 | 本 PRD 中的定义 | 边界 / 不等于 | 状态 | Owner / 权威来源 |
+| --- | --- | --- | --- | --- | --- |
+| `OrganizationDirectoryConnection` | 技术机制 | 外部目录连接。 | 不等于审核任务。 | 当前 | 审核产品负责人 / 本 PRD。 |
+
+## 四、概要设计""",
+        1,
+    )
+    if "non_goal_current_concept_conflict" not in warning_groups(
+        "prd", non_goal_current_concept_prd
+    ):
+        failures.append("current concept explicitly excluded by non-goal was not warned")
+
+    api_product_goal_prd = current_prd.replace(
+        "目标：缩短审核处理时间；非目标：不改结算规则。",
+        "目标：为开发者提供稳定 API 产品并缩短接入时间；非目标：不定义调用方内部实现。",
+        1,
+    )
+    if "goal_mechanism_leak" in warning_groups("prd", api_product_goal_prd):
+        failures.append("API product outcome was incorrectly warned as a goal mechanism leak")
+
+    no_history_baseline_prd = re.sub(
+        r"成功指标：.*?Owner 为运营负责人。",
+        "成功指标：无历史基线；基线建立方式：上线前回放最近 30 天申请；"
+        "目标状态：无版本结论比例为 0%；观察窗口为上线后 30 天；"
+        "Owner 为运营负责人。",
+        current_prd,
+        count=1,
+    )
+    if "success_metric_incomplete" in missing_groups("prd", no_history_baseline_prd):
+        failures.append("measured no-history baseline unexpectedly failed")
+
+    light_prd = (FIXTURES / "prd-light-readable-valid.md").read_text(encoding="utf-8")
+    light_without_complete_scenario = re.sub(
+        r"(?ms)^### SCN-001.*?(?=^## 四、)",
+        "业务场景：用户保存失败后看到提示。\n\n",
+        light_prd,
+        count=1,
+    )
+    if "lightweight_scenario_incomplete" not in missing_groups(
+        "prd", light_without_complete_scenario
+    ):
+        failures.append("lightweight PRD without a complete scenario unexpectedly passed")
+
+    light_without_atomic_requirement = (
+        light_prd
+        .replace("规范强度：必须。", "", 1)
+        .replace(
+            "要求的行为或业务结果：明确显示未保存并保留用户输入和重试入口。",
+            "",
+            1,
+        )
+    )
+    if "lightweight_requirement_incomplete" not in missing_groups(
+        "prd", light_without_atomic_requirement
+    ):
+        failures.append("lightweight PRD without an atomic requirement unexpectedly passed")
+
+    light_with_weak_acceptance = re.sub(
+        r"(?ms)^## 六、验收摘要.*$",
+        "## 六、验收摘要\n\n业务结果：页面正常。验收标准：测试通过。",
+        light_prd,
+        count=1,
+    )
+    if "lightweight_acceptance_incomplete" not in missing_groups(
+        "prd", light_with_weak_acceptance
+    ):
+        failures.append("lightweight PRD with non-observable acceptance unexpectedly passed")
+
     if "## 六、关键流程" in current_prd:
         failures.append("single-scenario fixture kept a redundant shared-flow section")
     readable_single_missing = missing_groups("prd", current_prd)
@@ -178,8 +308,8 @@ def main() -> int:
     if "rule_contract_incomplete" in missing_groups("prd", compact_rule_prd):
         failures.append("compact rule projection unexpectedly failed")
     incomplete_compact_rule = compact_rule_prd.replace(
-        "申请待审且材料完整 / 记录通过或驳回结论并保留操作者和时间 / 运营负责人。",
-        "申请待审且材料完整 / 记录通过或驳回结论并保留操作者和时间。",
+        "申请待审、材料完整、来源可用且审核员有权限 / 记录通过或驳回结论并保留操作者和时间 / 运营负责人。",
+        "申请待审、材料完整、来源可用且审核员有权限 / 记录通过或驳回结论并保留操作者和时间。",
         1,
     )
     if "rule_contract_incomplete" not in missing_groups(
@@ -252,8 +382,8 @@ def main() -> int:
             "",
             1,
         ).replace(
-            "## 九、验收摘要",
-            embedded_flow_section + "## 九、验收摘要",
+            "## 八、验收摘要",
+            embedded_flow_section + "## 八、验收摘要",
             1,
         )
         if "conditional_flow_order" not in missing_groups(
@@ -283,19 +413,21 @@ def main() -> int:
 
     enhanced_prd = (FIXTURES / "prd-enhanced-readable-valid.md").read_text(encoding="utf-8")
     shared_flow = re.search(
-        r"(?ms)^## 六、关键流程\n.*?(?=^## 七、业务规则与接口抽象)",
+        r"(?ms)^### 跨场景端到端流程\n.*?(?=^### 产品需求陈述)",
         enhanced_prd,
     )
     if shared_flow is None:
-        failures.append("enhanced fixture shared flow missing")
+        failures.append("enhanced fixture embedded cross-scenario flow missing")
     else:
         misplaced_flow = enhanced_prd.replace(shared_flow.group(0), "", 1).replace(
-            "## 九、验收摘要",
-            shared_flow.group(0) + "## 九、验收摘要",
+            "## 八、验收摘要",
+            shared_flow.group(0) + "## 八、验收摘要",
             1,
         )
         if "conditional_flow_order" not in missing_groups("prd", misplaced_flow):
             failures.append("misplaced conditional flow unexpectedly passed")
+    if "## 六、关键流程" in enhanced_prd:
+        failures.append("enhanced canonical fixture kept a legacy shared-flow section")
 
     incomplete_scenario = re.sub(
         r"(?ms)^### SCN-001 运营审核申请\n.*?(?=^### 产品需求陈述)",

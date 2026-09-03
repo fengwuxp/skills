@@ -188,14 +188,14 @@ DOCUMENT_CONTROL_FIELD_GROUPS = (
     ("product_owner", ("产品 owner", "产品 Owner")),
     ("business_owner", ("业务 owner", "业务 Owner")),
     ("updated_at", ("更新时间",)),
-    ("authority_source", ("权威来源",)),
+    ("authority_source", ("权威来源", "权威边界")),
 )
 ARCHITECTURE_SPINE_FIELD_GROUPS = (
-    ("architecture_spine", ("产品架构主脊",)),
-    ("core_capability", ("核心能力",)),
-    ("core_object_relation", ("核心对象与关系",)),
-    ("interaction_boundary", ("关键交互与边界",)),
-    ("view_choice", ("关键图 / 不画图理由", "关键图/不画图理由")),
+    ("architecture_spine", ("产品架构主脊", "概要主链", "核心授权结构", "方案概述与核心方案")),
+    ("core_capability", ("核心能力", "能力地图", "本期价值与范围")),
+    ("core_object_relation", ("核心对象与关系", "核心名相", "核心概念与业务口径")),
+    ("interaction_boundary", ("关键交互与边界", "参与方与责任", "分层责任边界")),
+    ("view_choice", ("关键图 / 不画图理由", "关键图/不画图理由", "产品视图")),
 )
 PRODUCT_INTERFACE_FIELD_GROUPS = (
     ("interface_name", ("产品接口名称",)),
@@ -1282,21 +1282,53 @@ def document_control_issues(text: str) -> list[str]:
 
 
 def architecture_spine_issues(text: str) -> list[str]:
-    overview = section_body(text, ("概要设计",))
+    detail = re.search(r"(?m)^#{2,6}\s+.*详细设计.*$", text)
+    early_product_design = text[: detail.start()] if detail else text
+
+    def present(aliases: tuple[str, ...]) -> bool:
+        return has_meaningful_alias_value(early_product_design, aliases) or bool(
+            section_body(early_product_design, aliases).strip()
+        )
+
     return ["architecture_spine_incomplete"] if any(
-        not has_meaningful_alias_value(overview, aliases)
+        not present(aliases)
         for _, aliases in ARCHITECTURE_SPINE_FIELD_GROUPS
     ) else []
 
 
-def product_interface_contract_issues(text: str) -> list[str]:
+def has_compact_product_interface_contract(text: str) -> bool:
     rules_and_interface = section_body(
         text, ("业务规则与接口抽象", "业务规则和接口抽象")
     )
-    return ["product_interface_contract_incomplete"] if any(
-        not has_meaningful_alias_value(rules_and_interface, aliases)
+    for line in rules_and_interface.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        headers = [normalize(cell) for cell in line.strip().strip("|").split("|")]
+        has_name = any(header in {"产品能力", "产品接口"} for header in headers)
+        has_input = any(header in {"输入与前置", "输入与前置条件"} for header in headers)
+        has_output_failure = any(
+            header in {"输出与失败语义", "业务输出与失败语义"} for header in headers
+        )
+        if has_name and has_input and has_output_failure:
+            return True
+    return False
+
+
+def has_full_product_interface_contract(text: str) -> bool:
+    rules_and_interface = section_body(
+        text, ("业务规则与接口抽象", "业务规则和接口抽象")
+    )
+    return all(
+        has_meaningful_alias_value(rules_and_interface, aliases)
         for _, aliases in PRODUCT_INTERFACE_FIELD_GROUPS
-    ) else []
+    )
+
+
+def product_interface_contract_issues(text: str) -> list[str]:
+    return [] if (
+        has_full_product_interface_contract(text)
+        or has_compact_product_interface_contract(text)
+    ) else ["product_interface_contract_incomplete"]
 
 
 def success_metric_issues(text: str) -> list[str]:
@@ -1311,6 +1343,13 @@ def success_metric_issues(text: str) -> list[str]:
         return bool(match and meaningful_values([match.group(1)]))
 
     has_baseline = has_value(r"基线(?:值)?\s*(?:为|[：:])\s*([^；;。]+)")
+    no_history_baseline = bool(
+        re.search(r"(?:无|暂无)历史基线|基线(?:尚未建立|待建立)", normalized)
+    )
+    has_baseline_plan = has_value(
+        r"(?:基线建立方式|基线采集计划|基线测量计划)\s*(?:为|[：:])\s*([^；;。]+)"
+    )
+    has_baseline = has_baseline or (no_history_baseline and has_baseline_plan)
     has_target = bool(
         has_value(r"(?<!非)目标(?:值|状态)?\s*(?:为|降至|达到|提升至|[：:])\s*([^；;。，,]+)")
         or has_value(r"(?:降至|提升至|达到)\s*([^；;。，,]+)")
@@ -1320,6 +1359,34 @@ def success_metric_issues(text: str) -> list[str]:
     )
     has_owner = has_value(r"(?:owner|负责人)\s*(?:为|[：:])\s*([^；;。]+)")
     return [] if all((has_baseline, has_target, has_window, has_owner)) else ["success_metric_incomplete"]
+
+
+def lightweight_prd_contract_issues(text: str) -> list[str]:
+    issues: list[str] = []
+    if scenario_contract_issues(text):
+        issues.append("lightweight_scenario_incomplete")
+
+    detail = section_body(text, ("详细设计",))
+    projected_requirement = f"## 产品需求陈述\n{detail}"
+    if requirement_contract_issues(projected_requirement):
+        issues.append("lightweight_requirement_incomplete")
+
+    acceptance = section_body(text, ("验收摘要",))
+    has_observable_result = any(
+        contains_term(acceptance, marker)
+        for marker in ("显示", "保留", "可查询", "可操作", "通知", "记录", "状态")
+    )
+    has_boundary = any(
+        contains_term(acceptance, marker)
+        for marker in ("不得", "禁止", "边界", "失败", "恢复", "重试", "人工")
+    )
+    has_acceptance_owner = any(
+        contains_term(acceptance, marker)
+        for marker in ("验收 Owner", "产品负责人", "业务负责人", "运营确认", "业务确认")
+    )
+    if not all((acceptance.strip(), has_observable_result, has_boundary, has_acceptance_owner)):
+        issues.append("lightweight_acceptance_incomplete")
+    return issues
 
 
 def has_rule_scope(text: str) -> bool:
@@ -1377,6 +1444,60 @@ def contains_term(text: str, term: str) -> bool:
     return term.casefold() in text.casefold()
 
 
+def _goal_statement_body(text: str) -> str:
+    goals = section_body(text, ("目标与非目标",))
+    boundaries = [
+        position
+        for marker in ("成功指标", "成功标准", "本期非目标", "本期不做", "非目标")
+        if (position := goals.find(marker)) >= 0
+    ]
+    return goals[: min(boundaries)] if boundaries else goals
+
+
+def goal_mechanism_leak(text: str) -> bool:
+    goal_body = _goal_statement_body(text)
+    mechanism_markers = (
+        "resourceId",
+        "httpMethod",
+        "Provider",
+        "scopeType",
+        "explicitRefs",
+        "schema",
+        "SQL",
+        "Repository",
+        "Handler",
+        "Mapper",
+        "HTTP_METHOD",
+        "字段组合",
+        "取并集",
+        "并集",
+        "交集",
+        "路由算法",
+    )
+    return sum(1 for marker in mechanism_markers if contains_term(goal_body, marker)) >= 3
+
+
+def non_goal_current_concept_conflict(text: str) -> bool:
+    goals = section_body(text, ("目标与非目标",))
+    starts = [
+        position
+        for marker in ("本期非目标", "本期不做", "非目标")
+        if (position := goals.find(marker)) >= 0
+    ]
+    if not starts:
+        return False
+    non_goals = goals[min(starts) :]
+    excluded_identifiers = set(re.findall(r"`([A-Z][A-Za-z0-9_]{4,})`", non_goals))
+    if not excluded_identifiers:
+        return False
+    concepts = section_body(text, ("核心概念与业务口径",))
+    current_rows = "\n".join(
+        line for line in concepts.splitlines() if re.search(r"\|\s*当前\s*\|", line)
+    )
+    current_identifiers = set(re.findall(r"`([A-Z][A-Za-z0-9_]{4,})`", current_rows))
+    return bool(excluded_identifiers & current_identifiers)
+
+
 def valued_group_hits(kind: str, group: RequiredGroup, text: str) -> int:
     aliases = [alias.casefold() for alias in group.aliases]
     all_aliases = sorted(
@@ -1425,6 +1546,15 @@ def warning_groups(kind: str, text: str) -> list[str]:
         warnings.append("implementation_language")
     if declared_prd_strength(text) == "轻量" and ambiguous_business_phrases(text):
         warnings.append("ambiguous_business_language")
+    if goal_mechanism_leak(text):
+        warnings.append("goal_mechanism_leak")
+    if non_goal_current_concept_conflict(text):
+        warnings.append("non_goal_current_concept_conflict")
+    if (
+        has_compact_product_interface_contract(text)
+        and not has_full_product_interface_contract(text)
+    ):
+        warnings.append("compact_product_interface_contract")
     return warnings
 
 
@@ -1501,6 +1631,8 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.append("keyword_only_section")
         if strength == "轻量" and is_keyword_shell("prd", text):
             missing.append("keyword_shell")
+        if strength == "轻量":
+            missing.extend(lightweight_prd_contract_issues(text))
         if strength in SCENARIO_CONTRACT_STRENGTHS:
             missing.extend(architecture_spine_issues(text))
             missing.extend(product_interface_contract_issues(text))
@@ -1689,14 +1821,30 @@ def run_self_test() -> int:
         "## 二、定性、范围与概要\n产品定性：流程治理；总体判断：统一入口；范围和产品边界为后台审核。"
         "概要设计采用统一入口；方案概述说明申请如何流转。核心名相为审核任务，定义是待处理申请。"
         "用户为运营，角色是审核员，责任边界不变。\n"
-        "## 三、详细设计与业务场景\n详细设计：审核员处理申请单场景；功能围绕对象状态和生命周期提供审核反馈。\n"
+        "## 三、详细设计与业务场景\n本节说明审核员处理待审核申请的责任推进与失败收口。\n"
+        "### SCN-001 审核员处理申请单\n"
+        "业务情境：运营收到一条待审核申请，需要在当前工作台完成裁决。\n"
+        "责任推进：审核员核对申请事实并提交通过或拒绝结论，工作台记录结果。\n"
+        "裁决与状态：只有具备审核权限且事实完整时才能提交，提交后申请从待审核变为已裁决。\n"
+        "异常与收口：事实缺失时保持待审核并提示补充，重复提交时显示既有结果并停止再次裁决。\n"
+        "需求名称：审核裁决。需求类型：功能。责任主体：审核员。"
+        "场景 / 前置状态：SCN-001，申请为待审核。规范强度：必须。"
+        "要求的行为或业务结果：审核员提交后记录唯一裁决结果。"
+        "度量、时限或边界：无审核权限不得提交。来源与可靠性：当前 PRD，已确认。"
+        "关联规则：审核权限规则。验收样例：提交通过后申请显示已通过。\n"
         "## 四、流程、规则与产品接口\n主流程是提交、审核、通知；异常流程处理重复请求和人工处理。"
         "规则覆盖权限和审批。产品接口抽象说明业务契约、输入、输出和失败语义。\n"
         "## 五、数据、风险与待确认\n数据包括指标、报表和审计。风险和依赖待确认，确认方为业务，影响范围为上线。\n"
-        "## 六、验收摘要\n验收摘要覆盖业务结果、关键边界、红线和验收标准。"
+        "## 六、验收摘要\n业务结果：申请提交后显示唯一裁决状态；"
+        "关键边界与红线：无审核权限不得提交，重复提交不得产生第二个结果；"
+        "验收标准：产品负责人确认状态可查询，业务负责人确认异常时可恢复处理。"
     )
-    if missing_groups("prd", light_prd):
-        failures.append("prd: merged lightweight document unexpectedly failed")
+    light_prd_missing = missing_groups("prd", light_prd)
+    if light_prd_missing:
+        failures.append(
+            "prd: merged lightweight document unexpectedly failed: "
+            + ", ".join(light_prd_missing)
+        )
     flat_light_prd = (
         "文档强度：轻量。\n"
         + " ".join(alias for group in CHECKS["prd"] for alias in group.aliases)

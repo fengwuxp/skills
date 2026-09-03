@@ -112,6 +112,8 @@ description: |
 
 当用户只要求评审 PRD、需求评审、评审会前 AI 预扫描、找问题或给修改建议时，优先读取 `references/product-prd-quality-gates.md` 和 `references/product-design-and-prd.md` 输出问题清单、必改项、待确认项、owner 和验收影响；不要默认重写全文。用户明确要求“按评审结论重写/整理最终版”时，再进入 PRD 产出工作流。
 
+当用户要求逐文档深审、重新定性 PRD 目标、梳理核心概念与流程，或连续评审多份既有 PRD 时，同样读取上述两个 reference，并执行“目标纯度 -> 概念角色 -> 流程关系 -> 非目标反查 -> 下游不变量传播”的语义深审。目标只保留产品结果和稳定边界；规范语法、聚合算法、状态迁移和 Provider 等机制归入概念、规则或接口契约。只有用户授权写回时才修改当前权威；产品不变量变化后必须列出系分、测试和准出影响，不能只修 PRD 一处。
+
 产品架构交付物必须在正式、完整、可评审、提交前、CR 或触发验证场景下做本地结构检查：正式 PRD 先运行 `scripts/check_product_qualification.py`，再运行 `scripts/check_product_deliverable.py --kind prd`；业务架构、产品架构方案、图形 brief、产品合议评审报告和跨应用原型范围规划继续使用 `check_product_deliverable.py` 的对应 `--kind`。脚本只检查可发现结构，不证明产品定性、概念事实、组织、指标或业务结论正确，也不写文件、不访问网络、不上传文件、不读取密钥；无法运行时必须说明原因、人工检查结果和残余风险。
 
 当用户明确要求画图、流程图、能力地图、状态机、关系图、资金流图、产品架构图、运营后台结构图或可视化产物时，读取 `references/diagram-output.md`，正式图形化交付默认只生成 SVG；仅当用户明确要求 Mermaid/Markdown 草图、PNG、PDF、截图或其他格式时才额外处理并报告验证结论。

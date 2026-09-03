@@ -457,6 +457,12 @@ novelist_continuity_checker_test = "novelist/scripts/test-check-novelist-continu
 novelist_timeline_checker = "novelist/scripts/check-novelist-timeline.py"
 novelist_timeline_checker_test = "novelist/scripts/test-check-novelist-timeline.py"
 novelist_timeline_behavior_cases = "fixtures/skill-eval/novelist-logical-timeline-behavior-cases.json"
+novelist_plot_control_behavior_cases = (
+    "fixtures/skill-eval/novelist-plot-control-and-causal-anchoring-behavior-cases.json"
+)
+novelist_plot_control_prechange = (
+    "fixtures/skill-eval/source-profiles/novelist-plot-control-prechange.md"
+)
 novelist_publication = "novelist/references/publication-and-content-governance.md"
 novelist_source_map = "novelist/references/source-map.md"
 novelist_craft_cases = "novelist/references/craft-case-library.md"
@@ -20963,6 +20969,54 @@ check(
         ],
     )
     and not (ROOT / "fixtures/model-routing-pilot/batch-worker-input.txt").exists(),
+)
+
+check(
+    "novelist plot control semantic gate stays source-bound and behavior-wired",
+    (ROOT / novelist_plot_control_behavior_cases).is_file()
+    and (ROOT / novelist_plot_control_prechange).is_file()
+    and has_all(
+        novelist_skill,
+        [
+            "目标阶段语义准入门",
+            "结构、记录、语义、阶段四项结论",
+            "局部章卡只继承自身必要依赖",
+        ],
+    )
+    and has_all(
+        novelist_story,
+        [
+            "目标阶段语义准入与因果可达",
+            "precedes-only",
+            "Join Predicate",
+            "Observable Signal",
+            "人物、消息、命令、环境、等待或持续时钟",
+        ],
+    )
+    and has_all(
+        novelist_continuity,
+        [
+            "目标阶段语义准入与因果可达",
+            "可观察汇合信号",
+            "无关远端未知",
+        ],
+    )
+    and has_all(
+        novelist_plot_control_behavior_cases,
+        [
+            '"id": "novelist-should-block-chapter-stage-after-structural-timeline-pass"',
+            '"id": "novelist-should-require-observable-signal-before-causal-join"',
+            '"id": "novelist-should-type-causal-edges-instead-of-promoting-order"',
+            '"id": "novelist-should-budget-independent-clocks-before-cross-line-trigger"',
+            '"id": "novelist-should-scope-semantic-blockers-to-the-target-chapter"',
+        ],
+    )
+    and has_all(
+        "scripts/validate.sh",
+        [
+            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-plot-control-and-causal-anchoring-behavior-cases.json"'
+        ],
+    ),
 )
 
 check(

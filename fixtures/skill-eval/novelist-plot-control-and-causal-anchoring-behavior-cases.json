@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "description": "novelist 目标阶段语义准入、因果可达分型、自然时钟与可观察汇合信号的行为契约。静态 fixture 只固定预期行为；真实改善仍须同一 runner/model 重复试验、盲评和独立复核。",
+  "source_profiles": {
+    "baseline": {
+      "id": "novelist-plot-control-prechange",
+      "paths": [
+        "fixtures/skill-eval/source-profiles/novelist-plot-control-prechange.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md"
+      ],
+      "sha256": "7623480a2857ce35d1f634f4b8dfd6129b23a7f98fa035f3bfa516904f489536"
+    },
+    "candidate": {
+      "id": "novelist-plot-control-candidate",
+      "paths": [
+        "novelist/SKILL.md",
+        "novelist/admission.json",
+        "huaxia-practical-wisdom/SKILL.md",
+        "novelist/references/story-design-and-drafting.md",
+        "novelist/references/continuity-and-revision.md"
+      ],
+      "sha256": "31d6956782b51aa9c5d3e2861a36cee0a048b2396928d6643388fd143a3748e8"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.05,
+    "max_safety_regression": 0.05,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 0.8
+  },
+  "cases": [
+    {
+      "id": "novelist-should-block-chapter-stage-after-structural-timeline-pass",
+      "category": "semantic-stage-admission",
+      "risk": "high",
+      "prompt": "一份多线卷纲的十八个事件全部标为 confirmed + aligned，Open Fields 中没有 blocker，时间线脚本也输出 OK。作者准备直接进入章卡。可是灾变前一段同时包含人物普通返程、命令经过多级接力抵达远端、远端完成一轮接应、应当复位却未复位、持续响应越限；Natural Duration 都写成 unknown。另有数个姓名和器具材质也未定。请判断当前能否进入章卡，并给出最小下一步。",
+      "criteria": [
+        "分别报告结构、记录、语义和目标阶段四项结论：结构与记录可以 PASS，但未知时距会改变返程、命令抵达、远端操作和灾变触发的最早可能顺序，因此语义与章卡阶段必须 CONDITIONAL 或 BLOCK；不得把脚本 OK 汇总成时间线或章卡已就绪。",
+        "从目标结果反向切出必要事件，分别核对人物移动、消息或命令接力、远端执行、等待窗口和环境变化的自然时钟；T 数字差不得换算自然历时，也不得为通过门禁伪造精确时辰。",
+        "把会改变可达性、知情、选择或结果的 unknown 升为 blocker:natural-time；姓名、器具材质等不改变当前可行性的字段继续保留为普通 Open Fields，不得一并抛给作者。",
+        "只推进最早的跨线时钟 blocker，并说明其余时距如何依赖该结果；不直接制作章卡或正文。"
+      ]
+    },
+    {
+      "id": "novelist-should-require-observable-signal-before-causal-join",
+      "category": "observable-cross-line-join",
+      "risk": "high",
+      "prompt": "两条并行撤离线已经在作者侧完成：外层救援把最后一名可达者送走，内层守门者随后必须毁掉唯一回路。锚表把两条撤离事件都列为毁门事件的 Depends On，结构检查通过；但守门者看不见外层，也没有收到消息。请审查这条汇合与因果关系，不要新增神秘感应。",
+      "criteria": [
+        "指出作者知道两个分支完成，不等于守门者能够据此行动；Depends On 只能表达作者侧前置完成，不能替代世界内可观察汇合条件。",
+        "要求最小 Join Predicate、Observer、Observable Signal、Earliest Signal Time 和未收到信号时的 Timeout 或 Fallback；信号只能来自普通消息、人物移动、资源状态、共同环境或既有会合接口，不新增感应、预言或全知。",
+        "在可观察信号关闭前，将毁门事件的语义或目标阶段保持 blocker；具体人物姓名、器具和逐字口令可以继续开放。",
+        "若两线只在读者剪辑层并置、并不驱动人物决定，则明确标为叙事汇流，不强造角色侧信号。"
+      ]
+    },
+    {
+      "id": "novelist-should-type-causal-edges-instead-of-promoting-order",
+      "category": "typed-causal-reachability",
+      "risk": "high",
+      "prompt": "第一天共同体因路面风险暂封一条低路；数日后外部战争带来独立求援，协调者越权发令；远端执行者又延长响应，最终发生灾变。暂封使灾变当天低路上没有聚集人群。时间表因为事件先后，把暂封、求援、发令、远端延长和灾变全部串成 Depends On。请校正因果，但保留真实后果。",
+      "criteria": [
+        "把时间关系与作用关系分开：暂封早于求援和灾变，只改变人员位置、生活负担与伤亡分布，不导致外部战争、求援、越权发令或灾变。",
+        "将作用边至少区分为仅先后、使能、触发、信息传递、持续约束或反馈；本例中越权发令是必要命令条件，远端延长与其共同构成灾变直接机制，暂封只是后果分布修饰。",
+        "每条跨线作用边写清来源状态、载体或机制、受体、最早起效和可观察结果；没有载体或机制时不得从先后升级为因果。",
+        "保留暂封对灾变伤亡和安置的真实长边，不因否定直接因果而删除其后果。"
+      ]
+    },
+    {
+      "id": "novelist-should-budget-independent-clocks-before-cross-line-trigger",
+      "category": "multi-clock-natural-time",
+      "risk": "high",
+      "prompt": "协调者在中立节点发出救援命令后，自己沿已核普通路返回现场；同一命令还要经三次交接抵达远端，远端完成首轮操作并等待复位窗口。现行提要只写‘随后远端响应，接着现场崩坏’，却要求协调者在崩坏前已经返回。请给出可用的时序锚，不编造精确里程和时辰。",
+      "criteria": [
+        "把人物返程、命令产生与交接、远端接收与理解、首轮执行、等待复位和环境越限拆成独立时钟，区分可并行与必须串行步骤。",
+        "给出最低时距、粗粒度上界或依赖条件，使人物返抵现场严格早于远端越限触发；材料不足时保留时间包络和 blocker，不使用 T 数字差或伪精确时辰。",
+        "命令链必须说明承载者或功能角色、交接点类型和接收后的行动反馈；不得临时新增即时传讯、捷径或异常感应。",
+        "输出当前最早可行窗口与唯一主 blocker，不因正式地名、姓名或器具尚未确定而停滞。"
+      ]
+    },
+    {
+      "id": "novelist-should-scope-semantic-blockers-to-the-target-chapter",
+      "category": "stage-scoped-semantic-blocker",
+      "risk": "high",
+      "prompt": "全卷后半仍有跨城消息时差、远端伤愈和卷末会合窗口未定；第一章只写主角在同一早晨目击一次局部异常，人物、地点、进入状态、当场选择和章尾变化都已确认，也不依赖后半事件。作者要先制作第一章章卡。请判断未知项怎样影响当前阶段。",
+      "criteria": [
+        "先声明目标范围只到第一章，按因果反向切片确认后半跨城消息、伤愈和卷末会合不在首章必要依赖中，不得让无关远端 unknown 机械阻断局部章卡。",
+        "只复核第一章自身的地点、自然时距、人物知情、能力、选择、状态增量和下一章接口；若这些条件闭合，可判首章语义与章卡阶段 PASS。",
+        "后半未知继续保留其原有 blocker 和全卷阶段停止线，不因局部 PASS 被清空、降级或伪装成已经解决。",
+        "输出同时区分局部阶段结论和全卷结论，不用一个全局 ready 或 block 覆盖两种范围。"
+      ]
+    }
+  ]
+}

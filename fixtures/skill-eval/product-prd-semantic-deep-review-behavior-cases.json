@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 的 PRD 目标纯度、概念角色、流程关系、非目标反查和不变量传播 cases-only 行为契约。静态通过不证明模型行为改善、产品语义正确或下游已经对齐。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "product-prd-semantic-deep-review-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-design-and-prd.md",
+        "product-architecture-expert/references/product-prd-template.md",
+        "product-architecture-expert/references/product-prd-quality-gates.md",
+        "senior-software-architect/references/product-design.md"
+      ],
+      "sha256": "e7b95d5b60f5100e735873fa5597f3158e6987f3753c7a6963ab8917107b7687"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "product-prd-deep-review-should-purify-goals",
+      "category": "goal-purity",
+      "risk": "high",
+      "prompt": "请深审这份权限 PRD。目标写着：API 使用 {httpMethod?} {apiPattern} 生成 resourceId，页面使用 route[#tab][$feature][@button]，Provider 按 namespace 路由，多角色分别对功能和范围取并集。请判断目标是否合格并给出改法。",
+      "criteria": [
+        "识别产品结果、稳定边界与标识语法、Provider 路由、集合计算混层；目标保留可解释授权、独立功能和范围、可观察治理结果，精确语法和算法下沉到概念、规则或产品接口。",
+        "说明同一规范事实只保留一个权威位置，目标引用规则而不复制公式；不删除功能与范围独立控制等已确认边界。",
+        "输出目标修改、规则归位、影响章节、语义是否变化和验证方式，不把结构归位伪装成新产品规则。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-layer-concept-roles",
+      "category": "concept-role-layering",
+      "risk": "high",
+      "prompt": "核心概念表把 Role、Provider、EffectiveScope、AccessDecision、当前 UI 配置和外部企业主体都写成业务对象。请逐项定性并重构概念层。",
+      "criteria": [
+        "保留产品、产品能力、业务主体、业务对象、业务状态、协议和技术机制等一级规范类型，同时用第二层角色区分本域事实、产品视图、请求时派生投影、外部事实引用和协作契约。",
+        "Role 等可治理事实与 Provider、EffectiveScope、AccessDecision、UI 上下文和外部主体分层；派生结果和外部引用不得成为新的可分配或持久事实。",
+        "不把本域事实、派生投影等第二层角色加入一级枚举，不因类名、字段或当前实现反向定义业务概念。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-separate-flow-families",
+      "category": "flow-topology",
+      "risk": "high",
+      "prompt": "关键流程依次列出资源配置、请求鉴权、前端投影、账号注销和旧数据迁移，编号为 1 到 5，看起来像一个端到端事务。请做流程审查。",
+      "criteria": [
+        "识别这些流程具有不同触发、Owner 和时间尺度，不能因共享对象就串成一个伪端到端长事务。",
+        "按实际语义拆成配置治理、请求时判定、外部协作、高风险生命周期和迁移恢复等流程族，并说明关系、状态、异常收口和可观察结果。",
+        "流程族名称按领域裁剪；单场景线性流程不机械分组，精确业务规则仍由流程引用而非在步骤中重写。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-find-non-goal-conflict",
+      "category": "negative-space-consistency",
+      "risk": "high",
+      "prompt": "同一 PRD 的非目标写‘本期不建设 ExternalDirectoryConnection’，但核心状态表仍把 ExternalDirectoryConnection 标记为当前，并设计 Enabled、Suspended 状态。请确认如何处理。",
+      "criteria": [
+        "把同一概念一边排除、一边作为当前对象继续设计识别为阻断性语义冲突，而不是普通文案重复。",
+        "若迁移或退役不是当前目标，从当前概念、状态、需求、流程和验收删除；历史实现只能作为证据，不能恢复产品地位。",
+        "若确需保留，必须先明确迁移或退役目标、Owner、期限、退出条件和验收，再更新非目标与版本。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-propagate-invariants",
+      "category": "invariant-propagation",
+      "risk": "high",
+      "prompt": "产品权威已明确同一人员同时最多一个有效任职，但系分只约束单部门，测试也只准备多部门输入。请完成本轮 PRD 深审收口。",
+      "criteria": [
+        "先确认这是既有产品权威的下游漏写还是新的业务规则；不能用当前系分或代码反向缩小产品不变量。",
+        "核对目标范围、概念状态、流程规则、REQ/AC、系分唯一约束、CT/验收和迁移影响，输出 aligned、missing、conflict 或 pending-owner。",
+        "既有权威明确时做最小下游对齐并保留来源；新取舍或实现可行性分别进入 Owner 决策或工程验证，未传播完成不宣称整体对齐。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-not-reject-api-product-goal",
+      "category": "api-product-hard-negative",
+      "risk": "medium",
+      "prompt": "这是一款面向开发者售卖的 API 产品。目标是让开发者获得稳定 API 能力并把接入周期从两周缩短到两天。看到目标里有 API，是否必须全部下沉到技术规则？",
+      "criteria": [
+        "不因出现 API 就判定目标污染；API 是商业供给和用户能力时，可以保留在业务目标与用户目标。",
+        "只把 HTTP Method、Path、schema、SDK 内部结构和路由实现下沉到产品接口或系分，保留接入周期、稳定能力、目标用户和成功标准。",
+        "说明 Checker warning 只是候选提示，必须结合产品定义和目标主体人工裁决。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-not-overstructure-linear-prd",
+      "category": "linear-flow-hard-negative",
+      "risk": "medium",
+      "prompt": "轻量 PRD 只有一个用户、一个申请对象和提交到成功的线性流程，异常只有材料缺失。是否必须拆出配置流、运行流、协作流、生命周期流和迁移流？",
+      "criteria": [
+        "拒绝为分层而分层；单场景、单责任和线性流程使用编号步骤即可，材料缺失在同一流程说明反馈和收口。",
+        "只有真实存在不同 Owner、时间尺度、独立触发或高风险生命周期时才增加流程族，不预建迁移或配置流程。",
+        "仍保留目标、对象、规则、异常责任和可观察验收，不把轻量解释为删除必要边界。"
+      ]
+    },
+    {
+      "id": "product-prd-deep-review-should-route-system-design",
+      "category": "system-design-hard-negative",
+      "risk": "high",
+      "prompt": "产品目标、概念、流程和验收已经确认。现在请评审数据库唯一索引、事务边界、缓存键和消息补偿是否正确，并修改系分。",
+      "criteria": [
+        "识别为系统设计和工程验证任务，交给 senior-software-architect；产品专家只提供已确认产品不变量和验收来源。",
+        "不重新改写 PRD 目标或发明产品规则，不用产品模板替代数据库、事务、缓存、补偿和测试设计。",
+        "架构评审必须让唯一约束、事务、缓存和补偿回指产品对象、不变量、场景和 CT，无法回指时列为工程风险。"
+      ]
+    },
+    {
+      "id": "product-prd-template-should-generate-lightweight-without-contract-bloat",
+      "category": "lightweight-prd-contract",
+      "risk": "high",
+      "prompt": "给已有编辑页补一个保存失败提示：单用户、单场景、低风险、失败可重试。请生成一份可评审 PRD，但不要为了正式而堆全量状态机、矩阵和编号。",
+      "criteria": [
+        "选择轻量强度并说明依据；用紧凑结构表达一个完整场景、一条原子需求和可观察验收，必要规则就近合并，不机械复制标准或增强模板。",
+        "即使是轻量 PRD，也保留权限边界、主要失败路径、人工责任、最低审计或记录要求和恢复方式；不得把轻量解释为删除必要语义契约。",
+        "不强制稳定 ID、完整对象/状态/权限矩阵、发布附录或平台化抽象；未知事实保持待确认，不为填满模板编造产品事实。"
+      ]
+    },
+    {
+      "id": "product-prd-template-should-not-invent-success-baseline",
+      "category": "success-metric-baseline",
+      "risk": "high",
+      "prompt": "这是一个新合规控制，没有历史数据。负责人要求 PRD 必须量化，于是建议直接写‘误拦率基线 3%，上线后降到 1%’。请审查并给出可验收写法。",
+      "criteria": [
+        "拒绝把未经测量的 3% 写成历史基线，明确记录无历史基线、证据来源或当前不可得状态，不用伪精确数字换取表面完整。",
+        "定义基线建立方式、目标值或目标状态、观察窗口、数据口径和 Owner；需要先试运行采样时，写清建立基线和复核目标的先后关系。",
+        "区分结果型成功指标与交付验收；缺少测量责任人或建立计划时保持待确认或阻断，不把页面完成、接口成功或文档提交当成业务结果。"
+      ]
+    }
+  ]
+}

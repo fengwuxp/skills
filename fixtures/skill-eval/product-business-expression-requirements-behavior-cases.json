@@ -18,7 +18,7 @@
         "product-architecture-expert/references/product-prd-quality-gates.md",
         "product-architecture-expert/scripts/check_product_deliverable.py"
       ],
-      "sha256": "f106cacdec14d2eb9f87da0919be061ce75129d46225b473e546215eb022b5cf"
+      "sha256": "d32e1b856afefa272d7ce6996b917950850c3c2c49f98465e12c6b4db94914e5"
     }
   },
   "rubric": {
