@@ -77,6 +77,10 @@
 
 没有对照实验时，结论只能写成“通过当前结构与 fixture 检查”，不能写成“能力已全面证明”。
 
+Source-profile 对照还必须证明来源真正进入模型上下文。优先将授权 source 正文按文件边界直接提供给 Maker；若改用隔离文件读取，原始轨迹必须证明声明的文件已被读取。仅复制文件、列出路径或扫描目录不算加载 Skill。Maker 不得看到 acceptance criteria、rubric、release gate、blind label 或预期答案；这些只交给独立 Judge，否则 baseline/candidate 会被目标答案提示饱和。
+
+独立 Judge 的评分必须携带盲文件中的 `pair_id` 与 A/B label，并按二者校验全集、唯一性和绑定关系；不能只依赖返回数组顺序推断评分归属。出现未知 ID、遗漏、重复或备注明显描述其它 case 时属于对齐失败；保留未变的 Maker / blind 证据，用新 identity 按 case 或更小的语义完整批次从 0 重评，不能复用 partial 或手工挪动个别分数。
+
 ### 方差检查
 
 复杂 Skill 的同一 prompt 可能多次运行结果不同：

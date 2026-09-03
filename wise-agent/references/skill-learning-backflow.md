@@ -105,6 +105,9 @@ Owner 确认候选后，人工评审结论为 `confirmed`，candidate 账本文�
 ### 7.1 Collector、Judge 与触发语义
 
 - Collector 只冻结并核对 payload，执行隔离、采集响应与原始轨迹，记录实际 source 读取、工具尝试、退出码和结果；缺响应、缺轨迹、越界读取、模型漂移或输入身份不一致时停止。
+- Source-profile 对照必须证明被测来源实际进入模型上下文：可以把授权 source 正文按文件边界直接框入 Maker prompt，也可以要求 Maker 在隔离目录读取并由原始轨迹证明每个声明文件已读。只复制文件、列出路径、执行目录扫描或依赖模型自行发现，不算 candidate source 已加载；发现此类情况标为 `HARNESS_ERROR` 并从零重采。
+- Maker 只接收同题用户请求、对应 condition 的授权 source 和固定输出契约；不得接收 acceptance criteria、rubric、release gate、blind label、预期答案或失败归因。criteria 只进入独立 Judge；否则 baseline/candidate 被同一目标答案饱和，不能形成增量证据。
+- Judge 的每条评分必须回显 `pair_id` 和 A/B label，collector 按 `(pair_id, label)` 校验唯一性、全集和盲文件绑定后再计分；只要求数组顺序、再由位置推断 pair 的评分不可准入。批量评分出现未知 ID、遗漏、重复或备注串题时标为 `HARNESS_ERROR`，保留未变的 Maker / blind 证据，用新 Judge identity 按 case 或更小的语义完整批次从 0 完整重评；不得复用 partial 或手工搬移分数。
 - Collector 回执固定为 `实际 source 读取 | 工具尝试 | 退出码 | 结果 | 原始轨迹指针`；它只记事实，不从 source、case ID 或 arm 推导“应该调用什么工具”，也不把自己的判断写成 Skill PASS / FAIL。
 - Collector 不按 case ID、arm、关键词或预期答案复制专业 Skill 的工具触发规则，也不要求工具成功才保存响应。工具是否应调用，回到被测 source 中可观察的语义谓词，例如正式、完整、可评审或触发验证。
 - Launcher 只声明入口、允许读取范围、隔离、授权和证明边界；不得成为第二领域权威。工具失败、修正后成功和未调用都作为行为事实保留，由盲化后的 Judge 按任务 criteria 裁决。
