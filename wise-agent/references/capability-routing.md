@@ -128,6 +128,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
 | 方案、计划或设计的决策压力测试 | `grill-me` | 当前产品 / 工程主能力；需要经典校准时 `huaxia-practical-wisdom` | 问题台账、历史去重、保真度路由、决策包、决策快照与执行前对账 |
 | 产品澄清、工程计划、TDD、调试、CR 或完成前验证的方法缺口 | 当前产品 / 工程主能力 | 官方 Superpowers 插件中的对应方法 Skill | 专业 owner 回读、项目验证、新会话行为冒烟 |
+| 已获联网授权的公开、非敏感、多源 / 垂直 / 批量检索，且没有更权威的专用 Connector / API | 当前任务主能力；AnySearch 只作为观察执行能力 | 需要登录态、交互或页面实况时改用 Browser；已知官方来源直接读取原文 | 原始来源回读、来源日期 / 版本、交叉核验、出站数据检查；聚合结果不作权威或高风险结论 |
 | 其它领域 | 先判断通用能力是否足够，再审查已安装或候选 Skill | 仅装载能缩小错误空间的能力 | 该能力声明的 validator、来源证据或专业人工复核 |
 
 显式调用专业 Skill 时，不再反向追加无关能力。比如 `$senior-software-architect` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind 证据不得加载 Wind 专项；`$ui-design-expert` 做界面设计时不替产品 Owner 发明业务规则，也不因存在 Figma 工具就自动调用；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。

@@ -543,6 +543,7 @@ wise_agent_verification_release = "wise-agent/references/verification-review-rel
 wise_agent_superpowers_library = "wise-agent/references/superpowers-skill-library.md"
 wise_agent_skill_type_owner_routing = "wise-agent/references/capability-routing.md"
 wise_agent_source_map = "wise-agent/references/source-map.md"
+wise_agent_external_capability_behavior_cases = "fixtures/skill-eval/wise-agent-external-capability-behavior-cases.json"
 wise_agent_hallmark_behavior_cases = (
     "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"
 )
@@ -17252,7 +17253,7 @@ def route_fixture(prompt: str) -> set[str]:
             )
         if not contains_any(prompt, ["不调用外部代码评审工具", "没有要求 Open Code Review", "不需要外部 Checker 工具"]) and contains_any(prompt, ["Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "ocr review", "OpenCodeReview", "代码评审工具", ".opencodereview", "rule.json", "WorkBuddy", "本地执行型 Coding Agent", "最小正确实现", "过度设计 CR", "AI 代码阅读工具", "代码理解工具", "代码阅读理解", "阅读理解代码", "上下文工程", "上下文治理", "知识库治理", "知识库工具", "知识图谱", "代码库知识图谱", ".understand-anything", "understand-dashboard", "dashboard", "diff impact", "onboarding guide", "auto-update", "post-commit hook", "图谱提交", "agent instructions", "AI-readiness", "readiness", "instructions", "eval", "MCP 配置", "上下文漂移", "安装", "调用", "设计-代码对齐", "对齐设计和代码", "代码入口", "实现状态", "偏差"]):
             route.add("code-understanding-tools.md")
-        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 插件", "superpowers@openai-api-curated", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.1", "上游 release", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grill-me", "Wayfinder", "wayfinder", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
+        if contains_any(prompt, ["Superpowers skills", "superpowers skills", "Superpowers 插件", "superpowers@openai-api-curated", "Superpowers 6.0", "Superpowers 6.x", "Superpowers 6.1", "v6.1.1", "上游 release", "上游 latest", "latest release", "SDD v6", "SSD 套件", "SDD 套件", "Harness 版本", "task-reviewer", "task-brief", "review-package", "progress ledger", "pre-flight plan review", "brainstorming", "writing-plans", "executing-plans", "subagent-driven-development", "test-driven-development", "requesting-code-review", "verification-before-completion", "Matt Pocock", "mattpocock/skills", "grill-me", "Wayfinder", "wayfinder", "GStack", "/office-hours", "/plan-ceo-review", "/plan-eng-review", "/plan-design-review", "/review", "/qa", "/ship", "Trellis", "AnySearch", "anysearch", "AI 编码框架", "框架分层", "轻量问询", "外部 skill", "外部技能", "下载", "接入", "加入"]):
             route.add("superpowers-skill-library.md")
             route.add("source-map.md")
             if contains_any(prompt, ["升级", "版本", "上游 release", "上游 latest", "latest release", "v6.1.1", "helper", "不默认运行外部脚本", "Harness"]):
@@ -17271,7 +17272,7 @@ def route_fixture(prompt: str) -> set[str]:
             route.add("planning-execution-admission.md")
         if contains_any(prompt, ["验证矩阵", "知识表达门禁", "意图可执行", "反馈源", "缺口 owner", "反馈闭环成熟度", "验证簇", "不变量验证簇", "高风险业务不变量", "生产重放", "变异测试", "对抗测试", "置信度", "事实边界检查", "事实边界", "无根据猜测", "模型脑补", "范围外不做", "超出用户目标", "质量/测试门禁", "质量门禁", "测试门禁", "五支柱验证", "安全/测试/代码质量/性能/发布就绪", "生产级代码", "理解门禁", "代码库理解结论包", "AI 快速阅读代码", "快速阅读代码库", "变更可理解性", "影响可视化", "图形化理解", "架构描述转图", "测试矩阵", "验证顺序", "CR 前置条件", "失败回退", "testing.md", "TDD", "代码 CR", "CR", "多文件 diff", "重构计划", "入口路径", "源码锚点", "调用关系", "边界变化", "验证证据", "验证", "验证命令", "验证结果", "验收标准", "失败测试", "独立 Checker", "状态回写", "发布", "监控", "复盘", "/qa", "/ship", "QA Lead", "Release Engineer", "QA 验证", "发布准出", "Harness Plan", "Execution Grant", "默认授权", "授权策略", "显式确认", "替我审批", "自动推进", "经验回流", "Skill 自我改进", "经验归位", "知识归位", "设计-代码对齐", "代码入口", "实现状态", "偏差", "测试证据", "独立验证", "一次通过率", "返工率", "缺陷密度", "spec-lint", "AC 覆盖", "漂移检查", "AC 与测试映射", "项目执行规范", "执行状态", "成功标准", "目标状态"]):
             route.add("verification-review-release.md")
-        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "设计模式的本质", "找到变化", "封装变化", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent", "GStack", "Trellis", "四大 AI 编码框架", "四大AI编码框架", "渐进式 SDD", "Spec Coding", "PrismSpec", "Lattice Harness", "吴恩达", "Andrew Ng", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "Claude Code之父", "固定周期清空"]):
+        if contains_any(prompt, ["外部文章", "工具能力", "官方", "来源", "Harness Engineering", "Skill 原理与最佳实践", "架构真功夫", "设计模式的本质", "找到变化", "封装变化", "Gemini CLI", "AgentRC", "Understand Anything", "Ponytail", "Open Code Review", "open-code-review", "alibaba/open-code-review", "OCR", "WorkBuddy", "Karpathy", "Andrej", "karpathy-guidelines", "知识图谱工具", "Clarity Agent", "GStack", "Trellis", "AnySearch", "anysearch", "四大 AI 编码框架", "四大AI编码框架", "渐进式 SDD", "Spec Coding", "PrismSpec", "Lattice Harness", "吴恩达", "Andrew Ng", "Agentic Coding Loop", "Developer Feedback Loop", "External Feedback Loop", "Claude Code之父", "固定周期清空"]):
             route.add("source-map.md")
     if contains_any(
         prompt,
@@ -18695,6 +18696,51 @@ check(
             "诊断反馈",
             "可交付竖切",
             "Skill 存在不等于能力成立",
+        ],
+    ),
+)
+
+check(
+    "AnySearch remains a bounded public-search execution capability",
+    has_all(
+        wise_agent_superpowers_library,
+        [
+            "### 2B. AnySearch 受控调度",
+            "`allow_implicit_invocation: false`",
+            "公开且非敏感",
+            "专用 Connector / API",
+            "`batch_search --queries @file`",
+            "`https://api.anysearch.com`",
+            "不自动接受、打印或保存",
+        ],
+    )
+    and has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "AnySearch",
+            "观察执行能力",
+            "公开、非敏感",
+            "专用 Connector / API",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "anysearch-ai/anysearch-skill",
+            "15b7ea5039983c9dee328be8c7c609f3eb86058e",
+            "3608fab2ef7087c602e6a96df9b6812c2f6ba136b3a24df21ae670fb20530dfd",
+            "ENGINEERING_READY_WITH_RISK",
+            "credential-exfiltration",
+            "9204068ff9cfa49efe3b0b169156055316642ad207113b787952de255f8b1075",
+            "0ca5b9ade680aafad9169065836b8b8c49f401c6c5ef59c40cca5a93c2c924c4",
+        ],
+    )
+    and has_all(
+        wise_agent_external_capability_behavior_cases,
+        [
+            '"id": "wise-agent-should-route-anysearch-for-bounded-public-research"',
+            '"id": "wise-agent-should-block-sensitive-anysearch-egress"',
+            '"id": "wise-agent-should-degrade-anysearch-without-overclaiming"',
         ],
     ),
 )
