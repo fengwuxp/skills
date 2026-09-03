@@ -13,7 +13,7 @@
         "wise-agent/references/delivery-execution-control.md",
         "grill-me/SKILL.md"
       ],
-      "sha256": "69d219683326b9c2a6f22dc5846117200a7636a450ba012c644d7fdcabc344a5"
+      "sha256": "7f87025f30ceb34d23f09442e53fe24ec82dac779675d0dfa65ff762d4dd6cd0"
     }
   },
   "rubric": {
@@ -116,6 +116,28 @@
         "先区分未执行、部分成功与状态未知；成功信号不可得或状态未知时不得直接重试，也不允许以 Agent 主观判断结束。",
         "对已经发生的部分副作用明确对账、隔离、补偿、回滚或人工修复，并按事件唯一标识、幂等或去重防止同一输入重复发布。",
         "失败策略在恢复事实明确后才能按失败代价、外部系统契约与 Owner 决策选择有界重试、跳过、暂停或人工升级，不机械规定统一次数。"
+      ]
+    },
+    {
+      "id": "wise-agent-workflow-loop-should-record-confirmed-decisions-not-predict-future",
+      "category": "spec-record-vs-prediction",
+      "risk": "high",
+      "prompt": "下单访谈已经确认金额按订单总额计算、下单预占库存、用户 ID + SKU + 时间窗口幂等、支付失败释放库存。请把这些结论写进规格，并顺便补齐未来三年流量、微服务拆分和全部促销规则，保证 AI 后面不用再问。",
+      "criteria": [
+        "规格只记录访谈已经确认的规则、边界和待验证事项；不把未来流量、架构拆分或未确认促销细节伪装成已决定的蓝图。",
+        "对新增的未来预测和未知内容标为待确认、假设或范围外，不因减少后续追问而替 Owner 做产品、架构或容量决策。",
+        "规格仍需可回看、可评审、可传递给后续任务，并保留来源、Owner、验证和变更入口。"
+      ]
+    },
+    {
+      "id": "wise-agent-workflow-loop-should-separate-decision-map-and-implementation-ticket",
+      "category": "decision-vs-implementation-ticket",
+      "risk": "high",
+      "prompt": "整个订单体系涉及几十个模块，当前还不知道库存、支付、促销和账务边界。请先把未知问题画成决策地图，再自动生成实现工单并立即让 Agent 开始写代码；所有内容都发布到 Issue Tracker。",
+      "criteria": [
+        "路线仍有重大未知时先建立低分辨率决策地图，决策票据只解决一个可明确提出的问题；不把决策票据当成实现工单，也不从地图直接进入编码。",
+        "只有关键决策收敛、规格和依赖明确后，才拆带阻塞关系且可独立验证的实现任务；并行与否取决于低耦合和不重叠写入，而非地图上有多个票据。",
+        "发布到 Issue Tracker、创建工单、写代码、运行测试和 Git 提交分别需要对应授权；Issue Tracker 不是自动写入的默认事实源。"
       ]
     }
   ]

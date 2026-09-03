@@ -4728,6 +4728,8 @@ check(
             '"id": "wise-agent-workflow-loop-should-omit-inapplicable-reliability-mechanisms"',
             '"id": "wise-agent-workflow-loop-should-define-run-completion-and-final-action"',
             '"id": "wise-agent-workflow-loop-should-bound-failure-and-repeat-processing"',
+            '"id": "wise-agent-workflow-loop-should-record-confirmed-decisions-not-predict-future"',
+            '"id": "wise-agent-workflow-loop-should-separate-decision-map-and-implementation-ticket"',
         ],
     )
     and has_all(
@@ -4758,6 +4760,33 @@ check(
         "scripts/validate.sh",
         [
             'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"'
+        ],
+    ),
+)
+check(
+    "wise agent keeps confirmed-spec and ticket-role boundaries",
+    has_all(
+        wise_agent_delivery_execution_control,
+        [
+            "规格只记录已确认决策，不预测未来",
+            "决策票据与实现票据分离",
+            "Issue Tracker 不是自动写入的默认事实源",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "https://mp.weixin.qq.com/s/JE--HT6I0kE47PtUER-iLA",
+            "05 - mattpocock/skills",
+            "规格只记录已确认决策",
+            "不新增顶层 Skill",
+        ],
+    )
+    and has_all(
+        wise_agent_reusable_workflow_loop_behavior_cases,
+        [
+            '"id": "wise-agent-workflow-loop-should-record-confirmed-decisions-not-predict-future"',
+            '"id": "wise-agent-workflow-loop-should-separate-decision-map-and-implementation-ticket"',
         ],
     ),
 )
