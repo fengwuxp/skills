@@ -537,6 +537,9 @@ wise_agent_verification_release = "wise-agent/references/verification-review-rel
 wise_agent_superpowers_library = "wise-agent/references/superpowers-skill-library.md"
 wise_agent_skill_type_owner_routing = "wise-agent/references/capability-routing.md"
 wise_agent_source_map = "wise-agent/references/source-map.md"
+wise_agent_hallmark_behavior_cases = (
+    "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"
+)
 codex_harness_runtime_behavior_cases = "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
 codegen_route = {"codegen", "code-generation-rules.md", "wind-project-patterns.md", "generate_scaffold.py"}
 codegen_safety_route = codegen_route | {"requires-confirmation"}
@@ -18630,6 +18633,51 @@ check(
             "诊断反馈",
             "可交付竖切",
             "Skill 存在不等于能力成立",
+        ],
+    ),
+)
+
+check(
+    "Hallmark stays a bounded UI method with explicit side effects and independent proof",
+    has_all(
+        wise_agent_skill_type_owner_routing,
+        [
+            "Hallmark",
+            "表达型 Web 页面",
+            "运营后台",
+            "不自动装载",
+        ],
+    )
+    and has_all(
+        wise_agent_superpowers_library,
+        [
+            "`hallmark`",
+            "`ui-design-expert`",
+            "`.hallmark/log.json`",
+            "`tokens.css`",
+            "URL study",
+            "自评不构成准出证据",
+            "资源闭包缺口",
+            "site/css/tokens.css",
+        ],
+    )
+    and has_all(
+        wise_agent_source_map,
+        [
+            "Nutlope/hallmark",
+            "13ac0ec7e148655948100b6396439e481361d690",
+            "048bcb236034691d49120189495b32293cc76bad6f477f271972808000fe10e5",
+            "gNg_mNaVwJME9SNqRtD0Zw",
+            "Try these 10 skills—and show off your own",
+        ],
+    )
+    and has_all(
+        wise_agent_hallmark_behavior_cases,
+        [
+            '"id": "wise-agent-should-route-hallmark-as-bounded-ui-method"',
+            '"id": "wise-agent-should-not-auto-route-hallmark-for-operational-ui"',
+            '"id": "wise-agent-should-not-treat-hallmark-self-audit-as-release-proof"',
+            '"id": "wise-agent-should-degrade-hallmark-on-missing-upstream-resources"',
         ],
     ),
 )

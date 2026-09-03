@@ -116,7 +116,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | 从零规划或重构用于说明和辅助佐证公司真实业务的企业官网，涉及业务类型、建议模块、内容、指标参考示例值、公开参考差异、图片多屏要求和按需 Legal 条件 | 候选 `business-website-planner`，仅在 admission 通过后使用 | 业务事实未稳定时消费 `product-architecture-expert`；页面与多屏设计交 `ui-design-expert`；设计稿默认 Figma；实现交 `senior-software-architect` | 业务权威、建议模块、使用者确认指标、Reference DNA、Responsive Media Brief、Owner 复核与 `requirement-acceptance-testing`；Figma 写入另行授权 |
 | 按已确认需求独立验收业务逻辑、API/数据副作用、Web UI 交互、视觉还原、可访问性或运行结果 | 候选 `requirement-acceptance-testing`，仅在 admission 通过后使用 | 消费 `product-architecture-expert` 的需求与验收种子、`senior-software-architect` 的实现和测试证据、`ui-design-expert` 的设计与 Design QA 证据 | 需求与实现指纹、目标项目测试、浏览器/视觉证据、独立 Checker 和验收 Owner；Checker 不接管修复 |
-| Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具 | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner |
+| Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具；表达型 Web 页面在用户显式调用 Hallmark，或已确认产品与交互契约后确有反模板化缺口时，可装载 `hallmark` | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner；Hallmark 自评不构成准出证据 |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段由 `wise-agent` 持有目标与授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；设定集和正式载体用 `document-authoring` | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
@@ -131,6 +131,8 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | 其它领域 | 先判断通用能力是否足够，再审查已安装或候选 Skill | 仅装载能缩小错误空间的能力 | 该能力声明的 validator、来源证据或专业人工复核 |
 
 显式调用专业 Skill 时，不再反向追加无关能力。比如 `$senior-software-architect` 做普通 Java CR，可消费通用 Java 约规，但没有 Wind 证据不得加载 Wind 专项；`$ui-design-expert` 做界面设计时不替产品 Owner 发明业务规则，也不因存在 Figma 工具就自动调用；`$document-authoring` 做一句润色时直接完成，不展开完整文档流程。
+
+Hallmark 是 Web 视觉结构与反模板化方法，不是 UI 总权威。支付运营后台、高密度工作台、已有设计系统还原、Figma design-to-code、原生 App 和普通 UI 修复不自动装载；这些任务继续由 `ui-design-expert` 按真实内容、客户端、状态和交互契约裁决。Hallmark 只有在用户显式调用，或表达型 Web 页面存在明确的结构审美缺口时才作为可选协同能力，且不得因此获得联网、项目写入、删除或发布权限。调用前还要检查所选 verb、主题与 reference 的资源闭包；安装目录存在不等于每条上游引用都可用。
 
 `llm-coding-hygiene` 在实际代码写入时默认装载，但不改变工程主能力、不成为第二 Owner，也不要求额外输出检查卡。只读源码 CR、仅诊断且不写代码、纯项目编码规范检查和文档任务不自动触发；简单一步代码修改仍静默应用编码卫生并直接完成，不为展示流程而追加知止者、Ponytail、Superpowers 或完整协作链。
 
