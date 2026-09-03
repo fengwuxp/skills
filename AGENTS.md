@@ -59,7 +59,7 @@ Skill 采用 `Metadata -> SKILL.md -> bundled resources` 三级加载：元数�
 
 ## Skill 类型与接入门禁
 
-Skill 不是提示词堆叠。新增、重构或吸收经验时先确认主类型、稳定职责、触发 / 非触发、输入 / 输出、Owner、验证和停止条件；已有能力能承载时优先增强既有 Skill、reference、script 或 fixture，不新建平级 Skill。详细类型、来源矩阵、归位和候选验证见 `resource-capability-distiller/references/distillation-contract.md`；创建规范见 `skill-creator`。高风险操作仍须先通知、确认、再执行，且不得借 Skill 获得 Git、联网、生产、删除、部署、密钥或不可逆操作权限。
+Skill 不是提示词堆叠。新增、重构或吸收经验时先确认主类型、稳定职责、触发 / 非触发、输入 / 输出、Owner、验证和停止条件；已有能力能承载时优先增强既有 Skill、reference、script 或 fixture，不新建平级 Skill。每个 Skill 的 `admission.json` 必须显式声明 `evidence_mode`：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，但不代表已取得 live 评分；`behavior-scored` 必须有 active baseline/candidate、盲评和评分门禁。缺失或不一致时不得判为 evidence ready。详细类型、来源矩阵、归位和候选验证见 `resource-capability-distiller/references/distillation-contract.md`；创建规范见 `skill-creator`。高风险操作仍须先通知、确认、再执行，且不得借 Skill 获得 Git、联网、生产、删除、部署、密钥或不可逆操作权限。
 
 ## Agent 运行时分层
 

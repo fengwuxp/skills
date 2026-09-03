@@ -1,5 +1,6 @@
 {
   "status": "installable",
+  "evidence_mode": "contract-only",
   "requires": [
     "huaxia-practical-wisdom"
   ],

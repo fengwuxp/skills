@@ -370,9 +370,9 @@ git diff --check
 ./sync-skills.sh --dry-run all
 ```
 
-正式同步后运行 `scripts/validate-installed-skills.sh`。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
+正式同步后运行 `scripts/validate-installed-skills.sh`；也可用 `./scripts/validate.sh --require-installed-parity` 将真实安装态纳入完整验证。默认 `./scripts/validate.sh` 只验证源仓库和隔离的同步 fixture，并会明确输出 parity 未检查。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
 
-`fixtures/skill-eval/evidence-gates.json` 声明需要进入交付门禁的 behavior contract 和已评分证据。`scripts/check-skill-evidence.py` 复用统一 evaluator 核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate；`sync-skills.sh` 会跳过或阻断 evidence 不再匹配当前源码的 Skill。证据失效时必须基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
+`admission.json` 的 `evidence_mode` 与 `fixtures/skill-eval/evidence-gates.json` 共同声明证据强度：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，但不代表已取得 live 评分；`behavior-scored` 还必须有 active baseline/candidate、盲评、评分和 release gate。`scripts/check-skill-evidence.py` 复用统一 evaluator 核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate；模式缺失或与门禁不一致时直接阻断，`sync-skills.sh` 会跳过或阻断 evidence 不再匹配当前源码的 Skill。证据失效时必须基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
 
 `scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。默认检查项目目录；需要核对指定目录时，显式传入来源和路径，递归报告重复 Skill ID、完全重复的 `description` 与无效 metadata，指向同一真实目录的软链接只记为 alias。语义相似不做词法自动裁决；`fixtures/skill-eval/prompt-cases.json` 中同一 `competition_group` 的真实请求只声明并静态校验唯一触发 Owner 和竞争者 hard negative，真实触发行为仍需 live eval / smoke：
 
@@ -393,6 +393,8 @@ python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior
 # 独立评分 JSONL：pair_id、label、五项 rubric 分数、blocker、notes、blind_sha256
 python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --blind /tmp/skill-behavior-judge.jsonl --output /tmp/skill-behavior-report.json
 ```
+
+`evaluate-skill-behavior.py validate` 默认只检查案例契约；需要同时核对 `source_profiles` / `input_profile` 的内容指纹时使用 `validate --verify-sources`，收集和评分阶段始终强制校验来源。
 
 行为 criteria 应区分用户可见语义与执行过程：事实判断、方案选择、停止结论和风险说明由 `response` 评分；实际读取范围、工具调用、验证和是否发生外部或权威写入由成对 `execution_evidence` 证明。不得为了让内部过程“可见”而强迫用户回答复述检查步骤、未发生的写回动作或固定授权话术；也不得用自述证据替代回答中本应明确的事实、选择和结论。两种 condition 必须同时提供或同时不提供执行证据，证据标识不得泄露 condition、私有路径、prompt、token 或密钥。
 

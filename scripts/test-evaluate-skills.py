@@ -77,6 +77,8 @@ class SkillDeliveryGateTests(unittest.TestCase):
 
     @staticmethod
     def write_skill(root: Path, name: str, metadata: dict[str, object]) -> Path:
+        metadata = dict(metadata)
+        metadata.setdefault("evidence_mode", "structural-only")
         skill_dir = root / name
         skill_dir.mkdir()
         (skill_dir / "SKILL.md").write_text(f"# {name}\n", encoding="utf-8")
@@ -128,6 +130,7 @@ class SkillDeliveryGateTests(unittest.TestCase):
             self.assertEqual(ready_gates["admission_status"], "installable")
             self.assertEqual(ready_gates["dependency_readiness"], "ready")
             self.assertEqual(ready_gates["evidence_readiness"], "ready")
+            self.assertEqual(ready_gates["evidence_mode"], "structural-only")
             self.assertEqual(ready_gates["installed_parity"], "not_checked")
             self.assertEqual(ready_gates["delivery_readiness"], "requires_installed_parity")
             self.assertEqual(candidate_gates["delivery_readiness"], "blocked")
@@ -157,7 +160,12 @@ class SkillDeliveryGateTests(unittest.TestCase):
             skill_dir = self.write_skill(
                 root,
                 "ready-skill",
-                {"status": "installable", "blockers": [], "requires": []},
+                {
+                    "status": "installable",
+                    "evidence_mode": "contract-only",
+                    "blockers": [],
+                    "requires": [],
+                },
             )
 
             gates = MODULE.delivery_gates(skill_dir, root)

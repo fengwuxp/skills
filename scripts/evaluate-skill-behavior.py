@@ -5,7 +5,9 @@ The script never invokes an Agent or accesses the network. It reads only the
 explicit evaluation artifacts and source/input files declared by the selected
 case contract, and writes only explicit output paths. Responses may include
 redacted execution evidence. Collection and judging remain separate,
-reviewable steps.
+reviewable steps. The ``validate`` command checks the case contract by
+default; source/input digests are checked with ``--verify-sources`` and during
+collection or scoring.
 """
 
 from __future__ import annotations
@@ -302,7 +304,11 @@ def _reject_external_input_path(
         raise ContractError(f"{label}: external input path must not enter blind content")
 
 
-def validate_cases(data: dict[str, Any]) -> None:
+def validate_cases(
+    data: dict[str, Any],
+    *,
+    verify_source_profiles: bool = True,
+) -> None:
     if data.get("version") != 1:
         raise ContractError("cases: version must be 1")
     cases = data.get("cases")
@@ -380,8 +386,9 @@ def validate_cases(data: dict[str, Any]) -> None:
         value = gate.get(field)
         if not _finite_number(value) or value < 0:
             raise ContractError(f"release_gate.{field}: expected a non-negative number")
-    validate_source_profiles(data)
-    validate_input_profile(data)
+    if verify_source_profiles:
+        validate_source_profiles(data)
+        validate_input_profile(data)
     input_profile = data.get("input_profile")
     if isinstance(input_profile, dict):
         for index, case in enumerate(cases):
@@ -1016,6 +1023,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     validate = subparsers.add_parser("validate", help="validate the behavior case contract")
     validate.add_argument("--cases", type=Path, default=DEFAULT_CASES)
+    validate.add_argument(
+        "--verify-sources",
+        action="store_true",
+        help="also verify source/input profile digests (required by collection and scoring)",
+    )
 
     prepare = subparsers.add_parser("prepare", help="write an identical baseline/candidate task manifest")
     prepare.add_argument("--cases", type=Path, default=DEFAULT_CASES)
@@ -1050,7 +1062,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         case_data = load_json(args.cases)
         if args.command == "validate":
-            validate_cases(case_data)
+            validate_cases(case_data, verify_source_profiles=args.verify_sources)
             print(f"OK behavior cases={len(case_data['cases'])}")
             return 0
         if args.command == "prepare":

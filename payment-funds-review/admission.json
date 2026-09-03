@@ -1,5 +1,6 @@
 {
   "status": "candidate",
+  "evidence_mode": "structural-only",
   "updated_at": "2026-08-07",
   "blockers": [
     {

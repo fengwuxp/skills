@@ -1,4 +1,5 @@
 {
   "status": "installable",
+  "evidence_mode": "structural-only",
   "blockers": []
 }

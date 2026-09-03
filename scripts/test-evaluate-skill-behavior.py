@@ -236,7 +236,7 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         ):
             with self.subTest(cases=name):
                 case_data = MODULE.load_json(fixture_dir / name)
-                MODULE.validate_cases(case_data)
+                MODULE.validate_cases(case_data, verify_source_profiles=False)
                 self.assertIn("source_profiles", case_data)
                 self.assertTrue(
                     case_data["release_gate"].get("require_auditable_judgments")

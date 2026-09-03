@@ -1,5 +1,6 @@
 {
   "status": "candidate",
+  "evidence_mode": "contract-only",
   "updated_at": "2026-08-23",
   "blockers": [
     {

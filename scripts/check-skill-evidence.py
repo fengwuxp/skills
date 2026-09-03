@@ -22,6 +22,11 @@ EVALUATOR_PATH = Path(__file__).resolve().with_name("evaluate-skill-behavior.py"
 MANIFEST = Path("fixtures/skill-eval/evidence-gates.json")
 CONTRACT_GATE_KEYS = {"cases"}
 SCORED_GATE_KEYS = {"cases", "responses", "scores", "seed"}
+EVIDENCE_MODES = {"structural-only", "contract-only", "behavior-scored"}
+UNASSIGNED_CASE_FILES = {
+    # Generic evaluator self-test corpus; it is not owned by one Skill.
+    "behavior-cases.json",
+}
 
 
 def load_evaluator() -> ModuleType:
@@ -100,14 +105,56 @@ def load_manifest(repository_root: Path) -> dict[str, list[dict[str, Any]]]:
     return result
 
 
+def validate_case_contract(
+    evaluator: ModuleType,
+    case_data: dict[str, Any],
+    evidence_mode: str,
+) -> None:
+    """Validate case shape without treating contract-only fixtures as live evidence."""
+    if evidence_mode == "contract-only":
+        contract_data = dict(case_data)
+        contract_data.pop("source_profiles", None)
+        contract_data.pop("input_profile", None)
+        evaluator.validate_cases(contract_data)
+        return
+    evaluator.validate_cases(case_data)
+
+
 def audit_evidence(
     skill_dir: Path, repository_root: Path = ROOT
 ) -> list[str]:
+    admission_path = skill_dir / "admission.json"
+    try:
+        admission = json.loads(admission_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"{admission_path}: cannot read admission metadata: {exc}"]
+    evidence_mode = admission.get("evidence_mode") if isinstance(admission, dict) else None
+    if evidence_mode not in EVIDENCE_MODES:
+        return [
+            f"{admission_path}: evidence_mode must be one of {sorted(EVIDENCE_MODES)}"
+        ]
     try:
         manifest = load_manifest(repository_root)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return [str(exc)]
     gates = manifest.get(skill_dir.name, [])
+    scored_gate_count = sum(
+        1
+        for gate in gates
+        if isinstance(gate, dict) and set(gate) == SCORED_GATE_KEYS
+    )
+    if evidence_mode == "behavior-scored" and scored_gate_count == 0:
+        return [
+            f"{skill_dir.name}: behavior-scored requires at least one scored evidence gate"
+        ]
+    if evidence_mode == "contract-only" and scored_gate_count:
+        return [
+            f"{skill_dir.name}: contract-only cannot declare scored evidence gates"
+        ]
+    if evidence_mode == "contract-only" and not gates:
+        return [f"{skill_dir.name}: contract-only requires at least one case gate"]
+    if evidence_mode == "structural-only" and gates:
+        return [f"{skill_dir.name}: structural-only cannot declare behavior gates"]
     if not gates:
         return []
 
@@ -125,7 +172,7 @@ def audit_evidence(
                     repository_root, gate.get("cases"), f"{label}.cases"
                 )
                 case_data = evaluator.load_json(cases_path)
-                evaluator.validate_cases(case_data)
+                validate_case_contract(evaluator, case_data, evidence_mode)
                 scored_fields = {"responses", "scores", "seed"}
                 present = scored_fields & set(gate)
                 if not present:
@@ -176,6 +223,23 @@ def audit_repository(repository_root: Path = ROOT) -> list[str]:
         f"evidence manifest references unknown skill {skill}"
         for skill in sorted(set(manifest) - known_skills)
     ]
+    referenced_cases = {
+        Path(gate["cases"]).name
+        for gates in manifest.values()
+        for gate in gates
+        if isinstance(gate, dict) and isinstance(gate.get("cases"), str)
+    }
+    unassigned_cases = sorted(
+        path.name
+        for path in (repository_root / "fixtures" / "skill-eval").glob(
+            "*-behavior-cases.json"
+        )
+        if path.name not in referenced_cases and path.name not in UNASSIGNED_CASE_FILES
+    )
+    failures.extend(
+        f"behavior case is not declared in evidence manifest: {name}"
+        for name in unassigned_cases
+    )
     failures.extend(
         [
             failure
@@ -205,7 +269,11 @@ def main() -> int:
             print(f"- {failure}")
         return 1
     target = args.skill.name if args.skill else "repository"
-    print(f"OK skill evidence: {target}")
+    if args.skill:
+        metadata = json.loads((args.skill.resolve() / "admission.json").read_text(encoding="utf-8"))
+        print(f"OK skill evidence: {target} (mode={metadata['evidence_mode']})")
+    else:
+        print(f"OK skill evidence: {target} (modes declared per admission.json)")
     return 0
 
 

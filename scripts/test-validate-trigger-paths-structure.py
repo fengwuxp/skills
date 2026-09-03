@@ -60,6 +60,13 @@ class TriggerValidatorStructureTests(unittest.TestCase):
         self.assertIn("Cannot sync all: evidence is not current", sync_script)
         self.assertIn("All sync aborted before writing", sync_script)
 
+    def test_runtime_parity_is_an_explicit_validation_gate(self) -> None:
+        validate_script = VALIDATE_SCRIPT.read_text(encoding="utf-8")
+
+        self.assertIn("--require-installed-parity", validate_script)
+        self.assertIn("VALIDATE_INSTALLED_SKILLS", validate_script)
+        self.assertIn("SKIP installed parity", validate_script)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -18,6 +18,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 STATUSES = {"installable", "candidate"}
+EVIDENCE_MODES = {"structural-only", "contract-only", "behavior-scored"}
 ISO_DATE = re.compile(r"^20\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$")
 SKILL_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 IMPLICIT_INVOCATION = re.compile(
@@ -49,6 +50,12 @@ def audit_skill(skill_dir: Path) -> tuple[str, list[str]]:
     if status not in STATUSES:
         failures.append(f"{label}: status must be installable or candidate")
         return "invalid", failures
+
+    evidence_mode = data.get("evidence_mode")
+    if evidence_mode not in EVIDENCE_MODES:
+        failures.append(
+            f"{label}: evidence_mode must be one of {sorted(EVIDENCE_MODES)}"
+        )
 
     blockers = data.get("blockers", [])
     if not isinstance(blockers, list):
@@ -207,6 +214,7 @@ def self_test() -> list[str]:
             json.dumps(
                 {
                     "status": "candidate",
+                    "evidence_mode": "contract-only",
                     "updated_at": "2026-07-31",
                     "blockers": [{"id": "Q-1", "summary": "pending", "owner": "Owner"}],
                 }

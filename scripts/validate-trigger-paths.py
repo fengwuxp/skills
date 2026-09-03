@@ -3907,7 +3907,7 @@ check(
             "## 1A. 阶段与能力衔接",
             "能力 owner、专业 Skill、Worker / Checker 和最小装载规则统一读取 `capability-routing.md`",
             "两者不得各自维护一套 owner 表",
-            "选择一个主能力、必要的协同能力、明确不加载的能力和独立 Checker",
+            "选择一个主能力、必要的受控协同能力、明确不加载的能力和独立 Checker",
             "外部工具或框架只能补当前阶段的一个方法缺口",
             "能力边界变化时只修改 `capability-routing.md`",
             "具体主能力与协同能力始终回到 `capability-routing.md` 判断",
@@ -5010,7 +5010,7 @@ check(
         wise_agent_skill_type_owner_routing,
         [
             "创见探索产生候选后",
-            "一个主能力、必要时一个协同能力",
+            "一个主能力、必要时受控协同能力",
             "不加载项、输入、输出、验证和停止条件",
             "不得触发全量装载",
         ],
@@ -6365,11 +6365,9 @@ check(
     )
     and not (ROOT / product_builder_series_increment_responses).exists()
     and not (ROOT / product_builder_series_increment_scores).exists()
-    and has_none(
+    and has_all(
         "fixtures/skill-eval/evidence-gates.json",
-        [
-            product_builder_series_increment_behavior_cases,
-        ],
+        [product_builder_series_increment_behavior_cases],
     )
     and has_all(
         "scripts/validate.sh",

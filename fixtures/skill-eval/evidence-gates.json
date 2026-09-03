@@ -76,6 +76,39 @@
       },
       {
         "cases": "fixtures/skill-eval/novelist-public-fiction-learning-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-diversified-imagination-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-imagination-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-local-material-use-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-logical-timeline-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-plot-control-and-causal-anchoring-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-r6-craft-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-r6-foundation-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [
@@ -96,6 +129,15 @@
       },
       {
         "cases": "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-prd-semantic-deep-review-behavior-cases.json"
       }
     ],
     "wise-agent": [
@@ -104,6 +146,49 @@
       },
       {
         "cases": "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/agent-output-actionability-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-jit-loading-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"
+      }
+    ],
+    "payment-expert": [
+      {
+        "cases": "fixtures/skill-eval/payment-channel-routing-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/payment-domain-foundations-behavior-cases.json"
+      }
+    ],
+    "requirement-acceptance-testing": [
+      {
+        "cases": "fixtures/skill-eval/requirement-acceptance-testing-behavior-cases.json"
+      }
+    ],
+    "resource-capability-distiller": [
+      {
+        "cases": "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
+      }
+    ],
+    "security-engineering-expert": [
+      {
+        "cases": "fixtures/skill-eval/security-engineering-behavior-cases.json"
+      }
+    ],
+    "llm-coding-hygiene": [
+      {
+        "cases": "fixtures/skill-eval/llm-coding-hygiene-behavior-cases.json"
       }
     ],
     "ui-design-expert": [

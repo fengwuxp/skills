@@ -1,6 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+usage() {
+  cat <<'USAGE'
+Usage: scripts/validate.sh [--require-installed-parity]
+
+Default validation checks the Skill source repository and isolated sync fixtures.
+Pass --require-installed-parity (or set VALIDATE_INSTALLED_SKILLS=1) to also
+validate the real $CODEX_HOME/skills installation.
+USAGE
+}
+
+require_installed_parity="${VALIDATE_INSTALLED_SKILLS:-0}"
+for arg in "$@"; do
+  case "${arg}" in
+    --require-installed-parity)
+      require_installed_parity=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown argument: ${arg}" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT_DIR}"
 
@@ -422,8 +450,10 @@ if CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh >/dev/null 2
 fi
 CODEX_HOME="${parity_home}" ./sync-skills.sh product-architecture-expert >/dev/null
 CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh
-if [[ "${VALIDATE_INSTALLED_SKILLS:-}" == "1" ]]; then
+if [[ "${require_installed_parity}" == "1" ]]; then
   scripts/validate-installed-skills.sh
+else
+  echo "SKIP installed parity: pass --require-installed-parity or set VALIDATE_INSTALLED_SKILLS=1"
 fi
 
 echo "==> retired skill sync"

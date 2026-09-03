@@ -65,6 +65,27 @@ class ReferenceSelectionIntegrationTests(unittest.TestCase):
         self.assertEqual(2, len(candidates))
         self.assertEqual(candidates[0]["score"], candidates[1]["score"])
 
+    def test_natural_language_novelist_timeline_alias_routes_to_index(self) -> None:
+        result = MODULE.build_from_path(
+            ROOT / "novelist" / "references",
+            "剧情时序 多线并行",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertEqual("剧情时序 / 多线并行", result["matched_task"])
+        self.assertIn("递增逻辑锚与并发场景组", result["content"])
+        self.assertGreater(result["estimated_savings_ratio"], 0.3)
+
+    def test_natural_language_prd_alias_selects_template_index(self) -> None:
+        result = MODULE.build_from_path(
+            ROOT / "product-architecture-expert" / "references",
+            "PRD 模板 业务场景",
+        )
+
+        self.assertEqual("ready", result["status"])
+        self.assertEqual("PRD 模板 / 业务场景", result["matched_task"])
+        self.assertTrue(result["source"].endswith("product-prd-template.md"))
+
     def test_payment_method_card_selects_one_method(self) -> None:
         result = MODULE.build_package(
             ROOT / "payment-expert" / "references" / "payment-method-cards.md",

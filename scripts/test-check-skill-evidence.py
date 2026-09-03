@@ -154,7 +154,14 @@ class SkillEvidenceTests(unittest.TestCase):
                 )
 
             (skill_dir / "admission.json").write_text(
-                json.dumps({"status": "installable", "blockers": []}, indent=2)
+                json.dumps(
+                    {
+                        "status": "installable",
+                        "blockers": [],
+                        "evidence_mode": "behavior-scored" if scored else "contract-only",
+                    },
+                    indent=2,
+                )
                 + "\n",
                 encoding="utf-8",
             )
@@ -207,6 +214,14 @@ class SkillEvidenceTests(unittest.TestCase):
 
             self.assertEqual([], CHECKER.audit_evidence(skill_dir, root))
 
+    def test_contract_only_fixture_drift_does_not_claim_live_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.build_repository(root, scored=False)
+            (root / "candidate.txt").write_text("changed\n", encoding="utf-8")
+
+            self.assertEqual([], CHECKER.audit_evidence(skill_dir, root))
+
     def test_incomplete_scored_gate_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -221,6 +236,85 @@ class SkillEvidenceTests(unittest.TestCase):
             failures = CHECKER.audit_evidence(skill_dir, root)
 
             self.assertTrue(any("responses, scores, and seed" in failure for failure in failures))
+
+    def test_missing_evidence_mode_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.build_repository(root, scored=False)
+            metadata_path = skill_dir / "admission.json"
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+            metadata.pop("evidence_mode")
+            metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+
+            failures = CHECKER.audit_evidence(skill_dir, root)
+
+            self.assertTrue(any("evidence_mode" in failure for failure in failures))
+
+    def test_behavior_scored_requires_a_scored_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.build_repository(root, scored=False)
+            metadata_path = skill_dir / "admission.json"
+            metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+            metadata["evidence_mode"] = "behavior-scored"
+            metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+
+            failures = CHECKER.audit_evidence(skill_dir, root)
+
+            self.assertTrue(any("behavior-scored" in failure for failure in failures))
+
+    def test_contract_only_requires_a_case_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            fixtures = root / "fixtures" / "skill-eval"
+            fixtures.mkdir(parents=True)
+            (fixtures / "evidence-gates.json").write_text(
+                json.dumps({"version": 1, "skills": {}}), encoding="utf-8"
+            )
+            skill_dir = root / "demo-skill"
+            skill_dir.mkdir()
+            (skill_dir / "SKILL.md").write_text("# Demo\n", encoding="utf-8")
+            (skill_dir / "admission.json").write_text(
+                json.dumps(
+                    {
+                        "status": "installable",
+                        "evidence_mode": "contract-only",
+                        "blockers": [],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            failures = CHECKER.audit_evidence(skill_dir, root)
+
+            self.assertTrue(any("requires at least one case gate" in failure for failure in failures))
+
+    def test_repository_rejects_unwired_behavior_case(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            fixture_dir = root / "fixtures" / "skill-eval"
+            fixture_dir.mkdir(parents=True)
+            (fixture_dir / "evidence-gates.json").write_text(
+                json.dumps({"version": 1, "skills": {}}), encoding="utf-8"
+            )
+            skill_dir = root / "demo-skill"
+            skill_dir.mkdir()
+            (skill_dir / "SKILL.md").write_text("# Demo\n", encoding="utf-8")
+            (skill_dir / "admission.json").write_text(
+                json.dumps(
+                    {
+                        "status": "installable",
+                        "evidence_mode": "contract-only",
+                        "blockers": [],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (fixture_dir / "orphan-behavior-cases.json").write_text("{}", encoding="utf-8")
+
+            failures = CHECKER.audit_repository(root)
+
+            self.assertTrue(any("orphan-behavior-cases.json" in failure for failure in failures))
 
 
 if __name__ == "__main__":

@@ -283,6 +283,8 @@ def delivery_gates(
     repository_root: Path = ROOT,
 ) -> dict[str, Any]:
     status, admission_failures = ADMISSION_CHECKER["audit_skill"](skill_dir)
+    admission_data, _ = ADMISSION_CHECKER["read_metadata"](skill_dir)
+    evidence_mode = admission_data.get("evidence_mode", "invalid")
     dependencies: list[str] = []
     dependency_failures: list[str] = []
     evidence_failures: list[str] = []
@@ -305,6 +307,7 @@ def delivery_gates(
         "required_skills": dependencies,
         "dependency_readiness": "ready" if not dependency_failures else "blocked",
         "evidence_readiness": "ready" if not evidence_failures else "blocked",
+        "evidence_mode": evidence_mode,
         "installed_parity": "not_checked" if ready_for_parity else "blocked",
         "delivery_readiness": "requires_installed_parity" if ready_for_parity else "blocked",
         "blockers": blockers,

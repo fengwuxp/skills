@@ -24,6 +24,8 @@ SPEC.loader.exec_module(MODULE)
 class SkillAdmissionTests(unittest.TestCase):
     @staticmethod
     def write_skill(root: Path, name: str, metadata: dict[str, object]) -> Path:
+        metadata = dict(metadata)
+        metadata.setdefault("evidence_mode", "structural-only")
         skill_dir = root / name
         skill_dir.mkdir()
         (skill_dir / "SKILL.md").write_text(f"# {name}\n", encoding="utf-8")
@@ -195,6 +197,23 @@ class SkillAdmissionTests(unittest.TestCase):
             self.assertTrue(
                 any("restriction[1].scope must be distribution" in item for item in failures)
             )
+
+    def test_evidence_mode_must_be_declared_and_supported(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.write_skill(
+                root,
+                "invalid-evidence-mode",
+                {
+                    "status": "installable",
+                    "blockers": [],
+                    "evidence_mode": "live-and-magical",
+                },
+            )
+
+            _, failures = MODULE.audit_skill(skill_dir)
+
+            self.assertTrue(any("evidence_mode" in item for item in failures))
 
 
 if __name__ == "__main__":
