@@ -40,6 +40,14 @@ def readiness_summary(skill: str, evidence_mode: str) -> str:
     return f"OK skill evidence: {skill} (mode=behavior-scored)"
 
 
+def repository_readiness_summary() -> str:
+    return (
+        "OK skill delivery gates: repository "
+        "(modes declared per admission.json; "
+        "contract-only source-profile freshness=deferred per Skill)"
+    )
+
+
 def load_evaluator() -> ModuleType:
     spec = importlib.util.spec_from_file_location(
         "skill_behavior_evaluator_for_evidence_gate", EVALUATOR_PATH
@@ -284,10 +292,7 @@ def main() -> int:
         metadata = json.loads((args.skill.resolve() / "admission.json").read_text(encoding="utf-8"))
         print(readiness_summary(target, metadata["evidence_mode"]))
     else:
-        print(
-            "OK skill delivery gates: repository "
-            "(contract-only source-profile freshness=deferred)"
-        )
+        print(repository_readiness_summary())
     return 0
 
 

@@ -227,6 +227,14 @@ class SkillEvidenceTests(unittest.TestCase):
                 CHECKER.readiness_summary("demo-skill", "contract-only"),
             )
 
+    def test_repository_summary_preserves_mixed_evidence_modes(self) -> None:
+        self.assertEqual(
+            "OK skill delivery gates: repository "
+            "(modes declared per admission.json; "
+            "contract-only source-profile freshness=deferred per Skill)",
+            CHECKER.repository_readiness_summary(),
+        )
+
     def test_incomplete_scored_gate_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
