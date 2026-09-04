@@ -1236,6 +1236,93 @@ def cross_scenario_flow_issues(text: str) -> list[str]:
     return [] if shared_flow.strip() else ["cross_scenario_flow_missing"]
 
 
+def cross_scenario_view_contract_issues(text: str) -> list[str]:
+    detail = section_body(text, ("详细设计",))
+    headings = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", detail))
+    target: tuple[int, str] | None = None
+    for index, heading in enumerate(headings):
+        title = normalize(heading.group(2))
+        if "图形视图" not in title or not any(
+            alias in title for alias in ("跨场景端到端流程", "跨场景关键流程")
+        ):
+            continue
+        level = len(heading.group(1))
+        end = len(detail)
+        for following in headings[index + 1 :]:
+            if len(following.group(1)) <= level:
+                end = following.start()
+                break
+        target = (level, detail[heading.end() : end])
+        break
+    if target is None:
+        return []
+
+    level, body = target
+    normalized = normalize(body)
+
+    def assigned_values(labels: tuple[str, ...]) -> list[str]:
+        values = [value for label in labels for value in field_values(body, label)]
+        for label in labels:
+            pattern = re.compile(
+                rf"(?:^|[；;\n])\s*{re.escape(label)}\s*=\s*([^；;\n]+)",
+                re.IGNORECASE,
+            )
+            values.extend(match.group(1).strip() for match in pattern.finditer(body))
+        return meaningful_values(values)
+
+    has_scope = (
+        any(marker in normalized for marker in ("作用边界", "只表达", "只描述", "只展开"))
+        and any(marker in normalized for marker in ("场景关系", "分支关系", "责任交接", "共享生命周期", "状态变化"))
+        and any(marker in normalized for marker in ("不重复", "不复述"))
+    )
+    has_coverage = bool(
+        assigned_values(("实际覆盖", "覆盖场景", "覆盖范围", "覆盖"))
+        or re.search(
+            r"(?:实际)?覆盖[^。；\n]{1,80}(?:(?:SCN|UC)-[A-Z0-9-]+|场景|流程|路径)",
+            body,
+            re.IGNORECASE,
+        )
+    )
+    has_trace = (
+        all(marker in normalized for marker in ("规则", "风险", "验收"))
+        and any(marker in normalized for marker in ("追踪", "回链", "入口", "关联", "见第"))
+    )
+
+    issues: list[str] = []
+    if not all((has_scope, has_coverage, has_trace)):
+        issues.append("cross_scenario_view_contract_incomplete")
+    if level >= 3 and re.search(
+        r"本章\s*(?:只|主要|用于)(?:描述|展开|表达|说明)?", body
+    ):
+        issues.append("cross_scenario_heading_level_mismatch")
+
+    expression_values = assigned_values(("表达选择", "表达方式", "图形选择", "首选图形"))
+    has_expression_choice = bool(expression_values) or bool(
+        re.search(
+            r"(?:采用|使用|选择)[^。；\n]{0,30}(?:编号|流程图|泳道图|状态机|用例图|能力地图|图形)",
+            body,
+        )
+    )
+    has_visual = bool(
+        re.search(
+            r"!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\.(?:svg|png|jpe?g|webp)(?:#[^)]*)?\)|"
+            r"```(?:mermaid|dot|plantuml)|~~~(?:mermaid|dot|plantuml)",
+            body,
+            re.IGNORECASE,
+        )
+    )
+    if not has_visual:
+        has_numbered_rationale = (
+            has_expression_choice
+            and "编号" in normalized
+            and any(marker in normalized for marker in ("足够", "足以", "已经能够", "可以说明", "可说明", "即可"))
+            and bool(re.search(r"(?:无须|无需|不需要|不)[^。；\n]{0,40}(?:图|图形)", body))
+        )
+        if not has_numbered_rationale:
+            issues.append("cross_scenario_expression_rationale_missing")
+    return issues
+
+
 def conditional_flow_order_issues(text: str) -> list[str]:
     heading_matches = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", text))
     headings = [normalize(match.group(2)) for match in heading_matches]
@@ -1639,6 +1726,7 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.extend(scenario_contract_issues(text))
             missing.extend(scenario_relationship_issues(text))
             missing.extend(cross_scenario_flow_issues(text))
+            missing.extend(cross_scenario_view_contract_issues(text))
             missing.extend(conditional_flow_order_issues(text))
             missing.extend(success_metric_issues(text))
             missing.extend(requirement_contract_issues(text))

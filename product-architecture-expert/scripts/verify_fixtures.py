@@ -140,6 +140,102 @@ def main() -> int:
         if expected_issue not in missing_groups("prd", candidate):
             failures.append(f"{label} unexpectedly passed")
 
+    enhanced_prd = (FIXTURES / "prd-enhanced-readable-valid.md").read_text(encoding="utf-8")
+    cross_scenario_view_prd = enhanced_prd.replace(
+        "### 跨场景端到端流程\n",
+        """### 跨场景端到端流程与图形视图
+
+作用边界：本节只表达 SCN-001 与 SCN-002 的分支关系、责任交接和共享状态变化，不重复前述场景卡中的业务情境、局部规则和异常细节。
+
+本节实际覆盖 SCN-001、SCN-002 及专业确认后的恢复路径。
+
+表达选择：使用编号步骤已经足以说明分支与恢复顺序，因此无需补充图形。
+
+追踪入口：规则 R-EXT-001、风险与待确认见第七节、验收见第八节。
+
+""",
+        1,
+    )
+    cross_scenario_contract_cases = (
+        (
+            cross_scenario_view_prd.replace(
+                "作用边界：本节只表达 SCN-001 与 SCN-002 的分支关系、责任交接和共享状态变化，"
+                "不重复前述场景卡中的业务情境、局部规则和异常细节。\n",
+                "",
+                1,
+            ),
+            "cross_scenario_view_contract_incomplete",
+            "cross-scenario view without a scope boundary",
+        ),
+        (
+            cross_scenario_view_prd.replace(
+                "本节实际覆盖 SCN-001、SCN-002 及专业确认后的恢复路径。\n",
+                "",
+                1,
+            ),
+            "cross_scenario_view_contract_incomplete",
+            "cross-scenario view without actual coverage",
+        ),
+        (
+            cross_scenario_view_prd.replace(
+                "表达选择：使用编号步骤已经足以说明分支与恢复顺序，因此无需补充图形。\n",
+                "",
+                1,
+            ),
+            "cross_scenario_expression_rationale_missing",
+            "cross-scenario visual section without an expression rationale",
+        ),
+        (
+            cross_scenario_view_prd.replace(
+                "作用边界：本节只表达",
+                "作用边界：本章只表达",
+                1,
+            ),
+            "cross_scenario_heading_level_mismatch",
+            "section-level cross-scenario view using chapter wording",
+        ),
+    )
+    for candidate, expected_issue, label in cross_scenario_contract_cases:
+        if expected_issue not in missing_groups("prd", candidate):
+            failures.append(f"{label} unexpectedly passed")
+
+    valid_cross_scenario_issues = {
+        issue
+        for issue in missing_groups("prd", cross_scenario_view_prd)
+        if issue.startswith("cross_scenario_view_")
+        or issue.startswith("cross_scenario_expression_")
+        or issue.startswith("cross_scenario_heading_")
+    }
+    if valid_cross_scenario_issues:
+        failures.append(
+            "valid prose cross-scenario view contract unexpectedly failed: "
+            + ",".join(sorted(valid_cross_scenario_issues))
+        )
+
+    visual_cross_scenario_prd = cross_scenario_view_prd.replace(
+        "表达选择：使用编号步骤已经足以说明分支与恢复顺序，因此无需补充图形。\n",
+        """图形目标：用流程图呈现场景分支和专业确认后的恢复路径。
+
+```mermaid
+flowchart LR
+    SCN-001 --> SCN-002
+```
+""",
+        1,
+    )
+    visual_contract_issues = {
+        issue
+        for issue in missing_groups("prd", visual_cross_scenario_prd)
+        if issue.startswith("cross_scenario_view_")
+        or issue.startswith("cross_scenario_expression_")
+        or issue.startswith("cross_scenario_heading_")
+    }
+    if visual_contract_issues:
+        failures.append(
+            "valid graphical cross-scenario view contract unexpectedly failed: "
+            + ",".join(sorted(visual_contract_issues))
+        )
+
     authority_boundary_prd = current_prd.replace("权威来源：", "权威边界：", 1)
     if "document_control_incomplete" in missing_groups("prd", authority_boundary_prd):
         failures.append("authority boundary equivalent document control was rejected")
@@ -413,7 +509,7 @@ def main() -> int:
 
     enhanced_prd = (FIXTURES / "prd-enhanced-readable-valid.md").read_text(encoding="utf-8")
     shared_flow = re.search(
-        r"(?ms)^### 跨场景端到端流程\n.*?(?=^### 产品需求陈述)",
+        r"(?ms)^### 跨场景端到端流程(?:与图形视图)?\n.*?(?=^### 产品需求陈述)",
         enhanced_prd,
     )
     if shared_flow is None:
