@@ -21,6 +21,9 @@
       },
       {
         "cases": "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
       }
     ],
     "business-website-planner": [
@@ -109,6 +112,9 @@
       },
       {
         "cases": "fixtures/skill-eval/novelist-r8-practice-backflow-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [
@@ -138,6 +144,9 @@
       },
       {
         "cases": "fixtures/skill-eval/product-prd-semantic-deep-review-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
       }
     ],
     "wise-agent": [
@@ -161,6 +170,9 @@
       },
       {
         "cases": "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
       }
     ],
     "payment-expert": [
@@ -218,6 +230,9 @@
       },
       {
         "cases": "fixtures/skill-eval/ui-motion-craft-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
       }
     ]
   }

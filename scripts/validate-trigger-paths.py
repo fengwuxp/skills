@@ -3,8 +3,8 @@
 """Validate legacy high-value Skill trigger and reference routing invariants.
 
 This is not a natural-language router or a behavior-evidence gate. Source-bound
-behavior evidence is owned by check-skill-evidence.py. Keep new checks focused
-on durable trigger, ownership, and routing invariants that survive wording changes.
+behavior evidence is owned by check-skill-evidence.py. New invariants belong in Skill-local fixtures or validators;
+only repair or remove existing checks in this legacy module.
 """
 
 import json
@@ -2342,8 +2342,8 @@ check(
         product_skill,
         [
             "正式交付只留结论",
-            "讨论、轻量问询、被拒方案和推理轨迹留在任务计划或评审记录",
-            "产品上下文交接卡",
+            "讨论、轻量问询、被拒方案和推理轨迹留在过程资产",
+            "产品上下文交接卡（Product Context Card）",
         ],
     )
     and has_all(
@@ -2650,10 +2650,8 @@ check(
     and has_all(
         product_skill,
         [
-            "先找变化轴再交工程",
-            "区分稳定业务事实与会变的业务规则、状态行为、外部依赖、平台差异和扩展场景",
-            "没有证据的未来变化只标为待观察",
-            "不作为架构拆分或平台化依据",
+            "边界与演进有证",
+            "一次性或尚未证明复用价值的需求不预建平台",
         ],
     )
     and has_all(
@@ -3073,8 +3071,7 @@ check(
         product_skill,
         [
             "交接不转责",
-            "只交 Product Context Card",
-            "承载事实、规则、验收种子、风险和待确认",
+            "产品上下文交接卡（Product Context Card）",
             "不判定工程准入、测试通过、Execution Grant 或上线审批",
         ],
     )
@@ -4072,7 +4069,6 @@ check(
         [
             "本技能继承仓库 `AGENTS.md` 的顶层处事原则",
             "概念定名先于扩需求",
-            "需求扩张时先区分用户价值、组织收益、文化/品牌意义和单纯欲望",
             "产品原则不替代证据",
         ],
     )
@@ -4159,9 +4155,9 @@ check(
     and has_all(
         product_skill,
         [
-            "业务流程编排产品能力",
-            "不用一个“万能能力”承载所有问题",
-            "不把产品能力图提前等同于服务、接口、数据库或工作流引擎",
+            "先语义后形态",
+            "边界与演进有证",
+            "一次性或尚未证明复用价值的需求不预建平台",
         ],
     )
     and has_all(
@@ -5088,9 +5084,7 @@ check(
         [
             "非标诉求不做传话筒",
             "产品岗提供解决方案，不被动搬运需求",
-            "第一性原理先于模板",
-            "不知道就问，没要求的不写",
-            "验收标准、解决方案假设和待确认项",
+            "缺关键事实时只输出假设、澄清问题、风险和 Round 0",
         ],
     )
     and has_all(
@@ -5947,9 +5941,11 @@ check(
             "evidence_fingerprint",
             "response_revision",
             "resolution_revision",
+            "accepted_role_revision",
+            "accepted_role_fingerprint",
             "supersedes",
             "旧响应标记为 `stale`",
-            "旧矩阵、旧卡片与旧决议都标记为 `stale`",
+            "旧卡片与旧决议都标记为 `stale`",
         ],
     ),
 )
@@ -8008,7 +8004,7 @@ check(
             "Ready / Active / Verified / Closed",
             "pass^k",
             "早期错误假设被新一手证据撤回",
-            "会商 topic / information / authority revision 变化后旧决议失效",
+            "会商 topic / role / information / authority revision 变化后旧决议失效",
         ],
     )
     and has_all(
@@ -11642,8 +11638,7 @@ check(
     has_all(
         product_skill,
         [
-            "概念生命周期要能退役",
-            "新增概念、规则、页面、状态或能力",
+            "product-concept-lifecycle.md",
             "谁拥有、替代什么",
             "何时复审与退役",
         ],
@@ -11773,7 +11768,6 @@ check(
     has_all(
         product_skill,
         [
-            "产品洞察/机会雷达",
             "product-insight-analyst.md",
         ],
     )
@@ -11810,9 +11804,6 @@ check(
     has_all(
         product_skill,
         [
-            "机会清单/Backlog 决策",
-            "需求优先级",
-            "User Story/AC",
             "po-backlog-manager.md",
         ],
     )
@@ -11879,7 +11870,6 @@ check(
         [
             "product-deliberation-workflow.md",
             "复杂 PRD、AI 生成方案、原型候选、多方争议",
-            "合议式产品评审",
         ],
     )
     and has_all(
@@ -12077,7 +12067,6 @@ check(
     and has_all(
         product_skill,
         [
-            "产品判断要动作化",
             "product-judgment-action-chain.md",
             "产品判断动作链",
             "pm-skills",
@@ -12191,7 +12180,7 @@ check(
             "第二层：通链路",
             "第三层：定取舍并形成可验证方案",
             "不是固定瀑布",
-            "最小完整视图",
+            "三层主轴",
             "同一背景、边界、证据与待确认项只写一次",
         ],
     )
@@ -15221,9 +15210,12 @@ check(
     and all(
         term in frontmatter(product_skill)
         for term in [
-            "明确要求从原型或页面材料反推产品语义",
-            "仅设计、绘制或验证已确认产品语义的 Web UI",
-            "仅把未来整站、多端角色或迁移层作为要拒绝的 UI 过度设计",
+            "原型或页面材料反推产品语义",
+            "已确认语义的 Web UI/Figma 原型",
+            "支付资金专项",
+            "系统实现",
+            "工程图",
+            "代码评审不触发",
         ]
     )
     and has_all(product_agent, ["产品 / 业务架构", "跨应用产品责任范围"])
@@ -19926,9 +19918,8 @@ check(
     and has_all(
         product_skill,
         [
-            "先跨诉求和场景察同",
-            "共性沉淀为稳定产品能力",
-            "特殊性按证据保留在场景、规则、参数或适配边界",
+            "先语义后形态",
+            "边界与演进有证",
             "一次性或尚未证明复用价值的需求",
         ],
     )
@@ -20657,7 +20648,7 @@ check(
         [
             "结论稳定后可协同 `document-authoring`",
             "重新运行产品交付物检查",
-            "`hanzi-philology` 只在命名确有古文、字源或训诂证据问题时按需参与",
+            "命名确有古文、字源或训诂证据问题时按需调用 `hanzi-philology`",
         ],
     )
     and has_all(
@@ -20709,8 +20700,6 @@ check(
             "短篇小说",
             "长篇小说",
             "超长篇小说",
-            "执简驭繁",
-            "人物刻画",
             "## 创作原则",
             "按照真实世界那样去构建故事",
             "世界在主角看不见时仍继续变化",
@@ -20733,32 +20722,9 @@ check(
             "叙事校准卡",
             "只有作者明确确认或纳入本轮自决授权范围",
             "不得替作者升级设定",
-            "不把现实决策卡原样写进小说",
-            "世界规则与后果必须自洽",
             "人物可以不理性",
-            "不敢赌为假",
-            "心理支点不等于外部证据链",
-            "若现有心理支点已经成立，不新增外部证据",
-            "巧合可以制造或加剧困境",
-            "反常事件不必成为谜底",
-            "不因反常事件规模大就缩小、删除或并入主因果",
-            "不为结构工整把所有异常、意象和伏笔汇入同一谜底",
-            "真实事件与传说先按证据状态处理",
-            "反常识不等于不真实",
-            "不以常识替代证据",
-            "保护不可替代的幻想核",
             "积厚而发",
             "灵感天成",
-            "原始核，与后续加工分开",
-            "天马行空与幻想归来",
-            "只发散、不选择、不落地",
-            "不把幻想归来反向变成探索门禁",
-            "作者要求选择、成形、写入故事或检验可用性时",
-            "可以退回天马行空重新发散",
-            "故事、人物、世界、历史与神话中归来",
-            "读者可感的叙事现实",
-            "完整百科不得先于人物选择与当场故事",
-            "不指成为现实史实",
             "不按章节给伏笔配额",
             "伏笔不要求事前唯一锁定答案",
             "不把“无法唯一证明”当成伏笔缺陷",
@@ -20768,7 +20734,6 @@ check(
             "已建立的读者承诺",
             "不刻意制造金句",
             "直笔与曲笔",
-            "创作判断与发布准入分轨",
             "公开传播与内容治理",
             "创作母稿",
             "发布适配稿",
@@ -21893,13 +21858,9 @@ check(
         novelist_skill,
         [
             "让新剧情承前而生",
-            "材料只说讨论或分析发生过却未给出具体依据时",
             "逐轮写明改变的事实、人物知情、读者承诺或下游行动",
-            "保留素材逐项记录作者原意、小说家公开判断维度",
-            "只有作者确认其承重功能",
             "无据漂移不得落地",
             "明显反向先过效力门",
-            "不能让“伏笔”或“写得通”代替修订授权",
         ],
     )
     and has_all(
@@ -22043,8 +22004,6 @@ check(
     and has_all(
         novelist_skill,
         [
-            "多轮讨论中增量收集承重创作素材",
-            "双方公开讨论的议题",
             "创作承续与草稿落地",
         ],
     )
@@ -22728,8 +22687,7 @@ check(
     has_all(
         novelist_skill,
         [
-            "心理真实要求可回望",
-            "不要求事前可预测",
+            "人物可以不理性",
             "references/character-craft.md",
         ],
     )

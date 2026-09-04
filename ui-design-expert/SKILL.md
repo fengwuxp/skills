@@ -51,6 +51,7 @@ description: |
 未命中快速止损门时，只读取当前任务必要的 reference；详细字段和分支由 reference 单一持有：
 
 - 新界面、重设计、局部优化、页面 CR：`references/design-and-review-workflow.md`；新界面读“一、任务与变更类型”至“七、交付契约”。
+- 用户显式要求角色讨论、多视角评审或合议，或同一 UI 决策确有产品权限、用户任务、结构交互、视觉、可访问性与实现约束冲突时，读 `references/deliberation-role-configuration.md`；由 `wise-agent` 主持时，通用角色语义由主持方加载。简单局部修复不启用。
 - 排版、tokens、响应式媒体、视觉元素意图：`references/design-foundations.md`；数据工作台、表单、审批等模式读 `references/common-scenario-patterns.md`。
 - 设计系统与 UI 资产选型：`references/ui-library-landscape.md`。Ant Design 跨应用采用遵循其“Ant Design B+ 采用边界”：运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为；正式稿使用 `--kind ant-adoption --scenario <scenario>`，最多修复两轮。
 - 视觉风格、东方审美、参考页面或截图、设计 DNA：`references/visual-style-directions.md`。

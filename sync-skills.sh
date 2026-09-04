@@ -17,6 +17,7 @@ Notes:
   - Source skills are discovered from skill directories next to this script.
   - Installed skills are synced to "$CODEX_HOME/skills/<skill-dir>".
   - Existing installed skills are backed up before sync.
+  - Symbolic-link roots, targets, and pre-existing backup paths are rejected.
   - Known replaced skills are moved to the backup directory after their replacement syncs.
 USAGE
 }
@@ -64,6 +65,22 @@ AGENT_BACKUP_ROOT="${CODEX_HOME_DIR}/.agent-backups"
 AGENT_PROFILE_FILES=("implementer.toml" "batch-worker.toml")
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 DRY_RUN_STAGE=""
+
+refuse_symbolic_link() {
+  local path="$1"
+  local label="$2"
+  if [[ -L "${path}" ]]; then
+    echo "Refusing symbolic-link ${label}: ${path}" >&2
+    exit 1
+  fi
+}
+
+refuse_symbolic_link "${TARGET_ROOT}" "Skill root"
+refuse_symbolic_link "${BACKUP_ROOT}" "Skill backup root"
+if [[ "${WITH_AGENTS}" == "true" ]]; then
+  refuse_symbolic_link "${AGENT_TARGET_DIR}" "Agent target"
+  refuse_symbolic_link "${AGENT_BACKUP_ROOT}" "Agent backup root"
+fi
 
 cleanup_dry_run_stage() {
   if [[ -n "${DRY_RUN_STAGE}" ]]; then
@@ -123,7 +140,7 @@ print_skills() {
   echo "Available skills:"
   local i
   for i in "${!skill_dirs[@]}"; do
-    printf '  [%d] %s  (%s, %s, dependencies=%s, evidence=%s)\n' \
+    printf '  [%d] %s  (%s, %s, dependencies=%s, delivery-gate=%s)\n' \
       "$((i + 1))" "${skill_dirs[$i]}" "${skill_names[$i]}" \
       "${skill_statuses[$i]}" "${skill_dependency_statuses[$i]}" \
       "${skill_evidence_statuses[$i]}"
@@ -159,7 +176,7 @@ select_with_dependencies() {
   if [[ "$(evidence_for_skill "${key}")" != "ready" ]]; then
     python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
       --skill "${SKILLS_DIR}/${key}" >&2 || true
-    echo "Skill evidence is not current: ${key}" >&2
+    echo "Skill delivery gate is not ready: ${key}" >&2
     exit 1
   fi
   while IFS= read -r dependency; do
@@ -179,7 +196,7 @@ select_all() {
         echo "Cannot sync all: required Skill is not installable for ${skill_dirs[$i]}" >&2
         blocked=true
       elif [[ "${skill_evidence_statuses[$i]}" != "ready" ]]; then
-        echo "Cannot sync all: evidence is not current for ${skill_dirs[$i]}" >&2
+        echo "Cannot sync all: delivery gate is not ready for ${skill_dirs[$i]}" >&2
         blocked=true
       fi
     else
@@ -265,7 +282,7 @@ if [[ ${#ARGS[@]} -gt 0 ]]; then
       if [[ "$(evidence_for_skill "${arg}")" != "ready" ]]; then
         python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
           --skill "${SKILLS_DIR}/${arg}" >&2 || true
-        echo "Skill evidence is not current: ${arg}" >&2
+        echo "Skill delivery gate is not ready: ${arg}" >&2
         exit 1
       fi
       add_selected "${arg}"
@@ -373,7 +390,15 @@ sync_one() {
   fi
   if ! python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
     --skill "${source_dir}"; then
-    echo "Skill evidence is not current: ${key}" >&2
+    echo "Skill delivery gate is not ready: ${key}" >&2
+    exit 1
+  fi
+  if [[ -L "${target_dir}" ]]; then
+    echo "Refusing symbolic-link Skill target: ${target_dir}" >&2
+    exit 1
+  fi
+  if [[ "${DRY_RUN}" == "false" && ( -e "${backup_dir}" || -L "${backup_dir}" ) ]]; then
+    echo "Refusing existing Skill backup path: ${backup_dir}" >&2
     exit 1
   fi
 
@@ -409,7 +434,8 @@ sync_one() {
     target_count="$(find "${target_dir}" -type f ! -name '.DS_Store' ! -iname '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
     echo "    files: source=${source_count}, target=${target_count}"
     if [[ "${source_count}" != "${target_count}" ]]; then
-      echo "    warning: source and target file counts differ; inspect rsync output" >&2
+      echo "Skill sync file counts differ: ${key}" >&2
+      exit 1
     fi
   fi
 }
@@ -418,6 +444,11 @@ sync_agent_profiles() {
   local rsync_target="${AGENT_TARGET_DIR}"
   local backup_dir="${AGENT_BACKUP_ROOT}/agents-${TIMESTAMP}"
   local profile_file source_file target_file
+
+  if [[ "${DRY_RUN}" == "false" && ( -e "${backup_dir}" || -L "${backup_dir}" ) ]]; then
+    echo "Refusing existing Agent backup path: ${backup_dir}" >&2
+    exit 1
+  fi
 
   echo "==> Codex agent profiles"
   echo "    from: ${AGENT_SOURCE_DIR}"
@@ -482,7 +513,7 @@ retire_replaced_skill() {
     echo "    to backup: ${backup_dir}"
     return 0
   fi
-  if [[ -e "${backup_dir}" ]]; then
+  if [[ -e "${backup_dir}" || -L "${backup_dir}" ]]; then
     echo "Retirement backup already exists: ${backup_dir}" >&2
     exit 1
   fi

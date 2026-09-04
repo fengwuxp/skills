@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate repository Skill admission metadata.
 
-Input: optional top-level skill directory, local admission.json, and candidate agents/openai.yaml.
+Input: optional top-level skill directory, SKILL.md, admission.json, and candidate agents/openai.yaml.
 Output: validation failures or the declared status.
 Writes/network: normal checks write nothing and never use network; self-test writes only to a temporary directory. Missing admission.json is rejected.
 """
@@ -25,6 +25,7 @@ IMPLICIT_INVOCATION = re.compile(
     r"^\s*allow_implicit_invocation:\s*(true|false)\s*(?:#.*)?$",
     re.MULTILINE,
 )
+CROSS_SKILL_REFERENCE = re.compile(r"\.\./([a-z0-9]+(?:-[a-z0-9]+)*)/")
 
 
 def read_metadata(skill_dir: Path) -> tuple[dict[str, Any], list[str]]:
@@ -112,6 +113,18 @@ def audit_skill(skill_dir: Path) -> tuple[str, list[str]]:
         if dependency in seen_requires:
             failures.append(f"{label}: duplicate dependency {dependency}")
         seen_requires.add(dependency)
+
+    try:
+        skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+    except OSError as exc:
+        failures.append(f"{skill_dir / 'SKILL.md'}: cannot read: {exc}")
+        skill_text = ""
+    for dependency in sorted(set(CROSS_SKILL_REFERENCE.findall(skill_text))):
+        if dependency not in seen_requires:
+            failures.append(
+                f"{skill_dir / 'SKILL.md'}: cross-Skill relative reference requires "
+                f"admission.json dependency: {dependency}"
+            )
 
     updated_at = data.get("updated_at")
     if status == "candidate" and (
@@ -221,6 +234,7 @@ def self_test() -> list[str]:
             ),
             encoding="utf-8",
         )
+        (root / "SKILL.md").write_text("# Demo Skill\n", encoding="utf-8")
         (root / "agents").mkdir()
         (root / "agents" / "openai.yaml").write_text(
             "policy:\n  allow_implicit_invocation: false\n",

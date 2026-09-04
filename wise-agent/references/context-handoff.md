@@ -23,7 +23,7 @@
 - `Continue / Branch / Worker / Checker` 中的一个语义判断。
 - 命中 Branch 时的一份最小出站契约，以及证据返回时的一份返回契约。
 - 命中双边契约会商时的一份 `Contract Inquiry`、`Shared Information Matrix`、提供方证据响应、消费者对账和 Checker 准出结论。
-- 命中主持式多方会商时的一份 `Meeting Charter`、`Shared Information Matrix`、各方 `Position Card`、`Conflict Matrix`、`Meeting Resolution` 和 Checker 准出结论。
+- 命中主持式多方会商时的一份 `Meeting Charter`、`Discussion Role Matrix`、`Shared Information Matrix`、各方 `Position Card`、`Conflict Matrix`、`Meeting Resolution` 和 Checker 准出结论。
 - 命中项目内模块合议时的一组 `Module Fact Card`、逐依赖契约和 `accepted / rejected / pending` 裁决。
 - 运输方式、脱敏结果、授权边界、停止条件和失效条件。
 
@@ -31,6 +31,7 @@
 
 - 项目执行规范、跨轮状态和恢复入口读 `execution-specification.md`、`delivery-execution-control.md`。
 - Worker、Checker 和文件化交接读 `engineering-governance.md`。
+- 主持式会商需要按任务阶段、专业对象和决策问题配置工作位时，读 `deliberation-role-configuration.md`；本文件仍只拥有会商协议、版本和对账规则。
 - 高保真问题、决策包和原问题台账读 `../../grill-me/references/question-ledger.md`。
 - 项目内模块合议主张直接业务价值或赋能业务价值时，读取 `../../product-architecture-expert/references/business-architecture-planning.md`；纯技术价值不强制加载产品侧。系分与架构读 `../../senior-software-architect/references/system-analysis-design.md` 和 `../../senior-software-architect/references/project-governance-codebase-and-modules.md`。
 
@@ -42,7 +43,7 @@
 | 临时分叉取证 | `1. 正名与准入`、`2. 运输和出站契约` | 不复制完整会话或长期状态 |
 | 接收分叉结果 | `3. 返回契约与对账` | 不凭摘要覆盖原决策 |
 | 双边契约会商 | `1. 正名与准入`、`4.1` 至 `4.4` | 不把双方变成平级 execution steward，不永久互聊 |
-| 主持式多方会商 | `1. 正名与准入`、`4.1`、`4.2`、`4.5` | 不自由群聊，不让参与方互改权威载体 |
+| 主持式多方会商 | `1. 正名与准入`、`4.1`、`4.2`、`4.5`，并读 `deliberation-role-configuration.md` | 不自由群聊，不按职业名凑固定角色 |
 | 项目内模块合议 | `4.1`、`4.2`、`4.2A`，再按参与数进入 `4.3` 至 `4.5` | 不只看代码，不另建模块真相源 |
 
 ## 1. 正名与准入
@@ -115,11 +116,11 @@ Context Branch Return:
 
 ### 4.2 主题对齐与信息充分性门禁
 
-双边和多方共用同一门禁。主持者只归并信息覆盖，不替参与方判断事实或形成方案；重复信息按权威指针和版本合并，缺失信息必须显式保留，不能用会议摘要补齐。
+双边和多方共用同一门禁。主持式多方会商先按 `deliberation-role-configuration.md` 从 `task_phase + domain_object + decision_questions` 形成 `Discussion Role Matrix`，再据此确定必要参与方和信息项；角色名称、模型数量或职业标签不能代替责任与权威。主持者只归并信息覆盖，不替参与方判断事实或形成方案；重复信息按权威指针和版本合并，缺失信息必须显式保留，不能用会议摘要补齐。
 
 ```text
 Shared Information Matrix:
-deliberation_id / topic_revision / information_revision:
+deliberation_id / topic_revision / role_revision? / role_fingerprint? / information_revision:
 讨论主题 / decision_questions / 非目标 / 术语 / 事实基线版本:
 信息项 / 类型: fact / evidence / assumption / unknown / dependency
 authority_ref / evidence_revision / evidence_fingerprint:
@@ -209,7 +210,7 @@ inquiry_id / accepted_topic_revision / accepted_information_revision / accepted_
 
 ### 4.5 主持式多方会商
 
-多方会商不复制双边请求响应链，也不让所有参与方维护同一结论。主持者先定会议契约并完成信息充分性门禁，各方再在看到他方方案前独立陈述，随后只处理冲突：
+多方会商不复制双边请求响应链，也不让所有参与方维护同一结论。主持者先定会议契约，按 `task_phase`、`domain_object` 和 `decision_questions` 配置最小工作位，再完成信息充分性门禁；各方随后在看到他方方案前独立陈述，只处理真实冲突。
 
 会商按 `decision_questions` 选择 `deliberation_strategy`。它们是同一协议下的讨论策略，不新增控制模式或人格；默认只选一个主策略，只有另一种现实约束能反驳主策略时才增加一个挑战策略，不机械遍历全部策略。
 
@@ -224,42 +225,43 @@ inquiry_id / accepted_topic_revision / accepted_information_revision / accepted_
 Meeting Charter:
 meeting_id / execution_id / charter_revision:
 讨论主题 / decision_questions / 范围 / 非目标 / 术语 / 事实基线版本:
+task_phase / domain_object:
 deliberation_strategy / 主策略 / 挑战策略? / divergence_question / cross_examination_budget:
-主持者 / decision_owner / participant_authority_refs:
+主持者 / decision_owner / role_matrix_ref / participant_authority_refs:
 允许消息 / 写入边界 / 期望证据:
 预算 / 停止条件 / 失效条件:
 
 Position Card:
-meeting_id / charter_revision / information_revision / participant / authority_revision:
+meeting_id / charter_revision / role_revision / role_fingerprint / information_revision / role_id / participant / authority_revision:
 perspective_basis: authority / evidence / stakeholder_need / hypothesis
 事实 / 不变量 / 主张 / 异议:
 优化目标 / 现实约束 / 不可接受结果 / 盲区 / 改变立场的证据:
 证据 / 置信边界 / Owner Gate:
 
 Conflict Matrix:
-meeting_id / charter_revision / information_revision / issue_id / 各方版本:
+meeting_id / charter_revision / role_revision / role_fingerprint / information_revision / issue_id / 各方版本:
 共同事实 / 冲突 / 冲突类型: fact / need / constraint / risk / tradeoff
 交叉质询 / 综合候选 / 可选裁决 / decision_owner / 所需新证据:
 
 Meeting Resolution:
 meeting_id / charter_revision / resolution_revision:
-accepted_information_revision / accepted_authority_revisions:
+accepted_role_revision / accepted_role_fingerprint / accepted_information_revision / accepted_authority_revisions:
 evidence_fingerprint / supersedes?:
 逐项裁决: accepted / rejected / pending
 依据 / 行动项 / Owner / Checker:
 停止条件 / 重开条件 / 失效条件:
 ```
 
-每个视角必须说明 `perspective_basis` 并回链对应权威、证据或真实需求；无法回链的模拟角色只能标为 `hypothesis`，不得充当事实权威、`decision_owner` 或独立 Checker。不同模型只增加表达和审查方差，不自动构成多个独立权威。
+每个工作位必须说明自身责任、代表对象、保护结果、视角、权威范围和 `decision_right`，且能改变至少一个 `decision_question`；没有独特贡献的同质工作位合并或退出，存在利益冲突、自审或越权时拆开。每个视角必须说明 `perspective_basis` 并回链对应权威、证据或真实需求；无法回链的模拟角色只能标为 `hypothesis`，不得充当事实权威、`decision_owner` 或独立 Checker。不同模型只增加表达和审查方差，不自动构成多个独立权威。
 
 独立 `Position Card` 收齐后，主持者在 `cross_examination_budget` 内只发起针对性交叉质询：指出他方最强观点、自己可能低估的约束，以及什么新证据会改变立场。质询只用于产生新事实、风险、反证或综合候选；没有新增内容时按停止条件退场，不用重复发言制造碰撞。
 
-决议幂等键为 `meeting_id + charter_revision + accepted_information_revision + accepted_authority_revisions + evidence_fingerprint`；同一键重试不得产生第二份裁决。主题、议程、信息矩阵、参与方权威或证据任一修订时，旧矩阵、旧卡片与旧决议都标记为 `stale`，按新 revision 重开；新决议递增 `resolution_revision`、生成新的 `evidence_fingerprint` 并用 `supersedes` 指向旧决议。主持者只归并共同事实、差异和依赖，不替各方改写权威内容。`decision_owner` 逐项裁决，不强求共识；`pending` 必须绑定 Owner、新证据和下一动作。Checker 最后回读原始证据、信息充分性门禁、各方接受版本、`Conflict Matrix` 和 `Meeting Resolution`，会议纪要或共享消息流不能单独准出。
+决议幂等键为 `meeting_id + charter_revision + accepted_role_revision + accepted_role_fingerprint + accepted_information_revision + accepted_authority_revisions + evidence_fingerprint`；同一键重试不得产生第二份裁决。主题、议程、角色 revision 或 fingerprint、信息矩阵、参与方权威或证据任一修订时，旧卡片与旧决议都标记为 `stale`，角色矩阵自身按 `deliberation-role-configuration.md` 保留旧 revision 并生成带 `supersedes` 的新 revision；只重开受影响问题。新决议递增 `resolution_revision`、生成新的 `evidence_fingerprint` 并用 `supersedes` 指向旧决议。主持者只归并共同事实、差异和依赖，不替各方改写权威内容。`decision_owner` 逐项裁决，不强求共识；`pending` 必须绑定 Owner、新证据和下一动作。Checker 最后回读原始证据、角色与信息充分性门禁、各方接受版本、`Conflict Matrix` 和 `Meeting Resolution`，会议纪要或共享消息流不能单独准出。
 
 ### 4.6 停止、重开与授权
 
 - 提供方证据响应完成、消费者返回 `confirmed`、Checker 无阻断项后，停止高带宽会商；项目执行规范 只保存裁决和权威指针，不复制双方正文。
 - 多方议题全部形成 `accepted / rejected`，或 `pending` 已绑定 Owner 与下一证据，且 Checker 无阻断项后退场；项目执行规范 只保存 `Meeting Resolution` 和各方权威指针。
 - 没有新事实、差异、阻塞或验证证据时暂停讨论，不用重复消息制造进展。
-- 只有新增场景、公共契约变化、接受版本不一致、证据失效或运行反馈推翻假设时，才以新 revision `reopen`。
+- 只有新增场景、任务阶段或角色配置变化、公共契约变化、接受版本不一致、证据失效或运行反馈推翻假设时，才以新 revision `reopen`。
 - 任何会商、响应、确认或 Checker 结论都不产生仓库写入、Git、联网、安装、发布、生产、密钥、部署或不可逆操作授权。

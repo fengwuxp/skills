@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 与 senior-software-architect 的产品设计六阶段、四门禁、产品-系分-原型对齐和架构反馈行为契约。静态 fixture 只固定可观察契约，不等于真实行为改善或工程准出。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true
+  },
+  "cases": [
+    {
+      "id": "product-should-qualify-demand-before-solution",
+      "category": "definition-gate",
+      "risk": "high",
+      "prompt": "$product-architecture-expert：业务方要求新增批量审批、自动提醒和一个管理驾驶舱。请直接把三项功能写进 PRD，问题和证据以后再补。",
+      "criteria": [
+        "先区分业务原话、当前解法、真实问题、影响主体、失败成本、当前替代和证据强度，不把三个功能名直接升级为需求事实。",
+        "给出产品定性、目标边界、非目标、Owner 和需要验证的主 blocker；定义门未通过时不进入概要或详细设计。",
+        "仍可说明任何候选切片必须保留的权限、失败恢复、人工责任、审计和可观察验收，不用信息不足删除基本责任。"
+      ]
+    },
+    {
+      "id": "product-should-baseline-goals-and-concepts-before-flow",
+      "category": "definition-gate",
+      "risk": "high",
+      "prompt": "$product-architecture-expert：产品、运营和研发分别把同一个对象叫申请、审核单和任务，目标则混着写了缩短时长、增加字段和改状态机。请整理后直接画流程。",
+      "criteria": [
+        "先把目标收敛为业务结果、用户能力、风险边界和可观察成功状态，将字段、状态迁移等机制下沉到概念、规则或接口。",
+        "建立最小概念基线，写清规范概念、定义、不等于、Owner、适用范围、别名和不变量；代码或旧页面不能反向成为业务真相。",
+        "目标和核心概念仍冲突时定义门保持 blocked，不用流程图掩盖语义未定。"
+      ]
+    },
+    {
+      "id": "product-should-drive-detail-design-from-scenarios",
+      "category": "design-gate",
+      "risk": "high",
+      "prompt": "$product-architecture-expert：需求方向已确认。先把页面字段、规则矩阵和全部详细设计写完，再让用户和 QA 补几个用例验证即可。",
+      "criteria": [
+        "拒绝把用例放到详细设计之后补证；先选能覆盖主链路、边界、异常、人工兜底和不可接受结果的代表场景与验收种子。",
+        "由场景推导责任推进、对象状态、业务规则、权限、数据和失败恢复，再形成详细设计；页面、字段和接口不得脱离场景自我成立。",
+        "设计门只有在概要主脊、场景关系、详细设计和验收能够双向追踪时才 ready；缺口绑定 Owner 和停止条件。"
+      ]
+    },
+    {
+      "id": "product-and-architect-should-reconcile-product-system-and-prototype",
+      "category": "alignment-gate",
+      "risk": "high",
+      "prompt": "$product-architecture-expert：PRD 说申请可以撤回，原型没有撤回入口，系分却把提交后状态设计成不可逆。请把三份材料合成一个一致版本，哪份写得详细就以哪份为准。",
+      "criteria": [
+        "拒绝按篇幅、完成度或多数材料投票；产品设计拥有业务语义，原型只投影可见交互，系分拥有模块、接口、数据、失败和质量实现责任。",
+        "沿目标 ID、场景 ID、能力或对象、规则或状态、原型页面与状态锚点、系分模块接口数据、AC 或测试建立跨层追踪，逐项定位冲突和受影响范围。",
+        "产品规则冲突交产品 Owner 裁决；裁决前对齐门 blocked，不让原型或当前代码反向改写产品事实。确认后分别更新各自权威并清除旧值。"
+      ]
+    },
+    {
+      "id": "senior-should-participate-early-without-owning-product-semantics",
+      "category": "architect-participation",
+      "risk": "high",
+      "prompt": "$senior-software-architect：产品还在定义目标和核心概念。请你先按现有数据库和服务边界替产品决定对象、产品范围和成功口径，后面 PRD 跟着系统改。",
+      "criteria": [
+        "架构师可以提前提供遗留约束、数据事实、可行性、风险和验证成本，但不能用现有数据库、服务或实现命名替产品定义目标、业务概念和范围。",
+        "定义阶段发现产品语义缺口时返回产品 Owner；概要阶段再把已确认能力、对象、状态和责任映射为候选系统边界，详细阶段才展开接口数据和运行机制。",
+        "架构师记录产品假设、工程约束和衍生需求的不同 Owner；未确认产品事实不得被写成系分基线。"
+      ]
+    },
+    {
+      "id": "product-should-refactor-architecture-from-cross-product-evidence",
+      "category": "architecture-feedback-gate",
+      "risk": "high",
+      "prompt": "$product-architecture-expert：我们已经有多份产品设计和几个线上系统。请综合后直接重画全域业务架构，把名称相似的功能都合成公共平台，并同步安排系统重构。",
+      "criteria": [
+        "先确认当前投资或整合决策、范围、Owner、证据和验收，只从多个已确认产品场景或运行证据中提炼重复出现的目标、对象、不变量、能力与真实变化轴。",
+        "用价值流、业务能力、业务流程和能力-项目-系统映射中对当前决策必要的最小视图识别重复建设、缺口和错误边界；名称相似、页面相似或技术复用不自动构成共同能力。",
+        "输出保留、合并、拆分、补齐、退役、投资或停止等增量决策及影响、Owner、验证与重开条件；不自动生成大爆炸系统重构、Execution Grant 或 Git 动作。"
+      ]
+    },
+    {
+      "id": "product-should-resume-from-current-gate-instead-of-replaying-waterfall",
+      "category": "gate-recovery",
+      "risk": "medium",
+      "prompt": "$product-architecture-expert：需求定性、目标、概念、场景和详细设计都已由 Owner 确认，现在只发现原型 revision 落后于 PRD。请严格从第一阶段重新做完整需求分析、概念建模和详细设计，确保流程完整。",
+      "criteria": [
+        "识别定义门和设计门仍有当前权威，不为流程完整重做；只把对齐门标为 stale，并回读当前 PRD、原型 revision 和受影响锚点。",
+        "只重开原型漂移影响的场景、状态和验收，未受影响的已确认结论作为权威输入，不自动重开范围或架构反馈门。",
+        "修复并验证对齐后更新 revision、差异结论和停止条件；若新证据推翻上游不变量，再按影响显式退回相应门禁。"
+      ]
+    }
+  ]
+}

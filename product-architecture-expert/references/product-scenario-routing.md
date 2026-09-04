@@ -70,6 +70,7 @@
 | PRD / 需求评审会前 AI 预扫描 | 快速路由表、产品语义门禁，并继续读 `product-prd-quality-gates.md` 的“AI 预扫描四维度” | 不把 AI 扫描结果当已确认缺陷，不替代正式评审 |
 | 产品洞察 / 资料分析 / 机会雷达 | 快速路由表、产品语义门禁，并继续读 `product-insight-analyst.md` | 不把资料摘要当机会决策 |
 | 产品判断动作链 / pm-skills 工作流参考 | 快速路由表、产品语义门禁，并继续读 `product-judgment-action-chain.md`，按缺口再读 `product-insight-analyst.md`、`po-backlog-manager.md` 或 PRD reference | 不安装或照搬外部 `pm-skills`，不把路线图愿望清单当产品判断 |
+| 需求定性到详细设计、产品-系分-原型对齐及架构反馈 | 快速路由表、产品语义门禁，并继续读 `product-judgment-action-chain.md` 的“四门禁与六阶段收敛”；架构反馈再读 `business-architecture-planning.md` 的“2A. 架构反馈门” | 不生成六份平行文档，不让原型或系统实现反向定义产品事实 |
 | 内部平台 / 运营工具商业成立判断 | 读 `product-judgment-action-chain.md` 的第一层与商业成立风险；用效率、成本、风险、采用率和责任归属判断可持续性 | 不强制套收入、付费或外部市场模型 |
 | 上线后复盘 / 指标回流 | 从第三层进入，回看原始目标与验收种子，再按新证据回溯方向和链路 | 不把活动量、访问量或功能上线直接当价值证明 |
 | 产品头脑风暴 / 问题探索 / 假设挑战 | 快速路由表、产品语义门禁，并继续读 `product-architecture-methodology.md` 的“2.0E 产品头脑风暴纪律” | 不把发散想法直接当 PRD、Backlog 或研发任务 |

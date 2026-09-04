@@ -78,6 +78,8 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 
 跨上下文先正名：`Continue` 从既有状态载体续接同一任务；`Branch` 只为需要干净上下文的独立取证临时分叉并回传。不得按固定 token 阈值创建 Branch，也不得把它混成 Worker、Checker、第二状态源或新的控制机制；需要临时上下文分叉时读取 `references/context-handoff.md`。
 
+用户显式要求角色讨论、多视角碰撞、合议或辩论，或同一决策确有多个真实责任与不可接受后果时，读取 `references/deliberation-role-configuration.md`，先按 `task_phase + domain_object + decision_questions` 选择最小工作位，再进入讨论。角色只承担责任、站位和检查视角，不是平级人格；角色名称、模型数量和一致意见都不构成事实权威、Owner 裁决或 Checker 证据。简单任务没有真实分歧时直接完成，不为展示过程启动角色讨论。
+
 两个及以上长期上下文分别持有独立事实权威，或同一项目中两个以上模块需要围绕直接业务价值、赋能业务价值、技术价值、模块定位、能力边界、依赖或公共契约共同裁决时，也读取 `references/context-handoff.md`。项目级简短入口为 `$wise-agent 模块合议：<项目或边界议题>`；模块只是事实权威，不是平级人格。两方优先双边契约会商；三个及以上只有共享决策不可拆且权威确实独立时才进入主持式多方会商。会商前先确认讨论主题并完成信息充分性门禁，未通过不得进入立场讨论或决策；不得把会商变成自由群聊、互改权威事实或形成多个执行状态 owner。
 
 ## 工作与授权
@@ -94,7 +96,7 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 
 - 产品到工程与阶段交接：`references/product-to-engineering-lifecycle.md`、`references/delivery-lifecycle.md`；创见探索与求真验证：`references/creative-exploration-and-evidence.md`。
 - 大项目与执行控制：`references/planning-execution-admission.md`、`references/engineering-governance.md`、`references/execution-specification.md`、`references/delivery-execution-control.md`；旧 Goal 输入兼容才读取 `references/goal-governance.md`。
-- PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
+- 角色讨论、多视角与跨上下文会商：`references/deliberation-role-configuration.md`、`references/context-handoff.md`；PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
 - 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
 - Skill 使用记录、OTel、Hook、token 成本和命中 / 效果评测仅在用户显式要求开启、关闭、检查或优化知止者使用观测时读取 `references/skill-usage-observability.md`；观测默认关闭，不保存正文，不自动写学习 candidate。

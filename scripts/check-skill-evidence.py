@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Verify source-bound Skill evidence before delivery or synchronization.
+"""Verify the declared Skill delivery gate before synchronization.
 
 Input: one Skill directory and its repository-relative evidence_gates.
-Output: pass/fail evidence readiness with source, response, blind, score, and release-gate checks.
+Output: pass/fail readiness at the declared structural, contract, or scored mode.
 Writes/network: none. The checker evaluates artifacts in memory and never invokes an Agent.
 """
 
@@ -27,6 +27,17 @@ UNASSIGNED_CASE_FILES = {
     # Generic evaluator self-test corpus; it is not owned by one Skill.
     "behavior-cases.json",
 }
+
+
+def readiness_summary(skill: str, evidence_mode: str) -> str:
+    if evidence_mode == "structural-only":
+        return f"OK skill structure: {skill} (mode=structural-only)"
+    if evidence_mode == "contract-only":
+        return (
+            f"OK skill contract: {skill} "
+            "(mode=contract-only; source-profile freshness=deferred)"
+        )
+    return f"OK skill evidence: {skill} (mode=behavior-scored)"
 
 
 def load_evaluator() -> ModuleType:
@@ -271,9 +282,12 @@ def main() -> int:
     target = args.skill.name if args.skill else "repository"
     if args.skill:
         metadata = json.loads((args.skill.resolve() / "admission.json").read_text(encoding="utf-8"))
-        print(f"OK skill evidence: {target} (mode={metadata['evidence_mode']})")
+        print(readiness_summary(target, metadata["evidence_mode"]))
     else:
-        print(f"OK skill evidence: {target} (modes declared per admission.json)")
+        print(
+            "OK skill delivery gates: repository "
+            "(contract-only source-profile freshness=deferred)"
+        )
     return 0
 
 

@@ -57,6 +57,8 @@
 
 Skill 采用 `Metadata -> SKILL.md -> bundled resources` 三级加载：元数据只负责触发，正文承载定位、路由和必要红线，`references/`、`scripts/`、`assets/` 按任务需要读取。创建或审查时须保持 `SKILL.md` 精简、引用一层直连、确定性动作脚本化，并检查 `agents/openai.yaml`、引用和同步 dry-run；不要把长知识、模板或工具步骤塞进入口。通用创建流程见 `skill-creator`，能力归位与验证见 `resource-capability-distiller/references/distillation-contract.md`。
 
+`scripts/validate-trigger-paths.py` 只修复或删除既有检查，不再承接新不变量；新增约束进入对应 Skill 的 fixture、validator 或独立仓库级检查，并由 `scripts/validate.sh` 聚合，避免所有能力继续争用同一 legacy 文件。
+
 ## Skill 类型与接入门禁
 
 Skill 不是提示词堆叠。新增、重构或吸收经验时先确认主类型、稳定职责、触发 / 非触发、输入 / 输出、Owner、验证和停止条件；已有能力能承载时优先增强既有 Skill、reference、script 或 fixture，不新建平级 Skill。每个 Skill 的 `admission.json` 必须显式声明 `evidence_mode`：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，但不代表已取得 live 评分；`behavior-scored` 必须有 active baseline/candidate、盲评和评分门禁。缺失或不一致时不得判为 evidence ready。详细类型、来源矩阵、归位和候选验证见 `resource-capability-distiller/references/distillation-contract.md`；创建规范见 `skill-creator`。高风险操作仍须先通知、确认、再执行，且不得借 Skill 获得 Git、联网、生产、删除、部署、密钥或不可逆操作权限。

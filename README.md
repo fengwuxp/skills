@@ -66,6 +66,7 @@
 | 长任务执行规范 | `$wise-agent：把这项跨轮工作落入项目已有 OpenSpec / Spec / Issue / 任务计划，不创建运行时 Goal；一次只推进一个当前切片，记录验证证据、停止条件和下一入口。` |
 | 双边契约会商 | `$wise-agent：协调 <消费者任务> 与 <提供方任务>，先确认讨论主题并充分交换事实、证据和缺口；信息充分后再围绕 <公共契约> 做版本化会商、双边对账和独立验证。` |
 | 主持式多方会商 | `$wise-agent：协调 <任务列表> 围绕 <共享决策> 进入主持式多方会商；先确认主题和信息覆盖，充分交换后再独立形成立场、归并冲突、形成决议并交 Checker。` |
+| 场景化角色讨论 | `$wise-agent：围绕 <决策问题> 组织角色讨论；不要让我预选人物，请按任务阶段和专业对象配置最小工作位，逐项说明责任、站位、视角、依据、决策权与退出条件。单一 UI 或小说任务也可直接调用对应专业 Skill。` |
 | 需求讨论 | `先做能力归位：判断这个需求是在使用、增强、组合还是新增哪项稳定能力；默认审视不等于默认展开。` |
 | 产品设计 | `根据 <访谈/需求/原型> 写一版可评审 PRD；先提炼稳定能力、共性和有证据的特殊性，再展开场景、流程、规则和验收。` |
 | 创见探索 | `$wise-agent：结合华夏经世智慧处理这个原创/非标设想；先保留原始意图和挑战的默认前提，再做最小可逆实验；不要以主流/文献数量单独否决，也不要把新颖直接当成正确。` |
@@ -350,6 +351,8 @@ python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py disable
 
 ## 安装
 
+支持环境为 macOS 或 Linux 的 Bash shell；同步需要 Python 3.11+ 与 `rsync`，完整验证还需要 Ruby、`rg` 和 Git。仓库未提供 Windows 原生脚本，Windows 使用者应在 WSL 或等价 Unix 环境中运行，并自行确认工具版本兼容性。
+
 ```bash
 git clone https://github.com/fengwuxp/skills.git
 cd skills
@@ -358,7 +361,11 @@ cd skills
 scripts/validate-installed-skills.sh
 ```
 
-同步单个无依赖 Skill 使用 `./sync-skills.sh document-authoring`；非默认目录使用 `CODEX_HOME=/path/to/codex-home`。有 `admission.json.requires` 的 Skill 必须在同一命令中先列依赖、再列调用方；`all` 会按准入和依赖闭包选择安全批次。同步使用 `rsync --delete`，会先备份已有安装，并按替代关系退役 `wind-project-coding-conventions`、`delivery-collab` 和 `huaxia-wisdom`。完成后重启 Codex 或开启新会话。
+同步单个无依赖 Skill 使用 `./sync-skills.sh document-authoring`；非默认目录使用 `CODEX_HOME=/path/to/codex-home`。有 `admission.json.requires` 的 Skill 必须在同一命令中先列依赖、再列调用方；`all` 会按准入和依赖闭包选择安全批次。同步使用 `rsync --delete`，会先备份已有安装；Skill / Agent 根目录、目标目录或备份路径为符号链接，以及同时间戳备份已存在时均 fail-closed。脚本还会按替代关系退役 `wind-project-coding-conventions`、`delivery-collab` 和 `huaxia-wisdom`。完成后重启 Codex 或开启新会话。
+
+### 许可证状态
+
+本仓库当前未声明顶层许可证；公开可读不等于获得使用、修改、团队共享或再分发许可，相关范围须由仓库 Owner 明确。第三方素材继续服从其文件内许可证和来源边界，局部许可证不能替代仓库级许可。
 
 ## 验证与同步安全
 
@@ -372,7 +379,7 @@ git diff --check
 
 正式同步后运行 `scripts/validate-installed-skills.sh`；也可用 `./scripts/validate.sh --require-installed-parity` 将真实安装态纳入完整验证。默认 `./scripts/validate.sh` 只验证源仓库和隔离的同步 fixture，并会明确输出 parity 未检查。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
 
-`admission.json` 的 `evidence_mode` 与 `fixtures/skill-eval/evidence-gates.json` 共同声明证据强度：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，但不代表已取得 live 评分；`behavior-scored` 还必须有 active baseline/candidate、盲评、评分和 release gate。`scripts/check-skill-evidence.py` 复用统一 evaluator 核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate；模式缺失或与门禁不一致时直接阻断，`sync-skills.sh` 会跳过或阻断 evidence 不再匹配当前源码的 Skill。证据失效时必须基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
+`admission.json` 的 `evidence_mode` 与 `fixtures/skill-eval/evidence-gates.json` 共同声明证据强度：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，只证明案例契约可用，不证明 `source_profiles` 仍匹配当前源码，也不代表已取得 live 评分；`behavior-scored` 还必须有 active baseline/candidate、盲评、评分和 release gate。`scripts/check-skill-evidence.py` 按声明模式检查对应门禁：`contract-only` 只核对案例契约，`behavior-scored` 才强制核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate。模式缺失或与门禁不一致时直接阻断；进入行为收集或评分前必须用 `validate --verify-sources` 重新核对来源，漂移时基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
 
 `scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。默认检查项目目录；需要核对指定目录时，显式传入来源和路径，递归报告重复 Skill ID、完全重复的 `description` 与无效 metadata，指向同一真实目录的软链接只记为 alias。语义相似不做词法自动裁决；`fixtures/skill-eval/prompt-cases.json` 中同一 `competition_group` 的真实请求只声明并静态校验唯一触发 Owner 和竞争者 hard negative，真实触发行为仍需 live eval / smoke：
 

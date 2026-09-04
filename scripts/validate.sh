@@ -48,6 +48,7 @@ run_gate() {
 echo "==> bash syntax"
 bash -n sync-skills.sh
 bash -n scripts/audit-skills.sh
+bash -n scripts/test-sync-skills.sh
 bash -n scripts/validate-installed-skills.sh
 bash -n scripts/smoke-wise-agent-behavior.sh
 bash -n scripts/validate-superpowers-install.sh
@@ -327,6 +328,12 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-jit-loading-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
 
+echo "==> deliberation role configuration behavior cases"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
+
+echo "==> product design lifecycle alignment behavior cases"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
+
 echo "==> hanzi philology evidence checker"
 hanzi-philology/scripts/check_philology_evidence.py --self-test
 
@@ -417,6 +424,7 @@ echo "==> SkillX export adapter"
 python3 scripts/skillx_export_adapter.py --self-test
 
 echo "==> sync dry-run"
+bash scripts/test-sync-skills.sh
 dry_run_home="${tmp_dir}/dry-run-home"
 CODEX_HOME="${dry_run_home}" ./sync-skills.sh --dry-run all
 if [[ -e "${dry_run_home}" ]]; then

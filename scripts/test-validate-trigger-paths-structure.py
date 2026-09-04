@@ -17,9 +17,18 @@ EVIDENCE_FUNCTIONS = {
     "file_fingerprint",
     "source_set_fingerprint",
 }
+LEGACY_VALIDATOR_MAX_LINES = 25_086
 
 
 class TriggerValidatorStructureTests(unittest.TestCase):
+    def test_legacy_validator_is_frozen_for_new_invariants(self) -> None:
+        validator_source = VALIDATOR.read_text(encoding="utf-8")
+        agents_rules = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+
+        self.assertLessEqual(len(validator_source.splitlines()), LEGACY_VALIDATOR_MAX_LINES)
+        self.assertIn("New invariants belong in Skill-local fixtures or validators", validator_source)
+        self.assertIn("validate-trigger-paths.py` 只修复或删除既有检查", agents_rules)
+
     def test_repo_agents_delegates_conditional_detail(self) -> None:
         agents_rules = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
 
@@ -52,12 +61,12 @@ class TriggerValidatorStructureTests(unittest.TestCase):
         self.assertIn("scripts/test-check-skill-evidence.py", validate_script)
         self.assertIn("scripts/check-skill-evidence.py", validate_script)
 
-    def test_sync_blocks_non_current_evidence(self) -> None:
+    def test_sync_blocks_non_ready_delivery_gate(self) -> None:
         sync_script = SYNC_SCRIPT.read_text(encoding="utf-8")
 
         self.assertIn("scripts/check-skill-evidence.py", sync_script)
-        self.assertIn("Skill evidence is not current", sync_script)
-        self.assertIn("Cannot sync all: evidence is not current", sync_script)
+        self.assertIn("Skill delivery gate is not ready", sync_script)
+        self.assertIn("Cannot sync all: delivery gate is not ready", sync_script)
         self.assertIn("All sync aborted before writing", sync_script)
 
     def test_runtime_parity_is_an_explicit_validation_gate(self) -> None:
@@ -66,6 +75,16 @@ class TriggerValidatorStructureTests(unittest.TestCase):
         self.assertIn("--require-installed-parity", validate_script)
         self.assertIn("VALIDATE_INSTALLED_SKILLS", validate_script)
         self.assertIn("SKIP installed parity", validate_script)
+
+    def test_runtime_parity_fails_closed_on_dependency_or_evidence_drift(self) -> None:
+        parity_script = (ROOT / "scripts" / "validate-installed-skills.sh").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("installed skill has non-installable dependencies", parity_script)
+        self.assertIn("installed skill delivery gate is not ready", parity_script)
+        self.assertNotIn("SKIP installed parity: ${skill_name} has", parity_script)
+        self.assertNotIn("SKIP installed parity: ${skill_name} evidence", parity_script)
 
 
 if __name__ == "__main__":

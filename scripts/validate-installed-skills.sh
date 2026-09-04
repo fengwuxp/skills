@@ -30,13 +30,13 @@ while IFS= read -r skill_md; do
 
   if ! python3 "${ROOT_DIR}/scripts/check-skill-admission.py" \
     --check-dependencies "${source_dir}" >/dev/null 2>&1; then
-    echo "SKIP installed parity: ${skill_name} has non-installable dependencies"
+    fail "installed skill has non-installable dependencies: ${skill_name}"
     continue
   fi
 
   if ! python3 "${ROOT_DIR}/scripts/check-skill-evidence.py" \
     --skill "${source_dir}" >/dev/null 2>&1; then
-    echo "SKIP installed parity: ${skill_name} evidence is not current"
+    fail "installed skill delivery gate is not ready: ${skill_name}"
     continue
   fi
 

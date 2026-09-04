@@ -125,6 +125,42 @@ class SkillAdmissionTests(unittest.TestCase):
 
             self.assertTrue(any("requires unknown skill missing" in item for item in failures))
 
+    def test_cross_skill_relative_reference_requires_declared_dependency(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            caller = self.write_skill(
+                root,
+                "caller",
+                {"status": "installable", "blockers": []},
+            )
+            (caller / "SKILL.md").write_text(
+                "Read `../provider/references/contract.md`.\n",
+                encoding="utf-8",
+            )
+
+            _, failures = MODULE.audit_skill(caller)
+
+            self.assertTrue(
+                any("cross-Skill relative reference requires admission.json dependency: provider" in item for item in failures)
+            )
+
+    def test_declared_cross_skill_relative_reference_is_allowed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            caller = self.write_skill(
+                root,
+                "caller",
+                {"status": "installable", "blockers": [], "requires": ["provider"]},
+            )
+            (caller / "SKILL.md").write_text(
+                "Read `../provider/references/contract.md`.\n",
+                encoding="utf-8",
+            )
+
+            _, failures = MODULE.audit_skill(caller)
+
+            self.assertEqual([], failures)
+
     def test_installable_allows_valid_non_distribution_restrictions(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             skill_dir = self.write_skill(

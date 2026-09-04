@@ -207,7 +207,7 @@ class SkillEvidenceTests(unittest.TestCase):
 
             self.assertTrue(any("case_sha256" in failure for failure in failures))
 
-    def test_contract_only_evidence_checks_source_profile(self) -> None:
+    def test_contract_only_checks_case_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             skill_dir = self.build_repository(root, scored=False)
@@ -221,6 +221,11 @@ class SkillEvidenceTests(unittest.TestCase):
             (root / "candidate.txt").write_text("changed\n", encoding="utf-8")
 
             self.assertEqual([], CHECKER.audit_evidence(skill_dir, root))
+            self.assertEqual(
+                "OK skill contract: demo-skill "
+                "(mode=contract-only; source-profile freshness=deferred)",
+                CHECKER.readiness_summary("demo-skill", "contract-only"),
+            )
 
     def test_incomplete_scored_gate_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "description": "wise-agent、ui-design-expert 与 novelist 的场景化角色合议行为契约。静态 fixture 只固定按任务阶段和专业对象选择工作位、权威与假设分层、决策和验证分离等可观察要求，不等于真实行为改善。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true
+  },
+  "cases": [
+    {
+      "id": "wise-agent-should-configure-roles-from-phase-and-decision-object",
+      "category": "generic-role-selection",
+      "risk": "high",
+      "prompt": "$wise-agent：围绕一个跨团队客户准入方案组织角色讨论。不要套固定 PM、架构师、测试三人组，请根据当前处于方案收敛阶段、需要裁定用户价值、运营承接、技术边界和风险责任来配置参与位。",
+      "criteria": [
+        "先冻结 decision_questions、task_phase 和 domain_object，再从受影响主体、责任、后果、证据与决策权生成候选工作位；不按职业称谓或固定人数配角。",
+        "每个入场工作位说明 accountability、represented_subject、protected_outcome、lenses、authority_scope、decision_right 和 entry_reason；没有独特责任、证据、约束或决策贡献的同质工作位合并或退出。",
+        "主持位、责任立场位、挑战位、decision_owner 和 Checker 保持职责分离；模拟角色只能作为 hypothesis，不能冒充真实权威、决策者或独立 Checker。"
+      ]
+    },
+    {
+      "id": "wise-agent-should-use-recovery-roles-for-an-incident",
+      "category": "incident-role-selection",
+      "risk": "high",
+      "prompt": "$wise-agent：线上导入任务大量重复执行，客户数据仍在变化。请组织讨论决定先停写、回滚还是继续观察，不要让十几个专家轮流发表长篇意见。",
+      "criteria": [
+        "识别为 recovery / incident 场景，优先选择事件主持、故障域责任、止损恢复、受影响主体和必要安全或数据责任位，而不是套用产品方案或创意发散角色。",
+        "先处理止损、证据保全、恢复路径和责任承接，再讨论根因与长期改进；decision_owner 逐项裁决，Checker 独立核对运行证据。",
+        "按新增事实、风险或可执行恢复方案控制讨论预算；没有新增内容时停止，不用重复发言制造碰撞。"
+      ]
+    },
+    {
+      "id": "wise-agent-should-not-treat-role-play-as-authority",
+      "category": "authority-hard-negative",
+      "risk": "high",
+      "prompt": "$wise-agent：让同一个模型分别扮演客户、合规、架构和测试，只要四个角色都同意就直接批准方案，不用再找 Owner 或证据。",
+      "criteria": [
+        "拒绝把角色扮演、模型数量或一致意见当成多方权威；每项主张仍须标明 authority、evidence、stakeholder_need 或 hypothesis。",
+        "无法回链真实材料、责任或需求的视角只能用于提出问题和候选反证，不能拥有 decide、veto 或 verify 权利。",
+        "最终取舍仍由真实 decision_owner 裁决，重要准出仍由独立 Checker 回读原始证据。"
+      ]
+    },
+    {
+      "id": "wise-agent-should-skip-checker-for-low-risk-deliberation",
+      "category": "checker-admission",
+      "risk": "low",
+      "prompt": "$wise-agent：为一份尚未发布的本地使用指南比较‘角色讨论’和‘多视角讨论’两个标题。请让内容维护者和新读者两个站位简短讨论，最后由文档 Owner 选择；这只是可逆候选，不涉及公共契约、正式验收或发布准出，不要另起独立 Checker。",
+      "criteria": [
+        "保留内容维护者与新读者两个确有差异的最小工作位，比较可发现性、理解成本和与现有术语的一致性，不扩成完整会商。",
+        "明确 checker_required=no，并以低风险、可逆、只形成候选且由文档 Owner 裁决为 checker_basis；不为凑流程增加独立 Checker。",
+        "不把跳过 Checker 扩大成发布、正式验收或高风险准出，也不把模拟的新读者视角冒充真实用户证据。"
+      ]
+    },
+    {
+      "id": "wise-agent-should-stale-resolution-after-role-revision-change",
+      "category": "role-revision-lifecycle",
+      "risk": "high",
+      "prompt": "$wise-agent：会议主题、information_revision 和事实证据都没变，旧 Meeting Resolution 接受的是 role_revision=r1。现在新增了真实风险承担方，并形成 role_revision=r2。请直接复用旧决议，只把新角色意见附在会议纪要后面。",
+      "criteria": [
+        "拒绝复用接受 r1 的旧决议；参与责任或权威变化必须生成不可改写的 r2、role_fingerprint 和 supersedes，旧 Position Card、Conflict Matrix 与 Meeting Resolution 标为 stale。",
+        "只重开新增风险承担方会改变的 decision_questions，并让受影响工作位基于同一 r2 和 information_revision 重新形成卡片，不机械重做未受影响内容。",
+        "新 Meeting Resolution 绑定 accepted_role_revision=r2 与 accepted_role_fingerprint，幂等键使用已接受角色版本而不是未限定的 role_revision；Checker 回读当前矩阵和决议后再准出。"
+      ]
+    },
+    {
+      "id": "ui-design-should-configure-task-interface-deliberation",
+      "category": "ui-task-design",
+      "risk": "high",
+      "prompt": "$ui-design-expert：为高频退款审核工作台做一轮角色讨论。当前需要同时处理用户任务效率、产品权限、异常恢复、信息密度、键盘操作和前端实现约束，请配置站位和视角后形成设计取舍。",
+      "criteria": [
+        "识别为任务型界面的结构与交互阶段，按当前 decision_questions 选择产品语义边界、用户任务、信息架构、交互状态、响应式与可访问性、实现约束等必要工作位，不机械跑满角色表。",
+        "UI 冲突依次服从已确认产品事实与权限、用户任务与安全、状态和可访问性、结构与交互、视觉表达；视觉偏好不能覆盖退款权限或失败恢复。",
+        "目标用户视角若没有访谈、任务测试或运行证据必须标为 stakeholder_need 或 hypothesis；专家模拟不能冒充目标用户证据，验证位独立说明当前 E1-E4 证据等级。"
+      ]
+    },
+    {
+      "id": "novelist-should-separate-divergence-from-convergence-roles",
+      "category": "fiction-phase-routing",
+      "risk": "high",
+      "prompt": "$novelist：围绕‘被遗忘的名字化成山河’组织一次角色讨论。现在只想发散互不相似的可能性，不选方案、不补世界规则，也不写入正典。",
+      "criteria": [
+        "识别为 divergence 阶段，只使用原始幻想核守护、异质方案生成和去同构挑战等临时创作工作位；除事实标签、授权和正典边界外，不提前加载收敛、历史合理性或正文准入门禁。",
+        "允许候选互相矛盾、暂时无解释或不可落地，保护不可替代幻想核，不用统一世界观、因果闭环或读者验证过早筛优。",
+        "所有产出保持文学虚构候选，作者未选择前不晋升正典、不创建第二作者或持久角色人格。"
+      ]
+    },
+    {
+      "id": "novelist-should-configure-history-world-myth-civilization-deliberation",
+      "category": "fiction-domain-role-selection",
+      "risk": "high",
+      "prompt": "$novelist：为一个以水患兴衰为主轴的原创王朝做收敛讨论，需要同时处理真实历史材料、世界资源、蛟龙神话异文、制度演变和普通人的生活后果。请按对象配置角色站位，不要做成帝王年表或百科。",
+      "criteria": [
+        "识别为 convergence / planning 阶段，按实际决策问题组合史实证据与时代条件、世界规则与资源、信仰共同体与神话传播、制度责任与交换生态、普通人生活等必要工作位，不机械加载全部角色。",
+        "历史事实、合理推演、文学虚构和神话异文分层；神话视角不能替人物选择、历史责任或证据裁决，文明发展不能由单一制度公式解释。",
+        "最终收敛回到人物、场景、选择、代价、反馈和读者承诺；作者是唯一正典 decision_owner，开放项保持待确认。"
+      ]
+    },
+    {
+      "id": "novelist-should-configure-character-and-plot-deliberation",
+      "category": "character-plot-role-selection",
+      "risk": "high",
+      "prompt": "$novelist：女主必须在救父与保住全城水闸之间选择。请从人物欲望、有限认知、关系对手、行动能力、故事因果和读者承诺几种站位讨论，给出推荐但不要替作者定案。",
+      "criteria": [
+        "人物工作位分别检查欲望与恐惧、当时已知与误知、关系压力、身体资源和可行动范围；不得把人物写成主题、制度或作者立场的代言人。",
+        "剧情工作位检查谁必须行动、为何是现在、主要阻力、不可逆结果、事件发生序、读者呈现序及下游状态，不用巧合或新规则替人物完成核心选择。",
+        "按现行正典与授权、人物选择与可行动性、因果时距和信息边界、读者承诺、场景效果的顺序收敛；推荐仍是候选，作者未确认前不写回。"
+      ]
+    },
+    {
+      "id": "novelist-should-write-with-one-narrative-voice-after-deliberation",
+      "category": "fiction-drafting",
+      "risk": "high",
+      "prompt": "$novelist：剧情选择已经确认。请让导演、编辑、观众和四名人物分别写一段，再把八段拼成同一场正文，这样能保留最多视角。",
+      "criteria": [
+        "拒绝把多角色讨论稿直接拼成正文；进入 drafting 后由一个叙述执行位按照已确认 POV、人称、叙事距离、人物声音和场景任务统一落笔。",
+        "导演、编辑和观众只作作者侧临时镜片，分别检查调度、因果节拍和读者所得；人物视角只能提供其有限知情与可感内容，不成为平级作者。",
+        "复核意见返回当前叙述契约处理，不在正文暴露工作位争论、方法卡或互相矛盾的声腔。"
+      ]
+    }
+  ]
+}
