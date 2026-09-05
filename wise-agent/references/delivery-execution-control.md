@@ -66,6 +66,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 判断是否需要 Agent Loop | `1. Loop 边界`、`2. 最小契约`、`2C. Loop 组件清单` | 不直接写执行计划 |
+| 长对话越改越偏 / 连续纠正后重新定锚 / 合法目标变更还是偏航 | `2B.1A 同会话重新定锚检查点` | 不机械回到最早目标，不新增 Drift Mode |
 | Loop 触发可靠性 / 工作流可靠触发 | `2. 最小契约`、`4. 反馈与验证总则`、`5. 授权与工具边界`、`6. 预算和停止条件` | 不把所有可靠性机制默认套入每个任务 |
 | 诊断 Agent 生产不稳属于哪层 | `1A. L1-L4 工程成熟度诊断` | 不先改 Prompt、换模型或直接上 Loop |
 | 设计 `/goal` / `/loop` / auto mode 准入 | `2. 最小契约`、`5. 授权与工具边界` | 不把工具能力当授权 |
@@ -219,7 +220,35 @@ AI 注释去噪 / 可读性门禁:
 多方会商在项目执行规范中保存当前 `Meeting Resolution` 指针，并用 `authority_refs[]` 的 `authority_revision / fingerprint` 绑定其 `resolution_revision` 和内容；`topic / role / information / participant authority revision` 及 `role_fingerprint` 保留在该决议内，不新增状态 JSON 顶层字段。当前 validator 只检查外层指针、版本和迁移声明，不能解释决议内部语义；Checker 必须回读决议，核对 `accepted_role_revision / accepted_role_fingerprint` 等接受版本后才能恢复执行。
 
 长任务、多轮会商、上下文压缩 / 恢复、模型或工具配置变化及权威材料更新时，复用同一状态载体，不新增 `Drift Mode`、记忆库、向量库或第二真相源。运行顺序为慎始回读、版本对账、一事一验、慎终归复：每个原子切片按任务指针 just-in-time 回读 项目执行规范、成功标准、非目标、red lines、授权、确认 / 排除 / 待确认项及一手来源，摘要只作索引；投影 `state_revision / authority_refs / decision_transitions / execution_transition?` 并与 previous 对账，结论只取 `aligned / stale / conflict / insufficient`；仅承重项全部 aligned 才推进一个切片并只回写 delta，否则停止补证或交还 Owner。`state_revision` 每次持久化递增 1；承重 项目执行规范 字段变化时，`execution_transition` 精确列出 `changed_fields / owner / reason / evidence_ref / evidence_fingerprint`。决策集合互斥且 `execution_basis` 只能引用 confirmed；execution_basis 换轨属于承重 项目执行规范 变化，必须有 execution_transition。跨版决策不得静默删除或换类，新 confirmed / excluded、pending 换类等必须用 `decision_transitions[]` 记录决策、前后状态、Owner 和证据；excluded 不得直接变 confirmed，须先 `excluded -> pending` reopen，再在后续 revision 裁决。`authority_refs[]` 记录 `ref / authority_revision / fingerprint / observed_at / recheck_on / status`，状态只取 current / stale / superseded；revision 或 fingerprint 变化后只能 stale，或由 Checker 回读原始 ref 后补本 revision 新的 `recheck_evidence` 与严格晚于旧时刻的 `observed_at`；被替代来源保留双向 `superseded_by / supersedes` tombstone，整个 entry 跨版不可改写，`Ready / Active / Verified / Closed` 不接受 stale。多方会商把 `context-handoff.md` 的 topic / role / information / participant authority revision 与 evidence fingerprint 映射到上述字段，任一变化使旧决议 stale，只重开受影响问题。validator 只检查声明结构和迁移；Checker 必须回读 ref、核对 fingerprint，并以最终环境 / 状态复核。多 trial 行为评测比较 `pass^k`，不以一次通过或固定 token / 轮次阈值准出。执行 `python3 wise-agent/scripts/check_state_contract.py <current.json> --previous <previous.json>`；首版省略 previous。压力样例至少覆盖：早期错误假设被新一手证据撤回、上下文中段事实压缩后精确回读、排除项无 Owner reopen 不得复活、来源换版后旧 Ready / Verified 失效、会商 topic / role / information / authority revision 变化后旧决议失效。
+
 Requirement-Diff 对账只在跨模块、跨轮或复杂交付中启用：先按模块或独立验收切片记录 `id / 目标与非目标 / 来源需求 / AC / 受影响契约、状态、事件与数据 / 读取锚点 / 写入范围 / 验收 / 待确认 Owner`，每次恢复、CR 或收口时标记 `done / partial / todo / changed / blocked`。状态通用证据为来源需求 / AC 的版本或指纹与观察时间；`done / partial` 还需当前 diff / commit、源码 / 测试锚点和验证结果；`todo / blocked` 记录原因、依赖、Owner 与停止证据，不伪造尚不存在的实现证据；候选 `changed` 记录需求与实现的偏差证据并冻结受影响切片，由产品 Owner 先裁决需求确实变化还是实现偏离。只有确认需求变化后，才先更新权威需求契约并完成影响识别；实现偏离保持需求权威并修正实现。结果写入已有 OpenSpec tasks、Harness Plan、项目执行规范 或任务文档，不强制新建 `requirement.md`、命令树、目录或第二真相源，简单单轮任务继续直接执行。
+
+### 2B.1A 同会话重新定锚检查点
+
+同会话重新定锚只处理中途连续局部纠正造成的支配依据漂移。真正的偏航不是答案发生了变化，而是使命、成功标准、red lines、决策集合或 `execution_basis` 在没有 Owner 和 transition 的情况下被局部反馈替换。用户明确要求重新定锚，或出现局部修改各自合理但整体远离目标、在两个极端间反复摇摆、一个坏案例被扩成永久规则、当前方案已无法由成功标准和 confirmed / excluded / pending 共同解释时，进入本检查点。单纯对话变长、固定 token 阈值、一次明确纠错、正常 TDD 反馈或有当前权威与 Owner 支撑的目标迁移不触发；本检查点不是 `Drift Mode`、新状态、第二真相源或长期记忆。
+
+执行时只做五件事：
+
+1. **知止停动**：停止继续修改、补充或执行，不回退已有产物，只把当前方案冻结为待对账候选；期限、沉没成本和“再折中一次”不能越过该停止线。
+2. **察实正名**：just-in-time 回读可见的用户原话、项目执行规范、一手材料和当前权威，诊断为疑似偏航、合法迁移、`conflict` 或 `insufficient`。前两项只是本次检查点的判断，不写成新的持久化状态；状态结论仍沿用 `aligned / stale / conflict / insufficient`。最早与最新表达都不自动拥有最高权重；有 Owner、当前权威、新成功线和影响范围的变化按合法目标迁移处理，不恢复旧目标。
+3. **辨明变与不变**：使命、成功标准、非目标、red lines、confirmed / excluded / pending 和授权属于承重依据；实现方式、表达形式、当前切片与顺序可以在依据内调整。局部反馈可以修正可变项，不能无 transition 改写承重项；所谓折中不能让两个互斥依据同时生效。
+4. **重立执行依据**：只重述足以支配下一步的当前主线、冲突和未知，不机械总结整段历史；疑似偏航给出拟恢复的 `execution_basis`，合法迁移给出所需 `execution_transition / decision_transitions`，`conflict / insufficient` 只给最小补证入口。
+5. **确认后行验**：输出检查点后停止。Owner 确认时记录必要 transition，再只恢复一个可验证切片；Owner 纠正时先修订检查点；没有确认或承重信息仍冲突时保持停止。下一切片以目标映射、范围稳定和新证据作为反馈；再次摇摆时回查目标契约或权威来源，不继续累加提示词和永久规则。
+
+```text
+重新定锚检查点:
+触发证据 / 一次性诊断: 疑似偏航 / 合法迁移 / conflict / insufficient；不新增状态
+当前使命 / 成功标准 / 非目标:
+confirmed / excluded / pending / red lines:
+必须保持 / 可以调整:
+当前偏离或合法变更证据:
+拟采用 execution_basis / 必要 transitions:
+冲突 / 未知 / 最小补证入口:
+Owner 确认: confirm / correct；确认前停止
+```
+
+华夏经世镜片只用于缩小判断错误：正名防止把合法目标迁移误叫偏航，变与不变防止局部反馈改写承重目标，知止与少干预防止用更多补丁修复支点漂移。镜片不能证明偏航、不能替代一手材料、Owner、transition、测试或授权，也不要求在用户可见输出中表演经典名词。
+
 ## 2B.2 可选工作拓扑投影
 工作拓扑投影不是新的 `Graph Mode`、流程或真相源，只把现有 Task Tree / Wave plan 中已经存在的工作关系变成可校验结构。只有两项同时满足才附加 `work_graph`：上下文隔离、并行、专业化交接或断点恢复有明确收益；至少三个节点且存在分支、汇合、并行或跨 Wave 交接。简单、线性、单文件或一次可完成的任务继续直接执行。
 层次保持不变：项目执行规范 定义整体完成线；`work_graph` 表达节点、依赖和当前可执行集合；Loop 只在需要反复行动和反馈的节点内运行；Worker 承担低耦合执行节点；Checker 是高风险节点或汇合准入的独立验证者。稳定的能力地图仍由 `capability-routing.md` 管理，Skill 是能力包，不把它们虚构成常驻 Agent 组织。

@@ -157,6 +157,9 @@
         "cases": "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/wise-agent-conversation-reanchor-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/agent-output-actionability-behavior-cases.json"
       },
       {

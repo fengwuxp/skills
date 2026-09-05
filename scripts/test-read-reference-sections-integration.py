@@ -52,6 +52,30 @@ class ReferenceSelectionIntegrationTests(unittest.TestCase):
             result["selections"][0]["heading_path"],
         )
 
+    def test_conversation_reanchor_aliases_select_checkpoint(self) -> None:
+        for query in (
+            "长对话越改越偏",
+            "连续纠正后重新定锚",
+            "合法目标变更还是偏航",
+        ):
+            with self.subTest(query=query):
+                result = MODULE.build_package(
+                    ROOT / "wise-agent" / "references" / "delivery-execution-control.md",
+                    query,
+                )
+
+                self.assertEqual("ready", result["status"])
+                self.assertEqual(
+                    "长对话越改越偏 / 连续纠正后重新定锚 / 合法目标变更还是偏航",
+                    result["matched_task"],
+                )
+                self.assertEqual(
+                    ["2B.1 认知完整性门禁", "2B.1A 同会话重新定锚检查点"],
+                    result["selections"][0]["heading_path"],
+                )
+                self.assertNotIn("Requirement-Diff 对账", result["content"])
+                self.assertGreater(result["estimated_savings_ratio"], 0.3)
+
     def test_low_confidence_task_tie_returns_ambiguity_candidates(self) -> None:
         matched, candidates = MODULE.match_task(
             "控制停止",
