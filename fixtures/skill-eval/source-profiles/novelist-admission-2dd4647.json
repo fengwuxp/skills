@@ -1,0 +1,7 @@
+{
+  "status": "installable",
+  "requires": [
+    "huaxia-practical-wisdom"
+  ],
+  "blockers": []
+}

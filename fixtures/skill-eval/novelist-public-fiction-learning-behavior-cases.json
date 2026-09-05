@@ -1,26 +1,26 @@
 {
   "version": 1,
-  "description": "novelist 公开小说跨类型学习的最小增量行为契约，只修复群像共同事件在未限定危险级别时自动收敛为灾害、救援、记录与承责的问题。静态 fixture 只固定可复跑标准；真实改善仍须同 runner/model 重复 candidate、盲评和独立复核。",
+  "description": "novelist 公开小说跨类型学习的最小增量行为契约，检验群像共同事件的压力级别、独立行动与分别结算，不把可共享的时间、场地或资源强制改成零和冲突。baseline 与 candidate 共用从 Git 提交 2dd464765725e6d0311adeaf1ba38f881f807b95 还原的 admission 与 huaxia 依赖，candidate 只让 novelist 本体保持当前态。静态 fixture 只固定可复跑标准；真实改善仍须同 runner/model 重复 candidate、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
       "id": "novelist-public-fiction-learning-prechange",
       "paths": [
         "fixtures/skill-eval/source-profiles/novelist-public-fiction-learning-prechange.md",
-        "novelist/admission.json",
-        "huaxia-practical-wisdom/SKILL.md"
+        "fixtures/skill-eval/source-profiles/novelist-admission-2dd4647.json",
+        "fixtures/skill-eval/source-profiles/novelist-huaxia-practical-wisdom-2dd4647.md"
       ],
-      "sha256": "c8867071dc5b7e3c154b183c3107915b92a393594d75dcc84f06051956aa1b7d"
+      "sha256": "6e4da091d23802658024f4ce3f3c6e1465a77454f0fecd733a3087b9d5f6456b"
     },
     "candidate": {
       "id": "novelist-public-fiction-learning-current",
       "paths": [
         "novelist/SKILL.md",
-        "novelist/admission.json",
-        "huaxia-practical-wisdom/SKILL.md",
+        "fixtures/skill-eval/source-profiles/novelist-admission-2dd4647.json",
+        "fixtures/skill-eval/source-profiles/novelist-huaxia-practical-wisdom-2dd4647.md",
         "novelist/references/story-design-and-drafting.md",
         "novelist/references/creative-inertia.md"
       ],
-      "sha256": "c9bc91cb373a9534eea498173321b034f4f990b3cb9369489362d91147a4999e"
+      "sha256": "402380f9aa038ff5a28d5076acdbc387c1aaf2b99fec69ec2bbb7e0ddf9a0a6c"
     }
   },
   "rubric": {
@@ -90,8 +90,8 @@
       "criteria": [
         "印错名单只改变名次、注意力、交易、撤展时间和公开表态机会，不升级成犯罪调查、群体踩踏、纵火、伤者救援或官员问责。",
         "摊主从库存和顾客行动，馆员从流程、时间和机构口径行动，书法家从名声、技艺与去留行动；三人可以互相利用、误解或拒绝，不形成同一善意小队。",
-        "至少一人的最佳选择会损害另一人的短期目标，且没有全知调停者给出皆大欢喜方案；错误名单不自动证明真实资格或人物品德。",
-        "章尾分别留下生意、职业关系和艺术名声的下一站，三条线以后可以再交叉，但不强制共同调查名单来源。"
+        "临时错误须经三人的不同选择，分别改变交易、撤展和公开书写的条件；只有题面已经给出不可替代的成功标准时，才要求至少一人的原目标失败，本题不因共享时间或场地强制造零和。错误名单不自动证明真实资格或人物品德。",
+        "章尾分别结算库存或交易结果、撤展与职业责任、题字与艺术名声的状态，并保留可继续接口；不为制造独立性强补下一地点或任务，也不强制三人共同调查名单来源。"
       ]
     },
     {

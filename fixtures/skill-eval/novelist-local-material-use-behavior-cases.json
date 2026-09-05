@@ -1,27 +1,27 @@
 {
   "version": 1,
-  "description": "novelist 在授权项目根内实际读取、采用和约束本地资料的增量行为 contract。静态通过只证明定义可复跑；当前 source 变更后仍需 fresh baseline/candidate、盲评与独立复核。",
+  "description": "novelist 在授权项目根内实际读取、采用和约束本地资料的增量行为 contract。baseline 与 candidate 共用从 Git 提交 2dd464765725e6d0311adeaf1ba38f881f807b95 还原的 admission 与 huaxia 依赖，candidate 只让 novelist 本体保持当前态。静态通过只证明定义可复跑；当前 source 变更后仍需 fresh baseline/candidate、盲评与独立复核。",
   "source_profiles": {
     "baseline": {
       "id": "novelist-local-material-use-prechange",
       "paths": [
         "fixtures/skill-eval/source-profiles/novelist-diversified-imagination-prechange.md",
-        "novelist/admission.json",
-        "huaxia-practical-wisdom/SKILL.md",
+        "fixtures/skill-eval/source-profiles/novelist-admission-2dd4647.json",
+        "fixtures/skill-eval/source-profiles/novelist-huaxia-practical-wisdom-2dd4647.md",
         "fixtures/skill-eval/source-profiles/novelist-diversified-imagination-local-material.md"
       ],
-      "sha256": "935d37d26ad2863cf04b456cee8fcf6f36784c8ddf68b4a5550ccd8fa5466846"
+      "sha256": "99bdfd06013baf81ab14ca6994c363450bc94537de7b2341b65a8580111c415c"
     },
     "candidate": {
       "id": "novelist-local-material-use-current",
       "paths": [
         "novelist/SKILL.md",
-        "novelist/admission.json",
-        "huaxia-practical-wisdom/SKILL.md",
+        "fixtures/skill-eval/source-profiles/novelist-admission-2dd4647.json",
+        "fixtures/skill-eval/source-profiles/novelist-huaxia-practical-wisdom-2dd4647.md",
         "novelist/references/worldbuilding-and-research.md",
         "fixtures/skill-eval/source-profiles/novelist-diversified-imagination-local-material.md"
       ],
-      "sha256": "1203e55193d5fdd63c6333aaddd57a112737458c6fcf967f4d57d1c52b1bd96c"
+      "sha256": "8e6c7fc3370d4fc6c6119b720f562be976e19eeb8cc0e9519fd0e3409aa66fc8"
     }
   },
   "rubric": {
@@ -76,7 +76,7 @@
       "prompt": "冷素材里的‘上弦东门返潮’很有画面，请直接恢复为现行事实并据此统一两份候选。",
       "criteria": [
         "回读地理权威，指出东门没有已确认河槽、水门或引水设施，不能恢复冲突旧句。",
-        "冷素材只作反例或遗留母题，不覆盖权威、不统一活跃候选，也不因画面感升级正典。",
+        "冷素材只作反例或遗留母题，不覆盖权威，也不作为统一活跃候选的依据；若另有不冲突的活跃材料，可以独立提出合并候选，但不得声称由冷素材支撑或自动升级正典。",
         "说明可继续使用的南水门与街坊劳动材料及仍开放的幻想空间。"
       ]
     },
@@ -98,7 +98,7 @@
       "prompt": "只给我本轮合成项目资料的使用回执和两条不能推出的结论，不要继续发散，也不要联网。",
       "criteria": [
         "回执明确读取了项目入口、地理权威、活跃候选和冷素材，并区分采用与未采用内容。",
-        "至少说明磨痕青苔不能证明地下河仍在，地方材料不能裁定产权、责任或完整历史。",
+        "两条结论至少覆盖两个不同证明上限：磨痕、青苔或水声不能证明地下河仍在；材料不能还原完整河道或完整历史；材料不能裁定产权或责任。三类任选两类，不要求把全部上限机械塞进两条结论。",
         "不新增候选、不联网、不写回正典，并说明停止理由。"
       ]
     }
