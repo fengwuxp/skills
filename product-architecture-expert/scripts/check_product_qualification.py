@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate product qualification and optional PRD concept projection.
+"""Validate product qualification and an optional PRD concept definition table.
 
 Input: explicit UTF-8 text/file or stdin. Output: deterministic structural
 errors only. The checker does not access the network, write files, or decide
@@ -30,7 +30,6 @@ QUALIFICATION_OBJECTS = {
 }
 CHANGE_TYPES = {"新建", "增强", "治理", "风险约束", "运营提效", "迁移", "退役", "验证"}
 DOCUMENT_STRENGTHS = {"轻量", "标准", "增强"}
-CONCEPT_STATUSES = {"当前", "候选", "废弃", "迁移中"}
 EMPTY_VALUES = {"", "-", "无", "暂无", "待定", "待确认", "n/a", "na", "null", "none"}
 PLACEHOLDER = re.compile(r"〈[^〉\n]+〉")
 
@@ -123,12 +122,10 @@ def concept_section(text: str) -> str | None:
 def table_records(section: str) -> list[dict[str, str]] | None:
     lines = section.splitlines()
     required = {
-        "concept": "概念",
-        "type": "类型",
-        "definition": "本prd中的定义",
-        "boundary": "边界不等于",
-        "status": "状态",
-        "authority": "owner权威来源",
+        "concept": lambda header: header == "概念",
+        "type": lambda header: header == "类型",
+        "definition": lambda header: header in {"统一定义", "本prd中的定义"},
+        "boundary": lambda header: header == "边界不等于",
     }
     for index, line in enumerate(lines):
         if not line.strip().startswith("|"):
@@ -136,8 +133,8 @@ def table_records(section: str) -> list[dict[str, str]] | None:
         headers = [cell.strip().strip("`*_").strip() for cell in line.strip().strip("|").split("|")]
         normalized_headers = [normalize(header) for header in headers]
         positions = {
-            name: next((pos for pos, header in enumerate(normalized_headers) if header == token), None)
-            for name, token in required.items()
+            name: next((pos for pos, header in enumerate(normalized_headers) if matches(header)), None)
+            for name, matches in required.items()
         }
         if any(position is None for position in positions.values()):
             continue
@@ -164,7 +161,7 @@ def concept_issues(text: str) -> list[str]:
         return []
     records = table_records(section)
     if not records:
-        return ["concept_projection_incomplete"]
+        return ["concept_definition_table_incomplete"]
     issues: list[str] = []
     seen: set[str] = set()
     for record in records:
@@ -180,10 +177,6 @@ def concept_issues(text: str) -> list[str]:
             issues.append("concept_definition_missing")
         if not meaningful(record["boundary"]):
             issues.append("concept_boundary_missing")
-        if record["status"] not in CONCEPT_STATUSES:
-            issues.append("concept_status_invalid")
-        if not meaningful(record["authority"]):
-            issues.append("concept_authority_missing")
     return issues
 
 

@@ -54,7 +54,7 @@
 | 古籍、字源、异文、训诂 | `hanzi-philology` | 消费已核验结论做现实校准 |
 | 产品与业务语义 | `product-architecture-expert` | 取舍、时势、反偏和止损问题 |
 | 系分、代码、测试、CR、发布 | `senior-software-architect` | 决策前提与风险校准 |
-| 正式报告和载体 | `document-authoring` | 已稳定的决策结论与证据等级 |
-| 跨阶段、跨轮协作 | `wise-agent` | 专业镜片和决策卡 |
+| 正式报告和载体 | 当前 Agent 的可用文档能力；`document-authoring` 仅在准入、可用性和调用策略均满足时协同 | 已稳定的决策结论与证据等级 |
+| 跨阶段、跨轮协作 | 当前 Agent；用户显式调用时可使用 `wise-agent` | 专业镜片和决策卡 |
 
 任何专业能力的事实结论优先于本 Skill 的类比；出现冲突时停止类比并回到原始证据。

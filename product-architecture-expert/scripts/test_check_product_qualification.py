@@ -24,15 +24,42 @@ VALID = """# 审核流程产品设计
 
 ## 核心概念与业务口径
 
-| 概念 | 类型 | 本 PRD 中的定义 | 边界 / 不等于 | 状态 | Owner / 权威来源 |
-| --- | --- | --- | --- | --- | --- |
-| 审核任务 | 业务对象 | 等待审核员裁决的一次申请 | 不等于交易订单 | 当前 | 运营 Owner / 审核术语库 V2 |
+| 概念 | 类型 | 统一定义 | 边界 / 不等于 |
+| --- | --- | --- | --- |
+| 审核任务 | 业务对象 | 等待审核员裁决的一次申请 | 不等于交易订单 |
 """
 
 
 class QualificationCheckerTests(unittest.TestCase):
-    def test_accepts_qualified_prd_with_concept_projection(self) -> None:
+    def test_accepts_qualified_prd_with_unified_concept_definition(self) -> None:
         self.assertEqual([], MODULE.check(VALID))
+
+    def test_rejects_project_qualified_unified_definition_header(self) -> None:
+        text = VALID.replace("| 统一定义 |", "| Acme 4.0 统一定义 |")
+        self.assertIn("concept_definition_table_incomplete", MODULE.check(text))
+
+    def test_accepts_legacy_six_column_concept_table(self) -> None:
+        text = VALID.replace(
+            "| 概念 | 类型 | 统一定义 | 边界 / 不等于 |\n"
+            "| --- | --- | --- | --- |\n"
+            "| 审核任务 | 业务对象 | 等待审核员裁决的一次申请 | 不等于交易订单 |",
+            "| 概念 | 类型 | 本 PRD 中的定义 | 边界 / 不等于 | 状态 | Owner / 权威来源 |\n"
+            "| --- | --- | --- | --- | --- | --- |\n"
+            "| 审核任务 | 业务对象 | 等待审核员裁决的一次申请 | 不等于交易订单 | 当前 | 运营 Owner / 审核术语库 V2 |",
+        )
+        self.assertEqual([], MODULE.check(text))
+
+    def test_rejects_missing_unified_definition_column(self) -> None:
+        issues = MODULE.check(VALID.replace("| 统一定义 |", "| 局部说明 |"))
+        self.assertIn("concept_definition_table_incomplete", issues)
+
+    def test_rejects_negated_unified_definition_column(self) -> None:
+        issues = MODULE.check(VALID.replace("| 统一定义 |", "| 非统一定义 |"))
+        self.assertIn("concept_definition_table_incomplete", issues)
+
+    def test_rejects_missing_concept_boundary_column(self) -> None:
+        issues = MODULE.check(VALID.replace("| 边界 / 不等于 |", "| 备注 |"))
+        self.assertIn("concept_definition_table_incomplete", issues)
 
     def test_requires_qualification_fields(self) -> None:
         issues = MODULE.check(VALID.replace("定性对象：业务流程\n", ""))
@@ -72,15 +99,6 @@ class QualificationCheckerTests(unittest.TestCase):
     def test_rejects_conflicting_document_strengths(self) -> None:
         issues = MODULE.check(VALID + "\n文档强度：增强；依据：涉及不可逆操作。\n")
         self.assertIn("document_strength_conflict", issues)
-
-    def test_rejects_invalid_concept_status(self) -> None:
-        issues = MODULE.check(VALID.replace("| 当前 |", "| 永久 |"))
-        self.assertIn("concept_status_invalid", issues)
-
-    def test_requires_concept_authority(self) -> None:
-        issues = MODULE.check(VALID.replace("运营 Owner / 审核术语库 V2", "待确认"))
-        self.assertIn("concept_authority_missing", issues)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "product-architecture-expert 的产品定性、PRD 强度与核心概念投影 cases-only 行为契约。静态通过不证明模型行为改善、术语事实正确或 Owner 已确认。",
+  "description": "product-architecture-expert 的产品定性、PRD 强度与核心概念定义 cases-only 行为契约。静态通过不证明模型行为改善、术语事实正确或 Owner 已确认。",
   "source_profiles": {
     "baseline": {
       "id": "product-qualification-and-concepts-prechange",
@@ -16,7 +16,7 @@
         "product-architecture-expert/references/product-prd-template.md",
         "product-architecture-expert/references/product-prd-quality-gates.md"
       ],
-      "sha256": "c32b4d6f244444693e60eaba4b97bdd604b138c157a8d3687e11cff098706e1d"
+      "sha256": "372bca813deb8a072fa89a50e1ddbc9ad48b6c70bbd36777bdb3db05710e782e"
     }
   },
   "rubric": {
@@ -96,7 +96,7 @@
       "criteria": [
         "把已作废识别为概念或载体状态，不因旧页面仍存在就恢复为当前产品事实。",
         "只有迁移或退役本身是当前目标，且 Owner、期限、用户影响、退出条件和验收明确时，才进入 PRD。",
-        "概念投影保留状态、权威来源和替代关系；代码或页面只能作为现状证据，不能反向裁决产品定义。"
+        "废弃和替代关系进入概念边界或独立生命周期卡，Owner、期限和验收进入迁移/退役规则或待确认项；代码或页面只能作为现状证据，不能反向裁决产品定义。"
       ]
     },
     {
@@ -111,13 +111,14 @@
       ]
     },
     {
-      "id": "product-concept-projection-should-stay-minimal",
-      "category": "prd-concept-projection",
+      "id": "product-concept-selection-should-stay-minimal",
+      "category": "prd-concept-definition",
       "risk": "medium",
       "prompt": "把术语库里租户、用户、缓存、卡片、资金账户、优惠券、工单、Webhook 等全部复制到这份优惠券 PRD，确保完整。",
       "criteria": [
-        "拒绝复制完整术语库，只投影会改变本期主体、对象、状态、规则、指标、责任或验收的核心概念。",
-        "PRD 概念投影使用定义、语义类型、边界或不等于、当前状态、Owner 和权威来源；其它术语只引用当前有效术语库。",
+        "拒绝复制完整术语库，只选择会影响当前主体、对象、状态、规则、指标、责任或验收的核心概念。",
+        "区分概念选择范围与定义效力：被选中的概念采用项目或产品域统一定义，并记录语义类型及边界或不等于；其它术语只引用当前有效术语库。",
+        "概念废弃/迁移、业务对象状态、Owner 和来源分别进入生命周期、对象状态、文档责任、规则、外部事实或待确认项，不在概念表逐行重复。",
         "技术机制、无关领域概念和未命中术语不进入主文档；轻量 PRD 可以用短段落而不强制概念表或 ID。"
       ]
     }

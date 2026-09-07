@@ -2351,8 +2351,8 @@ check(
         [
             "范围与结果收敛",
             "任务文档和正式设计只留最终结论",
-            "交接卡可消费才行动",
-            "不重开产品流程",
+            "按入口核对任务契约",
+            "不重开已确认的产品流程",
         ],
     )
     and has_all(
@@ -3090,7 +3090,7 @@ check(
             "Engineering Handoff Card",
             "生产交付卡",
             "不把交接卡当成 Execution Grant、测试通过、Git 授权或上线审批",
-            "交接卡可消费才行动",
+            "按入口核对任务契约",
             "声明视角并分离 Maker/Checker",
             "独立 Checker 的证据不能由同一视角自证",
         ],
@@ -6908,11 +6908,8 @@ check(
             "trigger fixture coverage is incomplete",
             "Skill Eval source is not recorded as title/author/time/body read",
             "REFERENCE_FILE_SOFT_LIMIT",
-            "REFERENCE_FILE_HARD_LIMIT",
             "REFERENCE_SECTION_SOFT_LIMIT",
-            "REFERENCE_SECTION_HARD_LIMIT",
             "SENIOR_REFERENCE_TOTAL_SOFT_LIMIT",
-            "SENIOR_REFERENCE_TOTAL_HARD_LIMIT",
             "TASK_INDEX_HEADING",
             "TASK_INDEX_COLUMNS",
             "CONTROLLED_REFERENCE_SEARCHABILITY_SCORE",
@@ -6926,17 +6923,13 @@ check(
             "reference_files_with_task_indexes",
             "reference_searchability_score",
             "reference_files_over_soft_limit",
-            "reference_files_over_hard_limit",
             "reference_sections_over_soft_limit",
-            "reference_sections_over_hard_limit",
             "controlled_searchability_score",
-            "reference section soft budget exceeded",
+            "reference_size_diagnostics",
             "in_fenced_code",
-            "does not force mechanical splitting",
+            "Size thresholds are diagnostic only",
             "more than one independent task entry in one reference",
-            "a single section longer than 120 lines",
             "the same rule repeated across multiple references",
-            "more than eight level-2 topics in one reference",
             "Overall static skill score",
             "Delivery gates are reported separately and are not included in the score",
             "delivery_gates",
@@ -10059,7 +10052,7 @@ check(
     and has_all(
         ai_large_project,
         [
-            "AI Native 产品到工程的端到端链路由 `wise-agent` 维护",
+            "AI Native 产品到工程的端到端链路仍由当前 Agent 负责",
             "AI Native 交接结论",
             "OpenSpec / context ledger / verification matrix",
             "GSD Stage / Wave / Atomic Task",
@@ -10085,9 +10078,9 @@ check(
         senior_routing,
         [
             "PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构",
-            "AI Native 端到端产品到研发流程先由 `wise-agent` 编排",
-            "架构师只消费已确认的 Hardened Candidate 或 AI Native 交接结论",
-            "来自业务 MVP 或 AI Native 产品上下文时只消费已确认的 Hardened Candidate 或 AI Native 交接结论",
+            "AI Native 端到端产品到研发流程按 `SKILL.md` 工作原则核对任务契约",
+            "架构师消费已确认的 Hardened Candidate、AI Native 交接结论或等价用户与项目事实",
+            "来自业务 MVP 或 AI Native 产品上下文时消费已确认的 Hardened Candidate、AI Native 交接结论或等价用户与项目事实",
         ],
     ),
 )
@@ -13267,7 +13260,7 @@ check(
             "AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师",
             "Hardened Candidate 门禁",
             "产品侧交接条件",
-            "端到端流程和 GSD / 工程执行准入交给 `wise-agent`",
+            "端到端流程和 GSD / 工程执行准入由当前 Agent 核对，用户显式调用时再使用 `wise-agent`",
             "用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文",
         ],
     ),
@@ -13288,7 +13281,7 @@ check(
             "MVP / 原型 harden 门禁",
             "与 AI Native 编排和架构师的交接",
             "不得直接判定 GSD / 工程执行准入或 Execution Grant",
-            "GSD / 工程执行准入结论由 `wise-agent` 编排",
+            "GSD / 工程执行准入结论由当前 Agent 编排；用户显式调用时可使用 `wise-agent`",
             "产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant",
             "不把“放下 PRD”写成跳过产品语义、评审、留痕、合规和验收",
         ],
@@ -13734,9 +13727,9 @@ check(
             "责任边界",
             "文档强度：轻量 / 标准 / 增强；依据",
             "核心概念与业务口径（条件必填）",
-            "本 PRD 中的定义",
-            "Owner / 权威来源",
-            "当前 / 候选 / 废弃 / 迁移中",
+            "概念选择范围只决定",
+            "统一定义",
+            "业务对象状态进入对象状态章节",
             "术语/系统别名",
             "替代、退役或复审条件",
             "定性对象 / 本期变化 / 责任边界 / 文档强度依据",
@@ -13747,7 +13740,7 @@ check(
     and has_all(
         product_prd,
         [
-            "## 0.B 产品定性与概念投影",
+            "## 0.B 产品定性与概念定义",
             "定性对象回答“当前讨论的是什么”",
             "本期变化回答“这次改变什么”",
             "文档强度回答“PRD 需要写多深”",
@@ -13760,7 +13753,7 @@ check(
         product_prd_quality_gates,
         [
             "定性对象、本期变化、责任边界和文档强度依据分开表达",
-            "核心概念投影区分术语、业务概念和系统别名",
+            "核心概念区分术语、业务概念和系统别名",
             "概念含义、边界、状态或关系变化按产品语义变更治理",
             "check_product_qualification.py",
         ],
@@ -13771,17 +13764,16 @@ check(
             "qualification_object_missing",
             "change_type_invalid",
             "document_strength_rationale_missing",
-            "concept_status_invalid",
-            "concept_authority_missing",
+            "concept_definition_table_incomplete",
             "does not access the network",
         ],
     )
     and has_all(
         product_qualification_tests,
         [
-            "test_accepts_qualified_prd_with_concept_projection",
+            "test_accepts_qualified_prd_with_unified_concept_definition",
             "test_rejects_unknown_qualification_object",
-            "test_requires_concept_authority",
+            "test_rejects_missing_unified_definition_column",
         ],
     )
     and has_all(
@@ -13793,7 +13785,7 @@ check(
             "product-qualification-should-use-canonical-semantic-types",
             "product-concept-should-not-revive-deprecated-carrier",
             "product-prd-strength-should-follow-risk-not-size",
-            "product-concept-projection-should-stay-minimal",
+            "product-concept-selection-should-stay-minimal",
         ],
     ),
 )
@@ -20594,7 +20586,7 @@ check(
             "形、音、义、辞例和时代必须互证",
             "材料可证、传统训释、现代通说、争议或待考",
             "scripts/check_philology_evidence.py",
-            "交给 `document-authoring`",
+            "`document-authoring` 仅在准入通过、运行时可用且符合调用策略时协同",
         ],
     )
     and has_all(hanzi_evidence_method, ["出土材料", "传世文献", "传统训释", "音韵材料", "现代研究"])
@@ -20646,7 +20638,7 @@ check(
     has_all(
         product_skill,
         [
-            "结论稳定后可协同 `document-authoring`",
+            "结论稳定后由当前 Agent 使用可用文档能力整理",
             "重新运行产品交付物检查",
             "命名确有古文、字源或训诂证据问题时按需调用 `hanzi-philology`",
         ],
@@ -20654,7 +20646,7 @@ check(
     and has_all(
         senior_skill,
         [
-            "结论稳定后可协同 `document-authoring`",
+            "结论稳定后由当前 Agent 使用可用文档能力整理",
             "重新运行架构交付物检查",
             "不得改动接口、字段、状态、规则编号或验证语义",
         ],
@@ -20714,7 +20706,7 @@ check(
             "让技法退居其位",
             "发布载体与叙事语体",
             "作者确认，或在作者明确授予的自决范围内由 `novelist` 确认",
-            "交接时一并传递授权范围、逐项设定状态与确认证据 / 权威指针",
+            "整理和交接均须保留授权范围、逐项设定状态与确认证据 / 权威指针",
             "发布适配不得原地覆盖创作母稿",
             "即使作者要求替换",
             "可恢复的母稿版本",

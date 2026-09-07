@@ -1,0 +1,22 @@
+{
+  "status": "candidate",
+  "evidence_mode": "contract-only",
+  "updated_at": "2026-09-07",
+  "blockers": [
+    {
+      "id": "YDP-001",
+      "summary": "尚无同一 runner/model 的 baseline/candidate 重复响应与独立盲评",
+      "owner": "仓库 Owner / 独立 Checker"
+    },
+    {
+      "id": "YDP-002",
+      "summary": "新 Skill 尚未完成一次独立的非敏感语雀前向发布试点",
+      "owner": "文档平台 Owner / 验收 Owner"
+    },
+    {
+      "id": "YDP-003",
+      "summary": "语雀编辑器行为具有时效性，尚未建立版本变化后的复核证据",
+      "owner": "文档平台 Owner"
+    }
+  ]
+}

@@ -1578,10 +1578,40 @@ def non_goal_current_concept_conflict(text: str) -> bool:
     if not excluded_identifiers:
         return False
     concepts = section_body(text, ("核心概念与业务口径",))
-    current_rows = "\n".join(
-        line for line in concepts.splitlines() if re.search(r"\|\s*当前\s*\|", line)
+    legacy_records = table_records(
+        concepts,
+        {
+            "concept": ("概念",),
+            "status": ("状态", "当前状态"),
+        },
     )
-    current_identifiers = set(re.findall(r"`([A-Z][A-Za-z0-9_]{4,})`", current_rows))
+    if legacy_records:
+        current_concepts = [
+            record["concept"]
+            for record in legacy_records
+            if normalize(record["status"]) == "当前"
+        ]
+    else:
+        concept_records = table_records(
+            concepts,
+            {
+                "concept": ("概念",),
+                "boundary": ("边界 / 不等于", "边界/不等于", "边界", "不等于"),
+            },
+        )
+        lifecycle_only = re.compile(
+            r"^(?:已废弃|废弃(?:中)?|迁移中|退役中|仅用于(?:迁移|退役))"
+        )
+        current_concepts = [
+            record["concept"]
+            for record in concept_records
+            if not lifecycle_only.search(normalize(record["boundary"]))
+        ]
+    current_identifiers = {
+        identifier
+        for concept in current_concepts
+        for identifier in re.findall(r"\b([A-Z][A-Za-z0-9_]{4,})\b", concept)
+    }
     return bool(excluded_identifiers & current_identifiers)
 
 

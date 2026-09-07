@@ -1,0 +1,6 @@
+interface:
+  display_name: "语雀文档发布"
+  short_description: "把本地 Markdown 权威版本受控发布到语雀并完成回读"
+  default_prompt: "Use $yuque-document-publisher 将明确的本地 Markdown 权威版本发布或更新到指定语雀文档，并保留版本、资源和回读证据。"
+policy:
+  allow_implicit_invocation: false

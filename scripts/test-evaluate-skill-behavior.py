@@ -270,6 +270,94 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         with self.assertRaises(MODULE.ContractError):
             MODULE.blind_responses(self.case_data, drifted, seed=731)
 
+    def runtime_profile(self) -> dict[str, str]:
+        return {
+            "reasoning_effort": "high",
+            "tools": "fixture-tools-v1",
+            "permissions": "fixture-read-only-v1",
+            "environment": "fixture-environment-v1",
+        }
+
+    def test_runtime_profile_drift_is_rejected_even_without_required_gate(self) -> None:
+        for field in self.runtime_profile():
+            with self.subTest(field=field):
+                rows = self.response_rows()
+                for row in rows:
+                    row["runtime_profile"] = self.runtime_profile()
+                rows[1]["runtime_profile"][field] = "different-profile"
+                with self.assertRaisesRegex(MODULE.ContractError, "runtime_profile"):
+                    MODULE.blind_responses(self.case_data, rows, seed=731)
+
+    def test_runtime_profile_cannot_be_partially_missing_or_invalid(self) -> None:
+        for invalid in (None, {}, [], {"reasoning_effort": "high"},
+                        {**self.runtime_profile(), "tools": " "},
+                        {**self.runtime_profile(), "reasoning_effort": "configured-default"}):
+            with self.subTest(invalid=invalid):
+                rows = self.response_rows()
+                for row in rows:
+                    row["runtime_profile"] = self.runtime_profile()
+                rows[1]["runtime_profile"] = invalid
+                with self.assertRaisesRegex(MODULE.ContractError, "runtime_profile"):
+                    MODULE.blind_responses(self.case_data, rows, seed=731)
+
+    def test_runtime_profile_rejects_sensitive_or_private_values(self) -> None:
+        unsafe_values = (
+            "token=sk-secret",
+            "token-abcdefgh",
+            "OPENAI" + "_API_KEY=value",
+            "Authorization Bearer abcdefgh",
+            "api-key abcdefgh",
+            "Bearer abcdefgh",
+            "/Users/private/project",
+            r"C:\Users\private\project",
+            "~/private/project",
+            "line one\nline two",
+        )
+        for unsafe in unsafe_values:
+            with self.subTest(unsafe=unsafe):
+                rows = self.response_rows()
+                for row in rows:
+                    row["runtime_profile"] = self.runtime_profile()
+                    row["runtime_profile"]["environment"] = unsafe
+                with self.assertRaisesRegex(MODULE.ContractError, "redacted"):
+                    MODULE.blind_responses(self.case_data, rows, seed=731)
+
+    def test_runtime_profile_requires_stable_version_identifiers(self) -> None:
+        rows = self.response_rows()
+        for row in rows:
+            row["runtime_profile"] = self.runtime_profile()
+            row["runtime_profile"]["environment"] = "macOS 15 arm64"
+        with self.assertRaisesRegex(MODULE.ContractError, "version identifier"):
+            MODULE.blind_responses(self.case_data, rows, seed=731)
+
+    def test_runtime_profile_gate_rejects_missing_metadata(self) -> None:
+        case_data = deepcopy(self.case_data)
+        case_data["release_gate"]["require_runtime_profile"] = True
+        with self.assertRaisesRegex(MODULE.ContractError, "runtime_profile"):
+            MODULE.blind_responses(case_data, self.response_rows(case_data), seed=731)
+        case_data["release_gate"]["require_runtime_profile"] = "true"
+        with self.assertRaisesRegex(MODULE.ContractError, "require_runtime_profile"):
+            MODULE.validate_cases(case_data)
+
+    def test_runtime_profile_is_recorded_without_entering_blind_content(self) -> None:
+        case_data = deepcopy(self.case_data)
+        case_data["release_gate"]["require_runtime_profile"] = True
+        plan = MODULE.build_plan(case_data, 1)
+        self.assertTrue(all(task.get("require_runtime_profile") is True for task in plan))
+        rows = self.response_rows(case_data)
+        for row in rows:
+            row["runtime_profile"] = self.runtime_profile()
+        blind_rows, key = MODULE.blind_responses(case_data, rows, seed=731)
+        self.assertEqual(self.runtime_profile(), key.get("runtime_profile"))
+        self.assertNotIn("runtime_profile", json.dumps(blind_rows))
+        self.assertNotIn("fixture-environment-v1", json.dumps(blind_rows))
+        scores = self.score_rows(key)
+        report = MODULE.score_judgments(case_data, scores, key, blind_rows=blind_rows)
+        self.assertEqual(self.runtime_profile(), report.get("runtime_profile"))
+        del key["runtime_profile"]
+        with self.assertRaisesRegex(MODULE.ContractError, "runtime_profile"):
+            MODULE.score_judgments(case_data, scores, key, blind_rows=blind_rows)
+
     def test_rejects_unresolved_maker_and_judge_model_identities(self) -> None:
         unresolved_responses = self.response_rows()
         for row in unresolved_responses:
@@ -411,6 +499,24 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
         stale_source["source_profiles"]["candidate"]["sha256"] = "0" * 64
         with self.assertRaises(MODULE.ContractError):
             MODULE.validate_cases(stale_source)
+
+    def test_source_profile_bindings_cannot_enter_blind_responses(self) -> None:
+        case_data = self.source_bound_case_data()
+        profiles = case_data["source_profiles"].values()
+        markers = [
+            marker
+            for profile in profiles
+            for marker in (profile["id"], profile["sha256"], *profile["paths"])
+        ]
+
+        for marker in markers:
+            with self.subTest(marker=marker):
+                rows = self.response_rows(case_data)
+                rows[0]["response"] = f"response leaked {marker}"
+                with self.assertRaisesRegex(
+                    MODULE.ContractError, "source profile binding"
+                ):
+                    MODULE.blind_responses(case_data, rows, seed=731)
 
     def test_source_profile_paths_cannot_escape_through_symlinks(self) -> None:
         with tempfile.TemporaryDirectory() as root_dir, tempfile.TemporaryDirectory() as outside_dir:

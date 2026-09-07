@@ -42,6 +42,15 @@ EXECUTION_EVIDENCE_PATTERN = re.compile(
 EXECUTION_EVIDENCE_SECRET_PATTERN = re.compile(
     r":(?:sk-|gh[opusr]_|github_pat_|xox[baprs]-)"
 )
+RUNTIME_PROFILE_SECRET_PATTERN = re.compile(
+    r"(?:sk-[a-z0-9_-]{4,}|gh[opusr]_[a-z0-9_-]+|github_pat_[a-z0-9_-]+|"
+    r"xox[baprs]-[a-z0-9_-]+|\bbearer\s+[a-z0-9._~+/-]{8,}|"
+    r"(?:api[_-]?key|token|secret|password|authorization|cookie)[._-][a-z0-9_-]{4,}|"
+    r"(?:api[_-]?key|token|secret|password|authorization|cookie)\s*[:=]|"
+    r"(?:api[_-]?key|token|secret|password|authorization|cookie)\s+\S{8,})",
+    re.IGNORECASE,
+)
+RUNTIME_PROFILE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$", re.IGNORECASE)
 
 
 class ContractError(ValueError):
@@ -115,6 +124,37 @@ def _finite_number(value: Any) -> bool:
         return math.isfinite(value)
     except OverflowError:
         return False
+
+
+def _redacted_runtime_profile_value(value: Any, label: str) -> str:
+    text = _non_empty_string(value, label)
+    if (
+        RUNTIME_PROFILE_ID_PATTERN.fullmatch(text) is None
+        or RUNTIME_PROFILE_SECRET_PATTERN.search(text) is not None
+    ):
+        raise ContractError(f"{label}: expected a redacted stable version identifier")
+    return text
+
+
+def _runtime_profile(
+    record: dict[str, Any], label: str, *, required: bool = False
+) -> dict[str, str] | None:
+    field_label = f"{label}.runtime_profile"
+    if "runtime_profile" not in record:
+        if required:
+            raise ContractError(f"{field_label}: required by the release gate")
+        return None
+    value = record["runtime_profile"]
+    fields = {"reasoning_effort", "tools", "permissions", "environment"}
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ContractError(f"{field_label}: expected {', '.join(sorted(fields))}")
+    profile = {
+        field: _redacted_runtime_profile_value(value[field], f"{field_label}.{field}")
+        for field in sorted(fields)
+    }
+    if any(item.casefold() in UNRESOLVED_MODEL_IDENTITIES for item in profile.values()):
+        raise ContractError(f"{field_label}: expected resolved configuration values")
+    return profile
 
 
 def _validate_execution_evidence(row: dict[str, Any], label: str) -> None:
@@ -304,6 +344,18 @@ def _reject_external_input_path(
         raise ContractError(f"{label}: external input path must not enter blind content")
 
 
+def _reject_source_profile_binding(
+    text: str, label: str, profiles: dict[str, Any]
+) -> None:
+    markers = set()
+    for condition in CONDITIONS:
+        profile = profiles[condition]
+        markers.update((profile["id"], profile["sha256"]))
+        markers.update(profile["paths"])
+    if any(marker in text for marker in markers):
+        raise ContractError(f"{label}: source profile binding must not enter blind content")
+
+
 def validate_cases(
     data: dict[str, Any],
     *,
@@ -362,6 +414,8 @@ def validate_cases(
     require_auditable = gate.get("require_auditable_judgments", False)
     if not isinstance(require_auditable, bool):
         raise ContractError("release_gate.require_auditable_judgments: expected a boolean")
+    if not isinstance(gate.get("require_runtime_profile", False), bool):
+        raise ContractError("release_gate.require_runtime_profile: expected a boolean")
     pairwise_non_regression = gate.get("high_risk_pairwise_non_regression", True)
     if not isinstance(pairwise_non_regression, bool):
         raise ContractError(
@@ -423,6 +477,8 @@ def build_plan(case_data: dict[str, Any], trials: int) -> list[dict[str, Any]]:
                     "prompt": case["prompt"],
                     "risk": case["risk"],
                 }
+                if case_data["release_gate"].get("require_runtime_profile", False):
+                    task["require_runtime_profile"] = True
                 if isinstance(source_profiles, dict) or isinstance(input_profile, dict):
                     task["case_sha256"] = _case_digest(case_data)
                 if isinstance(source_profiles, dict):
@@ -448,6 +504,7 @@ def blind_responses(
     input_profile = case_data.get("input_profile")
     indexed: dict[tuple[str, int], dict[str, dict[str, Any]]] = defaultdict(dict)
     profiles = set()
+    runtime_profiles: dict[str, dict[str, str] | None] = {}
 
     for index, row in enumerate(response_rows):
         case_id = _non_empty_string(row.get("case_id"), f"responses[{index}].case_id")
@@ -460,6 +517,10 @@ def blind_responses(
         if condition not in CONDITIONS:
             raise ContractError(f"responses[{index}].condition: expected baseline or candidate")
         response = _non_empty_string(row.get("response"), f"responses[{index}].response")
+        if isinstance(source_profiles, dict):
+            _reject_source_profile_binding(
+                response, f"responses[{index}].response", source_profiles
+            )
         if isinstance(input_profile, dict):
             _reject_external_input_path(
                 response, f"responses[{index}].response", input_profile
@@ -467,6 +528,12 @@ def blind_responses(
         _validate_execution_evidence(row, f"responses[{index}]")
         runner = _non_empty_string(row.get("runner"), f"responses[{index}].runner")
         model = _model_identity(row.get("model"), f"responses[{index}].model")
+        runtime_profile = _runtime_profile(
+            row,
+            f"responses[{index}]",
+            required=case_data["release_gate"].get("require_runtime_profile", False),
+        )
+        runtime_profiles[json.dumps(runtime_profile, sort_keys=True)] = runtime_profile
         if isinstance(source_profiles, dict) or isinstance(input_profile, dict):
             case_sha256 = _non_empty_string(
                 row.get("case_sha256"), f"responses[{index}].case_sha256"
@@ -500,6 +567,8 @@ def blind_responses(
 
     if len(profiles) != 1:
         raise ContractError("responses: baseline and candidate must use one identical runner/model profile")
+    if len(runtime_profiles) != 1:
+        raise ContractError("responses.runtime_profile: must match across all responses")
     trial_sets = {
         case_id: {trial for observed_case, trial in indexed if observed_case == case_id}
         for case_id in cases_by_id
@@ -565,6 +634,9 @@ def blind_responses(
         "model": model,
         "pairs": key_pairs,
     }
+    runtime_profile = next(iter(runtime_profiles.values()))
+    if runtime_profile is not None:
+        key["runtime_profile"] = runtime_profile
     blind_sha256 = _blind_digest(tasks)
     for task in tasks:
         task["blind_sha256"] = blind_sha256
@@ -591,6 +663,11 @@ def score_judgments(
         raise ContractError("key.pairs: expected a non-empty list")
     _non_empty_string(key.get("runner"), "key.runner")
     _non_empty_string(key.get("model"), "key.model")
+    runtime_profile = _runtime_profile(
+        key,
+        "key",
+        required=case_data["release_gate"].get("require_runtime_profile", False),
+    )
     source_profiles = case_data.get("source_profiles")
     if isinstance(source_profiles, dict) and key.get("source_profiles") != source_profiles:
         raise ContractError("key.source_profiles: does not match the selected cases")
@@ -843,6 +920,8 @@ def score_judgments(
         "conditions": summaries,
     }
     report["blind_sha256"] = key["blind_sha256"]
+    if runtime_profile is not None:
+        report["runtime_profile"] = runtime_profile
     if isinstance(source_profiles, dict):
         report["source_profiles"] = source_profiles
     if isinstance(input_profile, dict):

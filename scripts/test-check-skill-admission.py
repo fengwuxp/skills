@@ -22,6 +22,44 @@ SPEC.loader.exec_module(MODULE)
 
 
 class SkillAdmissionTests(unittest.TestCase):
+    def test_invocation_policy_rejects_unreadable_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.write_skill(
+                root, "new-capability", {"status": "installable", "blockers": []}
+            )
+            with self.assertRaisesRegex(ValueError, "openai.yaml"):
+                MODULE.explicit_invocation_skills(root)
+            (skill_dir / "admission.json").write_text("{invalid", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "invalid JSON"):
+                MODULE.explicit_invocation_skills(root)
+
+    def test_invocation_policy_follows_metadata_not_skill_names(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.write_skill(
+                root, "new-capability", {"status": "installable", "blockers": []}
+            )
+            agents_dir = skill_dir / "agents"
+            agents_dir.mkdir()
+            policy = agents_dir / "openai.yaml"
+            policy.write_text("policy:\n  allow_implicit_invocation: false\n", encoding="utf-8")
+            self.assertEqual(MODULE.explicit_invocation_skills(root), {"new-capability"})
+            policy.write_text("policy:\n  allow_implicit_invocation: true\n", encoding="utf-8")
+            self.assertEqual(MODULE.explicit_invocation_skills(root), set())
+            metadata = {
+                "status": "candidate", "evidence_mode": "structural-only", "blockers": []
+            }
+            (skill_dir / "admission.json").write_text(
+                json.dumps(metadata), encoding="utf-8"
+            )
+            self.assertEqual(MODULE.explicit_invocation_skills(root), {"new-capability"})
+            _, failures = MODULE.audit_skill(skill_dir)
+            self.assertTrue(any(
+                "candidate must set allow_implicit_invocation: false" in failure
+                for failure in failures
+            ))
+
     @staticmethod
     def write_skill(root: Path, name: str, metadata: dict[str, object]) -> Path:
         metadata = dict(metadata)

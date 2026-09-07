@@ -4,6 +4,8 @@
 
 ## 外部参考来源
 
+- OpenAI 官方 [Model guidance — Using GPT-6 Astra](https://developers.openai.com/api/docs/guides/latest-model)：2026-09-05 通过 Codex in-app Browser 读取当前选中章节的完整正文；命令行仍返回 403，不将其作为已读证据。采用 `Instruction following` 的具体条款归因方法，并以 `Initiative and follow-through`、`Testing and verification` 作为授权内推进与定向验证的参考；模型差异用于提出配置受控的行为对照。只保存方法索引，不复制正文和示例提示词，不采纳自动 Git、默认子代理分工或隐含扩大授权；模型名称、API 参数、异步能力与成本声明不写成本机已验证事实，未来适配须重读当时版本并核对真实运行时。
+
 - 索引关键词：内部路由、AI 代码交付闭环、Agent Loop Engineering、架构排熵、Wisdom Lens、华夏经世智慧、Gitee 仓库 [aiami/huaxia-wisdom]、问题核心诊断、反脑补证据边界、概念定名、需求止损、定向 / 定性 / 定位 / 定量变化治理、不把传统文化或医学观点写成产品事实、架构结论、合规结论、生产审批或 Execution Grant、L1-L4 工程成熟度诊断参考来源、L3 优先加固、理解债 / 认知投降风险、产品洞察/机会雷达、product-insight-analyst.md、Skill 自我改进外循环、Skill Improvement Card；不得把个人长期偏好、私有对话轨迹、客户资料、生产数据、密钥、外部文章原文、工具宣传或 Agent 自述写入仓库。
 
 - 语雀 [《阿里巴巴Java开发手册》](https://www.yuque.com/iv8gga/qgf69v)：作为 `wind-coding-conventions/references/java-coding-conventions.md` 的基础规约来源之一，专题证据同步保存在 `wind-coding-conventions/references/source-map.md`。页面目录包含 23 篇文档，版本历史标明 1.3.1 于 2017-11-30 发布；2026-07-16 已通过 Codex 应用内浏览器逐章读取编程规约、异常日志、单元测试、安全规约、MySQL、工程结构和附录。只吸收仍稳定且能补足现有规则的对象比较、序列化兼容、`finally`、Maven / Gradle 依赖治理、SQL 投影和索引隐式类型转换边界；不复制手册原文、正反例或完整目录，不创建独立 Skill，不吸收机械作者日期、固定覆盖率、所有 POJO 必须包装类型、固定数据库字段、统一禁用外键，以及 `time_wait`、文件句柄、`Xms/Xmx` 等服务器运行参数。测试方法统一使用 `testXxx` 是团队明确规则，不归因于该手册。

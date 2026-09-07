@@ -10,7 +10,7 @@ description: |
 
 本 Skill 是知止者按需装载的 Web UI 设计能力包，负责把已确认的用户目标、产品语义、真实内容和技术约束转成可实现、可验证的浏览器界面设计契约。它覆盖信息架构、任务流、页面层级、交互状态、可操作原型、响应式、可访问性、视觉方向、设计系统约束、可用性验证和实现后 Design QA。
 
-它不负责定义产品业务语义、规则和验收口径，也不替代前端工程实现、源码 CR 或生产发布。需要跨产品、设计和工程推进时，由 `wise-agent` 持有目标；产品事实由 `product-architecture-expert` 稳定，界面设计由本 Skill 负责，代码实现与工程验证由 `senior-software-architect` 负责。
+它不负责定义产品业务语义、规则和验收口径，也不替代前端工程实现、源码 CR 或生产发布。跨产品、设计和工程推进仍由当前 Agent 持有目标，`wise-agent` 仅按 `AGENTS.md` 的显式调用条件加载；产品事实由 `product-architecture-expert` 稳定，界面设计由本 Skill 负责，代码实现与工程验证由 `senior-software-architect` 负责。
 
 ## 快速止损门
 

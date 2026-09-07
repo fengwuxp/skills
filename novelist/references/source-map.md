@@ -82,6 +82,7 @@
 - 不吸收：任何作品的原文、作者口吻、人物、设定、力量体系、关系结构或独创情节；不把男性凝视、身体侵犯、性侵威胁、性别物化、胁迫求饶和操控恋爱对象当作人物鲜活或喜剧技巧；不按书名建立题材模板，也不把古典专名、古语数量或半文半白语气等同古典气象。
 - 证据边界：阅读卡、长摘要与 baseline 保留在授权任务的临时载体，不进入本仓库。当前只形成 W4 候选回流；静态 fixture、reference diff 与 source-set digest 不证明行为提升，W5 仍须用同 runner/model、六个 holdout、每题三次生成 candidate 并独立盲评。
 - 后续状态覆盖（2026-09-04）：W5 已执行并在 release gate 被拒，后续 R2、R3、R4 与轮动第一轮仍为 `accepted=0`；最新横向复盘只增强项目私有检索资产，未发现现有 `novelist` 尚未覆盖且具独立行为改善证据的新能力。该进度只修正本来源的准入状态，不把项目知识库变成默认运行时依赖，也不在此同步后续阅读流水。
+- 行为复评覆盖（2026-09-05）：修复 source profile 冻结与评测契约后，`novelist-local-material-use` 在隔离 `gpt-5.6-sol/high`、五题各三次的 baseline/candidate 盲评中通过 release gate；`novelist-public-fiction-learning` 虽达到 candidate `58/60 criteria`、零 blocker 和总体改善，仍在书展与悬疑题各有一次 pairwise correctness 回退，继续 `FAIL / NOT_ADMITTED`。live responses、blind、scores 与 reports 只保留在当前任务临时证据目录，未进入本仓库；因此整体仍为 `contract-only / accepted=0`，不更新 admission，不把局部通过写成整个 Skill 的行为准入。
 
 ## 证据与维护边界
 

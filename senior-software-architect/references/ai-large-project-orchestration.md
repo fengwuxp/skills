@@ -29,7 +29,7 @@
 ## 需要继续读取的 reference
 
 - AI 协作总纲读 `ai-assisted-engineering.md`。
-- 端到端 AI Native 产品到研发流程、角色编排和 GSD / 工程执行准入判断先由 `wise-agent/references/planning-execution-admission.md` 编排；本文件只消费已确认的准入结论，并在已经进入工程侧大项目编排后细化任务包、上下文账本、Wave 和验证矩阵。产品侧上下文缺口回到 `product-architecture-expert/references/ai-native-product-context.md`。
+- 端到端 AI Native 产品到研发流程、角色编排和 GSD / 工程执行准入判断按 `SKILL.md` 工作原则核对目标、约束、授权和验收；仅在用户显式调用 `wise-agent` 时消费其 `references/planning-execution-admission.md` 的准入结论，否则使用已确认的用户与项目事实，并在已经进入工程侧大项目编排后细化任务包、上下文账本、Wave 和验证矩阵。产品侧上下文缺口回到 `product-architecture-expert/references/ai-native-product-context.md`。
 - 生命周期、验证命令和 Git 边界读 `workflow.md`。
 - 受控工程执行 Loop 的工程细节读 `cad-mode.md`；Execution Grant 和 Git 授权服从其既有权威来源。
 - Java 代码修改读项目本地规范、`wind-coding-conventions` 通用层和 `coding-review-deep-dive.md`；Wind 专项按依赖或上下文启用；测试读 `testing.md`。
@@ -42,8 +42,8 @@
 | 判断是否启用大项目编排 | 1、2 | 不先写项目状态文件 |
 | 初始化项目账本 | 3、4、5 | 不展开执行 Wave |
 | 规划阶段和原子任务 | 6、7 | 不进入工程执行 Loop 细节 |
-| GSD / 工程执行组合判断 | 先消费 `wise-agent/references/planning-execution-admission.md` 的准入结论，再读 8 和 `cad-mode.md` | 不把整个大项目交给工程执行 Loop |
-| GSD + 长任务 + Loop 进入工程 | 先消费 `wise-agent/references/execution-specification.md`、`delivery-execution-control.md` 和 `planning-execution-admission.md`，再读 6、7、10 | 不创建运行时 Goal，不把 Loop 当整个 Roadmap 授权 |
+| GSD / 工程执行组合判断 | 按 `SKILL.md` 工作原则核对直接任务或已收到的准入结论，再读 8 和 `cad-mode.md` | 不把整个大项目交给工程执行 Loop |
+| GSD + 长任务 + Loop 进入工程 | 先核对已有项目执行规范、授权和任务契约；显式调用 `wise-agent` 时消费其对应结论，再读 6、7、10 | 不创建运行时 Goal，不把 Loop 当整个 Roadmap 授权 |
 | AI Native 编排结论进入工程 | 8A，并消费 `wise-agent` 或产品侧交接材料 | 不把业务 MVP 直接当工程执行授权 |
 | 多 Agent / Wave 执行 | 7、9、10 | 不跳过验证 |
 | Codex automation / artifact 协作 | 10、11、12 | 不把平台能力当授权，不创建 runtime Goal |
@@ -73,7 +73,7 @@ OpenSpec 定目标
 - 让持续编排每轮都有反馈、验证、预算、无进展检测和停止条件。
 - 让会话中断、上下文清理或阶段切换后可以恢复，而不是从头解释。
 
-AI Native 产品到工程的端到端链路由 `wise-agent` 维护，GSD / 工程执行编排准入由 `wise-agent/references/planning-execution-admission.md` 产出。进入本文件时，只保留工程侧最小链路：
+AI Native 产品到工程的端到端链路仍由当前 Agent 负责；仅在用户显式调用 `wise-agent` 时消费其 GSD / 工程执行编排准入结论。直接工程任务从已确认的用户与项目事实核对同等输入，不因缺少协调 Skill 或交接卡而阻塞。进入本文件时，只保留工程侧最小链路：
 
 ```text
 AI Native 交接结论
@@ -272,7 +272,7 @@ Wave 规则：
 
 ## 8. GSD 与工程执行双层协议
 
-端到端 GSD / 工程执行准入、GSD Round 0 缺口、Wave/Atomic Task 候选和 Plan Grant / Execution Grant 缺口先由 `wise-agent/references/planning-execution-admission.md` 输出。本节只说明资深架构师拿到准入包后，如何把工程侧大项目编排和受控工程执行 Loop 组合起来。
+端到端 GSD / 工程执行准入、GSD Round 0 缺口、Wave/Atomic Task 候选和 Plan Grant / Execution Grant 缺口按 `SKILL.md` 工作原则从已确认事实核对；显式调用 `wise-agent` 时可消费其准入包。本节说明工程任务契约齐备后，如何把工程侧大项目编排和受控工程执行 Loop 组合起来。
 
 GSD-like 编排管大盘，受控工程执行 Loop 跑单元。大项目编排负责定义“哪些任务可以被执行”，工程 profile 负责一个已选任务的连续执行、验证和回写。不得把整个大项目直接交给工程执行 Loop。
 
@@ -319,7 +319,7 @@ GSD Round 0
 
 ## 8A. 消费 AI Native 编排交接结论
 
-当输入来自业务方或产品侧 AI 生成原型、MVP、Product Builder 方案、业务 dogfooding 结果或“放下 PRD”的流程改造时，先确认是否已有 `wise-agent` 或 `产品架构专家` 给出的产品侧交接结论。没有 Hardened Candidate 或产品侧交接条件时，不进入 GSD / 工程执行，只回到产品上下文补齐。
+当输入来自业务方或产品侧 AI 生成原型、MVP、Product Builder 方案、业务 dogfooding 结果或“放下 PRD”的流程改造时，先核对已确认的产品事实，输入可以是产品侧交接结论，也可以是等价的用户与项目事实。只有目标、对象状态、规则、验收或风险责任等实质输入缺失时，才停止依赖该缺口的 GSD / 工程执行动作；不以未调用 `wise-agent` 或缺少命名卡片为由阻塞。
 
 进入 GSD Round 0 时，本文件只消费以下工程输入：
 
@@ -341,7 +341,7 @@ GSD Round 0
 
 - 业务方能跑通 MVP，就直接进入工程执行 Loop 改代码。
 - 产品侧只给页面和按钮，没有对象、状态、规则、验收和风险 owner。
-- 架构师绕过 `wise-agent` 和产品侧交接结论，直接按原型补接口和表结构。
+- 架构师绕过已确认的产品事实、工程任务契约和必要授权，直接按原型补接口和表结构。
 - 把 PRD、GSD 计划或产品上下文包当成自动提交、联网、部署或生产操作授权。
 
 ## 9. 执行协议

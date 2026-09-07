@@ -75,9 +75,9 @@ description: 用户明确要求使用华夏经世智慧、老祖宗智慧或经�
 
 - 产品语义和业务架构由 `product-architecture-expert` 主责，本 Skill 只补取舍、时势和反偏问题。
 - 系分、代码、CR、测试和生产变更由 `senior-software-architect` 主责，本 Skill 不输出工程准出结论。
-- 正式报告按需交给 `document-authoring`，不得把文化化推理过程写入正式交付文档。
+- 正式报告由当前 Agent 使用可用文档能力整理；`document-authoring` 仅在准入通过、运行时可用且符合调用策略时协同，不得把文化化推理过程写入正式交付文档。
 - 小说故事语义和正文由 `novelist` 主责；本 Skill 只返回叙事校准卡，不成为第二作者或正典 Owner。
-- 跨专业、跨阶段、跨轮任务由 `wise-agent` 持有目标、状态和最终交付责任。
+- 跨专业、跨阶段、跨轮任务仍由当前 Agent 持有目标、状态和最终交付责任；`wise-agent` 仅按 `AGENTS.md` 的显式调用条件加载。
 
 ## 红线
 

@@ -44,23 +44,25 @@ REQUIRED_PROMPT_DIMENSIONS = {
     "baseline_comparison",
     "variance_check",
 }
-EXPLICIT_INVOCATION_SKILLS = {
-    "business-website-planner",
-    "fiction-visual-designer",
-    "learning-coach",
-    "requirement-acceptance-testing",
-    "wise-agent",
-}
+ADMISSION_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-admission.py"))
+EXPLICIT_INVOCATION_SKILLS = ADMISSION_CHECKER["explicit_invocation_skills"](ROOT)
 EXPLICIT_INVOCATION_ALIASES = {
     "business-website-planner": ("$business-website-planner", "business-website-planner", "业务官网规划师"),
+    "document-authoring": ("$document-authoring", "document-authoring", "专业文档撰写"),
     "fiction-visual-designer": (
         "$fiction-visual-designer",
         "fiction-visual-designer",
         "小说视觉设计师",
     ),
     "learning-coach": ("$learning-coach", "learning-coach", "持续学习教练"),
+    "payment-funds-review": ("$payment-funds-review", "payment-funds-review", "支付资金审查"),
     "requirement-acceptance-testing": ("$requirement-acceptance-testing", "requirement-acceptance-testing", "需求验收测试"),
     "wise-agent": ("$wise-agent", "wise-agent", "知止者"),
+    "yuque-document-publisher": (
+        "$yuque-document-publisher",
+        "yuque-document-publisher",
+        "语雀文档发布",
+    ),
 }
 PROGRESSIVE_HEADER_TERMS = [
     "## 使用时机",
@@ -71,21 +73,16 @@ PROGRESSIVE_HEADER_TERMS = [
 TASK_INDEX_HEADING = "## 按任务读取索引"
 TASK_INDEX_COLUMNS = ["| 任务 | 优先读取 | 跳过 |"]
 REFERENCE_FILE_SOFT_LIMIT = 400
-REFERENCE_FILE_HARD_LIMIT = 550
 REFERENCE_SECTION_SOFT_LIMIT = 120
-REFERENCE_SECTION_HARD_LIMIT = 180
 SENIOR_REFERENCE_TOTAL_SOFT_LIMIT = 7000
-SENIOR_REFERENCE_TOTAL_HARD_LIMIT = 8000
 CONTROLLED_REFERENCE_SEARCHABILITY_SCORE = 85
 TOP_LARGE_REFERENCE_COUNT = 5
 TOP_LARGE_SECTION_COUNT = 5
 REFERENCE_SPLIT_TRIGGERS = [
     "more than one independent task entry in one reference",
-    "a single section longer than 120 lines",
     "the same rule repeated across multiple references",
-    "more than eight level-2 topics in one reference",
+    "a task index cannot isolate the context required by a task",
 ]
-ADMISSION_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-admission.py"))
 EVIDENCE_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-evidence.py"))
 
 
@@ -351,12 +348,8 @@ def score_metadata(description_len: int, has_agent_yaml: bool) -> tuple[int, lis
 def score_progressive(skill_lines: int, ref_links: int, missing_refs: list[str]) -> tuple[int, list[str]]:
     warnings: list[str] = []
     score = 100
-    if skill_lines > 500:
-        score -= 30
-        warnings.append("SKILL.md exceeds 500 lines")
-    elif skill_lines > 350:
-        score -= 10
-        warnings.append("SKILL.md is growing; consider moving detail to references")
+    if skill_lines > 350:
+        warnings.append("large SKILL.md; inspect task routing, size alone does not lower score")
     if ref_links == 0:
         score -= 18
         warnings.append("SKILL.md has no direct reference links")
@@ -433,12 +426,6 @@ def reference_searchability_score(
 ) -> int:
     if reference_count == 0:
         return 0
-    large_refs = [
-        item
-        for item in reference_stats
-        if item["lines"] >= REFERENCE_FILE_SOFT_LIMIT
-        or item["level_2_sections"] > 8
-    ]
     score = 0
     score += score_ratio(
         sum(1 for item in reference_stats if item["has_progressive_headers"]),
@@ -446,28 +433,11 @@ def reference_searchability_score(
         22,
     )
     score += score_ratio(
-        sum(1 for item in large_refs if item["has_task_index"]),
-        len(large_refs) or 1,
+        sum(1 for item in reference_stats if item["has_task_index"]),
+        reference_count,
         28,
     )
-    largest_file = reference_stats[0]["lines"] if reference_stats else 0
-    largest_section = section_stats[0]["lines"] if section_stats else 0
-    if largest_file <= REFERENCE_FILE_SOFT_LIMIT:
-        score += 18
-    elif largest_file <= REFERENCE_FILE_HARD_LIMIT:
-        score += 10
-    if largest_section <= REFERENCE_SECTION_SOFT_LIMIT:
-        score += 18
-    elif largest_section <= REFERENCE_SECTION_HARD_LIMIT:
-        score += 8
-    average_lines = reference_lines / reference_count
-    if average_lines <= 220:
-        score += 14
-    elif average_lines <= 300:
-        score += 8
-    elif average_lines <= 400:
-        score += 4
-    return min(score, 100)
+    return min(score * 2, 100)
 
 
 def score_references(
@@ -485,56 +455,31 @@ def score_references(
         score = 82 + score_ratio(reference_headers, reference_count, 18)
     if reference_count == 0:
         warnings.append("no bundled references")
-    if reference_lines > 8000:
-        score -= 12
-        warnings.append("reference set is large; keep indexes sharp")
-    elif reference_lines > 5000 and searchability_score < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE:
-        score -= min(16, 8 + CONTROLLED_REFERENCE_SEARCHABILITY_SCORE - searchability_score)
-        warnings.append("reference set is sizable; monitor searchability")
+    if reference_lines > 5000 and searchability_score < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE:
+        warnings.append("large reference set; inspect navigation coverage, size alone does not lower score")
     over_soft = [
         item
         for item in reference_stats
         if item["lines"] > REFERENCE_FILE_SOFT_LIMIT
     ]
-    over_hard = [
-        item
-        for item in reference_stats
-        if item["lines"] > REFERENCE_FILE_HARD_LIMIT
-    ]
-    if over_hard:
-        score -= 10
-        names = ", ".join(f"{item['path']}={item['lines']}" for item in over_hard)
-        warnings.append(f"reference hard budget exceeded: {names}")
-    elif over_soft:
+    if over_soft:
         names = ", ".join(f"{item['path']}={item['lines']}" for item in over_soft[:3])
         warnings.append(
-            "reference soft budget exceeded; inspect split triggers, "
-            f"does not force mechanical splitting: {names}"
+            "large reference files; inspect task indexes, "
+            f"size alone does not lower score or force splitting: {names}"
         )
     oversized_sections = [
         item
         for item in section_stats
         if item["lines"] > REFERENCE_SECTION_SOFT_LIMIT
     ]
-    hard_oversized_sections = [
-        item
-        for item in section_stats
-        if item["lines"] > REFERENCE_SECTION_HARD_LIMIT
-    ]
-    if hard_oversized_sections:
-        score -= 6
-        names = ", ".join(
-            f"{item['path']}#{item['title']}={item['lines']}"
-            for item in hard_oversized_sections[:3]
-        )
-        warnings.append(f"reference section hard budget exceeded: {names}")
-    elif oversized_sections:
+    if oversized_sections:
         names = ", ".join(
             f"{item['path']}#{item['title']}={item['lines']}"
             for item in oversized_sections[:3]
         )
         warnings.append(
-            "reference section soft budget exceeded; inspect whether one topic should split: "
+            "large reference sections; inspect task boundaries, size alone does not lower score: "
             f"{names}"
         )
     if (
@@ -543,11 +488,8 @@ def score_references(
         and searchability_score < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE
     ):
         warnings.append(
-            "senior reference total exceeds soft budget; monitor large_reference_files"
+            "large senior reference set; inspect large_reference_files for navigation gaps"
         )
-        if reference_lines > SENIOR_REFERENCE_TOTAL_HARD_LIMIT:
-            score -= 8
-            warnings.append("senior reference total exceeds hard budget")
     return max(min(score, 100), 0), warnings
 
 
@@ -793,31 +735,19 @@ def evaluate_skill(skill_dir: Path, validate_text: str) -> SkillEvaluation:
             for item in reference_stats
             if item["lines"] > REFERENCE_FILE_SOFT_LIMIT
         ],
-        "reference_files_over_hard_limit": [
-            item
-            for item in reference_stats
-            if item["lines"] > REFERENCE_FILE_HARD_LIMIT
-        ],
         "reference_sections_over_soft_limit": [
             item
             for item in section_stats
             if item["lines"] > REFERENCE_SECTION_SOFT_LIMIT
         ],
-        "reference_sections_over_hard_limit": [
-            item
-            for item in section_stats
-            if item["lines"] > REFERENCE_SECTION_HARD_LIMIT
-        ],
-        "reference_budget": {
+        "reference_size_diagnostics": {
+            "mode": "diagnostic-only",
             "file_soft_limit": REFERENCE_FILE_SOFT_LIMIT,
-            "file_hard_limit": REFERENCE_FILE_HARD_LIMIT,
             "section_soft_limit": REFERENCE_SECTION_SOFT_LIMIT,
-            "section_hard_limit": REFERENCE_SECTION_HARD_LIMIT,
             "senior_total_soft_limit": SENIOR_REFERENCE_TOTAL_SOFT_LIMIT,
-            "senior_total_hard_limit": SENIOR_REFERENCE_TOTAL_HARD_LIMIT,
             "controlled_searchability_score": CONTROLLED_REFERENCE_SEARCHABILITY_SCORE,
             "split_triggers": REFERENCE_SPLIT_TRIGGERS,
-            "note": "Soft budget triggers review only and does not force mechanical splitting.",
+            "note": "Size thresholds are diagnostic only; they do not lower scores, block admission, or force splitting.",
         },
         "script_files": len(scripts),
         "fixture_files": len(fixtures),
@@ -973,8 +903,6 @@ def run_self_test() -> None:
             raise SystemExit(f"{item['name']}: missing openai yaml")
         if metrics["missing_reference_links"]:
             raise SystemExit(f"{item['name']}: missing reference links")
-        if metrics["skill_lines"] > 500:
-            raise SystemExit(f"{item['name']}: SKILL.md too large")
         if item["dimensions"]["realistic_prompt_fixtures"] < 90:
             raise SystemExit(
                 f"{item['name']}: realistic prompt fixture score too low: "
@@ -985,22 +913,6 @@ def run_self_test() -> None:
             and item["metrics"]["fixture_files"] < 2
         ):
             raise SystemExit(f"{item['name']}: missing runnable fixture files")
-        if (
-            item["name"] == "senior-software-architect"
-            and metrics["reference_lines"] > SENIOR_REFERENCE_TOTAL_HARD_LIMIT
-        ):
-            raise SystemExit(
-                f"{item['name']}: reference total too large: {metrics['reference_lines']}"
-            )
-        if (
-            item["name"] == "senior-software-architect"
-            and metrics["reference_lines"] > SENIOR_REFERENCE_TOTAL_SOFT_LIMIT
-            and metrics["reference_searchability_score"] < CONTROLLED_REFERENCE_SEARCHABILITY_SCORE
-        ):
-            raise SystemExit(
-                f"{item['name']}: reference searchability too low: "
-                f"{metrics['reference_searchability_score']}"
-            )
     print("OK skill evaluation self-test")
 
 

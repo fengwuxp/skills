@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate repository Skill admission metadata.
 
-Input: optional top-level skill directory, SKILL.md, admission.json, and candidate agents/openai.yaml.
+Input: optional top-level skill directory, SKILL.md, admission.json, and agents/openai.yaml.
 Output: validation failures or the declared status.
 Writes/network: normal checks write nothing and never use network; self-test writes only to a temporary directory. Missing admission.json is rejected.
 """
@@ -39,6 +39,30 @@ def read_metadata(skill_dir: Path) -> tuple[dict[str, Any], list[str]]:
     if not isinstance(data, dict):
         return {}, [f"{path}: root must be an object"]
     return data, []
+
+
+def explicit_invocation_skills(repository_root: Path = ROOT) -> set[str]:
+    explicit_skills: set[str] = set()
+    for entrypoint in sorted(repository_root.glob("*/SKILL.md")):
+        skill_dir = entrypoint.parent
+        metadata, failures = read_metadata(skill_dir)
+        if failures:
+            raise ValueError("; ".join(failures))
+        if metadata.get("status") not in STATUSES:
+            raise ValueError(f"{skill_dir / 'admission.json'}: invalid admission status")
+        if metadata["status"] == "candidate":
+            explicit_skills.add(skill_dir.name)
+            continue
+        agent_path = skill_dir / "agents" / "openai.yaml"
+        try:
+            implicit_values = IMPLICIT_INVOCATION.findall(agent_path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            raise ValueError(f"{agent_path}: cannot read invocation policy: {exc}") from exc
+        if implicit_values not in (["true"], ["false"]):
+            raise ValueError(f"{agent_path}: invocation policy must declare one boolean value")
+        if implicit_values == ["false"]:
+            explicit_skills.add(skill_dir.name)
+    return explicit_skills
 
 
 def audit_skill(skill_dir: Path) -> tuple[str, list[str]]:

@@ -7,7 +7,7 @@
 - 用户要求从 AI 原型、业务 dogfooding、MVP、Product Builder 工作方式或“放下 PRD”输入中提炼产品侧上下文、验收种子和工程交接条件。
 - 用户已有原型、低代码页面、AI 生成 Demo、MVP、页面截图、HTML 或业务操作流程，希望进入可评审产品方案、PRD、系统设计或 CAD。
 - 业务方、产品、运营或老板已能用 AI 快速做出候选方案，但需要判断哪些内容值得进入工程化。
-- 产品方案要交给 `wise-agent` 编排或 `资深架构师` 承接，需要先说明产品侧哪些事实已确认、哪些仍是假设。
+- 产品方案进入端到端编排或由 `资深架构师` 承接前，需要先说明产品侧哪些事实已确认、哪些仍是假设；编排默认由当前 Agent 负责，用户显式调用时再使用 `wise-agent`。
 
 ## 不适用场景
 
@@ -42,7 +42,7 @@
 | MVP / 原型进入工程 harden | 3、4、5、6，并读 `product-architecture-methodology.md` 的技术交接 | 不把可运行等同于可上线 |
 | Product Builder 工作方式评估 | 1、2、7 | 不用岗位判断替代业务 owner 和结果责任 |
 | 从 AI Native 上下文包生成 PRD | 3、5，并继续读 PRD reference | 不让 PRD 只描述页面控件 |
-| 交给 AI Native 编排或架构师 | 6，由 `wise-agent` 判断 GSD / 工程执行准入，再让架构师读 `product-design.md` 和 `ai-large-project-orchestration.md` | 不把产品上下文包当 Execution Grant |
+| 交给 AI Native 编排或架构师 | 6，由当前 Agent 判断 GSD / 工程执行准入；用户显式调用时可使用 `wise-agent`，再让架构师读 `product-design.md` 和 `ai-large-project-orchestration.md` | 不把产品上下文包当 Execution Grant |
 | 输出 Product Context Card | 3、6 | 不生成 Engineering Handoff Card、生产交付卡或 Execution Grant |
 | 评审 AI 生成方案噪声 | 2、4、7 | 不把所有 Demo 都沉淀为需求 |
 
@@ -206,7 +206,7 @@ PRD 章节必须能回指上下文包：
 
 产品侧上下文包只回答“这个产品候选是否值得工程化、工程化时必须保持哪些业务事实”。它不是端到端流程设计，不是系统设计，不是 Harness Plan，也不是 Execution Grant。
 
-交给 `wise-agent` 编排或 `资深架构师` 承接前至少输出：
+进入端到端编排或由 `资深架构师` 承接前至少输出；用户显式调用时可由 `wise-agent` 编排：
 
 | 交接项 | 产品侧必须给出 | 架构侧继续处理 |
 | --- | --- | --- |
@@ -217,7 +217,7 @@ PRD 章节必须能回指上下文包：
 | 风险与确认 | 资金、合规、隐私、安全、外部规则确认方 | 生产门禁、发布回滚、审计、安全架构 |
 | MVP 证据 | 原型/MVP 观察、已知限制、不可复用实现 | AI Native 编排输入、GSD 任务包输入、工程执行 Loop 候选判断 |
 
-GSD / 工程执行准入结论由 `wise-agent` 编排，并由架构师在系统设计、OpenSpec、Harness Plan、验证矩阵和 Execution Grant 中确认。产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant；产品侧不得把“业务方能跑通 MVP”解释为“可以自动编码上线”。
+GSD / 工程执行准入结论由当前 Agent 编排；用户显式调用时可使用 `wise-agent`，并由架构师在系统设计、OpenSpec、Harness Plan、验证矩阵和 Execution Grant 中确认。产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant；产品侧不得把“业务方能跑通 MVP”解释为“可以自动编码上线”。
 
 ## 6A. AI Native 调用产品专家的细化能力
 

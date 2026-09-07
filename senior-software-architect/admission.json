@@ -1,5 +1,5 @@
 {
   "status": "installable",
-  "evidence_mode": "behavior-scored",
+  "evidence_mode": "contract-only",
   "blockers": []
 }

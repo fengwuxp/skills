@@ -296,11 +296,11 @@ flowchart LR
         1,
     ).replace(
         "## 四、概要设计",
-        """#### 核心概念与业务口径（本期投影）
+        """#### 核心概念与业务口径
 
-| 概念 | 类型 | 本 PRD 中的定义 | 边界 / 不等于 | 状态 | Owner / 权威来源 |
-| --- | --- | --- | --- | --- | --- |
-| `OrganizationDirectoryConnection` | 技术机制 | 外部目录连接。 | 不等于审核任务。 | 当前 | 审核产品负责人 / 本 PRD。 |
+| 概念 | 类型 | 统一定义 | 边界 / 不等于 |
+| --- | --- | --- | --- |
+| `OrganizationDirectoryConnection` | 技术机制 | 外部目录连接。 | 不等于审核任务。 |
 
 ## 四、概要设计""",
         1,
@@ -309,6 +309,52 @@ flowchart LR
         "prd", non_goal_current_concept_prd
     ):
         failures.append("current concept explicitly excluded by non-goal was not warned")
+
+    historical_non_example_prd = non_goal_current_concept_prd.replace(
+        "不等于审核任务。", "不等于历史证据。", 1
+    )
+    if "non_goal_current_concept_conflict" not in warning_groups(
+        "prd", historical_non_example_prd
+    ):
+        failures.append("historical non-example incorrectly hid an active concept conflict")
+
+    deprecated_concept_prd = non_goal_current_concept_prd.replace(
+        "不等于审核任务。", "已废弃，仅用于迁移。", 1
+    )
+    if "non_goal_current_concept_conflict" in warning_groups(
+        "prd", deprecated_concept_prd
+    ):
+        failures.append("deprecated migration-only concept was treated as current")
+
+    boundary_mentions_retired_concept = non_goal_current_concept_prd.replace(
+        "不等于审核任务。",
+        "不等于已废弃缓存。",
+        1,
+    )
+    if "non_goal_current_concept_conflict" not in warning_groups(
+        "prd", boundary_mentions_retired_concept
+    ):
+        failures.append(
+            "current concept was ignored when its boundary mentioned a retired concept"
+        )
+
+    legacy_retired_concept = non_goal_current_concept_prd.replace(
+        "| 概念 | 类型 | 统一定义 | 边界 / 不等于 |",
+        "| 概念 | 类型 | 统一定义 | 边界 / 不等于 | 状态 |",
+        1,
+    ).replace(
+        "| --- | --- | --- | --- |",
+        "| --- | --- | --- | --- | --- |",
+        1,
+    ).replace(
+        "| `OrganizationDirectoryConnection` | 技术机制 | 外部目录连接。 | 不等于审核任务。 |",
+        "| `OrganizationDirectoryConnection` | 技术机制 | 外部目录连接。 | 不等于审核任务。 | 废弃 |",
+        1,
+    )
+    if "non_goal_current_concept_conflict" in warning_groups(
+        "prd", legacy_retired_concept
+    ):
+        failures.append("legacy retired concept was treated as a current concept")
 
     api_product_goal_prd = current_prd.replace(
         "目标：缩短审核处理时间；非目标：不改结算规则。",

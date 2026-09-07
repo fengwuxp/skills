@@ -2803,7 +2803,7 @@
     {
       "id": "payment-funds-review-should-block-idempotency-conflict",
       "skill": "payment-funds-review",
-      "query": "同一个 ledgerTransactionSn 第二次提交时交易头、金额和借贷账户不变，但 posting facts 的余额约束发生变化。请基于原始请求、分录和余额快照独立判断这是不是幂等冲突，以及失败后哪些事实必须保持不变。",
+      "query": "使用 $payment-funds-review 作候选定向评估：同一个 ledgerTransactionSn 第二次提交时交易头、金额和借贷账户不变，但 posting facts 的余额约束发生变化。请基于原始请求、分录和余额快照独立判断这是不是幂等冲突，以及失败后哪些事实必须保持不变。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -2812,7 +2812,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "由 payment-funds-review 作为独立 Checker 读取原始请求、posting/entry 和余额证据，裁决 BLOCK；稳定摘要必须包含 posting facts，同一身份下事实变化属于幂等冲突；拒绝第二次请求且交易、route、posting、entry、余额投影和审计事实不得新增或变化；不接管源码修复，不把本地证据外推为生产并发安全。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；由 payment-funds-review 作为独立 Checker 读取原始请求、posting/entry 和余额证据，裁决 BLOCK；稳定摘要必须包含 posting facts，同一身份下事实变化属于幂等冲突；拒绝第二次请求且交易、route、posting、entry、余额投影和审计事实不得新增或变化；不接管源码修复，不把本地证据外推为生产并发安全。"
     },
     {
       "id": "payment-funds-review-should-verify-failure-side-effects",
@@ -2827,7 +2827,7 @@
         "efficiency_metrics",
         "variance_check"
       ],
-      "expected_handling": "作为独立 Checker 输出 BLOCK，要求读取原交易、历史 route snapshot、当前动作和失败前后事实快照；不得按当前绑定重算，不得新增交易、route、posting、entry、余额投影或审计成功事实；只有返回失败的测试不足以证明失败无副作用，实现与测试缺口交还 senior-software-architect。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；作为独立 Checker 输出 BLOCK，要求读取原交易、历史 route snapshot、当前动作和失败前后事实快照；不得按当前绑定重算，不得新增交易、route、posting、entry、余额投影或审计成功事实；只有返回失败的测试不足以证明失败无副作用，实现与测试缺口交还 senior-software-architect。"
     },
     {
       "id": "payment-funds-review-negative-code-fix",
@@ -3894,7 +3894,7 @@
     {
       "id": "document-authoring-should-formalize-report",
       "skill": "document-authoring",
-      "query": "请把会议记录、调研结论和验证数据整理成一份给管理层评审的正式报告，保留事实来源、待确认负责人和下一步行动，不要补造背景。",
+      "query": "使用 $document-authoring 作候选定向评估：请把会议记录、调研结论和验证数据整理成一份给管理层评审的正式报告，保留事实来源、待确认负责人和下一步行动，不要补造背景。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -3904,12 +3904,12 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入专业文档撰写路径；先建立文档契约，确认目标读者、用途、范围、事实源、文档状态、输出载体、owner 和验收；区分事实、推断、待确认和范围外不做，按管理层阅读顺序组织结论、依据、行动、风险和验证；所有正式文档都不添加背景色或底纹，只对重要描述或概念名词加粗；待确认项必须带 owner 和影响，不补造背景，不把结构检查通过写成事实正确或正式批准。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；进入专业文档撰写路径；先建立文档契约，确认目标读者、用途、范围、事实源、文档状态、输出载体、owner 和验收；区分事实、推断、待确认和范围外不做，按管理层阅读顺序组织结论、依据、行动、风险和验证；所有正式文档都不添加背景色或底纹，只对重要描述或概念名词加粗；待确认项必须带 owner 和影响，不补造背景，不把结构检查通过写成事实正确或正式批准。"
     },
     {
       "id": "document-authoring-should-distinguish-chinese-document-genres",
       "skill": "document-authoring",
-      "query": "同一批材料：客服投诉本月增加 32%，主要集中在退款到账慢；抽样 80 单发现 51 单超过承诺时限；原因尚未完成专业确认。请分别整理成一份给管理层决策的中文专题简报，以及一份供研究人员复核的中文研究说明。两份都只给结构和开头两段，不补造原因。",
+      "query": "使用 $document-authoring 作候选定向评估：同一批材料：客服投诉本月增加 32%，主要集中在退款到账慢；抽样 80 单发现 51 单超过承诺时限；原因尚未完成专业确认。请分别整理成一份给管理层决策的中文专题简报，以及一份供研究人员复核的中文研究说明。两份都只给结构和开头两段，不补造原因。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -3918,17 +3918,17 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "由 document-authoring 在同一事实源上分别确认文种与效力、读者关系、阅读后动作、证据要求和语体。管理层专题简报以关键事实、风险状态、决策请求和行动责任优先，压缩样本细节但保留外推边界；研究说明先界定研究问题、范围、材料、统计口径和样本局限，再展开事实、推断、异议与阶段性结论。两份文档共享事实，不共享固定开头顺序或同一种机关腔；原因未确认时均保持待确认，但分别说明对管理决策和研究结论的影响，不补造原因或因果。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；由 document-authoring 在同一事实源上分别确认文种与效力、读者关系、阅读后动作、证据要求和语体。管理层专题简报以关键事实、风险状态、决策请求和行动责任优先，压缩样本细节但保留外推边界；研究说明先界定研究问题、范围、材料、统计口径和样本局限，再展开事实、推断、异议与阶段性结论。两份文档共享事实，不共享固定开头顺序或同一种机关腔；原因未确认时均保持待确认，但分别说明对管理决策和研究结论的影响，不补造原因或因果。"
     },
     {
       "id": "document-authoring-should-design-professional-training-scenario",
       "skill": "document-authoring",
-      "query": "支付对象、状态、异常和证据口径已经由支付专家确认。请把这些材料整理成面向产品、研发和运营的中文培训包，包含渐进学习路径、桌面推演、事件卡、讲师提示和参考答案；不能只做摘要加选择题。",
+      "query": "使用 $document-authoring 作候选定向评估：支付对象、状态、异常和证据口径已经由支付专家确认。请把这些材料整理成面向产品、研发和运营的中文培训包，包含渐进学习路径、桌面推演、事件卡、讲师提示和参考答案；不能只做摘要加选择题。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "由 document-authoring 持有培训文档工程，先确认目标读者、训练后的可观察行为、已稳定领域事实、训练环境、验收 owner 和载体；按阅读/诊断、桌面推演、sandbox 或仿真、历史案例、受控真实任务组织渐进路径。场景数据必须虚构或脱敏，领域结论只保留权威指针或经 Owner 确认的脱敏最小结论，不粘贴未脱敏原始材料；角色私有信息按任务最小披露，学员版不含角色外信息、讲师提示或答案，并与讲师版设置独立载体或访问边界。未经明确授权不得触发真实资金、生产写入、密钥操作或不可逆动作。情景至少包含目标、角色、前置事实、角色私有信息、未知项、对象/状态、事件卡、交付物、红线、停止条件和检查点；讲师提示说明何时发事件、观察什么和何时停止，参考答案给判断依据、证据和可接受分支，不把唯一措辞当唯一正确答案。领域结论仍由 payment-expert 复核，文档检查不替代训练行为证据。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；由 document-authoring 持有培训文档工程，先确认目标读者、训练后的可观察行为、已稳定领域事实、训练环境、验收 owner 和载体；按阅读/诊断、桌面推演、sandbox 或仿真、历史案例、受控真实任务组织渐进路径。场景数据必须虚构或脱敏，领域结论只保留权威指针或经 Owner 确认的脱敏最小结论，不粘贴未脱敏原始材料；角色私有信息按任务最小披露，学员版不含角色外信息、讲师提示或答案，并与讲师版设置独立载体或访问边界。未经明确授权不得触发真实资金、生产写入、密钥操作或不可逆动作。情景至少包含目标、角色、前置事实、角色私有信息、未知项、对象/状态、事件卡、交付物、红线、停止条件和检查点；讲师提示说明何时发事件、观察什么和何时停止，参考答案给判断依据、证据和可接受分支，不把唯一措辞当唯一正确答案。领域结论仍由 payment-expert 复核，文档检查不替代训练行为证据。"
     },
     {
       "id": "document-authoring-negative-invent-payment-training-facts",
@@ -3944,7 +3944,7 @@
     {
       "id": "document-authoring-should-trigger-visual-explainer",
       "skill": "document-authoring",
-      "query": "MCP 的定义、能力边界和来源已经由技术 Owner 确认。请整理成一页给不懂开发的采购经理看的视觉预习页，让他能够解释 MCP 解决什么问题、USB-C 类比哪里成立和哪里失效，并完成一个近迁移判断。",
+      "query": "使用 $document-authoring 作候选定向评估：MCP 的定义、能力边界和来源已经由技术 Owner 确认。请整理成一页给不懂开发的采购经理看的视觉预习页，让他能够解释 MCP 解决什么问题、USB-C 类比哪里成立和哪里失效，并完成一个近迁移判断。",
       "should_trigger": true,
       "difficulty": "realistic",
       "hard_negative": false,
@@ -3954,7 +3954,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 document-authoring 的通俗视觉讲解路径，读取 plain-language-and-visual-explanation.md；以采购经理的前置知识、实际问题和阅读后动作建立讲解契约，在技术 Owner 已确认事实内完成一句正名、主关系图和渐进信息区块。USB-C 只作为辅助类比，明确目标概念关系、对应关系和失效点，不以类比替代定义；视觉必须表达关系而非只放大 emoji。最后提供复述或近迁移任务，并区分事实保真、目标读者理解、视觉语义和真实载体检查。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；进入 document-authoring 的通俗视觉讲解路径，读取 plain-language-and-visual-explanation.md；以采购经理的前置知识、实际问题和阅读后动作建立讲解契约，在技术 Owner 已确认事实内完成一句正名、主关系图和渐进信息区块。USB-C 只作为辅助类比，明确目标概念关系、对应关系和失效点，不以类比替代定义；视觉必须表达关系而非只放大 emoji。最后提供复述或近迁移任务，并区分事实保真、目标读者理解、视觉语义和真实载体检查。"
     },
     {
       "id": "document-authoring-negative-direct-short-explanation",
@@ -3983,12 +3983,12 @@
         "efficiency_metrics",
         "variance_check"
       ],
-      "expected_handling": "进入合并和最终版收口路径；先选择权威版本，列出冲突、影响和确认 owner，未经确认不静默覆盖；保留来源、版本和关键结论追踪，正文只保留最终规则、例外、流程、记录和复审要求；调用环境可用的文档能力生成 DOCX，不添加背景色或底纹，只对重要描述或概念名词加粗；逐页检查文件可打开、目录、分页、表格溢出、字体和文本截断，无法渲染时明确未完成视觉验收。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；进入合并和最终版收口路径；先选择权威版本，列出冲突、影响和确认 owner，未经确认不静默覆盖；保留来源、版本和关键结论追踪，正文只保留最终规则、例外、流程、记录和复审要求；调用环境可用的文档能力生成 DOCX，不添加背景色或底纹，只对重要描述或概念名词加粗；逐页检查文件可打开、目录、分页、表格溢出、字体和文本截断，无法渲染时明确未完成视觉验收。"
     },
     {
       "id": "document-authoring-should-separate-fiction-audiences",
       "skill": "document-authoring",
-      "query": "小说设定已经由作者确认：摆渡人真实身份是二十年前沉船事故的旧船长；特殊绳结和北岸禁行是身份伏笔，第十二章才揭晓。请把同一材料分别整理成作者侧正典设定档案、无剧透的读者人物附录，并给出出版编辑用的完整故事梗概。不要新增剧情。",
+      "query": "使用 $document-authoring 作候选定向评估：小说设定已经由作者确认：摆渡人真实身份是二十年前沉船事故的旧船长；特殊绳结和北岸禁行是身份伏笔，第十二章才揭晓。请把同一材料分别整理成作者侧正典设定档案、无剧透的读者人物附录，并给出出版编辑用的完整故事梗概。不要新增剧情。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -3997,7 +3997,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "由 novelist 保持故事语义主责，document-authoring 只治理创作文档。作者侧正典档案标明已确认正典、完整剧透、身份事实、伏笔和第十二章揭晓边界；读者人物附录按阅读进度只呈现读者所知，不公开旧船长身份、沉船事故、伏笔性质或揭晓安排；出版编辑用梗概允许完整剧透，但现有材料不足以形成全书完整梗概时，只交付已确认的身份悬念线并列出缺口，不补写沉船经过、主要冲突或结局。三份产物分别标明作者侧、读者侧、编辑侧、剧透等级、正典状态、行文功能和格式，不因共用材料而写成相同内容。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；由 novelist 保持故事语义主责，document-authoring 只治理创作文档。作者侧正典档案标明已确认正典、完整剧透、身份事实、伏笔和第十二章揭晓边界；读者人物附录按阅读进度只呈现读者所知，不公开旧船长身份、沉船事故、伏笔性质或揭晓安排；出版编辑用梗概允许完整剧透，但现有材料不足以形成全书完整梗概时，只交付已确认的身份悬念线并列出缺口，不补写沉船经过、主要冲突或结局。三份产物分别标明作者侧、读者侧、编辑侧、剧透等级、正典状态、行文功能和格式，不因共用材料而写成相同内容。"
     },
     {
       "id": "document-authoring-should-route-prd",
@@ -5426,7 +5426,7 @@
     {
       "id": "novelist-should-not-own-fiction-project-docs",
       "skill": "novelist",
-      "query": "故事设定已经由作者确认，请把分散的人物档案、时间线、世界规则和决策记录整理成一套职责单一、相互引用的创作设定集；不要续写剧情，也不要改变设定状态。",
+      "query": "使用 $document-authoring 作候选定向评估：故事设定已经由作者确认，请把分散的人物档案、时间线、世界规则和决策记录整理成一套职责单一、相互引用的创作设定集；不要续写剧情，也不要改变设定状态。",
       "should_trigger": false,
       "preferred_skill": "document-authoring",
       "difficulty": "hard_negative",
@@ -5436,7 +5436,7 @@
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "故事语义已经由作者确认，任务只治理设定集的权威、职责、引用和版本；应由 document-authoring 主责，novelist 仅做故事语义复核。"
+      "negative_reason": "仅作用户显式点名的候选定向评估，不表示安装或生产准入；故事语义已经由作者确认，任务只治理设定集的权威、职责、引用和版本；应由 document-authoring 主责，novelist 仅做故事语义复核。"
     },
     {
       "id": "hanzi-philology-should-support-fiction-term-evidence",
@@ -5455,7 +5455,7 @@
     {
       "id": "document-authoring-should-govern-fiction-project-docs",
       "skill": "document-authoring",
-      "query": "故事设定已经由作者确认，请把分散的人物档案、时间线、世界规则和决策记录整理成一套职责单一、相互引用的创作设定集；不要续写剧情，也不要改变设定状态。",
+      "query": "使用 $document-authoring 作候选定向评估：故事设定已经由作者确认，请把分散的人物档案、时间线、世界规则和决策记录整理成一套职责单一、相互引用的创作设定集；不要续写剧情，也不要改变设定状态。",
       "should_trigger": true,
       "difficulty": "edge",
       "hard_negative": false,
@@ -5464,7 +5464,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "由 document-authoring 负责创作项目文档工程，先确认唯一权威、文档职责、状态词汇、引用关系和验收方式；从作者或 novelist 接收事实时核对授权范围、逐项设定状态与确认证据 / 权威指针，缺失则保持待确认，不写入正典。整理设定集、人物档案、时间线和决策记录，但不新增剧情、不改变作者确认状态，最终由 novelist 做故事语义与连续性复核。"
+      "expected_handling": "仅作候选定向评估，不表示安装或生产准入；由 document-authoring 负责创作项目文档工程，先确认唯一权威、文档职责、状态词汇、引用关系和验收方式；从作者或 novelist 接收事实时核对授权范围、逐项设定状态与确认证据 / 权威指针，缺失则保持待确认，不写入正典。整理设定集、人物档案、时间线和决策记录，但不新增剧情、不改变作者确认状态，最终由 novelist 做故事语义与连续性复核。"
     },
     {
       "id": "document-authoring-should-not-draft-fiction",
@@ -6135,6 +6135,113 @@
         "baseline_comparison"
       ],
       "expected_handling": "触发 fiction-visual-designer 后拒绝制造精度声明；说明生成式概念图不能证明真实正投影、毫米尺寸、公差或开模可用性，继续需要完整工程输入与专业 CAD 或工程制图能力，视觉参考不得冒充生产文件。"
+    },
+    {
+      "id": "document-authoring-negative-unavailable-candidate",
+      "skill": "document-authoring",
+      "query": "请将已经确认的接口说明整理成正式报告，保留字段语义和验证结论；只使用当前可用能力，不安装新能力。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "未显式点名候选 Skill，不能绕过 admission 和调用策略；由当前 Agent 使用可用文档能力整理，保留工程领域复核，格式能力不足时只说明缺口。"
+    },
+    {
+      "id": "payment-funds-review-negative-implicit-candidate",
+      "skill": "payment-funds-review",
+      "query": "幂等语义和资金不变量已经确认，请只读 CR 本地失败无副作用实现与测试，指出源码证据支持的阻塞项；不修改代码，也不作生产准出。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "未显式点名候选审查能力，由 senior-software-architect 在已确认资金契约下进行源码 CR；不能因涉及资金就自动加载未准入的候选 Skill。"
+    },
+    {
+      "id": "wise-agent-negative-unmentioned-cross-stage-engineering",
+      "skill": "wise-agent",
+      "query": "已确认产品对象、接口、写入范围和验收，Owner 已授权本地补丁及聚焦测试。请按接口到实现到验证三阶段推进一个跨模块修复；不提交、不联网，不再重开已确认决策。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "negative_reason": "任务跨度不等于显式调用；当前 Agent 使用工程主能力核对用户与项目事实后推进，不能要求补协调入口或命名交接卡，也不扩大授权。"
+    },
+    {
+      "id": "senior-software-architect-should-own-direct-cross-stage-engineering",
+      "skill": "senior-software-architect",
+      "query": "已确认产品对象、接口、写入范围和验收，Owner 已授权本地补丁及聚焦测试。请按接口到实现到验证三阶段推进一个跨模块修复；不提交、不联网，不再重开已确认决策。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "由当前 Agent 直接装载工程主能力，核对已确认目标、实质输入、写入范围与验证后推进；不因跨模块和跨阶段改派协调 Skill，不重复索要交接卡，缺关键事实时仅停止依赖该缺口的动作。"
+    },
+    {
+      "id": "yuque-document-publisher-should-update-existing-docref",
+      "skill": "yuque-document-publisher",
+      "query": "使用 $yuque-document-publisher，把本地已评审 PRD 更新到我给出的语雀 docRef。正文包含 Mermaid 和一张本地 SVG，请保留 Git 为权威并完成发布后回读。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
+      "expected_handling": "冻结本地路径、版本、SHA-256、目标知识库/docRef、图片范围和授权；生成临时投影并检查 manifest，保留 Mermaid、单独上传 SVG、处理相对链接；核对阅读版与草稿后执行已授权发布，最后回读来源标记、结构、图形、图片和目录，不把语雀反向变成权威。"
+    },
+    {
+      "id": "yuque-document-publisher-should-recover-busy-draft",
+      "skill": "yuque-document-publisher",
+      "query": "使用 $yuque-document-publisher：Markdown 已转换且顶部显示已保存，但点击更新提示 busy。继续发布，不能重复粘贴或丢掉现有草稿。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "等待保存状态；长期 busy 时只重载同一 docRef，核对草稿的 SourceVersion、SHA-256 和核心章节仍为待发布内容；更新按钮恢复后继续。草稿丢失、摘要漂移或版本不明时停止并交文档 Owner，不重复粘贴、不切换目标。"
+    },
+    {
+      "id": "yuque-document-publisher-should-confirm-cloud-deletion-separately",
+      "skill": "yuque-document-publisher",
+      "query": "使用 $yuque-document-publisher 更新正文，并顺便删除疑似重复的旧文档、空分组和历史附件。",
+      "should_trigger": true,
+      "difficulty": "edge",
+      "hard_negative": false,
+      "dimensions": ["trigger_accuracy", "output_quality"],
+      "expected_handling": "正文更新与云端删除分开授权；先解析疑似重复对象、归属和影响，在删除动作前要求明确确认。未获删除授权时仍可完成独立的正文更新与回读，并把云端对象留作待确认。"
+    },
+    {
+      "id": "yuque-document-publisher-negative-product-writing",
+      "skill": "yuque-document-publisher",
+      "query": "用户身份与权限还没有统一定义，请先重写 PRD 的主体、对象、状态、规则和验收；本轮不上传任何平台。",
+      "should_trigger": false,
+      "preferred_skill": "product-architecture-expert",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "baseline_comparison"],
+      "negative_reason": "目标是产品语义与 PRD 设计，不存在语雀上传、同步、更新或发布任务；应由 product-architecture-expert 主责，不触发发布投影或浏览器写入。"
+    },
+    {
+      "id": "yuque-document-publisher-negative-read-only-view",
+      "skill": "yuque-document-publisher",
+      "query": "打开这个语雀链接，只读查看当前正文并概括主要内容；不要上传、同步、更新或发布任何文档。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": ["trigger_accuracy", "efficiency_metrics"],
+      "negative_reason": "任务只需使用当前环境的浏览器能力读取页面，没有本地 Markdown 到语雀的发布动作，不触发 yuque-document-publisher。"
     }
   ]
 }

@@ -200,6 +200,8 @@ python3 -m py_compile product-architecture-expert/scripts/check_prd_readability_
 python3 -m py_compile product-architecture-expert/scripts/test_check_prd_readability_evaluation.py
 python3 -m py_compile product-architecture-expert/scripts/test_check_product_qualification.py
 python3 -m py_compile product-architecture-expert/scripts/verify_fixtures.py
+python3 -m py_compile yuque-document-publisher/scripts/prepare_yuque_projection.py
+python3 -m py_compile yuque-document-publisher/scripts/test_prepare_yuque_projection.py
 python3 -m py_compile requirement-acceptance-testing/scripts/check_requirement_acceptance.py
 python3 -m py_compile requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py
 python3 -m py_compile resource-capability-distiller/scripts/check_capability_candidate.py
@@ -359,6 +361,10 @@ echo "==> requirement acceptance testing"
 run_gate python3 requirement-acceptance-testing/scripts/test_check_requirement_acceptance.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/requirement-acceptance-testing-behavior-cases.json"
 
+echo "==> Yuque document publisher"
+run_gate python3 yuque-document-publisher/scripts/test_prepare_yuque_projection.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/yuque-document-publisher-behavior-cases.json"
+
 echo "==> UI design deliverable checker"
 python3 ui-design-expert/scripts/check_ui_design_deliverable.py --self-test
 python3 ui-design-expert/scripts/test_check_design_draft_review.py
@@ -407,6 +413,7 @@ echo "==> Skill Eval prompt fixtures"
 scripts/audit-skill-eval-fixtures.py --self-test
 
 echo "==> Skill behavior evaluation"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/instruction-boundaries-behavior-cases.json"
 python3 scripts/evaluate-skill-behavior.py --self-test
 python3 scripts/test-evaluate-skill-behavior.py
 

@@ -10,7 +10,7 @@ description: |
 
 本 Skill 把公司真实业务、可公开事实、证明材料、品牌约束和公开参考转化为 Business Website Contract。官网用于清晰说明和辅助佐证业务，不替代合同、发票、资质、交易记录、客户确认、专业审批或监管结论。
 
-本 Skill 只持有官网业务契约，不负责 UI 绘制、Figma 写入、图片生成、代码实现、法律文本定稿或发布准入。跨阶段目标和授权仍由 `wise-agent` 持有。
+本 Skill 只持有官网业务契约，不负责 UI 绘制、Figma 写入、图片生成、代码实现、法律文本定稿或发布准入。跨阶段目标仍由当前 Agent 持有，授权范围仍以用户要求为准；`wise-agent` 仅按 `AGENTS.md` 的显式调用条件加载。
 
 当前为候选能力，仅在用户显式调用时使用；准入状态见 `admission.json`。
 
@@ -40,8 +40,8 @@ description: |
 - **页面、视觉、交互和多屏媒体设计**：交 `ui-design-expert`；Figma 是默认执行载体。
 - **图片生成或编辑**：在 Asset Brief 已确认后交 `imagegen`，生成结果仍需来源、内容和视觉验收。
 - **代码实现**：交 `senior-software-architect`，由工程能力选择框架图片组件和性能策略。
-- **实现验收**：交 `requirement-acceptance-testing` 独立检查业务、内容、交互、视觉与多屏证据。
-- **支付、安全与正式政策**：分别交 `payment-expert`、`security-engineering-expert` 和 `document-authoring`；专业批准保留人类 Owner。
+- **实现验收**：`requirement-acceptance-testing` 仅在准入通过、运行时可用且符合调用策略时独立检查业务、内容、交互、视觉与多屏证据；否则保留待独立验收项，不由 Maker 自证准出。
+- **支付、安全与正式政策**：支付、安全分别交 `payment-expert`、`security-engineering-expert`；正式政策由当前 Agent 使用可用文档能力整理，`document-authoring` 仅在准入通过、运行时可用且符合调用策略时协同；专业批准保留人类 Owner。
 
 需要复核公开来源、读取状态、时效和未吸收内容时读取 `references/source-map.md`。
 

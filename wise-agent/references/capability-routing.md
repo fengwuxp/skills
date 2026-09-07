@@ -108,22 +108,25 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 
 ## 三、已知能力地图
 
+是否加载 `wise-agent` 只按 `AGENTS.md` 的显式调用条件，不由任务跨度决定。表中候选能力仅在准入通过、运行时可用且符合其调用策略时进入实际任务；候选定向评估不等于生产路由准入。`document-authoring` 不可用时，由当前 Agent 使用可用文档能力继续授权内成文并保留领域复核；缺少 DOCX/PDF 等格式能力时明确说明缺口，不自动安装或声称已生成。
+
 | 任务信号 | 主能力 | 可选协同能力 | 独立验证 |
 | --- | --- | --- | --- |
 | 支付、资金、账户、账本、清分、清算、结算、对账、退款、争议、通道、卡组织、ACH/银行转账、VCC、跨境支付或支付监管产品规则 | `payment-expert` | 需要通用 PRD 主文档时 `product-architecture-expert`；进入系分、代码、TDD 或生产变更时 `senior-software-architect` | 外部规则检查器、业务/支付/财务/合规 Owner、方法卡盲测、目标项目测试与对账证据 |
 | 支付资金方案、实现证据或测试结果的独立准出审查，且涉及幂等、冻结、授权拒绝、原路退款、出款门禁或失败无副作用 | 候选 `payment-funds-review`，仅在 admission 通过后使用 | 产品事实由 `payment-expert` 提供；实现与测试证据由 `senior-software-architect` 提供 | 原始材料回读、目标项目测试、余额/交易/路由/分录事实快照、支付/财务 Owner；Checker 不接管修复 |
 | 业务、资金、身份权限、数据、协议、软件供应链、系统架构或运行事件的安全设计、评审、威胁/滥用分析与风险准出 | `security-engineering-expert` | 产品事实用 `product-architecture-expert`；支付事实用 `payment-expert`；实现与修复用 `senior-software-architect`；仓库/path、diff、finding 验证与仓库威胁模型使用精确 `codex-security:*` 能力 | 资产与资损、信任边界、攻击/滥用路径、控制与恢复、验证证据、残余风险及人类风险 Owner |
-| PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | `document-authoring`、有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
+| PRD、产品语义、业务架构、对象、流程、规则、状态、验收、产品图 | `product-architecture-expert` | 符合前述候选条件时 `document-authoring`；有真实训诂问题时 `hanzi-philology` | 产品交付物检查器、业务 Owner、验收种子 |
 | 从零规划或重构用于说明和辅助佐证公司真实业务的企业官网，涉及业务类型、建议模块、内容、指标参考示例值、公开参考差异、图片多屏要求和按需 Legal 条件 | 候选 `business-website-planner`，仅在 admission 通过后使用 | 业务事实未稳定时消费 `product-architecture-expert`；页面与多屏设计交 `ui-design-expert`；设计稿默认 Figma；实现交 `senior-software-architect` | 业务权威、建议模块、使用者确认指标、Reference DNA、Responsive Media Brief、Owner 复核与 `requirement-acceptance-testing`；Figma 写入另行授权 |
 | 按已确认需求独立验收业务逻辑、API/数据副作用、Web UI 交互、视觉还原、可访问性或运行结果 | 候选 `requirement-acceptance-testing`，仅在 admission 通过后使用 | 消费 `product-architecture-expert` 的需求与验收种子、`senior-software-architect` 的实现和测试证据、`ui-design-expert` 的设计与 Design QA 证据 | 需求与实现指纹、目标项目测试、浏览器/视觉证据、独立 Checker 和验收 Owner；Checker 不接管修复 |
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具；表达型 Web 页面在用户显式调用 Hallmark，或已确认产品与交互契约后确有反模板化缺口时，可装载 `hallmark` | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner；Hallmark 自评不构成准出证据 |
-| 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`，正式成文按需用 `document-authoring` | 测试、静态检查、源码回读、独立 CR、发布证据 |
-| 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段由 `wise-agent` 持有目标与授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
-| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；设定集和正式载体用 `document-authoring` | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
-| 报告、制度、手册、研究说明、材料合并、正式载体 | `document-authoring` | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
+| 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`；符合前述候选条件时用 `document-authoring` 正式成文 | 测试、静态检查、源码回读、独立 CR、发布证据 |
+| 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段仍由当前 Agent 持有目标并遵守用户授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
+| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；符合前述候选条件时用 `document-authoring` 整理设定集和正式载体 | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
+| 报告、制度、手册、研究说明、材料合并、正式载体 | 候选 `document-authoring`，仅在上述准入与可用性条件满足后协同；否则由当前 Agent 使用可用文档能力 | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
+| 用户显式要求把本地 Markdown、PRD、系分或正式文档上传、同步、更新或发布到语雀 | 候选 `yuque-document-publisher`；当前仅作用户显式候选评估，准入后按届时调用策略使用 | 正文语义仍由 `product-architecture-expert`、`senior-software-architect` 或符合前述候选条件的 `document-authoring` 持有；UI 操作使用环境可用 Browser Skill | 本地版本与 SHA-256、稳定 docRef、草稿对账、Markdown/Mermaid/图片回读、目录复核和动作时授权 |
 | 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
-| 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 正式报告按需用 `document-authoring`；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
-| 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段任务由 `wise-agent` 持有目标；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
+| 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 符合前述候选条件时用 `document-authoring` 整理正式报告；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
+| 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段仍由当前 Agent 持有目标，用户显式调用时再使用 `wise-agent`；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
 | DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成后消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
 | 方案、计划或设计的决策压力测试 | `grill-me` | 当前产品 / 工程主能力；需要经典校准时 `huaxia-practical-wisdom` | 问题台账、历史去重、保真度路由、决策包、决策快照与执行前对账 |
@@ -148,11 +151,11 @@ Hallmark 是 Web 视觉结构与反模板化方法，不是 UI 总权威。支�
 ### 三 B、小说、文档与训诂能力组合
 
 - 小说故事语义、人物弧光、世界构建、卷章设计、正文和连续性由 `novelist` 主责；`huaxia-practical-wisdom` 只以察实、正名、审时、权衡、行验、化校准人情事势、制度、代价和反馈，不替作者决定，不把经典框架直接写成故事。
-- 单次构思、正文、重写或评审直接由 `novelist` 完成，不额外加载 `wise-agent`；跨轮长篇、多稿权威、状态恢复或需要组合两项以上专业能力时，才由 `wise-agent` 持有目标和状态，`novelist` 仍是故事主能力。
+- 单次构思、正文、重写或评审直接由 `novelist` 完成，不额外加载 `wise-agent`；跨轮长篇、多稿权威、状态恢复或需要组合专业能力时仍由当前 Agent 持有目标和状态，仅在用户显式调用后加载 `wise-agent`，`novelist` 仍是故事主能力。
 - `huaxia-practical-wisdom` 是 `novelist` 的必要校准依赖，不是并列主能力；普通创作只消费最小叙事校准卡，复杂主线、群像、制度冲突或兴衰取舍才扩展 1-3 个镜片，均不输出经世决策卡。
-- 专业文档撰写由 `document-authoring` 提供，领域事实仍由产品、工程、法律、合规或其它专项能力负责；成稿后重新运行产品或架构交付物检查。
+- 专业文档撰写按上述准入与可用性条件选用 `document-authoring` 或当前可用文档能力，领域事实仍由产品、工程、法律、合规或其它专项能力负责；成稿后重新运行产品或架构交付物检查。
 - 汉字学与训诂由 `hanzi-philology` 提供，正式结论形成训诂证据卡，不设单一权威书。
-- 小说人物名、地名、称号、器物名和拟古语言只有出现真实形音义、训诂或时代语感问题时才装载 `hanzi-philology`；它只返回创作用字证据卡。设定集、人物档案、时间线和决策台账只有需要权威整理或正式载体时才装载 `document-authoring`；两者都不得升级候选设定或续写正文。
+- 小说人物名、地名、称号、器物名和拟古语言只有出现真实形音义、训诂或时代语感问题时才装载 `hanzi-philology`；它只返回创作用字证据卡。设定集、人物档案、时间线和决策台账需要权威整理或正式载体时，默认由当前 Agent 使用可用文档能力；只有符合前述候选条件时才装载 `document-authoring`。两者都不得升级候选设定或续写正文。
 - 产品名相确有古文、字源或训诂问题时，训诂能力只是可选证据协作者；最终名称仍结合业务事实、用户理解、领域统一语言和人类 Owner 决策。普通 API、类名、方法名、字段名与数据库命名不触发训诂能力。
 
 ## 四、按任务类型补足证据

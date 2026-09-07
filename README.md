@@ -93,7 +93,7 @@
 | 提交并推送 | `提交并推送当前分支：先检查工作区和验证证据，只暂存本轮文件；提交后核对提交范围，再推送当前分支。` |
 | 同步 Skill 安装态 | `允许把 <Skill 列表> 同步到 <CODEX_HOME>；先 dry-run，确认目标和备份目录后正式同步，再校验安装一致性；不要执行 Git 提交或推送。` |
 
-普通小说任务不需要默认加 `$wise-agent`：单次构思、正文、重写或评审直接调用 `$novelist`；跨轮、多稿权威、状态恢复或需要组合文档与考据能力时，再由 `$wise-agent` 持有目标和状态。`huaxia-practical-wisdom` 是小说家的必要叙事校准依赖，用户无需另行点名；`document-authoring` 和 `hanzi-philology` 只在对应交付物或证据问题实际出现时加载。
+普通小说任务不需要默认加 `$wise-agent`：单次构思、正文、重写或评审直接调用 `$novelist`；跨轮、多稿权威、状态恢复或需要组合文档与考据能力时仍由当前 Agent 持有目标和状态，用户需要显式协同时再调用 `$wise-agent`。`huaxia-practical-wisdom` 是小说家的必要叙事校准依赖，用户无需另行点名；`document-authoring` 仅用于显式候选评估，`hanzi-philology` 只在真实证据问题出现时加载。
 
 ### 多任务会商怎么触发
 
@@ -187,7 +187,8 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 | 实际代码写入，Karpathy Guidelines，或 AI 生成计划 / diff 的隐藏假设、过度设计、范围漂移、无关清理与弱验证专项审查 | LLM 编码卫生，ID：`llm-coding-hygiene`，路径：[llm-coding-hygiene](./llm-coding-hygiene) | 用户目标、计划或 diff、相关源码与测试、成功标准 | 实际代码写入时默认生效，但只作静默护栏，不替代工程实现、TDD、源码 CR 或项目编码约规 |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事/卷/章设计、正文、重写和连续性审查 | 小说家，ID：`novelist`，路径：[novelist](./novelist) | 类型承诺、当前创作单元、稿件权威、设定状态、允许改变范围、作者验收 | 以华夏经世智慧校准人情事势；不把旧稿、考据结论或创作候选自动升级为正典 |
 | 小说、漫画、影视、动画或游戏叙事中的人物、服饰、建筑、兵器、器物、植物、药物、灵物和生物视觉设计 | 候选小说视觉设计师，ID：`fiction-visual-designer`，路径：[fiction-visual-designer](./fiction-visual-designer)；`FVD-001` 关闭前不可安装、同步、团队共享或公开发布 | 故事语义或独立创意、对象、必须保留、允许改变、目标载体、作者验收 | 持有视觉转译、已确认人物审美基准与身份锚图编排、已确认器物多视图编排及图像验收；图片由 `imagegen` 执行，不写小说正典，不替代史实或工程制图 |
-| 正式报告、制度、手册、研究说明、创作设定集、文档审校、DOCX/PDF | `document-authoring`，路径：[document-authoring](./document-authoring) | 读者、用途、事实源、载体、验收方 | 不改变产品、工程、小说、法律、合规或考据结论，不负责小说正文 |
+| 正式报告、制度、手册、研究说明、创作设定集、文档审校、DOCX/PDF | 候选专业文档撰写，ID：`document-authoring`，路径：[document-authoring](./document-authoring)；`DA-001` 关闭前仅用于用户显式候选评估，不自动路由、安装或同步 | 读者、用途、事实源、载体、验收方 | 候选不可用时由当前 Agent 使用可用文档能力；不改变产品、工程、小说、法律、合规或考据结论，不负责小说正文 |
+| 本地 Markdown、PRD、系分或正式文档到语雀的受控上传、同步、更新与发布 | 候选语雀文档发布，ID：`yuque-document-publisher`，路径：[yuque-document-publisher](./yuque-document-publisher)；`YDP-001~003` 关闭前仅显式调用，不安装、同步或自动发布 | 本地源路径、版本与摘要、目标知识库/docRef、图片与链接映射、操作授权 | 不改写正文事实，不持有 Token，不默认删除、改权限、Git 或批量发布；静态证据不代表语雀运行可用 |
 | 教程、视频、代码、文档、规范和产物到可复用能力候选 | 资源炼技，ID：`resource-capability-distiller`，路径：[resource-capability-distiller](./resource-capability-distiller) | 可读取材料、复用目标、目标环境、许可与验收方式 | 先提炼能力单元并逐项归位；不默认创建新 Skill，不自动安装、同步、提交或晋升 |
 | 汉字学、训诂、字源、甲骨文、金文、小篆、通假、异体及创作名称的时代语感证据 | `hanzi-philology`，路径：[hanzi-philology](./hanzi-philology) | 对象、时代、文本范围、材料、结论等级 | 《说文解字》只是证据之一；不测字吉凶、不替作者起名、不负责普通工程命名 |
 | 华夏经典视角下的现实决策、组织协作、长期成长和行动取舍 | 华夏经世智慧，ID：`huaxia-practical-wisdom`，路径：[huaxia-practical-wisdom](./huaxia-practical-wisdom) | 事实、目标、约束、主体、时限、最坏损失 | 不作医学诊疗、占卜命理或古籍训诂，不替代专业结论 |
@@ -206,9 +207,9 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 - 从支付产品到工程化：支付专家稳定资金事实、支付不变量、外部规则边界和验收种子，架构师完成系统设计、代码、测试和生产证据，知止者只在跨阶段或跨轮时持有项目执行规范与 Checker。
 - 从产品事实到可用界面：产品专家稳定业务语义和验收口径，UI 设计专家形成信息架构、交互状态、视觉与可用性契约，架构师实现并验证；Figma 能力只负责工具内执行或既有设计到代码。
 - 材料包含访谈、工单、竞品、路线图、PRD、发布复盘或提到 `pm-skills` 时，知止者装载产品判断动作链，形成产品上下文包并继续持有后续目标、验证和停止条件。
-- 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，`document-authoring` 只负责成文与载体，不改变证据等级。
-- 从小说创见到长篇交付：`novelist` 持有故事与正文，以 `huaxia-practical-wisdom` 校准人情事势；确有字词证据问题时调用 `hanzi-philology`，设定稳定且需要权威整理或正式载体时调用 `document-authoring`。
-- 从小说语义到视觉图像：`novelist` 稳定故事语义与正典，`fiction-visual-designer` 完成视觉转译与验收，并可编排已确认人物的审美基准、身份锚图、服饰状态、场景表现与定向修订，以及已确认器物的多视图成图与拼版；`imagegen` 执行生成或编辑，已确认视觉设定需要正式载体时交 `document-authoring`。
+- 从训诂考据到正式报告：`hanzi-philology` 先形成证据卡，由当前 Agent 使用可用文档能力成文；用户显式进行候选评估时才使用 `document-authoring`，且不得改变证据等级。
+- 从小说创见到长篇交付：`novelist` 持有故事与正文，以 `huaxia-practical-wisdom` 校准人情事势；确有字词证据问题时调用 `hanzi-philology`，设定稳定且需要权威整理或正式载体时由当前 Agent 使用可用文档能力，`document-authoring` 仅作显式候选评估。
+- 从小说语义到视觉图像：`novelist` 稳定故事语义与正典，由当前 Agent 使用可用视觉能力完成转译与验收；用户显式进行候选评估时可使用 `fiction-visual-designer` 编排已确认人物的审美基准、身份锚图、服饰状态、场景表现与定向修订，以及已确认器物的多视图成图与拼版。`imagegen` 执行生成或编辑，已确认视觉设定需要正式载体时由当前 Agent 使用可用文档能力整理，`document-authoring` 仅作显式候选评估。
 - 从普通图到复杂图：先由产品专家或架构师稳定语义，再决定是否使用专用出图能力。
 - 官方 Superpowers 插件只补 brainstorming、TDD、调试、CR、验证等方法缺口，不替代产品或工程主能力，也不扩大 Git、worktree、subagent 或安装授权。
 
@@ -405,7 +406,7 @@ python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-sc
 
 行为 criteria 应区分用户可见语义与执行过程：事实判断、方案选择、停止结论和风险说明由 `response` 评分；实际读取范围、工具调用、验证和是否发生外部或权威写入由成对 `execution_evidence` 证明。不得为了让内部过程“可见”而强迫用户回答复述检查步骤、未发生的写回动作或固定授权话术；也不得用自述证据替代回答中本应明确的事实、选择和结论。两种 condition 必须同时提供或同时不提供执行证据，证据标识不得泄露 condition、私有路径、prompt、token 或密钥。
 
-所有独立评分都须从 blind 文件原样保留 `blind_sha256`，`score` 始终核对 seed 映射、blind 正文与 scores；cases 声明 `source_profiles` 时，response 还必须原样保留 `prepare` 生成的 `case_sha256` 与 `source_sha256`。外部项目评测可声明 `input_profile={id,root,paths,sha256}`：`root` 必须是绝对目录，`paths` 只列显式文件且不得越界，response 必须保留 `case_sha256` 与 `input_sha256`；评测器会在 `prepare`、`blind`、`score` 时重新核对内容指纹。外部路径只进入 Maker 任务；任何会进入 blind 的 case 字段或 response 含 `root`、输入文件路径或其解析后绝对路径时直接拒绝，blind 与最终报告只保留 `id` 和 `sha256`。任一漂移即拒绝。
+所有独立评分都须从 blind 文件原样保留 `blind_sha256`，`score` 始终核对 seed 映射、blind 正文与 scores；cases 声明 `source_profiles` 时，response 还必须原样保留 `prepare` 生成的 `case_sha256` 与 `source_sha256`，但 response 正文不得回显任一 source profile 的 `id`、路径或 `sha256`，命中时在 blind 前直接拒绝。外部项目评测可声明 `input_profile={id,root,paths,sha256}`：`root` 必须是绝对目录，`paths` 只列显式文件且不得越界，response 必须保留 `case_sha256` 与 `input_sha256`；评测器会在 `prepare`、`blind`、`score` 时重新核对内容指纹。外部路径只进入 Maker 任务；任何会进入 blind 的 case 字段或 response 含 `root`、输入文件路径或其解析后绝对路径时直接拒绝，blind 与最终报告只保留 `id` 和 `sha256`。任一漂移即拒绝。
 
 默认 8 个用例覆盖直接回答、Agent 自主完成、根因诊断、详细解释、破坏性操作、真实歧义、部分成功和来源证据边界。候选存在阻塞项、正确性或安全性实质回退、或加权得分未提升时，`score` 返回非零。高风险 correctness / safety 默认还要求逐 pair 不回退；只有 fixture 明确以 `high_risk_pairwise_non_regression: false` 选择多轮聚合裁决时才跳过该层，aggregate 回退、criteria 和 blocker 门禁仍保留。真实 smoke 通过当前 Codex provider 发起只读请求，并把结果写到指定目录；`semantic-contract`、`module-deliberation` 与 `wind-validation` 单独模式直接读取源仓库规则，`spring-bean` 与 `ui-design` 也采用同一方式，其余模式先检查安装一致性：
 

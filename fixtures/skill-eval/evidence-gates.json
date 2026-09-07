@@ -14,13 +14,13 @@
         "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/senior-public-contract-migration-behavior-cases.json",
-        "responses": "fixtures/skill-eval/senior-public-contract-migration-responses.jsonl",
-        "scores": "fixtures/skill-eval/senior-public-contract-migration-scores.jsonl",
-        "seed": 731
+        "cases": "fixtures/skill-eval/senior-public-contract-migration-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/senior-adr-governance-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/instruction-boundaries-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
@@ -194,6 +194,11 @@
     "resource-capability-distiller": [
       {
         "cases": "fixtures/skill-eval/resource-capability-distiller-behavior-cases.json"
+      }
+    ],
+    "yuque-document-publisher": [
+      {
+        "cases": "fixtures/skill-eval/yuque-document-publisher-behavior-cases.json"
       }
     ],
     "security-engineering-expert": [

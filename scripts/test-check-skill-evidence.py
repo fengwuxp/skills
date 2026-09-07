@@ -109,7 +109,7 @@ class SkillEvidenceTests(unittest.TestCase):
                                 "case_sha256": case_digest,
                                 "condition": condition,
                                 "trial": 1,
-                                "response": f"{case['id']} {condition}",
+                                "response": f"{case['id']} response",
                                 "runner": "maker",
                                 "model": "model",
                                 "source_profile": profile["id"],

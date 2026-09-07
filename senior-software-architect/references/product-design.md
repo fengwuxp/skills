@@ -2,7 +2,7 @@
 
 本文不是 PRD 生成指南，也不替代专业产品能力。完整通用 PRD、产品架构、业务规则矩阵、运营后台和数据指标由 `product-architecture-expert` 定义；支付、资金、清结算、对账、VCC、ACH、卡组织等产品事实由 `payment-expert` 定义。本文件只用于架构师在进入系统设计、代码实现、测试计划前，校准产品语义是否足够支撑工程落地。
 
-当输入来自 AI Native 产品上下文、Product Builder、业务 dogfooding、AI 生成 MVP/原型或“放下 PRD”流程时，端到端流程和 GSD / 工程执行 准入先由 `wise-agent` 编排；本文件只确认产品侧是否已有 AI Native 产品上下文包、Hardened Candidate 或等价交接结论。缺少业务 owner、对象状态、规则矩阵、验收种子或风险确认方时，不进入系统设计、GSD-like 编排或 CAD。
+当输入来自 AI Native 产品上下文、Product Builder、业务 dogfooding、AI 生成 MVP/原型或“放下 PRD”流程时，按 `SKILL.md` 工作原则核对工程任务契约；仅在用户显式调用 `wise-agent` 时消费其端到端准入结论。本文件确认产品侧已有 AI Native 产品上下文包、Hardened Candidate、等价交接结论或已确认的用户与项目事实，不要求特定卡片或协调 Skill。缺少业务 owner、对象状态、规则矩阵、验收种子或风险确认方时，不进入系统设计、GSD-like 编排或 CAD。
 
 ## 使用时机
 
@@ -13,7 +13,7 @@
 ## 不适用场景
 
 - 完整通用 PRD、产品架构、能力地图、业务流程和运营后台优先使用 `product-architecture-expert`；支付资金方案优先使用 `payment-expert`。
-- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型 harden 和 PRD 可执行上下文的产品侧缺口优先交给 `产品架构专家` 读取 `ai-native-product-context.md`；端到端产品到研发流程交给 `wise-agent`；本文件只承接产品侧已确认材料进入工程设计。
+- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型 harden 和 PRD 可执行上下文的产品侧缺口优先交给 `产品架构专家` 读取 `ai-native-product-context.md`；端到端产品到研发流程仍由当前 Agent 负责，`wise-agent` 仅按显式调用条件加载；本文件只承接产品侧已确认材料进入工程设计。
 - 已进入工程实现、代码 Review、测试或生产变更时，回到对应架构师专项 reference。
 - 不用于替业务脑补未确认目标、规则、优先级或合规结论。
 

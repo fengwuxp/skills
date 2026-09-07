@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import runpy
 import sys
 import tempfile
 import unittest
@@ -22,6 +23,93 @@ SPEC.loader.exec_module(MODULE)
 
 
 class SkillDeliveryGateTests(unittest.TestCase):
+    def test_candidate_invocation_policy_matches_both_evaluators(self) -> None:
+        fixture_audit = runpy.run_path(str(ROOT / "scripts/audit-skill-eval-fixtures.py"))
+        for skill in (
+            "document-authoring",
+            "payment-funds-review",
+            "yuque-document-publisher",
+        ):
+            with self.subTest(skill=skill):
+                self.assertIn(skill, MODULE.EXPLICIT_INVOCATION_SKILLS)
+                self.assertIn(skill, fixture_audit["EXPLICIT_INVOCATION_SKILLS"])
+
+    def test_candidate_implicit_positive_is_rejected(self) -> None:
+        fixture_audit = runpy.run_path(str(ROOT / "scripts/audit-skill-eval-fixtures.py"))
+        for skill in (
+            "document-authoring",
+            "payment-funds-review",
+            "yuque-document-publisher",
+        ):
+            with self.subTest(skill=skill):
+                payload = json.loads(
+                    (ROOT / "fixtures/skill-eval/prompt-cases.json").read_text(encoding="utf-8")
+                )
+                case = next(
+                    case for case in payload["cases"]
+                    if case["skill"] == skill and case["should_trigger"]
+                )
+                case["query"] = "请根据已经确认的材料给出范围内的结论，不加载候选能力。"
+                failures = fixture_audit["audit_data"](payload, label="candidate-policy")
+                self.assertTrue(any(
+                    f"{skill} positive cases require an explicit skill name" in failure
+                    for failure in failures
+                ))
+                stats = MODULE.prompt_fixture_stats(skill, payload)
+                _, warnings = MODULE.score_prompt_fixtures(skill, stats, payload)
+                self.assertIn(f"{skill}: positive prompt fixture lacks explicit invocation", warnings)
+
+    def test_entrypoint_line_count_does_not_change_quality_score(self) -> None:
+        baseline, _ = MODULE.score_progressive(100, 1, [])
+        for lines in (350, 351, 500, 501, 9000):
+            with self.subTest(lines=lines):
+                self.assertEqual(MODULE.score_progressive(lines, 1, [])[0], baseline)
+        self.assertLess(
+            MODULE.score_progressive(501, 1, ["references/missing.md"])[0], baseline
+        )
+
+    def test_reference_size_does_not_change_quality_score(self) -> None:
+        baseline, _ = MODULE.score_references(
+            "senior-software-architect", 1, 100, 8, [], [], 80
+        )
+        for lines in (400, 550, 551, 5001, 7001, 8001):
+            with self.subTest(lines=lines):
+                score, warnings = MODULE.score_references(
+                    "senior-software-architect", 1, lines, 8,
+                    [{"path": "references/guide.md", "lines": lines}],
+                    [{"path": "references/guide.md", "title": "任务索引", "lines": lines}],
+                    80,
+                )
+                self.assertEqual(score, baseline)
+                self.assertFalse(any("hard budget" in warning for warning in warnings))
+
+    def test_reference_searchability_measures_navigation_not_size(self) -> None:
+        reference = {
+            "path": "references/guide.md",
+            "has_progressive_headers": True,
+            "has_task_index": True,
+            "level_2_sections": 4,
+        }
+        baseline = MODULE.reference_searchability_score(
+            1, 100, [{**reference, "lines": 100}], [{"lines": 100}]
+        )
+        for lines in (400, 551, 8001):
+            with self.subTest(lines=lines):
+                self.assertEqual(
+                    MODULE.reference_searchability_score(
+                        1, lines, [{**reference, "lines": lines}], [{"lines": lines}]
+                    ),
+                    baseline,
+                )
+        self.assertLess(
+            MODULE.reference_searchability_score(
+                1, 100,
+                [{**reference, "lines": 100, "has_task_index": False}],
+                [{"lines": 100}],
+            ),
+            baseline,
+        )
+
     def test_explicit_only_skill_counts_all_supported_invocation_aliases(self) -> None:
         stats = MODULE.prompt_fixture_stats(
             "wise-agent",

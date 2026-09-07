@@ -13,6 +13,7 @@ import argparse
 import hashlib
 import json
 import re
+import runpy
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Sequence
@@ -42,16 +43,12 @@ SKILLS = {
     "senior-software-architect",
     "ui-design-expert",
     "wind-coding-conventions",
+    "yuque-document-publisher",
 }
 EXTERNAL_COMPETITOR_SKILLS = {"ai-slop-detector"}
 KNOWN_SKILLS = SKILLS | EXTERNAL_COMPETITOR_SKILLS | {"imagegen"}
-EXPLICIT_INVOCATION_SKILLS = {
-    "business-website-planner",
-    "fiction-visual-designer",
-    "learning-coach",
-    "requirement-acceptance-testing",
-    "wise-agent",
-}
+ADMISSION_CHECKER = runpy.run_path(str(ROOT / "scripts" / "check-skill-admission.py"))
+EXPLICIT_INVOCATION_SKILLS = ADMISSION_CHECKER["explicit_invocation_skills"](ROOT)
 SKILL_MENTIONS = {
     "business-website-planner": ["business-website-planner", "业务官网规划师"],
     "wise-agent": [
@@ -90,6 +87,11 @@ SKILL_MENTIONS = {
     "senior-software-architect": ["资深架构师", "senior-software-architect"],
     "ui-design-expert": ["ui-design-expert", "UI 设计专家"],
     "wind-coding-conventions": ["wind-coding-conventions", "Wind 编码约规"],
+    "yuque-document-publisher": [
+        "$yuque-document-publisher",
+        "yuque-document-publisher",
+        "语雀文档发布",
+    ],
 }
 REQUIRED_DIMENSIONS = {
     "trigger_accuracy",
@@ -251,7 +253,7 @@ REQUIRED_COMPETITION_GROUPS = {
     "fiction-project-document-owner": {
         "skills": {"document-authoring", "novelist"},
         "expected_skill": "document-authoring",
-        "sha256": "2c4c56975165c998903602fb4df5569ffb2ca2aefaa7ce740dd0bc0a06bb872b",
+        "sha256": "465a06ccf7f9d46f87bea7802cd6daf71b8fde61d37db05157ab9f3e0bfd466c",
     },
     "fiction-term-evidence-owner": {
         "skills": {"hanzi-philology", "novelist"},

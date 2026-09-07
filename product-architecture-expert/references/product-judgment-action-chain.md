@@ -32,7 +32,7 @@
 - 机会清单、优先级、路线图、User Story 或 AC 决策时，读 `po-backlog-manager.md`。
 - 需要正式 PRD / 产品方案时，读 `product-prd-template.md` 和 `product-design-and-prd.md`。
 - 需要多角色产品评审或 PRD 预扫描时，读 `product-deliberation-workflow.md` 和 `product-prd-quality-gates.md`。
-- 需要交给 AI Native 或架构师时，读 `ai-native-product-context.md`，端到端编排交给 `wise-agent`。
+- 需要交给 AI Native 或架构师时，读 `ai-native-product-context.md`；端到端编排仍由当前 Agent 负责，用户显式调用时再使用 `wise-agent`。
 
 ## 按任务读取索引
 

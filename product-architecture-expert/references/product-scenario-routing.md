@@ -37,7 +37,7 @@
 
 ## 需要继续读取的 reference
 
-- PRD/产品文档在方向、链路和取舍已有可信权威时读 `product-prd-template.md` 和 `product-design-and-prd.md`；任一项缺失时先读 `product-judgment-action-chain.md`。正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后可交给 `document-authoring` 处理同一权威版本的表达和载体，编辑后回本技能重新校验。
+- PRD/产品文档在方向、链路和取舍已有可信权威时读 `product-prd-template.md` 和 `product-design-and-prd.md`；任一项缺失时先读 `product-judgment-action-chain.md`。正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后由当前 Agent 使用可用文档能力整理；`document-authoring` 仅在准入、可用性和调用策略均满足时协同，编辑后回本技能重新校验。
 - 跨应用 / 多端原型需求规划读 `product-design-and-prd.md` 的“跨应用原型需求规划”，输出需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；直接绘制 Web 原型转 `ui-design-expert`。
 - 客户端交互 / 响应式 / 可用性 / 触控键盘 / 弱网恢复设计读 `product-client-interaction.md`，再回到 `product-design-and-prd.md` 完成页面与非页面承接；输出客户端策略表、任务与路由图、交互状态矩阵、多端差异表和每端验收卡，不先决定视觉组件。
 - AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD / 工程执行准入、Harness/Agent 编排由 `wise-agent` 处理。
@@ -145,7 +145,7 @@
 | 产品阶段、PMF 前后、产品团队不按岗位分工、原型验证、真实交付、复杂度清扫、增长放大、可靠维护 | `product-architecture-methodology.md` | 产品阶段与贡献方式诊断卡：阶段证据、主要缺口、需要 / 暂缓的贡献方式、下一产物、owner 和验收 / 停止条件 |
 | 概念膨胀、新旧规则并存、需求只加不减、事实源分裂、旧入口下线或概念生命周期 | `product-concept-lifecycle.md` | Concept Lifecycle Card：核心概念、事实源、新增/替代关系、净增概念数、旧概念关系、进入条件、收敛/合并/废弃规则、迁移路径、用户/运营影响面、验收种子、下线 owner、复审日期、退役条件和待确认项 |
 | 洞察太多、机会清单、需求池、路线图候选、Backlog 决策、优先级、P0/P1/P2、User Story、AC | `po-backlog-manager.md`, `product-design-and-prd.md` | Backlog 决策包：BV/EE、业务/用户/工程三桌校验、P0/P1/P2、拒绝理由、User Story、AC、技术现实主义风险和待确认项 |
-| AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师 | `ai-native-product-context.md`, `product-architecture-methodology.md`；端到端流程和 GSD / 工程执行准入交给 `wise-agent`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和产品侧交接条件；不把可运行等同于可上线 |
+| AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师 | `ai-native-product-context.md`, `product-architecture-methodology.md`；端到端流程和 GSD / 工程执行准入由当前 Agent 核对，用户显式调用时再使用 `wise-agent`；正式 PRD 再读 PRD reference | AI Native 产品上下文包、Hardened Candidate 门禁、MVP 证据、对象规则、验收种子、风险确认和产品侧交接条件；不把可运行等同于可上线 |
 | 产品方案要交给架构师继续系统设计、业务驱动架构交接、产品语义到工程验证、验收种子到 TDD 交接 | `product-architecture-methodology.md`, `product-design-and-prd.md`, `product-prd-quality-gates.md` | 正式产品文档保持目标、定性、概要、流程、规则、接口抽象和验收摘要；详细验收矩阵、质量属性映射及工程交接控制进入执行计划 |
 | 能力地图、模块关系、产品架构 | `product-architecture-methodology.md` | 能力地图、模块边界、前后台能力、交付拆分 |
 | 画图、流程图、状态机、关系图、产品架构图、资金流图、运营后台结构图、可视化产物 | `diagram-output.md`，按场景再读 `product-architecture-methodology.md`、`product-design-and-prd.md` 或支付资金专项 reference | 默认生成 SVG，报告用途、假设、验证和待确认项；Mermaid/Markdown 草图、PNG/PDF/截图等其他格式需用户明确提出 |
@@ -179,7 +179,7 @@
 
 - **用户要产品架构方案**：输出背景、目标、范围、用户、角色、能力地图、对象模型、流程、状态机、规则、权限、数据、运营、风险和验收。
 - **用户要业务架构规划**：读取 `business-architecture-planning.md`，先判断战略意图、真实问题和决策场景，声明选用视图、跳过视图及理由，再按决策问题输出最小且完整的视图组合；价值流、业务能力和业务流程只作为参考性工作基线，不宣称为普遍标准或固定交付清单。若需要图形化表达，继续读 `diagram-output.md`，正式图形化交付默认只生成 SVG；不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant。
-- **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给 AI Native 编排/架构师的产品侧条件；若用户要求端到端流程、Harness/GSD/工程执行准入或 AI 工具协作，转 `wise-agent`。
+- **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给 AI Native 编排/架构师的产品侧条件；若用户要求端到端流程、Harness/GSD/工程执行准入或 AI 工具协作，由当前 Agent 继续负责，只有用户显式调用时才使用 `wise-agent`。
 - **用户要判断需求是否适合 AI，或直接要求 RAG、微调、小模型、AI 化 / 更智能**：读取 `ai-native-product-context.md` 的“2A. AI 适配性判断”，先输出 AI 适配性判断卡，比较非 AI 基线、候选机制、代表性评测、失败检测、人工容量和半年工作系统变化；不替架构师选择具体模型、检索、工具或训练实现。
 - **用户要交给架构师继续设计或业务驱动架构交接**：正式产品文档保持背景、目标、定性、概要、流程、规则、接口抽象和验收摘要的阅读主线；Product Context Card 或执行计划再承载参与方与 owner、详细验收矩阵、质量属性映射、待确认项和专业确认方，不把交接控制复制进 PRD 正文。
 - **用户要补齐产品经理方法论或产品专家基础能力**：读取 `product-architecture-methodology.md` 的“2B. 产品经理基础方法校准”和 `skill-tree.md`，把基础产品经理知识体系翻译为文档分型、流程表达、原型注释、产品架构图、用户研究、需求管理、数据分析、技术/项目协作、行业商业分析和知识库沉淀，并说明哪些能力已覆盖、哪些能力需要提升到复杂业务对象、规则、验收和交接。
