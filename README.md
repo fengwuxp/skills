@@ -8,7 +8,7 @@
 
 知止者不是流程路由器，而是统一智能行动主体：先读事实，再判断问题，装载最小能力，完成真实工作，用独立证据验证并归位结果。多 Skill 只为同一 Agent 补充专业上下文，不产生第二人格或重复 Owner；运行时只读取当前任务必要的 reference。
 
-体系按“体、枢、用、证”归位：`AGENTS.md` 守体，`wise-agent` 持枢，专业 Skill 各安其用，fixtures、validator、测试与人工评审独立作证；上层只声明边界和路由，不复制下层说明书。
+体系按“体、枢、用、证”归位：本源仓库的 `AGENTS.md` 守维护治理之体，`wise-agent` 持枢，专业 Skill 各安其用，fixtures、validator、测试与人工评审独立作证；上层只声明边界和路由，不复制下层说明书。安装后的行动约束以消费任务实际生效的上位指令、宿主配置和项目规则为准，不能把源仓库设计目标当作已加载的运行时规则。
 
 责任始终分为四层：
 
@@ -19,16 +19,18 @@
 
 人类责任 Owner、知止者、专业能力和独立 Checker 分开；内部可以协作，最终责任不能混写。
 
-运行时资产按职责归位：
+源仓库治理与交付资产按职责归位：
 
 | 位置 | 保存内容 |
 | --- | --- |
-| `AGENTS.md` | 每次会话都应遵守的仓库规则、安全边界和维护门禁 |
+| 根目录 `AGENTS.md` | 维护本源仓库时适用的规则、安全边界和门禁；不随 Skill 自动分发 |
 | `<skill>/SKILL.md` | Skill 的触发、定位、核心流程、场景路由和红线 |
 | `<skill>/references/` | 详细知识、模板、清单、证据和复杂分支 |
 | `<skill>/scripts/` | 确定性生成、解析、校验和状态检查 |
 | `fixtures/`、`<skill>/fixtures/` | 触发正负例、行为契约和可执行回归样例 |
 | `<skill>/agents/openai.yaml` | Codex 展示信息、默认调用提示和隐式触发策略 |
+
+`sync-skills.sh` 按选定的 `<skill>/` 目录同步到 `$CODEX_HOME/skills/<skill>/`，不复制根目录 `AGENTS.md`；`--with-agents` 仅额外同步约定的子代理配置，不安装全局行动规则。消费项目不必具有本仓库的 `AGENTS.md`，Skill 也不得要求继承它。消费侧的全局或项目指令须独立管理，不能通过更新源仓库代替修改；安装一致性只证明文件一致，不证明发现、加载、权限裁决或任务行为正确。
 
 ## 用户使用指南
 
@@ -403,6 +405,8 @@ python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-sc
 ```
 
 `evaluate-skill-behavior.py validate` 默认只检查案例契约；需要同时核对 `source_profiles` / `input_profile` 的内容指纹时使用 `validate --verify-sources`，收集和评分阶段始终强制校验来源。
+
+消费场景另用 `fixtures/skill-eval/skill-consumer-behavior-cases.json`：覆盖直接修复、显式专业调用、跨阶段交付、消费项目审批和 Markdown 回退。`python3 scripts/prepare-skill-consumer-eval.py --validate` 只检查准备契约；`--case consumer-direct-repair --output-dir /tmp/skill-consumer-run` 在尚不存在的目录中调用现有同步脚本，先 dry-run 再暂存工程 Skill，并生成合成项目、任务与指纹回执。它不执行 Codex、模型或任务，不读取密钥，不修改真实安装目录；失败保留日志且不生成成功回执。暂存不等于自然加载，真实评测仍待运行环境隔离、授权、加载轨迹和独立评分，详见[消费环境评估](references/skill-evaluation-methodology.md#消费环境评估)。
 
 行为 criteria 应区分用户可见语义与执行过程：事实判断、方案选择、停止结论和风险说明由 `response` 评分；实际读取范围、工具调用、验证和是否发生外部或权威写入由成对 `execution_evidence` 证明。不得为了让内部过程“可见”而强迫用户回答复述检查步骤、未发生的写回动作或固定授权话术；也不得用自述证据替代回答中本应明确的事实、选择和结论。两种 condition 必须同时提供或同时不提供执行证据，证据标识不得泄露 condition、私有路径、prompt、token 或密钥。
 

@@ -64,6 +64,10 @@ check_script_patterns() {
   output="$(grep -EIn "${pattern}" "${files[@]}" || true)"
   output="$(echo "${output}" | grep -Ev 'scripts/audit-skills\.sh:|scripts/audit-skill-security\.py:|scripts/test-audit-skill-security\.py:|scripts/validate\.sh:.*rm -rf "\$\{tmp_dir\}"|scripts/validate-superpowers-install\.sh:.*rm -rf "\$\{tmp\}"|sync-skills\.sh:.*rsync|scripts/archive-source-evidence\.py:.*shutil\.copy2|java-service-code-generator/scripts/verify_fixtures\.py:.*subprocess|java-service-code-generator/scripts/verify_fixtures\.py:.*shutil|java-service-code-generator/scripts/verify_fixtures\.py:.*rmtree\(base_tmp\)|scripts/audit-skill-eval-fixtures\.py:.*skill eval fixture|scripts/validate-trigger-paths\.py:.*OK skill eval fixture self-test|scripts/validate-trigger-paths\.py:.*AI 原型/eval 到 PRD-Lite/OpenSpec/Harness/GSD/CAD|scripts/validate-trigger-paths\.py:.*从 AI 原型/eval 到 PRD-Lite、OpenSpec、GSD/CAD 编排准入结论|scripts/validate-trigger-paths\.py:.*AI 原型 / eval / dogfooding|scripts/validate-trigger-paths\.py:.*用 AI Native 研发流程设计一套从 AI 原型/eval|scripts/validate-trigger-paths\.py:.*用 AI Native 研发流程编排设计一套从 AI 原型/eval' || true)"
 
+  local reviewed_consumer_patterns
+  reviewed_consumer_patterns='^\./scripts/(prepare-skill-consumer-eval|test-prepare-skill-consumer-eval)\.py:[0-9]+:import subprocess$|^\./scripts/prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*(result = subprocess\.run\(command, cwd=ROOT, env=environment,|stdout=subprocess\.PIPE, stderr=subprocess\.STDOUT, text=True\))$|^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*(with (self\.subTest\(output=output\), )?patch\.object\(self\.module\.subprocess, "run"(, (return_value=result|wraps=subprocess\.run))?\) as run:|result = subprocess\.CompletedProcess\(\[\], 1, "controlled failure\\n"\)|(failed|passed) = subprocess\.run\(checker, cwd=self\.output, capture_output=True, text=True\))$'
+  output="$(echo "${output}" | grep -Ev "${reviewed_consumer_patterns}" || true)"
+
   if [[ -n "${output}" ]]; then
     warn "review high-risk script patterns:"
     echo "${output}" >&2

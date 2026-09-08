@@ -23,6 +23,9 @@
         "cases": "fixtures/skill-eval/instruction-boundaries-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/skill-consumer-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
       }
     ],

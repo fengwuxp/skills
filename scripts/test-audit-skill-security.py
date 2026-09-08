@@ -16,6 +16,34 @@ SCRIPT = ROOT / "scripts" / "audit-skill-security.py"
 
 
 class SkillSecurityAuditTests(unittest.TestCase):
+    def test_consumer_process_review_is_scoped_to_exact_calls(self) -> None:
+        audit = (ROOT / "scripts/audit-skills.sh").read_text(encoding="utf-8")
+        start = audit.index("check_script_patterns() {")
+        finish = audit.index("\ncheck_external_urls()", start)
+        runner = ('set -euo pipefail\nstatus=0\nwarn() { status=1; echo "$*"; }\n'
+                  + audit[start:finish] + '\ncheck_script_patterns\nexit "$status"\n')
+        approved = (
+            'import subprocess\n'
+            'result = subprocess.run(command, cwd=ROOT, env=environment,\n'
+            '                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)\n'
+        )
+        cases = (
+            ("prepare-skill-consumer-eval.py", approved, 0),
+            ("prepare-skill-consumer-eval.py", 'subprocess.run(["curl", "https://example.test"])\n', 1),
+            ("prepare-skill-consumer-eval.py", 'result = subprocess.run(command, shell=True)\n', 1),
+            ("prepare-skill-consumer-eval.py", 'import subprocess; os.system(command)\n', 1),
+            ("other.py", approved, 1),
+        )
+        for name, body, expected in cases:
+            with self.subTest(name=name, body=body), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                (root / "scripts").mkdir()
+                (root / "scripts/unrelated.sh").write_text("true\n", encoding="utf-8")
+                (root / "scripts" / name).write_text(body, encoding="utf-8")
+                result = subprocess.run(["bash", "-c", runner], cwd=root,
+                                        capture_output=True, text=True, timeout=5)
+                self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+
     def run_audit(self, root: Path, *extra_args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [sys.executable, str(SCRIPT), "--root", str(root), *extra_args],

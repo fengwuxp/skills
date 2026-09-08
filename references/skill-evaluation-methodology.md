@@ -76,7 +76,7 @@
 - 新版 `description` 与旧版 `description` 的触发差异。
 - 新增脚本前后，步骤数、人工判断点和错误率是否下降。
 
-模型适配与指令精简分开评估：固定模型比较现行规则与候选；更换模型后另开完整对照，不混合不同模型的部分结果。保留共同的仓库安全与授权规则，不能把关闭安全约束作为“无 Skill”基线。
+模型适配与指令精简分开评估：固定模型比较现行规则与候选；更换模型后另开完整对照，不混合不同模型的部分结果。保留同一实验环境实际适用的安全与授权规则，不能把关闭安全约束作为“无 Skill”基线，也不能额外注入源仓库规则来假定消费环境已经遵守它。
 
 需要排除运行配置混淆时，case 的 `release_gate.require_runtime_profile` 设为 `true`。`prepare` 只提示采集要求，不猜测真实运行值；每条响应记录 `runtime_profile={reasoning_effort, tools, permissions, environment}`，分别提供实际推理强度、工具契约、授权边界和运行环境的稳定脱敏版本标识。标识只允许字母、数字、点、下划线和连字符，详细配置清单由同轮采集证据保留，不上传密钥、用户目录、环境变量原文或自由文本摘要。所有响应必须完整、相同；即使未启用门禁，只要提供该字段，也不得部分缺失或混用。模型仍由原 `model` 字段单独绑定，Skill/reference 由 `source_profiles` 绑定，不混入运行配置。
 
@@ -84,9 +84,25 @@
 
 没有对照实验时，结论只能写成“通过当前结构与 fixture 检查”，不能写成“能力已全面证明”。
 
-Source-profile 对照还必须证明来源真正进入模型上下文。优先将授权 source 正文按文件边界直接提供给 Maker；若改用隔离文件读取，原始轨迹必须证明声明的文件已被读取。仅复制文件、列出路径或扫描目录不算加载 Skill。Maker 不得看到 acceptance criteria、rubric、release gate、blind label 或预期答案；这些只交给独立 Judge，否则 baseline/candidate 会被目标答案提示饱和。
+Source-profile 对照还必须证明来源真正进入模型上下文。仅在显式定义的组合指令实验中，才可将授权 source 正文按文件边界直接提供给 Maker；这不能证明 Skill 的自然发现或按需加载。若采用隔离文件读取，原始轨迹必须证明声明的文件已被读取。仅复制文件、列出路径或扫描目录不算加载 Skill。Maker 不得看到 acceptance criteria、rubric、release gate、blind label 或预期答案；这些只交给独立 Judge，否则 baseline/candidate 会被目标答案提示饱和。
 
 独立 Judge 的评分必须携带盲文件中的 `pair_id` 与 A/B label，并按二者校验全集、唯一性和绑定关系；不能只依赖返回数组顺序推断评分归属。出现未知 ID、遗漏、重复或备注明显描述其它 case 时属于对齐失败；保留未变的 Maker / blind 证据，用新 identity 按 case 或更小的语义完整批次从 0 重评，不能复用 partial 或手工挪动个别分数。
+
+### 消费环境评估
+
+先区分四层证据，不能跨层外推：源仓库治理约束维护者；分发包包含被同步的 Skill 文件；宿主与消费项目规则决定当前任务的指令和权限环境；真实轨迹与产物才证明发现、加载、执行和交付。源仓库 `AGENTS.md` 不随包分发，安装一致性检查不证明后两层。
+
+`fixtures/skill-eval/skill-consumer-behavior-cases.json` 是独立的消费场景准备契约，不替换组合指令案例，不进入 active 评分准出。运行 `python3 scripts/prepare-skill-consumer-eval.py --validate` 检查契约；指定 `--case <id> --output-dir /tmp/<new-directory>` 时，只暂存 `senior-software-architect`，并生成 `project/`、`task.txt`、`setup.log` 和 `receipt.json`。最小宿主没有项目 `AGENTS.md`；审批宿主只有合成消费项目规则和 `PENDING` 状态。输出必须是 `/tmp` 下的新目录，已有目录、符号链接逃逸、源仓库及当前 `CODEX_HOME` 内的目标均拒绝；失败不重试、不清理已有证据、不生成成功回执。
+
+后续真实采集须满足以下边界；准备器不执行这些步骤：
+
+- 从独立消费项目启动原生运行时，采集器只发送 `task.txt`，不得人工拼接 Skill 全文、源仓库 `AGENTS.md`、rubric 或预期答案到 developer/user 指令。宿主正常发现或显式调用后载入包内正文属于原生加载，不属于采集器注入；仍须用原始消息或读取轨迹核对实际载入内容与包文件指纹。评分契约和回执在采集器侧，Maker 的可读范围只含消费项目与声明的运行时资产，不能靠“放在项目外”代替读取隔离。
+- 使用同一 host profile 做新旧包对照，固定 runner、model、推理、工具和授权配置，只变化 Skill 版本；宿主规则变化须另开对照。仅切换 `CODEX_HOME` 不足以证明全局 Skill、插件、Hook、memory、父目录规则和用户配置已隔离，先核对实际有效清单与读取轨迹。
+- 显式专业调用须有包内 `SKILL.md` 的原生加载或读取证据；隐式场景允许简单任务直接完成，也可能加载专业能力。分别记录完成率、无必要停顿、实际加载和越权，不能把成功结果倒推成已加载 Skill，或把未加载样本算成该 Skill 的行为改善。
+- Checker 独立复跑验收检查、比较项目文件及写入范围，并核对审批、工具和能力读取轨迹。合成项目故意保留 `None` 缺陷；准备器单测中的受控修复只证明 checker 能发现它，不代表 Agent 已完成任务。报告场景只评报告，不能要求越界修复。
+- 先冻结案例、包和宿主输入指纹，采集时核对 `receipt.json` 中的文件哈希，结合隔离执行证据和成对运行记录，再按既有盲评/评分契约裁决。准备回执固定为 `NOT_RUN / NOT_VERIFIED`，不是可直接用于晋升的评分输入；缺加载证明、外部调用授权或预算时，停止对应采集并保留待验证状态。
+
+历史 `instruction-boundaries-behavior-cases.json` 仍按原组合指令范围解释。其 `instruction-current` 是冻结来源标签，不表示永远追随工作区；在 `4ffc24a` 源码快照上可核对原指纹。当前源码变化后，应在对应历史快照复核旧证据，并独立建立新实验，禁止刷新旧 `sha256`、挪用旧 response 或将尚未完成的 Judge 评分补记为通过。
 
 ### 方差检查
 

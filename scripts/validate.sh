@@ -416,6 +416,9 @@ echo "==> Skill behavior evaluation"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/instruction-boundaries-behavior-cases.json"
 python3 scripts/evaluate-skill-behavior.py --self-test
 python3 scripts/test-evaluate-skill-behavior.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/skill-consumer-behavior-cases.json"
+run_gate python3 scripts/prepare-skill-consumer-eval.py --validate
+python3 scripts/test-prepare-skill-consumer-eval.py
 
 echo "==> skill quality advisory"
 python3 scripts/test-audit-skill-security.py
