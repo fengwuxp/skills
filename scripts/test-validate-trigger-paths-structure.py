@@ -11,7 +11,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR = ROOT / "scripts" / "validate-trigger-paths.py"
 VALIDATE_SCRIPT = ROOT / "scripts" / "validate.sh"
-SYNC_SCRIPT = ROOT / "sync-skills.sh"
 EVIDENCE_FUNCTIONS = {
     "behavior_fixture_fingerprint",
     "file_fingerprint",
@@ -61,30 +60,12 @@ class TriggerValidatorStructureTests(unittest.TestCase):
         self.assertIn("scripts/test-check-skill-evidence.py", validate_script)
         self.assertIn("scripts/check-skill-evidence.py", validate_script)
 
-    def test_sync_blocks_non_ready_delivery_gate(self) -> None:
-        sync_script = SYNC_SCRIPT.read_text(encoding="utf-8")
-
-        self.assertIn("scripts/check-skill-evidence.py", sync_script)
-        self.assertIn("Skill delivery gate is not ready", sync_script)
-        self.assertIn("Cannot sync all: delivery gate is not ready", sync_script)
-        self.assertIn("All sync aborted before writing", sync_script)
-
     def test_runtime_parity_is_an_explicit_validation_gate(self) -> None:
         validate_script = VALIDATE_SCRIPT.read_text(encoding="utf-8")
 
         self.assertIn("--require-installed-parity", validate_script)
         self.assertIn("VALIDATE_INSTALLED_SKILLS", validate_script)
         self.assertIn("SKIP installed parity", validate_script)
-
-    def test_runtime_parity_fails_closed_on_dependency_or_evidence_drift(self) -> None:
-        parity_script = (ROOT / "scripts" / "validate-installed-skills.sh").read_text(
-            encoding="utf-8"
-        )
-
-        self.assertIn("installed skill has non-installable dependencies", parity_script)
-        self.assertIn("installed skill delivery gate is not ready", parity_script)
-        self.assertNotIn("SKIP installed parity: ${skill_name} has", parity_script)
-        self.assertNotIn("SKIP installed parity: ${skill_name} evidence", parity_script)
 
 
 if __name__ == "__main__":

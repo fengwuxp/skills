@@ -19,26 +19,6 @@ while IFS= read -r skill_md; do
   source_dir="$(dirname "${skill_md}")"
   skill_name="$(basename "${source_dir}")"
   target_dir="${TARGET_ROOT}/${skill_name}"
-  admission_status="$(python3 "${ROOT_DIR}/scripts/check-skill-admission.py" --status "${source_dir}")"
-
-  if [[ "${admission_status}" != "installable" ]]; then
-    if [[ -e "${target_dir}" ]]; then
-      fail "candidate skill remains installed: ${target_dir}"
-    fi
-    continue
-  fi
-
-  if ! python3 "${ROOT_DIR}/scripts/check-skill-admission.py" \
-    --check-dependencies "${source_dir}" >/dev/null 2>&1; then
-    fail "installed skill has non-installable dependencies: ${skill_name}"
-    continue
-  fi
-
-  if ! python3 "${ROOT_DIR}/scripts/check-skill-evidence.py" \
-    --skill "${source_dir}" >/dev/null 2>&1; then
-    fail "installed skill delivery gate is not ready: ${skill_name}"
-    continue
-  fi
 
   if [[ ! -f "${target_dir}/SKILL.md" ]]; then
     fail "installed skill missing: ${target_dir}"

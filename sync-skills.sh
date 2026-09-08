@@ -7,6 +7,7 @@ Usage:
   sync-skills.sh                 # list skills and prompt for selection
   sync-skills.sh <skill-dir>...   # sync one or more skills by directory name
   sync-skills.sh all              # sync all skills
+  sync-skills.sh --overwrite all  # clear this project's installed skills, then sync all
   sync-skills.sh --dry-run        # preview selected sync without writing target
   sync-skills.sh --with-agents wise-agent  # also sync global implementer/batch_worker profiles
 
@@ -16,13 +17,17 @@ Environment:
 Notes:
   - Source skills are discovered from skill directories next to this script.
   - Installed skills are synced to "$CODEX_HOME/skills/<skill-dir>".
+  - Named skills or all discovered skills are copied without admission or dependency checks.
   - Existing installed skills are backed up before sync.
+  - Overwrite mode moves current project names and known retired names to backup first.
+  - Other installed skills, .system, and existing backups are left untouched.
   - Symbolic-link roots, targets, and pre-existing backup paths are rejected.
   - Known replaced skills are moved to the backup directory after their replacement syncs.
 USAGE
 }
 
 DRY_RUN=false
+OVERWRITE=false
 WITH_AGENTS=false
 ARGS=()
 for arg in "$@"; do
@@ -33,6 +38,9 @@ for arg in "$@"; do
       ;;
     --dry-run)
       DRY_RUN=true
+      ;;
+    --overwrite)
+      OVERWRITE=true
       ;;
     --with-agents)
       WITH_AGENTS=true
@@ -63,6 +71,11 @@ AGENT_SOURCE_DIR="${REPO_ROOT}/.codex/agents"
 AGENT_TARGET_DIR="${CODEX_HOME_DIR}/agents"
 AGENT_BACKUP_ROOT="${CODEX_HOME_DIR}/.agent-backups"
 AGENT_PROFILE_FILES=("implementer.toml" "batch-worker.toml")
+SKILL_REPLACEMENTS=(
+  "wind-project-coding-conventions:wind-coding-conventions"
+  "delivery-collab:wise-agent"
+  "huaxia-wisdom:huaxia-practical-wisdom"
+)
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 DRY_RUN_STAGE=""
 
@@ -94,41 +107,10 @@ if [[ "${DRY_RUN}" == "true" ]]; then
 fi
 
 skill_dirs=()
-skill_names=()
-skill_statuses=()
-skill_dependency_statuses=()
-skill_evidence_statuses=()
 while IFS= read -r skill_file; do
   dir="$(dirname "${skill_file}")"
   key="$(basename "${dir}")"
-  name="$(awk '
-    BEGIN { in_fm=0 }
-    NR == 1 && $0 == "---" { in_fm=1; next }
-    in_fm && $0 == "---" { exit }
-    in_fm && /^name:[[:space:]]*/ {
-      sub(/^name:[[:space:]]*/, "")
-      print
-      exit
-    }
-  ' "${skill_file}")"
-  if [[ -z "${name}" ]]; then
-    name="${key}"
-  fi
   skill_dirs+=("${key}")
-  skill_names+=("${name}")
-  status="$(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" --status "${dir}")"
-  skill_statuses+=("${status}")
-  if [[ "${status}" == "installable" ]] \
-    && python3 "${REPO_ROOT}/scripts/check-skill-admission.py" --check-dependencies "${dir}" >/dev/null 2>&1; then
-    skill_dependency_statuses+=("ready")
-  else
-    skill_dependency_statuses+=("blocked")
-  fi
-  if python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" --skill "${dir}" >/dev/null 2>&1; then
-    skill_evidence_statuses+=("ready")
-  else
-    skill_evidence_statuses+=("blocked")
-  fi
 done < <(find "${SKILLS_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | sort)
 
 if [[ ${#skill_dirs[@]} -eq 0 ]]; then
@@ -140,10 +122,7 @@ print_skills() {
   echo "Available skills:"
   local i
   for i in "${!skill_dirs[@]}"; do
-    printf '  [%d] %s  (%s, %s, dependencies=%s, delivery-gate=%s)\n' \
-      "$((i + 1))" "${skill_dirs[$i]}" "${skill_names[$i]}" \
-      "${skill_statuses[$i]}" "${skill_dependency_statuses[$i]}" \
-      "${skill_evidence_statuses[$i]}"
+    printf '  [%d] %s\n' "$((i + 1))" "${skill_dirs[$i]}"
   done
 }
 
@@ -159,6 +138,7 @@ contains_skill() {
 }
 
 selected=()
+ALL_SELECTED=false
 add_selected() {
   local key="$1"
   local existing
@@ -170,84 +150,12 @@ add_selected() {
   selected+=("${key}")
 }
 
-select_with_dependencies() {
-  local key="$1"
-  local dependency
-  if [[ "$(evidence_for_skill "${key}")" != "ready" ]]; then
-    python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
-      --skill "${SKILLS_DIR}/${key}" >&2 || true
-    echo "Skill delivery gate is not ready: ${key}" >&2
-    exit 1
-  fi
-  while IFS= read -r dependency; do
-    [[ -z "${dependency}" ]] && continue
-    select_with_dependencies "${dependency}"
-  done < <(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
-    --list-dependencies "${SKILLS_DIR}/${key}")
-  add_selected "${key}"
-}
-
 select_all() {
-  local i
-  local blocked=false
-  for i in "${!skill_dirs[@]}"; do
-    if [[ "${skill_statuses[$i]}" == "installable" ]]; then
-      if [[ "${skill_dependency_statuses[$i]}" != "ready" ]]; then
-        echo "Cannot sync all: required Skill is not installable for ${skill_dirs[$i]}" >&2
-        blocked=true
-      elif [[ "${skill_evidence_statuses[$i]}" != "ready" ]]; then
-        echo "Cannot sync all: delivery gate is not ready for ${skill_dirs[$i]}" >&2
-        blocked=true
-      fi
-    else
-      echo "Skip ${skill_dirs[$i]}: admission status ${skill_statuses[$i]}" >&2
-    fi
+  ALL_SELECTED=true
+  local key
+  for key in "${skill_dirs[@]}"; do
+    add_selected "${key}"
   done
-  if [[ "${blocked}" == "true" ]]; then
-    echo "All sync aborted before writing: fix blocked installable Skills or choose explicit Skills." >&2
-    exit 1
-  fi
-  for i in "${!skill_dirs[@]}"; do
-    if [[ "${skill_statuses[$i]}" == "installable" ]]; then
-      select_with_dependencies "${skill_dirs[$i]}"
-    fi
-  done
-}
-
-status_for_skill() {
-  local candidate="$1"
-  local i
-  for i in "${!skill_dirs[@]}"; do
-    if [[ "${skill_dirs[$i]}" == "${candidate}" ]]; then
-      echo "${skill_statuses[$i]}"
-      return 0
-    fi
-  done
-  return 1
-}
-
-dependencies_for_skill() {
-  local candidate="$1"
-  local i
-  for i in "${!skill_dirs[@]}"; do
-    if [[ "${skill_dirs[$i]}" == "${candidate}" ]]; then
-      echo "${skill_dependency_statuses[$i]}"
-      return 0
-    fi
-  done
-  return 1
-}
-
-evidence_for_skill() {
-  local candidate="$1"
-  local i
-  for i in "${!skill_dirs[@]}"; do
-    if [[ "${skill_dirs[$i]}" == "${candidate}" ]]; then
-      echo "${skill_evidence_statuses[$i]}"
-      return 0
-    fi
-  done
-  return 1
 }
 
 selected_index() {
@@ -269,22 +177,6 @@ if [[ ${#ARGS[@]} -gt 0 ]]; then
       continue
     fi
     if contains_skill "${arg}"; then
-      if [[ "$(status_for_skill "${arg}")" != "installable" ]]; then
-        echo "Skill is not installable: ${arg} ($(status_for_skill "${arg}"))" >&2
-        exit 1
-      fi
-      if [[ "$(dependencies_for_skill "${arg}")" != "ready" ]]; then
-        python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
-          --check-dependencies "${SKILLS_DIR}/${arg}" >&2 || true
-        echo "Skill has non-installable dependencies: ${arg}" >&2
-        exit 1
-      fi
-      if [[ "$(evidence_for_skill "${arg}")" != "ready" ]]; then
-        python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
-          --skill "${SKILLS_DIR}/${arg}" >&2 || true
-        echo "Skill delivery gate is not ready: ${arg}" >&2
-        exit 1
-      fi
       add_selected "${arg}"
     else
       echo "Unknown skill: ${arg}" >&2
@@ -327,31 +219,20 @@ if [[ ${#selected[@]} -eq 0 ]]; then
   exit 0
 fi
 
-for selected_position in "${!selected[@]}"; do
-  key="${selected[$selected_position]}"
-  while IFS= read -r dependency; do
-    [[ -z "${dependency}" ]] && continue
-    if ! dependency_position="$(selected_index "${dependency}")"; then
-      echo "Skill dependency must be selected in the same sync: ${key} -> ${dependency}" >&2
-      exit 1
-    fi
-    if (( dependency_position >= selected_position )); then
-      echo "Select Skill dependency before its caller: ${dependency} -> ${key}" >&2
-      exit 1
-    fi
-  done < <(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
-    --list-dependencies "${SKILLS_DIR}/${key}")
-done
+if [[ "${OVERWRITE}" == "true" ]]; then
+  if [[ "${ALL_SELECTED}" != "true" ]]; then
+    echo "--overwrite requires all" >&2
+    exit 1
+  fi
+  if [[ "${TARGET_ROOT}" -ef "${SKILLS_DIR}" ]]; then
+    echo "Refusing to clear the source Skill root: ${TARGET_ROOT}" >&2
+    exit 1
+  fi
+fi
 
 if [[ "${WITH_AGENTS}" == "true" ]] && ! selected_index "wise-agent" >/dev/null; then
   echo "--with-agents requires wise-agent to be selected" >&2
   exit 1
-fi
-
-if [[ "${WITH_AGENTS}" == "true" ]]; then
-  python3 "${REPO_ROOT}/scripts/validate-codex-agent-profiles.py" \
-    --source-dir "${AGENT_SOURCE_DIR}" \
-    --target-dir "${AGENT_TARGET_DIR}"
 fi
 
 echo "Repository root: ${REPO_ROOT}"
@@ -370,34 +251,15 @@ sync_one() {
   local target_dir="${TARGET_ROOT}/${key}"
   local backup_dir="${BACKUP_ROOT}/${key}-${TIMESTAMP}"
   local rsync_target="${target_dir}"
-  local admission_status
-  local dependency_output
-  admission_status="$(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" --status "${source_dir}")"
-
   if [[ ! -f "${source_dir}/SKILL.md" ]]; then
     echo "Source skill is invalid, missing SKILL.md: ${source_dir}" >&2
-    exit 1
-  fi
-  if [[ "${admission_status}" != "installable" ]]; then
-    echo "Skill is not installable: ${key} (${admission_status})" >&2
-    exit 1
-  fi
-  if ! dependency_output="$(python3 "${REPO_ROOT}/scripts/check-skill-admission.py" \
-    --check-dependencies "${source_dir}")"; then
-    echo "${dependency_output}" >&2
-    echo "Skill has non-installable dependencies: ${key}" >&2
-    exit 1
-  fi
-  if ! python3 "${REPO_ROOT}/scripts/check-skill-evidence.py" \
-    --skill "${source_dir}"; then
-    echo "Skill delivery gate is not ready: ${key}" >&2
     exit 1
   fi
   if [[ -L "${target_dir}" ]]; then
     echo "Refusing symbolic-link Skill target: ${target_dir}" >&2
     exit 1
   fi
-  if [[ "${DRY_RUN}" == "false" && ( -e "${backup_dir}" || -L "${backup_dir}" ) ]]; then
+  if [[ "${DRY_RUN}" == "false" && -e "${target_dir}" && ( -e "${backup_dir}" || -L "${backup_dir}" ) ]]; then
     echo "Refusing existing Skill backup path: ${backup_dir}" >&2
     exit 1
   fi
@@ -417,7 +279,7 @@ sync_one() {
   rsync_args=(-av --delete --exclude '.DS_Store' --exclude '.idea' --exclude '__pycache__' --exclude '*.[pP][yY][cC]')
   if [[ "${DRY_RUN}" == "true" ]]; then
     rsync_args+=(--dry-run)
-    if [[ ! -d "${target_dir}" ]]; then
+    if [[ "${OVERWRITE}" == "true" || ! -d "${target_dir}" ]]; then
       rsync_target="${DRY_RUN_STAGE}"
     fi
   else
@@ -425,19 +287,6 @@ sync_one() {
   fi
 
   rsync "${rsync_args[@]}" "${source_dir}/" "${rsync_target}/"
-
-  if [[ "${DRY_RUN}" == "false" ]]; then
-    test -f "${target_dir}/SKILL.md"
-    test -d "${target_dir}/references" || true
-    local source_count target_count
-    source_count="$(find "${source_dir}" -type f ! -name '.DS_Store' ! -iname '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
-    target_count="$(find "${target_dir}" -type f ! -name '.DS_Store' ! -iname '*.pyc' ! -path '*/.idea/*' ! -path '*/__pycache__/*' | wc -l | tr -d ' ')"
-    echo "    files: source=${source_count}, target=${target_count}"
-    if [[ "${source_count}" != "${target_count}" ]]; then
-      echo "Skill sync file counts differ: ${key}" >&2
-      exit 1
-    fi
-  fi
 }
 
 sync_agent_profiles() {
@@ -480,11 +329,37 @@ sync_agent_profiles() {
   done
 
   if [[ "${DRY_RUN}" == "false" ]]; then
-    for profile_file in "${AGENT_PROFILE_FILES[@]}"; do
-      cmp -s "${AGENT_SOURCE_DIR}/${profile_file}" "${AGENT_TARGET_DIR}/${profile_file}"
-    done
     [[ ! -d "${backup_dir}" ]] || echo "    backup: ${backup_dir}"
   fi
+}
+
+clear_project_skills() {
+  local project_skills=("${skill_dirs[@]}")
+  local mapping key target_dir backup_dir
+  for mapping in "${SKILL_REPLACEMENTS[@]}"; do
+    project_skills+=("${mapping%%:*}")
+  done
+
+  for key in "${project_skills[@]}"; do
+    target_dir="${TARGET_ROOT}/${key}"
+    backup_dir="${BACKUP_ROOT}/${key}-${TIMESTAMP}"
+    refuse_symbolic_link "${target_dir}" "Skill target"
+    if [[ "${DRY_RUN}" == "false" && -e "${target_dir}" && ( -e "${backup_dir}" || -L "${backup_dir}" ) ]]; then
+      echo "Refusing existing Skill backup path: ${backup_dir}" >&2
+      exit 1
+    fi
+  done
+
+  for key in "${project_skills[@]}"; do
+    target_dir="${TARGET_ROOT}/${key}"
+    backup_dir="${BACKUP_ROOT}/${key}-${TIMESTAMP}"
+    [[ -e "${target_dir}" ]] || continue
+    echo "==> clear ${key}"
+    echo "    move to backup: ${backup_dir}"
+    if [[ "${DRY_RUN}" == "false" ]]; then
+      mv "${target_dir}" "${backup_dir}"
+    fi
+  done
 }
 
 retire_replaced_skill() {
@@ -523,6 +398,10 @@ retire_replaced_skill() {
   echo "    backup: ${backup_dir}"
 }
 
+if [[ "${OVERWRITE}" == "true" ]]; then
+  clear_project_skills
+fi
+
 for key in "${selected[@]}"; do
   sync_one "${key}"
   echo
@@ -533,8 +412,10 @@ if [[ "${WITH_AGENTS}" == "true" ]]; then
   echo
 fi
 
-retire_replaced_skill "wind-project-coding-conventions" "wind-coding-conventions"
-retire_replaced_skill "delivery-collab" "wise-agent"
-retire_replaced_skill "huaxia-wisdom" "huaxia-practical-wisdom"
+if [[ "${OVERWRITE}" == "false" ]]; then
+  for mapping in "${SKILL_REPLACEMENTS[@]}"; do
+    retire_replaced_skill "${mapping%%:*}" "${mapping#*:}"
+  done
+fi
 
 echo "Done. Restart Codex or open a new session if skill metadata does not refresh immediately."

@@ -3295,7 +3295,7 @@ check(
     )
     and has_all(
         "sync-skills.sh",
-        ["--with-agents", "AGENT_PROFILE_FILES", "AGENT_SOURCE_DIR", "AGENT_TARGET_DIR", "validate-codex-agent-profiles.py", "--target-dir", "cmp -s"],
+        ["--with-agents", "AGENT_PROFILE_FILES", "AGENT_SOURCE_DIR", "AGENT_TARGET_DIR"],
     )
     and has_all(
         "scripts/validate-codex-agent-profiles.py",

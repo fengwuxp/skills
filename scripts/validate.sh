@@ -444,20 +444,6 @@ if [[ -e "${dry_run_home}" ]]; then
   exit 1
 fi
 
-echo "==> candidate skill sync guard"
-candidate_home="${tmp_dir}/candidate-home"
-if CODEX_HOME="${candidate_home}" ./sync-skills.sh --dry-run payment-funds-review >/dev/null 2>&1; then
-  echo "FAIL candidate payment-funds-review was syncable" >&2
-  exit 1
-fi
-
-echo "==> optional payment routing sync guard"
-dependency_home="${tmp_dir}/dependency-home"
-if ! CODEX_HOME="${dependency_home}" ./sync-skills.sh --dry-run product-architecture-expert >/dev/null 2>&1; then
-  echo "FAIL product-architecture-expert was blocked by optional payment routing" >&2
-  exit 1
-fi
-
 echo "==> installed skill parity self-test"
 parity_home="${tmp_dir}/parity-home"
 CODEX_HOME="${parity_home}" ./sync-skills.sh all >/dev/null

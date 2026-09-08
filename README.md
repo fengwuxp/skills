@@ -354,17 +354,27 @@ python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py disable
 
 ## 安装
 
-支持环境为 macOS 或 Linux 的 Bash shell；同步需要 Python 3.11+ 与 `rsync`，完整验证还需要 Ruby、`rg` 和 Git。仓库未提供 Windows 原生脚本，Windows 使用者应在 WSL 或等价 Unix 环境中运行，并自行确认工具版本兼容性。
+支持环境为 macOS 或 Linux 的 Bash shell；同步需要 `rsync`，完整验证还需要 Python 3.11+、Ruby、`rg` 和 Git。仓库未提供 Windows 原生脚本，Windows 使用者应在 WSL 或等价 Unix 环境中运行，并自行确认工具版本兼容性。
 
 ```bash
 git clone https://github.com/fengwuxp/skills.git
 cd skills
 ./sync-skills.sh --dry-run all
 ./sync-skills.sh all
-scripts/validate-installed-skills.sh
 ```
 
-同步单个无依赖 Skill 使用 `./sync-skills.sh document-authoring`；非默认目录使用 `CODEX_HOME=/path/to/codex-home`。有 `admission.json.requires` 的 Skill 必须在同一命令中先列依赖、再列调用方；`all` 会按准入和依赖闭包选择安全批次。同步使用 `rsync --delete`，会先备份已有安装；Skill / Agent 根目录、目标目录或备份路径为符号链接，以及同时间戳备份已存在时均 fail-closed。脚本还会按替代关系退役 `wind-project-coding-conventions`、`delivery-collab` 和 `huaxia-wisdom`。完成后重启 Codex 或开启新会话。
+同步指定 Skill 使用 `./sync-skills.sh document-authoring`，可同时列出多个目录；`all` 覆盖同步所有包含 `SKILL.md` 的源目录。同步只负责复制，不检查 `candidate` / `installable`、准入证据或依赖关系，不要求依赖顺序，也不自动补选依赖；目标不存在就创建，已存在就覆盖。非默认目录使用 `CODEX_HOME=/path/to/codex-home`。
+
+需要先清空本项目的安装目录再全量复制时，使用覆盖式同步：
+
+```bash
+./sync-skills.sh --dry-run --overwrite all
+./sync-skills.sh --overwrite all
+```
+
+`--overwrite` 仅用于 `all`：先将当前源目录同名的已安装 Skill，以及三个已知旧名称 `wind-project-coding-conventions`、`delivery-collab`、`huaxia-wisdom` 移入备份，从安装位置移除；全部清理后再复制当前全量 Skill。白名单按目录名精确匹配，不扫描其它 Skill 的内容或推断归属；`.system`、已有备份、其它名称的 Skill 和来源不明的历史目录均保留。源仓库已经删除且不在已知旧名称中的目录不会被自动清理。
+
+同步使用 `rsync --delete`，会清理选中目录内源端已删除的文件，并先备份已有安装；保留符号链接和备份路径冲突保护，不影响未选中的其它 Skill。脚本仍按替代关系退役 `wind-project-coding-conventions`、`delivery-collab` 和 `huaxia-wisdom`。完成后重启 Codex 或开启新会话。需要核对文件一致性时可单独运行 `scripts/validate-installed-skills.sh`，它不是同步门禁；准入与质量检查留在独立验证流程中。
 
 ### 许可证状态
 
