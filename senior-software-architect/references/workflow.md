@@ -71,6 +71,7 @@
 
 门禁规则：
 
+- Design / Plan 产物落盘必须复用用户或项目已确认的原生载体，不能因 OpenSpec、Spec Kit、Kiro、Superpowers 或 Harness 的工具默认值并建目录；没有已确认载体时，只给候选落点并保留写入边界。
 - Clarify 或 Design 阶段仍有关键不确定时，不进入代码实现；先输出 Round 0 缺口、澄清问题或可确认假设。
 - 设计前必须先构造用例、测试用例、边界条件、异常路径和验收标准；这属于测试驱动设计，不等同于编码阶段才写单测。
 - Build 阶段的每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景；无法追溯的“顺手优化”、格式化、抽象或删除，默认不进入本轮变更。
@@ -78,7 +79,7 @@
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
 - AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；受控工程执行、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
 - 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充 Harness Plan、上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
-- Harness Plan 必须体现 OpenSpec / Superpowers / Harness 的责任分离：OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。
+- Harness Plan 必须体现 OpenSpec / Superpowers / Harness 的责任分离：项目选用 OpenSpec 时，OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接；责任分离不要求生成三套目录或三份重复文档。
 
 ## 可交付竖切任务契约
 

@@ -58,7 +58,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 | Worker | 子任务输入可冻结、写入不重叠且并行收益明确 | `references/engineering-governance.md` |
 | Checker | 高风险、公共契约、重要交付或发布准出 | `references/verification-review-release.md` |
 
-先判断 SDLC，再判断是否需要项目执行规范，确需在当前切片反复运行才增加 Loop；Worker 与 Checker 是正交判断。用户提出 Goal、长任务或持续推进时，不创建或恢复运行时 Goal，转为更新项目已有 `OpenSpec / Spec / Issue / 任务计划`。执行规范固定目标、约束、退出标准、验证、授权和当前切片；切片内部由模型自行选择最短可验证路径。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有项目执行规范上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
+先判断 SDLC，再判断是否需要项目执行规范，确需在当前切片反复运行才增加 Loop；Worker 与 Checker 是正交判断。用户提出 Goal、长任务或持续推进时，不创建或恢复运行时 Goal，转为更新项目已有 `OpenSpec / Spec / Issue / 任务计划`。规划产物落盘、多框架冲突和文档减层读取 `references/execution-specification.md` 的“规划产物归位与减层”；Skill、Plugin 或 Harness 的默认路径不是项目权威。执行规范固定目标、约束、退出标准、验证、授权和当前切片；切片内部由模型自行选择最短可验证路径。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有项目执行规范上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
 
 ## 能力装载
 

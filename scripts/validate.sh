@@ -325,6 +325,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 echo "==> wise-agent module deliberation behavior cases"
 scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-module-deliberation-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-external-capability-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-conversation-reanchor-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"

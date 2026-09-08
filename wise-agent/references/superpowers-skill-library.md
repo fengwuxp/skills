@@ -83,7 +83,7 @@ Superpowers 不成为第二 Owner。知止者保持统一行动主体，专业 S
 | Superpowers Skill | 适用缺口 | 主责与边界 |
 | --- | --- | --- |
 | `brainstorming` | 模糊想法、目标、约束、备选和成功标准 | 产品语义、范围与验收回产品架构专家；关键分叉未决才升级 `grill-me`，避免重复问询。 |
-| `writing-plans` | 已确认 Spec 的工程任务拆解 | 架构师负责完整计划、文件边界和验证策略。 |
+| `writing-plans` | 已确认 Spec 的工程任务拆解 | 架构师负责完整计划、文件边界和验证策略；产物路径按 `execution-specification.md` 的归位契约裁决。 |
 | `executing-plans` | 已授权计划的批次执行与检查点 | 不替代 Plan / Wave / Execution Grant。 |
 | `subagent-driven-development`、`dispatching-parallel-agents` | 独立任务和独立 Checker | 仅在当前会话有工具、任务不共享写入且用户授权时使用。 |
 | `test-driven-development` | 功能、Bug 修复和行为变更 | 架构师决定测试层级、例外和项目策略；不机械删除既有实现。 |
@@ -120,6 +120,8 @@ AnySearch 只作为第三方公开检索的观察执行能力，不是默认搜�
 - 已安装不等于执行授权；Skill 的 `MUST`、`always` 或默认流程不能覆盖用户原话和仓库规则。
 - 产品任务不因 `brainstorming` 自动进入工程计划；工程任务不因 `writing-plans` 自动进入实现。
 - 一行文档或低风险局部修改不因插件存在自动创建 worktree、分支、subagent 或提交。
+- 调用 `brainstorming` 或 `writing-plans` 前按 `execution-specification.md` 的“规划产物归位与减层”选择载体；`docs/superpowers` 只是插件可覆盖默认值，不能自行创建第二规划根。
+- `.superpowers` 中的 brainstorming、SDD、快照、brief、report 或测试证据默认是工具执行资产；除非项目明确将其纳入权威约规，否则不得作为唯一设计、任务状态、授权或恢复入口。
 - 插件脚本、本地服务、`.superpowers/`、依赖安装和联网访问必须逐项满足当前任务需要、写入边界和授权。
 - Git 提交、推送、PR、merge、worktree 创建与清理继续遵守仓库 `AGENTS.md`。
 - Superpowers 输出不得写成产品确认、架构裁决、测试通过、CR 结论、发布批准或生产生效事实。

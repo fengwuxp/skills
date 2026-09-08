@@ -8,6 +8,9 @@
     ],
     "senior-software-architect": [
       {
+        "cases": "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
       },
       {
@@ -153,6 +156,9 @@
       }
     ],
     "wise-agent": [
+      {
+        "cases": "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
+      },
       {
         "cases": "fixtures/skill-eval/wise-agent-external-capability-behavior-cases.json"
       },
