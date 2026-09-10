@@ -4,7 +4,7 @@
 
 ## 使用时机
 
-- 用户要求 AI 参与代码生成、Bug 修复、重构、测试补充、迁移改造或文档到代码转换。
+- 用户要求设计或调整 AI 编码协作方法；普通代码生成、Bug 修复、重构和补测试走各自专业入口，不因执行者是 AI 而读取本文件。
 - 任务需要 OpenSpec、Superpowers、Harness、受控工程执行、Plan Grant / Execution Grant 或多 Agent 协作。
 - AI Native 已交付 Product Context Card、Engineering Handoff Card 或 生产交付卡，需要架构师判断是否可消费并继续工程设计、编码、TDD、CR 或发布风险。
 - 需要审查 AI 生成代码是否越界、幻觉、缺测试、放宽断言或伪造验证。
@@ -17,19 +17,16 @@
 
 ## 读取后必须产出
 
-- 当前任务属于轻量执行、OpenSpec、Harness Plan、受控工程执行 Loop 还是只读审查。
-- 写入范围、禁止事项、验证命令和停止条件。
-- AI Native 交接卡消费结论：Product Context Card 是否足够，Engineering Handoff Card 是否可执行，生产交付卡是否满足持续推进门禁。
-- 长任务的上下文账本、阶段状态、交接方式和恢复入口。
-- Codex 运行时协作方式与工程知识资产判断：thread、voice/transcript、steering/queuing、tool reach、automation、side panel/artifact 或显式 written context 是否适用；旧 Goal 输入只迁移目标意图与历史来源。知识资产需说明资料范围、源码锚点、项目规则、验证证据、输出标准、更新 owner 和停用条件。
-- AI 产物复核重点：边界、契约、测试、验证、依赖、安全和生产风险。
+- 当前实际采用的协作方式、写入范围、验证与停止条件，复用已有任务事实；不要求另选模式或创建卡片。
+- 只有实际收到 AI Native 交接卡时核对卡片；需要恢复或跨责任人交接时补状态与恢复入口；使用 Codex 持续协作能力时再读对应章节。
+- AI 产物复核结论以边界、契约、测试、依赖、安全和生产风险证据为准。
 
 ## 需要继续读取的 reference
 
 - Java/Spring 代码先读项目本地规范、`wind-coding-conventions` 通用层和 `coding-review-deep-dive.md`；Wind 专项按依赖或上下文启用。
 - 测试/TDD 读 `testing.md`；Bug 修复读 `debugging-diagnosis.md`。
-- 中大型项目、长任务、上下文衰减、多 Agent/Wave 编排、暂停恢复和收口流程读 `ai-large-project-orchestration.md`。
-- 受控工程执行 Loop 的工程细节读 `cad-mode.md`；Plan Grant / Execution Grant 读 `wise-agent/references/planning-execution-admission.md`。
+- 真实恢复、跨责任人交接或已获准的多 Agent/Wave 编排才读 `ai-large-project-orchestration.md` 对应章节；普通多文件工作不增加阶段计划。
+- 实际采用受控工程执行 Loop 才读 `cad-mode.md`；实际采用 Plan Grant / Execution Grant 才读 `wise-agent/references/planning-execution-admission.md` 对应授权规则，不因引用加载协调 Skill。
 - 生产变更读 `production-readiness.md` 和 `negative-constraints.md`。
 
 ## 按任务读取索引
@@ -42,8 +39,8 @@
 | 受控工程执行 Loop 准入 | 9 受控工程执行 Loop、10 Plan Grant / Execution Grant，并继续读 `cad-mode.md` | 基础三层模型解释 |
 | 审查 AI 生成代码 | 4 Superpowers、8 风险分级、Review 清单，并按需读 Review/测试 reference | CAD 执行流程细节 |
 | 生产或高风险自动推进 | 8 风险分级、9 受控自治开发模式、10 Plan Grant / Execution Grant，并继续读 `cad-mode.md` | 低风险轻量执行内容 |
-| 中大型 AI 编码或上下文衰减治理 | 5 Harness、6 长任务上下文治理，并继续读 `ai-large-project-orchestration.md` | 不照搬外部工具命令或完整文件体系 |
-| Codex thread、automation、goal、side panel 或外部工具协作 | 5 Harness、6 长任务上下文治理、Codex 运行时协作模式；中大型任务继续读 `ai-large-project-orchestration.md` | 不把平台功能当授权或规格 |
+| 真实恢复、跨责任人交接或上下文衰减治理 | 6 长任务上下文治理，按需读 `ai-large-project-orchestration.md` 暂停恢复章节 | 不因中大型项目创建完整文件体系 |
+| Codex thread、automation、goal、side panel 或外部工具协作 | Codex 运行时协作模式；实际需要恢复或编排时再读 5、6 | 不把平台功能当授权或规格 |
 | AI Native 架构师角色升级 / 放下代码 / Agent 工作流设计 | 1 核心定位、1A AI Native 架构师工作面、4 Superpowers、5 Harness | 不把“少写代码”理解为放弃编码能力、验证或生产责任 |
 | AI 产品进入旧系统 / 企业协作 AI / Agent 工作流落地 | 1B AI 进入旧系统的架构门禁、3 OpenSpec、8 风险分级 | 不把 demo、发布会目标或产品热度当生产架构准入 |
 | 模糊需求 / 原型 / 页面说明进入工程任务 | 1C 可开发系统工程化门禁、3 OpenSpec、5 Harness | 不从页面愿望直接拆代码任务 |
@@ -77,7 +74,7 @@ OpenSpec 定目标
 -> Plan Grant / Execution Grant 控制可自动执行的权限边界
 ```
 
-中大型 AI 编码的额外风险是上下文衰减：对话越长，目标、决策、禁止事项、阻塞项和验证证据越容易被历史噪音淹没。架构师要把关键上下文放进可审查、可版本化、可恢复的载体，而不是依赖主会话记忆。
+实际出现上下文衰减、需要恢复或交接时，把目标、决策、禁止事项、阻塞项和验证证据放进已有的可审查、可版本化、可恢复的载体；不按项目规模或对话长度自动增加账本。
 
 ## 1A. AI Native 架构师工作面
 
@@ -173,18 +170,19 @@ OpenSpec / Superpowers / Harness 的责任边界：
 | Superpowers | 规定怎么高质量地做。 | TDD、Review、Refactor、最小变更、编码红线、测试门禁和 AI 产物复核。 | 不替代需求规格、协作分工、写入范围或用户授权。 |
 | Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接。 | Owner、Task ID、写入范围、只读范围、依赖顺序、Wave、验证命令、停止条件、交接和恢复入口。 | 不替代 OpenSpec、Superpowers、Plan Grant / Execution Grant、测试结果或生产审批。 |
 
-升级路径：
+按实际需要选择，以下不是逐级必经路径：
 
 ```text
 轻量修改：目标 + 写入范围 + 验证命令
-中高风险 AI 编码：OpenSpec + Harness Plan + Superpowers 检查
-中大型项目：OpenSpec + context ledger + GSD Stage/Wave/Atomic Task + Harness Plan + verification matrix
+存在关键取舍：澄清依赖决策 + 按风险选择验证
+需要恢复或交接：复用已有状态载体 + 保留证据与恢复入口
+已获准的并行编排：任务依赖 + 写入隔离 + 独立验收
 受控工程执行：单个已选任务 + 冻结决策 + 写入与验证边界 + Loop 契约 + Plan Grant / Execution Grant
 ```
 
 ## 2. 适用场景
 
-- 使用 AI 进行代码生成、Bug 修复、重构、测试补充、迁移改造或文档到代码转换。
+- 用户要求设计 AI 编码协作方法，或项目已经采用 OpenSpec、Superpowers、Harness 等机制。
 - 使用多个 AI Agent、子任务、人员或工作流并行完成同一个工程目标。
 - 需求、接口、数据、权限、资金、状态机、审计、兼容性或生产行为存在风险，需要先把标准和验证方式讲清楚。
 - 需要审查 AI 生成代码是否符合架构红线、编码约规、测试要求和交付标准。
@@ -290,7 +288,7 @@ Superpowers 红线：
 
 Harness 负责让人、AI、子任务和工具协作可控。它不是组织审批，而是工程执行编排。
 
-Harness 的产物不是“再写一份项目计划”，而是当前任务的可执行协作契约。任何进入 AI 编码实现的任务，至少要能说清：谁负责、哪个 Task ID、允许写哪里、只能读哪里、先做什么后做什么、用什么命令验证、什么情况停下、如何把结果交接给下一轮。
+Harness 的产物不是“再写一份项目计划”，而是实际协作任务的可执行契约。已采用 Harness、需要任务分派或项目明确要求时，复用现有任务标识、责任人、读写范围、依赖、验证与交接；普通已授权实现无需另建 Task ID 或 Harness Plan。
 
 最小 Harness Plan：
 
@@ -311,8 +309,8 @@ Harness Plan 分级：
 
 | 类型 | 使用场景 | 必须补齐 |
 | --- | --- | --- |
-| lightweight | 明确小改、单 Agent、单轮验证。 | Task ID/目标、Owner、写入范围、只读范围、验证命令、停止条件和交接。 |
-| gsd-wave | 中大型项目、Wave 编排、多 Agent 或跨会话恢复。 | 原子任务包、Wave 边界、上下文账本、阶段状态、验证矩阵和 handoff。 |
+| lightweight | 项目明确要求交付轻量 Harness Plan。 | Task ID/目标、Owner、写入范围、只读范围、验证命令、停止条件和交接。 |
+| gsd-wave | 已获准的 Wave / 多 Agent 编排。 | 原子任务包、Wave 边界、上下文账本、阶段状态、验证矩阵和 handoff。 |
 | engineering-loop | 准备进入受控工程执行 Loop 的单个任务包或阶段切片。 | 测试策略、适用授权、反馈源、人工确认点、回写和恢复入口。 |
 
 需要正式检查 Harness Plan 时，使用 `scripts/check_harness_plan.py`。脚本只检查本地文本或显式传入的本地文件，不联网、不上传、不读取密钥、不判断方案质量。常用方式：
@@ -354,7 +352,7 @@ Harness 红线：
 
 ## 6. 长任务上下文治理
 
-长任务不靠“主会话一直记得”维持质量，而靠项目内权威材料和阶段状态持续收束。适用于多轮实现、多 Agent 协作、跨模块变更、会话可能中断或上下文开始膨胀的任务。
+需要恢复、跨责任人交接或实际出现上下文衰减时，以项目内权威材料和阶段状态持续收束；当前会话内目标与依赖清楚的多模块实现不因此增加持久化要求。
 
 详细流程、账本文件、阶段模板、原子任务包、Wave 依赖、暂停恢复、Git 边界和收口模板统一读 `ai-large-project-orchestration.md`；本文只保留入口摘要，避免规则在多个 reference 中漂移。
 
@@ -411,24 +409,24 @@ Wave 编排规则：
 
 | 风险级别 | 场景 | 流程要求 |
 | --- | --- | --- |
-| 低风险 | 文档、注释、局部样板、明确的小修 | 轻量 OpenSpec，可直接执行并说明验证情况 |
-| 中风险 | 普通功能、Bug 修复、测试补充、局部重构 | OpenSpec + 相关测试 + 最小修改 + Review |
-| 高风险 | 公共契约、数据模型、权限、资金、生产行为、依赖升级、跨模块重构 | OpenSpec 先确认 + Harness Plan + TDD/验收测试 + 验证矩阵 + 残余风险 |
+| 低风险 | 文档、注释、局部样板、明确的小修 | 授权内直接执行并给适度验证，不要求规格或计划文件 |
+| 中风险 | 普通功能、Bug 修复、测试补充、局部重构 | 复用已确认契约，最小修改、相关测试和 Review |
+| 高风险 | 公共契约、数据模型、权限、资金、生产行为、依赖升级、跨模块重构 | 确认真实未决取舍和必要授权，保留契约、验收、兼容、回滚与残余风险；文档按项目要求复用 |
 
-高风险 AI 编码流程：
+高风险 AI 编码的依赖关系，具体方法沿用项目选择：
 
 ```text
 识别任务和风险
--> 形成 OpenSpec 并确认关键假设
+-> 核对既有契约，确认未决取舍与授权
 -> 提取验收场景和测试用例
--> 制定 Harness Plan
+-> 按实际依赖组织工作
 -> 小步实现
--> Superpowers 审查与重构
+-> 按项目标准审查必要变更
 -> 编译、测试、静态检查
 -> 输出交付结论和残余风险
 ```
 
-低风险小修、3 分钟内可完成的明确改动、一次性 demo 或 MVP 快速验证，不需要重型上下文账本、子 Agent 或 Wave 编排；使用轻量 OpenSpec 和普通验证闭环即可。
+目标、范围、授权和验证清楚时直接工作；不按预计分钟数或项目规模决定是否创建文档。恢复、交接、并行与 Loop 各按真实需要启用，不能代替项目验证要求。
 
 ## 9. 受控工程执行 Loop
 

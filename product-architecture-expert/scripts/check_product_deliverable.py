@@ -35,10 +35,9 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("detail_design", ["详细设计", "场景", "功能", "对象", "状态", "生命周期", "不变量", "状态机图"], 3),
         RequiredGroup("flows", ["主流程", "逆向流程", "异常流程", "人工处理", "业务流程", "责任推进", "异常与收口", "用例图", "流程图", "泳道图"], 2),
         RequiredGroup("rules", ["规则", "权限", "审批", "额度", "计费", "版本", "验收样例"], 2),
-        RequiredGroup("interface_abstraction", ["接口抽象", "产品接口", "业务契约", "输入", "输出", "失败语义", "责任边界"], 3),
         RequiredGroup("data_and_audit", ["数据", "指标", "报表", "埋点", "审计", "追溯"], 2),
         RequiredGroup("risk_and_confirmation", ["风险", "依赖", "待确认", "确认方", "影响范围"], 2),
-        RequiredGroup("acceptance_summary", ["验收摘要", "业务结果", "关键边界", "红线", "验收标准"], 2),
+        RequiredGroup("acceptance_summary", ["验收摘要", "业务结果", "关键边界", "红线", "验收标准", "正常结果", "边界结果", "禁止结果"], 2),
     ],
     "product-architecture": [
         RequiredGroup("business_goal", ["业务目标", "用户价值", "成功指标", "非目标"], 2),
@@ -173,7 +172,7 @@ RULE_FIELD_GROUPS = (
     ("rule_condition", ("当", "触发与判断条件", "条件")),
     ("rule_outcome", ("则", "处理结果", "结论")),
     ("rule_owner", ("Owner", "规则 Owner", "规则 owner")),
-    ("rule_examples", ("正例 / 边界例 / 反例", "验收样例")),
+    ("rule_examples", ("正例 / 边界例 / 反例", "验收样例", "正例", "边界例", "反例")),
 )
 RULE_COMPACT_FIELD_GROUPS = (
     ("name_type_motivation", ("规则名称 / 性质 / 业务动机", "规则名称/性质/业务动机")),
@@ -198,12 +197,12 @@ ARCHITECTURE_SPINE_FIELD_GROUPS = (
     ("view_choice", ("关键图 / 不画图理由", "关键图/不画图理由", "产品视图")),
 )
 PRODUCT_INTERFACE_FIELD_GROUPS = (
-    ("interface_name", ("产品接口名称",)),
-    ("interface_consumer", ("接口使用方",)),
-    ("interface_input", ("接口输入与前置条件",)),
-    ("interface_output", ("接口业务输出与副作用",)),
-    ("interface_failure", ("接口失败语义",)),
-    ("interface_boundary", ("接口责任边界",)),
+    ("interface_name", ("产品接口名称", "对外能力名称", "能力名称", "产品能力", "产品接口")),
+    ("interface_consumer", ("接口使用方", "使用方")),
+    ("interface_input", ("接口输入与前置条件", "输入与前置", "输入与前置条件")),
+    ("interface_output", ("接口业务输出与副作用", "结果与状态变化")),
+    ("interface_failure", ("接口失败语义", "失败承接", "失败恢复")),
+    ("interface_boundary", ("接口责任边界", "责任边界")),
 )
 AMBIGUOUS_BUSINESS_PHRASES = (
     "按相关规则处理",
@@ -227,7 +226,7 @@ PRD_SECTION_ORDER = [
     ("section_overview", ("概要设计",)),
     ("section_detail", ("详细设计",)),
     ("section_requirements", ("产品需求陈述",)),
-    ("section_rules_and_interface", ("业务规则与接口抽象", "业务规则和接口抽象")),
+    ("section_rules_and_interface", ("业务规则",)),
     ("section_risk", ("数据与风险", "数据、权限、风险", "风险与待确认")),
     ("section_acceptance", ("验收摘要",)),
 ]
@@ -264,7 +263,7 @@ SELF_TESTS: dict[str, tuple[str, str]] = {
         "当前版本：1.0。\n文档状态：评审中。\n文档强度：标准。\n"
         "产品 owner：审核产品负责人。\n业务 owner：运营负责人。\n"
         "更新时间：2026-09-01 09:00 +08:00。\n权威来源：当前 PRD。\n"
-        "## 阅读摘要\n当前结论：统一审核入口；产品定义 / 产品架构主脊：为运营提供可追踪的审核能力；主链路：提交、审核、通知；核心对象与边界：申请单由平台管理，不改变交易订单。\n"
+        "## 产品摘要\n面向运营统一后台审核入口，提供可追踪的审核能力；本期处理申请的提交、审核和通知，申请单由平台管理，不改变交易订单或结算规则。\n"
         "## 一、背景与问题\n背景：审核积压影响运营；问题：人工路径不清。\n"
         "## 二、目标与非目标\n目标：缩短审核处理时间；非目标：不改结算规则。"
         "成功指标：当前审核中位处理时长基线为 24 小时，上线 30 天内目标降至 8 小时，观察窗口为上线后连续 30 天，Owner 为运营负责人。\n"
@@ -1005,6 +1004,41 @@ def contract_records(
     return rows + narrative_records
 
 
+def rule_branch_pairs(text: str) -> tuple[list[tuple[str, str]], bool]:
+    body = re.split(r"(?m)^#{1,6}\s+", text, maxsplit=1)[0]
+    body = re.sub(
+        r"(?m)^([ \t]*[-+*][ \t]+当[：:][^；;\n]+?)[。.]?[ \t]*\n[ \t]*[-+*][ \t]+则[：:]",
+        r"\1；则：",
+        body,
+    )
+    items = re.findall(r"(?m)^[ \t]*[-+*][ \t]+(.*(?:\n[ \t]+[^\n]+)*)", body)
+    metadata_labels = {
+        alias
+        for name, aliases in RULE_FIELD_GROUPS
+        if name not in {"rule_condition", "rule_outcome"}
+        for alias in aliases
+    } | {"规则编号", "来源", "版本", "生效期", "生效范围", "未确认前处理", "失效时处理", "外部不可用"}
+    pairs: list[tuple[str, str]] = []
+    incomplete = False
+    for item in items:
+        label = re.match(r"([^：:\n]+)[：:]", item)
+        if label and label.group(1).strip() in metadata_labels:
+            continue
+        statement = item.strip().rstrip("。.")
+        match = re.fullmatch(
+            r"当[：:]\s*([^；;\n]+)[；;]\s*则[：:]\s*([^。\n]+)", statement
+        ) or re.fullmatch(r"([^。；;：:\n]+?)时[，,]\s*([^。；;：:\n]+)", statement)
+        if match is None:
+            incomplete = True
+            continue
+        condition, outcome = (value.strip() for value in match.groups())
+        if len(meaningful_values([condition, outcome])) != 2:
+            incomplete = True
+            continue
+        pairs.append((condition, outcome))
+    return pairs, incomplete
+
+
 def business_rule_records(text: str) -> list[dict[str, str]]:
     rows = contract_table_records(text, RULE_FIELD_GROUPS, ("规则编号", "规则名称"))
     narrative = "\n".join(line for line in text.splitlines() if not line.strip().startswith("|"))
@@ -1033,7 +1067,7 @@ def business_rule_records(text: str) -> list[dict[str, str]]:
         merged.append(pending_identifier)
     if not rows and not merged:
         merged = [narrative]
-    return rows + [
+    records = rows + [
         {
             **{
                 name: " ".join(contract_group_values(block, aliases))
@@ -1043,6 +1077,12 @@ def business_rule_records(text: str) -> list[dict[str, str]]:
         }
         for block in merged
     ]
+    for record in records:
+        pairs, _ = rule_branch_pairs(record["__text__"])
+        if pairs:
+            record["rule_condition"] = " / ".join(condition for condition, _ in pairs)
+            record["rule_outcome"] = " / ".join(outcome for _, outcome in pairs)
+    return records
 
 
 def phrase_is_defined(text: str, phrase: str) -> bool:
@@ -1115,6 +1155,37 @@ def requirement_contract_issues(text: str) -> list[str]:
             issues.append("ambiguous_requirement_language")
         return issues
     records = contract_records(requirements, REQUIREMENT_FIELD_GROUPS, ("需求名称",))
+    for record in records:
+        statements = re.findall(
+            r"(?m)^[ \t]*(?:[-+*][ \t]+)?在([^。\n]+?)时[，,][ \t]*"
+            r"([^。，,；;\n]+?)(必须|不得)([^。\n]+)[。.]?[ \t]*$",
+            record["__text__"],
+        )
+        if len(statements) == 1:
+            for name, value in zip(
+                ("requirement_context", "responsible_subject", "normative_force", "required_outcome"),
+                statements[0],
+                strict=True,
+            ):
+                if not record[name] and meaningful_values([value.strip()]):
+                    record[name] = value.strip()
+        if not record["normative_force"]:
+            inline_force = re.match(r"^(必须|不得)\s*(\S.+)$", record["required_outcome"])
+            if inline_force and meaningful_values([inline_force.group(2)]):
+                record["normative_force"] = inline_force.group(1)
+        if record["responsible_subject"] and record["requirement_context"] and not record["required_outcome"]:
+            object_statements = [
+                match
+                for clause in re.split(r"[。\n]", record["__text__"])
+                if (match := re.fullmatch(r"每个([^：:；;]+?)(必须|不得)([^：:；;]+)", clause.strip()))
+                and len(meaningful_values([match.group(1).strip(), match.group(3).strip()])) == 2
+            ]
+            if len(object_statements) == 1:
+                statement = object_statements[0]
+                if record["normative_force"] and normalize(record["normative_force"]) != statement.group(2):
+                    issues.append("normative_force_invalid")
+                record["normative_force"] = statement.group(2)
+                record["required_outcome"] = statement.group(0)
     if any(any(not record[name] for name, _ in REQUIREMENT_FIELD_GROUPS) for record in records):
         issues.append("requirement_contract_incomplete")
     if any(
@@ -1129,7 +1200,7 @@ def requirement_contract_issues(text: str) -> list[str]:
 
 
 def business_rule_contract_issues(text: str) -> list[str]:
-    rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
+    rules = section_body(text, ("业务规则",))
     issues: list[str] = []
     compact_values = {
         name: [
@@ -1172,7 +1243,11 @@ def business_rule_contract_issues(text: str) -> list[str]:
                 issues.append("external_rule_governance_missing")
         return issues
     records = business_rule_records(rules)
-    if any(any(not record[name] for name, _ in RULE_FIELD_GROUPS) for record in records):
+    if any(
+        any(not record[name] for name, _ in RULE_FIELD_GROUPS)
+        or rule_branch_pairs(record["__text__"])[1]
+        for record in records
+    ):
         issues.append("rule_contract_incomplete")
     if any(ambiguous_business_phrases(record["__text__"]) for record in records):
         issues.append("ambiguous_rule_language")
@@ -1242,7 +1317,7 @@ def cross_scenario_view_contract_issues(text: str) -> list[str]:
     target: tuple[int, str] | None = None
     for index, heading in enumerate(headings):
         title = normalize(heading.group(2))
-        if "图形视图" not in title or not any(
+        if not any(
             alias in title for alias in ("跨场景端到端流程", "跨场景关键流程")
         ):
             continue
@@ -1258,68 +1333,38 @@ def cross_scenario_view_contract_issues(text: str) -> list[str]:
         return []
 
     level, body = target
-    normalized = normalize(body)
-
-    def assigned_values(labels: tuple[str, ...]) -> list[str]:
-        values = [value for label in labels for value in field_values(body, label)]
-        for label in labels:
-            pattern = re.compile(
-                rf"(?:^|[；;\n])\s*{re.escape(label)}\s*=\s*([^；;\n]+)",
-                re.IGNORECASE,
-            )
-            values.extend(match.group(1).strip() for match in pattern.finditer(body))
-        return meaningful_values(values)
-
-    has_scope = (
-        any(marker in normalized for marker in ("作用边界", "只表达", "只描述", "只展开"))
-        and any(marker in normalized for marker in ("场景关系", "分支关系", "责任交接", "共享生命周期", "状态变化"))
-        and any(marker in normalized for marker in ("不重复", "不复述"))
+    steps = re.findall(r"(?m)^\s*\d+[.)、]\s+(.+)$", body)
+    diagrams = re.findall(
+        r"(?m)^[ \t]*(```|~~~)(?:mermaid|dot|plantuml)[^\n]*\n([\s\S]*?)^[ \t]*\1[ \t]*$",
+        body,
+        re.IGNORECASE,
     )
-    has_coverage = bool(
-        assigned_values(("实际覆盖", "覆盖场景", "覆盖范围", "覆盖"))
-        or re.search(
-            r"(?:实际)?覆盖[^。；\n]{1,80}(?:(?:SCN|UC)-[A-Z0-9-]+|场景|流程|路径)",
+    has_linked_visual = bool(
+        re.search(
+            r"!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\.(?:svg|png|jpe?g|webp)(?:#[^)]*)?\)",
             body,
             re.IGNORECASE,
         )
     )
-    has_trace = (
-        all(marker in normalized for marker in ("规则", "风险", "验收"))
-        and any(marker in normalized for marker in ("追踪", "回链", "入口", "关联", "见第"))
+    has_visual = bool(diagrams) or has_linked_visual
+    flow = "\n".join(steps) if steps else body if has_linked_visual else "\n".join(
+        diagram for _, diagram in diagrams
     )
-
+    referenced_ids = {match.group(0).upper() for match in SCENARIO_ID_PATTERN.finditer(flow)}
+    defined_ids = defined_scenario_ids(text)
+    has_steps = len(steps) >= 2 and all(
+        meaningful_values([SCENARIO_ID_PATTERN.sub("", step).strip(" 。；;、，,.：:")])
+        for step in steps
+    )
     issues: list[str] = []
-    if not all((has_scope, has_coverage, has_trace)):
+    if not (has_steps or has_visual) or (
+        len(defined_ids) > 1 and (len(referenced_ids) < 2 or referenced_ids - defined_ids)
+    ):
         issues.append("cross_scenario_view_contract_incomplete")
     if level >= 3 and re.search(
         r"本章\s*(?:只|主要|用于)(?:描述|展开|表达|说明)?", body
     ):
         issues.append("cross_scenario_heading_level_mismatch")
-
-    expression_values = assigned_values(("表达选择", "表达方式", "图形选择", "首选图形"))
-    has_expression_choice = bool(expression_values) or bool(
-        re.search(
-            r"(?:采用|使用|选择)[^。；\n]{0,30}(?:编号|流程图|泳道图|状态机|用例图|能力地图|图形)",
-            body,
-        )
-    )
-    has_visual = bool(
-        re.search(
-            r"!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\.(?:svg|png|jpe?g|webp)(?:#[^)]*)?\)|"
-            r"```(?:mermaid|dot|plantuml)|~~~(?:mermaid|dot|plantuml)",
-            body,
-            re.IGNORECASE,
-        )
-    )
-    if not has_visual:
-        has_numbered_rationale = (
-            has_expression_choice
-            and "编号" in normalized
-            and any(marker in normalized for marker in ("足够", "足以", "已经能够", "可以说明", "可说明", "即可"))
-            and bool(re.search(r"(?:无须|无需|不需要|不)[^。；\n]{0,40}(?:图|图形)", body))
-        )
-        if not has_numbered_rationale:
-            issues.append("cross_scenario_expression_rationale_missing")
     return issues
 
 
@@ -1333,9 +1378,11 @@ def conditional_flow_order_issues(text: str) -> list[str]:
         return []
     details = matching_heading_positions(headings, ("详细设计",))
     requirements = matching_heading_positions(headings, ("产品需求陈述",))
-    rules = matching_heading_positions(
-        headings, ("业务规则与接口抽象", "业务规则和接口抽象")
-    )
+    chapter_level = len(heading_matches[details[0]].group(1)) if len(details) == 1 else 0
+    rules = [
+        index for index in matching_heading_positions(headings, ("业务规则",))
+        if len(heading_matches[index].group(1)) == chapter_level
+    ]
     embedded_flow = "跨场景" in headings[flows[0]] if len(flows) == 1 else False
     legacy_order_valid = (
         len(flows) == 1
@@ -1383,9 +1430,39 @@ def architecture_spine_issues(text: str) -> list[str]:
     ) else []
 
 
+def interface_abstraction_blocks(text: str) -> list[str]:
+    blocks = []
+    headings = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", text))
+    parents: list[tuple[int, bool]] = []
+    for index, heading in enumerate(headings):
+        level = len(heading.group(1))
+        title = heading.group(2)
+        following = headings[index + 1] if index + 1 < len(headings) else None
+        body = text[heading.end() : following.start() if following else len(text)]
+        while parents and parents[-1][0] >= level:
+            parents.pop()
+        explicit_section = any(
+            name in title for name in ("产品接口抽象", "对外能力与协作约定")
+        )
+        in_contract_section = explicit_section or bool(parents and parents[-1][1])
+        has_children = following is not None and len(following.group(1)) > level
+        has_fields = any(
+            field_values(body, alias)
+            for _, aliases in PRODUCT_INTERFACE_FIELD_GROUPS for alias in aliases
+        )
+        explicit_name = any(
+            field_values(body, alias) for alias in ("产品接口名称", "对外能力名称")
+        )
+        legacy_table = bool(re.search(r"(?m)^\s*\|\s*(?:产品能力|产品接口)\s*\|", body))
+        if explicit_name or legacy_table or (in_contract_section and (has_fields or not has_children)):
+            blocks.append(body)
+        parents.append((level, in_contract_section))
+    return blocks
+
+
 def has_compact_product_interface_contract(text: str) -> bool:
     rules_and_interface = section_body(
-        text, ("业务规则与接口抽象", "业务规则和接口抽象")
+        text, ("业务规则",)
     )
     for line in rules_and_interface.splitlines():
         if not line.strip().startswith("|"):
@@ -1402,19 +1479,18 @@ def has_compact_product_interface_contract(text: str) -> bool:
 
 
 def has_full_product_interface_contract(text: str) -> bool:
-    rules_and_interface = section_body(
-        text, ("业务规则与接口抽象", "业务规则和接口抽象")
-    )
-    return all(
-        has_meaningful_alias_value(rules_and_interface, aliases)
-        for _, aliases in PRODUCT_INTERFACE_FIELD_GROUPS
+    blocks = interface_abstraction_blocks(text)
+    return bool(blocks) and all(
+        all(meaningful_values([record[name]]) for name, _ in PRODUCT_INTERFACE_FIELD_GROUPS)
+        for block in blocks
+        for record in contract_records(block, PRODUCT_INTERFACE_FIELD_GROUPS, PRODUCT_INTERFACE_FIELD_GROUPS[0][1])
     )
 
 
 def product_interface_contract_issues(text: str) -> list[str]:
     return [] if (
-        has_full_product_interface_contract(text)
-        or has_compact_product_interface_contract(text)
+        not interface_abstraction_blocks(text)
+        or has_full_product_interface_contract(text)
     ) else ["product_interface_contract_incomplete"]
 
 
@@ -1477,7 +1553,7 @@ def lightweight_prd_contract_issues(text: str) -> list[str]:
 
 
 def has_rule_scope(text: str) -> bool:
-    rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
+    rules = section_body(text, ("业务规则",))
     rule_types = (
         field_values(rules, "规则性质")
         or field_values(rules, "规则名称 / 性质 / 业务动机")
@@ -1501,7 +1577,7 @@ def defined_scenario_ids(text: str) -> set[str]:
 
 
 def rule_scenario_issues(text: str) -> list[str]:
-    rules = section_body(text, ("业务规则与接口抽象", "业务规则和接口抽象"))
+    rules = section_body(text, ("业务规则",))
     referenced_ids = {match.group(0).upper() for match in SCENARIO_ID_PATTERN.finditer(rules)}
     return ["undefined_rule_scenario_reference"] if referenced_ids - defined_scenario_ids(text) else []
 
@@ -1679,7 +1755,11 @@ def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
     for group in CHECKS[kind]:
-        hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
+        hits = (
+            valued_group_hits(kind, group, section_body(text, ("验收摘要",)))
+            if kind == "prd" and group.name == "acceptance_summary"
+            else sum(1 for alias in group.aliases if alias.casefold() in normalized)
+        )
         if hits < group.min_hits:
             missing.append(group.name)
         elif kind in VALUED_GROUP_KINDS and valued_group_hits(kind, group, text) < group.min_hits:
@@ -1750,9 +1830,9 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.append("keyword_shell")
         if strength == "轻量":
             missing.extend(lightweight_prd_contract_issues(text))
+        missing.extend(product_interface_contract_issues(text))
         if strength in SCENARIO_CONTRACT_STRENGTHS:
             missing.extend(architecture_spine_issues(text))
-            missing.extend(product_interface_contract_issues(text))
             missing.extend(scenario_contract_issues(text))
             missing.extend(scenario_relationship_issues(text))
             missing.extend(cross_scenario_flow_issues(text))

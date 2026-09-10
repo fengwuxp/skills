@@ -2,9 +2,11 @@
 """Manage the opt-in, candidate-only wise-agent learning ledger.
 
 Input: explicit current-task evidence supplied on the command line.
-Output: mode.json and candidate Markdown records under SKILL_LEARNING_HOME.
+Output: mode.json, candidate records, explicit pattern revisions and version outcomes.
 Writes: only the selected learning home; never the repository or Codex Skills.
 Network: never. Git and Skill promotion: unsupported by design.
+Pattern maintenance requires a separate explicit review action, not the enabled
+candidate-write grant. Lookup is scoped to one Skill and is not a runtime hook.
 """
 
 from __future__ import annotations
@@ -116,7 +118,8 @@ def open_regular(path: Path, flags: int, mode: int = 0o600) -> int:
             raise ValueError(f"{path.name} changed while being opened")
         if truncate:
             os.ftruncate(descriptor, 0)
-        os.fchmod(descriptor, 0o600)
+        if flags & (os.O_WRONLY | os.O_RDWR):
+            os.fchmod(descriptor, 0o600)
         return descriptor
     except BaseException:
         os.close(descriptor)
@@ -233,6 +236,8 @@ def require_candidate_mode(root: Path) -> dict[str, object]:
 
 
 def clean_text(name: str, value: str, limit: int = 2000) -> str:
+    if not isinstance(value, str):
+        raise ValueError(f"{name} must be text")
     text = value.strip()
     if not text:
         raise ValueError(f"{name} must not be empty")
@@ -366,6 +371,183 @@ def list_records(root: Path, skill: str | None, status_filter: str | None) -> No
         print(f"{status or 'unknown'}\t{path.relative_to(root)}")
 
 
+def private_directory(root: Path, *parts: str, create: bool = False) -> Path:
+    validate_home(root.resolve())
+    directory = root
+    for component in (None, *parts):
+        if component is not None:
+            directory = directory / component
+        if create:
+            ensure_private_dir(directory)
+        else:
+            try:
+                metadata = directory.lstat()
+            except FileNotFoundError:
+                continue
+            if not stat.S_ISDIR(metadata.st_mode) or stat.S_ISLNK(metadata.st_mode):
+                raise ValueError(f"{directory.name} must be a real directory")
+    return directory
+
+
+def pattern_directory(root: Path, skill: str, pattern_id: str, create: bool = False) -> Path:
+    if not SKILL_ID_RE.fullmatch(skill) or not SLUG_RE.fullmatch(pattern_id):
+        raise ValueError("skill and pattern_id must be lowercase slugs")
+    return private_directory(root, "patterns", skill, pattern_id, create=create)
+
+
+def read_json_object(path: Path) -> dict:
+    value = json.loads(read_private_text(path))
+    if not isinstance(value, dict):
+        raise ValueError(f"{path.name} must contain a JSON object")
+    return value
+
+
+def write_snapshot(path: Path, value: dict) -> None:
+    descriptor, temporary = tempfile.mkstemp(prefix=".snapshot-", dir=path.parent)
+    try:
+        payload = json.dumps(value, ensure_ascii=False, indent=2) + "\n"
+        write_all(descriptor, payload.encode("utf-8"))
+        os.link(temporary, path)
+    finally:
+        os.close(descriptor)
+        os.unlink(temporary)
+
+
+def review_actor(reviewer: str, sensitivity_check: str) -> str:
+    if sensitivity_check != "public-safe":
+        raise ValueError("explicit review requires public-safe material")
+    return clean_text("reviewer", reviewer, 500)
+
+
+def text_items(data: dict, field: str, required: bool = False) -> list[str]:
+    items = data.get(field, [])
+    if not isinstance(items, list) or (required and not items):
+        raise ValueError(f"{field} must be {'a nonempty' if required else 'a'} list")
+    return list(dict.fromkeys(clean_text(field, item) for item in items))
+
+
+def revise_pattern(
+    root: Path, skill: str, pattern_id: str, data: dict, reviewer: str, sensitivity_check: str,
+) -> Path:
+    directory = pattern_directory(root, skill, pattern_id)
+    reviewer = review_actor(reviewer, sensitivity_check)
+    fields = {"status", "summary", "scope", "strategies", "counterexamples", "record_refs", "evidence_refs", "reason"}
+    if not isinstance(data, dict) or set(data) - fields:
+        raise ValueError("pattern review must contain only supported fields")
+    if data.get("status") not in ("active", "retracted"):
+        raise ValueError("pattern status must be active or retracted")
+    review = {field: clean_text(field, data.get(field)) for field in ("summary", "scope", "reason")}
+    for field in ("strategies", "counterexamples", "record_refs", "evidence_refs"):
+        review[field] = text_items(data, field, required=field == "evidence_refs")
+    record_digests = {}
+    for reference in review["record_refs"]:
+        parts = Path(reference).parts
+        if (len(parts) != 3 or parts[:2] != ("records", skill)
+                or not re.fullmatch(r"[0-9]{4}-[a-z0-9-]+\.md", parts[2])):
+            raise ValueError("record_refs must name candidate files within the target Skill")
+        record_dir = private_directory(root, "records", skill)
+        content = read_private_text(record_dir / parts[2])
+        if f"\nTarget Skill: {skill}\n" not in content:
+            raise ValueError("record target Skill does not match review")
+        record_digests[reference] = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    revisions = read_revisions(directory, skill, pattern_id)
+    revision = revisions[-1]["revision"] + 1 if revisions else 1
+    review.update({
+        "schema_version": 1, "skill_id": skill, "pattern_id": pattern_id,
+        "revision": revision, "status": data["status"], "record_digests": record_digests,
+        "reviewer": reviewer, "reviewed_at": datetime.now(timezone.utc).isoformat(),
+    })
+    directory = pattern_directory(root, skill, pattern_id, create=True)
+    path = directory / f"{revision:06d}.json"
+    write_snapshot(path, review)
+    return path
+
+
+def read_revisions(directory: Path, skill: str, pattern_id: str) -> list[dict]:
+    revisions = []
+    for path in sorted(directory.glob("[0-9]*.json")):
+        value = read_json_object(path)
+        if (not path.stem.isdigit() or value.get("revision") != int(path.stem)
+                or value.get("skill_id") != skill or value.get("pattern_id") != pattern_id):
+            raise ValueError("pattern revision identity mismatch")
+        revisions.append(value)
+    return sorted(revisions, key=lambda value: value["revision"])
+
+
+def record_impact(
+    root: Path, skill: str, pattern_id: str, registry: dict, version_id: str,
+    reviewer: str, sensitivity_check: str,
+) -> int:
+    directory = pattern_directory(root, skill, pattern_id)
+    reviewer = review_actor(reviewer, sensitivity_check)
+    if not read_revisions(directory, skill, pattern_id):
+        raise ValueError("review the pattern before linking version outcomes")
+    if not isinstance(registry, dict) or registry.get("skill_id") != skill:
+        raise ValueError("registry skill_id does not match review")
+    candidates = registry.get("candidates", {})
+    candidate = candidates.get(version_id) if isinstance(candidates, dict) else None
+    if not isinstance(candidate, dict) or candidate.get("pattern_id") != pattern_id:
+        raise ValueError("candidate pattern_id does not match review")
+    parent = candidate.get("parent_version_id")
+    if (not re.fullmatch(r"[a-f0-9]{64}", version_id)
+            or not isinstance(parent, str) or not re.fullmatch(r"[a-f0-9]{64}", parent)
+            or candidate.get("version_id") != version_id or candidate.get("content_sha256") != version_id):
+        raise ValueError("candidate version identity is invalid")
+    outcomes = candidate.get("outcomes")
+    if not isinstance(outcomes, list) or not outcomes:
+        raise ValueError("no recorded outcomes; legacy decisions are not reconstructed")
+    supported = ("CHECKER_PASSED", "CHECKER_FAILED", "CANARY_PASSED", "CANARY_FAILED", "REJECTED", "PROMOTED", "ROLLED_BACK")
+    artifact_ref = clean_text("artifact_ref", candidate.get("artifact_path"))
+    pending = []
+    for sequence, event in enumerate(outcomes, start=1):
+        if (not isinstance(event, dict) or event.get("outcome") not in supported
+                or event.get("sequence") != sequence):
+            raise ValueError("unsupported version outcome")
+        value = {field: clean_text(field, event.get(field))
+                 for field in ("outcome", "actor", "reason", "evidence_ref", "at")}
+        value.update({"schema_version": 1, "sequence": sequence, "skill_id": skill, "pattern_id": pattern_id,
+                      "version_id": version_id, "parent_version_id": parent, "artifact_ref": artifact_ref})
+        pending.append((f"{version_id}-{sequence:06d}", value))
+    impacts_dir = private_directory(root, "patterns", skill, pattern_id, "impacts", create=True)
+    written = 0
+    for event_id, value in pending:
+        path = impacts_dir / f"{event_id}.json"
+        try:
+            existing = read_json_object(path)
+        except FileNotFoundError:
+            existing = None
+        if existing is not None:
+            if any(existing.get(field) != content for field, content in value.items()):
+                raise ValueError("immutable outcome content mismatch")
+            continue
+        value.update({"imported_by": reviewer, "imported_at": datetime.now(timezone.utc).isoformat()})
+        write_snapshot(path, value)
+        written += 1
+    return written
+
+
+def lookup_patterns(root: Path, skill: str, pattern_id: str | None = None) -> dict:
+    if not SKILL_ID_RE.fullmatch(skill):
+        raise ValueError("skill must be a lowercase slug")
+    parent = private_directory(root, "patterns", skill)
+    if pattern_id is not None:
+        directories = [pattern_directory(root, skill, pattern_id)]
+    else:
+        directories = [pattern_directory(root, skill, path.name) for path in sorted(parent.iterdir())] if parent.exists() else []
+    patterns = []
+    for directory in directories:
+        revisions = read_revisions(directory, skill, directory.name)
+        if not revisions:
+            continue
+        impacts_dir = private_directory(root, "patterns", skill, directory.name, "impacts")
+        impacts = [read_json_object(path) for path in sorted(impacts_dir.glob("*.json"))]
+        if any(value.get("skill_id") != skill or value.get("pattern_id") != directory.name for value in impacts):
+            raise ValueError("outcome identity mismatch")
+        patterns.append({"pattern_id": directory.name, "current": revisions[-1], "revisions": revisions,
+                         "impacts": sorted(impacts, key=lambda value: (value["at"], value["version_id"], value["sequence"]))})
+    return {"skill_id": skill, "patterns": patterns}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--home", help="learning home; defaults to SKILL_LEARNING_HOME or ~/.skill-learning")
@@ -391,6 +573,21 @@ def build_parser() -> argparse.ArgumentParser:
     listing = subparsers.add_parser("list", help="list records for explicit review")
     listing.add_argument("--skill")
     listing.add_argument("--status", choices=["candidate", "confirmed", "promoted", "rejected", "superseded"])
+
+    lookup = subparsers.add_parser("lookup", help="read patterns and outcomes for explicit Skill maintenance only")
+    lookup.add_argument("--skill", required=True)
+    lookup.add_argument("--pattern-id")
+
+    revise = subparsers.add_parser("revise-pattern", help="record a separately authorized pattern review")
+    revise.add_argument("--input", type=Path, required=True)
+    impact = subparsers.add_parser("record-impact", help="copy outcomes from an explicitly supplied registry")
+    impact.add_argument("--registry", type=Path, required=True)
+    impact.add_argument("--version-id", required=True)
+    for command in (revise, impact):
+        command.add_argument("--skill", required=True)
+        command.add_argument("--pattern-id", required=True)
+        command.add_argument("--reviewer", required=True)
+        command.add_argument("--sensitivity-check", required=True, choices=["public-safe"])
     return parser
 
 
@@ -492,6 +689,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             write_candidate(root, args)
         elif args.command == "list":
             list_records(root, args.skill, args.status)
+        elif args.command == "lookup":
+            print(json.dumps(lookup_patterns(root, args.skill, args.pattern_id), ensure_ascii=False, indent=2))
+        elif args.command == "revise-pattern":
+            path = revise_pattern(root, args.skill, args.pattern_id, read_json_object(args.input),
+                                  args.reviewer, args.sensitivity_check)
+            print(f"REVISED {path}")
+        elif args.command == "record-impact":
+            count = record_impact(root, args.skill, args.pattern_id, read_json_object(args.registry),
+                                  args.version_id, args.reviewer, args.sensitivity_check)
+            print(f"RECORDED {count} outcomes")
         else:
             parser.error(f"unsupported command: {args.command}")
     except (OSError, ValueError, json.JSONDecodeError) as exc:

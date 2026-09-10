@@ -58,7 +58,7 @@
 
 ## 工程生命周期门禁
 
-所有进入实现或验证的工程任务默认按 `Clarify -> Design -> Plan -> Build -> Verify -> Review/Ship` 收敛。低风险任务可以轻量合并相邻步骤，但不得跳过目标澄清和验证说明；高风险任务不得跳过确认点、测试设计、回滚或监控边界。
+`Clarify -> Design -> Plan -> Build -> Verify -> Review/Ship` 用于检查工程责任是否覆盖，不要求每项都成为独立文档、顺序阶段或用户审批点。目标、范围、授权和验证清楚时直接实现；多步骤可用简短计划组织依赖，无需等待完整计划批准。高风险任务仍须保留确认点、测试设计、回滚或监控边界。
 
 | 阶段 | 必须回答 | 证据形态 |
 | --- | --- | --- |
@@ -71,14 +71,14 @@
 
 门禁规则：
 
-- Design / Plan 产物落盘必须复用用户或项目已确认的原生载体，不能因 OpenSpec、Spec Kit、Kiro、Superpowers 或 Harness 的工具默认值并建目录；没有已确认载体时，只给候选落点并保留写入边界。
-- Clarify 或 Design 阶段仍有关键不确定时，不进入代码实现；先输出 Round 0 缺口、澄清问题或可确认假设。
+- Design / Plan 产物只在需要恢复、交接或项目明确要求时落盘，复用用户或项目已确认的原生载体，不能因 OpenSpec、Spec Kit、Kiro、Superpowers 或 Harness 的工具默认值并建目录；无载体时按 `wise-agent/references/execution-specification.md` 的“规划产物归位与减层”处理，不因引用该规则加载协调 Skill。
+- Clarify 或 Design 仍有会改变当前行动的关键不确定时，只暂停依赖它的实现；可查事实先自行取证，已有确认不重复询问，独立且已授权的部分继续推进。
 - 设计前必须先构造用例、测试用例、边界条件、异常路径和验收标准；这属于测试驱动设计，不等同于编码阶段才写单测。
 - Build 阶段的每个代码 diff、测试和重构都必须能回指用户目标、OpenSpec 条款、缺陷复现或验收场景；无法追溯的“顺手优化”、格式化、抽象或删除，默认不进入本轮变更。
 - Verify 阶段无法执行真实验证时，必须说明原因、替代证据和残余风险，不得用“看起来没问题”代替验证。
 - 涉及生产数据、公共契约、外部依赖、权限、资金、安全或不可逆操作时，Review/Ship 必须包含兼容策略、回滚、监控和人工确认点。
-- AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`，在本生命周期之上增加 OpenSpec、Superpowers 和 Harness 边界；受控工程执行、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`。
-- 中大型 AI 编码或上下文开始膨胀时，必须在 Plan 阶段补充 Harness Plan、上下文账本、阶段状态、子任务交接和恢复入口；不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据。
+- 实际需要 AI 协作编排或多 Agent 时读取 `ai-assisted-engineering.md`，按需补充 OpenSpec、Superpowers 和 Harness 边界；实际采用受控工程执行 Loop、Plan Grant / Execution Grant 或自动分轮推进时读取 `cad-mode.md`。
+- 需要跨会话恢复或跨责任人交接时，在项目原生载体记录当前目标、授权、决策、阻塞项、验证证据和恢复入口；Harness Plan、上下文账本、阶段状态与子任务交接按实际需要裁剪，不因中大型 AI 编码而全量展开。
 - Harness Plan 必须体现 OpenSpec / Superpowers / Harness 的责任分离：项目选用 OpenSpec 时，OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接；责任分离不要求生成三套目录或三份重复文档。
 
 ## 可交付竖切任务契约
@@ -114,7 +114,7 @@
 
 ### 执行与收口
 
-1. **快速归位**：把 Clarify、Design、Plan 合并为内部准入判断，只确认目标、范围、事实、风险、预期行为和最终验证；不为简单任务生成流程文档。
+1. **快速归位**：把 Clarify、Design、Plan 合并为内部准入判断，确认目标、范围、事实、风险、预期行为和最终验证；涉及接口或方法写回时，先按 `project-governance-service-api-modeling.md` 的“能力价值与架构裁决”给出简短结论，不为简单任务生成流程文档。
 2. **编码先行**：读取相关源码、调用方、测试和本地约规后连续完成最小实现；不强制先写失败测试，也不要求每次编辑后运行完整测试，必要时可在自然检查点运行快速编译或类型检查。
 3. **实现回读**：回看最终 diff、调用方、异常路径和无关修改。此时只能声明“实现已完成，测试与验证待补”。
 4. **集中补测**：行为变化补行为测试，Bug 修复补回归测试；纯机械变更可使用编译、静态检查和差异回读作为等价证据。
@@ -142,7 +142,7 @@
 - 先识别项目构建工具和变更类型，再选择验证命令。
 - AI 参与代码实现、重构、测试补充或多 Agent 协作时，先按 `ai-assisted-engineering.md` 判断是否需要 OpenSpec、Superpowers 和 Harness Plan。
 - 中高风险 AI 编码任务必须先明确目标、范围、非目标、验收场景、写入范围、禁止事项和验证命令；低风险任务可使用轻量 OpenSpec。
-- 多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口；如果任务只是明确小修或一次性 demo，不启动重型并行流程。
+- 多 Agent 派发或真实恢复需要按前述工程生命周期门禁保留状态与交接；Wave 依赖只在实际分波时明确，跨模块本身不要求重型并行流程。
 - Harness Plan 需要正式校验时，使用 `senior-software-architect/scripts/check_harness_plan.py --kind lightweight|gsd-wave|engineering-loop`；脚本只检查结构完整性，不替代测试、Review、Plan Grant / Execution Grant 或用户授权。
 - 当一个工程任务已经选定、关键决策冻结、写入与验证边界清楚，且实现、反馈和修正明显需要至少两轮时，可以进入受控工程执行 Loop；详细准入、轮内动作和停止条件以 `cad-mode.md` 为准，授权仍以 Plan Grant / Execution Grant 和项目规则为准。
 - 对代码或构建配置修改，优先运行项目现有的快速编译、类型检查或构建命令。

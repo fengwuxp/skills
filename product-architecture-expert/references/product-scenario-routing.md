@@ -129,7 +129,7 @@
 | --- | --- | --- |
 | 产品方向、业务目标、产品边界不清 | `product-architecture-methodology.md` | 目标、用户、范围、非目标、成功指标、关键风险 |
 | 从零构思、优化已有 PRD、既有产品增量需求 | `product-design-and-prd.md`, `product-architecture-methodology.md` | 需求分析结论卡、PRD-Lite 或既有权威 PRD 的 `ADDED / MODIFIED / REMOVED` 增量；不建立第二事实源 |
-| 业务架构规划、业务 IT 对齐、战略落项目、业务能力地图、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射 | `business-architecture-planning.md`, `product-architecture-methodology.md`；复杂图形化表达加读 `diagram-output.md` | 业务架构准入卡、选用视图、跳过视图及理由，以及按决策问题选择的最小完整视图组合；不固定要求能力地图、价值流、业务流程或项目组合全部产出 |
+| 业务架构规划、业务 IT 对齐、战略落项目、业务能力地图、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射 | `business-architecture-planning.md`, `product-architecture-methodology.md`；复杂图形化表达加读 `diagram-output.md` | 决策依据或已有准入卡锚点、选用视图、跳过视图及理由，以及按决策问题选择的最小完整视图组合；不固定要求能力地图、价值流、业务流程或项目组合全部产出 |
 | 写 PRD、生成 PRD、完善 PRD、补全 PRD、改写 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；支付资金协同 `payment-expert`，运营数据发布加读 `product-prd-operations-and-data.md`，提交前自检加读 `product-prd-quality-gates.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
 | 同一需求跨运营平台 / C 端等应用，或跨浏览器 / 桌面客户端 / H5 等客户端的原型范围规划 | `product-design-and-prd.md` | 需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；不直接画界面 |
 | 按 PC / 手机设备情境与浏览器 / H5 / APP 运行载体设计交互、响应式、可用性或中断恢复 | `product-client-interaction.md`, `product-design-and-prd.md` | 客户端策略表、任务与路由图、交互状态矩阵、多端差异表和验收卡；不把桌面缩小成移动方案 |

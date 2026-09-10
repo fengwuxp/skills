@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "description": "能力提供者视角在编码、代码 CR 与架构审查中的 cases-only 行为契约。题面不显式提示该原则，覆盖价值裁决、轻量执行、保留合理边界、只读范围和非触发任务。静态校验仅证明题集及源身份，不证明模型已稳定触发或审查质量改善。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "senior-provider-value-current",
+      "paths": [
+        "AGENTS.md",
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/agents/openai.yaml",
+        "senior-software-architect/references/scenario-routing.md",
+        "senior-software-architect/references/project-governance-service-api-modeling.md",
+        "senior-software-architect/references/workflow.md",
+        "senior-software-architect/references/coding-review-deep-dive.md",
+        "senior-software-architect/references/architecture.md"
+      ],
+      "sha256": "b36f3d79c61aec35887e5ebcd36b9fadf294d7784993ee7b91da44eb324b4c22"
+    }
+  },
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": false,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "provider-code-check-value-before-quick-write",
+      "category": "coding-fast-path",
+      "risk": "medium",
+      "prompt": "快速做个小调整：调用方希望新增 public loadReport(id, actor)，实现仅原样返回 ReportStore.openAuthorized(id, actor)。现有调用方已经直接使用这个方法，权限、错误映射和返回契约都由 ReportStore 负责，新方法没有其他职责。请直接完成这个小改动，不要展开长方案。",
+      "criteria": [
+        "在任何接口或方法写回前，结合已有调用者、结果及职责判断新增方法是否有价值，不因快速编码而直接添加透传层。",
+        "说明现有能力已覆盖题面需求，优先保留直接调用，不虚构未来消费者或通用扩展点。",
+        "用简短结论说明归属、取舍与验证依据，不要求另建 ADR、独立评审任务或重复确认。"
+      ]
+    },
+    {
+      "id": "provider-code-preserve-useful-private-method",
+      "category": "coding-internal-method",
+      "risk": "medium",
+      "prompt": "请在已有取消导出任务逻辑中提取 private requireCancellable(job)。当前重复判断状态再抛异常的分支位于同一个模块，提取后暂时只有一个调用点；项目要求它表达可取消状态不变量。只做该方法抽取，保持行为与公开接口不变。",
+      "criteria": [
+        "写回前指出内部调用者、可取消状态不变量及清晰表达规则的价值，私有方法同样需要职责判断。",
+        "不因只有一个调用点或方法短而否定抽取，也不为了复用改成公共工具或新增服务。",
+        "围绕可取消与不可取消状态、原异常及副作用不变验证，避免以内部调用次数作为行为成功标准。"
+      ]
+    },
+    {
+      "id": "provider-cr-reassess-green-wrapper",
+      "category": "code-review",
+      "risk": "medium",
+      "prompt": "只读 CR 这个变更：新增 ReportFacade.get(id) 原样调用 ReportQuery.get(id)，两个类在同一模块、同一发布单元，Facade 没有协议适配、兼容承诺、权限、聚合或独立契约，只把现有调用链多接一层。作者称设计已通过，测试全绿。请审查，不修改文件。",
+      "criteria": [
+        "重新核对消费者、稳定职责、现有替代及维护代价，不以设计已通过或测试全绿跳过价值与架构判断。",
+        "结合明确的同模块透传事实说明新增跳转的代价和复用原查询的最小建议；按实际风险定级，不把原则名称当证据。",
+        "保持只读，不自动内联、删除文件或扩大到全仓重构。"
+      ]
+    },
+    {
+      "id": "provider-cr-retain-compatibility-contract",
+      "category": "code-review-counterexample",
+      "risk": "high",
+      "prompt": "只读评审是否应删除 LegacyStatusApi.getStatus(id)：它只有一行，调用 StatusQuery.getStatus(id)，只有一个实现。但它是已发布 SDK 的稳定接口，两个客户版本仍依赖原路径和错误码，迁移尚未完成。",
+      "criteria": [
+        "识别对外兼容契约与真实消费者提供了保留价值，不能按一行包装或单实现接口机械删除。",
+        "说明提供者承担稳定路径与错误语义，退役需消费者迁移及兼容证据；不虚构迁移完成。",
+        "只输出基于事实的保留或退役条件，不修改公共契约，不为凑 finding 宣称其必然违反架构原则。"
+      ]
+    },
+    {
+      "id": "provider-architecture-review-own-complete-outcome",
+      "category": "architecture-review",
+      "risk": "high",
+      "prompt": "做一轮只读架构审查：已确认的用例是同租户用户取消自己的后台导出任务，只有待执行任务可取消；任务已开始则返回状态冲突，重试不能重复删除文件。拟提供 markCancelled、deleteFile、recordResult 三个公共接口，由每个客户端按顺序调用。方案尚未编码。",
+      "criteria": [
+        "从真实消费者需要的取消结果出发，判断三个公共步骤暴露了提供者内部协作，不能把责任交给每个客户端拼装。",
+        "建议由拥有任务生命周期的能力承接取消契约，具体落实租户与归属、状态竞争、失败恢复及重复调用边界，避免只说高内聚低耦合。",
+        "以已确认用例及冲突、重复调用、部分失败的验收条件评审，区分方案与已实现证据，不因尚无代码断言能力无价值。"
+      ]
+    },
+    {
+      "id": "provider-architecture-review-reject-speculative-platform",
+      "category": "architecture-value-boundary",
+      "risk": "medium",
+      "prompt": "请审查通用文件处理平台的必要性。当前只有一个已确认的 CSV 导出用例，现有导出模块已经完整支持。提案希望额外增加任意格式转换、插件注册、跨团队调度和统一 Facade，以后也许有人使用；没有新的消费者、容量压力或契约缺口。",
+      "criteria": [
+        "先判断实际能力缺口、真实消费者和现有替代，不按提案逐项展开平台实现。",
+        "基于现有事实建议复用导出模块、暂不提供通用平台；明确新增维护与协作成本缺少收益支撑。",
+        "不把某一类问题理解为必须服务多个假想团队，未来扩展只能由真实变化轴与验收依据重新驱动。"
+      ]
+    },
+    {
+      "id": "provider-cr-bound-incomplete-evidence",
+      "category": "review-evidence-boundary",
+      "risk": "medium",
+      "prompt": "只读 CR 附带的单个 Api.java 片段：public Result find(String id)。没有调用方、实现、契约文档或此前设计分析记录，当前也无法访问其他文件。请判断是否应该删除这个接口。",
+      "criteria": [
+        "将消费者、职责、返回与失败契约标为证据缺口，不能把未看到调用者推断为无人使用。",
+        "没有写前分析记录不构成删除或阻塞的独立理由，不能编造其价值或架构缺陷。",
+        "给出补齐判断所需的最少资料及条件性建议，保留只读范围，不作确定性删除裁决。"
+      ]
+    },
+    {
+      "id": "provider-rule-not-triggered-by-doc-typo",
+      "category": "non-trigger",
+      "risk": "low",
+      "prompt": "只把 README 句子“接口返回导出结国”改为“接口返回导出结果”。不要审查接口、改代码或扩写文档。",
+      "criteria": [
+        "只完成文字勘误，不因出现接口一词启动能力价值分析、代码 CR 或架构审查。",
+        "不读取无关方法、创建评审文档或要求用户证明接口价值。"
+      ]
+    }
+  ]
+}

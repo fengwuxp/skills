@@ -1,12 +1,13 @@
 # Skill 学习回流
 
-本文定义知止者学习回流模式的候选经验账本、证据门禁、生命周期、受控改进试验、去重和授权边界。它不新增顶层流程，不替代 `code-delivery.md` 的知识归位，也不让 Skill 自行改写。
+本文定义候选证据、可修订问题模式、改动版本与结果之间的关联，以及学习回流的授权边界。它不新增顶层流程，不替代 `code-delivery.md` 的知识归位，也不让 Skill 自行改写。
 
 ## 使用时机
 
 - 用户显式要求开启、关闭或检查知止者学习回流模式。
 - 当前任务出现重复失败、确认纠偏、fixture / validator 失败、CR 根因或权威来源失效，且需要形成可复核候选。
 - 需要评审候选经验是否应进入 Skill、reference、fixture 或 script。
+- 用户显式要求维护已有经验、查询失败方案、修订问题模式或回链版本试验结果。
 
 ## 不适用场景
 
@@ -19,6 +20,7 @@
 - 是否命中候选记录门禁，以及使用的当前任务证据。
 - 目标 Skill、去重结果、候选记录位置，或不记录原因。
 - 下一人工评审结论只能由证据与 Owner 裁决为 `candidate / confirmed / promoted / rejected / superseded`；自动化最高只能写入 `candidate` 账本文件。
+- 显式维护时给出 `skill_id / pattern_id`、当前修订及证据、关联的改动版本与结果；无记录或证据不足时明确说明，不自动补历史。
 
 ## 需要继续读取的 reference
 
@@ -33,6 +35,7 @@
 | 开启或关闭模式 | `1. 模式与授权`、`5. 确定性记录器` | 不读取历史候选正文 |
 | 任务收口记录候选 | `2. 候选门禁`、`3. 生命周期`、`4. 去重与字段` | 不扫描历史对话或全部 Skill |
 | 评审候选并生成改进 diff | `3. 生命周期`、`6. 晋升门禁`，再读 `code-delivery.md` | 候选不充当运行时指令 |
+| 查询、修订问题模式或回链结果 | `1. 模式与授权`、`3. 生命周期`、`5. 确定性记录器` | 不遍历其它 Skill、不自动改源文件 |
 | 行为评测采集、失败归因与恢复 | `7. 行为评测 Harness 归因与恢复` | 不把 Harness 错误计为 Skill 得分 |
 
 ## 1. 模式与授权
@@ -40,6 +43,8 @@
 用户显式执行 `scripts/skill-learning-ledger.py enable` 后，只授予 `$SKILL_LEARNING_HOME/wise-agent/`（默认 `~/.skill-learning/wise-agent/`）下的候选记录写入权。没有 `mode.json`、状态不是 `enabled` 或 candidate-only Grant 不完整时不得写入。专业 Skill 不复制模式声明，知止者在任务收口时统一分发和归位。
 
 该 Grant 不包含仓库、Codex Skills 安装目录、历史对话、其他私人目录、联网、Git、同步或发布。关闭模式只撤销后续候选写入，不删除已有记录。
+
+`lookup`、`revise-pattern`、`record-impact` 只在用户显式要求评审或维护学习经验时使用，不是开启模式后的自动动作。后两者须另有当前任务的本地维护授权，并显式填写 reviewer 与 `public-safe`；这些参数记录责任和脱敏声明，不替代用户授权。维护可在自动记录关闭或未初始化时进行，不创建或改变 `mode.json`。普通任务不读取模式库，不把其中任何内容作为运行时指令。
 
 ## 2. 候选门禁
 
@@ -55,14 +60,18 @@
 
 ## 3. 生命周期
 
-评审生命周期是 `candidate -> confirmed -> promoted`，也允许进入 `rejected` 或 `superseded`。它不是记录器状态机：
+经验采纳的评审生命周期仍是 `candidate -> confirmed -> promoted`，也允许进入 `rejected` 或 `superseded`。不要把它与某个改动版本的成败混为同一个状态机：
 
 - `candidate`：自动化所能达到的最高状态。
 - `confirmed`：Owner 已确认经验可复用、目标 Skill 和权威落点正确；在 `confirmed` 状态内执行受控改进试验并生成最小改进 diff。
 - `promoted`：改进已进入权威 Skill、reference、fixture 或 script，并有独立验证证据。
 - `rejected / superseded`：证据不足、归位错误或已被新记录替代；保留状态用于防止旧候选复活。
 
-当前确定性记录器不提供状态迁移命令。`confirmed` 是人工评审结论，写入当前任务、CR 或 Decision Log；candidate 账本文件仍保持 `candidate`，不得绕过记录器直接修改私有文件。后续 `promoted / rejected / superseded` 裁决也留在可审计的任务证据中，直到未来另有显式授权、审计和确定性迁移入口。
+`confirmed` 是人工评审结论，原始 candidate 文件保持不变；`confirmed / promoted / rejected / superseded` 采纳裁决仍引用当前任务、CR 或 Decision Log，不就地改写原始观察。显式维护时用以下对象连接证据与裁决：
+
+- **证据记录**：保留原始观察及引用；关联已有记录时保存其摘要指纹，不扫描或复制私有对话。
+- **问题模式**：以 `skill_id / pattern_id` 为稳定标识，包含问题摘要、适用范围、可复用策略、反例与证据。`active` 表示当前评审版本，`retracted` 表示已被反证或不再适用；两者都不是运行时启用状态。新证据通过完整修订替换当前知识，旧修订仅保留为历史。
+- **改动与结果**：以内容 hash 标识具体改动版本，并关联问题模式、父版本、产物位置、Checker / canary 结果、人工拒绝、晋升和回滚事件。拒绝方案只否定该干预，不自动否定问题；反过来，撤回问题模式也不自动部署或回滚 Skill。
 
 candidate 账本与 confirmed 评审结论不得反向充当 Skill 指令。运行时行为只能来自已经晋升的权威内容。
 
@@ -76,11 +85,83 @@ candidate 账本与 confirmed 评审结论不得反向充当 Skill 指令。运�
 
 ## 5. 确定性记录器
 
-`scripts/skill-learning-ledger.py` 是离线载体，只提供 `enable / disable / status / record / list`。它不联网、不扫描历史、不确认或晋升记录、不修改仓库或 Codex Skills，也不执行 Git。
+`scripts/skill-learning-ledger.py` 是离线载体：`enable / disable / status / record / list` 保持原有 candidate-only 行为；`lookup / revise-pattern / record-impact` 用于显式维护。它不联网、不扫描历史、不自动确认或晋升经验、不修改仓库或 Codex Skills，也不执行 Git。
 
 `record` 必须显式传入当前任务引用、证据类型、证据引用、观察失败、期望行为、复用范围、建议权威落点、验证方式和 `public-safe` 检查。`repeated-failure` 至少需要两个不同证据引用。
 
 账本目录权限固定为 `0700`，模式和候选文件固定为 `0600`；记录器拒绝凭证以及带明确标签的身份证、手机号和银行卡号。该检查只作最后一道防线，不能替代调用前脱敏。
+
+### 5.1 存储与修订
+
+复用 `$SKILL_LEARNING_HOME/wise-agent/`，不新建数据库或后台服务：
+
+```text
+mode.json                                        原有自动记录开关
+records/<skill-id>/<number>-<slug>.md              不改写的原始候选
+patterns/<skill-id>/<pattern-id>/<revision>.json   完整问题模式修订
+patterns/<skill-id>/<pattern-id>/impacts/          按版本与序号保存的结果
+```
+
+修订包含 `status / summary / scope / strategies / counterexamples / record_refs / evidence_refs / reason`。`evidence_refs` 必须非空，其他列表可以为空；`record_refs` 只能指向本 Skill 已存在的候选相对路径。每次显式提交完整修订，不让已失效的旧策略继续作为当前知识；旧观察、旧修订和旧版本结果不删除。重复 `record` 仍只去重，新证据由显式修订纳入，不借机扩张自动记录范围。
+
+示例输入是已脱敏、已人工评审的 `pattern-review.json`，不是模型自行确认的经验：
+
+```json
+{
+  "status": "active",
+  "summary": "交付时遗漏输出契约检查",
+  "scope": "有明确输出契约的 Skill 维护任务",
+  "strategies": ["只核对本任务明确要求的输出"],
+  "counterexamples": ["纯文字任务不需要全仓构建"],
+  "record_refs": [],
+  "evidence_refs": ["fixture:output-contract-failure"],
+  "reason": "Owner 已确认问题与适用范围"
+}
+```
+
+以下命令从源仓库根目录执行；实际记录必须使用本任务的证据而非示例引用：
+
+```bash
+python3 wise-agent/scripts/skill-learning-ledger.py lookup --skill demo-skill
+python3 wise-agent/scripts/skill-learning-ledger.py revise-pattern \
+  --skill demo-skill --pattern-id output-contract --input pattern-review.json \
+  --reviewer skill-owner --sensitivity-check public-safe
+```
+
+`lookup --skill` 只读指定 Skill，可加 `--pattern-id` 精确定位；返回当前修订、历史修订和全部已回链结果。目录不存在时返回空结果，不创建目录或修改权限。新修订以独占、原子发布方式写入私有文件，不覆盖旧修订；遇到并发冲突、损坏文件或链接路径时明确失败，不自动覆盖修复。
+
+### 5.2 版本结果回链
+
+源仓库已有的 `scripts/skill-evolution-control.py` 继续管理不可变改动产物和 registry 版本指针。使用该控制器的试验可在 `register` 时传 `--pattern-id`；它在现有 Checker、canary、promote、rollback 动作中记录有序结果，`reject --reason --actor --evidence-ref` 记录人工拒绝。重复注册同一版本不得清空裁决或改绑问题模式。控制器不读写学习目录，也不因此放宽既有验证条件。
+
+已获指定 registry 的回滚授权时，`VERSION_ID` 固定为本次确认要撤回的当前版本，不是 `last_known_good`；完整参数可通过 `python3 scripts/skill-evolution-control.py rollback --help` 查看：
+
+```bash
+python3 scripts/skill-evolution-control.py rollback \
+  --registry registry.json --expected-current-version "$VERSION_ID" \
+  --reason "已确认当前版本违反护栏" --actor skill-owner
+```
+
+当前版本与预期不一致时，命令拒绝且不写入 registry；先重新核对变化，不自动替换预期版本重试。回滚后的结果回链仍使用被撤回的 `VERSION_ID`，不要换成恢复后的版本。
+
+每次明确的试验结论后，无论成败，获本地维护授权才显式回链：
+
+```bash
+python3 wise-agent/scripts/skill-learning-ledger.py record-impact \
+  --skill demo-skill --pattern-id output-contract \
+  --registry registry.json --version-id "$VERSION_ID" \
+  --reviewer skill-owner --sensitivity-check public-safe
+```
+
+回链只读取用户指定的 registry，不打开其中的产物或外部证据引用；保存父版本、改动内容 hash、产物引用及有序结果。重复导入幂等，同一版本和序号的已保存结果不能被重写。原始判断由 Checker、试验与 Owner 提供；回链器不评分、不证明证据真实性，也不把一次正向结果自动改写为永久策略。
+
+版本晋升或回滚只改变该 registry 的指针，不等于修改源仓库或本机安装；学习历史保持不变。要将试验结果转成新的策略、反例或撤回结论，仍需显式修订问题模式。未使用该 registry 的普通 Skill 修改沿用原有流程，不强制新增 canary 或安装验证。
+
+### 5.3 兼容与验证边界
+
+旧 `mode.json` 与候选记录保持兼容，不迁移、不自动关联历史；不带 `pattern_id / outcomes` 的旧 registry 可以继续使用原命令，但回链不会根据最终状态猜造过去的事件。新的带关联版本从明确记录的试验结果开始积累。
+
+`scripts/test-skill-learning-loop.py` 覆盖原始证据保留、模式修订与撤回、拒绝后再试验、晋升与回滚、幂等和文件安全；由 `scripts/validate.sh` 聚合。它只证明离线契约，不证明 Skill 已取得行为收益。没有真实 baseline / candidate 行为评测，不声明任务成功率或模型能力提升。同步脚本不消费此模式库或这些验证门禁。
 
 ## 6. 晋升门禁
 

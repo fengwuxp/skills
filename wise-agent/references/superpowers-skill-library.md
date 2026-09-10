@@ -117,8 +117,8 @@ AnySearch 只作为第三方公开检索的观察执行能力，不是默认搜�
 
 ## 3. 执行与授权门禁
 
-- 已安装不等于执行授权；Skill 的 `MUST`、`always` 或默认流程不能覆盖用户原话和仓库规则。
-- 产品任务不因 `brainstorming` 自动进入工程计划；工程任务不因 `writing-plans` 自动进入实现。
+- 已安装不等于执行授权；Skill 的 `MUST`、`always` 或默认流程不能覆盖用户原话和项目规则。用户已批准范围明确的实现时，不因插件要求再次设计审批而暂停；只对真实未决设计或新增权限提问。
+- 产品任务不因 `brainstorming` 自动进入工程计划；工程任务不因 `writing-plans` 自动进入实现。反之，已授权实现也不因未先运行这两个 Skill 而退回规划；按当前知识缺口选择方法，不将工具顺序当作授权条件。
 - 一行文档或低风险局部修改不因插件存在自动创建 worktree、分支、subagent 或提交。
 - 调用 `brainstorming` 或 `writing-plans` 前按 `execution-specification.md` 的“规划产物归位与减层”选择载体；`docs/superpowers` 只是插件可覆盖默认值，不能自行创建第二规划根。
 - `.superpowers` 中的 brainstorming、SDD、快照、brief、report 或测试证据默认是工具执行资产；除非项目明确将其纳入权威约规，否则不得作为唯一设计、任务状态、授权或恢复入口。

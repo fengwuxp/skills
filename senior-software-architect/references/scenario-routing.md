@@ -4,7 +4,7 @@
 
 ## 使用时机
 
-- 用户任务同时涉及任务类型、技术栈、风险等级或目标产物选择。
+- 任务入口或组合风险尚不明确，需要在任务类型、技术栈和目标产物之间选择参考。
 - 不确定应读取 `architecture.md`、`testing.md`、`debugging-diagnosis.md`、`production-readiness.md` 还是其他专项 reference。
 - 需要做触发路径自检、模拟验收或防止一次性加载过多 reference。
 
@@ -15,9 +15,8 @@
 
 ## 读取后必须产出
 
-- 当前任务类型、技术栈、风险等级和目标产物判断。
-- 最小 reference 集合，以及不读取其他 reference 的理由。
-- 对应输出形态和关键红线。
+- 选出当前任务所需的最小 reference 与适用红线；任务明确后可直读已定位的细分 reference，不补读父索引。
+- 对用户只报告会影响行动的判断或缺口，不另交路由卡，也不逐项解释未加载哪些文档。
 
 ## 需要继续读取的 reference
 
@@ -35,7 +34,8 @@
 | 图形化、系分、ADR 或生产变更 | `快速路由表` 中图形、系分、选型、上线行，再读对应专项 reference | 不用图或 ADR 掩盖缺少验证的设计 |
 | 非标工程问题 / 无标准答案问题 | `快速路由表` 中非标工程问题行，再读 `architecture.md` 的“1.3 非标工程问题” | 不把复杂问题拆成机械执行清单 |
 | 系统反馈、政策阻力、战略前瞻或 Backcasting | `快速路由表` 中系统干预行，再读 `system-intervention-and-backcasting.md` | 根因已定位的线性局部 Bug 不加载系统干预 reference |
-| 外部依赖、AI 协作或多 Agent 推进 | `快速路由表` 中外部 API、AI 编码协作行，再读 `workflow.md`、`ai-assisted-engineering.md`；中大型项目继续读 `ai-large-project-orchestration.md` | 不凭模型记忆处理时效性外部规则，不照搬外部工作流命令 |
+| 外部依赖 | `快速路由表` 中外部 API 行，`workflow.md` 的外部知识时效性门禁 | 不凭模型记忆处理时效性外部规则，不因外部依赖加载 AI 编排 |
+| 已采用 AI 协作或多 Agent 推进 | `快速路由表` 中 AI 编码协作行；真实恢复、跨责任人交接或已获准的多 Agent/Wave 编排才读 `ai-large-project-orchestration.md` 对应章节 | 不因中大型项目、多文件或长任务自动增加编排，不照搬外部工作流命令 |
 
 ## 使用顺序
 
@@ -45,11 +45,13 @@
 4. **识别目标产物**：代码修改、Review 结论、系分文档、ADR、迁移计划、上线检查、回滚方案或测试计划。
 5. **选择最小参考集**：只加载当前任务需要的 reference；不为了显得完整一次性加载所有文档。
 
+接口与方法写回前、代码 CR 或架构审查，均先读取 `project-governance-service-api-modeling.md` 的“能力价值与架构裁决”；快速编码、局部方法调整和只读审查同样适用。它是下表各入口共用的判断，不需要额外的专项评审请求；只在本轮编码或审查范围内执行。
+
 ## 快速路由表
 
 | 场景 | 必读参考 | 输出重点 |
 | --- | --- | --- |
-| 通用架构设计 | `architecture.md`、`review-and-output-templates.md` | 背景、目标、非目标、边界、数据、可靠性、安全、验证、发布和取舍。 |
+| 通用架构设计 / 架构审查 | `architecture.md`、`project-governance-service-api-modeling.md`、`review-and-output-templates.md` | 背景、目标、非目标、能力价值、职责、边界、数据、可靠性、安全、验证、发布和取舍。 |
 | 非标工程问题 / 无标准答案 / 跨模块跨团队 / 复杂遗留问题 / AI 编码失控 | `architecture.md`、`adr-and-tradeoff.md`、`workflow.md`；涉及测试或编码时加读 `testing.md`，涉及生产时加读 `production-readiness.md` | 先输出非标工程问题卡：问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令、决策标准和停止条件；不直接进入大范围改造。 |
 | 症状反复 / 多主体反馈 / 政策阻力 / 时间延迟 / 战略前瞻 / Backcasting | `system-intervention-and-backcasting.md`；进入编码或生产动作时再加读 `testing.md`、`workflow.md` 或 `production-readiness.md` | 输出待验证的反馈模型或回溯路径，以及一个有 Owner、观察窗口、成功 / 失败信号、停止和回退的最小可逆干预；线性局部 Bug 直接走 Bug 修复。 |
 | PRD/产品方案/AI Native 产品上下文到系统设计 / 业务驱动架构 | `product-design.md`、`architecture.md`、`system-analysis-design.md`；AI Native 端到端产品到研发流程按 `SKILL.md` 工作原则核对任务契约，仅在用户显式调用 `wise-agent` 时消费其编排结论，产品侧缺口回 `产品架构专家` 的 `ai-native-product-context.md`；涉及验收种子、TDD 或测试计划时加读 `testing.md` | 先校准产品目标、核心业务用例、对象状态、规则矩阵、验收场景和风险 owner；架构师消费已确认的 Hardened Candidate、AI Native 交接结论或等价用户与项目事实，再把业务 driver 转成服务/模块边界、质量属性场景、接口、数据、测试、监控、发布和取舍；需要 TDD 时输出业务驱动验证到测试资产映射。 |
@@ -63,7 +65,7 @@
 | 架构坏味 / 深度代码质量扫描 | `coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` 和项目本地规范 | 先确认最近改动 / diff、指定模块、全仓或仅架构层；默认快速体检只返回 3-5 个最高价值候选，用户明确要求深度扫描才扩展。先按业务语义、边界、契约和失败路径 Review，再追加上帝类、循环依赖、过长方法、Feature Envy、Data Clumps 和复杂度热点等启发式扫描。 |
 | Bug 修复 / 调试诊断 / 根因分析 / 测试失败 | `debugging-diagnosis.md`、`testing.md`、`workflow.md` 和项目本地规范 | 先建立可重复反馈环和最小复现，再假设验证、证据采集、最小修复和回归测试；高风险问题补时间线和 5-Why 复盘草稿。 |
 | 写测试 / 补测试 / 加测试 / 按 TDD 推进 / 先写失败测试 / 测试选择 / 测试分层 | `testing.md` 和项目本地规范 | 先读 `testing.md` 第 2 节选择测试形态，再定业务事实、保护对象、风险来源、真实链路和替身边界；只有命中 `testing.md` 第 6/12 节专项条件时再读 `testing-practices.md`。 |
-| 代码 Review / PR Review | `review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 问题优先，按 P0-P3 给文件行号、风险、证据、建议和验证。 |
+| 代码 Review / 源码 CR / PR Review | `project-governance-service-api-modeling.md`、`review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 先裁决能力价值、职责与契约；问题优先，按真实后果定级，给文件行号、风险、证据、建议和验证。 |
 | 系统分析设计 / 系分 | `system-analysis-design.md`、`system-analysis-template.md`、`architecture.md`、`production-readiness.md` | 产品语义输入、系统边界、运行时场景、工程规则、模块/契约/数据、规则落地、非功能、验证和 Engineering Handoff；明确要求正式成稿或 PDF 时，工程结论稳定后由当前 Agent 使用可用文档能力整理，`document-authoring` 仅在准入、可用性和调用策略均满足时协同，编辑后回本技能重新校验。 |
 | 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件；同时说明关键节点/通信边、复杂度从哪里转移到哪里，以及隐藏边是否可观测、可追踪和可回滚。 |
 | 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md` | 业务不变量、事务边界、幂等、去重、补偿、对账、告警和一致性窗口。 |
@@ -76,8 +78,8 @@
 | 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
-| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `workflow.md`、`ai-assisted-engineering.md`、`ai-large-project-orchestration.md`、`negative-constraints.md`；命中受控工程执行、Plan Grant / Execution Grant 或自动分轮推进时加读 `cad-mode.md`；端到端 AI Native 流程按 `SKILL.md` 工作原则核对任务契约，不因流程跨度自动加载 `wise-agent` | 先过工程生命周期门禁，再用 OpenSpec 定标准，用 Superpowers 保 TDD、Review、Refactor 和验证纪律，用大项目编排流程管理上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口；来自业务 MVP 或 AI Native 产品上下文时消费已确认的 Hardened Candidate、AI Native 交接结论或等价用户与项目事实；GSD-like 编排管大盘，受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片，并服从授权、Git、用户中断和停止条件。 |
-| AI 生成代码审查 | `skill-tree.md`、`negative-constraints.md`、`workflow.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策。 |
+| AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `ai-assisted-engineering.md`；真实恢复、交接或已获准的多 Agent/Wave 编排才读 `ai-large-project-orchestration.md`，实际采用受控工程执行 Loop 才读 `cad-mode.md`；按 `SKILL.md` 工作原则核对任务契约，不因流程跨度自动加载 `wise-agent` | 使用项目已选择的规格、测试和评审方法，不要求补齐 OpenSpec / Superpowers。来自业务 MVP 或 AI Native 产品上下文时消费已确认的 Hardened Candidate、AI Native 交接结论或等价用户与项目事实；受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片，并服从授权、Git、用户中断和停止条件。 |
+| AI 生成代码审查 | `coding-review-deep-dive.md`，出现依赖或权限风险时补 `negative-constraints.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策；不因代码由 AI 生成加载能力地图或编排。 |
 | 技能自检 / 模拟验收 | `acceptance-scenarios.md`、`skill-tree.md` | 一致性、自解释、可执行、克制性和生产意识。 |
 
 ## 组合场景处理
@@ -101,7 +103,7 @@
 - **安全改造 + 遗留系统**：先识别现有权限和数据隔离缺口，再用防腐层、灰度开关和回归测试逐步收敛，不一次性重写认证授权体系。
 - **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载项目本地规范、`wind-coding-conventions` 的通用 Java 层与 `coding-review-deep-dive.md`；Wind 专项按依赖或上下文启用。若进入受控工程执行 Loop，再读 `cad-mode.md` 确认工程准入与逐轮推进边界。
 - **AI 编码协作 + 高风险生产行为**：先确认 OpenSpec 中的业务不变量、验收场景和回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范。
-- **AI 编码协作 + 中大型长任务**：先判断是需求不清还是上下文衰减；需求不清回到 OpenSpec 和产品/系分补齐，上下文衰减或真实大项目则读取 `ai-large-project-orchestration.md`，建立上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和收口流程。明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程。
+- **AI 编码协作 + 中大型长任务**：需求不清时只暂停依赖该缺口的动作，由现有产品/系分事实或对应 Owner 补齐；真实恢复、交接或已获准的编排才读 `ai-large-project-orchestration.md` 对应章节。上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和收口流程按实际需要取用；目标与授权已清楚的多文件任务直接执行。
 - **GSD-like 编排 + 受控工程执行 Loop**：先用 `ai-large-project-orchestration.md` 拆出 Stage、Wave 和原子任务包，再只对已选定且门禁完整的单个 Task ID 或阶段切片读取 `cad-mode.md`。不得把整个大项目直接交给工程执行 Loop，不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant。
 
 ## 输出路由

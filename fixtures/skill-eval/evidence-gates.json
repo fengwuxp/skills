@@ -3,15 +3,27 @@
   "skills": {
     "grill-me": [
       {
+        "cases": "fixtures/skill-eval/planning-execution-proportionality-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/grill-me-resolution-and-intent-behavior-cases.json"
       }
     ],
     "senior-software-architect": [
       {
+        "cases": "fixtures/skill-eval/senior-progressive-loading-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/planning-execution-proportionality-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/senior-provider-value-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
@@ -125,6 +137,9 @@
     ],
     "product-architecture-expert": [
       {
+        "cases": "fixtures/skill-eval/design-evidence-proportionality-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
       },
       {
@@ -156,6 +171,9 @@
       }
     ],
     "wise-agent": [
+      {
+        "cases": "fixtures/skill-eval/planning-execution-proportionality-behavior-cases.json"
+      },
       {
         "cases": "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
       },
@@ -221,6 +239,9 @@
       }
     ],
     "ui-design-expert": [
+      {
+        "cases": "fixtures/skill-eval/design-evidence-proportionality-behavior-cases.json"
+      },
       {
         "cases": "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
       },

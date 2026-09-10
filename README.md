@@ -276,8 +276,8 @@ $wise-agent：这个 项目执行规范 存在 <分支 / 汇合 / 并行 / 跨 W
 - 可查 Facts、已有 Owner 结论和低风险可逆默认项由 Agent 自答并留痕；新价值取舍、公共契约、高风险和红线交给 Owner。
 - 高保真问题先交给原型、真实页面、可执行样例或观测取证，再回到原问题裁决；不凭语言断言使用体验，也不把取证交接当 Owner 决策。
 - 范围过大时按独立决策包交接，每包保留范围、Owner、输入快照、证据媒介、写回位置和停止条件；只有包之间没有共享决策、红线或写回位置时才并行。
-- 你只需要回答接受建议、改答案、补材料或停止；说“按你建议推进”只关闭当前 blocker。
-- 退出：确认 shared understanding，形成决策快照；未确认前不执行。
+- 你可以接受建议、改答案、补材料或停止；“按你建议推进”按上下文承接已明确的建议与授权，不替你确认未展示的分叉。具体解释见 `grill-me/SKILL.md`。
+- 退出：形成决策快照；只澄清仍影响行动的理解差异，已有确认不重复请示，依赖未决判断的动作等待，其余已授权工作继续。
 - 红线、底线、不能碰、不可、禁止、必须等表达必须记录，执行前逐项对账。
 
 #### 3.3 知识、上下文与学习回流
@@ -301,6 +301,8 @@ python3 ~/.codex/skills/wise-agent/scripts/skill-learning-ledger.py disable
 ```
 
 `candidate` 只是待审证据，不代表 Skill 已改进。Owner 确认复用范围、目标 Skill 和权威落点后，人工评审结论为 `confirmed`，candidate 账本文件仍保持 `candidate`；受控试验在该状态内执行，不新增 `RSI Mode` 或其他生命周期状态。独立 Checker 复核后，由 Owner 作 `promote / reject / supersede` 裁决并留在任务证据中。学习模式只控制 candidate 账本写入；Skill 源仓库修改、Git、同步和发布分别需要对应授权。
+
+另行显式维护学习经验时，账本支持 `lookup --skill <skill-id>`、`revise-pattern` 和 `record-impact`：把原始证据、可修订的问题模式、具体改动版本与结果关联起来。方案被拒或版本回滚不会删除问题证据，过期模式可以撤回；这些入口不会自动启用、迁移旧记录或改变运行时 Skill。参数、目录与授权边界见 [Skill 学习回流](wise-agent/references/skill-learning-backflow.md)。
 
 知止者使用观测与学习候选账本相互独立。只有用户显式授权后才在本地启用 metadata-only 记录；脚本不修改 Codex 配置，先打印候选配置供人工审查：
 

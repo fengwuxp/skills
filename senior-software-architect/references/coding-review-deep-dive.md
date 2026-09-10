@@ -58,6 +58,8 @@
 
 ## 编码判断顺序
 
+进入代码 CR 时，先按 `project-governance-service-api-modeling.md` 的“能力价值与架构裁决”核对本轮接口与方法；依据当前源码、调用方和测试重新判断，不能沿用写前结论直接准出，再按以下顺序展开问题。
+
 1. **先看业务语义**：名称、模型、方法和测试是否表达真实业务意图。
 2. **再看领域语言**：关键对象、动作、状态和异常是否使用业务能理解的统一语言；同一词在不同上下文中是否被强行统一或混用。
 3. **再看边界方向**：Controller、Application、Domain、Infrastructure、Converter、Repository 是否各司其职。

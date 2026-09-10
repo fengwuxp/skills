@@ -92,7 +92,7 @@ Superpowers 通过官方 Codex 插件独立提供，调度入口读 `superpowers
 
 ## 2A. 交付执行契约 v3
 
-`交付执行契约 v3` 是本仓库内部执行契约版本，不等同于外部 Harness、插件或 `.superpowers/sdd/` 默认运行态。它在 v1（owner、顺序、写入范围、验证命令、停止条件和交接）之上，吸收 Superpowers v6 SDD 的可迁移纪律，并把执行状态机、文件化交接和恢复入口写成准入条件：
+`交付执行契约 v3` 是本仓库内部执行契约版本，不等同于外部 Harness、插件或 `.superpowers/sdd/` 默认运行态。实际采用多 Agent 派发、跨会话执行交接，或项目明确采用本契约时，才应用以下准入条件；同一 Agent 在当前会话内完成已授权工作不因多步骤而补齐整套契约。它在 v1（owner、顺序、写入范围、验证命令、停止条件和交接）之上，吸收 Superpowers v6 SDD 的可迁移纪律，复用既有执行状态、文件化交接和恢复入口：
 
 - **pre-flight plan review**：进入执行前先检查计划冲突、跨任务接口不一致、会被 reviewer 判为缺陷的要求、验证命令缺失和授权越界。
 - **单一 Task Reviewer**：每个任务由一个独立 Checker 同时给出规格符合度和代码质量结论，避免 spec reviewer 与 quality reviewer 重复、漂移或互相甩锅。

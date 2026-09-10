@@ -1,7 +1,7 @@
 interface:
   display_name: "资深架构师"
-  short_description: "架构/系分/重构设计、Bug/TDD/代码评审、代码库接手与生产风险"
+  short_description: "接口设计与实现、架构/系分/重构、CR/架构审查、Bug/TDD与生产风险"
   brand_color: "#0F766E"
-  default_prompt: "Use $senior-software-architect 基于源码、测试和项目约束完成架构、系分、重构、代码评审、Bug 修复或 TDD，并报告验证、发布回滚和生产风险；图形化需求按 Skill 路由。"
+  default_prompt: "Use $senior-software-architect 基于源码、测试和项目约束完成工程任务；目标与授权清楚时直接执行，按需读取专业参考。编码与审查均从能力提供者视角裁决价值、职责和契约，报告真实验证及适用的兼容、回滚和生产风险；图形化需求按 Skill 路由。"
 policy:
   allow_implicit_invocation: true

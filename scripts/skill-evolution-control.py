@@ -5,6 +5,8 @@ The tool never calls a model, accesses the network, or edits a source Skill.
 It stores immutable candidate artifacts and an explicit runtime pointer in a
 caller-provided registry file. Production integration must provide the
 business experiment and metric evidence consumed by ``record-canary``.
+Optional pattern IDs and outcome history link explicit learning reviews to
+version decisions; this tool never reads or writes the private learning ledger.
 """
 
 from __future__ import annotations
@@ -173,7 +175,8 @@ def _candidate(registry: dict[str, Any], version_id: str) -> dict[str, Any]:
 
 
 def add_candidate(
-    registry: dict[str, Any], manifest: dict[str, Any], content: str, artifacts_dir: Path
+    registry: dict[str, Any], manifest: dict[str, Any], content: str, artifacts_dir: Path,
+    pattern_id: str | None = None,
 ) -> None:
     if manifest.get("state") != "CHECKED":
         raise StateError("only CHECKED candidates can be registered")
@@ -182,6 +185,19 @@ def add_candidate(
     version_id = _non_empty(manifest.get("version_id"), "candidate.version_id")
     if manifest.get("content_sha256") != _sha256(content) or version_id != _sha256(content):
         raise StateError("candidate content hash does not match manifest")
+    if pattern_id is not None and not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", pattern_id):
+        raise StateError("pattern_id must be a lowercase slug")
+    existing = registry["candidates"].get(version_id)
+    if existing is not None:
+        if (existing.get("pattern_id") != pattern_id
+                or existing.get("parent_version_id") != manifest.get("parent_version_id")
+                or existing.get("policy_sha256") != manifest.get("policy_sha256")):
+            raise StateError("candidate already registered with different provenance")
+        artifact_path = Path(existing.get("artifact_path", ""))
+        if (artifact_path.is_symlink() or not artifact_path.is_file()
+                or _sha256(artifact_path.read_text(encoding="utf-8")) != version_id):
+            raise StateError("registered candidate artifact is missing or changed")
+        return
     artifacts_dir = artifacts_dir.expanduser().resolve()
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     if not artifacts_dir.is_dir() or artifacts_dir.is_symlink():
@@ -197,6 +213,8 @@ def add_candidate(
             handle.write(content)
     record = dict(manifest)
     record["artifact_path"] = str(artifact_path)
+    record["pattern_id"] = pattern_id
+    record["outcomes"] = []
     registry["candidates"][version_id] = record
     registry["versions"][version_id] = {
         "version_id": version_id,
@@ -204,6 +222,32 @@ def add_candidate(
         "content_sha256": version_id,
         "artifact_path": str(artifact_path),
     }
+
+
+def record_outcome(
+    candidate: dict[str, Any], outcome: str, actor: str, reason: str, evidence_ref: str,
+) -> None:
+    outcomes = candidate.setdefault("outcomes", [])
+    outcomes.append({
+        "sequence": len(outcomes) + 1,
+        "outcome": outcome, "actor": actor, "reason": reason,
+        "evidence_ref": evidence_ref, "at": _now(),
+    })
+
+
+def reject_candidate(
+    registry: dict[str, Any], version_id: str, reason: str, actor: str, evidence_ref: str,
+) -> None:
+    reason = _non_empty(reason, "reason")
+    actor = _non_empty(actor, "actor")
+    evidence_ref = _non_empty(evidence_ref, "evidence_ref")
+    candidate = _candidate(registry, version_id)
+    if candidate.get("state") not in {
+        "CHECKED", "APPROVED_FOR_CANARY", "CHECKER_FAILED", "CANARY_FAILED", "CANARY_PASSED",
+    }:
+        raise StateError("candidate cannot be rejected in its current state; promoted versions require rollback")
+    candidate["state"] = "REJECTED"
+    record_outcome(candidate, "REJECTED", actor, reason, evidence_ref)
 
 
 def approve_candidate(registry: dict[str, Any], version_id: str, reviewer: str) -> None:
@@ -243,6 +287,8 @@ def record_checker(
     }
     if not passed:
         candidate["state"] = "CHECKER_FAILED"
+    record_outcome(candidate, "CHECKER_PASSED" if passed else "CHECKER_FAILED",
+                   checker_id, "Independent checker result.", evidence_ref)
 
 
 def record_canary(
@@ -311,6 +357,10 @@ def record_canary(
     candidate["canary"]["passed"] = passed
     candidate["canary"]["recorded_at"] = _now()
     candidate["state"] = "CANARY_PASSED" if passed else "CANARY_FAILED"
+    reason = "; ".join(f"{field}={evidence[field]}" for field in (
+        "primary_lower_bound_delta", "guardrails_pass", "sample_ratio_ok", "attribution_complete", "data_fresh",
+    ))
+    record_outcome(candidate, candidate["state"], evidence["experiment_id"], reason, evidence["evidence_ref"])
 
 
 def enable_automation(registry: dict[str, Any], actor: str) -> None:
@@ -364,6 +414,8 @@ def promote_candidate(
             "at": _now(),
         }
     )
+    record_outcome(candidate, "PROMOTED", actor, "Registry pointer promoted after positive canary.",
+                   canary["evidence_ref"])
 
 
 def rollback(
@@ -381,6 +433,7 @@ def rollback(
     current_candidate = registry.get("candidates", {}).get(previous)
     if isinstance(current_candidate, dict):
         current_candidate["state"] = "ROLLED_BACK"
+        record_outcome(current_candidate, "ROLLED_BACK", actor, reason, f"registry:rollback:{previous}:{target}")
     registry["current_version"] = target
     automation = registry.get("automation")
     if isinstance(automation, dict):
@@ -440,6 +493,14 @@ def _parser() -> argparse.ArgumentParser:
     register.add_argument("--candidate", type=Path, required=True)
     register.add_argument("--registry", type=Path, required=True)
     register.add_argument("--artifacts-dir", type=Path, required=True)
+    register.add_argument("--pattern-id", help="optional learning pattern ID within this Skill")
+
+    reject = commands.add_parser("reject", help="record a rejected intervention without erasing its evidence")
+    reject.add_argument("--registry", type=Path, required=True)
+    reject.add_argument("--version-id", required=True)
+    reject.add_argument("--reason", required=True)
+    reject.add_argument("--actor", required=True)
+    reject.add_argument("--evidence-ref", required=True)
 
     approve = commands.add_parser("approve", help="record manual approval for canary")
     approve.add_argument("--registry", type=Path, required=True)
@@ -488,7 +549,11 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "register":
             registry = _load_json(args.registry)
             manifest = _load_json(args.manifest)
-            add_candidate(registry, manifest, _read_text(args.candidate), args.artifacts_dir)
+            add_candidate(registry, manifest, _read_text(args.candidate), args.artifacts_dir, args.pattern_id)
+            _write_json(args.registry, registry)
+        elif args.command == "reject":
+            registry = _load_json(args.registry)
+            reject_candidate(registry, args.version_id, args.reason, args.actor, args.evidence_ref)
             _write_json(args.registry, registry)
         elif args.command == "approve":
             registry = _load_json(args.registry)

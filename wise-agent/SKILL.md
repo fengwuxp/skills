@@ -38,7 +38,7 @@ AI 推理偏向与方差校准不新增运行模式：遇到长上下文、强�
 
 Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机制，也不扩大仓库写入、Git、同步或发布授权；候选生命周期和受控试验读取 `references/skill-learning-backflow.md`，确认后的知识归位与最小 diff 读取 `references/code-delivery.md`。
 
-复杂或模糊任务先跑决策澄清门禁。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重、问题保真度和决策快照由该 Skill 负责。需要观察实物的高保真问题先交接取证，返回后再收敛；执行前对账读取 `references/delivery-execution-control.md`。
+只有未决问题会改变当前行动的目标、契约、授权或不可接受后果时，才进入决策澄清门禁；复杂度本身不触发问询。Facts 用材料和工具自答，Decisions 才问 Owner；一次只问一个主 blocker，已确认决策不重复询问，只暂停依赖未决项的行动。关键分叉、含糊回答或连续返工时按需装载 `grill-me`；问题台账、历史去重、问题保真度和决策快照由该 Skill 负责。需要观察实物的高保真问题先交接取证，返回后再收敛；需要核对决策与执行依据时读取 `references/delivery-execution-control.md`。
 
 当路线尚未显现、常规能力只能得到局部解，或输入含原创设想、非标方案与突破性设计时，读取 `references/creative-exploration-and-evidence.md`，从成功图景逆推少量成事路径候选，再按“创见探索 -> 求真验证”分轨；候选不是事实、授权、正确性或完成证据。路线清楚且一步可验证时跳过，产品或工程交接仍回到各自专项 reference，不新增模式、人格或执行授权。
 
@@ -50,6 +50,8 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 默认直接工作，不展开完整 SDLC，也不因任务复杂就自动装载 Superpowers；只按证据增加下列控制。
 
+目标、范围、授权和验证清楚时直接推进；多步骤任务可用简短计划组织依赖，不要求先交付完整计划或等待再次批准。“谋”是行动前的判断，不是每次执行前的文档阶段。只有真实恢复、跨责任人交接或项目明确要求时才持久化，复用已有载体；不因加载 reference、阶段切换或任务复杂而新增卡片。
+
 | 机制 | 只在何时增加 | 详细规则 |
 | --- | --- | --- |
 | SDLC | 跨产品、设计、工程、验证、发布、运行或退役阶段 | `references/delivery-lifecycle.md` |
@@ -58,7 +60,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 | Worker | 子任务输入可冻结、写入不重叠且并行收益明确 | `references/engineering-governance.md` |
 | Checker | 高风险、公共契约、重要交付或发布准出 | `references/verification-review-release.md` |
 
-先判断 SDLC，再判断是否需要项目执行规范，确需在当前切片反复运行才增加 Loop；Worker 与 Checker 是正交判断。用户提出 Goal、长任务或持续推进时，不创建或恢复运行时 Goal，转为更新项目已有 `OpenSpec / Spec / Issue / 任务计划`。规划产物落盘、多框架冲突和文档减层读取 `references/execution-specification.md` 的“规划产物归位与减层”；Skill、Plugin 或 Harness 的默认路径不是项目权威。执行规范固定目标、约束、退出标准、验证、授权和当前切片；切片内部由模型自行选择最短可验证路径。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有项目执行规范上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
+SDLC、项目执行规范、Loop、Worker 与 Checker 分别按实际需要选择，不要求依次经过。用户提出 Goal、长任务或持续推进时，不创建或恢复运行时 Goal，转为更新项目已有 `OpenSpec / Spec / Issue / 任务计划`。规划产物落盘、多框架冲突和文档减层读取 `references/execution-specification.md` 的“规划产物归位与减层”；Skill、Plugin 或 Harness 的默认路径不是项目权威。执行规范固定目标、约束、退出标准、验证、授权和当前切片；切片内部由模型自行选择最短可验证路径。工作拓扑投影不是第六个机制：只有上下文隔离、并行、专业化交接或断点恢复有明确收益，且三个以上节点出现分支、汇合、并行或跨 Wave 交接时，才在既有项目执行规范上投影可校验 `work_graph`；简单、线性或单文件任务不生成。
 
 ## 能力装载
 
@@ -92,7 +94,7 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 - 仅翻译或改写 commit message 不触发 Git，也不触发本 Skill。
 - 全局默认内核使用 `assets/codex-global-agents.md`；写入 `$CODEX_HOME` 前必须授权，已有非空规则时合并，不得直接覆盖。
 - 需要让新项目直接使用 `implementer` / `batch_worker` 时，在源仓库先运行 `./sync-skills.sh --dry-run --with-agents wise-agent`；只有用户明确授权全局写入后才去掉 `--dry-run`，随后重启 Codex 或新建任务。同步保留其他全局 Agent，并在覆盖同名且内容不同的文件前备份。
-- 完成必须同时具备：目标映射、真实产物、独立验证、状态回写和残余风险 Owner；缺一项只能继续、停止或交接。
+- 完成必须给出目标对应的真实产物或明确结论、验证证据和残余风险；需要独立 Checker 时不得以 Maker 自述替代。已有状态载体或实际交接时回写必要变化；存在未决风险时明确责任 Owner，不为无残余事项创建空卡。
 
 ## Reference 路由
 
@@ -103,6 +105,7 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
 - Skill 使用记录、OTel、Hook、token 成本和命中 / 效果评测仅在用户显式要求开启、关闭、检查或优化知止者使用观测时读取 `references/skill-usage-observability.md`；观测默认关闭，不保存正文，不自动写学习 candidate。
 - 学习回流 candidate 记录仅在显式开启后读取 `references/skill-learning-backflow.md`；只记录当前任务已脱敏、可复核的 `$SKILL_LEARNING_HOME` `candidate`，不得扫描历史对话、自动晋升、提交、同步或发布。
+- 用户显式要求评审或维护学习经验时，也读取 `references/skill-learning-backflow.md`，按目标 Skill 查询、修订问题模式与回链版本结果；这类维护单独授权，不要求开启自动记录，也不把账本注入普通任务。
 - 用户协作档案仅在用户显式开启后读取 `references/user-collaboration-profile.md`；档案与学习回流、仓库和安装目录隔离，candidate 不参与运行时决策，当前指令优先，也不得扩大任何授权。
 - 用户明确授权修改 Skill 源仓库时不要求先开启学习回流模式；按根目录 `AGENTS.md` 和 `references/code-delivery.md` 推进，学习账本、仓库写入、Git、同步和发布分别使用各自授权。
 - 外部 Skill 与来源边界：`references/superpowers-skill-library.md`、`references/source-map.md`。

@@ -43,8 +43,8 @@ class ExpectedHandlingFixture(NamedTuple):
 
 
 DECISION_GRILL_BOUNDARY_TERMS = (
-    "决策澄清门禁是小闭环总门禁",
-    "`grill-me` 是命中升级条件后的升级盘问",
+    "决策澄清门禁只处理会改变当前行动的未决判断",
+    "按需装载 `grill-me`",
 )
 
 WISE_AGENT_CORE_TERMS = [
@@ -60,7 +60,7 @@ WISE_AGENT_CORE_TERMS = [
     "单体工作优先",
     "Checker 独立",
     "决策澄清门禁",
-    "完成必须同时具备",
+    "完成必须给出目标对应的真实产物或明确结论、验证证据和残余风险",
     "联网、安装、Git、密钥、部署、生产、删除、不可逆操作",
     "单个领域词不等于专项证据",
     "明确要求执行 Git stage / commit / push",
@@ -1514,8 +1514,6 @@ check(
         senior_skill,
         [
             "`wind-coding-conventions`",
-            "Java 项目在本地规范之后读取 `wind-coding-conventions` 的通用层",
-            "架构师负责源码级设计、TDD、CR 和验证",
         ],
     )
     and has_all(
@@ -2249,10 +2247,9 @@ check(
     and has_all(
         wise_agent_delivery_lifecycle,
         [
-            "轻量问询结论",
-            "`grill-me` 盘问结论",
+            "存在真实未决判断时",
+            "不因读取本文展示全套角色链、控制卡或反馈图",
             *DECISION_GRILL_BOUNDARY_TERMS,
-            "装载这一独立 Skill",
             "完整盘问、问题台账、历史去重、自决和决策快照由该 Skill 负责",
             "Loop 推进中适时装载 `grill-me`",
             "执行前对账读 `delivery-execution-control.md`",
@@ -2267,11 +2264,11 @@ check(
         [
             "盘问、问题台账、历史去重和决策快照由独立 `grill-me` 负责",
             "完整盘问、问题台账、历史去重、自决和红线规则",
-            "本节只消费决策快照并做执行前对账",
-            "已确认选择、被排除方案、待确认项、red_lines、下一阶段输入和写回位置",
+            "本节消费已有决策依据并做执行前对账",
+            "已确认选择、被排除方案、待确认项、red_lines 和下一阶段输入",
             "被排除方案不得复活",
             "待确认项不得脑补",
-            "快照缺失或不一致时停止并问 Owner",
+            "承重依据缺失或冲突时只暂停依赖它的动作并问 Owner",
             "领域知识分流",
             "只有 Owner 已确认",
             "冲突证据与影响范围",
@@ -2453,7 +2450,6 @@ check(
     and has_all(
         ai_engineering,
         [
-            "工程知识资产判断",
             "最小工程知识资产包包含目标读者、使用场景、资料范围、入口路径",
             "代码库教程、架构培训、技术早报和方案沉淀必须能回链源码路径",
             "不要用字数、生成速度或内容条数当工程价值指标",
@@ -2713,7 +2709,6 @@ check(
             "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`",
             "语义重复",
             "shared understanding",
-            "未确认前不执行",
             "red_lines",
             "huaxia-practical-wisdom",
         ],
@@ -2776,7 +2771,7 @@ check(
         [
             "按需装载 `grill-me`",
             "问题台账、历史去重、问题保真度和决策快照由该 Skill 负责",
-            "执行前对账读取 `references/delivery-execution-control.md`",
+            "需要核对决策与执行依据时读取 `references/delivery-execution-control.md`",
         ],
     )
     and has_all(
@@ -3057,7 +3052,7 @@ check(
     and has_all(
         wise_agent_planning_execution_admission,
         [
-            "三卡交接结论",
+            "项目要求三卡交接时核对三卡",
             "7A. 三卡到架构师的消费规则",
             "Product Context Card",
             "Engineering Handoff Card",
@@ -3164,7 +3159,7 @@ check(
             "Out of scope",
             "Next decision",
             "地图只作索引",
-            "每轮最多关闭一个决策",
+            "一次只向 Owner 提出一个主 blocker",
             "grill-me",
             "research",
             "prototype",
@@ -3500,12 +3495,12 @@ check(
     and has_all(
         wise_agent_planning_execution_admission,
         [
-            "知止者的产研交付视图准入结论",
+            "只回答当前准入问题",
             "是否需要 GSD Round 0",
             "Wave / Atomic Task 候选",
             "Superpowers 方法门禁",
             "工程执行 Loop 候选缺口",
-            "授权策略卡",
+            "授权来自用户原话与其指向的已确认范围",
             "默认授权哪些任务",
             "Codex 的“替我审批”模式",
             "Execution Grant 缺口",
@@ -3552,7 +3547,7 @@ check(
             "完成前是否需要 `verification-before-completion`",
             "Atomic Task 候选",
             "生产可用能力锚点",
-            "事实/推断/待确认边界",
+            "事实、推断、待确认和范围外不做",
             "建议授权模式",
             "Superpowers 方法纪律候选",
             "TDD 切入点",
@@ -3570,7 +3565,7 @@ check(
             "默认审批通道",
             "未开启时不得假定开启",
             "Git 默认需要显式确认",
-            "只说“继续”“按建议推进”“自动跑起来”",
+            "用户说“继续”“按建议推进”时，回指本轮上下文中已提出且已确认的目标、范围与动作",
             "事实边界红线",
             "无根据猜测、模型脑补、工具总结、外部文章观点或超出用户目标的功能扩张",
             "事实依据、推断依据、待确认项和范围外不做",
@@ -3806,7 +3801,7 @@ check(
             "# 交付生命周期",
             "Role Collaboration Loop Map",
             "Intent-to-Production Role Loop Map",
-            "生产生效验证结论",
+            "涉及生产生效时",
             "## 1A. 阶段与能力衔接",
             "阶段只回答“现在位于生命周期哪里”",
             "能力路由只回答“当前需要什么专业能力和独立验证”",
@@ -3859,7 +3854,7 @@ check(
             "不允许模拟模块、内存版业务 Service 或无业务入口 demo",
             "把阶段名当能力来源",
             "目标、计划、原子执行、执行契约和授权边界都是本流程的内部层",
-            "小闭环决策澄清门禁结论",
+            "决策澄清门禁只处理会改变当前行动的未决判断",
             "自决推进",
             "询问 owner",
             "继续收敛",
@@ -3925,9 +3920,9 @@ check(
             "Agentic Coding Loop",
             "Developer Feedback Loop",
             "External Feedback Loop",
-            "外层慢反馈如何修正 Vision",
-            "中层如何修正 Spec",
-            "内层如何执行和验证",
+            "先让外层反馈定方向",
+            "中层把方向翻译成 Spec",
+            "内层再执行和验证",
             "不让内层 AI 自测替代产品判断或真实用户反馈",
             "越外层越慢、越决定方向",
         ],
@@ -3952,7 +3947,7 @@ check(
     and has_all(
         wise_agent_delivery_lifecycle,
         [
-            "GStack 角色链审查结论",
+            "GStack 角色链映射",
             "forcing questions",
             "连续逼问",
             "生产交付审查卡",
@@ -4025,11 +4020,11 @@ check(
             "继续收敛",
             "停止交接",
             "自我规划当人工确认",
-            "任务结束责任闭环",
+            "任务结束给出交付内容、目标 / 验收映射、验证证据和未完成项 / 残余风险",
             "交付责任自检",
-            "下一任务计划问询",
+            "达到完成线就收口，不自动创造下一任务",
             "当前主 blocker / 建议答案 / 依据 / 影响 / 默认暂停点:",
-            "不要同时摊开多个 blocker",
+            "只有另有真实阻塞判断时才提出下一问题",
         ],
     )
     and has_all(
@@ -4660,7 +4655,7 @@ check(
     and has_all(
         wise_agent_planning_execution_admission,
         [
-            "Agent Loop 准入卡",
+            "实际采用 GSD、Wave、工程执行 Loop 或 AI 产品工程化",
             "执行状态与当前阶段",
             "Engineering Handoff Card",
             "Plan Grant Active",
@@ -5857,8 +5852,6 @@ check(
             "Facts 先从材料、源码、测试或日志自答",
             "Decisions 才问 owner",
             "`grill-me` 是升级盘问",
-            "你只需要回答接受建议、改答案、补材料或停止",
-            "退出：确认 shared understanding",
             "红线、底线、不能碰、不可、禁止、必须",
             "按你建议推进",
             "自决推进",
@@ -6032,23 +6025,11 @@ check(
     ),
 )
 check(
-    "senior skill uses three-step loading",
-    has_all(
-        senior_skill,
-        [
-            "运行时按三步加载",
-            "复杂任务先读 `references/scenario-routing.md`",
-            "只读取当前任务必要的 reference",
-        ],
-    ),
-)
-check(
     "senior skill routes diagram output",
     has_all(
         senior_skill,
         [
             "references/diagram-output.md",
-            "系统架构图",
             "正式图形化交付默认只生成 SVG",
         ],
     ),
@@ -6058,10 +6039,9 @@ check(
     has_all(
         senior_skill,
         [
-            "`references/scenario-routing.md` 是本技能唯一完整路由表",
-            "复杂通用产品语义",
-            "优先使用 `product-architecture-expert`",
-            "领域事实与不变量使用 `payment-expert`",
+            "references/scenario-routing.md",
+            "product-architecture-expert",
+            "payment-expert",
         ],
     ),
 )
@@ -6183,7 +6163,7 @@ check(
     "senior openai yaml keeps concise engineering scope",
     has_all(
         senior_agent,
-        ["$senior-software-architect", "源码、测试和项目约束", "发布回滚和生产风险"],
+        ["$senior-software-architect", "源码、测试和项目约束", "回滚", "生产风险"],
     ),
 )
 check(
@@ -6460,7 +6440,7 @@ check(
             "边界结果",
             "禁止结果",
             "失败后的可观察状态",
-            "规则卡、规则矩阵和决策表都使用第 7.1 节",
+            "第 6.1 节对 Business Rule Contract 的投影",
         ],
     )
     and has_all(
@@ -8552,7 +8532,7 @@ check(
             "| Loop |",
             "| Worker |",
             "| Checker |",
-            "Worker 与 Checker 是正交判断",
+            "SDLC、项目执行规范、Loop、Worker 与 Checker 分别按实际需要选择",
         ],
     )
     and has_all(
@@ -9576,8 +9556,8 @@ check(
     has_all(
         workflow,
         [
-            "AI 协作或多 Agent 必须继续读取 `ai-assisted-engineering.md`",
-            "受控工程执行、Plan Grant / Execution Grant 或自动分轮推进必须继续读取 `cad-mode.md`",
+            "实际需要 AI 协作编排或多 Agent 时读取 `ai-assisted-engineering.md`",
+            "实际采用受控工程执行 Loop、Plan Grant / Execution Grant 或自动分轮推进时读取 `cad-mode.md`",
         ],
     ),
 )
@@ -9614,8 +9594,6 @@ check(
             "Superpowers | 规定怎么高质量地做",
             "Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
             "轻量修改：目标 + 写入范围 + 验证命令",
-            "中高风险 AI 编码：OpenSpec + Harness Plan + Superpowers 检查",
-            "中大型项目：OpenSpec + context ledger + GSD Stage/Wave/Atomic Task + Harness Plan + verification matrix",
             "受控工程执行：单个已选任务 + 冻结决策 + 写入与验证边界 + Loop 契约 + Plan Grant / Execution Grant",
         ],
     )
@@ -9661,8 +9639,6 @@ check(
         senior_skill,
         [
             "`scripts/check_harness_plan.py`",
-            "`--kind lightweight|gsd-wave|engineering-loop`",
-            "缺少 Task ID、Owner、写入范围、只读范围、依赖顺序、验证命令、停止条件、交接或 Execution Grant 关联时返回非 0",
             "脚本通过不等于执行授权、测试通过或生产审批",
         ],
     )
@@ -9694,7 +9670,6 @@ check(
     has_all(
         ai_engineering,
         [
-            "Harness 的产物不是“再写一份项目计划”，而是当前任务的可执行协作契约",
             "Task ID：本任务的稳定追踪编号",
             "Harness Plan 分级",
             "lightweight",
@@ -9726,7 +9701,6 @@ check(
         [
             "`references/ai-assisted-engineering.md`",
             "`references/cad-mode.md`",
-            "`cad-mode.md` 是受控工程执行 Loop 工程 profile 的唯一详细规则源",
         ],
     )
     and has_all(
@@ -9836,7 +9810,7 @@ check(
     and has_all(
         senior_routing,
         [
-            "GSD-like 编排管大盘，受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片",
+            "受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片",
             "GSD-like 编排 + 受控工程执行 Loop",
             "不得把整个大项目直接交给工程执行 Loop",
             "不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant",
@@ -9901,8 +9875,6 @@ check(
     has_all(
         ai_engineering,
         [
-            "长任务的上下文账本、阶段状态、交接方式和恢复入口",
-            "中大型 AI 编码或上下文衰减治理",
             "上下文衰减",
             "可审查、可版本化、可恢复的载体",
             "详细流程、账本文件、阶段模板、原子任务包、Wave 依赖、暂停恢复、Git 边界和收口模板统一读 `ai-large-project-orchestration.md`",
@@ -9917,7 +9889,6 @@ check(
             "同一 Wave 只能包含互不重叠、无顺序依赖、可独立验证的任务",
             "Git 操作仍服从项目规则和用户授权",
             "不把外部工作流命令、XML 示例或文件命名照搬进项目",
-            "低风险小修、3 分钟内可完成的明确改动、一次性 demo 或 MVP 快速验证",
         ],
     ),
 )
@@ -9944,7 +9915,6 @@ check(
             "GSD 与工程执行双层协议",
             "工程执行 Loop 候选：是/否，原因",
             "Execution Grant 要求",
-            "暂停前必须更新 `03-state.md`",
             "恢复时先读",
             "大项目编排鼓励原子可追溯，且必须在规划阶段给出提交切片",
             "是否实际执行 Git 写操作由 Grant 和工具权限决定",
@@ -9968,7 +9938,6 @@ check(
     and has_all(
         senior_skill,
         [
-            "中大型项目、长任务、上下文衰减、多 Agent/Wave 编排读 `references/ai-large-project-orchestration.md`",
             "`references/ai-large-project-orchestration.md`",
             "不安装或照搬外部 GSD 工具",
         ],
@@ -10089,9 +10058,9 @@ check(
     has_all(
         workflow,
         [
-            "上下文账本、阶段状态、子任务交接和恢复入口",
-            "不得依赖主会话长期记忆维持目标、决策、阻塞项和验证证据",
-            "多 Agent、长任务或跨模块 AI 编码还必须明确上下文账本、阶段状态、原子任务计划、Wave 依赖、交接说明和会话恢复入口",
+            "需要跨会话恢复或跨责任人交接时",
+            "在项目原生载体记录当前目标、授权、决策、阻塞项、验证证据和恢复入口",
+            "多 Agent 派发或真实恢复需要按前述工程生命周期门禁保留状态与交接",
             "AI 多 Agent 或 Wave 编排产生的变更应保持原子可追溯",
         ],
     )
@@ -10099,9 +10068,6 @@ check(
         senior_routing,
         [
             "AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理",
-            "上下文账本、阶段状态、原子任务包、Wave 依赖、暂停恢复、交接和收口",
-            "先判断是需求不清还是上下文衰减",
-            "明确小修、一次性 demo 或快速 MVP 验证不启动重型并行流程",
         ],
     ),
 )
@@ -10232,9 +10198,10 @@ check(
     has_all(
         product_prd_template,
         [
-            "核心概念 / 术语与系统别名",
+            "核心概念与业务口径（条件必填）",
             "场景与流程",
-            "业务规则与接口抽象",
+            "### 6. 业务规则",
+            "对外能力与协作约定（按需）",
             "Product Context Card",
         ],
     )
@@ -10351,17 +10318,6 @@ check(
         [
             "用户要“改代码”",
             "Clarify、Design、Plan、Build、Verify、Review/Ship 生命周期门禁",
-        ],
-    ),
-)
-check(
-    "senior route sends AI collaboration through workflow first",
-    has_all(
-        senior_routing,
-        [
-            "`workflow.md`、`ai-assisted-engineering.md`",
-            "`cad-mode.md`",
-            "先过工程生命周期门禁",
         ],
     ),
 )
@@ -12037,7 +11993,7 @@ check(
             "数据分析",
             "技术与项目协作",
             "行业商业分析与知识库",
-            "对象模型、规则矩阵、数据验收、跨团队交接、风险治理和领域知识",
+            "对象、规则、数据验收、跨团队交接和风险治理的可评审依据",
             "不把基础岗位清单替代复杂产品架构",
         ],
     ),
@@ -12298,7 +12254,7 @@ check(
             "选用视图：",
             "跳过视图及理由：",
             "不再用总述、清单和结尾重复复述同一判断",
-            "触发和结束条件必须与准入卡的范围边界一致",
+            "触发和结束条件必须与已确认的范围边界一致",
             "业务架构准入卡",
             "业务能力地图",
             "三视角工作基线",
@@ -13351,9 +13307,9 @@ check(
         product_architecture,
         [
             "### 6.2 验收种子到测试驱动设计",
-            "验收种子交接矩阵",
-            "需求ID",
-            "质量属性ID",
+            "详细验收种子使用已有验收或执行材料承接",
+            "关联需求：<REQ 编号>",
+            "质量属性：<适用时引用 QA 编号>",
             "业务前置条件",
             "可观察结果",
             "风险红线",
@@ -13583,7 +13539,7 @@ check(
             "更新既有文档默认保持原路径",
             "只有用户明确进入命名迁移任务时才改名",
             "信息传递流程",
-            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（业务场景与流程、能力对象、产品需求陈述）-> 业务规则与接口抽象",
+            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（业务场景与流程、能力对象、产品需求陈述）-> 业务规则 -> 风险与待确认 -> 验收摘要",
             "完整性框架不等于可见目录",
             "描述可靠性必须可见",
             "表达结构选择",
@@ -13613,20 +13569,21 @@ check(
             "业务场景与场景内流程",
             "场景关系：〈串联 / 并行 / 分支 / 互斥 / 独立",
             "跨场景端到端流程与图形视图（条件必填）",
-            "业务规则与接口抽象",
-            "产品接口抽象",
+            "### 6. 业务规则",
+            "对外能力与协作约定（按需）",
             "数据、权限、风险与待确认",
             "验收摘要与产品到架构交接",
             "Product Context Card",
             "附录按需展开",
             "精简输出规则",
             "验收摘要放在正文末尾",
-            "详细验收矩阵进入执行计划",
-            "产品能力对角色或上下游暴露的稳定业务契约",
+            "任务状态和运行证据优先进入项目已有验收清单或执行计划",
+            "需要独立承诺时按能力逐条表达",
             "模板占位符使用 `〈...〉`",
             "每个 P0/P1 需求仍须能回到问题、目标、场景、规则和验收",
             "正式 PRD 以最终标准版本为主",
-            "文档控制只保留当前版本号、状态、owner、发布日期、评审结论摘要和过程记录链接",
+            "当前版本：〈当前生效版本〉；文档状态：〈草稿 / 评审中 / 已确认 / 已废弃〉；更新时间：",
+            "版本、责任人和评审状态仍归紧凑元数据，完整治理明细归文末",
             "按角色分层消费",
             "决策层服务业务 / 管理者",
             "方案层服务产品 / 设计 / 架构",
@@ -13639,8 +13596,7 @@ check(
             "默认不强制每份 PRD 生成图片",
             "多角色、多对象、多状态、多团队交接或高风险评审时，至少选择一张关键图帮助建立共同理解",
             "发布后验证",
-            "业务驱动架构交接包",
-            "详细验收矩阵进入执行计划",
+            "权威输入：〈规范主题、PRD 精确路径与版本",
             "product-prd-quality-gates.md",
             "payment-expert",
             "product-prd-operations-and-data.md",
@@ -13725,15 +13681,13 @@ check(
             "定性对象",
             "本期变化",
             "责任边界",
-            "文档强度：轻量 / 标准 / 增强；依据",
+            "文档强度：〈轻量 / 标准 / 增强〉；依据",
             "核心概念与业务口径（条件必填）",
             "概念选择范围只决定",
             "统一定义",
             "业务对象状态进入对象状态章节",
             "术语/系统别名",
             "替代、退役或复审条件",
-            "定性对象 / 本期变化 / 责任边界 / 文档强度依据",
-            "核心概念 / 术语与系统别名 / 用户 / 主体 / 对象",
             "check_product_qualification.py",
         ],
     )
@@ -13797,7 +13751,7 @@ check(
             "文档过厚、过薄、未更新、未评审",
             "## 2. 文档治理门禁",
             "文档目标、目标读者和文档类型清楚",
-            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（业务场景与流程、能力对象、产品需求陈述）-> 业务规则与接口抽象 -> 验收摘要",
+            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（业务场景与流程、能力对象、产品需求陈述）-> 业务规则 -> 验收摘要",
             "复杂执行细节拆到实施计划、附录或图",
             "图形化视图选择合理",
             "图文一致",
@@ -13810,7 +13764,7 @@ check(
             "版本治理保留当前版本号、状态、owner、评审结论摘要、影响范围、通知对象和过程记录链接",
             "合议式产品评审报告是过程资产",
             "文档、原型、规则矩阵、验收标准和工程交接口径一致",
-            "正式 PRD 只保留业务结果、关键边界、红线和可观察的验收摘要",
+            "正文继续保留必要场景 / 规则编号、产品确认方、业务结果、关键边界、红线和恢复定义",
             "图形化验收路径清楚",
             "验收描述必须包含可观察结果",
         ],
@@ -15191,7 +15145,6 @@ check(
         product_business_architecture,
         [
             "### 投资决策输出门禁",
-            "必须输出 `当前决策 | 范围 | Owner | 证据 | 验收` 准入卡",
             "可以先给有界、可撤销的条件结论",
             "不得先下无条件确定结论",
             "不得用一张“合成图”、同一节点或一条单向箭头链同时承载价值阶段、稳定能力和一次运行活动",
@@ -15292,11 +15245,7 @@ check(
             "同一请求同时声称“流程 / 可操作原型”和“只做孤立成功页或静态状态稿”时，只问一个 Owner blocker",
             "静态状态稿只能证明该状态的内容与层级",
             "已确认的整站范围、Page Manifest、内容或品牌 Owner 不能被“简单”改成首页",
-            "视觉元素意图审查先输出不可省略的证据卡",
-            "真实页面 / 页面任务 | 首要判断 | 信息优先级 | 目标受众 | 目标视口 / 设备 | 元素 Owner / 依据",
-            "缺任一关键字段时只列待补证据并停止",
             "已有 Owner 批准或有真实职责的品牌、图像、留白、装饰和视觉权重维持现状",
-            "字段齐全后再逐项记录元素职责",
         ],
     )
     and has_all(
@@ -15323,7 +15272,6 @@ check(
             "误导或噪音风险 | 保留 / 修改 / 删除",
             "密度、装饰和品牌表达不是自动删除项",
             "保留前仍须核对目标受众、响应式变化、加载与动效成本、替代信息和辅助技术语义",
-            "没有真实页面、页面任务或信息优先级时，停止元素级裁决",
         ],
     )
     and has_none(ui_simple_design_behavior_cases, ["product-architecture-expert/"])
@@ -15395,13 +15343,9 @@ check(
         senior_skill,
         [
             "scripts/check_architecture_deliverable.py",
-            "架构方案、系统分析设计、重构设计、代码 Review、生产变更和图形 brief",
             "正式、完整、可评审、提交前、CR 或触发验证场景",
-            "不写文件、不访问网络、不上传文件、不读取密钥",
             "不判断架构质量",
             "无法运行脚本时必须说明原因、人工检查结果和残余风险",
-            "缺少架构类型",
-            "当前态 / 目标态与视图层级",
         ],
     )
     and has_all(
@@ -18296,7 +18240,7 @@ expected_handling_has(
         "Out of scope",
         "Next decision",
         "地图只作索引",
-        "每轮最多关闭一个决策",
+        "一次只向 Owner 提出一个主 blocker",
         "grill-me",
         "research",
         "prototype",
@@ -18389,7 +18333,7 @@ expected_handling_has(
         "已确认选择",
         "被排除方案",
         "待确认项",
-        "写回产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入",
+        "需要恢复或交接时写回已有产品上下文卡、工程交接卡、任务树 / 计划切片、验证矩阵或下一阶段输入",
         "不把 grill-me 写成默认执行授权、长时间访谈、产品 owner 决策、架构批准、测试通过、CR 结论、Git 授权或上线审批",
     ),
 )
@@ -19718,7 +19662,7 @@ check(
     has_all(
         product_prd,
         [
-            "当前结论、产品架构主脊、本期边界、主链路 / 异常承接和关键待确认",
+            "产品定位、范围、核心链路、异常边界及关键待确认按主模板填写",
             "业务阶段、可观察输入输出",
             "`Handler`、事务边界、MQ、Outbox、Saga",
             "归入系分设计",
@@ -19727,16 +19671,16 @@ check(
     and has_all(
         product_prd_template,
         [
-            "当前结论 / 为什么现在",
-            "产品定义 / 产品架构主脊",
-            "本期承诺 / 非目标",
-            "主链路 / 异常承接",
-            "关键待确认 / 责任与来源",
+            "这是什么产品或能力，服务谁，解决什么问题，提供什么业务价值",
+            "本期范围：",
+            "核心链路：",
+            "异常与边界：",
+            "关键待确认：",
         ],
     )
     and has_all(
         product_prd_quality_gates,
-        ["实现语言", "先列为警告", "结构检查", "产品语义正确", "视觉验收通过"],
+        ["实现语言", "先列为警告", "结构检查", "脚本通过不代表业务结论、条件等价、专业规则批准或视觉验收通过"],
     )
     and has_all(
         product_deliverable_checker,
@@ -19965,8 +19909,8 @@ check(
     and has_all(
         product_prd_template,
         [
-            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（业务场景与流程、能力对象、产品需求陈述）-> 业务规则与接口抽象",
-            "阅读摘要",
+            "背景与问题 -> 目标与非目标 -> 定性与范围 -> 概要设计 -> 详细设计（业务场景与流程、能力对象、产品需求陈述）-> 业务规则 -> 风险与待确认 -> 验收摘要",
+            "产品摘要",
             "轻量 / 标准 / 增强",
             "PRD 是当前产品语义的权威来源",
             "协同主记录",
@@ -19976,7 +19920,7 @@ check(
             "产品产生什么可观察结果",
             "失败后谁承接",
             "验收摘要放在正文末尾",
-            "详细验收矩阵进入执行计划",
+            "任务状态和运行证据优先进入项目已有验收清单或执行计划",
         ],
     )
     and has_all(
