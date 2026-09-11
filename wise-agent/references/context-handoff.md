@@ -22,10 +22,12 @@
 
 - `Continue / Branch / Worker / Checker` 中的一个语义判断。
 - 命中 Branch 时的一份最小出站契约，以及证据返回时的一份返回契约。
-- 命中双边契约会商时的一份 `Contract Inquiry`、`Shared Information Matrix`、提供方证据响应、消费者对账和 Checker 准出结论。
-- 命中主持式多方会商时的一份 `Meeting Charter`、`Discussion Role Matrix`、`Shared Information Matrix`、各方 `Position Card`、`Conflict Matrix`、`Meeting Resolution` 和 Checker 准出结论。
+- 命中双边契约会商时，按已到阶段保留 `Contract Inquiry`、`Shared Information Matrix`、提供方证据响应和消费者对账。
+- 命中主持式多方会商时，先保留 `Meeting Charter`、`Discussion Role Matrix` 和 `Shared Information Matrix`；进入立场讨论后形成必要参与方的 `Position Card`，有真实冲突才展开 `Conflict Matrix`，形成裁决时保存 `Meeting Resolution`。
 - 命中项目内模块合议时的一组 `Module Fact Card`、逐依赖契约和 `accepted / rejected / pending` 裁决。
 - 运输方式、脱敏结果、授权边界、停止条件和失效条件。
+
+上述产物复用现有台账、回执和权威指针，不要求每种卡片、`Dispatch Plan` 或 `Meeting Control Ledger` 各建文件。事实核对或等待裁决阶段只保存已取得的证据、未决项、Owner 和下一动作，不补空立场卡、冲突矩阵或决议。本文的 Checker 准入统一按 `deliberation-role-configuration.md` 的 `checker_required / checker_basis` 判断：低风险事实核对或候选整理可不另起 Checker；重要交付、公共契约或高风险准出仍须独立验证，不能以阶段收口冒充准出。
 
 ## 需要继续读取的 reference
 
@@ -244,7 +246,9 @@ input_scope / evidence_requirements / prohibited_decisions / collaboration_mode:
 depends_on / expected_output / owner / stop_condition / current_execution_id:
 ```
 
-`collaboration_mode` 只描述当前派发动作，可取 `fact_check`、`independent_position`、`paired_reconciliation` 或 `open_discussion`；它们不是新的运行模式。主持者根据回执和依赖动态调整下一项：没有新增事实或反证就停止讨论；材料未齐就保持 `PENDING`，并记录 `pending_reason=waiting_for_collaboration`、Owner、下一唤醒条件和失效条件，不把等待写成完成。所有席位回执后，主持者按任务、角色和问题分别归并，不能用整体共识覆盖缺失回执、冲突细节或未决承接。
+`collaboration_mode` 只描述当前派发动作，可取 `fact_check`、`independent_position`、`paired_reconciliation` 或 `open_discussion`；它们不是新的运行模式。主持者根据回执和依赖动态调整下一项：没有新增事实或反证就停止讨论。等待时保留 `PENDING`、真实原因、Owner、下一唤醒条件和失效条件；只有依赖他席产物时才用 `pending_reason=waiting_for_collaboration`。等待作者 / Owner 裁决、缺证或参与者不可用应分别说明依赖；已授权且可自行读取的材料直接补查，不转成催问他席，也不重问已提出的裁决问题。
+
+主持者按当前问题已派发的必要任务增量归并；不受缺口影响的独立项可继续在原授权内推进，未回执且阻断当前问题的任务仍不得准出。未派发、明确排除或已绑定未决承接的事项不要求制造回执；保留冲突、缺口与下一动作，不能用整体共识代替缺失证据，也不因局部等待暂停参与者的其他任务。
 
 主持者必须在同一 `Meeting Charter` 或既有项目执行规范中维护会商控制台账，确保每个参与任务都有去向、有回执、有证据和有收口；派单必须携带稳定 `task_id`、`inquiry_id`、目标 `thread_id`、已确认角色及其有效期、`execution_id`（如有）和会商 revision：
 
@@ -256,7 +260,7 @@ required_input / expected_output / dispatch_status / response_status:
 evidence_refs / decision_status / owner / next_action / last_observed_at:
 ```
 
-主持者在投递前冻结参与任务清单、责任、输入、输出、验收和停止条件；每次回执按 `task_id + message_id / inquiry_id` 一一对账，保留原始证据指针或授权的脱敏摘录，不能只保留总结。要声称活动任务已安全排队或续接，至少要有可回链的事件顺序：投递接受 -> `queued`（带目标 `execution_id`）-> 原活动继续或完成 -> 安全边界消费 -> 回执完成；缺少任一运行时事件只能记为 `conditional` / `PENDING`，不能由文件哈希、模型自述或普通完成回执补足。失败、超时、拒绝、未答、`PENDING` 和 `DEFERRED` 必须分别记录 Owner 与下一动作；恢复时先扫描未对账行和待处理指针，再继续调度。只有所有任务行都已回执、明确排除或绑定未决承接，且 `Meeting Resolution` 已逐项归档后，主持者才能结束会商；整体共识不能替代缺失任务回执或细节。
+主持者在投递前冻结参与任务清单、责任、输入、输出、验收和停止条件；每次回执按 `task_id + message_id / inquiry_id` 一一对账，保留原始证据指针或授权的脱敏摘录，不能只保留总结。要声称活动任务已安全排队或续接，至少要有可回链的事件顺序：投递接受 -> `queued`（带目标 `execution_id`）-> 原活动继续或完成 -> 安全边界消费 -> 回执完成；缺少任一运行时事件只能记为 `conditional` / `PENDING`，不能由文件哈希、模型自述或普通完成回执补足。失败、超时、拒绝、未答、`PENDING` 和 `DEFERRED` 必须分别记录 Owner 与下一动作；恢复时先扫描未对账行和待处理指针，再继续调度。当前阶段的任务行都已回执、明确排除或绑定未决承接后，可按 4.6 结束本阶段会商；只有实际形成裁决时才归档 `Meeting Resolution`，阶段结束不解除未决阻断或替代缺失证据。
 
 会商按 `decision_questions` 选择 `deliberation_strategy`。它们是同一协议下的讨论策略，不新增控制模式或人格；默认只选一个主策略，只有另一种现实约束能反驳主策略时才增加一个挑战策略，不机械遍历全部策略。
 
@@ -306,8 +310,8 @@ evidence_fingerprint / supersedes?:
 
 ### 4.6 停止、重开与授权
 
-- 提供方证据响应完成、消费者返回 `confirmed`、Checker 无阻断项后，停止高带宽会商；项目执行规范 只保存裁决和权威指针，不复制双方正文。
-- 多方议题全部形成 `accepted / rejected`，或 `pending` 已绑定 Owner 与下一证据，且 Checker 无阻断项后退场；项目执行规范 只保存 `Meeting Resolution` 和各方权威指针。
+- 双边定契完成需提供方证据响应与消费者 `confirmed`；多方裁决按问题记录 `accepted / rejected / pending`，未决项绑定 Owner、下一证据与唤醒条件。`checker_required=yes` 时须独立 Checker 无阻断项才可准出，`no` 时按已记录的依据收口，不强制补 Checker 结论。
+- 事实核对完成或只能等待裁决时，可保存证据和未决承接后结束本阶段高带宽讨论，不冒称定契或裁决完成。项目执行规范引用实际已有的阶段产物或 `Meeting Resolution`，不复制双方正文或补造尚未发生的结论。
 - 没有新事实、差异、阻塞或验证证据时暂停讨论，不用重复消息制造进展。
 - 只有新增场景、任务阶段或角色配置变化、公共契约变化、接受版本不一致、证据失效或运行反馈推翻假设时，才以新 revision `reopen`。
 - 任何会商、响应、确认或 Checker 结论都不产生仓库写入、Git、联网、安装、发布、生产、密钥、部署或不可逆操作授权。
