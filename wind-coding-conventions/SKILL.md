@@ -1,6 +1,6 @@
 ---
 name: wind-coding-conventions
-description: Java 项目编码约规 Skill。用户要求检查包含 Java 源码的 Java/Spring 项目编码规范或初始化项目 AGENTS.md 时触发；项目声明、依赖、包名或类型表明属于 Wind 时叠加专项约规。仅有 JVM、Maven 或 Gradle 上下文不触发；源码设计、代码 CR、Bug 修复、TDD、验证和代码生成不触发。
+description: Java 项目编码约规 Skill。用户要求制定或检查 Java/Spring 编码规范、注释与 Javadoc 约规，或初始化含 Java 源码项目的 AGENTS.md 时触发；项目声明、依赖、包名或类型表明属于 Wind 时叠加专项约规。仅有 JVM、Maven 或 Gradle 上下文不触发；源码设计、代码 CR、Bug 修复、TDD、验证和代码生成不触发。
 ---
 
 # Java/Wind 编码约规
@@ -13,6 +13,7 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 
 ## 触发条件
 
+- 用户要求制定或检查 Java 单行注释、块注释、Javadoc 的格式、场景和使用时机；只读 `references/java-coding-conventions.md` 的“4.8 注释与 Javadoc”，不因注释任务加载 Wind 专项。
 - 用户要求检查包含 Java 源码的 Java/Spring 项目编码规范、契约、异常日志、依赖适配、数据库访问、测试代码或项目 `AGENTS.md` 约规；Maven、Gradle 或 JVM 只能作为构建上下文，不能单独证明适用本 Skill。
 - 项目 `AGENTS.md`、任务说明、依赖坐标、包名、import、类型或模块结构表明项目属于 Wind 项目族。
 - 用户要求检查 Wind 风格项目的 `face` / `impl` 模块边界、接口放置、模型归属、分包规则或 ServiceImpl 实现方式。
@@ -39,7 +40,7 @@ description: Java 项目编码约规 Skill。用户要求检查包含 Java 源�
 
 ## Reference 路由
 
-- `references/java-coding-conventions.md`：所有 Java 项目的通用入口；Java/Spring 编码、契约、异常日志、Lombok/MapStruct、数据库、MyBatis Flex、安全和测试代码细则按依赖与任务读取；普通 Java `AGENTS.md` 初始化也只从本文件提炼最小项目 patch。
+- `references/java-coding-conventions.md`：所有 Java 项目的通用入口；注释任务定位“4.8 注释与 Javadoc”，编码或 CR 涉及注释变更时同样核对该节；Java/Spring 契约、异常日志、Lombok/MapStruct、数据库、MyBatis Flex、安全和测试代码细则按依赖与任务读取；普通 Java `AGENTS.md` 初始化也只从本文件提炼最小项目 patch。
 - `references/wind-coding-conventions.md`：Wind 编码约规主规则；只有命中 Wind 高置信度信号时读取。
 - `references/wind-architecture-patterns.md`：Wind 项目族端口、Starter、Trace、安全、查询和企业集成模式；涉及能力复用或架构模式时读取。
 - `references/wind-project-agents-template.md`：Wind 项目本地 `AGENTS.md` 初始化 / 改进模板；只有已经命中 Wind 高置信度信号且用户要求项目 AGENTS 初始化、改进或 `wise-agent` 项目约规入口时读取。

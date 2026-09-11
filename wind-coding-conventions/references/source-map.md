@@ -25,6 +25,7 @@
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |
 | 核验阿里手册采纳 | `阿里 Java 开发手册` | 不复制手册正文和旧版环境参数 |
+| 核验注释、Javadoc、注解位置与空行 | `Javadoc 与注释格式` | 不把团队格式选择当统一行业标准 |
 | 核验 Clean Code 启发 | `《代码整洁之道》公开学习材料` | 不把读书笔记或启发式建议升级成机械强制规则 |
 | 核验 Bean Validation 语义与触发边界 | `Bean Validation / Jakarta Validation / Spring MVC 官方文档` | 不把注解声明误写成已执行验证 |
 | 核验 Spring Bean 依赖注入与 Lombok 构造器 | `Spring Dependency Injection / Lombok constructor 官方文档` | 不把 Lombok 构造器生成误写成 Spring 装配已验证 |
@@ -37,6 +38,14 @@
 - 读取状态：2026-07-16 已通过 Codex 应用内浏览器逐章读取目录中的编程规约、异常日志、单元测试、安全、MySQL、工程结构和附录。
 - 采纳边界：只吸收仍稳定且能补足现有规则的对象比较、序列化兼容、`finally`、依赖治理、SQL 投影和索引类型一致性等内容。
 - 不吸收：不复制正文、示例或完整目录；不吸收机械作者日期、固定覆盖率、所有 POJO 必须包装类型、固定数据库字段、统一禁用外键和服务器运行参数。`testXxx` 是团队规则，不归因于该手册。
+
+## Javadoc 与注释格式
+
+- 来源：[Oracle JDK 25 Javadoc 规范](https://docs.oracle.com/en/java/javase/25/docs/specs/javadoc/doc-comment-spec.html)、[Google Java Style](https://google.github.io/styleguide/javaguide.html) 的 4.6.1、4.8.5、4.8.6 与第 7 节，以及[阿里官方 GitBook 注释规约](https://github.com/alibaba/p3c/blob/master/p3c-gitbook/编程规约/注释规约.md)（1.3.1 版本，不代表后续手册版本）。
+- 读取状态：2026-09-11 已读取上述相关正文；Oracle 用于核验文档识别、方法文档完整性与继承，Google 与阿里用于对照团队风格差异。
+- 采纳边界：声明文档和实现说明按用途区分，保留类型注解位置与必要契约；具体规则统一在 `java-coding-conventions.md` 的“4.8 注释与 Javadoc”。块注释可用于 formatter 的段落重排，工具是否支持以项目配置为准。
+- 差异边界：Google 允许短且无块标签的单行 Javadoc、连续多行 `//` 与字段按需留空行；阿里该版本要求方法内多行说明用块注释，对声明文档要求更严格。本 Skill 的默认格式与按需注释策略是选择性采纳，不声明逐条符合两家规范；Oracle JDK 25 与所读 Google 版本也支持 Markdown Javadoc，传统 `/** ... */` 不是唯一文档形式。
+- 复核条件：项目更换 JDK、formatter 或明确采用其他团队规范时，重新核对受影响规则；不要求升级工具、切换文档格式或批量改写无关注释。
 
 ## 《代码整洁之道》公开学习材料
 
