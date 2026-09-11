@@ -210,13 +210,53 @@ inquiry_id / accepted_topic_revision / accepted_information_revision / accepted_
 
 ### 4.4A 活动执行与会商消息隔离
 
-会商消息在宿主运行时属于控制面事件，不自动成为活动任务的用户输入。目标任务处于 `Running`、存在进行中的模型响应、工具调用或审批时，默认将消息排队到该任务的待处理事件流，保持 `execution_id`、当前切片、`execution_basis`、授权和停止条件不变；在响应完成、工具结果 / 审批返回、显式检查点或宿主支持的安全续接边界再消费。宿主支持中途引导时，已接受的消息只表示进入队列，后继响应创建才表示已提交到续接；不得把消息到达当作取消或隐式改轨。
+本节只规定会商消息已经通过会话发现、目标授权和运输后的消费与续接，不限制跨项目、跨会话会商的准入、授权确认或消息投递。`queued`、`consumed`、`receipt_complete` 是不同状态；不能因为目标任务正在执行，或当前 turn 不允许注入，就判定会商不可投递。
 
-会商响应、确认、Checker 结论和普通评论均不具备取消活动任务的效果；当前用户或任务 Owner 针对同一 `execution_id` 发出的明确中止可以取消。超时、安全策略、宿主故障等其他中断必须单独记录为运行时中断，并进入恢复或人工接管路径。运行时不支持排队或安全续接时，改用独立会商上下文并保存待处理指针，不把消息注入活动 turn。若宿主已经终止活动 turn，恢复时必须从已有状态载体重建执行依据；不得把会商到达推断为用户取消，也不得丢弃已完成工具结果、授权和未决事项。
+会商消息在宿主运行时属于控制面事件，不自动成为活动任务的用户输入。目标任务处于 `Running`、存在进行中的模型响应、工具调用或审批时，默认将消息排队到该目标任务的待处理事件流，保持 `execution_id`、当前切片、`execution_basis`、授权和停止条件不变；在响应完成、工具结果 / 审批返回、显式检查点或宿主支持的安全续接边界再消费。宿主支持中途引导时，已接受的消息只表示进入队列，后继响应创建才表示已提交到续接；不得把消息到达当作取消或隐式改轨。
+
+会商响应、确认、Checker 结论和普通评论均不具备取消活动任务的效果；当前用户或任务 Owner 针对同一 `execution_id` 发出的明确中止可以取消。超时、安全策略、宿主故障等其他中断必须单独记录为运行时中断，并进入恢复或人工接管路径。运行时不支持排队或安全续接时，仍可在已获授权的独立会商上下文中投递并保存待处理指针，但不得把消息注入活动 turn，也不得把无法安全续接解释为禁止投递。若宿主已经终止活动 turn，恢复时必须从已有状态载体重建执行依据；不得把会商到达推断为用户取消，也不得丢弃已完成工具结果、授权和未决事项。
 
 ### 4.5 主持式多方会商
 
 多方会商不复制双边请求响应链，也不让所有参与方维护同一结论。主持者先定会议契约，按 `task_phase`、`domain_object` 和 `decision_questions` 配置最小工作位，再完成信息充分性门禁；各方随后在看到他方方案前独立陈述，只处理真实冲突。
+
+项目内的主持式会商使用项目级 `Meeting Chair` 控制面。`Meeting Chair` 是稳定的责任名；当它同时负责识别任务、按职责派发、等待协作、归并回执和推进收口时，可称为“项目协同主持者”，这表示职责扩展，不新增 Agent、人格或控制模式。主持者由用户或项目 Owner 明确确认一个主会话，不通过标题、摘要或模型自行选举。主持者负责会议主题、参与范围、信息收集、差异归并、决议和 Checker 交接；参与会话保留自己的事实、权威、Owner 和执行状态。主持者不得替参与会话确认事实或业务 Owner，不因主持身份获得对方工作区、Git、生产或取消权限，也不得强制中断活动任务。
+
+```text
+Meeting Charter:
+project_ref / meeting_id / meeting_revision:
+chair_thread_id / chair_owner / participant_scope / dispatch_authority:
+shared_decision_questions / stop_conditions / invalidation_conditions:
+```
+
+会话发现只产生候选，不产生角色和权限确认。标题、项目归属、最近活动时间用于定位；经授权的短摘要或会话声明只用于形成 `candidate_role`、`evidence_refs`、`confidence` 和 `unresolved_scope`，一律标为 `hypothesis`，不默认扫描完整历史。只有目标会话自身或其当前有效任务状态返回 `accepted_role`、`authority_refs`、`decision_right`、`read_scope`、`write_scope`、`current_execution_id`、`availability` 和 `expires_on` 后，角色才进入 `accepted`；任务阶段、权威材料或执行依据变化时重新确认。
+
+主持者按“发现 -> 候选 -> 目标确认 -> 问题定性 -> 角色化派发 -> 回执 -> 归并 / 协作讨论 -> 决议”调度。先判断当前请求是一项已有 Owner 的单任务、多个可独立验收的任务，还是多个权威共同裁定的共享问题：前两者直接处理或按 Worker 汇合，不开会；只有共享问题不可拆且需要多个独立权威时才进入会商。会话发现、读取、投递 / 排队、消费和回执完成分别记录状态；其中一项失败不得推断其他项均失败。跨项目参与方必须同时满足目标会话身份、项目 / 任务授权和会商范围约束；缺少任一项时保持 `PENDING`，不得用标题或摘要补齐。
+
+主持者不得把同一份完整提示机械广播给所有席位。每次派发都由同一事实基线和公共停止线，加上面向该席位的责任差量组成；差量至少说明为何由该会话承担、它要回答的独特问题、允许读取的材料、不得替其他席位裁定的范围、预期证据和回执格式。事实核验可先逐席派发；立场形成在信息门禁通过后独立进行；两个席位之间有明确冲突时只发起双边对账；只有跨角色依赖仍无法收敛时，才邀请受影响席位做有议题、有预算、有退出条件的自由讨论。自由讨论可以交换反例、追问和新证据，但不得开放全部历史、让所有会话持续广播或改变任何席位的事实权威。
+
+每项派发都要有可回链的 `Dispatch Plan`：
+
+```text
+task_id / inquiry_id / participant_thread_id / role_id / role_revision:
+shared_context_ref / role_delta / objective / required_questions:
+input_scope / evidence_requirements / prohibited_decisions / collaboration_mode:
+depends_on / expected_output / owner / stop_condition / current_execution_id:
+```
+
+`collaboration_mode` 只描述当前派发动作，可取 `fact_check`、`independent_position`、`paired_reconciliation` 或 `open_discussion`；它们不是新的运行模式。主持者根据回执和依赖动态调整下一项：没有新增事实或反证就停止讨论；材料未齐就保持 `PENDING`，并记录 `pending_reason=waiting_for_collaboration`、Owner、下一唤醒条件和失效条件，不把等待写成完成。所有席位回执后，主持者按任务、角色和问题分别归并，不能用整体共识覆盖缺失回执、冲突细节或未决承接。
+
+主持者必须在同一 `Meeting Charter` 或既有项目执行规范中维护会商控制台账，确保每个参与任务都有去向、有回执、有证据和有收口；派单必须携带稳定 `task_id`、`inquiry_id`、目标 `thread_id`、已确认角色及其有效期、`execution_id`（如有）和会商 revision：
+
+```text
+Meeting Control Ledger:
+task_id / inquiry_id / participant_thread_id / accepted_role / role_valid_until:
+authority_ref / execution_id / meeting_revision:
+required_input / expected_output / dispatch_status / response_status:
+evidence_refs / decision_status / owner / next_action / last_observed_at:
+```
+
+主持者在投递前冻结参与任务清单、责任、输入、输出、验收和停止条件；每次回执按 `task_id + message_id / inquiry_id` 一一对账，保留原始证据指针或授权的脱敏摘录，不能只保留总结。要声称活动任务已安全排队或续接，至少要有可回链的事件顺序：投递接受 -> `queued`（带目标 `execution_id`）-> 原活动继续或完成 -> 安全边界消费 -> 回执完成；缺少任一运行时事件只能记为 `conditional` / `PENDING`，不能由文件哈希、模型自述或普通完成回执补足。失败、超时、拒绝、未答、`PENDING` 和 `DEFERRED` 必须分别记录 Owner 与下一动作；恢复时先扫描未对账行和待处理指针，再继续调度。只有所有任务行都已回执、明确排除或绑定未决承接，且 `Meeting Resolution` 已逐项归档后，主持者才能结束会商；整体共识不能替代缺失任务回执或细节。
 
 会商按 `decision_questions` 选择 `deliberation_strategy`。它们是同一协议下的讨论策略，不新增控制模式或人格；默认只选一个主策略，只有另一种现实约束能反驳主策略时才增加一个挑战策略，不机械遍历全部策略。
 

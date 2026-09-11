@@ -31,7 +31,9 @@
       "criteria": [
         "先冻结 decision_questions、task_phase 和 domain_object，再从受影响主体、责任、后果、证据与决策权生成候选工作位；不按职业称谓或固定人数配角。",
         "每个入场工作位说明 accountability、represented_subject、protected_outcome、lenses、authority_scope、decision_right 和 entry_reason；没有独特责任、证据、约束或决策贡献的同质工作位合并或退出。",
-        "主持位、责任立场位、挑战位、decision_owner 和 Checker 保持职责分离；模拟角色只能作为 hypothesis，不能冒充真实权威、决策者或独立 Checker。"
+        "主持位、责任立场位、挑战位、decision_owner 和 Checker 保持职责分离；模拟角色只能作为 hypothesis，不能冒充真实权威、决策者或独立 Checker。",
+        "主持者按每个参与会话的职责、权威和进度生成公共基线加角色差量的 Dispatch Plan，不向所有席位机械发送同一任务；逐席记录唯一问题、输入范围、证据要求、禁止裁定事项、预期输出和依赖。",
+        "事实核验先逐席进行，明确冲突优先双边对账；只有跨角色依赖需要即时追问时才开放有议题、有预算、有退出条件的自由讨论，没有新增事实或反证就停止，并将未完成协作保留为带 Owner 和下一唤醒条件的 PENDING。"
       ]
     },
     {
