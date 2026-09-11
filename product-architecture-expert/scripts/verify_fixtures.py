@@ -9,8 +9,12 @@ from pathlib import Path
 from check_product_deliverable import (
     business_rule_contract_issues,
     business_rule_records,
+    acceptance_scenario_issues,
+    defined_scenario_ids,
     missing_groups,
+    product_interface_contract_issues,
     requirement_contract_issues,
+    scenario_contract_issues,
     section_body,
     warning_groups,
 )
@@ -82,6 +86,23 @@ EXACT_FAILURE_CASES = {
     "prd-invalid-external-rule.md",
     "prd-invalid-success-metric.md",
 }
+
+
+def template_reading_path_failures() -> list[str]:
+    template = (ROOT / "references" / "product-prd-template.md").read_text(encoding="utf-8")
+    quality_gates = (ROOT / "references" / "product-prd-quality-gates.md").read_text(encoding="utf-8")
+    failures: list[str] = []
+    if re.search(r"(?m)^#{1,6}\s+.*(?:验收摘要|产品验收入口|产品到架构交接)", template):
+        failures.append("template still exposes an acceptance or architecture handoff section")
+    if re.search(r"(?m)^#{1,6}\s+.*(?:验收摘要|产品验收入口|产品到架构交接)", quality_gates):
+        failures.append("quality gates still expose an acceptance or architecture handoff section")
+    if "主模板 1-8 节" in template:
+        failures.append("template reading index still treats chapter 8 as a default PRD chapter")
+    if "详细验收及执行证据按第 8 节归位" in template:
+        failures.append("template still routes detailed acceptance evidence through chapter 8")
+    if "主模板 1-8 节" in quality_gates or "主模板第 8 节进入已有承接文档" in quality_gates:
+        failures.append("quality gates still make chapter 8 the default acceptance handoff")
+    return failures
 
 
 def readable_expression_failures(compact_prd: str) -> list[str]:
@@ -180,12 +201,9 @@ def readable_expression_failures(compact_prd: str) -> list[str]:
         )
         if missing_groups("prd", candidate):
             failures.append(f"equivalent cross-scenario heading unexpectedly failed: {heading}")
-    acceptance = section_body(compact_prd, ("验收摘要",))
-    for replacement in ("\n验收待编写。\n", "\n正常结果：\n边界结果：\n禁止结果：\n"):
-        candidate = compact_prd.replace(acceptance, replacement, 1)
-        candidate += "\n## 附加写作说明\n业务结果：保存唯一结论。关键边界：不允许二次提交。红线：不得覆盖终态。\n"
-        if "acceptance_summary" not in missing_groups("prd", candidate):
-            failures.append("acceptance contract borrowed unrelated keywords or accepted empty labels")
+    candidate = re.sub(r"(?ms)^## 八、验收摘要.*?(?=^## |Z)", "", compact_prd)
+    if "section_acceptance" in missing_groups("prd", candidate):
+        failures.append("optional acceptance section unexpectedly blocked PRD")
     print("Checked readable expressions: 7 equivalent forms and 44 negative mutations.")
     return failures
 
@@ -284,6 +302,7 @@ def business_commitment_failures() -> list[str]:
 
 def main() -> int:
     failures: list[str] = []
+    failures.extend(template_reading_path_failures())
     failures.extend(business_commitment_failures())
     for kind, path, should_pass, expected_missing in CASES:
         if not path.exists():
@@ -1009,6 +1028,76 @@ flowchart LR
     for candidate, expected_issue, label in branch_cases:
         if expected_issue not in missing_groups("prototype-scope-plan", candidate):
             failures.append(f"{label} unexpectedly passed")
+
+    vertical_prd = """## 5. 详细设计
+### 5.3 产品需求陈述
+#### REQ-001 示例需求
+- 类型 / 优先级：功能，P0。
+- 责任主体：业务 Owner。
+- 场景 / 前置状态：SCN-001；前置事实有效。
+- 要求的行为或业务结果：系统返回可观察结果。
+- 边界：失败不改变原状态。
+## 6. 业务规则
+### 6.1 业务规则注册表
+#### R-001 示例规则
+- 性质 / 场景：不变量；SCN-001。
+- 对象 / 输入：业务对象；输入事实。
+- 当 / 则：条件成立时，按规则产生结果。
+- Owner / 例边界：业务 Owner；正例通过，反例拒绝。
+        ### 6.2 对外能力与协作约定（按需）
+        #### 示例能力
+        - 能力名称：示例能力。
+        - 使用方：业务应用。
+- 输入与前置：业务材料和权限有效。
+- 结果与状态变化：返回结果并记录引用。
+- 失败承接：失败转人工。
+- 责任边界：平台持有执行事实，业务 Owner 确认业务结果。
+### 验收摘要入口（按需）
+- 对应场景：SCN-001。
+- 产品结果：业务结果可观察。
+- 禁止结果：不得伪造成功。
+"""
+    if requirement_contract_issues(vertical_prd):
+        failures.append("vertical requirement cards unexpectedly failed")
+    named_vertical_prd = vertical_prd.replace("#### REQ-001 示例需求", "#### 示例需求")
+    if requirement_contract_issues(named_vertical_prd):
+        failures.append("named vertical requirement cards unexpectedly failed")
+    if business_rule_contract_issues(vertical_prd):
+        failures.append("vertical rule cards unexpectedly failed")
+    if product_interface_contract_issues(vertical_prd):
+        failures.append("vertical interface cards unexpectedly failed")
+    if "section_acceptance" in missing_groups("prd", vertical_prd):
+        failures.append("optional acceptance section unexpectedly blocked vertical PRD")
+
+    readable_scenario = """## 5. 详细设计
+### 业务场景：管理模板和默认初始化来源
+<!-- 下游索引：SCN-001 -->
+- 场景说明：维护可复制模板并选择默认初始化来源。
+- 参与者与责任：平台运营维护模板，前端提供兼容声明。
+- 主路径与状态变化：登记、校验、发布并供新租户复制。
+- 规则引用：规则由业务规则章节维护。
+- 完成证据：默认来源可回查，存量租户不变。
+- 异常与人工兜底：来源失效时停止并人工处理。
+### 验收摘要入口（按需）
+- 对应场景：管理模板和默认初始化来源。
+- 业务结果与关键边界：默认来源可回查，存量租户不变。
+"""
+    if defined_scenario_ids(readable_scenario) != {"SCN-001"}:
+        failures.append("hidden scenario handoff index was not recognized")
+    if acceptance_scenario_issues(readable_scenario):
+        failures.append("human-readable scenario acceptance entry unexpectedly failed")
+
+    lean_scenario = """## 5. 详细设计
+### 业务场景：建立租户 UI
+<!-- 下游索引：SCN-002 -->
+- 场景说明：目标租户需要独立的 UI。
+- 参与者与责任：设计师提交设计，运营选择目标租户。
+- 流程：提交设计、校验归属、形成草稿。
+- 业务结果：目标租户形成独立草稿。
+- 异常处理：归属不明时停止。
+"""
+    if scenario_contract_issues(lean_scenario):
+        failures.append("lean scenario card unexpectedly failed")
 
     if failures:
         print("FAIL product fixture verification")

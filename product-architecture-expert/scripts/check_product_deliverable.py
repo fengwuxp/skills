@@ -37,7 +37,6 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("rules", ["规则", "权限", "审批", "额度", "计费", "版本", "验收样例"], 2),
         RequiredGroup("data_and_audit", ["数据", "指标", "报表", "埋点", "审计", "追溯"], 2),
         RequiredGroup("risk_and_confirmation", ["风险", "依赖", "待确认", "确认方", "影响范围"], 2),
-        RequiredGroup("acceptance_summary", ["验收摘要", "业务结果", "关键边界", "红线", "验收标准", "正常结果", "边界结果", "禁止结果"], 2),
     ],
     "product-architecture": [
         RequiredGroup("business_goal", ["业务目标", "用户价值", "成功指标", "非目标"], 2),
@@ -145,6 +144,13 @@ SCENARIO_LEGACY_FIELD_GROUPS = (
     ("observable_result", ("完成证据与验收种子", "完成证据")),
     ("exception_closure", ("逆向、异常与停止", "异常与人工兜底")),
 )
+SCENARIO_LEAN_FIELD_GROUPS = (
+    ("scenario_statement", ("场景说明",)),
+    ("participants", ("参与者", "参与者与责任")),
+    ("flow", ("流程", "主路径")),
+    ("business_result", ("业务结果",)),
+    ("exception_handling", ("异常处理", "异常与人工兜底")),
+)
 REQUIREMENT_FIELD_GROUPS = (
     ("requirement_name", ("需求名称",)),
     ("requirement_type", ("需求类型",)),
@@ -228,7 +234,6 @@ PRD_SECTION_ORDER = [
     ("section_requirements", ("产品需求陈述",)),
     ("section_rules_and_interface", ("业务规则",)),
     ("section_risk", ("数据与风险", "数据、权限、风险", "风险与待确认")),
-    ("section_acceptance", ("验收摘要",)),
 ]
 STRUCTURE_ONLY_MESSAGE = "仅通过结构检查，不代表语义和视觉验收通过"
 IMPLEMENTATION_LANGUAGE_TERMS = (
@@ -924,10 +929,17 @@ def scenario_contract_issues(text: str) -> list[str]:
     def complete(body: str, groups: tuple[tuple[str, tuple[str, ...]], ...]) -> bool:
         return all(has_meaningful_alias_value(body, aliases) for _, aliases in groups)
 
+    def lean_complete(body: str) -> bool:
+        return complete(body, SCENARIO_LEAN_FIELD_GROUPS) and not re.search(
+            r"(?m)^\s*[-+*]?\s*(?:规则与验收|适用规则|完成证据|验收(?:样例|标准)?)\s*[：:]",
+            body,
+        )
+
     if any(
         not complete(body, SCENARIO_SHORT_FIELD_GROUPS)
         and not complete(body, SCENARIO_NARRATIVE_FIELD_GROUPS)
         and not complete(body, SCENARIO_LEGACY_FIELD_GROUPS)
+        and not lean_complete(body)
         for _, body in blocks
     ):
         issues.append("scenario_contract_incomplete")
@@ -948,6 +960,56 @@ def section_body(text: str, aliases: tuple[str, ...]) -> str:
                 break
         return text[heading.end() : end]
     return ""
+
+
+def vertical_card_blocks(text: str, pattern: str) -> list[str]:
+    matches = list(re.finditer(rf"(?m)^####\s+({pattern})\s+.+?\s*$", text))
+    return [
+        text[match.end() : matches[index + 1].start() if index + 1 < len(matches) else len(text)]
+        for index, match in enumerate(matches)
+    ]
+
+
+def vertical_requirement_card_issues(text: str) -> list[str] | None:
+    requirements = section_body(text, ("产品需求陈述",))
+    blocks = vertical_card_blocks(requirements, r"REQ-[A-Z0-9-]+")
+    if not blocks:
+        headings = list(re.finditer(r"(?m)^####\s+([^\n]+?)\s*$", requirements))
+        blocks = [
+            requirements[heading.end() : headings[index + 1].start() if index + 1 < len(headings) else len(requirements)]
+            for index, heading in enumerate(headings)
+        ]
+    if not blocks:
+        return None
+    required_labels = (
+        ("责任主体",),
+        ("场景 / 前置状态", "场景/前置状态", "前置状态", "前置条件"),
+        ("要求的行为或业务结果", "业务结果"),
+        ("边界", "度量、时限或边界", "需求边界"),
+    )
+    issues: list[str] = []
+    for block in blocks:
+        if any(not has_meaningful_alias_value(block, aliases) for aliases in required_labels):
+            issues.append("requirement_contract_incomplete")
+    return sorted(set(issues))
+
+
+def vertical_rule_card_issues(text: str) -> list[str] | None:
+    rules = section_body(text, ("业务规则",))
+    blocks = vertical_card_blocks(rules, r"R-[A-Z0-9-]+")
+    if not blocks:
+        return None
+    required_labels = (
+        ("性质 / 场景", "规则性质", "适用场景"),
+        ("对象 / 输入", "适用对象与范围", "输入事实"),
+        ("当 / 则", "当", "则"),
+        ("Owner / 例边界", "Owner", "正例"),
+    )
+    return [
+        "rule_contract_incomplete"
+        for block in blocks
+        if any(not has_meaningful_alias_value(block, aliases) for aliases in required_labels)
+    ] or []
 
 
 def declared_prd_strength(text: str) -> str | None:
@@ -1124,6 +1186,9 @@ def requirement_contract_issues(text: str) -> list[str]:
     requirements = section_body(text, ("产品需求陈述",))
     if not requirements.strip():
         return ["requirement_contract_missing"]
+    vertical_issues = vertical_requirement_card_issues(text)
+    if vertical_issues is not None:
+        return vertical_issues
     issues: list[str] = []
     compact_values = {
         name: [
@@ -1201,6 +1266,9 @@ def requirement_contract_issues(text: str) -> list[str]:
 
 def business_rule_contract_issues(text: str) -> list[str]:
     rules = section_body(text, ("业务规则",))
+    vertical_issues = vertical_rule_card_issues(text)
+    if vertical_issues is not None:
+        return vertical_issues
     issues: list[str] = []
     compact_values = {
         name: [
@@ -1346,20 +1414,37 @@ def cross_scenario_view_contract_issues(text: str) -> list[str]:
             re.IGNORECASE,
         )
     )
-    has_visual = bool(diagrams) or has_linked_visual
+    has_visual = bool(
+        diagrams
+        and any(
+            re.search(r"(?:-->|->|==>|participant\s+|state\s+|subgraph\s+|\[[^\]]+\])", diagram)
+            for _, diagram in diagrams
+        )
+    ) or has_linked_visual
     flow = "\n".join(steps) if steps else body if has_linked_visual else "\n".join(
         diagram for _, diagram in diagrams
     )
     referenced_ids = {match.group(0).upper() for match in SCENARIO_ID_PATTERN.finditer(flow)}
     defined_ids = defined_scenario_ids(text)
+    human_readable_flow = "下游索引" in text and not referenced_ids
     has_steps = len(steps) >= 2 and all(
         meaningful_values([SCENARIO_ID_PATTERN.sub("", step).strip(" 。；;、，,.：:")])
         for step in steps
     )
     issues: list[str] = []
-    if not (has_steps or has_visual) or (
-        len(defined_ids) > 1 and (len(referenced_ids) < 2 or referenced_ids - defined_ids)
-    ):
+    trace_incomplete = len(defined_ids) > 1 and (
+        (
+            not has_visual
+            and not human_readable_flow
+            and (len(referenced_ids) < 2 or referenced_ids - defined_ids)
+        )
+        or (
+            has_visual
+            and referenced_ids
+            and (len(referenced_ids) < 2 or referenced_ids - defined_ids)
+        )
+    )
+    if not (has_steps or has_visual) or trace_incomplete:
         issues.append("cross_scenario_view_contract_incomplete")
     if level >= 3 and re.search(
         r"本章\s*(?:只|主要|用于)(?:描述|展开|表达|说明)?", body
@@ -1535,19 +1620,20 @@ def lightweight_prd_contract_issues(text: str) -> list[str]:
         issues.append("lightweight_requirement_incomplete")
 
     acceptance = section_body(text, ("验收摘要",))
+    result_text = acceptance or section_body(text, ("详细设计",))
     has_observable_result = any(
-        contains_term(acceptance, marker)
+        contains_term(result_text, marker)
         for marker in ("显示", "保留", "可查询", "可操作", "通知", "记录", "状态")
     )
     has_boundary = any(
-        contains_term(acceptance, marker)
+        contains_term(result_text, marker)
         for marker in ("不得", "禁止", "边界", "失败", "恢复", "重试", "人工")
     )
     has_acceptance_owner = any(
-        contains_term(acceptance, marker)
+        contains_term(result_text, marker)
         for marker in ("验收 Owner", "产品负责人", "业务负责人", "运营确认", "业务确认")
     )
-    if not all((acceptance.strip(), has_observable_result, has_boundary, has_acceptance_owner)):
+    if not all((result_text.strip(), has_observable_result, has_boundary, has_acceptance_owner)):
         issues.append("lightweight_acceptance_incomplete")
     return issues
 
@@ -1556,6 +1642,7 @@ def has_rule_scope(text: str) -> bool:
     rules = section_body(text, ("业务规则",))
     rule_types = (
         field_values(rules, "规则性质")
+        or field_values(rules, "性质 / 场景")
         or field_values(rules, "规则名称 / 性质 / 业务动机")
         or field_values(rules, "规则名称/性质/业务动机")
         or table_column_values(rules, ("规则性质",))
@@ -1564,16 +1651,24 @@ def has_rule_scope(text: str) -> bool:
         field_values(rules, "适用场景 / 步骤")
         + field_values(rules, "适用场景/步骤")
         + field_values(rules, "适用场景")
+        + field_values(rules, "性质 / 场景")
     ) or table_column_values(rules, ("适用场景 / 步骤", "适用场景/步骤", "适用场景"))
     return bool(rule_types and scopes)
 
 
 def defined_scenario_ids(text: str) -> set[str]:
-    return {
+    ids = {
         match.group(0).upper()
         for title, _ in scenario_blocks(section_body(text, ("详细设计",)))
         if (match := SCENARIO_ID_PATTERN.search(title))
     }
+    ids.update(
+        match.group(0).upper()
+        for comment in re.findall(r"<!--(.*?)-->", section_body(text, ("详细设计",)), re.S)
+        if "下游索引" in comment
+        for match in SCENARIO_ID_PATTERN.finditer(comment)
+    )
+    return ids
 
 
 def rule_scenario_issues(text: str) -> list[str]:
@@ -1584,6 +1679,8 @@ def rule_scenario_issues(text: str) -> list[str]:
 
 def acceptance_scenario_issues(text: str) -> list[str]:
     acceptance = section_body(text, ("验收摘要",))
+    if not acceptance.strip():
+        return []
     values = field_values(acceptance, "对应场景")
     if not values:
         return ["acceptance_scenario_missing"]
@@ -1592,6 +1689,8 @@ def acceptance_scenario_issues(text: str) -> list[str]:
         for value in values
         for match in SCENARIO_ID_PATTERN.finditer(value)
     }
+    if not referenced_ids and "下游索引" in text:
+        return []
     defined_ids = defined_scenario_ids(text)
     issues: list[str] = []
     if referenced_ids - defined_ids:
@@ -1755,11 +1854,7 @@ def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
     for group in CHECKS[kind]:
-        hits = (
-            valued_group_hits(kind, group, section_body(text, ("验收摘要",)))
-            if kind == "prd" and group.name == "acceptance_summary"
-            else sum(1 for alias in group.aliases if alias.casefold() in normalized)
-        )
+        hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)
         elif kind in VALUED_GROUP_KINDS and valued_group_hits(kind, group, text) < group.min_hits:
