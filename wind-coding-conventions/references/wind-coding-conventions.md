@@ -64,15 +64,16 @@
 
 ## 2. 服务层
 
+- 能力是否值得独立提供，先按 `../../senior-software-architect/references/project-governance-service-api-modeling.md` 的“能力价值与架构裁决”和“服务职责裁决”确认结果责任、数据与事务边界，再使用以下包位规则。已有基础服务或应用服务能承接时优先增强或合并，不为分层另造 `AggregateService` / `Loader`；需要对照保留与合并反例时读 `wind-coding-examples.md` 的示例 1—3。
 - Face Service 是对外稳定契约，`ServiceImpl` 承接校验、状态、事务和数据访问协调；ApplicationService 只在完整用例编排、事务边界、权限/审计、跨服务协调或外部副作用明确时使用。若 ApplicationService 作为对外用例契约出现，接口放 `*-face/application`，实现放 `*-impl/application/impl`，签名仍只用 Request/DTO/Query/值对象。
 - 接口落位：跨模块稳定业务能力放 `*-face/service`；完整用例契约才放 `*-face/application`；回调入口、扩展点和业务 SPI 放 `*-face/callback/*`；只被本模块实现层使用的接口留在 `*-impl/service`、`*-impl/domain` 或 `*-impl/support`，不因“可能复用”放进 face/core。
 - 服务层接口先按调用方契约设计：face Service 和跨模块接口只暴露 `DTO`、`Request`、`Query`、`Command`、枚举或值对象，不暴露 `Entity`；`ServiceImpl` 可在内部读取和更新 `Entity`，但不得把 `Entity` 透传给 Controller、face、ApplicationService 对外方法、Facade、Adapter 或其他域。
 - 包位：新代码的 face Service 生产实现默认放 `*-impl/.../service/impl`；`*-impl/.../impl` 根包只作为历史兼容或附近代码已有明确约定时保留，不作为新 ServiceImpl 默认落点。
 - 基础服务落位：被其他模块、组合 Service 或外部适配层稳定消费时，接口放 `*-face/service`；只封装本 impl 内 Mapper、QueryWrapper 或内部状态流转时，留在 `*-impl/service`；只是 Mapper 透传时不应新增服务。
-- 内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传；接口、Service、Facade、Adapter 必须有真实业务职责，不新增一行 wrapper、改名转发、浅模块或似是而非抽象。
-- 服务、接口、策略、工厂、状态机、规则层和配置化必须来自真实变化轴：业务规则、状态行为、外部通道、平台差异或技术选型已有来源、owner、验收样例和测试边界时才封装；只有“未来可能”的变化先保留显式代码，不为套设计模式新增浅服务或单实现抽象。
+- 内部基础服务可以封装稳定查询或基础数据访问，但不能只是 Mapper 透传；接口、Service、Facade、Adapter 必须有真实责任，已有调用不证明需要独立承载，不用一行 wrapper、改名转发或新包掩盖重复职责。
+- 服务、接口、策略、工厂、状态机、规则层和配置化必须来自真实责任或变化轴：业务规则、状态行为、外部通道、平台差异、技术选型或稳定公共契约已有来源、owner、验收样例和测试边界时才封装；只有“未来可能”的变化先保留显式代码，不为套设计模式新增浅服务，也不因只有一个实现而否定已成立的能力。
 - 组合服务、生命周期服务、应用层服务和外部适配层优先依赖实体对应的基础服务或稳定 face Service，不直接拿多个 Entity Mapper 拼业务流程；若对应基础服务缺少必要读写能力，先补强基础服务签名和 DTO/Request/Query，再改调用方。只有实体自身基础服务实现、贴近 SQL 的内部 helper 或确有性能/批量原因并有测试说明时，才直接依赖 Mapper。
-- Mapper default 方法只适合承载贴近 SQL 的 MyBatis Flex 原子条件更新或小型查询组合；一旦方法表达业务状态转换，或被 `ServiceImpl` 当作核心用例步骤调用，应迁到 `*-impl/service` 内部基础服务，由 `*-impl/service/impl` 依赖 Mapper / `UpdateChain` 实现。迁移前先 `rg` 查调用方：无生产调用的预留 default 直接删除，不包装成服务；只有单一调用且仍是低层资源占用的原子更新，可暂留 Mapper，等出现多个稳定调用方再提服务。
+- Mapper default 方法只适合承载贴近 SQL 的 MyBatis Flex 原子条件更新或小型查询组合；业务状态规则由已有且承责的 Service / `ServiceImpl` 持有，必要时补强现有内部基础服务，由其使用 Mapper / `UpdateChain`，不为迁移机械新建服务。迁移前用 `rg` 核对调用，再核对已确认需求与契约用途；确认无需求用途的预留 default 才删除，不包装成服务。低层原子更新可留在 Mapper，是否上提取决于规则责任及一致性边界，不以单个或多个调用方为门槛；服务决定状态前置条件，Mapper 执行相应原子条件更新。
 - 基础服务通用模板：公开基础服务命名为 `XxxService`，实现为 `XxxServiceImpl`；创建用 `createXxx(CreateXxxRequest)` 返回 `@NonNull Long`，创建/更新统一入口才用 `saveXxx(SaveXxxRequest)`；更新用 `updateXxx(UpdateXxxRequest)` 返回 `void`；删除用 `deleteXxxByIds(@NonNull Long... ids)`，单删可提供 `default deleteXxxById(id)` 代理；必然存在查询用 `@NonNull XxxDTO getXxxById(id)`，可能不存在查询用 `findXxx...` 并显式 `@Nullable`；分页查询用 `WindPagination<XxxDTO> queryXxxs(XxxQuery query, WindQuery<? extends QueryOrderField> options)`；非分页列表查询只在业务确需时提供 `List<XxxDTO> get/queryXxxs(XxxQuery query)`；状态动作使用明确业务动词，例如 `enable/disable/cancel/execute`，不得用泛化 `handle/process/doXxx`。
 - 【强制】同一状态变化只保留一个规范入口。便利重载或接口 `default method` 只能补充明确默认值并委托规范入口，不得接收后丢弃 `statusCode`、响应摘要、操作原因等有效参数；没有兼容诉求时直接删除旧重载，存在兼容诉求时必须列出调用方和下线责任人。
 - 【强制】公共方法最多接受一个 `WindQuery<? extends QueryOrderField>`。两个以上独立分页或排序诉求必须拆成独立查询；不得通过多个 `WindQuery`、多个结果集或综合视图大接口隐藏不同查询的分页、排序和生命周期边界。

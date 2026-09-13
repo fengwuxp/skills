@@ -26,6 +26,9 @@
         "cases": "fixtures/skill-eval/senior-provider-value-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/senior-provider-abstraction-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
       },
       {

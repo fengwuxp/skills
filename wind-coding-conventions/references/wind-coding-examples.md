@@ -51,19 +51,24 @@ public class XxxType {
 
 - 反例：`XxxApplicationService.submit(request)` 只调用 `xxxService.submit(request)`，没有用例编排、事务边界、权限审计或外部副作用。
 - 正例：只有需要把订单、支付、审计、消息、事务或外部调用编排成一个完整用例时才保留；否则直接由稳定的 Face Service / `ServiceImpl` 承接。
-- 验证点：删除或合并该层后调用方语义是否不变；若不变，优先收敛浅层。
+- 重复职责反例：已有 `ReportDefinitionService` 持有定义、版本与一致性规则，又新建 `ReportDefinitionAggregateService` 和 `ReportDefinitionLoader` 重做相同解析；新增调用后便宣称两个抽象都应保留，或只把 Loader 改名移包。
+- 合并正例：现有基础服务在自身数据与事务边界内承接版本解析，应用服务保留发布用例编排；收回重复解析并调整调用方，不删除仍需提供的能力，也不把应用侧的外部副作用下沉到基础服务。
+- 验证点：比较合并前后的结果、状态、原子提交、版本/锁约束与错误语义；确认没有独立契约或责任丢失，而非只看调用点存在或类文件减少。
 
 ### 2. 基础服务不是 Mapper 包装
 
 - 反例：`XxxBasicService.findById(id)` 只转发 `mapper.selectOneById(id)`，没有查询语义、分页、排序、selective 写库或异常契约。
 - 正例：基础服务沉淀稳定查询、QueryWrapper helper、分页上限、排序白名单、selective 更新和基础数据访问语义。
+- 保留反例：只因一个内部解析器有三个调用方就保留，或只因它只有一个实现就删除，均未回答独立职责。
+- 保留正例：独立解析器统一校验固定版本与依赖闭包，多个用例共享同一稳定语义，现有持久化服务只负责存取；可以保留最小内部组件。若不同入口的发布锁和查询快照要求不同，应明确这些契约，不按入口数量复制解析器。
 - 验证点：测试覆盖 QueryWrapper 条件、Mapper 语义、分页/排序、事务事实和异常语义。
 
 ### 3. Mapper default 不承载业务状态机
 
-- 反例：`UserCouponMapper.confirmLocked(...)` 用 default 方法直接更新锁定、核销、释放、退回等业务状态，`ServiceImpl` 把它当核心用例步骤调用；或把无生产调用的 `releaseXxx` 预留方法包装成服务。
-- 正例：业务状态动作迁到 `*-impl/service` 的内部基础服务，例如 `UserCouponService.confirmLockedUserCoupon(...)`，实现放 `service/impl` 并在内部使用 Mapper / `UpdateChain`；无调用的预留 default 直接删除，单一低层资源占用的原子更新可暂留 Mapper。
-- 验证点：先 `rg` 查调用方；Mapper 只保留 `BaseMapper`、必要自定义 SQL 或贴近 SQL 的原子条件更新；内部基础服务不暴露 Entity / QueryWrapper，测试覆盖影响行数、状态前置条件和并发幂等。
+- 反例：`UserCouponMapper.confirmLocked(...)` 用 default 方法决定锁定、核销、释放、退回的业务规则；或为确认无需求用途的 `releaseXxx` 预留方法新建服务，再用新调用点证明它有价值。
+- 正例：业务状态动作归入已有且承责的 `UserCouponService`，由其实现使用 Mapper / `UpdateChain` 完成原子更新；无需求用途的预留 default 删除，纯 SQL 原子条件更新可留在 Mapper，不按调用数量裁决。
+- 不删除的对照：已确认的公共核销能力尚未接入当前应用，但已有消费场景、责任与验收契约；保留必要接口及实现，不因仓内没有当前调用而删除，也不增加未确认的通用扩展。
+- 验证点：`rg` 结果结合已确认需求、公共契约、外部消费与兼容义务核对用途；测试覆盖影响行数、状态前置条件和并发幂等，不能用只存在测试引用来证明生产需求。
 
 ### 4. 模型边界不穿透
 

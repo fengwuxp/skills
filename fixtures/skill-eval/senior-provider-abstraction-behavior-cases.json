@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "description": "服务抽象纠偏的 cases-only 行为契约：有调用但职责重复时合并、无当前调用但用途已确认时保留、无需求用途时删除，以及独立解析和不同一致性边界的保留。静态验证仅证明题集结构及源身份，不代表模型行为已改善。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "senior-provider-abstraction-current",
+      "paths": [
+        "AGENTS.md",
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/agents/openai.yaml",
+        "senior-software-architect/references/scenario-routing.md",
+        "senior-software-architect/references/project-governance-service-api-modeling.md",
+        "senior-software-architect/references/workflow.md",
+        "senior-software-architect/references/coding-review-deep-dive.md",
+        "senior-software-architect/references/architecture.md",
+        "wind-coding-conventions/references/java-coding-conventions.md",
+        "wind-coding-conventions/references/wind-coding-conventions.md",
+        "wind-coding-conventions/references/wind-coding-examples.md",
+        "llm-coding-hygiene/SKILL.md"
+      ],
+      "sha256": "675d7653a9b02824b30ed63e5db938dc31f1f537aee44ced04aae0cf5c9439a3"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": false,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "provider-code-merge-called-duplicate-services",
+      "category": "coding-service-consolidation",
+      "risk": "high",
+      "prompt": "继续整理一个 Java/Wind 报表定义模块。已有 ReportDefinitionService 负责定义、版本、固定依赖解析和一致性校验，ReportPublishApplicationService 负责发布事务与通知。上轮为了分层新建了 ReportDefinitionAggregateService 与 ReportDefinitionLoader；它们在同一模块、同一事务内重复前者的解析和校验，多行实现没有新增数据所有权或独立契约，原服务也仍保留同样逻辑。已有三个应用入口改为经过这两个类。允许调整这些内部实现及调用方，要求保留固定版本、状态冲突和发布事务行为。请完成最小整理。",
+      "criteria": [
+        "首次写回前从提供者结果及责任、数据与事务边界比较既有服务和新增抽象，不能因为三个入口已经调用就默认保留重复层。",
+        "优先把重复解析和校验收回已有基础服务，发布编排与通知继续由应用服务承接，调整授权范围内的调用方并保留仍有需求的能力。",
+        "不按类名或代码长短认定职责，不用一行转发、新包或改名后的 Loader 掩盖同一重复承载。",
+        "验证固定版本、依赖一致性、状态冲突和事务失败的可观察结果，不能只断言内部调用次数或文件减少。"
+      ]
+    },
+    {
+      "id": "provider-cr-retain-confirmed-public-capability-without-current-calls",
+      "category": "code-review-public-capability",
+      "risk": "high",
+      "prompt": "只读 CR：公共 ReportArchiveService.restore(archiveId) 已按确认的跨应用恢复需求实现，目前只有一个实现，当前仓库没有生产调用。接入应用的交付排期在下一阶段；确认的契约已经给出恢复结果、权限、幂等、版本不匹配错误和验收用例，也有契约测试。有人提出当前调用数为零且接口只有一个方法，应删除接口和实现。本轮不修改文件。",
+      "criteria": [
+        "识别已确认公共恢复需求、消费场景、责任和验收契约是当前用途证据，不能将尚未接入等同于没有需求用途。",
+        "在已确认范围内保留必要能力，不因零当前调用、单实现或接口方法数量机械删除，也不为证明价值伪造生产调用、增设 Controller 或扩展通用恢复平台。",
+        "区分契约测试与真实应用接入证据，列明尚待接入验证的边界，并保持只读。"
+      ]
+    },
+    {
+      "id": "provider-code-remove-confirmed-unused-reservation",
+      "category": "coding-removal-with-evidence",
+      "risk": "medium",
+      "prompt": "清理本模块内部 ReportDefinitionMapper 的 loadFutureCandidate 预留 default 方法及仅为它编写的测试。已核对本模块所有生产引用、框架注册和配置入口，没有调用；维护者确认没有当前或已确认需求、对外契约、外部消费与兼容义务。方法只用于设想中的批量预览，现有单条预览和发布能力不依赖它。允许删除这个方法和专属测试，其他能力不变。",
+      "criteria": [
+        "将删除依据建立在已核实没有需求用途、契约或兼容义务上，而不只是零生产调用或仅有测试引用。",
+        "删除授权范围内的预留方法与专属测试，不把它包装成新 Service、Loader 或新接口来制造使用关系。",
+        "验证现有预览、发布与必要依赖仍成立，不删除其他有效方法、契约或共享测试。"
+      ]
+    },
+    {
+      "id": "provider-review-retain-independent-shared-resolver",
+      "category": "architecture-review-independent-responsibility",
+      "risk": "high",
+      "prompt": "只读评审 ReportDefinitionResolver 是否应并入基础服务或按应用拆开。基础服务只负责持久化存取；Resolver 在无状态内存计算中统一校验固定版本和依赖闭包，查询预览、发布校验、后台执行共享相同解析语义。它没有持久化写入和事务编排，只有一个实现；有些入口方法很短。把它并入某个应用服务会让其他应用反向依赖该应用，按三个消费者拆开则会复制同一规则。",
+      "criteria": [
+        "基于固定版本和依赖闭包这一独立责任及依赖方向保留最小内部解析组件，而非仅因已有三个调用方而保留。",
+        "不因单实现或短入口删除有效抽象，不为三个应用复制三个解析器，也不把稳定算法强行归入只负责持久化的服务。",
+        "验证同输入解析结果、版本不匹配和依赖损坏的行为，保持只读，不扩成公共平台或新增无需求接口。"
+      ]
+    },
+    {
+      "id": "provider-review-preserve-distinct-consistency-boundaries",
+      "category": "architecture-review-merge-boundary",
+      "risk": "high",
+      "prompt": "只读审查一次合并提案。ReportPreviewService 接受未保存草稿并只读试算；ReportPublishApplicationService 必须在事务内锁定当前版本、校验固定依赖并原子发布。两者会用到相同的定义解析算法，但预览不得加发布锁，发布不得使用预览的未固定依赖。提案要合成一个 Loader.load(id) 并让调用方任选解析结果，以减少服务和接口数量。",
+      "criteria": [
+        "区分可共享的稳定解析算法与不同的输入、数据、锁、事务和发布结果责任，不能以接口减少为由抹平契约。",
+        "由已有预览服务与发布应用服务保留各自的完整结果和一致性责任，必要时共享最小解析组件，不通过含糊 Loader 把选择规则转嫁给调用者。",
+        "围绕草稿试算无写副作用、发布版本竞争、固定依赖与事务回滚给出验证依据，保持只读且不机械增加新的服务层。"
+      ]
+    }
+  ]
+}
