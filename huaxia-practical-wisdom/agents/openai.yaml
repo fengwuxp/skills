@@ -1,6 +1,6 @@
 interface:
   display_name: "华夏经世智慧"
   short_description: "用华夏经典智慧校准现实决策，或为小说提供人情事势的叙事校准"
-  default_prompt: "使用 $huaxia-practical-wisdom 校准现实决策的名相、时势与行动；处理小说依赖请求时只返回叙事校准卡。"
+  default_prompt: "使用 $huaxia-practical-wisdom 校准现实决策的名相、时势与行动；处理小说依赖请求时提供按需叙事校准。"
 policy:
   allow_implicit_invocation: true
