@@ -14,6 +14,8 @@ import sys
 from pathlib import Path
 from typing import NamedTuple
 
+from check_product_qualification import concept_issues, concept_section
+
 
 class RequiredGroup(NamedTuple):
     name: str
@@ -169,6 +171,8 @@ REQUIREMENT_COMPACT_FIELD_GROUPS = (
     ("boundary", ("度量、时限或边界",)),
     ("source_rule_acceptance", ("来源与可靠性 / 关联规则 / 验收样例", "来源与可靠性/关联规则/验收样例")),
 )
+RULE_OWNER_ALIASES = ("Owner", "规则 Owner", "规则 owner", "责任方", "规则责任方")
+RULE_OWNER_EXAMPLE_ALIASES = ("Owner / 例边界", "责任方 / 例边界")
 RULE_FIELD_GROUPS = (
     ("rule_name", ("规则名称",)),
     ("rule_type", ("规则性质",)),
@@ -177,21 +181,21 @@ RULE_FIELD_GROUPS = (
     ("rule_input_facts", ("输入事实",)),
     ("rule_condition", ("当", "触发与判断条件", "条件")),
     ("rule_outcome", ("则", "处理结果", "结论")),
-    ("rule_owner", ("Owner", "规则 Owner", "规则 owner")),
+    ("rule_owner", RULE_OWNER_ALIASES),
     ("rule_examples", ("正例 / 边界例 / 反例", "验收样例", "正例", "边界例", "反例")),
 )
 RULE_COMPACT_FIELD_GROUPS = (
     ("name_type_motivation", ("规则名称 / 性质 / 业务动机", "规则名称/性质/业务动机")),
     ("scenario_scope", ("适用场景 / 步骤", "适用场景/步骤")),
     ("object_and_facts", ("适用对象与范围 / 输入事实", "适用对象与范围/输入事实")),
-    ("condition_outcome_owner", ("当 / 则 / Owner", "当/则/Owner")),
+    ("condition_outcome_owner", ("当 / 则 / Owner", "当/则/Owner", "当 / 则 / 责任方", "当/则/责任方")),
     ("examples", ("正例 / 边界例 / 反例",)),
 )
 DOCUMENT_CONTROL_FIELD_GROUPS = (
     ("current_version", ("当前版本",)),
     ("document_status", ("文档状态",)),
-    ("product_owner", ("产品 owner", "产品 Owner")),
-    ("business_owner", ("业务 owner", "业务 Owner")),
+    ("product_owner", ("产品 owner", "产品 Owner", "产品责任方")),
+    ("business_owner", ("业务 owner", "业务 Owner", "业务责任方")),
     ("updated_at", ("更新时间",)),
     ("authority_source", ("权威来源", "权威边界")),
 )
@@ -204,7 +208,7 @@ ARCHITECTURE_SPINE_FIELD_GROUPS = (
 )
 PRODUCT_INTERFACE_FIELD_GROUPS = (
     ("interface_name", ("产品接口名称", "对外能力名称", "能力名称", "产品能力", "产品接口")),
-    ("interface_consumer", ("接口使用方", "使用方")),
+    ("interface_consumer", ("接口使用方", "使用方", "使用方与任务")),
     ("interface_input", ("接口输入与前置条件", "输入与前置", "输入与前置条件")),
     ("interface_output", ("接口业务输出与副作用", "结果与状态变化")),
     ("interface_failure", ("接口失败语义", "失败承接", "失败恢复")),
@@ -347,6 +351,32 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+def matched_labeled_value(text: str, label: str, match: re.Match[str]) -> str:
+    value = match.group(1).strip().strip("`*_").strip()
+    if value or label != "流程":
+        return value
+    steps: list[str] = []
+    for line in text[match.end():].splitlines():
+        if not line.strip():
+            continue
+        step = re.fullmatch(r"[ \t]*(\d+)[.)、][ \t]+(\S.*)", line)
+        if not step or int(step.group(1)) != len(steps) + 1:
+            break
+        content = step.group(2)
+        field = re.match(r"([^：:。；;\n]+)[：:]", content)
+        if field and any(
+            normalize(field.group(1).strip("`*_ ")) == normalize(alias)
+            for groups in (SCENARIO_SHORT_FIELD_GROUPS, SCENARIO_NARRATIVE_FIELD_GROUPS,
+                           SCENARIO_LEGACY_FIELD_GROUPS, SCENARIO_LEAN_FIELD_GROUPS)
+            for _, aliases in groups for alias in aliases
+        ):
+            break
+        if not meaningful_values([content]):
+            break
+        steps.append(content)
+    return "\n".join(steps)
+
+
 def labeled_value(text: str, label: str) -> str | None:
     for line in text.splitlines():
         stripped = line.strip()
@@ -356,11 +386,11 @@ def labeled_value(text: str, label: str) -> str | None:
         if len(cells) >= 2 and normalize(cells[0]) == normalize(label):
             return cells[1]
     match = re.search(
-        rf"(?:^|[\n；;。])\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*(?:\*\*|__|`)?\s*[：:]\s*([^；;。\n|]+)",
+        rf"(?:^|[\n；;。])\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*(?:\*\*|__|`)?\s*[：:][ \t]*([^；;。\n|]*)",
         text,
         re.IGNORECASE,
     )
-    return match.group(1).strip().strip("`*_").strip() if match else None
+    return matched_labeled_value(text, label, match) if match else None
 
 
 def has_meaningful_labeled_value(text: str, label: str) -> bool:
@@ -449,17 +479,26 @@ def has_keyword_only_section(text: str) -> bool:
 def scenario_blocks(text: str) -> list[tuple[str, str]]:
     headings = list(re.finditer(r"(?m)^(#{3,6})\s+(.+?)\s*$", text))
     blocks: list[tuple[str, str]] = []
+    ancestors: list[tuple[int, str]] = []
     for index, heading in enumerate(headings):
         title = heading.group(2)
-        if not SCENARIO_HEADING_PATTERN.search(title):
-            continue
         level = len(heading.group(1))
+        while ancestors and ancestors[-1][0] >= level:
+            ancestors.pop()
+        in_requirements = "产品需求陈述" in title or any("产品需求陈述" in parent for _, parent in ancestors)
+        ancestors.append((level, title))
         end = len(text)
         for following in headings[index + 1 :]:
             if len(following.group(1)) <= level:
                 end = following.start()
                 break
-        blocks.append((title, text[heading.end() : end]))
+        body = text[heading.end() : end]
+        own_body = re.split(r"(?m)^#{3,6}\s+", body, maxsplit=1)[0]
+        if SCENARIO_HEADING_PATTERN.search(title) or not in_requirements and any(
+            re.search(rf"(?m)^\s*[-+*]?\s*{label}\s*[：:]", own_body)
+            for label in ("场景说明", "参与者", "流程", "业务结果", "异常处理")
+        ):
+            blocks.append((title, body if SCENARIO_HEADING_PATTERN.search(title) else own_body))
     return blocks
 
 
@@ -477,10 +516,10 @@ def labeled_values(text: str, label: str) -> list[str]:
                 values.append(cells[1])
     pattern = re.compile(
         rf"(?m)^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__|`)?\s*{re.escape(label)}\s*"
-        rf"(?:\*\*|__|`)?\s*[：:]\s*([^；;。\n|]+)",
+        rf"(?:\*\*|__|`)?\s*[：:][ \t]*([^；;。\n|]*)",
         re.IGNORECASE,
     )
-    values.extend(match.group(1).strip().strip("`*_").strip() for match in pattern.finditer(text))
+    values.extend(matched_labeled_value(text, label, match) for match in pattern.finditer(text))
     return values
 
 
@@ -983,33 +1022,121 @@ def vertical_requirement_card_issues(text: str) -> list[str] | None:
         return None
     required_labels = (
         ("责任主体",),
-        ("场景 / 前置状态", "场景/前置状态", "前置状态", "前置条件"),
+        ("场景 / 前置状态", "场景/前置状态", "前置状态", "前置条件", "前提", "适用场景"),
         ("要求的行为或业务结果", "业务结果"),
         ("边界", "度量、时限或边界", "需求边界"),
     )
     issues: list[str] = []
     for block in blocks:
         if any(not has_meaningful_alias_value(block, aliases) for aliases in required_labels):
-            issues.append("requirement_contract_incomplete")
+            has_field_labels = any(
+                re.search(rf"(?:^|[。；\n])[ \t]*(?:[-+*][ \t]+)?{re.escape(alias)}[ \t]*[：:]", block)
+                for aliases in required_labels[:-1] for alias in aliases
+            )
+            if has_field_labels or not natural_requirement_complete(block):
+                issues.append("requirement_contract_incomplete")
     return sorted(set(issues))
+
+
+def natural_requirement_complete(block: str) -> bool:
+    boundary = re.search(r"(?m)^边界[：:]([^\n]+)", block)
+    if not boundary or not meaningful_values([boundary.group(1)]):
+        return False
+    prose = block[:boundary.start()].strip()
+    condition = re.match(r"([^。；\n]+?)(?:时|后|前)[，,]([\s\S]+)", prose)
+    if not condition or not meaningful_values([condition.group(1)]):
+        return False
+    body = condition.group(2).strip()
+    subject = r"[^。；\n]+?(?:产品|平台|系统|Owner|owner|运营|人员|客户端|安全|IAM|SRE|用户|团队|审核员)"
+    required_action = r"(?:必须|不得)(?:按|为|仅|提供|建立|生成|读取|记录|重发|消费|保存|审核|发布|查询|拒绝)[^。\n]+"
+    if re.match(subject + r"\s*" + required_action, body):
+        return True
+    responsibility = re.match(subject + r"\s*共同承担[^。\n]+责任。\s*([\s\S]+)", body)
+    if responsibility:
+        return bool(re.match(r"(?:[^。\n]+?(?:产品|平台|系统)|[^。\n]+侧)" + required_action, responsibility.group(1)))
+    prerequisite = re.match(r"必须先确认([^。\n]+)。\s*([\s\S]+)", body)
+    return bool(prerequisite and meaningful_values([prerequisite.group(1)]) and re.fullmatch(
+        subject + r"\s*按[^。\n]+管理[^。\n]+[，,]保证[^。\n]+[。]?", prerequisite.group(2)
+    ))
+
+
+def natural_rule_blocks(text: str) -> list[str]:
+    rules = section_body(text, ("业务规则",))
+    headings = list(re.finditer(r"(?m)^(#{3,6})\s+(.+)$", rules))
+    if not headings or any(len(heading.group(1)) != 3 for heading in headings):
+        return []
+    if any(re.search(r"\b(?:R|PI)-[A-Z0-9-]+\b", heading.group(2)) for heading in headings):
+        return []
+    if re.search(r"(?m)^\s*\||规则(?:性质|名称|编号)[^：:\n]*[：:]", rules):
+        return []
+    return [rules[heading.end():headings[index + 1].start() if index + 1 < len(headings) else len(rules)]
+            for index, heading in enumerate(headings)]
+
+
+def natural_rule_complete(block: str) -> bool:
+    match = re.fullmatch(r"\s*当([^。\n]+?)时[，,]([^\n]+)\n\s*负责人[：:]([^\n]+)\s*", block)
+    if not match or any(not meaningful_values([value.strip("。 ")]) for value in match.groups()):
+        return False
+    return bool(re.match(
+        r"(?:[^，。；]+侧)?(?:不可|不得|不自行|拒绝|返回|只更新|按|均不|只处理|验证|参数来自|"
+        r"[^，。；]+必须)[^。\n]+", match.group(2)
+    ))
 
 
 def vertical_rule_card_issues(text: str) -> list[str] | None:
     rules = section_body(text, ("业务规则",))
     blocks = vertical_card_blocks(rules, r"R-[A-Z0-9-]+")
     if not blocks:
+        for section_name in ("业务规则注册表", "规则族合同"):
+            compact_rules = section_body(rules, (section_name,))
+            headings = list(re.finditer(r"(?m)^####\s+([^\n]+?)\s*$", compact_rules))
+            blocks.extend(
+                compact_rules[heading.end() : headings[index + 1].start() if index + 1 < len(headings) else len(compact_rules)]
+                for index, heading in enumerate(headings)
+            )
+    if not blocks:
+        natural_blocks = natural_rule_blocks(text)
+        if natural_blocks:
+            return [] if all(natural_rule_complete(block) for block in natural_blocks) else [
+                "rule_contract_incomplete", "rule_expression_manual_review_required"
+            ]
         return None
     required_labels = (
         ("性质 / 场景", "规则性质", "适用场景"),
         ("对象 / 输入", "适用对象与范围", "输入事实"),
         ("当 / 则", "当", "则"),
-        ("Owner / 例边界", "Owner", "正例"),
+        RULE_OWNER_EXAMPLE_ALIASES + RULE_OWNER_ALIASES,
     )
-    return [
-        "rule_contract_incomplete"
-        for block in blocks
-        if any(not has_meaningful_alias_value(block, aliases) for aliases in required_labels)
-    ] or []
+    issues: list[str] = []
+    for block in blocks:
+        if has_meaningful_labeled_value(block, "规则性质 / 动机"):
+            if any(not has_meaningful_labeled_value(block, label) for label in (
+                "适用场景 / 对象", "输入事实", "当 / 则"
+            )) or not has_meaningful_alias_value(block, RULE_OWNER_EXAMPLE_ALIASES):
+                issues.append("rule_contract_incomplete")
+        elif any(has_meaningful_alias_value(block, aliases) for aliases in required_labels):
+            if any(not has_meaningful_alias_value(block, aliases) for aliases in required_labels):
+                issues.append("rule_contract_incomplete")
+        elif not risk_review_rule_complete(block):
+            issues.extend(("rule_contract_incomplete", "rule_expression_manual_review_required"))
+    return list(dict.fromkeys(issues))
+
+
+def risk_review_rule_complete(block: str) -> bool:
+    items = re.findall(r"(?m)^[-+*]\s+([^\n]+)$", block)
+    if len(items) != len([line for line in block.splitlines() if line.strip()]):
+        return False
+    obligations = (
+        r"[^；。\n]+(?:变更|操作)必须由[^；。\n]+审核[；;][^；。\n]+时[，,][^；。\n]*(?:拒绝|禁止)[^；。\n]+",
+        r"[^；。\n]+低风险(?:变更|操作)[，,]按[^；。\n]+确认审核方式[；;]不得[^；。\n]+",
+        r"[^。\n]+(?:PENDING|待确认)[，,]由[^。\n]+(?:负责人|Owner|owner)确认[。]未确认时[^。\n]*(?:保留|停止)[^。\n]+",
+        r"所有(?:变更|操作)都保留权限检查[、，][^。\n]*校验[、，][^。\n]*版本[^。\n]*记录[。]",
+    )
+    return bool(items) and all(
+        any(re.match(pattern, item) for item in items) for pattern in obligations
+    ) and all(
+        any(re.match(pattern, item) for pattern in obligations) for item in items
+    )
 
 
 def declared_prd_strength(text: str) -> str | None:
@@ -1036,7 +1163,7 @@ def labeled_record_blocks(text: str, anchor_aliases: tuple[str, ...]) -> list[st
     if not matches:
         return []
     return [
-        text[match.start() : matches[index + 1].start() if index + 1 < len(matches) else len(text)]
+        re.split(r"(?m)^#{1,6}\s+", text[match.start() : matches[index + 1].start() if index + 1 < len(matches) else len(text)], maxsplit=1)[0]
         for index, match in enumerate(matches)
     ]
 
@@ -1301,7 +1428,7 @@ def business_rule_contract_issues(text: str) -> list[str]:
                 ("来源",),
                 ("版本",),
                 ("生效期", "生效范围"),
-                ("Owner", "规则 Owner", "规则 owner"),
+                RULE_OWNER_ALIASES,
                 ("未确认前处理", "失效时处理", "外部不可用"),
             )
             if any(
@@ -1327,7 +1454,7 @@ def business_rule_contract_issues(text: str) -> list[str]:
             ("来源",),
             ("版本",),
             ("生效期", "生效范围"),
-            ("Owner", "规则 Owner", "规则 owner"),
+            RULE_OWNER_ALIASES,
             ("未确认前处理", "失效时处理", "外部不可用"),
         )
         if any(not contract_group_values(record["__text__"], aliases) for aliases in external_groups):
@@ -1346,7 +1473,19 @@ def declared_scenario_relationship(detail: str) -> str | None:
         for relation in SCENARIO_RELATIONSHIPS
         if normalized.startswith(normalize(relation))
     ]
-    return matches[0] if len(matches) == 1 else None
+    if len(matches) == 1:
+        return matches[0]
+    declaration = re.search(r"(?m)^\s*(?:\*\*)?场景关系(?:\*\*)?[：:]([^\n]+)", detail)
+    if declaration is None:
+        return None
+    statement = declaration.group(1)
+    if re.search(r"待确认|未明确|不确定|并非|不是|不能|不可|不独立", statement):
+        return None
+    if re.search(r"[^。；]+发布后供[^。；]+读取", statement):
+        return "串联"
+    if re.search(r"[^。；]+(?:可独立使用|分别管理)", statement):
+        return "独立"
+    return None
 
 
 def scenario_relationship_issues(text: str) -> list[str]:
@@ -1363,6 +1502,15 @@ def scenario_relationship_issues(text: str) -> list[str]:
     return [] if declared_scenario_relationship(detail) else ["scenario_relationship_invalid"]
 
 
+def uses_natural_scenario_relationship(detail: str) -> bool:
+    values = field_values(detail, "场景关系")
+    return bool(
+        len(values) == 1
+        and not any(normalize(values[0]).startswith(relation) for relation in SCENARIO_RELATIONSHIPS)
+        and declared_scenario_relationship(detail)
+    )
+
+
 def cross_scenario_flow_issues(text: str) -> list[str]:
     detail = section_body(text, ("详细设计",))
     scenarios = scenario_blocks(detail)
@@ -1374,9 +1522,34 @@ def cross_scenario_flow_issues(text: str) -> list[str]:
     if declared_scenario_relationship(detail) == "独立":
         return []
     shared_flow = section_body(detail, ("跨场景端到端流程", "跨场景关键流程"))
+    if not shared_flow.strip() and uses_natural_scenario_relationship(detail):
+        shared_flow = section_body(detail, ("跨场景流程：",))
     if not shared_flow.strip():
         shared_flow = section_body(text, ("关键流程",))
     return [] if shared_flow.strip() else ["cross_scenario_flow_missing"]
+
+
+def natural_cross_scenario_flow_issues(detail: str) -> list[str]:
+    if not uses_natural_scenario_relationship(detail):
+        return []
+    headings = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", detail))
+    for index, heading in enumerate(headings):
+        if "跨场景流程：" not in heading.group(2):
+            continue
+        end = next((following.start() for following in headings[index + 1 :]
+                    if len(following.group(1)) <= len(heading.group(1))), len(detail))
+        body = detail[heading.end() : end]
+        steps = re.findall(r"(?m)^\d+[.)、]\s+(\S.+)$", body)
+        rows = table_records(body, {
+            "condition": ("触发", "条件"), "action": ("平台处理", "处理"),
+            "owner": ("责任 owner", "责任人"), "result": ("可观察结果", "业务结果"),
+            "boundary": ("停止线", "边界"),
+        })
+        if not (len(steps) >= 2 and len(meaningful_values(steps)) == len(steps)) and not (
+            rows and all(all(meaningful_values([value]) for value in row.values()) for row in rows)
+        ):
+            return ["cross_scenario_view_contract_incomplete"]
+    return []
 
 
 def cross_scenario_view_contract_issues(text: str) -> list[str]:
@@ -1398,7 +1571,7 @@ def cross_scenario_view_contract_issues(text: str) -> list[str]:
         target = (level, detail[heading.end() : end])
         break
     if target is None:
-        return []
+        return natural_cross_scenario_flow_issues(detail)
 
     level, body = target
     steps = re.findall(r"(?m)^\s*\d+[.)、]\s+(.+)$", body)
@@ -1450,7 +1623,7 @@ def cross_scenario_view_contract_issues(text: str) -> list[str]:
         r"本章\s*(?:只|主要|用于)(?:描述|展开|表达|说明)?", body
     ):
         issues.append("cross_scenario_heading_level_mismatch")
-    return issues
+    return issues + natural_cross_scenario_flow_issues(detail)
 
 
 def conditional_flow_order_issues(text: str) -> list[str]:
@@ -1494,13 +1667,37 @@ def conditional_flow_order_issues(text: str) -> list[str]:
 
 
 def document_control_issues(text: str) -> list[str]:
+    preamble = re.split(r"(?m)^#{2,6}\s+", text, maxsplit=1)[0]
+    control = preamble if has_meaningful_labeled_value(preamble, "当前版本") else section_body(
+        text, ("文档状态与责任", "文档治理信息", "文档控制")
+    )
     return ["document_control_incomplete"] if any(
-        not has_meaningful_alias_value(text, aliases)
+        not has_meaningful_alias_value(control, aliases)
         for _, aliases in DOCUMENT_CONTROL_FIELD_GROUPS
     ) else []
 
 
+def task_overview_complete(text: str) -> bool:
+    overview = section_body(text, ("概要设计", "方案概述"))
+    tasks = section_body(overview, ("日常操作", "按任务使用"))
+    records = re.split(r"\n\s*\n|\n(?=\d+[.)、]\s)", tasks.strip())
+    records = [re.sub(r"^\d+[.)、]\s*", "", record.strip()) for record in records if record.strip()]
+    task_pattern = (
+        r"(?:选择|修改|按|使用方|发起|提交|处理|调整)[^。；，\n]+[，。；]"
+        r"[^\n]*(?:查看|查询|检查|执行|发布|显示|读取|记录|保留|拒绝|回滚)[^。；，\n]+"
+    )
+    return bool(
+        records
+        and all(re.fullmatch(task_pattern + r"[^\n]*", record) for record in records)
+        and re.search(r"(?:人员|负责人|运营|使用方|平台)[^。\n]*(?:执行|确认|决定|维护|读取|处理)", overview)
+        and re.search(r"(?:范围|权限)[^。\n]+", overview)
+        and re.search(r"(?:失败|不足|不明确|不合法)[^。\n]*(?:拒绝|停止|显示|原因|保留)", overview)
+    )
+
+
 def architecture_spine_issues(text: str) -> list[str]:
+    if task_overview_complete(text) or narrative_overview_complete(text):
+        return []
     detail = re.search(r"(?m)^#{2,6}\s+.*详细设计.*$", text)
     early_product_design = text[: detail.start()] if detail else text
 
@@ -1515,6 +1712,19 @@ def architecture_spine_issues(text: str) -> list[str]:
     ) else []
 
 
+def narrative_overview_complete(text: str) -> bool:
+    overview = section_body(text, ("概要设计", "方案概述"))
+    prose = re.sub(r"(?ms)^```.*?^```\s*$", "", overview)
+    source = re.search(r"调用方先(?:给出|提交)([^，。]+)[，,](?:本产品|平台|系统)(?:解析|校验)([^；。]+)", prose)
+    branches = re.findall(r"需要([^，；。]+?)时([^，；。]+)", prose)
+    boundary = re.search(r"任何([^；。]+)都不改变([^；。]+)[；;](.+?)必须独立(?:查询|确认)([^。]+)", prose)
+    return bool(source and all(meaningful_values([value]) for value in source.groups())
+                and len(branches) >= 2 and all(
+                    meaningful_values([condition]) and re.search(r"(?:建立|生成|形成)[^，。；]+", result)
+                    for condition, result in branches
+                ) and boundary and all(meaningful_values([value]) for value in boundary.groups()))
+
+
 def interface_abstraction_blocks(text: str) -> list[str]:
     blocks = []
     headings = list(re.finditer(r"(?m)^(#{2,6})\s+(.+?)\s*$", text))
@@ -1527,7 +1737,7 @@ def interface_abstraction_blocks(text: str) -> list[str]:
         while parents and parents[-1][0] >= level:
             parents.pop()
         explicit_section = any(
-            name in title for name in ("产品接口抽象", "对外能力与协作约定")
+            name in title for name in ("产品接口抽象", "对外能力与协作约定", "独立业务承诺")
         )
         in_contract_section = explicit_section or bool(parents and parents[-1][1])
         has_children = following is not None and len(following.group(1)) > level
@@ -1581,10 +1791,42 @@ def product_interface_contract_issues(text: str) -> list[str]:
 
 def success_metric_issues(text: str) -> list[str]:
     goals = section_body(text, ("目标与非目标",))
+    criteria = section_body(goals, ("成功标准", "成功判定"))
+    if criteria or re.search(r"(?m)^#{2,6}\s+[^\n]*(?:成功标准|成功判定)", goals):
+        items = re.split(r"(?m)^[ \t]*[-+*][ \t]+", criteria)
+        if len(items) > 1 and not items[0].strip():
+            items = items[1:]
+        items = [item.strip() for item in items]
+    else:
+        items = re.findall(r"(?m)^[ \t]*(?:[-+*][ \t]+)?(?:成功标准|成功判定)[：:][ \t]*([^\n]*)", goals)
+    if items:
+        issues: list[str] = []
+        observable = r".+?(?:能查到|能查明|属于|时[，,]?(?:给出|拒绝|保留)|都有明确的|只更新|仅更新|不出现在)[^。；\n]+"
+        def observable_item(item: str) -> bool:
+            if "\n" in item:
+                return False
+            named = re.match(r"\*\*[^*]+\*\*[：:]([^\n]+)", item)
+            if named:
+                body = re.split(r"责任方[：:]", named.group(1))[0]
+                return has_meaningful_labeled_value(named.group(1), "责任方") and bool(re.search(
+                    r".+(?:(?:能回查|均不能生成|均无法读取)[^。；\n]+|独立可查|必须显式且通过[^。；\n]+校验)", body
+                ))
+            return bool(re.match(observable, item))
+        for item in items:
+            if re.search(r"(?:成功指标|口径|基线|目标值|目标状态|观察窗口)[ \t]*(?:为|[：:])", item):
+                issues.extend(quantitative_success_metric_issues(item))
+            elif not observable_item(item) or re.search(r"待确认|待定|提升体验|优化效率|〈|视情况|尽快", item):
+                issues.extend(("success_metric_incomplete", "success_expression_manual_review_required"))
+        return list(dict.fromkeys(issues))
     marker = goals.find("成功指标")
     if marker < 0:
         return ["success_metric_incomplete"]
-    normalized = normalize(goals[marker:])
+    metric = re.split(r"(?m)^#{1,6}\s+", goals[marker:], maxsplit=1)[0]
+    return quantitative_success_metric_issues(metric)
+
+
+def quantitative_success_metric_issues(metric: str) -> list[str]:
+    normalized = normalize(metric)
 
     def has_value(pattern: str) -> bool:
         match = re.search(pattern, normalized)
@@ -1605,7 +1847,8 @@ def success_metric_issues(text: str) -> list[str]:
     has_window = has_value(r"观察窗口\s*(?:为|[：:])\s*([^；;。]+)") or bool(
         re.search(r"上线(?:后)?\s*\d+\s*(?:天|小时|周|个月)内", normalized)
     )
-    has_owner = has_value(r"(?:owner|负责人)\s*(?:为|[：:])\s*([^；;。]+)")
+    owner = re.search(r"(?:^|[\n；;。，,])[ \t]*(?:owner|负责人|责任方)[ \t]*(?:为|[：:])[ \t]*([^；;。\n]+)", metric, re.IGNORECASE)
+    has_owner = bool(owner and meaningful_values([owner.group(1)]))
     return [] if all((has_baseline, has_target, has_window, has_owner)) else ["success_metric_incomplete"]
 
 
@@ -1639,6 +1882,9 @@ def lightweight_prd_contract_issues(text: str) -> list[str]:
 
 
 def has_rule_scope(text: str) -> bool:
+    natural_blocks = natural_rule_blocks(text)
+    if natural_blocks:
+        return all(natural_rule_complete(block) for block in natural_blocks)
     rules = section_body(text, ("业务规则",))
     rule_types = (
         field_values(rules, "规则性质")
@@ -1854,6 +2100,19 @@ def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
     for group in CHECKS[kind]:
+        if kind == "prd" and group.name == "definition_and_boundary" and concept_section(text) and not concept_issues(text):
+            continue
+        if kind == "prd" and group.name == "overview_design" and (task_overview_complete(text) or narrative_overview_complete(text)):
+            continue
+        if kind == "prd" and group.name == "flows":
+            scenarios = scenario_blocks(section_body(text, ("详细设计",)))
+            if scenarios and not scenario_contract_issues(text) and all(
+                any("->" in value or "→" in value for value in field_values(body, "流程"))
+                or any(re.search(r".+、.+(?:并|后).+", value) for value in field_values(body, "流程"))
+                or len(re.findall(r"(?m)^\d+[.)、]\s+\S.+", body)) >= 2
+                for _, body in scenarios
+            ):
+                continue
         hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
         if hits < group.min_hits:
             missing.append(group.name)

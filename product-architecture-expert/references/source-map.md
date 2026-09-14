@@ -55,6 +55,12 @@
 - `archive_id` 只能作为本机私有证据定位符，不代表公开来源仍可访问；需要引用或复核时仍要优先重新读取公开页面或官方来源。
 - 删除、验证页、空正文或无法复核的条目，即使存在本地归档，也不得写成“公开内容用于参考”，只能说明归档证据来源、读取日期、当前复核状态和剩余风险。
 
+## 模型指令适配依据（2026-09-14）
+
+- OpenAI [Model guidance：Using GPT-6 Astra](https://developers.openai.com/api/docs/guides/latest-model)：2026-09-14 实际读取官方正文，采纳范围为审查过度触发、矛盾指令、不必要停顿、过度格式化和过宽验证；不据此推断当前宿主的排队、中断、上下文实验或服务端路由状态。
+- 本地落点为 `SKILL.md` 的直接路由、局部自检与受影响范围止损，以及 `product-scenario-routing.md`、`product-design-and-prd.md`、`product-deliberation-workflow.md` 的按需合议。模板的业务语义契约、正式交付检查、Owner 与待确认边界继续有效，不把模型能力当作免检依据。
+- 这是指令一致性调整，尚无新的同模型行为对比；静态回归只能证明结构和兼容边界。模型或宿主行为变化时重新核验官方来源与真实执行证据，不把此读取日期当作永久适用保证。
+
 ## 当前行为证据状态（2026-08-31）
 
 - `product-business-architecture-behavior-cases.json`：2026-08-31 历史轮次使用本机配置的 `gpt-5.6-sol` 完成过 3 次 baseline/candidate 采集和盲评，原 rubric 报告为 candidate weighted score `4.8567`、criteria `45/45`、blockers `0`。本轮 CR 发现 2/3 candidate 在没有工具输出时声称检查已通过，因此题集已增加伪报执行 blocker；原 `responses` / `scores` 只作历史证据，退出 active gate。只有按新题集重新完成 3 轮采集、盲评和独立复核后才能恢复准出证据。

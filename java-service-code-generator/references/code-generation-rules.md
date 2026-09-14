@@ -220,7 +220,8 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 
 ## 生成后验证
 
-- 使用代表性 DDL、Java 类和字段表格分别跑一次脚本，检查生成文件是否能稳定输出。
+- 单次业务生成只核对本次实际使用的输入类型、字段映射和生成文件；不为一份 DDL 任务额外准备 Java 类、字段表格或重跑生成器全部 fixture。
+- 维护生成器代码或生成规程时，运行 `../scripts/verify_fixtures.py`，覆盖代表性 DDL、Java 类、字段表格、关键生成文件 golden hash、Java 关键字 / 保留字 / 受限标识符命名净化，以及已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名的负向路径。
 - Java 类或字段表格输入如果生成了 DDL 草案，必须提示用户该 DDL 是推断结果，需要 DBA/架构师确认。
 - 检查 Entity 注解、字段类型、字段注释、`@Schema`、`@Column`、逻辑删除、租户、版本字段是否正确。
 - 检查 Request 校验是否符合创建/更新语义。

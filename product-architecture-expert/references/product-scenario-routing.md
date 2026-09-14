@@ -1,6 +1,6 @@
 # 产品架构场景识别与方案路由
 
-本文用于在回答前快速判断产品架构问题属于哪类场景、应读取哪些参考、输出什么产物、优先检查哪些红线。它是知识路由，不是生产系统里的功能路由、支付通道路由或资金清结算路由。
+本文只在 `SKILL.md` 的直接入口不足以确定任务归属或参考范围时使用。按当前问题定位到一行或一节，不要求先读完本索引；它是知识路由，不是每次产品任务的必经流程。
 
 ## 使用时机
 
@@ -31,18 +31,16 @@
 
 ## 读取后必须产出
 
-- 场景类型、业务复杂度、关键对象、风险等级和目标产物判断。
-- 最小 reference 集合，以及待确认项。
-- 输出形态：PRD、产品方案、流程、规则矩阵、指标口径或支付资金方案。
+- 交付用户要求的产品判断或产物；仅在影响下一步取舍时说明范围、待确认项和能力边界，不单独输出路由报告。
 
 ## 需要继续读取的 reference
 
-- PRD/产品文档在方向、链路和取舍已有可信权威时读 `product-prd-template.md` 和 `product-design-and-prd.md`；任一项缺失时先读 `product-judgment-action-chain.md`。正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后由当前 Agent 使用可用文档能力整理；`document-authoring` 仅在准入、可用性和调用策略均满足时协同，编辑后回本技能重新校验。
+- PRD/产品文档直接读 `product-prd-template.md` 和 `product-design-and-prd.md`，继承已确认的方向、链路和取舍；缺口需要重新作产品判断时，按需读 `product-judgment-action-chain.md` 的对应层，其他已知部分继续交付。正式评审或提交前自检加读 `product-prd-quality-gates.md`；支付资金 PRD 协同 `payment-expert`；运营、通知、数据、发布加读 `product-prd-operations-and-data.md`。用户明确要求正式审校、DOCX 或 PDF 时，产品结论稳定后由当前 Agent 使用可用文档能力整理；`document-authoring` 仅在准入、可用性和调用策略均满足时协同，编辑后回本技能重新校验。
 - 跨应用 / 多端原型需求规划读 `product-design-and-prd.md` 的“跨应用原型需求规划”，输出需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；直接绘制 Web 原型转 `ui-design-expert`。
 - 客户端交互 / 响应式 / 可用性 / 触控键盘 / 弱网恢复设计读 `product-client-interaction.md`，再回到 `product-design-and-prd.md` 完成页面与非页面承接；输出客户端策略表、任务与路由图、交互状态矩阵、多端差异表和每端验收卡，不先决定视觉组件。
-- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD / 工程执行准入、Harness/Agent 编排由 `wise-agent` 处理。
+- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型进入工程 harden 和产品侧交接读 `ai-native-product-context.md`；端到端研发流程、GSD / 工程执行准入、Harness/Agent 编排由当前 Agent 按任务处理，用户显式调用时才加载 `wise-agent`。
 - AI 适配性、RAG / 微调 / 小模型等方案倾向或“更智能”诉求读 `ai-native-product-context.md` 的“AI 适配性判断”；先确认任务机制、非 AI 基线、代表性评测、降级和停止条件，具体技术实现交架构师核验。
-- 复杂 PRD、AI 生成方案、原型候选、多方争议、PM / Reviewer / 产品大师 / MAGI 多视角评审读 `product-deliberation-workflow.md`；它只提供产品合议评审流程，不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
+- 用户要求 PM / Reviewer / 产品大师 / MAGI 多视角评审，或存在影响取舍和责任归属的真实分歧时，读 `product-deliberation-workflow.md`。复杂 PRD、AI 生成方案和原型候选本身不触发合议；它不替代 PRD 主模板、Backlog 决策或 AI Native 研发编排。
 - 通用产品架构读 `product-architecture-methodology.md`。
 - 业务架构规划、业务能力地图、战略到项目组合、项目组合治理、能力-项目-系统映射和知识库回流读 `business-architecture-planning.md`；复杂图形化表达加读 `diagram-output.md`。
 - `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘、增长实验，或方向 / 链路 / 取舍 / 验证缺口场景，读 `product-judgment-action-chain.md`；它只串产品判断动作和交接路由，不安装外部 Skill。
@@ -65,7 +63,7 @@
 | 从零构思 / 优化已有 PRD / 既有产品增量需求 | 从零任务先定方向；既有产品先核对当前权威与新需求是否一致，再从链路或取舍层进入，并继续读 `product-design-and-prd.md` 的“PRD 连环追问与原型反推” | 不新建平行 PRD；不把技术栈、数据模型、API 或 Agent 控制规则写入正式 PRD |
 | 原型/HTML/页面截图/交互稿反推 PRD | 使用方式、产品语义门禁、快速路由表，并继续读 PRD reference | 只描述页面控件 |
 | 跨应用 / 多端原型需求规划 | 产品语义门禁、快速路由表，并继续读 `product-design-and-prd.md` 的“跨应用原型需求规划” | 不直接绘制界面，不按端名机械复制页面 |
-| 复杂 PRD / AI 生成方案 / 多视角合议评审 | 快速路由表、产品语义门禁，并继续读 `product-deliberation-workflow.md`、`product-prd-quality-gates.md` | 不新增独立产品大师 Skill，不照搬外部多 Agent 工具 |
+| 明确要求多视角合议评审 / 影响产品决定的真实分歧 | `product-deliberation-workflow.md`、`product-prd-quality-gates.md` | 不因复杂、AI 生成或分批写作自动进入合议，不新增独立产品大师 Skill |
 | PRD 文档质量治理 / 文档过厚过薄 / 版本评审同步 | 快速路由表、产品语义门禁，并继续读 `product-design-and-prd.md` 与 `product-prd-quality-gates.md` | 支付资金专项，除非命中资金场景 |
 | PRD / 需求评审会前 AI 预扫描 | 快速路由表、产品语义门禁，并继续读 `product-prd-quality-gates.md` 的“AI 预扫描四维度” | 不把 AI 扫描结果当已确认缺陷，不替代正式评审 |
 | 产品洞察 / 资料分析 / 机会雷达 | 快速路由表、产品语义门禁，并继续读 `product-insight-analyst.md` | 不把资料摘要当机会决策 |
@@ -91,7 +89,7 @@
 
 ## 使用方式
 
-先按以下顺序识别场景，再选择最小参考集：
+按当前缺口考虑以下维度，选择最小参考集；不要求逐项输出或重做已确认结论：
 
 1. **任务目标**：写作、生成、完善、补全、评审或从原型/HTML/页面截图/交互稿反推 PRD/产品需求文档/需求说明书/产品方案，产品定位、业务流程、状态机、规则矩阵、运营后台、数据指标、评审清单、支付与资金专项。
 2. **业务复杂度**：单角色单流程、多角色协作、多状态流转、多规则版本、多系统协同、多法域/多主体/多资金方。

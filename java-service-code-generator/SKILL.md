@@ -61,8 +61,7 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind Java Service
 
 ## 生成后验证
 
-- 至少使用代表性 DDL、Java 类和字段表格分别跑一次脚本或对应 fixture，检查生成文件是否稳定输出。
-- 本仓库维护时，`scripts/verify_fixtures.py` 还必须覆盖关键生成文件 golden hash、Java 关键字 / 保留字 / 受限标识符命名净化，以及负向路径：已有文件不允许覆盖、多个 face/impl 模块对存在歧义、字段表格缺少目标表名。
+- 单次业务生成验证实际输入和生成结果；生成器维护才运行跨输入类型回归。验证范围与维护检查项由 `references/code-generation-rules.md` 的“生成后验证”统一持有。
 - Java 类或字段表格输入如果生成 DDL 草案，必须提示用户该 DDL 是推断结果，需要 DBA/架构师确认。
 - 检查 Entity、Request、Query、Service、ServiceImpl、Converter 是否符合 `references/code-generation-rules.md`，并用 `wind-coding-conventions` 做生成后规则审查；源码级 CR 交回 `senior-software-architect`，重点确认 Entity 不外露、服务接口不透传、MapStruct 不夹带业务逻辑。
 - 写入真实项目模块必须使用目标项目实际构建工具（Maven / Gradle 等）运行受影响模块的定向编译或测试；未能执行时状态只能是 `PENDING`，不得宣称生成代码已可交付或生产可用。

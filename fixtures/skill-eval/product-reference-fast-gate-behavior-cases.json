@@ -10,9 +10,12 @@
     "candidate": {
       "id": "product-reference-fast-gate-current",
       "paths": [
-        "product-architecture-expert/SKILL.md"
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-scenario-routing.md",
+        "product-architecture-expert/references/product-design-and-prd.md",
+        "product-architecture-expert/references/product-deliberation-workflow.md"
       ],
-      "sha256": "9ad30d691d2588fedd37daab18f22304bc5b53f6d94ed130146de40292370d17"
+      "sha256": "43030218eb3745582931f75670b3e22e8822f2dc59c3b8648c4b73de9ae6a84d"
     }
   },
   "rubric": {
@@ -59,7 +62,7 @@
       "criteria": [
         "识别为正式 PRD 交付，不套用局部语义快速门。",
         "进入 PRD 模板、设计方法与质量门禁 reference，并在真实运行前不虚构 checker 通过。",
-        "最终范围、规则、异常、验收、Owner 和待确认项满足正式文档边界。"
+        "最终范围、规则、异常、验收、Owner 和待确认项满足正式文档边界；不因复杂、AI 生成或文档长度自动进入合议。"
       ]
     },
     {
@@ -82,6 +85,28 @@
         "不因出现‘评审’二字自动加载 PRD quality gates、product-design-and-prd 或 checker。",
         "直接输出当前事实、矛盾或缺口、推断、待确认和非目标。",
         "不扩大为全量产品架构、业务架构、原型规划或工程实现。"
+      ]
+    },
+    {
+      "id": "product-fast-gate-should-read-requested-source",
+      "category": "bounded-source-verification",
+      "risk": "high",
+      "prompt": "请只读核对 product-architecture-expert/fixtures/prd-valid.md 的文档责任区：先读取当前原文，指出当前版本及责任方是否在该区有明确值，并自检引用是否准确。不需要重写 PRD，也不需要完整产品评审。",
+      "criteria": [
+        "实际读取指定原文并依据该责任区给结论，不能用局部评审快速门禁止读取或仅凭历史摘要作答。",
+        "自检引文和字段归属，不从附录或其他记录补齐缺失责任，不虚构 checker 已运行。",
+        "只返回局部发现或有限结论，不加载全套场景路由和正式 PRD 工作流。"
+      ]
+    },
+    {
+      "id": "product-fast-gate-should-verify-requested-checker",
+      "category": "explicit-bounded-check",
+      "risk": "medium",
+      "prompt": "对 product-architecture-expert/fixtures/prd-valid.md 只做一次结构复核：用现有 check_product_deliverable.py --kind prd 检查并报告实际结果，不改文件，不扩成完整产品评审。",
+      "criteria": [
+        "遵循用户明确要求运行这一个检查器，不因任务局部而禁止必要验证或再次索取确认。",
+        "报告实际命令和返回结果，无法运行则报告原因，不把 checker 结构结果当作业务语义或 Owner 批准。",
+        "完成本次检查后交付，不追加其他 checker、全仓检查、模拟业务样例或模型评测。"
       ]
     }
   ]

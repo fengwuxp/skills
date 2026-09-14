@@ -2524,14 +2524,14 @@ check(
             "实际新增、修改、重构或修复代码时默认隐式生效",
             "静默协同护栏",
             "只读源码 CR、仅诊断且不写代码、纯项目编码规范检查和文档任务不自动触发",
-            "知止者持有跨专业、跨阶段或跨轮任务的目标、状态、授权和最终交付",
+            "当前 Agent 持有目标、状态、授权和最终交付",
             "`senior-software-architect` 持有工程实现、Bug 修复、TDD、源码 CR 和生产风险",
             "Ponytail 只补最小正确实现和可删除复杂度专项检查",
             "Superpowers 只补 brainstorming、计划、TDD、调试、Review 和验证方法",
             "项目 `AGENTS.md`、源码、测试和项目编码约规优先",
             "与当前目标直接相关的源码、测试和已有证据",
             "只清理本次修改制造的 orphan",
-            "用户要求“顺便清理”也不能证明相邻旧代码属于当前目标",
+            "不从笼统的“顺便清理”推导未指定的改动",
             "不得用简单优先删除安全、权限、持久化、幂等、审计、错误处理或必要测试",
         ],
     )
@@ -6167,12 +6167,12 @@ check(
     ),
 )
 check(
-    "product skill uses three-step loading",
+    "product skill routes directly with conditional discovery",
     has_all(
         product_skill,
         [
-            "运行时按三步加载",
-            "未被止损的复杂产品问题再读 `references/product-scenario-routing.md`",
+            "按目标产物直接选择 reference",
+            "才读 `references/product-scenario-routing.md`",
             "只读取当前任务必要的 reference",
         ],
     ),
@@ -11112,7 +11112,7 @@ check(
         ],
     )
     and has_all(
-        codegen_skill,
+        codegen_rules,
         [
             "Java 关键字 / 保留字 / 受限标识符命名",
             "命名净化",
@@ -15087,7 +15087,7 @@ check(
         [
             "题面已经显式给出当前切片的主体、对象、核心规则、候选状态 / 结果边界和验收问题",
             "槽位存在但有矛盾或缺口",
-            "不读取任何 reference，也不运行 checker",
+            "默认不展开 reference 或正式 checker",
             "单说“评审”不构成正式交付触发",
             "事实、矛盾 / 缺口、合理推断、待确认和非目标",
         ],
@@ -15224,8 +15224,8 @@ check(
         ui_design_skill,
         [
             "## 快速止损门",
-            "不读取任何 reference",
-            "不得进入 Figma、整站、设计系统或迁移路由",
+            "剔除无依据的整站、设计系统或迁移前置",
+            "继续当前已授权任务",
             "主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
             "简单不等于不完整",
             "最小闭环至少包含主路径、一条主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
@@ -15526,6 +15526,11 @@ check(
             "references/wind-project-patterns.md",
             "scripts/generate_scaffold.py",
             "不访问网络、不上传文件、不读取密钥",
+        ],
+    )
+    and has_all(
+        codegen_rules,
+        [
             "已有文件不允许覆盖",
             "多个 face/impl 模块对存在歧义",
             "字段表格缺少目标表名",

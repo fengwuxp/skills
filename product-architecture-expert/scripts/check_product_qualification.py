@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate product qualification and an optional PRD concept definition table.
+"""Validate product qualification and local PRD concept definitions.
 
 Input: explicit UTF-8 text/file or stdin. Output: deterministic structural
 errors only. The checker does not access the network, write files, or decide
@@ -121,6 +121,7 @@ def concept_section(text: str) -> str | None:
 
 def table_records(section: str) -> list[dict[str, str]] | None:
     lines = section.splitlines()
+    records: list[dict[str, str]] = []
     required = {
         "concept": lambda header: header == "概念",
         "type": lambda header: header == "类型",
@@ -130,6 +131,8 @@ def table_records(section: str) -> list[dict[str, str]] | None:
     for index, line in enumerate(lines):
         if not line.strip().startswith("|"):
             continue
+        if index and lines[index - 1].strip().startswith("|"):
+            continue
         headers = [cell.strip().strip("`*_").strip() for cell in line.strip().strip("|").split("|")]
         normalized_headers = [normalize(header) for header in headers]
         positions = {
@@ -137,8 +140,7 @@ def table_records(section: str) -> list[dict[str, str]] | None:
             for name, matches in required.items()
         }
         if any(position is None for position in positions.values()):
-            continue
-        records: list[dict[str, str]] = []
+            return None
         for row in lines[index + 1 :]:
             if not row.strip().startswith("|"):
                 break
@@ -151,18 +153,48 @@ def table_records(section: str) -> list[dict[str, str]] | None:
                     for name, position in positions.items()
                 }
             )
-        return records
-    return None
+    return records or None
+
+
+def concept_paragraph_records(section: str) -> list[dict[str, str]]:
+    records: list[dict[str, str]] = []
+    pattern = r"(?m)^\*\*([^*\n]+)\*\*[：:]([^\n]*(?:\n(?!\s*$|\*\*|#|\|)[^\n]+)*)"
+    for match in re.finditer(pattern, section):
+        sentences = re.split(r"[。\n]", match.group(2).strip(), maxsplit=1)
+        definition = sentences[0].strip()
+        boundary = sentences[1].strip() if len(sentences) > 1 else ""
+        definition_shape = re.search(
+            r"^(?:一[项组类种份套条个].+|供.+的.+|同一.+(?:的|在).+|当前.+(?:的|版本)|"
+            r"由.+的|对.+设置|记录.+(?:主体|对象|结果)|先保存.+再|.+适用于|(?:是|指).+|"
+            r"将.+转换为.+的.+|在.+下的一份.+|面向.+的.+|.+下的一次.+|"
+            r"目标.+形成的.+|引导.+的.+|.+为.+签发.+的.+)",
+            definition,
+        )
+        boundary_shape = re.search(
+            r"只|不等于|不属于|不得|不能|不授予|仍由|适用|范围|负责人|稳定值|业务规则|独立|历史|不改变",
+            boundary,
+        )
+        records.append({
+            "concept": match.group(1).strip(),
+            "definition": definition if definition_shape else "",
+            "boundary": boundary if boundary_shape else "",
+        })
+    return records
 
 
 def concept_issues(text: str) -> list[str]:
     section = concept_section(text)
     if section is None:
         return []
-    records = table_records(section)
+    table_rows = table_records(section)
+    records = (table_rows or []) + concept_paragraph_records(section)
     if not records:
-        return ["concept_definition_table_incomplete"]
+        return ["concept_definition_table_incomplete"] if re.search(r"(?m)^\s*\|", section) else [
+            "concept_expression_manual_review_required"
+        ]
     issues: list[str] = []
+    if re.search(r"(?m)^\s*\|", section) and not table_rows:
+        issues.append("concept_definition_table_incomplete")
     seen: set[str] = set()
     for record in records:
         if not meaningful(record["concept"]):
@@ -171,7 +203,7 @@ def concept_issues(text: str) -> list[str]:
             issues.append("concept_name_duplicate")
         else:
             seen.add(normalize(record["concept"]))
-        if record["type"] not in QUALIFICATION_OBJECTS:
+        if "type" in record and record["type"] not in QUALIFICATION_OBJECTS:
             issues.append("concept_type_invalid")
         if not meaningful(record["definition"]):
             issues.append("concept_definition_missing")

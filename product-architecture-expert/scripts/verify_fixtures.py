@@ -7,14 +7,21 @@ import re
 from pathlib import Path
 
 from check_product_deliverable import (
+    architecture_spine_issues,
     business_rule_contract_issues,
     business_rule_records,
+    cross_scenario_view_contract_issues,
     acceptance_scenario_issues,
     defined_scenario_ids,
+    document_control_issues,
+    field_values,
+    labeled_value,
     missing_groups,
     product_interface_contract_issues,
     requirement_contract_issues,
     scenario_contract_issues,
+    scenario_relationship_issues,
+    success_metric_issues,
     section_body,
     warning_groups,
 )
@@ -23,6 +30,62 @@ from check_product_qualification import check as qualification_issues
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "fixtures"
+
+
+def verify_chinese_responsibility_labels() -> list[str]:
+    failures: list[str] = []
+    for filename in ("prd-valid.md", "prd-compact-readable-valid.md", "prd-enhanced-readable-valid.md"):
+        original = (FIXTURES / filename).read_text(encoding="utf-8")
+        translated = re.sub(r"产品\s+owner", "产品责任方", original, flags=re.IGNORECASE)
+        translated = re.sub(r"业务\s+owner", "业务责任方", translated, flags=re.IGNORECASE)
+        translated = re.sub(r"Owner(?=\s*(?:[：:]|为))", "责任方", translated, flags=re.IGNORECASE)
+        translated = translated.replace("/ Owner", "/ 责任方")
+        if missing_groups("prd", original) != missing_groups("prd", translated):
+            failures.append(f"Chinese responsibility labels changed diagnostics: {filename}")
+
+    original = (FIXTURES / "prd-valid.md").read_text(encoding="utf-8")
+    for label in ("产品 owner", "业务 owner", "产品责任方", "业务责任方"):
+        source_label = "产品 owner" if label.startswith("产品") else "业务 owner"
+        candidate = original.replace(source_label, label)
+        field = re.search(rf"(?m)^{re.escape(label)}：[^\n]+", candidate)
+        if field is None:
+            raise AssertionError(label)
+        for replacement in ("", label + "：", label.replace("责任方", "所有者").replace("owner", "所有者") + "：运营负责人。"):
+            invalid = candidate[:field.start()] + replacement + candidate[field.end():]
+            invalid += "\n## 附录\n" + field.group(0) + "\n"
+            if "document_control_incomplete" not in document_control_issues(invalid):
+                failures.append(f"document responsibility borrowed from appendix: {label} {replacement}")
+
+    metrics = section_body(original, ("目标与非目标",))
+    for label in ("Owner", "责任方"):
+        candidate = "## 目标与非目标\n" + metrics.replace("Owner 为", label + "为")
+        owner = re.search(rf"{label}为[^。\n]+", candidate)
+        if owner is None:
+            raise AssertionError(label)
+        if success_metric_issues(candidate):
+            failures.append(f"metric responsibility rejected: {label}")
+        for replacement in ("", label + "：", "所有者为运营负责人"):
+            invalid = candidate[:owner.start()] + replacement + candidate[owner.end():]
+            invalid += "\n### 其他目标\n" + label + "：运营负责人。\n"
+            if "success_metric_incomplete" not in success_metric_issues(invalid):
+                failures.append(f"metric responsibility borrowed from sibling: {label} {replacement}")
+
+    compact = (FIXTURES / "prd-compact-readable-valid.md").read_text(encoding="utf-8")
+    rules = section_body(compact, ("业务规则",))
+    for label in ("Owner", "责任方"):
+        candidate = rules.replace("Owner：", label + "：")
+        owner = re.search(rf"(?m)^{label}：[^\n]+", candidate)
+        if owner is None:
+            raise AssertionError(label)
+        if business_rule_contract_issues("## 业务规则\n" + candidate):
+            failures.append(f"rule responsibility rejected: {label}")
+        for replacement in ("", label + "：", "所有者：资质专业 Owner。"):
+            invalid = candidate[:owner.start()] + replacement + candidate[owner.end():]
+            for suffix in ("\n### 附录\n" + owner.group(0), "\n" + candidate.replace("外部资质版本裁决", "第二条版本裁决")):
+                if "rule_contract_incomplete" not in business_rule_contract_issues("## 业务规则\n" + invalid + suffix):
+                    failures.append(f"rule responsibility borrowed from another record: {label} {replacement}")
+    print("Checked Chinese/Owner responsibility parity and 30 missing, empty, ownership and cross-record cases.")
+    return failures
 CASES = (
     ("prd", FIXTURES / "prd-light-readable-valid.md", True, set()),
     ("prd", FIXTURES / "prd-valid.md", True, set()),
@@ -102,6 +165,18 @@ def template_reading_path_failures() -> list[str]:
         failures.append("template still routes detailed acceptance evidence through chapter 8")
     if "主模板 1-8 节" in quality_gates or "主模板第 8 节进入已有承接文档" in quality_gates:
         failures.append("quality gates still make chapter 8 the default acceptance handoff")
+    for content, label in ((template, "template"), (quality_gates, "quality gates")):
+        if re.search(r"(?m)^#{1,6}\s+.*数据、权限、(?:运营、)?风险", content):
+            failures.append(f"{label} still makes data, permissions, operations, and risk a default chapter")
+        if "稳定编号继续保留" in content:
+            failures.append(f"{label} still asks new PRDs to retain stable numbering")
+        if re.search(r"(?m)^#{1,6}\s+.*产品接口抽象", content):
+            failures.append(f"{label} still exposes a product interface abstraction heading")
+    product_design = (ROOT / "references" / "product-design-and-prd.md").read_text(encoding="utf-8")
+    if "7. 数据、权限、风险与待确认" in product_design:
+        failures.append("product design reference still exposes the old governance chapter")
+    if re.search(r"(?m)^#{1,6}\s+.*产品接口抽象", product_design):
+        failures.append("product design reference still exposes a product interface abstraction heading")
     return failures
 
 
@@ -289,20 +364,252 @@ def business_commitment_failures() -> list[str]:
         candidate += "\n## 无关附录\n" + match.group() + "\n"
         negatives.append((candidate, "scenario_contract_incomplete", "scene contract borrowed from other chapter"))
     failures = []
-    for label, candidate in positives.items():
-        issues = missing_groups("prd", candidate)
-        if issues:
-            failures.append(f"{label}: {issues}")
-    for candidate, expected, label in negatives:
-        if expected not in missing_groups("prd", candidate):
-            failures.append(label)
-    print(f"Checked business commitments: {len(positives)} positive and {len(negatives)} negative cases.")
+    for title, consumer in (
+        ("对外能力与协作约定", "使用方"),
+        ("独立业务承诺", "使用方与任务"),
+        ("对外能力与协作约定", "使用方与任务"),
+    ):
+        def expression(candidate: str) -> str:
+            candidate = candidate.replace("对外能力与协作约定", title)
+            candidate = re.sub(r"(?m)^([-+*] )?使用方：", lambda match: (match.group(1) or "") + consumer + "：", candidate)
+            return candidate.replace("| 使用方 |", "| " + consumer + " |")
+
+        for label, candidate in positives.items():
+            issues = missing_groups("prd", expression(candidate))
+            if issues:
+                failures.append(f"{title}/{consumer} {label}: {issues}")
+        for candidate, expected, label in negatives:
+            if expected not in missing_groups("prd", expression(candidate)):
+                failures.append(f"{title}/{consumer} {label}")
+        print(f"Checked business commitments ({title}/{consumer}): {len(positives)} positive and {len(negatives)} negative cases.")
+    return failures
+
+
+def success_criteria_record_failures() -> list[str]:
+    failures: list[str] = []
+    prefix = "## 目标与非目标\n"
+    observable = "每次申请都能查到当前审核结果。"
+    metric = "成功指标：审核完成率；口径：取得结论的申请数 / 有效申请数；基线：90%；目标值：95%；观察窗口：上线后7天；负责人：审核 Owner。"
+    named = "**可追溯**：每次审核都能回查生效版本。责任方：审核平台。"
+    for label in ("成功标准", "成功判定"):
+        positives = (
+            f"- {label}：{observable}\n",
+            f"- {label}：{metric}\n",
+            f"### {label}\n- {observable}\n- {metric}\n",
+            f"### {label}\n- {metric}\n- {observable}\n",
+            f"### {label}\n- {named}\n- {metric}\n",
+            f"- {label}：{observable}\n- {label}：{metric}\n",
+            f"### {label}\n" + metric.replace("；", "；\n"),
+        )
+        for body in positives:
+            if success_metric_issues(prefix + body):
+                failures.append(f"success criterion entry or mixed record rejected: {body}")
+        negatives = (
+            f"- {label}：\n- {label}：{observable}\n",
+            f"### {label}\n- \n- {observable}\n",
+            f"### {label}\n\n### 其他目标\n{metric}\n",
+            f"### {label}\n以后确定。\n- {observable}\n",
+            f"### {label}\n- {observable}\n  另有一句尚未识别的表达。\n",
+            f"### {label}\n- 提升体验。\n- {metric}\n",
+            f"### {label}\n- {named.replace('责任方：审核平台。', '')}\n- {metric}\n",
+        )
+        for body in negatives:
+            if "success_metric_incomplete" not in success_metric_issues(prefix + body):
+                failures.append(f"success criterion borrowed another record or accepted unknown text: {body}")
+        for field in ("基线：90%；", "目标值：95%；", "观察窗口：上线后7天；", "负责人：审核 Owner。"):
+            broken = metric.replace(field, "")
+            for body in (
+                f"### {label}\n- {broken}\n- {observable}\n- {metric}\n",
+                f"- {label}：{broken}\n- {label}：{metric}\n",
+            ):
+                if "success_metric_incomplete" not in success_metric_issues(prefix + body):
+                    failures.append(f"quantified success criterion borrowed {field}")
+    print("Checked success criterion entries, mixed records and local missing-field rejection.")
+    return failures
+
+
+def natural_contract_failures() -> list[str]:
+    failures: list[str] = []
+    overview = """## 4. 概要设计
+为维护人员提供内容发布与查询能力。
+### 4.1 按任务使用
+选择要维护的内容及团队范围，查看当前值和历史变更。
+
+提交变更后，通过原请求查询执行状态和失败原因。
+### 4.2 共同要求
+维护人员按权限执行变更，业务负责人确认结果；失败时拒绝并保留记录。
+## 5. 详细设计
+"""
+    if architecture_spine_issues(overview):
+        failures.append("task overview unexpectedly failed")
+    task = "选择要维护的内容及团队范围，查看当前值和历史变更。"
+    for fragment in ("选择要维护的内容及团队范围。", "查看当前值和历史变更。"):
+        broken = overview.replace(task, fragment) + "\n## 其他章节\n" + task
+        if "architecture_spine_incomplete" not in architecture_spine_issues(broken):
+            failures.append("task overview borrowed action or result from another record")
+    for relationship in ("两项能力可独立使用，各自的处理状态分别更新。", "内容分别管理；发布后供使用方读取。"):
+        text = "## 5. 详细设计\n场景关系：" + relationship + "\n### 业务场景：提交\n内容\n### 业务场景：查询\n内容\n"
+        if scenario_relationship_issues(text):
+            failures.append("natural scenario relationship unexpectedly failed")
+        broken = text.replace(relationship, "关系待确认。")
+        if "scenario_relationship_invalid" not in scenario_relationship_issues(broken):
+            failures.append("unknown scenario relationship unexpectedly passed")
+    success = """## 2. 目标与非目标
+### 2.2 成功标准
+- 发布后能查到生效内容、适用范围和版本。
+- 审核未通过时拒绝发布并保留原版本。
+- 内容仅更新自己的处理状态，不能改变其他团队的结果。
+### 2.3 非目标
+不提供跨团队发布。
+"""
+    if success_metric_issues(success):
+        failures.append("observable nonnumeric success criteria unexpectedly failed")
+    for fragment in ("提升体验。", "审核未通过时。", "待确认。"):
+        broken = success.replace("审核未通过时拒绝发布并保留原版本。", fragment)
+        if "success_metric_incomplete" not in success_metric_issues(broken):
+            failures.append("success criterion borrowed result from another item")
+    quantified = """## 2. 目标与非目标
+### 成功标准
+指标口径：审核平均等待时长；基线：6小时；目标值：4小时；观察窗口：上线后2周；负责人：审核运营。
+"""
+    if success_metric_issues(quantified):
+        failures.append("quantified success standard unexpectedly failed")
+    for field in ("基线：6小时；", "目标值：4小时；", "观察窗口：上线后2周；", "负责人：审核运营。"):
+        if not success_metric_issues(quantified.replace(field, "")):
+            failures.append("quantified criterion lost a required field")
+    metric = quantified.split("### 成功标准\n")[1].strip()
+    split_metrics = "## 目标与非目标\n### 成功标准\n- " + metric.replace("负责人：审核运营。", "") + "\n- " + metric
+    if not success_metric_issues(split_metrics):
+        failures.append("quantified criterion borrowed responsibility from another record")
+    natural_flow = "## 详细设计\n场景关系：内容分别管理；发布后供使用方读取。\n### 跨场景流程：发布与使用\n1. 运营发布已审核内容。\n2. 使用方读取生效内容。\n"
+    if cross_scenario_view_contract_issues(natural_flow):
+        failures.append("natural cross-scenario flow unexpectedly failed")
+    if not cross_scenario_view_contract_issues(natural_flow.replace("1. 运营发布已审核内容。\n2. 使用方读取生效内容。", "以后补充。")):
+        failures.append("natural flow title hid missing flow content")
+    legacy_flow = """## 详细设计
+场景关系：独立。
+### 跨场景流程：异常与人工边界
+| 异常 | 自动处理 | 人工允许动作 | 禁止动作 |
+| --- | --- | --- | --- |
+| 结果未知 | 保持原请求 | 补充证据 | 另起发布 |
+"""
+    if cross_scenario_view_contract_issues(legacy_flow):
+        failures.append("new natural relationship checks changed the legacy flow path")
+    rule = """#### 发布复核
+- 敏感或高影响变更必须由不同人员审核；申请人与审核人相同，或所需审批缺失时，拒绝发布并保留记录。
+- 展示顺序等候选低风险变更，按内容影响确认审核方式；不得只因名称就降低审核要求。
+- 低风险目录仍为 PENDING，由内容及安全负责人确认。未确认时保留草稿或待审核状态，不自动免审。
+- 所有变更都保留权限检查、内容与影响校验、版本和操作记录。
+"""
+    envelope = "## 6. 业务规则\n### 6.1 业务规则注册表\n"
+    if business_rule_contract_issues(envelope + rule):
+        failures.append("local risk-review narrative unexpectedly failed")
+    for line in rule.splitlines()[1:]:
+        broken = envelope + rule.replace(line + "\n", "") + "\n## 其他章节\n" + rule
+        if not business_rule_contract_issues(broken):
+            failures.append("risk-review rule borrowed a missing obligation from another section")
+    return failures
+
+
+def chinese_record_failures() -> list[str]:
+    failures: list[str] = []
+    scenario = """### 提交审核申请
+- 场景说明：申请人提交材料以取得审核结果。
+- 参与者：申请人、审核员。
+- 流程：提交材料 -> 校验权限 -> 保存结论。
+- 业务结果：结论可查询，无权限时拒绝。
+- 异常处理：材料缺失时保留申请，由审核员通知补齐。
+"""
+    envelope = "## 详细设计\n场景关系：独立。\n"
+    if scenario_contract_issues(envelope + scenario):
+        failures.append("Chinese scenario title unexpectedly failed")
+    for first, second in (
+        ("提交材料。", "校验权限。"),
+        ("提交材料：申请人填写材料后提交审核。", "校验权限。"),
+        ("提交材料。", "校验权限：审核平台确认当前用户有审核权限。"),
+        ("09:00 由申请人提交材料。", "访问 https://example.com/review 查询审核结果。"),
+    ):
+        steps = (first, second, "保存结论。")
+        numbered = "- 流程：\n" + "\n".join(f"{index}. {step}" for index, step in enumerate(steps, 1))
+        body = scenario.replace("- 流程：提交材料 -> 校验权限 -> 保存结论。", numbered)
+        if scenario_contract_issues(envelope + body):
+            failures.append("numbered scenario flow with punctuation rejected")
+        if labeled_value(body, "流程") != "\n".join(steps) or field_values(body, "流程") != ["\n".join(steps)]:
+            failures.append("numbered scenario flow silently lost a step")
+    for following in (
+        "1. 业务结果：结论可查询。",
+        "1. **异常处理**：材料缺失时保留申请。",
+        "1. 场景说明：复核已提交申请。",
+        "### 另一场景\n1. 提交另一份材料。",
+        "## 附录\n1. 提交另一份材料。",
+    ):
+        if labeled_value("流程：\n" + following, "流程") != "":
+            failures.append("empty flow borrowed the next field or record")
+        if labeled_value("流程：\n1. 保存申请。\n" + following.replace("1.", "2."), "流程") != "保存申请。":
+            failures.append("numbered flow crossed a field or heading boundary")
+    requirement_section = "### 产品需求陈述\n#### 保存结论\n业务结果：保存审核事实。\n"
+    if scenario_contract_issues(envelope + scenario + requirement_section):
+        failures.append("requirement result was mistaken for a scenario card")
+    for titled_scenario in (scenario, scenario.replace("### 提交审核申请", "### SCN-001 提交审核申请")):
+        for line in titled_scenario.splitlines()[1:]:
+            for replacement in ("", line.split("：")[0] + "："):
+                broken = envelope + titled_scenario.replace(line, replacement) + scenario.replace("提交审核申请", "复核申请")
+                if "scenario_contract_incomplete" not in scenario_contract_issues(broken):
+                    failures.append("scenario borrowed a local field from its sibling")
+    requirements = (
+        ("申请已完成权限校验时，审核平台必须为申请保存审核结论。", "申请已完成权限校验时，", "审核平台", "必须为申请保存审核结论"),
+        ("发布内容前，必须先确认范围与内容契约。内容 Owner 按范围管理不可变版本，保证唯一生效版本。", "发布内容前，必须先确认范围与内容契约。", "内容 Owner ", "按范围管理不可变版本，保证唯一生效版本"),
+        ("材料已齐备时，审核员与内容 Owner 共同承担本次审核的责任。\n\n执行侧不得生成第二份结论。", "材料已齐备时，", "审核员与内容 Owner 共同承担本次审核的责任。", "执行侧不得生成第二份结论。"),
+    )
+    for statement, condition, owner, result in requirements:
+        card = "#### 保存审核结果\n\n" + statement + "\n\n边界：不改变已终结申请。\n"
+        prefix = "## 详细设计\n### 产品需求陈述\n"
+        if requirement_contract_issues(prefix + card):
+            failures.append("Chinese requirement paragraph unexpectedly failed")
+        if not requirement_contract_issues(prefix + card + "\n责任主体：\n"):
+            failures.append("natural statement hid an explicitly empty requirement field")
+        for fragment in (condition, owner, result, "边界：不改变已终结申请。"):
+            broken = prefix + card.replace(fragment, "") + card.replace("保存审核结果", "保存复核结果")
+            if "requirement_contract_incomplete" not in requirement_contract_issues(broken):
+                failures.append("Chinese requirement borrowed a missing fact from its sibling")
+    rule = "### 保留终态\n\n当申请已终结时，拒绝覆盖已保存结论。\n\n负责人：审核 Owner。\n"
+    rules = "## 业务规则\n" + rule
+    if business_rule_contract_issues(rules):
+        failures.append("Chinese conditional rule unexpectedly failed")
+    for fragment in ("申请已终结", "拒绝覆盖已保存结论。", "负责人：审核 Owner。"):
+        broken = "## 业务规则\n" + rule.replace(fragment, "") + rule.replace("保留终态", "保留复核终态")
+        if "rule_contract_incomplete" not in business_rule_contract_issues(broken):
+            failures.append("Chinese rule borrowed condition, result or owner from its sibling")
+    unknown = rules + "### 其他规则\n\n以后确定。\n"
+    if "rule_expression_manual_review_required" not in business_rule_contract_issues(unknown):
+        failures.append("unrecognized Chinese rule silently passed")
+    criterion = "- **可追溯**：每次审核都能回查生效版本。责任方：审核平台。\n"
+    prefix = "## 目标与非目标\n### 成功标准\n"
+    if success_metric_issues(prefix + criterion):
+        failures.append("named observable criterion unexpectedly failed")
+    for fragment in ("每次审核都能回查生效版本。", "责任方：审核平台。"):
+        if not success_metric_issues(prefix + criterion.replace(fragment, "") + criterion):
+            failures.append("named criterion borrowed result or responsibility")
+    overview = """## 概要设计
+调用方先提交申请和权限，本产品校验范围；需要审核时建立审核任务，需要复核时生成复核任务。
+任何任务结果都不改变源申请；业务 Owner 必须独立查询本域状态。
+## 详细设计
+"""
+    if architecture_spine_issues(overview):
+        failures.append("narrative overview unexpectedly failed")
+    for fragment in ("调用方先提交申请和权限，本产品校验范围；", "建立审核任务", "业务 Owner 必须独立查询本域状态。"):
+        broken = overview.replace(fragment, "") + "## 其他材料\n" + fragment
+        if not architecture_spine_issues(broken):
+            failures.append("narrative overview borrowed a missing fact outside its section")
     return failures
 
 
 def main() -> int:
     failures: list[str] = []
     failures.extend(template_reading_path_failures())
+    failures.extend(natural_contract_failures())
+    failures.extend(success_criteria_record_failures())
+    failures.extend(chinese_record_failures())
     failures.extend(business_commitment_failures())
     for kind, path, should_pass, expected_missing in CASES:
         if not path.exists():
@@ -349,6 +656,37 @@ def main() -> int:
         ),
         (
             current_prd.replace(
+                "# 审核任务中心 PRD\n",
+                "# 审核任务中心 PRD\n\n## 文档状态与责任\n",
+                1,
+            ),
+            None,
+            "template document control heading",
+        ),
+        (
+            current_prd.replace(
+                "# 审核任务中心 PRD\n",
+                "# 审核任务中心 PRD\n\n## 文档状态与责任\n",
+                1,
+            )
+            .replace("文档状态：评审中。\n", "", 1)
+            + "\n## 附录\n文档状态：已确认。\n",
+            "document_control_incomplete",
+            "template document control without status",
+        ),
+        (
+            current_prd.replace(
+                "# 审核任务中心 PRD\n",
+                "# 审核任务中心 PRD\n\n## 文档状态与责任\n",
+                1,
+            )
+            .replace("产品 owner：审核产品负责人。\n", "产品 owner：\n", 1)
+            + "\n## 附录\n产品 owner：附录负责人。\n",
+            "document_control_incomplete",
+            "template document control with empty product owner",
+        ),
+        (
+            current_prd.replace(
                 "- 产品架构主脊：缩短审核时长 -> SCN-001 -> 审核裁决能力 -> 申请 / 审核任务及状态 -> R-001 -> 可查询且不可覆盖的结论。\n",
                 "",
                 1,
@@ -363,7 +701,10 @@ def main() -> int:
         ),
     )
     for candidate, expected_issue, label in contract_cases:
-        if expected_issue not in missing_groups("prd", candidate):
+        missing = missing_groups("prd", candidate)
+        if expected_issue is None and "document_control_incomplete" in missing:
+            failures.append(f"{label} unexpectedly failed document control")
+        elif expected_issue is not None and expected_issue not in missing:
             failures.append(f"{label} unexpectedly passed")
 
     enhanced_prd = (FIXTURES / "prd-enhanced-readable-valid.md").read_text(encoding="utf-8")
@@ -1099,6 +1440,80 @@ flowchart LR
     if scenario_contract_issues(lean_scenario):
         failures.append("lean scenario card unexpectedly failed")
 
+    no_code_contract = """## 5. 详细设计
+### 业务场景：建立租户 UI
+- 场景说明：运营为目标租户建立独立的 UI 草稿。
+- 参与者与责任：设计师提交设计，运营确认目标租户。
+- 流程：提交设计、校验归属、形成草稿。
+- 业务结果：目标租户形成独立草稿。
+- 异常处理：归属不明时停止并转人工确认。
+
+### 产品需求陈述
+#### 建立独立 UI 草稿
+- 责任主体：平台运营。
+- 场景 / 前置状态：目标租户已存在且设计归属明确。
+- 要求的行为或业务结果：平台必须为目标租户形成可回查的独立草稿。
+- 需求边界：不得改动其他租户的存量 UI。
+
+### 业务规则
+#### 存量 UI 不变
+- 规则名称：存量 UI 不变。
+- 规则性质：不变量。
+- 业务动机：保护已存在租户的配置不被新草稿覆盖。
+- 适用对象与范围：所有已存在的租户。
+- 输入事实：新增租户 UI 草稿及现有租户配置。
+- 当：新增租户 UI 草稿时；则：其他租户的存量 UI 保持不变。
+- Owner：平台运营。
+- 正例：目标租户新增草稿，其他租户仍读取原配置。
+- 反例：新增草稿覆盖其他租户配置。
+"""
+    if scenario_contract_issues(no_code_contract):
+        failures.append("Chinese no-code scenario card unexpectedly failed")
+    if requirement_contract_issues(no_code_contract):
+        failures.append("Chinese no-code requirement card unexpectedly failed")
+    if business_rule_contract_issues(no_code_contract):
+        failures.append("Chinese no-code rule card unexpectedly failed")
+    if re.search(r"(?m)^#{1,6}\s+(?:SCN|REQ|R|AC)-", no_code_contract):
+        failures.append("Chinese no-code regression unexpectedly exposed a visible identifier")
+
+    no_code_compact_contract = """## 5. 详细设计
+### 产品需求陈述
+#### 建立独立 UI 草稿
+- 责任主体：平台运营。
+- 前提：目标租户已存在且设计归属明确。
+- 要求的行为或业务结果：平台必须为目标租户形成可回查的独立草稿。
+- 边界：不得改动其他租户的存量 UI。
+
+#### 回查租户 UI 草稿
+- 责任主体：平台运营。
+- 适用场景：目标租户已存在且草稿引用可验证。
+- 要求的行为或业务结果：平台必须返回目标租户的当前草稿及版本。
+- 边界：不得返回其他租户的 UI 草稿。
+
+## 6. 业务规则
+### 6.1 业务规则注册表
+#### 存量 UI 不变
+- 性质 / 场景：不变量；建立独立 UI 草稿。
+- 对象 / 输入：已存在租户；新增租户 UI 草稿及现有租户配置。
+- 当 / 则：新增租户 UI 草稿时；其他租户的存量 UI 保持不变。
+- Owner / 例边界：平台运营；正例为目标租户新增草稿且其他租户仍读取原配置，反例为新增草稿覆盖其他租户配置。
+"""
+    if requirement_contract_issues(no_code_compact_contract):
+        failures.append("Chinese compact requirement with short precondition unexpectedly failed")
+    if business_rule_contract_issues(no_code_compact_contract):
+        failures.append("Chinese no-code compact rule card unexpectedly failed")
+
+    for label in ("Owner / 例边界", "责任方 / 例边界"):
+        candidate = no_code_compact_contract.replace("Owner / 例边界", label)
+        if business_rule_contract_issues(candidate):
+            failures.append(f"compact responsibility label rejected: {label}")
+        for replacement in ("", f"- {label}：", "- 所有者：平台运营；正例：存量配置不变。"):
+            invalid = re.sub(rf"(?m)^- {re.escape(label)}：.*$", replacement, candidate)
+            invalid += "\n- 正例：存量配置不变。\n## 附录\n责任方：平台运营。\n"
+            if "rule_contract_incomplete" not in business_rule_contract_issues(invalid):
+                failures.append(f"compact rule borrowed example or appendix as responsibility: {label}")
+
+    failures.extend(verify_chinese_responsibility_labels())
     if failures:
         print("FAIL product fixture verification")
         for failure in failures:
