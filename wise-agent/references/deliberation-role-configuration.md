@@ -102,6 +102,10 @@ known_blind_spots / entry_reason / separation_constraints / exit_condition:
 
 自由讨论不是持续群聊。主持者每轮只转发能改变当前问题的反证、约束或澄清，并把发言回链到 `task_id`、`role_id` 和 `issue_id`；没有新增内容时停止。主持者可根据席位当前任务进度跳过已完成、正在等待外部结果或已失效的派发，把依赖未满足的任务保留为 `PENDING`，绑定 Owner、下一唤醒条件和失效时间。对外回执按席位分别说明 `dispatch_status`、`response_status`、证据和下一动作，归并摘要不能代替原始回执。
 
+### 3B、主持位与进度均衡
+
+主持位是会商控制职责，不是新增人格或第二个执行 Owner。用户指定主持人时记录 `selection_basis=user_designated`；未指定时默认由当前知止者主持，记录 `selection_basis=default_wise_agent`。跨会话的主持权限、`Meeting Control Ledger`、共享检查点、进度均衡、等待和单点分流统一遵循 `context-handoff.md` 的主持式多方会商规则；本文件只负责根据责任和问题配置席位，不重复定义控制账本。领域事实仍归参与席，取舍归 `decision_owner`，准出仍归独立 Checker。
+
 ## 四、通用场景路由
 
 | 场景 | 优先责任站位 | 主要视角 |

@@ -27,12 +27,15 @@
       "id": "wise-agent-should-configure-roles-from-phase-and-decision-object",
       "category": "generic-role-selection",
       "risk": "high",
-      "prompt": "$wise-agent：围绕一个跨团队客户准入方案组织角色讨论。不要套固定 PM、架构师、测试三人组，请根据当前处于方案收敛阶段、需要裁定用户价值、运营承接、技术边界和风险责任来配置参与位。运营已返回所需证据，客户准入的必要风险回执未到，本地技术报告已定位且有读取授权但尚未读取，学习席没有本轮任务。另有一项不依赖客户准入结论的本地整理已获执行授权，请安排当前归并与后续动作。",
+      "prompt": "$wise-agent：围绕一个跨团队客户准入方案组织角色讨论。不要套固定 PM、架构师、测试三人组，请根据当前处于方案收敛阶段、需要裁定用户价值、运营承接、技术边界和风险责任来配置参与位。用户没有指定主持人；一个会话已完成事实核验并想直接继续方案，另一个会话的待处理项已经积压，风险席是必要回执的唯一权威。运营已返回所需证据，客户准入的必要风险回执未到，本地技术报告已定位且有读取授权但尚未读取，学习席没有本轮任务。另有一项不依赖客户准入结论的本地整理已获执行授权，请安排当前归并与后续动作。",
       "criteria": [
         "先冻结 decision_questions、task_phase 和 domain_object，再从受影响主体、责任、后果、证据与决策权生成候选工作位；不按职业称谓或固定人数配角。",
         "每个入场工作位说明 accountability、represented_subject、protected_outcome、lenses、authority_scope、decision_right 和 entry_reason；没有独特责任、证据、约束或决策贡献的同质工作位合并或退出。",
         "主持位、责任立场位、挑战位、decision_owner 和 Checker 保持职责分离；模拟角色只能作为 hypothesis，不能冒充真实权威、决策者或独立 Checker。",
+        "用户未指定主持人时，默认由当前知止者承担主持位并记录选择依据；主持位是控制面职责，不新增人格，不替 decision_owner、领域 Owner 或 Checker 裁定事实。",
         "主持者按每个参与会话的职责、权威和进度生成公共基线加角色差量的 Dispatch Plan，不向所有席位机械发送同一任务；逐席记录唯一问题、输入范围、证据要求、禁止裁定事项、预期输出和依赖。",
+        "主持者维护同一会商修订下的 Meeting Control Ledger，逐席记录 participant_session、current_task、phase_checkpoint、dependency、pending_items、last_receipt、next_action 和 wake_condition；进度比较以共享检查点和真实回执为准。",
+        "出现进度领先、待处理项积压或单点压力时，主持者暂停超载席的新派发，按依赖关系让无关席位等待，或分流不越过权威与决策边界的独立子任务；不得复制同一裁定或让快席位无依赖地继续推进。",
         "事实核验先逐席进行，明确冲突优先双边对账；只有跨角色依赖需要即时追问时才开放有议题、有预算、有退出条件的自由讨论，没有新增事实或反证就停止，并将未完成协作保留为带 Owner 和下一唤醒条件的 PENDING。",
         "按必要任务增量归并运营回执，直接补读已授权的本地报告，不向学习席制造派单或回执；独立的本地整理可在原授权内推进，客户准入结论仍受必要风险回执阻断，不能因部分完成或已有 Owner 就放行。",
         "仅将依赖风险席产物的项记为 waiting_for_collaboration，绑定责任方及回执到达后的核验条件；重要准出所需独立 Checker 未完成时不得跳过，不把材料缺失或未发生的裁决补成空卡。"

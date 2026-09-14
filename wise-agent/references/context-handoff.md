@@ -222,12 +222,12 @@ inquiry_id / accepted_topic_revision / accepted_information_revision / accepted_
 
 多方会商不复制双边请求响应链，也不让所有参与方维护同一结论。主持者先定会议契约，按 `task_phase`、`domain_object` 和 `decision_questions` 配置最小工作位，再完成信息充分性门禁；各方随后在看到他方方案前独立陈述，只处理真实冲突。
 
-项目内的主持式会商使用项目级 `Meeting Chair` 控制面。`Meeting Chair` 是稳定的责任名；当它同时负责识别任务、按职责派发、等待协作、归并回执和推进收口时，可称为“项目协同主持者”，这表示职责扩展，不新增 Agent、人格或控制模式。主持者由用户或项目 Owner 明确确认一个主会话，不通过标题、摘要或模型自行选举。主持者负责会议主题、参与范围、信息收集、差异归并、决议和 Checker 交接；参与会话保留自己的事实、权威、Owner 和执行状态。主持者不得替参与会话确认事实或业务 Owner，不因主持身份获得对方工作区、Git、生产或取消权限，也不得强制中断活动任务。
+项目内的主持式会商使用项目级 `Meeting Chair` 控制面。`Meeting Chair` 是稳定的责任名；当它同时负责识别任务、按职责派发、等待协作、归并回执和推进收口时，可称为“项目协同主持者”，这表示职责扩展，不新增 Agent、人格或控制模式。用户指定主持人时记录 `selection_basis=user_designated`；未指定时默认由当前知止者主持，记录 `selection_basis=default_wise_agent`，不得通过标题、摘要或模型自行选出另一席。主持人负责会议主题、参与范围、信息收集、差异归并、决议和 Checker 交接，并维护席位进度与待处理项；参与会话保留自己的事实、权威、Owner 和执行状态。主持人不得替参与会话确认事实或业务 Owner，不因主持身份获得对方工作区、Git、生产或取消权限，也不得强制中断活动任务。
 
 ```text
 Meeting Charter:
 project_ref / meeting_id / meeting_revision:
-chair_thread_id / chair_owner / participant_scope / dispatch_authority:
+chair_thread_id / chair_owner / selection_basis / participant_scope / dispatch_authority:
 shared_decision_questions / stop_conditions / invalidation_conditions:
 ```
 
@@ -254,11 +254,17 @@ depends_on / expected_output / owner / stop_condition / current_execution_id:
 
 ```text
 Meeting Control Ledger:
-task_id / inquiry_id / participant_thread_id / accepted_role / role_valid_until:
-authority_ref / execution_id / meeting_revision:
+meeting_revision / shared_checkpoint / coordination_signal:
+task_id / inquiry_id / participant_session / participant_thread_id:
+role_id / accepted_role / role_valid_until / current_task / phase_checkpoint:
+authority_ref / execution_id / dependency / pending_items:
 required_input / expected_output / dispatch_status / response_status:
-evidence_refs / decision_status / owner / next_action / last_observed_at:
+evidence_refs / decision_status / owner / next_action / wake_condition / last_receipt / last_observed_at:
 ```
+
+`Meeting Control Ledger` 是会议状态载体中的一个逻辑区块，默认不新建平行文件。主持者在每次派发、回执、阻塞或检查点变化后刷新它；`coordination_signal` 只表示当前控制信号，不是新的全局执行状态：`balanced` 表示可按当前计划推进，`ahead_wait` 表示该席已到共享检查点需等待，`overloaded` 表示待处理项或当前任务已超过可承接范围，`single_point_pressure` 表示关键依赖集中在一个席位，`dependency_wait` 表示其他席位只能等待依赖。
+
+进度以同一 `meeting_revision`、共享检查点和真实回执对齐，不以消息数、模型自述或谁先提交方案判定。主持者发现某席领先时暂停其无依赖的后续方案；发现某席积压或单点压力时暂停该席新派发，先收敛、拆分或转移可独立完成的子任务。其他席位对依赖项保持 `PENDING / dependency_wait`，对不依赖该席裁定的证据整理、场景准备或验证准备可以分流；任何分流都不得复制权威裁定、越过 `decision_owner` 或改写他席事实。权威单点无法替代时记录 Owner、`current_execution_id`（如有）、唤醒和失效条件，等待不计为完成。
 
 主持者在投递前冻结参与任务清单、责任、输入、输出、验收和停止条件；每次回执按 `task_id + message_id / inquiry_id` 一一对账，保留原始证据指针或授权的脱敏摘录，不能只保留总结。要声称活动任务已安全排队或续接，至少要有可回链的事件顺序：投递接受 -> `queued`（带目标 `execution_id`）-> 原活动继续或完成 -> 安全边界消费 -> 回执完成；缺少任一运行时事件只能记为 `conditional` / `PENDING`，不能由文件哈希、模型自述或普通完成回执补足。失败、超时、拒绝、未答、`PENDING` 和 `DEFERRED` 必须分别记录 Owner 与下一动作；恢复时先扫描未对账行和待处理指针，再继续调度。当前阶段的任务行都已回执、明确排除或绑定未决承接后，可按 4.6 结束本阶段会商；只有实际形成裁决时才归档 `Meeting Resolution`，阶段结束不解除未决阻断或替代缺失证据。
 
