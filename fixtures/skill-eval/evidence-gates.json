@@ -23,6 +23,9 @@
         "cases": "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/senior-architecture-research-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-provider-value-behavior-cases.json"
       },
       {
