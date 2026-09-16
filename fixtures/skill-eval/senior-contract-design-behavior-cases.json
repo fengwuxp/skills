@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "description": "架构师核心原则重构的 contract-only 题集：覆盖设计、编码、CR 与架构审查中的稳定语义、实现封装、组合、最小正确实现及取舍边界。与既有 provider-value、provider-abstraction、architecture-research 题集共同使用，不重复其调用数量、兼容包装及优化停止案例。静态校验不证明真实触发或收益；收益试验须冻结修订前后完整能力，使用相同输入、runner/model 与工具，取得独立盲评，不能以 no-skill 对照归因本轮重构。",
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "contract-design-metric-result-before-storage-steps",
+      "category": "interface-design",
+      "risk": "high",
+      "prompt": "设计一个供报表使用的指标查询能力，只输出方案。已确认调用者需要按指标、维度和时间范围查询固定版本的结果，并判断数据是否完整；底层已有快照读取与实时计算能力。提案让报表先查物理绑定，再选择存储表和路由，最后自行决定缺失时是否实时回退。后台负责这些存储与执行策略，报表不掌握其一致性规则。请给最小接口和职责建议。",
+      "criteria": [
+        "从报表需要的查询结果和完整性判断定义契约，由提供者封装绑定、存储和路由，不要求报表拼装内部步骤。",
+        "明确固定版本、时间口径、无数据、零值、失败与完整性等实际需要的语义；实时回退能否满足承诺须有依据，不默认静默回退。",
+        "复用已有读取和计算能力，不按三个内部步骤新建三层公共服务，也不臆造通用引擎、插件或缓存需求；保持方案范围。"
+      ]
+    },
+    {
+      "id": "contract-cr-same-signature-changed-meaning",
+      "category": "code-review",
+      "risk": "high",
+      "prompt": "只读 CR：CountApi.query(criteria) 的签名和 JSON 字段完全不变。已发布契约规定空结果表示该时间段尚无完整数据，0 表示完整数据下计数为零，超时返回明确错误。diff 将空结果和超时都 catch 后返回 0，作者说这样封装了实现细节且调用方编译全通过。请评审，不改代码。",
+      "criteria": [
+        "依据给定契约指出签名不变仍发生语义破坏，超时、未知与合法零值不能混同。",
+        "将后果连接到报表对完整性和计数的错误判断，建议在提供者内映射并保留契约要求的业务状态，不暴露存储异常细节。",
+        "以完整零值、未完整数据和超时的可观察结果提出验证；保持只读，不将编译通过或作者说明当作兼容证据。"
+      ]
+    },
+    {
+      "id": "contract-code-pure-function-no-interface-pair",
+      "category": "coding-minimal-abstraction",
+      "risk": "medium",
+      "prompt": "按面向接口编程整理现有 TypeScript normalizeLabel(value) 能力。它是同模块使用的导出纯函数，已确认只去除首尾空格，空白输入返回空串，行为测试已覆盖；没有外部依赖、状态、替换或兼容隔离需求。当前草案准备加 ILabelNormalizer、DefaultLabelNormalizer 和工厂注册表。允许在这些事实范围内做最小整理，保留当前调用方式与行为。",
+      "criteria": [
+        "识别纯函数已经提供可依赖的输入输出契约，依据无新增责任或隔离需求拒绝机械接口、类和工厂配套。",
+        "保留现有函数和调用方式；如果当前实现已满足目标，可以给出无需修改的结论，不为展示重构制造 diff。",
+        "复用既有行为验证，不改空串语义、不制造第二实现，也不要求 ADR、文化分析卡或重复审批。"
+      ]
+    },
+    {
+      "id": "contract-review-composition-without-substitution",
+      "category": "architecture-review",
+      "risk": "high",
+      "prompt": "只读架构审查：公共 ValueQuery.query(criteria) 承诺固定版本的正式结果；ReportApplicationService 负责用例权限和展示组合，并另有接受草稿的 preview。它本来消费 ValueQuery，提案为复用代码让它也实现 ValueQuery，并让 query 遇到草稿时返回 preview 的试算值。请评估最小结构，正式与草稿场景都需要保留。",
+      "criteria": [
+        "区分消费能力的用例编排与提供正式值契约，指出试算值不能满足正式查询的版本和结果承诺。",
+        "优先组合委托公共查询能力，保留明确的草稿预览语义；不为转发、复用或类型名一致而继承或实现不满足的接口。",
+        "验证正式版本、草稿预览、权限和非法版本的外显结果，保持只读，不通过删除有效预览需求或增加重复查询层解决冲突。"
+      ]
+    },
+    {
+      "id": "contract-code-storage-change-stays-behind-boundary",
+      "category": "coding-information-hiding",
+      "risk": "high",
+      "prompt": "已确认并授权当前切片的实现：把 ReportQuery 的行存储读取替换为项目已有的列存储读取器。现有公共契约的字段、排序、缺失状态、版本与一致性保证全部保持。提案为了便于接入，给所有调用方新增 tableName、layoutKind、snapshotKey 参数，由调用方判断布局并补缺失字段。可以读取已有适配器和契约测试，仅修改查询内部和相关测试。请说明并推进最小实现路径。",
+      "criteria": [
+        "将读取器选择和数据映射留在提供者内部，复用已存在适配能力，不向公共调用方泄露物理存储参数或扩大写入范围。",
+        "核对新读取器能否兑现原契约；若缺少保证，只暂停依赖该缺口的实现，不把未验证等价写成完成，也不静默降级一致性。",
+        "用同一输入下字段、排序、缺失状态、版本和失败行为的契约验证检查替换，不依赖内部调用顺序或类数量证明成功；工具不可用时明确未执行。"
+      ]
+    },
+    {
+      "id": "contract-review-simplicity-preserves-failure-responsibility",
+      "category": "architecture-review-simplicity-boundary",
+      "risk": "high",
+      "prompt": "只读评估精简方案：ExportJobService 已通过持久化任务身份和条件更新保证进程重启、重复提交时只创建一个导出任务。提案以简单原则删除这些机制，改用单进程 Map 去重，理由是部署暂时只有一个实例且类和代码更少。故障恢复与重试需求仍然有效。请给最小调整结论。",
+      "criteria": [
+        "把最小正确实现与代码更少区分，依据重启、重复提交和有效契约保留必要的持久化与并发边界。",
+        "指出单实例不消除进程重启后的状态丢失，不用内存去重冒充原有可靠性，也不为反驳提案额外设计分布式平台。",
+        "围绕重启和重复提交的可观察任务结果给验证依据，保持只读，按真实风险裁决而不只引用原则名称。"
+      ]
+    },
+    {
+      "id": "contract-design-classical-lens-not-proof",
+      "category": "principle-application-boundary",
+      "risk": "medium",
+      "prompt": "结合华夏经世智慧评估一个任务查询模块，形成工程结论即可。当前只有已确认的按 ID 查询，既有模块满足契约，没有新增容量、故障或扩展需求。有人用阴阳互生论证必须拆为读写两个服务，用审时通变论证先加策略引擎，并要求每次编码都填写七类思维卡。请裁决。",
+      "criteria": [
+        "把文化思想用于责任、阶段和取舍的现代解释，不将类比或古籍当作拆服务、引擎选型和技术正确性的证据，也不捏造引文。",
+        "基于已确认需求及现有能力选择保留简单结构，不用未来可能扩展制造实现工作。",
+        "不增加逐项思维卡、强制文化 Skill 加载或重复确认；用简短工程结论、验证依据与必要复核条件收口。"
+      ]
+    }
+  ]
+}

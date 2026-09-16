@@ -7,7 +7,7 @@ Usage:
   sync-skills.sh                 # list skills and prompt for selection
   sync-skills.sh <skill-dir>...   # sync one or more skills by directory name
   sync-skills.sh all              # sync all skills
-  sync-skills.sh --overwrite all  # clear this project's installed skills, then sync all
+ # clear this project's installed skills, then sync all
   sync-skills.sh --dry-run        # preview selected sync without writing target
   sync-skills.sh --with-agents wise-agent  # also sync global implementer/batch_worker profiles
 

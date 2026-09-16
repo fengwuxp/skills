@@ -32,6 +32,9 @@
         "cases": "fixtures/skill-eval/senior-provider-abstraction-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/senior-contract-design-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
       },
       {
@@ -177,6 +180,9 @@
       }
     ],
     "wise-agent": [
+      {
+        "cases": "fixtures/skill-eval/wise-agent-experience-routing-behavior-cases.json"
+      },
       {
         "cases": "fixtures/skill-eval/planning-execution-proportionality-behavior-cases.json"
       },
