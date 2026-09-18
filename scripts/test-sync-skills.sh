@@ -142,6 +142,29 @@ backup_file="$(find "${direct_home}/skills/.backups" -name stale.txt -type f)"
 test -n "${backup_file}"
 test "$(cat "${backup_file}")" = stale
 
+claude_home="${tmp_dir}/claude-home"
+CLAUDE_HOME="${claude_home}" "${fixture_repo}/sync-skills.sh" --target claude candidate >"${output_file}" 2>&1
+diff -qr "${fixture_repo}/candidate" "${claude_home}/skills/candidate"
+test -d "${claude_home}/skills/.backups"
+
+printf '%s\n' changed > "${claude_home}/skills/candidate/SKILL.md"
+CLAUDE_HOME="${claude_home}" "${fixture_repo}/sync-skills.sh" --target claude candidate >"${output_file}" 2>&1
+diff -qr "${fixture_repo}/candidate" "${claude_home}/skills/candidate"
+claude_backup_file="$(find "${claude_home}/skills/.backups" -name SKILL.md -type f)"
+test -n "${claude_backup_file}"
+test "$(cat "${claude_backup_file}")" = changed
+
+claude_preview_home="${tmp_dir}/claude-preview-home"
+CLAUDE_HOME="${claude_preview_home}" "${fixture_repo}/sync-skills.sh" --target claude --dry-run all >"${output_file}" 2>&1
+test ! -e "${claude_preview_home}"
+
+if CLAUDE_HOME="${tmp_dir}/claude-agent-home" \
+  "${fixture_repo}/sync-skills.sh" --target claude --with-agents wise-agent >"${output_file}" 2>&1; then
+  echo "FAIL Claude target accepted Codex agent profiles" >&2
+  exit 1
+fi
+grep -Fq -- '--with-agents is only supported with --target codex' "${output_file}"
+
 all_home="${tmp_dir}/all-home"
 CODEX_HOME="${all_home}" "${fixture_repo}/sync-skills.sh" all >"${output_file}" 2>&1
 for key in candidate caller unchecked; do

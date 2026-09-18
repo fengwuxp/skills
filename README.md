@@ -367,6 +367,15 @@ cd skills
 
 同步指定 Skill 使用 `./sync-skills.sh document-authoring`，可同时列出多个目录；`all` 覆盖同步所有包含 `SKILL.md` 的源目录。同步只负责复制，不检查 `candidate` / `installable`、准入证据或依赖关系，不要求依赖顺序，也不自动补选依赖；目标不存在就创建，已存在就覆盖。非默认目录使用 `CODEX_HOME=/path/to/codex-home`。
 
+同步到 Claude Code 使用显式目标参数，默认目录为 `$HOME/.claude`：
+
+```bash
+./sync-skills.sh --target claude --dry-run all
+./sync-skills.sh --target claude all
+```
+
+也可以通过 `CLAUDE_HOME=/path/to/claude-home` 指定 Claude Code home。`--with-agents` 只适用于 Codex，不会把 Codex 专属代理配置写入 Claude Code。
+
 需要先清空本项目的安装目录再全量复制时，使用覆盖式同步：
 
 ```bash
@@ -392,7 +401,7 @@ git diff --check
 ./sync-skills.sh --dry-run all
 ```
 
-正式同步后运行 `scripts/validate-installed-skills.sh`；也可用 `./scripts/validate.sh --require-installed-parity` 将真实安装态纳入完整验证。默认 `./scripts/validate.sh` 只验证源仓库和隔离的同步 fixture，并会明确输出 parity 未检查。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在 `$CODEX_HOME/skills/.backups/`。
+正式同步 Codex 后运行 `scripts/validate-installed-skills.sh`；也可用 `./scripts/validate.sh --require-installed-parity` 将真实 Codex 安装态纳入完整验证。默认 `./scripts/validate.sh` 只验证源仓库和隔离的同步 fixture，并会明确输出 parity 未检查。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在目标的 `skills/.backups/` 下。Claude Code 目标使用同一份复制与备份逻辑，但当前安装一致性脚本只检查 Codex 目标，可用 `diff -qr` 对照 Claude 目标。
 
 `admission.json` 的 `evidence_mode` 与 `fixtures/skill-eval/evidence-gates.json` 共同声明证据强度：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，只证明案例契约可用，不证明 `source_profiles` 仍匹配当前源码，也不代表已取得 live 评分；`behavior-scored` 还必须有 active baseline/candidate、盲评、评分和 release gate。`scripts/check-skill-evidence.py` 按声明模式检查对应门禁：`contract-only` 只核对案例契约，`behavior-scored` 才强制核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate。模式缺失或与门禁不一致时直接阻断；进入行为收集或评分前必须用 `validate --verify-sources` 重新核对来源，漂移时基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
 

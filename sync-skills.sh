@@ -9,14 +9,17 @@ Usage:
   sync-skills.sh all              # sync all skills
  # clear this project's installed skills, then sync all
   sync-skills.sh --dry-run        # preview selected sync without writing target
+  sync-skills.sh --target claude all  # sync all skills to Claude Code
   sync-skills.sh --with-agents wise-agent  # also sync global implementer/batch_worker profiles
 
 Environment:
   CODEX_HOME  Codex home directory. Defaults to "$HOME/.codex".
+  CLAUDE_HOME Claude Code home directory. Defaults to "$HOME/.claude".
 
 Notes:
   - Source skills are discovered from skill directories next to this script.
-  - Installed skills are synced to "$CODEX_HOME/skills/<skill-dir>".
+  - Codex skills are synced to "$CODEX_HOME/skills/<skill-dir>".
+  - Claude Code skills are synced to "$CLAUDE_HOME/skills/<skill-dir>" with "--target claude".
   - Named skills or all discovered skills are copied without admission or dependency checks.
   - Existing installed skills are backed up before sync.
   - Overwrite mode moves current project names and known retired names to backup first.
@@ -29,8 +32,10 @@ USAGE
 DRY_RUN=false
 OVERWRITE=false
 WITH_AGENTS=false
+TARGET=codex
 ARGS=()
-for arg in "$@"; do
+while [[ $# -gt 0 ]]; do
+  arg="$1"
   case "${arg}" in
     -h|--help)
       usage
@@ -45,10 +50,23 @@ for arg in "$@"; do
     --with-agents)
       WITH_AGENTS=true
       ;;
+    --target)
+      shift
+      if [[ $# -eq 0 ]]; then
+        echo "--target requires codex or claude" >&2
+        exit 1
+      fi
+      TARGET="$1"
+      if [[ "${TARGET}" != "codex" && "${TARGET}" != "claude" ]]; then
+        echo "Unknown target: ${TARGET} (expected codex or claude)" >&2
+        exit 1
+      fi
+      ;;
     *)
       ARGS+=("${arg}")
       ;;
   esac
+  shift
 done
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
@@ -65,7 +83,13 @@ else
 fi
 
 CODEX_HOME_DIR="${CODEX_HOME:-${HOME}/.codex}"
-TARGET_ROOT="${CODEX_HOME_DIR}/skills"
+CLAUDE_HOME_DIR="${CLAUDE_HOME:-${HOME}/.claude}"
+if [[ "${TARGET}" == "claude" ]]; then
+  INSTALL_HOME_DIR="${CLAUDE_HOME_DIR}"
+else
+  INSTALL_HOME_DIR="${CODEX_HOME_DIR}"
+fi
+TARGET_ROOT="${INSTALL_HOME_DIR}/skills"
 BACKUP_ROOT="${TARGET_ROOT}/.backups"
 AGENT_SOURCE_DIR="${REPO_ROOT}/.codex/agents"
 AGENT_TARGET_DIR="${CODEX_HOME_DIR}/agents"
@@ -90,6 +114,10 @@ refuse_symbolic_link() {
 
 refuse_symbolic_link "${TARGET_ROOT}" "Skill root"
 refuse_symbolic_link "${BACKUP_ROOT}" "Skill backup root"
+if [[ "${WITH_AGENTS}" == "true" && "${TARGET}" != "codex" ]]; then
+  echo "--with-agents is only supported with --target codex" >&2
+  exit 1
+fi
 if [[ "${WITH_AGENTS}" == "true" ]]; then
   refuse_symbolic_link "${AGENT_TARGET_DIR}" "Agent target"
   refuse_symbolic_link "${AGENT_BACKUP_ROOT}" "Agent backup root"
@@ -236,7 +264,9 @@ if [[ "${WITH_AGENTS}" == "true" ]] && ! selected_index "wise-agent" >/dev/null;
 fi
 
 echo "Repository root: ${REPO_ROOT}"
-echo "Codex home:      ${CODEX_HOME_DIR}"
+echo "Target:          ${TARGET}"
+echo "Install home:    ${INSTALL_HOME_DIR}"
+echo "Skill root:      ${TARGET_ROOT}"
 echo "Dry run:         ${DRY_RUN}"
 echo
 
@@ -418,4 +448,8 @@ if [[ "${OVERWRITE}" == "false" ]]; then
   done
 fi
 
-echo "Done. Restart Codex or open a new session if skill metadata does not refresh immediately."
+if [[ "${TARGET}" == "claude" ]]; then
+  echo "Done. Restart Claude Code or open a new session if skill metadata does not refresh immediately."
+else
+  echo "Done. Restart Codex or open a new session if skill metadata does not refresh immediately."
+fi
