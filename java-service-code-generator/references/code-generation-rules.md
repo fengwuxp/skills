@@ -147,9 +147,10 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 
 - Entity 包：`${basePackage}.dal.entities`
 - Mapper 包：`${basePackage}.dal.mapper`
-- Converter 包：`${basePackage}.services.mapstruct`
-- ServiceImpl 包：`${basePackage}.services.impl`
-- DTO、Request、Query、Service 通常位于 face 模块下的 `${basePackage}.model.*` 和 `${basePackage}.services`。
+- Converter 包：`${basePackage}.service.mapstruct`
+- ServiceImpl 包：`${basePackage}.service.impl`
+- DTO、Request、Query、Service 通常位于 face 模块下的 `${basePackage}.model.*` 和 `${basePackage}.service`。
+- 旧版生成的 `services` 包不会自动迁移或删除；在既有工程重新生成前，先核对旧包、调用方 import 和组件扫描配置，按项目约定迁移，避免新旧 Service 并存。
 - face 模块生成的 Service 契约只暴露 DTO/Request/Query/WindQuery/分页结果，不暴露 Entity、Mapper、Repository 或 MyBatis `Page`；Entity 只在 impl/DAL/Converter 内部流转。
 - 生成描述尽可能使用中文：
   - 表注释、字段注释优先来自 SQL DDL。

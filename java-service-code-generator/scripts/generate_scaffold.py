@@ -996,7 +996,7 @@ def render_query(base_package: str, table: Table, name: str, author: str) -> str
 def render_converter(base_package: str, table: Table, name: str, author: str) -> str:
     desc = table_desc(table, name)
     today = dt.date.today().isoformat()
-    return f"""package {base_package}.services.mapstruct;
+    return f"""package {base_package}.service.mapstruct;
 
 import {base_package}.dal.entities.{name};
 import {base_package}.model.dto.{name}DTO;
@@ -1064,7 +1064,7 @@ public interface {name}Converter {{
 def render_service(base_package: str, table: Table, name: str, author: str) -> str:
     desc = table_desc(table, name)
     today = dt.date.today().isoformat()
-    return f"""package {base_package}.services;
+    return f"""package {base_package}.service;
 
 import {base_package}.model.dto.{name}DTO;
 import {base_package}.model.query.{name}Query;
@@ -1163,7 +1163,7 @@ def render_service_impl(base_package: str, table: Table, name: str, author: str)
         getter = "get" + deleted.java_name[:1].upper() + deleted.java_name[1:] + "()"
         deleted_check = f'\n        AssertUtils.isFalse(Boolean.TRUE.equals(result.{getter}), "{desc}不存在或已删除");'
     query_conditions = render_query_conditions(table, var)
-    return f"""package {base_package}.services.impl;
+    return f"""package {base_package}.service.impl;
 
 import {base_package}.dal.entities.{name};
 import {base_package}.dal.entities.table.{name}NameRefs;
@@ -1172,8 +1172,8 @@ import {base_package}.model.dto.{name}DTO;
 import {base_package}.model.query.{name}Query;
 import {base_package}.model.request.Create{name}Request;
 import {base_package}.model.request.Update{name}Request;
-import {base_package}.services.{name}Service;
-import {base_package}.services.mapstruct.{name}Converter;
+import {base_package}.service.{name}Service;
+import {base_package}.service.mapstruct.{name}Converter;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.wind.common.exception.AssertUtils;
 import com.wind.common.query.WindPagination;
@@ -1370,13 +1370,13 @@ def main() -> int:
     files = [
         (package_path(impl_root, f"{base_package}.dal.entities") / f"{name}.java", render_entity(base_package, table, name, args.author)),
         (package_path(impl_root, f"{base_package}.dal.mapper") / f"{name}Mapper.java", render_mapper(base_package, table, name, args.author)),
-        (package_path(impl_root, f"{base_package}.services.mapstruct") / f"{name}Converter.java", render_converter(base_package, table, name, args.author)),
-        (package_path(impl_root, f"{base_package}.services.impl") / f"{name}ServiceImpl.java", render_service_impl(base_package, table, name, args.author)),
+        (package_path(impl_root, f"{base_package}.service.mapstruct") / f"{name}Converter.java", render_converter(base_package, table, name, args.author)),
+        (package_path(impl_root, f"{base_package}.service.impl") / f"{name}ServiceImpl.java", render_service_impl(base_package, table, name, args.author)),
         (package_path(face_root, f"{base_package}.model.dto") / f"{name}DTO.java", render_dto(base_package, table, name, args.author)),
         (package_path(face_root, f"{base_package}.model.request") / f"Create{name}Request.java", render_request(base_package, table, name, args.author, "Create")),
         (package_path(face_root, f"{base_package}.model.request") / f"Update{name}Request.java", render_request(base_package, table, name, args.author, "Update")),
         (package_path(face_root, f"{base_package}.model.query") / f"{name}Query.java", render_query(base_package, table, name, args.author)),
-        (package_path(face_root, f"{base_package}.services") / f"{name}Service.java", render_service(base_package, table, name, args.author)),
+        (package_path(face_root, f"{base_package}.service") / f"{name}Service.java", render_service(base_package, table, name, args.author)),
     ]
     for path, content in files:
         write_file(path, content, args.overwrite)

@@ -34,17 +34,17 @@ CASES = [
                 "private BigDecimal amount;",
                 "private CurrencyIsoCode currency;",
             ],
-            "face/com/example/skill/codegen/services/SampleOrderService.java": [
+            "face/com/example/skill/codegen/service/SampleOrderService.java": [
                 "SampleOrderDTO getSampleOrderById",
             ],
-            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": [
+            "impl/com/example/skill/codegen/service/impl/SampleOrderServiceImpl.java": [
                 "sampleOrderMapper.updateSelective(entity)",
             ],
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleOrder.java": "bf0bcefcc15aadcd026766ba3faef8722893fdb094803cefcc9046ea64eccc82",
-            "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java": "ef36ab50232ce462e83278942524a7feb20098dc0565fe2bb1b5194ed63e3834",
-            "face/com/example/skill/codegen/services/SampleOrderService.java": "158d589e2d01d911a78665cb2232541a3002b09667049774547e8f955087853f",
+            "impl/com/example/skill/codegen/service/impl/SampleOrderServiceImpl.java": "206f1c02d18b46474c20099695640d534e86c4940bb1123a3d808db019851685",
+            "face/com/example/skill/codegen/service/SampleOrderService.java": "75b8c7547fc6f79f8f1b29c4dc61dbba0b93fde5a5560ff803561d75c7017da6",
         },
     },
     {
@@ -68,19 +68,19 @@ CASES = [
                 "private String channelCode;",
                 "private Boolean enabled;",
             ],
-            "face/com/example/skill/codegen/services/SampleChannelService.java": [
+            "face/com/example/skill/codegen/service/SampleChannelService.java": [
                 "SampleChannelDTO getSampleChannelById",
             ],
-            "impl/com/example/skill/codegen/services/impl/SampleChannelServiceImpl.java": [
+            "impl/com/example/skill/codegen/service/impl/SampleChannelServiceImpl.java": [
                 "sampleChannelMapper.updateSelective(entity)",
             ],
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": "a13d32ee0a7d3e3ad5cde36ee65c97cd6bb81f140339a49bfa1fa530f24fb16d",
-            "impl/com/example/skill/codegen/services/mapstruct/SampleChannelConverter.java": "e21e1307512adef43d2dabdb2e01b2af7e83bbc0388328c4497ccb8eafa5c03a",
-            "impl/com/example/skill/codegen/services/impl/SampleChannelServiceImpl.java": "b8b5d3798b17e13426361496c399d7d34cd008b0ef8d61e91094e1f35ab0ff56",
+            "impl/com/example/skill/codegen/service/mapstruct/SampleChannelConverter.java": "76c842e1b4ae4fd85417b5bebbda629554512fd090785eb0907a2ac069426733",
+            "impl/com/example/skill/codegen/service/impl/SampleChannelServiceImpl.java": "bd03ace83b9491f8a63b34bc82d613077de6c6c770051a69b834fbcce60cbed6",
             "face/com/example/skill/codegen/model/query/SampleChannelQuery.java": "6ae445ced82b7eb419fab48c2b7cfe3862dad643a754df7ec25b502361b73a1e",
-            "face/com/example/skill/codegen/services/SampleChannelService.java": "a3cddb82b11233b60c7374a26b0193bdfeec87121091eccefb484943acb92767",
+            "face/com/example/skill/codegen/service/SampleChannelService.java": "0fd195782291372012e7cfc9246bc7c8d688dfe50eddb0c98b24b0333915df9c",
         },
     },
     {
@@ -104,18 +104,18 @@ CASES = [
                 "private String batchNo;",
                 "private BigDecimal totalAmount;",
             ],
-            "face/com/example/skill/codegen/services/SampleBatchService.java": [
+            "face/com/example/skill/codegen/service/SampleBatchService.java": [
                 "SampleBatchDTO getSampleBatchById",
                 "WindPagination<SampleBatchDTO> querySampleBatchs",
             ],
-            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": [
+            "impl/com/example/skill/codegen/service/impl/SampleBatchServiceImpl.java": [
                 "sampleBatchMapper.updateSelective(entity)",
             ],
         },
         "golden_hashes": {
             "impl/com/example/skill/codegen/dal/entities/SampleBatch.java": "595864b4760c4fff7a374d15d187bd74c45fc709874efbfded0a3aeef474735f",
-            "impl/com/example/skill/codegen/services/impl/SampleBatchServiceImpl.java": "1338602a35cbcfd4f5991a4e0e13f0db9b0ba54eb759d497481e27ad471d846e",
-            "face/com/example/skill/codegen/services/SampleBatchService.java": "8dc393c29a193876b8aecd37bc709f905ddd56eb3ea7ec582a06ccbd953bc717",
+            "impl/com/example/skill/codegen/service/impl/SampleBatchServiceImpl.java": "17c0544761ffc1aaf1e041753172cd66c95cad4e15d9b3daa55fefe192c0a6f4",
+            "face/com/example/skill/codegen/service/SampleBatchService.java": "0ec6a6d8b6dc9ad35413a44c0792ce9062e312a4f89b3f64c7a7f5cc35e8ec10",
         },
     },
 ]
@@ -228,7 +228,7 @@ def run_reserved_identifier_cases(base_tmp: Path) -> None:
         raise AssertionError(f"reserved DDL fixture failed: {ddl_result.stdout}{ddl_result.stderr}")
     entity = (ddl_out / "impl/com/example/skill/codegen/dal/entities/Record.java").read_text(encoding="utf-8")
     service_impl = (
-        ddl_out / "impl/com/example/skill/codegen/services/impl/RecordServiceImpl.java"
+        ddl_out / "impl/com/example/skill/codegen/service/impl/RecordServiceImpl.java"
     ).read_text(encoding="utf-8")
     for snippet in ['@Column("record")', "private String recordValue;", '@Column("var")', "private String varValue;", '@Column("yield")', "private String yieldValue;"]:
         if snippet not in entity:
@@ -380,7 +380,7 @@ def verify_service_impl_contract(base_tmp: Path) -> None:
     if result.returncode != 0:
         raise AssertionError(f"service contract generation failed: {result.stdout}{result.stderr}")
     text = (
-        out / "impl/com/example/skill/codegen/services/impl/SampleOrderServiceImpl.java"
+        out / "impl/com/example/skill/codegen/service/impl/SampleOrderServiceImpl.java"
     ).read_text(encoding="utf-8")
     for required in ["@RequiredArgsConstructor", "@Transactional(rollbackFor = Exception.class)"]:
         if required not in text:
