@@ -4,6 +4,8 @@
 
 ## 外部参考来源
 
+- 微信 [《架构不会消灭复杂度，只会决定复杂度放在哪里》](https://mp.weixin.qq.com/s/DiXnU-VVjHKwebUohr3Fdw)：作者姚钢强，账号打开引擎盖，发布于 2026-08-17 21:12；2026-09-19 常规抓取失败后，通过浏览器读取标题、作者、时间及正文，并核读 [VS Code Extension Bisect](https://code.visualstudio.com/blogs/2021/02/16/extension-bisect)。只增强 `references/skill-evaluation-methodology.md` 的组合失败诊断：保留共同约束、核对实际加载、最小消融和交互反例。二分排查扩展为多 Skill 诊断是本仓库的方法推导，不是上游已验证的模型能力；文章中的 DSH 实验未复现，不据其推导自动恢复或跨工具事务保证。既有架构取舍和未知执行结果边界不重复添加；不复制原文、原图、代码或引入外部工具。
+
 - OpenAI 官方 [Model guidance — Using GPT-6 Astra](https://developers.openai.com/api/docs/guides/latest-model)：2026-09-05 通过 Codex in-app Browser 读取当前选中章节的完整正文；命令行仍返回 403，不将其作为已读证据。采用 `Instruction following` 的具体条款归因方法，并以 `Initiative and follow-through`、`Testing and verification` 作为授权内推进与定向验证的参考；模型差异用于提出配置受控的行为对照。只保存方法索引，不复制正文和示例提示词，不采纳自动 Git、默认子代理分工或隐含扩大授权；模型名称、API 参数、异步能力与成本声明不写成本机已验证事实，未来适配须重读当时版本并核对真实运行时。
 
 - 索引关键词：内部路由、AI 代码交付闭环、Agent Loop Engineering、架构排熵、Wisdom Lens、华夏经世智慧、Gitee 仓库 [aiami/huaxia-wisdom]、问题核心诊断、反脑补证据边界、概念定名、需求止损、定向 / 定性 / 定位 / 定量变化治理、不把传统文化或医学观点写成产品事实、架构结论、合规结论、生产审批或 Execution Grant、L1-L4 工程成熟度诊断参考来源、L3 优先加固、理解债 / 认知投降风险、产品洞察/机会雷达、product-insight-analyst.md、Skill 自我改进外循环、Skill Improvement Card；不得把个人长期偏好、私有对话轨迹、客户资料、生产数据、密钥、外部文章原文、工具宣传或 Agent 自述写入仓库。

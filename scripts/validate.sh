@@ -424,6 +424,7 @@ scripts/audit-skill-eval-fixtures.py --self-test
 
 echo "==> Skill behavior evaluation"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/instruction-boundaries-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/skill-composition-diagnosis-behavior-cases.json"
 python3 scripts/evaluate-skill-behavior.py --self-test
 python3 scripts/test-evaluate-skill-behavior.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/skill-consumer-behavior-cases.json"
