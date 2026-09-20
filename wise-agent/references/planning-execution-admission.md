@@ -1,16 +1,16 @@
 # 计划与执行准入
 
-本文定义知止者中对中大型任务的计划与执行准入判断。GSD 不再作为对外独立模式，而是产研交付视图的分波计划层；原 CAD 能力收缩为 Loop 的受控工程执行 profile。本文只回答是否需要 GSD Round 0、如何形成 Wave / Atomic Task 候选、哪些缺口阻断工程执行 Loop、下一步交给谁；不替代资深架构师的工程任务包、`cad-mode.md` 或 Execution Grant。
+本文仅供用户明确要求规划、任务拆解、GSD / Wave 或授权策略设计时使用，不再作为中大型任务的默认执行前置。普通实施直接依用户目标、事实、授权与验证推进，不先产出文档；下文 Spec、Round 0、Wave、Grant 和交接模板只约束明确采用对应机制的工作，不因任务规模自动启用。
 
 ## 使用时机
 
-- 用户明确有中大型项目、长任务、上下文衰减、多 Agent / Wave 编排、GSD-like 工作流或 CAD 自动推进诉求。
+- 用户明确要求中大型项目的规划产物、多 Agent / Wave 编排或 GSD-like 工作流设计。
 - 用户要求把 GSD、CAD、项目执行规范 多个工作模式统一压缩进 Loop，但仍需要保留大项目分波和原子执行能力。
 - 产品上下文包、PRD-Lite、OpenSpec 草案、AI 原型/eval 或 dogfooding 反馈已经出现，需要判断能否进入工程侧 GSD Round 0。
 - 用户要求“结合 GSD 与 CAD”“自动推进哪些任务”“默认授权哪些任务”“按什么顺序交给架构师或 Agent”“任务阶段是否提交代码”“Execution Grant 还缺什么”。
 - 用户希望减少每个任务审批，希望在 GSD/CAD 模式下默认授权、自动推进，或提到 Codex 的“替我审批”模式。
 - 用户担心大项目被拆散、上下文漂移、多个 Agent 互相覆盖、CAD 被误用于整个 Roadmap。
-- 目标大致存在，但到达目标的路线仍模糊、明显超过一次会话可可靠形成 Spec 或计划，需要先消除决策不确定性。
+- 用户明确要求探索目标路线或形成决策地图；仅有局部未知时直接取证或澄清该项。
 - 用户要求 GSD 模式支持 Superpowers skills、TDD、Review、verification-before-completion 或外部工程纪律接入。
 - 用户要求把 Agent Loop、`/goal`、`/loop`、auto mode、后台 Agent 或多 Agent 监督接入 GSD/CAD，并希望持续推进但可验证、可停止、可交接。
 - AI 产品、企业协作 AI、Agent 入口或组织级 AI 助手要从战略叙事、AI 原型、发布会目标或 dogfooding 进入工程化，需要先判断是否真的值得进入真实工作流。

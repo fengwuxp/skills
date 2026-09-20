@@ -3139,12 +3139,11 @@ check(
     ),
 )
 check(
-    "wise agent decision wayfinding stays upstream of spec and execution",
+    "wise agent explicit wayfinding preserves decision boundaries",
     has_all(
         wise_agent_skill,
         [
-            "决策寻路",
-            "目标存在但路线仍模糊",
+            "用户明确要求路线规划、任务拆解或采用 GSD / Wave",
             "planning-execution-admission.md",
         ],
     )
@@ -3436,7 +3435,7 @@ check(
             "调度 Superpowers skills",
             "交付执行契约 v3",
             "内部执行契约版本",
-            "pre-flight plan review",
+            "派发前核对",
             "单一 Task Reviewer",
             "文件化 handoff",
             "progress ledger",
@@ -3496,7 +3495,7 @@ check(
         wise_agent_planning_execution_admission,
         [
             "只回答当前准入问题",
-            "是否需要 GSD Round 0",
+            "用户明确要求规划、任务拆解、GSD / Wave 或授权策略设计",
             "Wave / Atomic Task 候选",
             "Superpowers 方法门禁",
             "工程执行 Loop 候选缺口",
@@ -4412,7 +4411,6 @@ check(
         wise_agent_execution_specification,
         [
             "# 项目执行规范",
-            "不创建或恢复运行时 Goal",
             "OpenSpec / Spec / Issue / 任务计划",
             "Execution ID",
             "成功标准",
@@ -7951,7 +7949,7 @@ check(
     "wise-agent gates long-task cognitive integrity without a second truth source",
     has_all(
         wise_agent_skill,
-        ["认知完整性对账", "承重状态不是 `aligned`", "停止或交还 Owner"],
+        ["从用户要求、当前源码、验证证据和已有记录恢复目标与授权", "项目实际采用持久状态契约", "恢复依据不足只暂停依赖缺口的动作"],
     )
     and has_all(
         wise_agent_cognition_model,
@@ -9600,7 +9598,7 @@ check(
     and has_all(
         workflow,
         [
-            "谁做、按什么顺序做、能改哪里、只读哪里、怎么验证、何时停止、怎么交接",
+            "当前动作的依赖、授权范围、验证与停止条件",
             "OpenSpec 规定要做什么，Superpowers 规定怎么高质量地做，Harness 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",
         ],
     ),
@@ -24900,11 +24898,10 @@ check(
 )
 
 check(
-    "wise-agent converts long-task Goal requests into a bounded project execution specification",
+    "wise-agent preserves long-task execution and recovery boundaries",
     has_all(
         wise_agent_skill,
         [
-            "不创建或恢复运行时 Goal",
             "项目执行规范",
             "当前切片",
             "切片内部",

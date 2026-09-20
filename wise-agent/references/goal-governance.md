@@ -1,6 +1,6 @@
 # Goal 输入兼容
 
-本文只保留旧输入迁移，不再定义当前执行状态。Goal 不是运行模式；用户提出 Goal、长任务或持续推进时，读取 `execution-specification.md`，把目标落入项目已有 `OpenSpec / Spec / Issue / 任务计划`，不创建或恢复运行时 Goal。
+本文只保留旧状态的实际迁移，不定义默认执行流程。Goal 不是运行模式；用户提出 Goal、长任务或持续推进时直接围绕已授权目标工作，不先创建规划文档。只有需要迁移既有状态或恢复时才读取 `execution-specification.md` 并复用项目已有记录；不创建或恢复运行时 Goal。
 
 ## 使用时机
 
@@ -30,4 +30,4 @@
 | --- | --- | --- |
 | 旧 Goal 请求 | `execution-specification.md` 的“正名与迁移” | 不创建运行时 Goal |
 | 旧 Goal Ledger 恢复 | 当前项目执行规范与一手来源 | 不信任旧摘要 |
-| 新增长任务 | 直接读取 `execution-specification.md` | 不再扩写本文件 |
+| 新增长任务 | 按目标与授权直接执行 | 不因任务时长读取本文或先写执行规范 |
