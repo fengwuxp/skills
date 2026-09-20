@@ -1,6 +1,6 @@
 ---
 name: wind-coding-conventions
-description: Java 项目编码约规 Skill。用户要求制定或检查 Java/Spring 编码规范、注释与 Javadoc 约规，或初始化含 Java 源码项目的 AGENTS.md 时触发；项目声明、依赖、包名或类型表明属于 Wind 时叠加专项约规。仅有 JVM、Maven 或 Gradle 上下文不触发；源码设计、代码 CR、Bug 修复、TDD、验证和代码生成不触发。
+description: Java/Wind 编码与测试约规。纯规范、注释/Javadoc 或 Java 项目 AGENTS.md 任务由本 Skill 主责；Java 源码设计、编码、CR、Bug 修复、TDD 和代码生成必须把本 Skill 作为规则依赖加载，执行仍归架构师或代码生成器。按项目声明、依赖、包名或类型启用 Wind 专项；仅有 JVM、Maven 或 Gradle 不触发。
 ---
 
 # Java/Wind 编码约规
@@ -9,7 +9,7 @@ description: Java 项目编码约规 Skill。用户要求制定或检查 Java/Sp
 
 本 Skill 是知止者按需装载的 Java 项目分层约规能力包。所有包含 Java 源码的项目先使用通用 Java 约规；Spring、JSpecify、Lombok、MapStruct、MyBatis 等规则按实际依赖或源码上下文启用；只有命中 Wind 信号时，才叠加 face/impl、服务分层、模型归位、Entity 不外露、ServiceImpl、基础服务并发/锁边界、查询字段/方法、内网 API 和字典国际化等 Wind 专项规则。`CurrencyIsoCode` 是 Wind 项目币种字段的通用强制项，不属于依赖按需规则。
 
-本 Skill 只回答“当前 Java 项目应启用哪层约规、具体约规是什么、当前设计或代码是否偏离约规”。纯约规检查由本 Skill 主责；源码设计、代码 CR、Bug 修复、TDD 和验证不触发本 Skill 主责，只把本 Skill 的通用 Java 与按需 Wind 规则作为输入交给 `senior-software-architect`；结构化 Java Service 生成继续交给 `java-service-code-generator`。
+本 Skill 只回答“当前 Java 项目应启用哪层约规、具体约规是什么、当前设计或代码是否偏离约规”。纯约规检查由本 Skill 主责；源码设计、代码 CR、Bug 修复、TDD 和验证不触发本 Skill 主责，但必须作为规则依赖由 `senior-software-architect` 实际读取适用章节，不能把“不主责”解释成“不加载”；结构化 Java Service 生成继续交给 `java-service-code-generator` 并在生成前消费规则。
 
 ## 触发条件
 
@@ -27,14 +27,14 @@ description: Java 项目编码约规 Skill。用户要求制定或检查 Java/Sp
 ## 工作流程
 
 1. 先读项目 `AGENTS.md`、`pom.xml` / Gradle 配置、相关源码包与 import、模块结构和用户任务上下文，记录实际技术信号；不能读取时只使用用户已给事实，不猜依赖。
-2. 任何包含 Java 源码的项目都先读取 `references/java-coding-conventions.md`；只启用与当前 JDK、框架、依赖和任务匹配的章节，不因 reference 提到某个库就要求项目新增该库。
+2. 任何包含 Java 源码的项目都先读取 `references/java-coding-conventions.md` 的适用章节；修改或生成测试时必须包含“15. 测试代码规约”，涉及依赖类型时包含“4.3 OOP 与对象设计”。只启用与当前 JDK、框架、依赖和任务匹配的章节，不因 reference 提到某个库就要求项目新增该库。
 3. 普通 Java 项目初始化或改进 `AGENTS.md` 时，只根据项目事实给最小 patch：记录 JDK/构建工具、项目本地规范优先级、实际依赖对应的约规章节、构建/测试/静态检查命令和验证边界；不读取 Wind 项目模板，不写 face/impl、Wind API 或 Wind 类型规则。
 4. 出现以下任一高置信度信号时叠加 Wind 专项：用户、任务或 `AGENTS.md` 明确声明 Wind；Maven/Gradle 坐标、包名或 import 明确属于 Wind；源码使用 `WindPagination`、`WindQuery`、`CurrencyIsoCode` 等 Wind 类型；`face` / `impl` 结构与 Wind 类型或项目族上下文同时出现。只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind。
 5. 命中 Wind 后读取 `references/wind-coding-conventions.md`：face/impl、Entity 不外露、服务/模型边界和所有币种字段使用 `CurrencyIsoCode` 属于 Wind 通用专项；JSpecify、MapStruct、MyBatis Flex 等依赖专项仍按实际依赖或源码启用；固定数据库字段只按项目已采用的 Wind MySQL 表约规启用。用户要求初始化或改进 Wind 项目 `AGENTS.md` 时再读 `references/wind-project-agents-template.md`；需要正反例时读 `references/wind-coding-examples.md`；涉及 Wind 项目族端口、Starter、Trace、安全或企业集成能力时读 `references/wind-architecture-patterns.md`。
 6. 输出时把结论分成：适用层级、上下文证据、触发约规、当前偏差、建议改法、需要回到架构师或代码生成器的后续动作。
 7. 如果涉及真实源码修改、TDD、深度 CR、生产发布或风险回滚，只给规则判断和路由建议，不替代 `senior-software-architect` 的执行与验证。
 8. 如果涉及 Open Code Review / OCR，只说明哪些 Wind 约规可作为 `.opencodereview/rule.json` 或 `--background` 的规则输入；OCR 输出仍交 `senior-software-architect` 做源码级判读。
-9. 需要低成本结构守卫时，普通 Java 项目运行 `scripts/check_wind_conventions.py --profile java --root <project>`，Wind 项目运行默认的 `--profile wind`；脚本只检查高信号红线，不替代源码级 CR、测试或项目本地规则。
+9. 修改 Java 生产或测试代码后，优先执行项目现有规约检查；没有等价守卫时，普通 Java 项目运行 `scripts/check_wind_conventions.py --profile java --root <project>`，Wind 项目运行默认的 `--profile wind`。区分本轮违例与历史发现，不扩大修复；脚本只检查高信号红线，不替代源码级 CR、测试或项目本地规则。
 
 命中任务索引或唯一标题时，先读取完整语义章节；存在歧义、跨节依赖、工程风险语境不全或节省不足时，再扩大到父节或整文件。普通规则检查不加载 `source-map.md`、模板或示例全集。
 
@@ -47,6 +47,7 @@ description: Java 项目编码约规 Skill。用户要求制定或检查 Java/Sp
 - `references/wind-coding-examples.md`：正反例和最佳实践；只有用户要求示例、参考或 AI Maker 落地参照时读取。
 - `references/source-map.md`：外部来源、读取状态、采纳边界和不吸收项；核验规则来源或演进约规时读取。
 - `scripts/check_wind_conventions.py`：离线结构守卫；普通 Java 用 `--profile java`，Wind 项目使用默认的 `--profile wind`，需要扫描真实项目或做规则自测时运行。
+- `scripts/test_interface_dependencies.py`：维护守卫或 Java 测试示例时运行的离线回归；检查源码可解析的 Service 接口依赖正反例与已发布 Spring 测试示例的命名，统一验证入口也会执行。
 
 ## 输出要求
 

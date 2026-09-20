@@ -90,7 +90,7 @@ class ExampleControllerTests extends AbstractControllerTest {
     private ExampleApplicationService exampleApplicationService;
 
     @Test
-    void createExampleReturnsBusinessId() throws Exception {
+    void testCreateExampleReturnsBusinessId() throws Exception {
         Mockito.when(exampleApplicationService.createExample(Mockito.any()))
                 .thenReturn(new ExampleDTO("example-id", "created"));
 
@@ -106,7 +106,7 @@ class ExampleControllerTests extends AbstractControllerTest {
     }
 
     @Test
-    void invalidRequestDoesNotEnterApplicationService() throws Exception {
+    void testInvalidRequestDoesNotEnterApplicationService() throws Exception {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/api/v1/examples/{accountId}/items",
                                 "example-account")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)

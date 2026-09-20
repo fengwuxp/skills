@@ -333,6 +333,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/planning-execution-proportionality-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-progressive-loading-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-java-delivery-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-conversation-reanchor-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"
@@ -399,6 +400,7 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/securit
 
 echo "==> wind convention guard"
 wind-coding-conventions/scripts/check_wind_conventions.py --self-test
+python3 wind-coding-conventions/scripts/test_interface_dependencies.py
 
 echo "==> reference index audit"
 scripts/audit-reference-indexes.py

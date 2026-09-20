@@ -59,6 +59,7 @@ Java/Spring 测试的核心不是“启动多少 Spring”，而是判断测试�
 
 ## 3. 公共测试基础设施
 
+- 先查项目已有测试基类、配置和运行入口；只有当前用例存在明确缺口时才补充，下面骨架不构成新建平行底座的理由。
 - 测试基类负责“运行底座”，不负责“业务测试目标”：统一测试属性、事务、数据源、SQL 初始化、通用 Mock/Fake、测试上下文初始化和清理。
 - 子类负责目标 Bean、必要内部依赖和外部边界替身；不要在基类中默认扫描整个业务包。
 - H2 数据源、MyBatis Flex 配置、SQL 初始化、加解密 TypeHandler、测试缓存、测试锁、测试事件发布器等可以沉淀到公共测试配置。
@@ -69,10 +70,14 @@ Java/Spring 测试的核心不是“启动多少 Spring”，而是判断测试�
 
 ```java
 @SpringJUnitConfig
-@ContextConfiguration(classes = ExampleTest.TestConfig.class)
+@ContextConfiguration(classes = AbstractExampleSpringTest.TestConfig.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Transactional(rollbackFor = Exception.class)
 abstract class AbstractExampleSpringTest {
+
+    @Configuration
+    static class TestConfig {
+    }
 }
 ```
 

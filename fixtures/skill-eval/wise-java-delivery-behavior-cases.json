@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "description": "知止者 Java/Wind 工程规则消费的 contract-only 回归：必需规则加载、已有接口消费、测试基座与事务证据。题集校验不证明模型已稳定遵守规则。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.2,
+      "concision": 0.05
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "senior-loading-should-consume-wind-rules-through-wise-agent",
+      "category": "required-rule-dependency",
+      "risk": "high",
+      "prompt": "知止者，给这个 Wind Java 服务补一个已确认的状态更新方法和回归测试。仓库 AGENTS.md、Service 接口、实现、AbstractServiceTest、测试命令和已批准契约均可读取。请按最小装载直接完成本地改动。",
+      "criteria": [
+        "写入前实际读取架构师工程路径、项目规则及受影响接口和调用方；Wind 作为必需规则依赖而非第二 Owner，不因只点名知止者或最小装载而省略。",
+        "读取适用 Java、Wind 规则及业务服务测试实践，按现有测试基座、公开服务契约和数据库事实编写 testXxx 测试，不自行新建同功能测试框架。",
+        "继续已授权的本地工作，运行项目测试和适用约规检查，报告实际结果；不要求额外批准规则加载，不自行提交或安装技能。"
+      ]
+    },
+    {
+      "id": "senior-loading-should-consume-established-interface",
+      "category": "interface-consumption",
+      "risk": "high",
+      "prompt": "OrderService 是现有业务接口，OrderServiceImpl 是唯一实现。新调用方和 Spring 业务测试直接注入 OrderServiceImpl，说这样更简单。请评审并修正已授权文件中的依赖声明，所需方法均已在接口上。",
+      "criteria": [
+        "以已有稳定契约和实际方法为依据，调用方字段、构造参数及 Spring 业务测试依赖 OrderService；不能以唯一实现或简单原则为由依赖实现。",
+        "装配处仍可选择 OrderServiceImpl，不强迫应用编排类实现被委托接口，不新增透传接口或包装服务。",
+        "验证既有装配与行为，保留实际测试证据，不把文本类型替换或守卫无发现当作运行成功。"
+      ]
+    },
+    {
+      "id": "senior-loading-should-not-invent-interface-for-every-class",
+      "category": "interface-hard-negative",
+      "risk": "medium",
+      "prompt": "修复一个内部 LabelFormatter 的已知格式错误，并补纯单元测试。它没有既有接口、跨模块使用者或变化轴，现有测试直接 new LabelFormatter。请遵守面向接口编程并保持改动最小。",
+      "criteria": [
+        "区分消费已有接口与是否新建接口；根据实际责任直接修复，不为约规机械新增 ILabelFormatter、工厂或 Spring 上下文。",
+        "读取适用 Java 测试约规并保留公开行为断言，纯实现单测可以直接构造目标类。",
+        "完成聚焦验证，报告结果，不将局部单测通过写成整个服务集成通过。"
+      ]
+    },
+    {
+      "id": "senior-loading-should-prove-production-transaction-boundary",
+      "category": "transaction-evidence",
+      "risk": "high",
+      "prompt": "给 Wind Service 的失败回滚补测试。项目已有 Spring/MyBatis 测试基座，生产入口应在写库后抛业务异常并回滚；同事建议测试类加 Transactional，结束自动回滚，再 verify(mapper).update 一次就算通过。请完成授权内测试。",
+      "criteria": [
+        "读取项目基座与事务配置以及 Java 约规和服务测试实践，复用已有真实 Service 与持久化设施，不另造内存 Service 或复制测试框架。",
+        "通过公开服务入口触发异常，在能观察生产事务完成结果的边界检查数据库事实；不让测试外围事务掩盖生产事务缺失，不以自动回滚或 Mapper 交互次数证明业务回滚。",
+        "测试使用 testXxx 命名和有业务意义的断言；无法运行真实数据库时如实报告缺口，不把编译或静态检查当作事务验证。"
+      ]
+    },
+    {
+      "id": "senior-loading-should-not-force-wind-on-plain-java",
+      "category": "project-scope-hard-negative",
+      "risk": "medium",
+      "prompt": "知止者，修复这个普通 Java 项目的字符串处理错误并补测试。项目使用 Maven，但 AGENTS.md、依赖、源码和包名均没有 Wind 信号，现有纯单元测试已能覆盖目标。请完成已授权的局部修改。",
+      "criteria": [
+        "读取工程路径及通用 Java 编码和测试规则，不能因为 Wind Skill 名称而跳过通用约规。",
+        "依项目事实采用现有测试设施，不强加 Wind face/impl、币种类型、Spring 或数据库依赖。",
+        "完成局部修改和聚焦验证，不增建测试框架或新接口，不把局部测试写成全项目验收。"
+      ]
+    }
+  ]
+}

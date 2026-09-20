@@ -66,6 +66,8 @@ SDLC、项目执行规范、Loop、Worker 与 Checker 分别按实际需要选�
 
 `references/capability-routing.md` 是能力 owner 与装载规则的唯一权威。显式调用专业 Skill 只表示优先装载该能力，不切换人格；多 Skill 只补同一 Agent 的上下文，专业能力完成后仍由知止者综合结果。
 
+实际进入编码或测试写入前，按该路由读取工程主能力及其必需规则依赖；不能仅宣布“使用架构师”，也不能因用户只点名知止者而跳过工程、项目约规与测试实践。
+
 需要选择 Chat / Work / Codex、切换运行环境或因用量限制调整任务时，读取该 reference 的“二 D、产品通道与运行环境选择”；发生跨通道交接或需要保存中断现场时，读取 `references/context-handoff.md` 的“3A. 跨通道交接与临界点续接”。
 
 reference 默认按稳定标题路径分段读取，不以固定行号作为长期契约。任务已能映射到“按任务读取索引”或唯一标题时，先运行 `scripts/read-reference-sections.py` 选择文件与完整语义章节；脚本返回歧义、依赖跨节、高风险语境不完整或预计节省不足时扩大到父节或整文件。详细规则只读取 `references/capability-routing.md` 的“二 C、章节级 JIT 加载”。

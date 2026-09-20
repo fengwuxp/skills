@@ -62,6 +62,8 @@
 
 能力组合遵循仓库 `AGENTS.md` 的“分层承责，正交合用”：专业 Skill 围绕独立责任、明确契约和可验证结果组合；知止者只编排任务目标、能力输入输出、协作顺序和验证，不成为吞并专项规则的万能业务编排层。
 
+最小装载不能省略主能力的必需规则依赖。进入代码或测试写入时，实际读取 `../../senior-software-architect/SKILL.md` 并按其写前路径执行；Java/Wind 约规、编码卫生和适用测试实践属于工程任务的必要依据，不因“默认零或一个协同能力”被裁掉。规则来源不成为第二执行 Owner；选择了能力名称、目录存在或摘要声称已读，都不等于读取了适用规则。
+
 Skill 拆分先做二问：产物是否具有可独立使用或验收的价值，能力是否会跨场景单独复用。两问任一为否，不拆顶层 Skill；两问均为是，仍须确认稳定职责、输入、输出、失败边界和验收能够独立成立。只在当前流程有意义的步骤留在工作流，载体、工具或权限不同不能单独证明需要新 Skill；优先复用既有 Skill、reference、script 或 fixture。
 
 ### 二 A、路由消歧、后置加载与加载扇出
@@ -137,7 +139,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | 从零规划或重构用于说明和辅助佐证公司真实业务的企业官网，涉及业务类型、建议模块、内容、指标参考示例值、公开参考差异、图片多屏要求和按需 Legal 条件 | 候选 `business-website-planner`，仅在 admission 通过后使用 | 业务事实未稳定时消费 `product-architecture-expert`；页面与多屏设计交 `ui-design-expert`；设计稿默认 Figma；实现交 `senior-software-architect` | 业务权威、建议模块、使用者确认指标、Reference DNA、Responsive Media Brief、Owner 复核与 `requirement-acceptance-testing`；Figma 写入另行授权 |
 | 按已确认需求独立验收业务逻辑、API/数据副作用、Web UI 交互、视觉还原、可访问性或运行结果 | 候选 `requirement-acceptance-testing`，仅在 admission 通过后使用 | 消费 `product-architecture-expert` 的需求与验收种子、`senior-software-architect` 的实现和测试证据、`ui-design-expert` 的设计与 Design QA 证据 | 需求与实现指纹、目标项目测试、浏览器/视觉证据、独立 Checker 和验收 Owner；Checker 不接管修复 |
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具；表达型 Web 页面在用户显式调用 Hallmark，或已确认产品与交互契约后确有反模板化缺口时，可装载 `hallmark` | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner；Hallmark 自评不构成准出证据 |
-| 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 项目按证据消费 `wind-coding-conventions`；符合前述候选条件时用 `document-authoring` 正式成文 | 测试、静态检查、源码回读、独立 CR、发布证据 |
+| 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 任务必须读取 `wind-coding-conventions` 通用层，按证据叠加 Wind 专项；测试写入再直达适用测试实践；符合前述候选条件时用 `document-authoring` 正式成文 | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段仍由当前 Agent 持有目标并遵守用户授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；符合前述候选条件时用 `document-authoring` 整理设定集和正式载体 | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | 候选 `document-authoring`，仅在上述准入与可用性条件满足后协同；否则由当前 Agent 使用可用文档能力 | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
@@ -145,7 +147,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
 | 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 符合前述候选条件时用 `document-authoring` 整理正式报告；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
 | 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段仍由当前 Agent 持有目标，用户显式调用时再使用 `wise-agent`；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
-| DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成后消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
+| DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成前消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
 | 方案、计划或设计的决策压力测试 | `grill-me` | 当前产品 / 工程主能力；需要经典校准时 `huaxia-practical-wisdom` | 问题台账、历史去重、保真度路由、决策包、决策快照与执行前对账 |
 | 产品澄清、工程计划、TDD、调试、CR 或完成前验证的方法缺口 | 当前产品 / 工程主能力 | 官方 Superpowers 插件中的对应方法 Skill | 专业 owner 回读、项目验证、新会话行为冒烟 |

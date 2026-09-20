@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import re
 import xml.etree.ElementTree as ET
+from collections import Counter
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
@@ -534,11 +535,90 @@ def check_file(
     return findings
 
 
+def qualified_java_type(name: str, code: str) -> str:
+    """Resolve explicit imports and same-package names only; no classpath guesses."""
+    if "." in name:
+        return name
+    imported = re.search(rf"\bimport\s+([\w.]+\.{re.escape(name)})\s*;", code)
+    if imported:
+        return imported.group(1)
+    package = re.search(r"\bpackage\s+([\w.]+)\s*;", code)
+    return f"{package.group(1)}.{name}" if package else name
+
+
+def check_interface_dependencies(files: list[Path], root: Path) -> list[Finding]:
+    """Check source-resolved ServiceImpl fields/constructors, not full Java typing.
+
+    Limit to direct, non-generic Service contracts present in production source.
+    Assembly classes and pure implementation unit tests are outside this check.
+    """
+    sources = {path: java_code_only(path.read_text(encoding="utf-8", errors="ignore")) for path in files}
+    type_counts = Counter(
+        qualified_java_type(path.stem, code) for path, code in sources.items()
+        if is_prod_path(path.relative_to(root))
+    )
+    interfaces: set[str] = set()
+    implementations: dict[str, str] = {}
+    for path, code in sources.items():
+        if not is_prod_path(path.relative_to(root)):
+            continue
+        if re.search(rf"\binterface\s+{re.escape(path.stem)}\b", code):
+            interfaces.add(qualified_java_type(path.stem, code))
+    for path, code in sources.items():
+        if not is_prod_path(path.relative_to(root)):
+            continue
+        match = re.search(r"\bclass\s+(\w+ServiceImpl)\s+implements\s+([\w.]+Service)\s*\{", code)
+        if match and match.group(1) == path.stem:
+            contract = qualified_java_type(match.group(2), code)
+            if contract in interfaces and type_counts[contract] == 1 and type_counts[qualified_java_type(path.stem, code)] == 1:
+                implementations[qualified_java_type(path.stem, code)] = contract
+
+    findings: list[Finding] = []
+    for path, code in sources.items():
+        rel = path.relative_to(root)
+        declaration = CLASS_DECLARATION.search(code)
+        if not declaration:
+            continue
+        header = code[:declaration.start()]
+        if has_annotation(header, ("Configuration", "org.springframework.context.annotation.Configuration")):
+            continue
+        if not is_prod_path(rel):
+            spring_test = any(has_annotation(code, annotation) for annotation in (
+                *FIELD_INJECTION_ANNOTATIONS,
+                ("SpringBootTest", "org.springframework.boot.test.context.SpringBootTest"),
+                ("SpringJUnitConfig", "org.springframework.test.context.junit.jupiter.SpringJUnitConfig"),
+                ("ContextConfiguration", "org.springframework.test.context.ContextConfiguration"),
+            ))
+            if not is_test_path(rel) or not spring_test:
+                continue
+        declared_names = set(re.findall(r"\b(?:class|interface|record|enum)\s+(\w+)", code))
+        matches = list(re.finditer(
+            r"\b(?:private|protected|public)\s+(?:final\s+)?(?P<type>[\w.]+ServiceImpl)\s+\w+\s*[;=]",
+            code,
+        ))
+        class_name = declaration.group("name")
+        for constructor in re.finditer(rf"\b{re.escape(class_name)}\s*\(([^{{}};]*)\)", code):
+            parameter = re.compile(r"\b(?P<type>[\w.]+ServiceImpl)\s+\w+\s*(?=[,)])")
+            matches.extend(parameter.finditer(code, constructor.start(1), constructor.end(1) + 1))
+        for match in sorted(matches, key=lambda item: item.start()):
+            name = match.group("type")
+            if name in declared_names:
+                continue
+            contract = implementations.get(qualified_java_type(name, code))
+            if contract:
+                findings.append(Finding(
+                    "ERROR", rel, code.count("\n", 0, match.start("type")) + 1,
+                    f"调用方应依赖接口 {contract}，不得以 {name} 作为依赖字段或构造参数",
+                ))
+    return findings
+
+
 def run(root: Path, profile: str = "wind") -> list[Finding]:
     if not root.exists():
         raise SystemExit(f"root not found: {root}")
     findings: list[Finding] = []
     files = java_files(root)
+    findings.extend(check_interface_dependencies(files, root))
     null_marked_packages = {
         path.parent
         for path in files

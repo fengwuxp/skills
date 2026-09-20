@@ -42,7 +42,7 @@ Java/Spring 公共测试底座、最小上下文、H2/MyBatis、外部依赖替�
 
 - 使用最小 Spring 上下文，优先 `@SpringJUnitConfig`、精确 `@Import`、测试专用 `TestConfig`。
 - 使用 H2 或 Testcontainers 初始化真实表结构。
-- 使用 `@Transactional(rollbackFor = Exception.class)` 自动回滚。
+- 数据隔离优先复用项目测试底座；可以使用测试事务自动回滚，但验证真实提交、异常回滚或传播边界时，不得用测试外层事务遮蔽被测服务的事务行为，应从真实事务边界外回读事实并清理数据。
 - 真实注入 service、converter、resolver、orchestrator、assembler、posting service、lifecycle 等内部协作者。
 - 只替换第三方通道、远程 HTTP、MQ、Redis、时间、ID 生成器等外部依赖或测试基础设施。
 - 避免手工 new 内部链路，避免绕过真实 Spring 装配、事务、AOP、条件 Bean 和配置约束。
@@ -51,6 +51,8 @@ Java/Spring 公共测试底座、最小上下文、H2/MyBatis、外部依赖替�
 ## 2. 服务测试基类
 
 服务测试基类只给最小骨架，公共基础设施细节见 `testing-practices-java-spring-common.md`：
+
+项目已有适用基类或配置时直接复用，不另建平行底座。下例的测试事务只表示数据隔离，不构成生产事务提交/回滚的证明。
 
 ```java
 @SpringJUnitConfig
@@ -85,7 +87,7 @@ class ExampleMessageServiceTests extends AbstractServiceTest {
     }
 
     @Test
-    void updateMessageStatePersistsBusinessFact() {
+    void testUpdateMessageStatePersistsBusinessFact() {
         exampleMessageService.updateExampleMessageState(exampleMessage.getId(), ExampleMessageState.UNREAD);
 
         ExampleMessageDTO current = exampleMessageService.getExampleMessageById(exampleMessage.getId());
@@ -94,7 +96,7 @@ class ExampleMessageServiceTests extends AbstractServiceTest {
     }
 
     @Test
-    void rejectIllegalBusinessOperation() {
+    void testRejectIllegalBusinessOperation() {
         Assertions.assertThrows(BusinessException.class, () ->
                 exampleMessageService.revokeExampleMessage(exampleMessage.getId(), "other-sender", LocalDateTime.now()));
     }

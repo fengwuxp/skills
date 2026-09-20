@@ -1477,7 +1477,7 @@ check(
         wind_skill,
         [
             "name: wind-coding-conventions",
-            "Java 项目编码约规 Skill",
+            "Java/Wind 编码与测试约规",
             "所有包含 Java 源码的项目先使用通用 Java 约规",
             "Maven/Gradle 坐标、包名或 import",
             "只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind",
@@ -1505,8 +1505,8 @@ check(
         wind_skill_agent,
         [
             "Java/Wind 编码约规",
-            "Java 源码项目通用约规",
-            "按上下文启用 Wind 专项",
+            "Java 编码与测试的规则依赖",
+            "按项目证据启用 Wind 专项",
             "$wind-coding-conventions",
         ],
     )
@@ -1819,7 +1819,7 @@ check(
         senior_skill,
         [
             "Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取",
-            "只消费规则结论，不复制 Java/Wind 约规正文",
+            "架构师不复制约规正文",
         ],
     )
     and has_all(
@@ -11269,7 +11269,7 @@ check(
         [
             "Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取",
             "只有存在 Wind 高置信度信号时才叠加专项",
-            "只消费规则结论，不复制 Java/Wind 约规正文",
+            "架构师不复制约规正文",
         ],
     ),
 )
