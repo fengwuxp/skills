@@ -64,7 +64,7 @@ WISE_AGENT_CORE_TERMS = [
     "联网、安装、Git、密钥、部署、生产、删除、不可逆操作",
     "单个领域词不等于专项证据",
     "明确要求执行 Git stage / commit / push",
-    "仅翻译或改写 commit message 不触发",
+    "仅翻译或改写 commit message 直接返回结果",
     "提交信息优先遵循当前项目约规",
 ]
 
@@ -1227,8 +1227,8 @@ expected_handling_has(
 )
 
 check(
-    "wise-agent requires explicit invocation while specialist capabilities remain precise",
-    contains(wise_agent_agent, "allow_implicit_invocation: false")
+    "wise-agent loads by default while specialist capabilities remain precise",
+    contains(wise_agent_agent, "allow_implicit_invocation: true")
     and all(
         contains(path, "allow_implicit_invocation: true")
         for path in [
@@ -1253,10 +1253,10 @@ check(
         wise_agent_skill,
         ["同一 Agent", "不切换人格", "一个项目执行契约", "默认使用中文与用户交流"],
     )
-    and has_all(wise_agent_agent, ["allow_implicit_invocation: false", "使用 $wise-agent 完成：<目标>"])
+    and has_all(wise_agent_agent, ["allow_implicit_invocation: true", "使用 $wise-agent 完成：<目标>"])
     and has_all(
         wise_agent_skill_type_owner_routing,
-        ["`wise-agent` 只在用户显式调用后装载", "同一 Agent", "不产生第二人格或重复 Owner"],
+        ["`wise-agent` 默认装载入口", "同一 Agent", "不产生第二人格或重复 Owner"],
     )
     and has_all(product_skill, ["知止者按需装载", "显式调用本 Skill 只表示优先装载该能力"])
     and has_all(senior_skill, ["知止者按需装载", "显式调用本 Skill 只表示优先装载工程能力"])
@@ -1266,15 +1266,15 @@ check(
     and has_all(wind_skill, ["知止者按需装载的 Java 项目分层约规能力包"]),
 )
 check(
-    "wise-agent global kernel stays minimal, conditional, and authorization-bound",
+    "wise-agent global kernel defaults to entry loading and stays authorization-bound",
     has_all(
         wise_agent_global_kernel,
         [
             "简单任务直接完成",
             "最短可验证路径",
             "最小专业 Skill",
-            "只有用户显式输入 `$wise-agent`、`wise-agent` 或“知止者”时才加载该 Skill",
-            "未显式点名时",
+            "默认加载 `wise-agent/SKILL.md`",
+            "用户无需显式点名",
             "必须取得用户明确授权",
             "更深目录的 `AGENTS.md` 可以补充或覆盖",
             "学习回流模式",
@@ -2837,12 +2837,12 @@ check(
 )
 
 check(
-    "wise agent metadata requires explicit invocation",
+    "wise agent metadata defines default invocation with explicit opt-out",
     has_all(
         wise_agent_skill,
         [
-            "只有用户显式输入",
-            "未显式点名时不触发",
+            "默认行动入口",
+            "无需用户显式点名",
         ],
     )
     and has_none(
@@ -3250,17 +3250,17 @@ check(
     ),
 )
 check(
-    "wise agent metadata triggers real work and excludes simple answers",
+    "wise agent metadata defaults to entry loading and keeps simple answers direct",
     "name: wise-agent" in frontmatter(wise_agent_skill)
     and all(
         term in frontmatter(wise_agent_skill)
         for term in [
-            "只有用户显式输入",
-            "`$wise-agent`",
-            "未显式点名时不触发",
+            "默认行动入口",
+            "用户明确禁用本 Skill 时不加载",
+            "无需用户显式点名",
         ]
     )
-    and contains(wise_agent_agent, "理解事实，知所止而后行动")
+    and contains(wise_agent_agent, "默认承接用户目标")
     and has_all(
         wise_agent_skill,
         ["统一智能行动主体", "确定目标、范围、授权", "默认只加载一个主能力", "Checker 独立"],
@@ -3270,11 +3270,11 @@ check(
     "wise agent supports one-line portable runtime routing",
     has_all(
         wise_agent_skill,
-        ["`$wise-agent <目标>`", "“知止者，<目标>”", "不要求用户选择模型、子代理或模式", "不隐式启用"],
+        ["`$wise-agent <目标>`", "“知止者，<目标>”", "不要求用户选择 Skill、模型、子代理或模式", "默认先加载本入口"],
     )
     and has_all(
         wise_agent_agent,
-        ['default_prompt: "使用 $wise-agent 完成：<目标>"', "allow_implicit_invocation: false"],
+        ['default_prompt: "使用 $wise-agent 完成：<目标>"', "allow_implicit_invocation: true"],
     )
     and has_all(
         wise_agent_engineering_governance,
@@ -3327,14 +3327,14 @@ check(
     )
     and has_all(
         wise_agent_agent,
-        ['display_name: "知止者"', "知所止而后行动", "使用 $wise-agent 完成：<目标>"],
+        ['display_name: "知止者"', "按需加载专业能力", "使用 $wise-agent 完成：<目标>"],
     )
     and has_all(
         agents_rules,
         [
-            "默认交互与责任模型",
-            "`wise-agent` 是它的显式协同能力入口",
-            "不能混写成“所有任务都必须加载 `wise-agent`”",
+            "按任务需要装载专业 Skill",
+            "默认加载 `wise-agent/SKILL.md`",
+            "用户无需显式点名",
             "它不是少做或不行动",
             "何时应停止或交还人类",
         ],
@@ -3879,9 +3879,9 @@ check(
     and has_all(
         "README.md",
         [
-            "默认交互与责任模型",
-            "`$wise-agent` 是显式协同入口",
-            "不表示每个任务都必须加载它",
+            "统一承接目标",
+            "用户无需点名",
+            "简单任务直接完成",
             "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
             "简单任务直接完成",
             "复杂任务才使用计划、SDLC、项目执行规范、Loop、Worker 或 Checker",
@@ -5676,19 +5676,19 @@ check(
             "wise-agent-should-not-project-work-topology-for-simple-task",
             "wise-agent-should-avoid-worker-for-coupled-task",
             "wise-agent-should-use-checker-without-worker",
-            "wise-agent-negative-single-domain-prd",
-            "wise-agent-negative-single-domain-system-design",
-            "wise-agent-negative-single-domain-source-review",
-            "wise-agent-negative-single-domain-codegen",
-            "wise-agent-negative-single-domain-document",
-            "wise-agent-negative-single-domain-philology",
-            "wise-agent-negative-single-domain-java-conventions",
-            "wise-agent-negative-simple-translation",
-            "wise-agent-negative-simple-fact",
-            "wise-agent-negative-simple-wording",
-            "wise-agent-negative-commit-message-translation",
-            "wise-agent-negative-simple-definition",
-            "wise-agent-negative-simple-synonyms",
+            "wise-agent-default-single-domain-prd",
+            "wise-agent-default-single-domain-system-design",
+            "wise-agent-default-single-domain-source-review",
+            "wise-agent-default-single-domain-codegen",
+            "wise-agent-default-single-domain-document",
+            "wise-agent-default-single-domain-philology",
+            "wise-agent-default-single-domain-java-conventions",
+            "wise-agent-default-simple-translation",
+            "wise-agent-default-simple-fact",
+            "wise-agent-default-simple-wording",
+            "wise-agent-default-commit-message-translation",
+            "wise-agent-default-simple-definition",
+            "wise-agent-default-simple-synonyms",
             "product-should-nonstandard-problem-solution",
             "senior-should-nonstandard-engineering-problem",
             "senior-should-invariant-verification-cluster",
@@ -5720,9 +5720,9 @@ skill_eval_cases_by_id = {
     case["id"]: case for case in json.loads(read(skill_eval_prompt_fixture))["cases"]
 }
 check(
-    "all wise-agent positive fixtures use an explicit invocation",
-    all(
-        any(term.casefold() in case.get("query", "").casefold() for term in ["$wise-agent", "wise-agent", "知止者"])
+    "wise-agent positive fixtures include implicit invocation",
+    any(
+        not any(term.casefold() in case.get("query", "").casefold() for term in ["$wise-agent", "wise-agent", "知止者"])
         for case in skill_eval_cases_by_id.values()
         if case.get("skill") == "wise-agent" and case.get("should_trigger") is True
     ),
@@ -5806,20 +5806,20 @@ check(
         "README.md",
         [
             "## 用户使用指南",
-            "仓库把知止者设计为默认交互与责任模型",
-            "`$wise-agent` 是显式协同入口",
-            "不表示每个任务都必须加载它",
-            "单一领域且边界清楚的任务可直接加载对应专业 Skill",
-            "跨专业、跨阶段、跨轮",
+            "仓库默认加载知止者",
+            "用户无需点名",
+            "简单任务直接完成",
+            "单一领域任务装载对应专业能力",
+            "跨专业、跨阶段或跨轮",
             "多 Skill 只为同一 Agent 补充专业上下文",
             "不产生第二人格或重复 Owner",
             "日常不需要选角色或背 Skill 名称",
             "### 1. 30 秒上手",
             "通用任务模板",
-            "任务明显跨专业、跨阶段、跨轮",
-            "可在前面显式加 `$wise-agent：`",
+            "跨专业、跨阶段或跨轮",
+            "`$wise-agent：`",
             "`wise-agent，<目标>`",
-            "没有这三种显式称呼时不会启用该 Skill",
+            "不是触发前提",
             "我想交付 <生产可用能力 / PRD / 系分 / 代码 / 图>",
             "常见任务可以直接这样说",
             "我有 PRD 和代码路径，只做只读 CR，不改代码",
@@ -8339,9 +8339,9 @@ behavior_contract_has(
     ("trigger", "admission", "value_model", "module_fact_card", "dependency_contract", "perspective_owners", "must_not_do"),
     ("$wise-agent 模块合议：<项目或边界议题>", "直接业务价值、赋能业务价值或技术价值", "技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果", "把模块或审查视角塑造成平级人格", "未经授权改代码、执行 Git 或发布"),
 )
-negative_reason_has(
-    "wise-agent-negative-module-deliberation-on-single-module-review",
-    ("单模块源码 CR", "不触发 wise-agent 模块合议", "不加载产品业务架构会商"),
+expected_handling_has(
+    "wise-agent-default-module-deliberation-on-single-module-review",
+    ('单模块源码 CR', '不触发 wise-agent 模块合议', '不加载产品业务架构会商'),
 )
 expected_handling_has(
     "wise-agent-should-coordinate-peer-authority-contract-deliberation",
@@ -8426,12 +8426,12 @@ expected_handling_lacks(
     "wise-agent-should-run-engineering-delivery-deliberation-cr",
     ("Maker 可以参与准出", "同一 AI 可以自证", "自动修复或执行 Git"),
 )
-negative_reason_has(
-    "wise-agent-negative-simple-local-engineering-cr",
-    ("单文件", "普通源码 CR", "senior-software-architect", "不触发 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-simple-local-engineering-cr",
+    ('单文件', '普通源码 CR', 'senior-software-architect', '不建立工程交付合议'),
 )
-negative_reason_lacks(
-    "wise-agent-negative-simple-local-engineering-cr",
+expected_handling_lacks(
+    "wise-agent-default-simple-local-engineering-cr",
     ("同时触发 wise-agent", "需要工程交付合议", "必须建立 项目执行规范"),
 )
 expected_handling_has(
@@ -13211,7 +13211,7 @@ check(
             "AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师",
             "Hardened Candidate 门禁",
             "产品侧交接条件",
-            "端到端流程和 GSD / 工程执行准入由当前 Agent 核对，用户显式调用时再使用 `wise-agent`",
+            "端到端流程和 GSD / 工程执行准入由当前 Agent 核对，默认入口与能力装载遵循 `AGENTS.md`",
             "用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文",
         ],
     ),
@@ -13232,7 +13232,7 @@ check(
             "MVP / 原型 harden 门禁",
             "与 AI Native 编排和架构师的交接",
             "不得直接判定 GSD / 工程执行准入或 Execution Grant",
-            "GSD / 工程执行准入结论由当前 Agent 编排；用户显式调用时可使用 `wise-agent`",
+            "GSD / 工程执行准入结论由当前 Agent 编排；知止者按需增加阶段控制",
             "产品上下文包、Hardened Candidate 或 GSD Roadmap 都不是 Execution Grant",
             "不把“放下 PRD”写成跳过产品语义、评审、留痕、合规和验收",
         ],
@@ -16628,7 +16628,7 @@ negative_route_fixtures: list[RouteFixture] = [
     ),
     RouteFixture(
         name="single module review does not start module deliberation",
-        prompt=skill_eval_cases_by_id["wise-agent-negative-module-deliberation-on-single-module-review"]["query"],
+        prompt=skill_eval_cases_by_id["wise-agent-default-module-deliberation-on-single-module-review"]["query"],
         routes={"context-handoff.md", "business-architecture-planning.md"},
     ),
     RouteFixture(
@@ -16639,7 +16639,7 @@ negative_route_fixtures: list[RouteFixture] = [
     RouteFixture(
         name="simple fast coding does not start heavy orchestration",
         prompt="这个局部代码调整行为已经明确，请快速编码，先完成最小实现，测试最后集中补。",
-        routes={"cad-mode.md", "ai-large-project-orchestration.md", "planning-execution-admission.md", "wise-agent"},
+        routes={"cad-mode.md", "ai-large-project-orchestration.md", "planning-execution-admission.md"},
     ),
     RouteFixture(
         name="bounded confirmed fast coding does not imply CAD",
@@ -16702,79 +16702,9 @@ negative_route_fixtures: list[RouteFixture] = [
         routes={"product", "product-scenario-routing.md", "product-prd-template.md", "product-design-and-prd.md"},
     ),
     RouteFixture(
-        name="wise agent on commit message translation only",
-        prompt="把 commit message 'fix payment timeout' 翻译成中文，只返回译文，不执行 Git。",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on ordinary PRD",
-        prompt="根据这批客户访谈和运营后台截图写一版可评审 PRD，补齐角色、对象、流程、规则、数据指标和验收标准",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
         name="wise agent pure engineering default assumption does not route creative product lane",
         prompt="$wise-agent 对一个 Java Service 做纯工程架构 CR：当前实现挑战一个默认前提，只看源码、接口契约和测试，不扩展需求语义，也不进入产品或创见探索流程",
         routes={"product-to-engineering-lifecycle.md", "creative-exploration-and-evidence.md"},
-    ),
-    RouteFixture(
-        name="wise agent on product judgment action chain only",
-        prompt="参考 pm-skills 把产品判断成流程：我们有访谈、工单、竞品、路线图、PRD 和发布材料，请用产品判断动作链判断现在做什么、为什么做、先不做什么、下一产物和 owner",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on concrete code review",
-        prompt="做一轮代码 CR：这个 Spring Boot Service 改了事务边界、缓存一致性和异常处理，帮我按严重级别列问题并补测试建议",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on ordinary Java coding review wording",
-        prompt="请对这个 Java Service 做一次编码评审，只读检查事务边界、异常契约和测试缺口，不改代码。",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on ordinary Java design review wording",
-        prompt="请对这个 Java Service 的模块边界和接口做一次设计评审，只读给出问题和源码依据，不做跨角色编排。",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on java service codegen",
-        prompt="根据这段 CREATE TABLE 生成 Wind 风格 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on business architecture only",
-        prompt="只做跨境支付业务架构规划：输出价值流、业务能力地图、核心对象、能力到项目和系统的映射，不需要跨角色交付编排",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on system design only",
-        prompt="为订单服务写一份系统分析设计，包含模块边界、接口、状态机、事务、异常、测试策略和发布风险，不需要流程编排",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on writing tests only",
-        prompt="给这个资金 Service 补单元测试和集成测试，覆盖幂等、事务回滚、并发冲突和异常分支，不需要规划协作流程",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on production incident only",
-        prompt="线上支付回调大量超时，请根据日志和调用链定位根因，给出止血、修复、回归测试和生产变更方案，不需要跨角色流程设计",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on formal document only",
-        prompt="把这批已确认材料整理成面向管理层的正式制度文档，保留引用并输出可评审 Markdown。",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on philology only",
-        prompt="考据‘止’字在甲骨、金文和《说文》中的形义关系，区分材料可证、传统训释和争议。",
-        routes={"wise-agent"},
-    ),
-    RouteFixture(
-        name="wise agent on Java conventions only",
-        prompt="只检查这个普通 Java 项目的编码约规，不做源码设计、CR、修复或 TDD。",
-        routes={"wise-agent"},
     ),
     RouteFixture(
         name="coding hygiene on read-only source review",
@@ -16845,7 +16775,7 @@ def routes_codegen(prompt: str) -> bool:
 
 def route_fixture(prompt: str) -> set[str]:
     """Tiny deterministic route simulation for high-value regression fixtures."""
-    route: set[str] = set()
+    route: set[str] = {"wise-agent"}
     if "$wise-agent" in prompt and "模块合议" in prompt:
         route.update(
             {
@@ -20746,9 +20676,9 @@ check(
             '"competition_group": "fiction-project-document-owner"',
             '"competition_group": "fiction-term-evidence-owner"',
             '"id": "novelist-should-draft-short-fiction"',
-            '"id": "wise-agent-negative-single-domain-fiction-drafting"',
-            "单次、单一小说创作任务",
-            "不额外触发 wise-agent",
+            '"id": "wise-agent-default-single-domain-fiction-drafting"',
+            "单次小说创作",
+            "不展开额外协作",
         ],
     )
     and has_all(
@@ -20766,7 +20696,7 @@ check(
             "`novelist`",
             "必要校准依赖 `huaxia-practical-wisdom`",
             "单次构思、正文、重写或评审",
-            "不额外加载 `wise-agent`",
+            "不展开额外协作",
             "跨轮长篇、多稿权威、状态恢复",
             "`novelist` 仍是故事主能力",
             "普通创作只消费最小叙事校准卡",
@@ -20780,7 +20710,7 @@ check(
             "创作设定集",
             "创作用字考据",
             "小说发布适配",
-            "普通小说任务不需要默认加 `$wise-agent`",
+            "小说任务也由知止者默认承接",
             "跨轮、多稿权威、状态恢复",
         ],
     )
@@ -23408,9 +23338,9 @@ expected_handling_has(
     "wise-agent-should-use-checker-without-worker",
     ("不派 Worker", "要求独立 Checker", "验证机制", "不替代发布 Owner"),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-prd",
-    ("单一产品领域任务", "product-architecture-expert", "不为维持默认人格概念额外加载 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-single-domain-prd",
+    ('单一产品领域任务', 'product-architecture-expert', '默认承接'),
 )
 
 check(
@@ -23610,45 +23540,45 @@ expected_handling_has(
     "wise-agent-should-not-silently-profile-user",
     ("拒绝扫描历史会话", "人格", "政治倾向", "不自动确认", "candidate 不生效"),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-system-design",
-    ("单一工程设计任务", "senior-software-architect", "不额外加载 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-single-domain-system-design",
+    ('单一工程设计任务', 'senior-software-architect', '默认承接'),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-source-review",
-    ("单一源码 CR", "senior-software-architect", "不加载 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-single-domain-source-review",
+    ('单一源码 CR', 'senior-software-architect', '默认承接'),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-codegen",
-    ("结构化 Java 代码生成任务", "java-service-code-generator", "不先加载 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-single-domain-codegen",
+    ('结构化 Java 代码生成任务', 'java-service-code-generator', '默认承接'),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-document",
-    ("单一正式成文任务", "document-authoring", "不加载 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-single-domain-document",
+    ('单一正式成文任务', 'document-authoring', '不隐式装载'),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-philology",
-    ("单一汉字学与训诂任务", "hanzi-philology", "不因需要证据互证就额外加载 wise-agent"),
+expected_handling_has(
+    "wise-agent-default-single-domain-philology",
+    ('单一汉字学与训诂任务', 'hanzi-philology', '默认承接'),
 )
-negative_reason_has(
-    "wise-agent-negative-single-domain-java-conventions",
-    ("纯 Java 约规任务", "wind-coding-conventions", "不升级为工程执行或 wise-agent 协同"),
+expected_handling_has(
+    "wise-agent-default-single-domain-java-conventions",
+    ('纯 Java 约规任务', 'wind-coding-conventions', '不升级为工程执行'),
 )
-negative_reason_has(
-    "wise-agent-negative-simple-wording",
-    ("一步措辞改写", "不加载知止者工作闭环"),
+expected_handling_has(
+    "wise-agent-default-simple-wording",
+    ('一步措辞改写', '直接回答'),
 )
-negative_reason_has(
-    "wise-agent-negative-commit-message-translation",
-    ("翻译 commit message", "不执行 Git", "不触发知止者"),
+expected_handling_has(
+    "wise-agent-default-commit-message-translation",
+    ('翻译 commit message', '不执行 Git'),
 )
-negative_reason_has(
-    "wise-agent-negative-simple-definition",
-    ("简单定义问答", "不触发知止者"),
+expected_handling_has(
+    "wise-agent-default-simple-definition",
+    ('简单定义问答', '直接回答'),
 )
-negative_reason_has(
-    "wise-agent-negative-simple-synonyms",
-    ("一步语言生成", "直接回答"),
+expected_handling_has(
+    "wise-agent-default-simple-synonyms",
+    ('一步语言生成', '直接回答'),
 )
 
 expected_handling_has(

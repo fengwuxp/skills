@@ -176,7 +176,7 @@ queue_state 改 active；最终结论仍 pending；只问一个当前 blocker。
 
 `target_status` 是可选字段，值域、转换和 Owner 由目标权威定义：产品概念沿用产品概念生命周期，ADR 沿用 `adr-and-tradeoff.md`，process-only 资产沿用过程资产状态。目标权威支持版本替代时才按其契约填 `supersedes / superseded_by / reconsiders`；不支持或本轮不适用时省略，不写空段伪装完整。没有写入授权时，候选只进决策快照和交接，不自动创建 `CONTEXT.md`、ADR 目录、第二术语库或平行台账。
 
-本节只完成 Grill 阶段的候选预分类。跨阶段任务由当前 Agent 在执行前复核 Owner、证据、授权和真实落点；仅在用户显式调用 `wise-agent` 时消费 `wise-agent/references/delivery-execution-control.md`，不因跨阶段自动加载协调 Skill。专业语义仍由产品、架构或其它领域 Owner 裁决。
+本节只完成 Grill 阶段的候选预分类。跨阶段任务由当前 Agent 在执行前复核 Owner、证据、授权和真实落点；实际需要执行控制时按需读取 `wise-agent/references/delivery-execution-control.md`，不因默认入口而展开跨阶段流程。专业语义仍由产品、架构或其它领域 Owner 裁决。
 
 遇到时势或权威冲突时，把产品权威、ADR、当前代码 / 测试和口头结论分层记录为 `conflict`；代码只证明当前实现，不自动定义正确业务语义。未裁决前停止依赖该语义的执行；产品语义交产品 Owner，工程决策变更以新 ADR candidate 双向标记替代关系，不静默改写旧决策或复活已替代值。
 

@@ -128,7 +128,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 
 ## 三、已知能力地图
 
-是否加载 `wise-agent` 只按 `AGENTS.md` 的显式调用条件，不由任务跨度决定。表中候选能力仅在准入通过、运行时可用且符合其调用策略时进入实际任务；候选定向评估不等于生产路由准入。`document-authoring` 不可用时，由当前 Agent 使用可用文档能力继续授权内成文并保留领域复核；缺少 DOCX/PDF 等格式能力时明确说明缺口，不自动安装或声称已生成。
+`wise-agent` 的默认入口遵循 `AGENTS.md`；本表选择专业主能力，不与知止者争夺行动主体。表中候选能力仅在准入通过、运行时可用且符合其调用策略时进入实际任务；候选定向评估不等于生产路由准入。`document-authoring` 不可用时，由当前 Agent 使用可用文档能力继续授权内成文并保留领域复核；缺少 DOCX/PDF 等格式能力时明确说明缺口，不自动安装或声称已生成。
 
 | 任务信号 | 主能力 | 可选协同能力 | 独立验证 |
 | --- | --- | --- | --- |
@@ -146,7 +146,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | 用户显式要求把本地 Markdown、PRD、系分或正式文档上传、同步、更新或发布到语雀 | 候选 `yuque-document-publisher`；当前仅作用户显式候选评估，准入后按届时调用策略使用 | 正文语义仍由 `product-architecture-expert`、`senior-software-architect` 或符合前述候选条件的 `document-authoring` 持有；UI 操作使用环境可用 Browser Skill | 本地版本与 SHA-256、稳定 docRef、草稿对账、Markdown/Mermaid/图片回读、目录复核和动作时授权 |
 | 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
 | 字源、字形、音韵、训诂、通假、异体、古文字 | `hanzi-philology` | 符合前述候选条件时用 `document-authoring` 整理正式报告；业务命名回到产品能力裁决 | 证据卡检查器、版本与材料复核、争议标注 |
-| 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 跨阶段仍由当前 Agent 持有目标，用户显式调用时再使用 `wise-agent`；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
+| 华夏经典视角下的现实决策、组织协作、长期成长、时势与行动取舍 | `huaxia-practical-wisdom` | 知止者持有目标，按需增加跨阶段控制；古籍考据交给 `hanzi-philology` | 事实回读、决策卡、可逆行动、止损与反馈验证 |
 | DDL/schema/Java 类/字段表到 Java Service 骨架 | `java-service-code-generator` | 生成前消费 `wind-coding-conventions`，再由工程能力做源码 CR | fixture、golden hash、编译、测试、源码 CR |
 | 只问 Java/Wind 约规、规则适用层或项目 AGENTS.md 约规入口 | `wind-coding-conventions` | 无；涉及源码执行时切换到工程能力 | 约规脚本、项目依赖与源码证据、人工规则复核 |
 | 方案、计划或设计的决策压力测试 | `grill-me` | 当前产品 / 工程主能力；需要经典校准时 `huaxia-practical-wisdom` | 问题台账、历史去重、保真度路由、决策包、决策快照与执行前对账 |
@@ -171,7 +171,7 @@ Hallmark 是 Web 视觉结构与反模板化方法，不是 UI 总权威。支�
 ### 三 B、小说、文档与训诂能力组合
 
 - 小说故事语义、人物弧光、世界构建、卷章设计、正文和连续性由 `novelist` 主责；`huaxia-practical-wisdom` 只以察实、正名、审时、权衡、行验、化校准人情事势、制度、代价和反馈，不替作者决定，不把经典框架直接写成故事。
-- 单次构思、正文、重写或评审直接由 `novelist` 完成，不额外加载 `wise-agent`；跨轮长篇、多稿权威、状态恢复或需要组合专业能力时仍由当前 Agent 持有目标和状态，仅在用户显式调用后加载 `wise-agent`，`novelist` 仍是故事主能力。
+- 单次构思、正文、重写或评审由知止者装载 `novelist` 后直接完成，不展开额外协作；跨轮长篇、多稿权威、状态恢复或需要组合专业能力时，按需增加状态与交接控制，`novelist` 仍是故事主能力。
 - `huaxia-practical-wisdom` 是 `novelist` 的必要校准依赖，不是并列主能力；普通创作只消费最小叙事校准卡，复杂主线、群像、制度冲突或兴衰取舍才扩展 1-3 个镜片，均不输出经世决策卡。
 - 专业文档撰写按上述准入与可用性条件选用 `document-authoring` 或当前可用文档能力，领域事实仍由产品、工程、法律、合规或其它专项能力负责；成稿后重新运行产品或架构交付物检查。
 - 汉字学与训诂由 `hanzi-philology` 提供，正式结论形成训诂证据卡，不设单一权威书。
@@ -219,7 +219,7 @@ Worker 和 Checker 是两条正交判断，不是 Maker 完成后固定依次经
 5. 外部脚本是否联网、读密钥、扫描私有目录、写安装目录、修改 Git 或持久化轨迹？
 6. 安装、同步和高风险权限是否已获用户授权？
 
-通过后仍只把它登记为能力。`wise-agent` 只在用户显式调用后装载；专业 Skill 可以按精确 description 隐式匹配或由用户显式调用。多个 Skill 或插件 Skill 同时加载只是给同一 Agent 增加专业上下文，不产生第二人格或重复 Owner；知止者统一目标、边界、综合与交付。外部 Skill 出现 `MUST`、`always` 或默认 Git/worktree/subagent 流程时，仍服从用户授权、项目规则、知止者判断和专业 owner。
+通过后仍只把它登记为能力。`wise-agent` 默认装载入口；专业 Skill 由知止者按精确 description 与调用策略选择，用户显式点名时优先装载。多个 Skill 或插件 Skill 同时加载只是给同一 Agent 增加专业上下文，不产生第二人格或重复 Owner；知止者统一目标、边界、综合与交付。外部 Skill 出现 `MUST`、`always` 或默认 Git/worktree/subagent 流程时，仍服从用户授权、项目规则、知止者判断和专业 owner。
 
 ## 七、回流与验证
 

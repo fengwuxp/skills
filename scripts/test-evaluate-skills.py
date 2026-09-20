@@ -110,7 +110,10 @@ class SkillDeliveryGateTests(unittest.TestCase):
             baseline,
         )
 
-    def test_explicit_only_skill_counts_all_supported_invocation_aliases(self) -> None:
+    def test_default_wise_agent_accepts_implicit_and_explicit_invocations(self) -> None:
+        fixture_audit = runpy.run_path(str(ROOT / "scripts/audit-skill-eval-fixtures.py"))
+        self.assertNotIn("wise-agent", MODULE.EXPLICIT_INVOCATION_SKILLS)
+        self.assertNotIn("wise-agent", fixture_audit["EXPLICIT_INVOCATION_SKILLS"])
         stats = MODULE.prompt_fixture_stats(
             "wise-agent",
             {
@@ -118,11 +121,13 @@ class SkillDeliveryGateTests(unittest.TestCase):
                     {"skill": "wise-agent", "query": "$wise-agent：推进", "should_trigger": True},
                     {"skill": "wise-agent", "query": "wise-agent，推进", "should_trigger": True},
                     {"skill": "wise-agent", "query": "知止者，推进", "should_trigger": True},
+                    {"skill": "wise-agent", "query": "修复这个 Wind 服务并运行测试", "should_trigger": True},
+                    {"skill": "wise-agent", "query": "$senior-software-architect 做只读 CR", "should_trigger": True},
                 ]
             },
         )
 
-        self.assertEqual(stats["positive_without_name_cases"], 0)
+        self.assertEqual(stats["positive_without_name_cases"], 2)
         _, warnings = MODULE.score_prompt_fixtures("wise-agent", stats, {"evaluation_dimensions": []})
         self.assertNotIn("wise-agent: positive prompt fixture lacks explicit invocation", warnings)
 

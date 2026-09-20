@@ -41,7 +41,7 @@ description: Use when 用户要求新增、修改、重构或修复代码，或�
 
 ## 协作边界
 
-- 当前 Agent 持有目标、状态、授权和最终交付；`wise-agent` 仅按 `AGENTS.md` 的显式调用条件加载，本 Skill 不另设协调前置。
+- 当前 Agent 持有目标、状态、授权和最终交付；默认入口与能力装载遵循 `AGENTS.md`，本 Skill 不另设协调前置。
 - `senior-software-architect` 持有工程实现、Bug 修复、TDD、源码 CR 和生产风险；本 Skill 只是静默协同护栏，不改变工程主能力，也不重复工程流程。
 - 只读源码 CR、仅诊断且不写代码、纯项目编码规范检查和文档任务不自动触发；用户显式调用本 Skill 时除外。
 - `wind-coding-conventions` 持有 Java / Wind 项目编码约规；本 Skill 不创设命名、分层、依赖或框架规范。

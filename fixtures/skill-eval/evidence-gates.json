@@ -181,6 +181,9 @@
     ],
     "wise-agent": [
       {
+        "cases": "fixtures/skill-eval/wise-default-routing-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/wise-java-delivery-behavior-cases.json"
       },
       {

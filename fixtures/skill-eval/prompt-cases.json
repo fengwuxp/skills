@@ -1668,7 +1668,7 @@
       ],
       "expected_handling": "用户已显式调用 $wise-agent；知止者保持同一 Agent 的行动主体，装载 product-architecture-expert，读取访谈、截图和交互稿事实并直接交付可评审 PRD。不得只回复路由建议，不得把专业能力写成第二人格或第二 Owner。产物区分事实、推断和待确认，并用产品交付物检查器或人工评审验证。",
       "behavior_contract": {
-        "activation": "用户显式调用 $wise-agent 的单域 PRD 任务应装载 product-architecture-expert；未点名的普通 PRD 直接由 product-architecture-expert 处理",
+        "activation": "用户显式调用 $wise-agent 或未点名的普通 PRD，均由知止者默认承接并装载 product-architecture-expert",
         "action_subject": "多个 Skill 只为同一 Agent 增加上下文，由知止者统一目标、边界、综合和交付",
         "must_not": "不得只返回路由建议，不得出现第二人格、重复 Owner 或专业 Skill 互相转交责任"
       }
@@ -2109,158 +2109,181 @@
       "expected_handling": "知止者不派 Worker，因为没有独立并行子任务；但公共 API 与发布风险要求独立 Checker，Checker 必须读取原始契约、测试、回滚和发布证据。Checker 是验证机制而不是 Worker 的下一阶段，也不替代发布 Owner。"
     },
     {
-      "id": "wise-agent-negative-complex-without-explicit-invocation",
+      "id": "wise-agent-default-complex-without-explicit-invocation",
       "skill": "wise-agent",
       "query": "从客户访谈梳理 PRD，再完成系分、实现、测试和发布验证；任务会跨产品、工程和验证多个阶段，请直接推进。",
-      "should_trigger": false,
-      "preferred_skill": "product-architecture-expert",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "任务虽然跨专业和跨阶段，但用户没有显式输入 $wise-agent、wise-agent 或知止者；当前 Agent 应从 product-architecture-expert 开始按阶段装载专业能力，不启用 wise-agent 及其模型分工。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "未点名也默认加载 wise-agent，以 product-architecture-expert 为当前产品主能力，阶段变化时再装载工程与验证能力；不一次加载全部 Skills，不先写规划文档，不因默认入口启用子代理或扩大发布授权。"
     },
     {
-      "id": "wise-agent-negative-single-domain-prd",
+      "id": "wise-agent-default-single-domain-prd",
       "skill": "wise-agent",
       "query": "根据客户访谈和运营后台截图写一版可评审 PRD，补齐角色、对象、流程、规则、指标和验收；任务只涉及产品设计。",
-      "should_trigger": false,
-      "preferred_skill": "product-architecture-expert",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是边界清楚的单一产品领域任务，应直接加载 product-architecture-expert；不为维持默认人格概念额外加载 wise-agent。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "单一产品领域任务也由 wise-agent 默认承接，装载 product-architecture-expert 并直接完成 PRD；不为展示协调而创建额外计划或流程。"
     },
     {
-      "id": "wise-agent-negative-single-domain-system-design",
+      "id": "wise-agent-default-single-domain-system-design",
       "skill": "wise-agent",
       "query": "为订单服务编写系统分析设计，覆盖模块边界、接口、状态机、事务、测试策略和发布风险；不需要跨角色协同。",
-      "should_trigger": false,
-      "preferred_skill": "senior-software-architect",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是边界清楚的单一工程设计任务，应直接加载 senior-software-architect；不额外加载 wise-agent 或展开协同机制。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "单一工程设计任务也由 wise-agent 默认承接，装载 senior-software-architect 并按用户要求完成系统设计；不展开额外协作。"
     },
     {
-      "id": "wise-agent-negative-single-domain-source-review",
+      "id": "wise-agent-default-single-domain-source-review",
       "skill": "wise-agent",
       "query": "只读 CR 这个 Spring Service 的事务边界、异常契约、缓存一致性和测试缺口，按严重级别列问题。",
-      "should_trigger": false,
-      "preferred_skill": "senior-software-architect",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是单一源码 CR，应由 senior-software-architect 主责并消费项目约规；没有跨能力或状态治理证据时不加载 wise-agent。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "单一源码 CR 也由 wise-agent 默认承接，装载 senior-software-architect 并消费项目约规，保持只读、按证据交付问题；不创建协作流程。"
     },
     {
-      "id": "wise-agent-negative-single-domain-codegen",
+      "id": "wise-agent-default-single-domain-codegen",
       "skill": "wise-agent",
       "query": "根据这段 CREATE TABLE 生成 Entity、Mapper、DTO、Request、Query、Converter、Service 和 ServiceImpl，输出到评审目录。",
-      "should_trigger": false,
-      "preferred_skill": "java-service-code-generator",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是结构化 Java 代码生成任务，应直接加载 java-service-code-generator；生成后的约规和源码 CR 按其交接链处理，不先加载 wise-agent。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "结构化 Java 代码生成任务由 wise-agent 默认承接，装载 java-service-code-generator 及必需 Java/Wind 规则，按授权完成生成与验证；不先写规划文档。"
     },
     {
-      "id": "wise-agent-negative-single-domain-document",
+      "id": "wise-agent-default-single-domain-document",
       "skill": "wise-agent",
       "query": "把这批已确认材料整理成面向管理层的正式制度文档，保留引用并输出可评审 Markdown。",
-      "should_trigger": false,
-      "preferred_skill": "document-authoring",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是事实已稳定的单一正式成文任务，应直接加载 document-authoring；没有跨领域事实裁决时不加载 wise-agent。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "单一正式成文任务由 wise-agent 默认承接；document-authoring 若仍为显式候选则不隐式装载，使用可用成文能力交付 Markdown；不把默认路由当作候选准入。"
     },
     {
-      "id": "wise-agent-negative-single-domain-philology",
+      "id": "wise-agent-default-single-domain-philology",
       "skill": "wise-agent",
       "query": "考据‘止’字在甲骨、金文和《说文》中的形义关系，区分材料可证、传统训释和争议。",
-      "should_trigger": false,
-      "preferred_skill": "hanzi-philology",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是单一汉字学与训诂任务，应直接加载 hanzi-philology；不因需要证据互证就额外加载 wise-agent。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "单一汉字学与训诂任务由 wise-agent 默认承接，装载 hanzi-philology 并依材料交付结论；不因证据互证展开额外协作。"
     },
     {
-      "id": "wise-agent-negative-single-domain-java-conventions",
+      "id": "wise-agent-default-single-domain-java-conventions",
       "skill": "wise-agent",
       "query": "只检查这个普通 Java 项目的编码约规和 AGENTS.md 约规入口，不做源码设计、CR、修复或 TDD。",
-      "should_trigger": false,
-      "preferred_skill": "wind-coding-conventions",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这是纯 Java 约规任务，应直接加载 wind-coding-conventions；不升级为工程执行或 wise-agent 协同。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "纯 Java 约规任务由 wise-agent 默认承接，装载 wind-coding-conventions；不升级为工程执行或协作流程。"
     },
     {
-      "id": "wise-agent-negative-simple-translation",
+      "id": "wise-agent-default-simple-translation",
       "skill": "wise-agent",
       "query": "请把这句话翻译成英文：今天的会议改到下午三点；只返回译文，不读取材料、不调用工具，也不需要形成正式交付物。",
-      "should_trigger": false,
-      "preferred_skill": "none",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
-      "negative_reason": "这是无需材料、工具、专项能力或验证的一步翻译，应直接回答，不加载知止者工作闭环。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "expected_handling": "wise-agent 默认入口保持轻量；一步翻译直接回答，只返回译文，不加载专业能力或读取额外材料，不展示工作闭环。"
     },
     {
-      "id": "wise-agent-negative-commit-message-translation",
+      "id": "wise-agent-default-commit-message-translation",
       "skill": "wise-agent",
       "query": "把 commit message 'fix payment timeout' 翻译成中文，只返回译文，不执行 Git。",
-      "should_trigger": false,
-      "preferred_skill": "none",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy", "variance_check"],
-      "negative_reason": "这只是翻译 commit message 的一步措辞任务，不执行 Git、不读取工作区，也不触发知止者。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "expected_handling": "wise-agent 默认入口保持轻量；翻译 commit message 直接返回译文，不执行 Git，不读取工作区，不触发工程交付流程。"
     },
     {
-      "id": "wise-agent-negative-simple-fact",
+      "id": "wise-agent-default-simple-fact",
       "skill": "wise-agent",
       "query": "请回答一个常识问题：中国的首都是哪座城市？只给出城市名称，不读取项目材料、不调用工具或形成交付物。",
-      "should_trigger": false,
-      "preferred_skill": "none",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
-      "negative_reason": "这是无需专项材料与行动闭环的稳定常识问答，应直接回答，不触发知止者。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "expected_handling": "wise-agent 默认入口保持轻量；稳定常识问答直接回答，只给城市名称，不调用工具或展开工作闭环。"
     },
     {
-      "id": "wise-agent-negative-simple-wording",
+      "id": "wise-agent-default-simple-wording",
       "skill": "wise-agent",
       "query": "把‘这个功能比较好用’改成一句更自然的中文，只返回改写结果；不读取文件、不调用工具、不形成正式文档。",
-      "should_trigger": false,
-      "preferred_skill": "none",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
-      "negative_reason": "这是无需材料、工具、专项能力或验证的一步措辞改写，应直接回答，不加载知止者工作闭环。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "expected_handling": "wise-agent 默认入口保持轻量；一步措辞改写直接回答，只返回改写结果，不加载专业能力或展开工作闭环。"
     },
     {
-      "id": "wise-agent-negative-simple-definition",
+      "id": "wise-agent-default-simple-definition",
       "skill": "wise-agent",
       "query": "用一句话解释什么是代码评审，只给通用定义；不读取项目源码、不调用工具，也不要求形成评审报告。",
-      "should_trigger": false,
-      "preferred_skill": "none",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
-      "negative_reason": "这是无需项目事实、工具或可验证行动的简单定义问答，应直接回答，不触发知止者。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "expected_handling": "wise-agent 默认入口保持轻量；简单定义问答直接回答，不读取项目源码，不调用工具或输出评审报告。"
     },
     {
-      "id": "wise-agent-negative-simple-synonyms",
+      "id": "wise-agent-default-simple-synonyms",
       "skill": "wise-agent",
       "query": "给‘推进’列出三个常用近义词，只返回词语；不读取材料、不调用工具，也不需要分析或交付闭环。",
-      "should_trigger": false,
-      "preferred_skill": "none",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "dimensions": ["trigger_accuracy"],
-      "negative_reason": "这是一步语言生成，不需要读取事实、调用能力、执行动作或独立验证，应直接回答。"
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy"
+      ],
+      "expected_handling": "wise-agent 默认入口保持轻量；一步语言生成直接回答，不调用工具、加载专业能力或展示分析流程。"
     },
     {
       "id": "senior-should-code-review-service-transaction",
@@ -5394,19 +5417,17 @@
       "negative_reason": "任务主产物是小说正文，并明确排除现实决策建议；应由 novelist 主责，huaxia-practical-wisdom 只按依赖契约返回叙事校准卡，不成为故事 Owner。"
     },
     {
-      "id": "wise-agent-negative-single-domain-fiction-drafting",
+      "id": "wise-agent-default-single-domain-fiction-drafting",
       "skill": "wise-agent",
       "query": "请直接写一篇约三千字的现代短篇小说：一名社区调解员发现最守规矩的住户正在替邻居隐瞒违规。重点写人物选择、关系变化、制度约束和行动代价，不需要现实决策建议、正式报告或设定集整理。",
-      "should_trigger": false,
-      "preferred_skill": "novelist",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
-      "competition_group": "fiction-drafting-owner",
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
       "dimensions": [
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "这是边界清楚的单次、单一小说创作任务，应直接由 novelist 持有故事语义并完成正文；huaxia-practical-wisdom 只按必要依赖返回叙事校准卡，不额外触发 wise-agent。"
+      "expected_handling": "wise-agent 默认承接单次小说创作，装载 novelist 作为故事主能力；huaxia-practical-wisdom 只按必要依赖提供叙事校准，直接完成正文，不展开额外协作。"
     },
     {
       "id": "novelist-should-not-own-fiction-term-evidence",
@@ -5681,18 +5702,17 @@
       "expected_handling": "由 wise-agent 冻结 candidate_revision、diff_fingerprint、Spec / AC revision 和验证证据，先完成 Meeting Charter 与 Shared Information Matrix；信息充分后，各事实权威独立提交 Position Card，Maker 只答疑、不参与准出。主持者仅把差异归入 Conflict Matrix，每条工程 finding 使用 finding_id / P0-P3、源码锚点、真实后果、Owner 和验证命令；decision_owner 逐项裁决，独立 Checker 最终只输出一个 Delivery Gate，不产生自动修复、Git、发布或生产授权。"
     },
     {
-      "id": "wise-agent-negative-simple-local-engineering-cr",
+      "id": "wise-agent-default-simple-local-engineering-cr",
       "skill": "wise-agent",
       "query": "请只读 Review 这个单文件空值修复，调用链清楚，聚焦测试已经通过，不需要跨角色会议、Goal 或发布评审。",
-      "should_trigger": false,
-      "preferred_skill": "senior-software-architect",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
       "dimensions": [
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "这是单文件、边界清楚的普通源码 CR，应由 senior-software-architect 直接核验源码、调用链和测试，不触发 wise-agent，也不建立工程交付合议。"
+      "expected_handling": "单文件普通源码 CR 由 wise-agent 默认承接，装载 senior-software-architect 直接核验调用链和测试；不建立工程交付合议、Goal 或执行规范。"
     },
     {
       "id": "wise-agent-should-reject-self-certified-roleplay-cr",
@@ -5870,18 +5890,17 @@
       "expected_handling": "由 wise-agent 启动模块合议并装载系分与架构证据，把构建耗时、故障发现时间、可靠性和资源成本作为技术价值候选，用当前基线、变化量、消费者和运行证据验证；没有已确认业务场景时不强行装载产品业务架构，不虚构直接业务价值或赋能业务价值。若后续主张赋能业务，再补齐技术能力 -> 消费模块/能力 -> 业务场景 -> 可观察业务结果，并交产品侧确认受益主体与结果口径。"
     },
     {
-      "id": "wise-agent-negative-module-deliberation-on-single-module-review",
+      "id": "wise-agent-default-module-deliberation-on-single-module-review",
       "skill": "wise-agent",
       "query": "只评审 order-service 单模块里一个已经定位清楚的空值修复，核对调用链和聚焦测试即可，不涉及其他模块、产品定位、公共契约或共享决策。",
-      "should_trigger": false,
-      "preferred_skill": "senior-software-architect",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
       "dimensions": [
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "这是边界清楚的单模块源码 CR，应由 senior-software-architect 直接核验调用链和测试，不触发 wise-agent 模块合议，也不加载产品业务架构会商。"
+      "expected_handling": "单模块源码 CR 由 wise-agent 默认承接，装载 senior-software-architect 核验调用链和测试；不触发 wise-agent 模块合议，不加载产品业务架构会商。"
     },
     {
       "id": "wise-agent-should-not-treat-model-diversity-as-independent-authority",
@@ -5992,7 +6011,7 @@
         "trigger_accuracy",
         "output_quality"
       ],
-      "expected_handling": "由 llm-coding-hygiene 读取目标、项目规则、相关源码、调用方、测试、计划和 diff，区分事实、推断、待确认与范围外不做；逐项给出有证据的隐藏假设、可复用能力、真实变化轴、共享根因、允许修改范围和可运行成功标准。只返回编码卫生专项结论，不接管工程实现、TDD、源码 CR 或项目编码约规；没有跨阶段状态时不额外加载 wise-agent。"
+      "expected_handling": "由 llm-coding-hygiene 读取目标、项目规则、相关源码、调用方、测试、计划和 diff，区分事实、推断、待确认与范围外不做；逐项给出有证据的隐藏假设、可复用能力、真实变化轴、共享根因、允许修改范围和可运行成功标准。只返回编码卫生专项结论，不接管工程实现、TDD、源码 CR 或项目编码约规；默认入口遵循 AGENTS.md，不因编码卫生展开跨阶段流程。"
     },
     {
       "id": "llm-coding-hygiene-should-detect-assumption-scope-and-verification-drift",
@@ -6020,7 +6039,7 @@
         "output_quality",
         "baseline_comparison"
       ],
-      "expected_handling": "由 senior-software-architect 主责实现、TDD 和验证，llm-coding-hygiene 作为静默协同护栏默认生效，约束最小根因修复、范围和成功证据；不额外输出编码卫生检查卡，不加载 wise-agent 或完整协作链。"
+      "expected_handling": "由 senior-software-architect 主责实现、TDD 和验证，llm-coding-hygiene 作为静默协同护栏默认生效，约束最小根因修复、范围和成功证据；不额外输出编码卫生检查卡，由知止者默认承接，不展开完整协作链。"
     },
     {
       "id": "llm-coding-hygiene-negative-readonly-source-review",
@@ -6165,18 +6184,17 @@
       "negative_reason": "未显式点名候选审查能力，由 senior-software-architect 在已确认资金契约下进行源码 CR；不能因涉及资金就自动加载未准入的候选 Skill。"
     },
     {
-      "id": "wise-agent-negative-unmentioned-cross-stage-engineering",
+      "id": "wise-agent-default-unmentioned-cross-stage-engineering",
       "skill": "wise-agent",
       "query": "已确认产品对象、接口、写入范围和验收，Owner 已授权本地补丁及聚焦测试。请按接口到实现到验证三阶段推进一个跨模块修复；不提交、不联网，不再重开已确认决策。",
-      "should_trigger": false,
-      "preferred_skill": "senior-software-architect",
-      "difficulty": "hard_negative",
-      "hard_negative": true,
+      "should_trigger": true,
+      "difficulty": "normal",
+      "hard_negative": false,
       "dimensions": [
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "任务跨度不等于显式调用；当前 Agent 使用工程主能力核对用户与项目事实后推进，不能要求补协调入口或命名交接卡，也不扩大授权。"
+      "expected_handling": "未点名的跨阶段工程任务也由 wise-agent 默认承接，使用 senior-software-architect 核对事实及必需规则后直接修复并验证；不补协调入口、命名交接卡或规划文档，不扩大授权。"
     },
     {
       "id": "senior-software-architect-should-own-direct-cross-stage-engineering",
@@ -6242,6 +6260,34 @@
       "hard_negative": true,
       "dimensions": ["trigger_accuracy", "efficiency_metrics"],
       "negative_reason": "任务只需使用当前环境的浏览器能力读取页面，没有本地 Markdown 到语雀的发布动作，不触发 yuque-document-publisher。"
+    },
+    {
+      "id": "wise-agent-negative-explicit-opt-out",
+      "skill": "wise-agent",
+      "query": "本轮不要加载知止者 Skill；只用 $senior-software-architect 做只读源码 CR。",
+      "should_trigger": false,
+      "preferred_skill": "senior-software-architect",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "negative_reason": "用户明确禁用 Skill，当前指令覆盖默认加载规则；按用户指定范围直接完成，不强行加载知止者或展开协调流程。"
+    },
+    {
+      "id": "wise-agent-negative-disable-all-skills",
+      "skill": "wise-agent",
+      "query": "这次不要读取或加载任何 Skill，包括 wise-agent；把 hello 翻译成中文，只返回译文。",
+      "should_trigger": false,
+      "preferred_skill": "none",
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "variance_check"
+      ],
+      "negative_reason": "用户明确禁用 Skill，当前指令覆盖默认加载规则；按用户指定范围直接完成，不强行加载知止者或展开协调流程。"
     }
   ]
 }
