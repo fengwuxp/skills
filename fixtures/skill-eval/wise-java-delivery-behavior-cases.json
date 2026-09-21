@@ -78,6 +78,28 @@
         "依项目事实采用现有测试设施，不强加 Wind face/impl、币种类型、Spring 或数据库依赖。",
         "完成局部修改和聚焦验证，不增建测试框架或新接口，不把局部测试写成全项目验收。"
       ]
+    },
+    {
+      "id": "java-format-config-and-readable-branches",
+      "category": "format-and-readability",
+      "risk": "high",
+      "prompt": "修复 Java 方法并补测试。项目提交的 IDEA Code Style 使用 160 行宽，.editorconfig 只定义 4 空格缩进；现有实现用嵌套三目选择依赖、执行状态变更，邻近历史代码也这样写。允许局部修复，不允许改格式配置或引入依赖。",
+      "criteria": [
+        "写入前实际读取项目格式配置和 Java 4.6，按各配置覆盖的选项与项目权威裁决，不能使用通用 120 强制换行或因 .editorconfig 存在而忽略 IDEA 设置。",
+        "将嵌套、副作用业务分支改成清晰控制流，保留合法简单三目，不机械新增策略层或批量重排邻近文件。",
+        "执行项目已有格式、测试与规约检查，工具不可用明确缺口，不以 Python guard 或 git diff --check 代替 IDEA 验证。"
+      ]
+    },
+    {
+      "id": "wind-serviceimpl-owns-persistence-without-ddd-wrapper",
+      "category": "architecture-specialization",
+      "risk": "high",
+      "prompt": "Wind OrderServiceImpl 已实现 OrderService，负责订单状态与本实体 Mapper 条件更新；新增调用方应通过稳定服务完成用例。同事认为领域核心不能碰 Mapper，建议新增透传 DomainService、Repository 和 Loader。请评审并完成已授权的最小修改。",
+      "criteria": [
+        "按 Wind 实际分层映射职责，允许承责基础 ServiceImpl 封装自己的 Mapper/Entity/事务；不将所有 ServiceImpl 等同于纯 DDD 领域层。",
+        "用例和 Controller 依赖稳定服务接口，不直连 Mapper 拼业务，也不把实体透传到外部契约。拒绝没有独立责任的新包装层，独立领域对象继续隔离基础设施。",
+        "按项目测试基座验证公开行为及本轮状态失败边界，无统一臆造覆盖率阈值，不以结构检查代替事务事实。"
+      ]
     }
   ]
 }

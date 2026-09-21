@@ -23,7 +23,7 @@
 
 ## 需要继续读取的 reference
 
-- 仓库级规则读 `AGENTS.md`。
+- 维护本 Skills 源仓库时，仓库级规则读源仓库根目录 `AGENTS.md`；消费侧运行规则必须随对应 Skill 包交付。
 - 新建或重构技能读系统 `skill-creator`。
 - 架构师 AI 协作和经验沉淀读 `senior-software-architect/references/ai-assisted-engineering.md`。
 

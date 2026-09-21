@@ -25,7 +25,7 @@
 ## 需要继续读取的 reference
 
 - 新建或更新 Skill 读系统 `skill-creator`。
-- 仓库级规则、安全边界和外部文章读取约规读 `AGENTS.md`。
+- 维护本 Skills 源仓库时，仓库级规则、安全边界和外部文章读取约规读源仓库根目录 `AGENTS.md`；本 reference 不随单个 Skill 分发，不作为消费项目运行规则入口。
 - Prompt 样例读 `fixtures/skill-eval/prompt-cases.json`。
 - 确定性结构评分读 `scripts/evaluate-skills.py`。
 - Prompt fixture 完整性检查读 `scripts/audit-skill-eval-fixtures.py`。

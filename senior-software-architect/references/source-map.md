@@ -16,7 +16,7 @@
 - 代码 Review 方法读 `coding-review-deep-dive.md`。
 - PR、提交、验证和 Git 边界读 `workflow.md`。
 - 生产、紧急变更和上线边界读 `production-readiness.md`。
-- 外部来源安全和仓库级治理读根目录 `AGENTS.md`。
+- 运行时外部来源读取与核验读 `workflow.md` 的“外部知识时效性门禁”；只有维护 Skills 源仓库时才额外遵守该源仓库根目录 `AGENTS.md`。
 ## 按任务读取索引
 | 任务 | 优先读取 | 跳过 |
 | --- | --- | --- |

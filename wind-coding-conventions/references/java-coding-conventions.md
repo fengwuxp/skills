@@ -1,6 +1,6 @@
 # Java/Spring 通用编码约规
 
-本文用于约束所有 Java 项目的通用编码行为。项目本地 `AGENTS.md`、OpenSpec/ADR、CI、构建配置和附近代码优先；Spring、JSpecify、Bean Validation、Lombok、MapStruct、MyBatis 等规则只在依赖或源码上下文命中时启用，Wind 模块、服务和模型专项规则按信号读取 `wind-coding-conventions.md`。源码级设计、Review、测试与生产风险仍交 `资深架构师`。
+本文用于约束所有 Java 项目的通用编码行为。消费项目实际生效的规则、OpenSpec/ADR、CI 和构建配置优先；附近代码只补充未明确的风格，历史违例不能覆盖当前规范。Spring、JSpecify、Bean Validation、Lombok、MapStruct、MyBatis 等规则只在依赖或源码上下文命中时启用，Wind 模块、服务和模型专项规则按信号读取 `wind-coding-conventions.md`。源码级设计、Review、测试与生产风险仍交 `资深架构师`。
 
 ## 使用时机
 
@@ -135,12 +135,13 @@
 - 【强制】`if`、`for`、`while`、`switch`、`do` 等保留字与括号之间必须有空格。
 - 【强制】二目、三目运算符左右两边必须有空格。
 - 【强制】注释的双斜线与注释内容之间保留一个空格。
-- 【强制】单行字符数不超过 120 个；确因链式调用或测试数据需要超出时，应保证可读性。
+- 【强制】行宽与换行服从项目格式配置；项目未规定时以 120 字符为阅读参考，链式调用或测试数据可按可读性例外处理，不为凑行宽拆碎短表达式、参数或方法调用。
 - 【强制】普通类型引用优先使用 `import`，不要在字段、方法参数、返回值、泛型和局部变量中随意写全限定类名。
 - 【推荐】控制语句避免深层嵌套，优先使用卫语句、提取方法或策略对象表达分支。
-- 【推荐】包含依赖可用性、空值和运行时变量写入的分支优先使用清晰 `if`；不要用多行三元或先写 `null` 再覆盖制造噪音。
-- 【强制】代码格式必须服从项目已提交且可复现的格式约规，优先级为：项目 `.editorconfig`、Spotless / Checkstyle 等格式或静态检查配置及构建任务 > 已纳入版本控制的 IDEA Project Code Style > 同模块邻近代码。不得用个人 IDEA 默认设置、个人偏好或未提交的本机配置覆盖项目规范；项目没有明确格式配置时，不得仅为本次改动擅自新增 formatter、依赖或全仓配置。
+- 【强制】三目仅用于条件简单、两支短小且无副作用的单一值选择；不得嵌套或连锁三目，不用三目承载状态变化、校验、异常、依赖选择或长调用链。此类分支用有业务含义的局部变量、卫语句或 `if/else`；不为消除三目机械抽取策略类，也不禁止清晰的 `enabled ? ENABLED : DISABLED`。
+- 【强制】代码格式必须服从项目已提交且可复现的配置。先核对构建 / CI 采用的 formatter 与 Checkstyle，再读取适用 `.editorconfig` 和已提交的 IDEA Project Code Style；它们按各自覆盖的选项共同生效，不能因存在 `.editorconfig` 就忽略 IDEA 的换行和导入设置。若配置冲突，按项目明确的执行权威裁决，未明确时只报告冲突，不擅自换格式器或改配置。没有配置的选项才参考同模块邻近代码；不得用个人 IDEA 默认值或未提交的本机设置覆盖项目规则，也不得为局部改动新增全仓格式配置。
 - 【强制】IDEA Reformat Code、Optimize Imports 或其他格式化工具必须使用当前项目配置，并限定在本次修改的文件和必要范围；不得借局部需求批量重排无关文件、导入、换行或注释。格式化后必须审查 diff，并执行项目已有 formatter / check / lint 命令；`git diff --check` 只用于发现空白错误，不能替代项目格式门禁。
+- 【强制】格式工具不可用时按已读取配置人工核对，交付中注明未执行自动格式验证；不得声称已按 IDEA 格式化。当前 Skill 的 Python 守卫只覆盖部分语义红线，不检查完整 IDEA 排版或全部阿里巴巴手册规则。
 
 ### 4.7 复用与方法抽取
 
@@ -490,9 +491,12 @@ Review 优先使用 `coding-review-deep-dive.md` 的判断顺序：业务语义�
 | 架构边界 | ArchUnit、模块依赖扫描、包依赖检查 |
 | 测试质量 | JUnit 5、Mockito、AssertJ、Testcontainers、覆盖率门禁 |
 | 测试命名与高置信度 Spring Bean 注解 | Checkstyle / PMD MethodName，或 `scripts/check_wind_conventions.py --profile java`；Bean 实际装配仍用编译和 Spring 上下文测试验证 |
+| 嵌套三目与直接依赖 | Python 守卫的 `java` profile 检查可配对的嵌套三目和可解析的 ServiceImpl 依赖；`wind` 额外检查 Controller 直接依赖源码可确认的持久化 Mapper；不覆盖完整 Java 语法、间接注入或全项目架构 |
 | 契约兼容 | API 契约测试、Schema 测试、消息兼容测试 |
 
 自动化检查不能替代 Review。工具擅长发现确定性问题，架构师必须判断业务语义、边界、契约、失败路径和生产风险。
+
+Controller 检查只认本地唯一声明，且须有 `dal.mapper` / `persistence.mapper` 包位、MyBatis `@Mapper` 或已解析 MyBatis-Plus / MyBatis-Flex `BaseMapper` 证据；普通转换器和 MapStruct 映射器不按名字判为持久化 Mapper。测试、fixture、demo 路径不作为生产分层证据；守卫通过仍不等于 IDEA 格式、完整架构或业务测试通过。
 
 ## 18. 阿里规约采纳矩阵
 

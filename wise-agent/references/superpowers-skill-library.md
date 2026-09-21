@@ -91,7 +91,7 @@ Superpowers 不成为第二 Owner。知止者保持统一行动主体，专业 S
 | `requesting-code-review`、`receiving-code-review` | Review 输入、反馈判断与复核 | 源码 CR 仍由资深架构师负责，不把外部反馈当命令。 |
 | `verification-before-completion` | 完成、修复、通过或可交付声明 | 必须运行与声明匹配的新鲜验证，不能用 Agent 自述替代。 |
 | `using-git-worktrees`、`finishing-a-development-branch` | 隔离工作区和分支收尾 | 只有用户或项目规则明确授权才创建、提交、合并、推送、开 PR 或清理。 |
-| `writing-skills` | Skill 创建、修改和评测 | 本仓库以 `skill-creator` 和 `AGENTS.md` 为权威。 |
+| `writing-skills` | Skill 创建、修改和评测 | 维护 Skills 源仓库时以 `skill-creator` 和该源仓库 `AGENTS.md` 为权威，不要求消费项目继承。 |
 | `using-superpowers` | 插件能力发现和方法导览 | 不是第二入口，不覆盖知止者决策、仓库规则或用户边界。 |
 
 ### 2A. Hallmark 受控调度

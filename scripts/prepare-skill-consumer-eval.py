@@ -2,7 +2,7 @@
 """Prepare a local consumer fixture without executing a model or its task.
 
 Input: checked-in cases and an explicit new directory under /tmp.
-Output: staged Skill, synthetic project, task and hash receipt in that directory.
+Output: staged Python Skill or Java Skill bundle, synthetic project, task and hash receipt.
 Uses only the repository sync script, first dry-run then temporary staging.
 No network, credentials, user configuration copy or real installation writes.
 Failure retains local setup evidence without a receipt; no retries or deletion.
@@ -25,6 +25,13 @@ ROOT = Path(__file__).resolve().parents[1]
 CASES = ROOT / "fixtures/skill-eval/skill-consumer-behavior-cases.json"
 PROJECT = ROOT / "fixtures/skill-eval/consumer-project"
 SKILL = "senior-software-architect"
+JAVA_SKILLS = ("wise-agent", SKILL, "wind-coding-conventions", "llm-coding-hygiene")
+JAVA_PROJECT = ROOT / "fixtures/skill-eval/java-consumer-project"
+JAVA_WRITES = (
+    "src/main/java/sample/web/OrderController.java",
+    "src/main/java/sample/service/impl/OrderServiceImpl.java",
+    "src/test/java/sample/OrderLabelTests.java",
+)
 
 
 def load_cases():
@@ -49,10 +56,16 @@ def validate_consumer_cases(data):
     if profiles["minimal"] is not None or not isinstance(profiles["approval"], str) or not profiles["approval"].strip():
         raise ValueError("minimal must omit policy; approval must provide policy")
     for case in data["cases"]:
+        profile = case.get("project_profile", "python")
+        if profile not in ("python", "java"):
+            raise ValueError(f"unknown project profile: {case['id']}")
+        if profile == "java" and setup.get("java_skills") != list(JAVA_SKILLS):
+            raise ValueError("Java profile requires the declared engineering Skill bundle")
         if case.get("host_profile") not in profiles:
             raise ValueError(f"unknown host profile: {case['id']}")
         writes = case.get("write_paths")
-        if not isinstance(writes, list) or any(path not in ("labels.py", "report.md") for path in writes):
+        allowed = JAVA_WRITES if profile == "java" else ("labels.py", "report.md")
+        if not isinstance(writes, list) or any(path not in allowed for path in writes):
             raise ValueError(f"unsupported consumer write paths: {case['id']}")
         if case["host_profile"] == "approval" and writes:
             raise ValueError("pending approval case must have no writable paths")
@@ -63,6 +76,8 @@ def prepare_case(data, case_id, output_dir):
     case = next((case for case in data["cases"] if case["id"] == case_id), None)
     if case is None:
         raise ValueError(f"unknown consumer case: {case_id}")
+    java_project = case.get("project_profile") == "java"
+    skills = JAVA_SKILLS if java_project else (SKILL,)
     requested = Path(output_dir)
     output = requested.resolve()
     home = Path.home()
@@ -79,7 +94,7 @@ def prepare_case(data, case_id, output_dir):
     environment = dict(os.environ, CODEX_HOME=str(output / "codex-home"),
                        PYTHONDONTWRITEBYTECODE="1")
     with (output / "setup.log").open("w", encoding="utf-8") as log:
-        for options in (("--dry-run", SKILL), (SKILL,)):
+        for options in (("--dry-run", *skills), skills):
             command = ["bash", str(ROOT / "sync-skills.sh"), *options]
             result = subprocess.run(command, cwd=ROOT, env=environment,
                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -88,7 +103,8 @@ def prepare_case(data, case_id, output_dir):
             if result.returncode:
                 raise RuntimeError(f"sync failed ({result.returncode}); see {output / 'setup.log'}")
     project = output / "project"
-    shutil.copytree(PROJECT, project, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    shutil.copytree(JAVA_PROJECT if java_project else PROJECT, project,
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     policy = data["consumer_setup"]["host_profiles"][case["host_profile"]]
     if policy is not None:
         (project / "AGENTS.md").write_text(policy, encoding="utf-8")
@@ -105,6 +121,8 @@ def prepare_case(data, case_id, output_dir):
         "case_id": case_id,
         "preparation_contract_sha256": hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
         "skill": SKILL,
+        "skills": list(skills),
+        "project_profile": "java" if java_project else "python",
         "host_profile": case["host_profile"],
         "write_paths": case["write_paths"],
         "execution_status": "NOT_RUN",

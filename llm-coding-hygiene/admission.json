@@ -1,6 +1,7 @@
 {
   "status": "installable",
   "evidence_mode": "contract-only",
+  "requires": ["senior-software-architect"],
   "updated_at": "2026-08-18",
   "blockers": [],
   "restrictions": []

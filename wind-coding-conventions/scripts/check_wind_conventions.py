@@ -97,6 +97,14 @@ FIELD_DECLARATION = re.compile(
     r"^\s*(?:(?:public|protected|private|static|final|transient|volatile)\s+)*"
     r"[A-Za-z_][\w.$?@<>, \[\]]*\s+[A-Za-z_]\w*\s*;\s*$"
 )
+PERSISTENCE_MAPPER_PACKAGE = re.compile(
+    r"\bpackage\s+(?:[\w.]+\.)?(?:dal|persistence)\.mapper\s*;"
+)
+MYBATIS_MAPPER_ANNOTATION = ("Mapper", "org.apache.ibatis.annotations.Mapper")
+MYBATIS_BASE_MAPPER_TYPES = {
+    "com.baomidou.mybatisplus.core.mapper.BaseMapper",
+    "com.mybatisflex.core.BaseMapper",
+}
 
 
 @dataclass(frozen=True)
@@ -105,6 +113,14 @@ class Finding:
     path: Path
     line_no: int
     message: str
+
+
+@dataclass
+class TernaryFrame:
+    line_no: int
+    depth: int
+    parent: "TernaryFrame | None"
+    has_colon: bool = False
 
 
 def is_face_path(path: Path) -> bool:
@@ -136,6 +152,84 @@ def stripped(line: str) -> str:
 
 def java_code_only(text: str) -> str:
     return JAVA_NON_CODE.sub(lambda match: "\n" * match.group(0).count("\n"), text)
+
+
+def is_generic_wildcard(code: str, offset: int) -> bool:
+    """Recognize the unambiguous `?` forms used in Java generic type arguments."""
+    before = offset - 1
+    while before >= 0 and code[before].isspace():
+        before -= 1
+    if before < 0 or code[before] not in "<,":
+        return False
+
+    after = offset + 1
+    while after < len(code) and code[after].isspace():
+        after += 1
+    if after >= len(code) or code[after] in ">,":
+        return True
+    return bool(re.match(r"(?:extends|super)\b", code[after:]))
+
+
+def check_nested_ternary_expressions(path: Path, root: Path, text: str) -> list[Finding]:
+    """Report only nested ternaries whose parent and child can both be paired.
+
+    This is deliberately an expression-boundary scanner, not a Java parser. It
+    discards comment/string content and separates statement, argument, and
+    parenthesized-expression boundaries so independent simple ternaries do not
+    become a nesting finding.
+    """
+    code = java_code_only(text)
+    frames: list[TernaryFrame] = []
+    all_frames: list[TernaryFrame] = []
+    depth = 0
+
+    for offset, char in enumerate(code):
+        if char == "?":
+            if is_generic_wildcard(code, offset):
+                continue
+            frame = TernaryFrame(
+                line_no=code.count("\n", 0, offset) + 1,
+                depth=depth,
+                parent=frames[-1] if frames else None,
+            )
+            frames.append(frame)
+            all_frames.append(frame)
+            continue
+
+        if char == ":":
+            for frame in reversed(frames):
+                if not frame.has_colon:
+                    frame.has_colon = True
+                    break
+            continue
+
+        if char in "([{":
+            depth += 1
+            continue
+
+        if char in ")]}":
+            depth = max(0, depth - 1)
+            frames = [frame for frame in frames if frame.depth <= depth]
+            continue
+
+        if char == ",":
+            frames = [frame for frame in frames if frame.depth < depth]
+            continue
+
+        if char == ";":
+            frames = []
+
+    rel = path.relative_to(root)
+    return [
+        Finding(
+            "ERROR",
+            rel,
+            frame.line_no,
+            "嵌套三目表达式应改为清晰的 if / else 分支",
+        )
+        for frame in all_frames
+        if frame.parent is not None and frame.has_colon and frame.parent.has_colon
+    ]
 
 
 @cache
@@ -503,6 +597,7 @@ def check_file(
     findings.extend(check_test_method_names(path, root, text))
     findings.extend(check_redundant_jspecify_checks(path, root, text, package_null_marked))
     findings.extend(check_spring_bean_annotations(path, root, text, spring_enabled, lombok_enabled))
+    findings.extend(check_nested_ternary_expressions(path, root, text))
 
     if profile == "java":
         return findings
@@ -544,6 +639,27 @@ def qualified_java_type(name: str, code: str) -> str:
         return imported.group(1)
     package = re.search(r"\bpackage\s+([\w.]+)\s*;", code)
     return f"{package.group(1)}.{name}" if package else name
+
+
+def is_persistence_mapper_declaration(match: re.Match[str], code: str) -> bool:
+    """Accept Mapper names only when local source proves a persistence role."""
+    if PERSISTENCE_MAPPER_PACKAGE.search(code):
+        return True
+
+    preceding_types = list(re.finditer(r"\b(?:class|interface|record|enum)\s+\w+", code[:match.start()]))
+    annotation_scope = code[preceding_types[-1].end() if preceding_types else 0 : match.start()]
+    explicit_annotation = re.search(r"@(?:org\.apache\.ibatis\.annotations\.)?Mapper\b", annotation_scope)
+    if explicit_annotation and has_annotation(code, MYBATIS_MAPPER_ANNOTATION):
+        return True
+
+    extended = re.search(
+        rf"\binterface\s+{re.escape(match.group('name'))}\s+extends\s+(?P<base>[\w.]*BaseMapper)\s*<",
+        code,
+    )
+    return bool(
+        extended
+        and qualified_java_type(extended.group("base"), code) in MYBATIS_BASE_MAPPER_TYPES
+    )
 
 
 def check_interface_dependencies(files: list[Path], root: Path) -> list[Finding]:
@@ -613,12 +729,61 @@ def check_interface_dependencies(files: list[Path], root: Path) -> list[Finding]
     return findings
 
 
+def check_controller_mapper_dependencies(files: list[Path], root: Path) -> list[Finding]:
+    """Check only source-resolved Mapper injection points on concrete Controllers."""
+    sources = {path: java_code_only(path.read_text(encoding="utf-8", errors="ignore")) for path in files}
+    mapper_counts: Counter[str] = Counter()
+    for path, code in sources.items():
+        if not is_prod_path(path.relative_to(root)):
+            continue
+        for match in re.finditer(r"\b(?:interface|class)\s+(?P<name>\w+Mapper)\b", code):
+            if is_persistence_mapper_declaration(match, code):
+                mapper_counts[qualified_java_type(match.group("name"), code)] += 1
+    mapper_types = {name for name, count in mapper_counts.items() if count == 1}
+
+    findings: list[Finding] = []
+    for path, code in sources.items():
+        rel = path.relative_to(root)
+        if not is_prod_path(rel):
+            continue
+        declaration = CLASS_DECLARATION.search(code)
+        if not declaration or not declaration.group("name").endswith("Controller"):
+            continue
+
+        class_name = declaration.group("name")
+        declared_names = set(re.findall(r"\b(?:class|interface|record|enum)\s+(\w+)", code))
+        matches = list(re.finditer(
+            r"\b(?:private|protected|public)\s+(?:static\s+)?(?:final\s+)?"
+            r"(?P<type>[\w.]+Mapper)\s+\w+\s*[;=]",
+            code,
+        ))
+        for constructor in re.finditer(rf"\b{re.escape(class_name)}\s*\(([^{{}};]*)\)", code):
+            parameter = re.compile(r"\b(?P<type>[\w.]+Mapper)\s+\w+\s*(?=[,)])")
+            matches.extend(parameter.finditer(code, constructor.start(1), constructor.end(1) + 1))
+
+        for match in sorted(matches, key=lambda item: item.start()):
+            name = match.group("type")
+            if name in declared_names:
+                continue
+            mapper_type = qualified_java_type(name, code)
+            if mapper_type in mapper_types:
+                findings.append(Finding(
+                    "ERROR",
+                    rel,
+                    code.count("\n", 0, match.start("type")) + 1,
+                    f"Controller 应依赖 Service 契约，不得直接依赖 Mapper {mapper_type}",
+                ))
+    return findings
+
+
 def run(root: Path, profile: str = "wind") -> list[Finding]:
     if not root.exists():
         raise SystemExit(f"root not found: {root}")
     findings: list[Finding] = []
     files = java_files(root)
     findings.extend(check_interface_dependencies(files, root))
+    if profile == "wind":
+        findings.extend(check_controller_mapper_dependencies(files, root))
     null_marked_packages = {
         path.parent
         for path in files

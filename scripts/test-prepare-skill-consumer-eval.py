@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -138,6 +139,54 @@ class ConsumerPreparationTests(unittest.TestCase):
         self.assertNotEqual(policy, (ROOT / "AGENTS.md").read_text())
         self.assertEqual((self.output / "project/approval.md").read_text(), "PENDING\n")
         self.assertEqual(receipt["write_paths"], [])
+
+    def test_java_bundle_contains_rules_and_no_source_repository_policy(self):
+        receipt = self.module.prepare_case(self.cases, "consumer-java-format-and-boundaries", self.output)
+        self.assertEqual(receipt["skills"], list(self.module.JAVA_SKILLS))
+        self.assertEqual(receipt["project_profile"], "java")
+        self.assertEqual(receipt["execution_status"], "NOT_RUN")
+        self.assertEqual(receipt["loading_status"], "NOT_VERIFIED")
+        self.assertFalse((self.output / "project/AGENTS.md").exists())
+        self.assertFalse((self.output / "codex-home/AGENTS.md").exists())
+        for skill in self.module.JAVA_SKILLS:
+            installed = self.output / "codex-home/skills" / skill
+            self.assertEqual((installed / "SKILL.md").read_bytes(), (ROOT / skill / "SKILL.md").read_bytes())
+        for resource in (
+            "wise-agent/references/runtime-boundaries.md",
+            "senior-software-architect/references/workflow.md",
+            "senior-software-architect/references/project-governance-service-api-modeling.md",
+            "wind-coding-conventions/references/java-coding-conventions.md",
+            "wind-coding-conventions/references/wind-coding-conventions.md",
+            "llm-coding-hygiene/SKILL.md",
+        ):
+            self.assertTrue((self.output / "codex-home/skills" / resource).is_file(), resource)
+        self.assertTrue((self.output / "project/.editorconfig").is_file())
+        self.assertTrue((self.output / "project/idea-code-style.xml").is_file())
+
+    def test_java_profile_rejects_missing_rules_or_foreign_write_paths(self):
+        for mutation in ("missing-rules", "python-write", "unknown-profile"):
+            with self.subTest(mutation=mutation):
+                data = deepcopy(self.cases)
+                case = next(case for case in data["cases"] if case["id"] == "consumer-java-format-and-boundaries")
+                if mutation == "missing-rules":
+                    data["consumer_setup"]["java_skills"].remove("wind-coding-conventions")
+                elif mutation == "python-write":
+                    case["write_paths"] = ["labels.py"]
+                else:
+                    case["project_profile"] = "unknown"
+                with self.assertRaises(ValueError):
+                    self.module.validate_consumer_cases(data)
+
+    @unittest.skipUnless(shutil.which("javac") and shutil.which("java"), "JDK is required for the executable Java fixture")
+    def test_java_fixture_compiles_and_exposes_the_behavior_bug(self):
+        classes = self.output.parent / "classes"
+        classes.mkdir()
+        sources = sorted(str(path) for path in self.module.JAVA_PROJECT.rglob("*.java"))
+        compilation = subprocess.run(["javac", "-d", str(classes), *sources], capture_output=True, text=True)
+        self.assertEqual(compilation.returncode, 0, compilation.stderr)
+        execution = subprocess.run(["java", "-cp", str(classes), "sample.OrderLabelTests"], capture_output=True, text=True)
+        self.assertNotEqual(execution.returncode, 0, "fixture must reproduce the missing trim behavior")
+        self.assertIn("AssertionError", execution.stderr)
 
     def test_failed_sync_leaves_log_without_success_receipt(self):
         result = subprocess.CompletedProcess([], 1, "controlled failure\n")

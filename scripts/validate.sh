@@ -402,6 +402,7 @@ scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/securit
 echo "==> wind convention guard"
 wind-coding-conventions/scripts/check_wind_conventions.py --self-test
 python3 wind-coding-conventions/scripts/test_interface_dependencies.py
+python3 wind-coding-conventions/scripts/test_readability_boundaries.py
 
 echo "==> reference index audit"
 scripts/audit-reference-indexes.py

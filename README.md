@@ -32,6 +32,8 @@
 
 `sync-skills.sh` 按选定的 `<skill>/` 目录同步到 `$CODEX_HOME/skills/<skill>/`，不复制根目录 `AGENTS.md`；`--with-agents` 仅额外同步约定的子代理配置，不安装全局行动规则。消费项目不必具有本仓库的 `AGENTS.md`，Skill 也不得要求继承它。消费侧的全局或项目指令须独立管理，不能通过更新源仓库代替修改；安装一致性只证明文件一致，不证明发现、加载、权限裁决或任务行为正确。
 
+Java/Wind 编码路径需要 `wise-agent`、`senior-software-architect`、`wind-coding-conventions` 和 `llm-coding-hygiene` 在运行时可达；可先执行 `./sync-skills.sh --dry-run wise-agent senior-software-architect wind-coding-conventions llm-coding-hygiene` 核对安装范围。`admission.json` 的 `requires` 用于独立依赖审查，不会让同步脚本自动安装依赖；非 Java 任务不加载 Java 规则正文。缺少当前任务必需规则时不能静默略过，也不能声称已按该规则交付。
+
 ## 用户使用指南
 
 **适用对象**：希望让 Codex 完成分析、设计、实现、评审、文档或 Skill 维护任务的使用者；不要求预先理解 Skill、项目执行规范、Loop 或 Checker。
@@ -427,7 +429,7 @@ python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-sc
 
 `evaluate-skill-behavior.py validate` 默认只检查案例契约；需要同时核对 `source_profiles` / `input_profile` 的内容指纹时使用 `validate --verify-sources`，收集和评分阶段始终强制校验来源。
 
-消费场景另用 `fixtures/skill-eval/skill-consumer-behavior-cases.json`：覆盖直接修复、显式专业调用、跨阶段交付、消费项目审批和 Markdown 回退。`python3 scripts/prepare-skill-consumer-eval.py --validate` 只检查准备契约；`--case consumer-direct-repair --output-dir /tmp/skill-consumer-run` 在尚不存在的目录中调用现有同步脚本，先 dry-run 再暂存工程 Skill，并生成合成项目、任务与指纹回执。它不执行 Codex、模型或任务，不读取密钥，不修改真实安装目录；失败保留日志且不生成成功回执。暂存不等于自然加载，真实评测仍待运行环境隔离、授权、加载轨迹和独立评分，详见[消费环境评估](references/skill-evaluation-methodology.md#消费环境评估)。
+消费场景另用 `fixtures/skill-eval/skill-consumer-behavior-cases.json`：覆盖直接修复、显式专业调用、跨阶段交付、消费项目审批、Markdown 回退和 Java 工程组合。`python3 scripts/prepare-skill-consumer-eval.py --validate` 只检查准备契约；`--case consumer-direct-repair --output-dir /tmp/skill-consumer-run` 在尚不存在的目录中调用现有同步脚本，先 dry-run 再暂存工程 Skill，并生成合成项目、任务与指纹回执。`--case consumer-java-format-and-boundaries --output-dir /tmp/java-consumer-run` 则暂存四个 Java 工程必需包，以及可编译但行为和结构检查应失败的样本；修复后分别验证公开行为、接口/Mapper 边界、三目和 IDEA 项目格式，不注入源仓库 `AGENTS.md`。准备脚本不执行 Codex、模型或任务，不读取密钥，不修改真实安装目录；失败保留日志且不生成成功回执。暂存不等于自然加载，真实评测仍待运行环境隔离、授权、加载轨迹和独立评分，详见[消费环境评估](references/skill-evaluation-methodology.md#消费环境评估)。
 
 行为 criteria 应区分用户可见语义与执行过程：事实判断、方案选择、停止结论和风险说明由 `response` 评分；实际读取范围、工具调用、验证和是否发生外部或权威写入由成对 `execution_evidence` 证明。不得为了让内部过程“可见”而强迫用户回答复述检查步骤、未发生的写回动作或固定授权话术；也不得用自述证据替代回答中本应明确的事实、选择和结论。两种 condition 必须同时提供或同时不提供执行证据，证据标识不得泄露 condition、私有路径、prompt、token 或密钥。
 

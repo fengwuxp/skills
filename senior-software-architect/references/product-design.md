@@ -13,7 +13,7 @@
 ## 不适用场景
 
 - 完整通用 PRD、产品架构、能力地图、业务流程和运营后台优先使用 `product-architecture-expert`；支付资金方案优先使用 `payment-expert`。
-- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型 harden 和 PRD 可执行上下文的产品侧缺口优先交给 `产品架构专家` 读取 `ai-native-product-context.md`；端到端产品到研发流程仍由当前 Agent 负责，默认入口与能力装载遵循 `AGENTS.md`；本文件只承接产品侧已确认材料进入工程设计。
+- AI Native 产品上下文、Product Builder、业务 dogfooding、MVP/原型 harden 和 PRD 可执行上下文的产品侧缺口优先交给 `产品架构专家` 读取 `ai-native-product-context.md`；端到端产品到研发流程仍由当前 Agent 负责，能力装载遵守当前消费项目实际生效的规则，不依赖 Skills 源仓库 `AGENTS.md`；本文件只承接产品侧已确认材料进入工程设计。
 - 已进入工程实现、代码 Review、测试或生产变更时，回到对应架构师专项 reference。
 - 不用于替业务脑补未确认目标、规则、优先级或合规结论。
 

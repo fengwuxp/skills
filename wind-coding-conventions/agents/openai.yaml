@@ -2,6 +2,6 @@ interface:
   display_name: "Java/Wind 编码约规"
   short_description: "Java 编码与测试的规则依赖，按项目证据启用 Wind 专项"
   brand_color: "#0369A1"
-  default_prompt: "Use $wind-coding-conventions 核对 Java 编码、接口依赖、注释与测试约规，按项目证据叠加 Wind 专项；工程任务为架构师提供必须读取的规则，不接管实现。"
+  default_prompt: "Use $wind-coding-conventions 核对 Java 编码、项目 IDEA 格式、三目可读性、接口依赖与测试约规，按项目证据叠加 Wind 专项；为架构师提供必读规则，不接管实现。"
 policy:
   allow_implicit_invocation: true

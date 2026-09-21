@@ -1522,7 +1522,7 @@ check(
             "Java/Spring 通用编码约规",
             "所有 Java 项目的通用编码行为",
             "不得为了套规约新增依赖",
-            "项目本地 `AGENTS.md`",
+            "消费项目实际生效的规则",
             "源码级设计、Review、测试与生产风险仍交 `资深架构师`",
         ],
     )
@@ -4164,7 +4164,7 @@ check(
     )
     and has_all(
         wise_agent_skill_type_owner_routing,
-        ["分层承责，正交合用", "不成为吞并专项规则的万能业务编排层"],
+        ["能力组合按独立职责划分", "不成为吞并专项规则的万能业务编排层"],
     ),
 )
 check(
@@ -4882,11 +4882,11 @@ check(
         agents_rules,
         [
             "体、枢、用、证",
-            "`AGENTS.md` 是体",
+            "本源仓库 `AGENTS.md` 守维护治理之体",
             "`wise-agent` 是枢",
             "专业 Skill 是用",
             "fixtures、validator、测试和人工评审是证",
-            "同一规则只保留一个权威来源",
+            "同一规则在各自作用域内只保留一个权威来源",
         ],
     )
     and has_all(
@@ -11055,11 +11055,11 @@ check(
     has_all(
         coding,
         [
-            "项目已提交且可复现的格式约规",
-            "项目 `.editorconfig`、Spotless / Checkstyle",
-            "已纳入版本控制的 IDEA Project Code Style",
+            "项目已提交且可复现的配置",
+            "构建 / CI 采用的 formatter 与 Checkstyle",
+            "适用 `.editorconfig` 和已提交的 IDEA Project Code Style",
             "同模块邻近代码",
-            "个人 IDEA 默认设置",
+            "个人 IDEA 默认值",
             "不得借局部需求批量重排无关文件",
             "格式化后必须审查 diff",
             "`git diff --check` 只用于发现空白错误",
@@ -13211,7 +13211,7 @@ check(
             "AI Native Product Builder、业务 dogfooding、MVP/原型 harden、放下 PRD、PRD 可执行上下文、交给 AI Native 编排/架构师",
             "Hardened Candidate 门禁",
             "产品侧交接条件",
-            "端到端流程和 GSD / 工程执行准入由当前 Agent 核对，默认入口与能力装载遵循 `AGENTS.md`",
+            "端到端流程和 GSD / 工程执行准入由当前 Agent 核对，能力装载遵守当前消费项目实际生效的规则",
             "用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文",
         ],
     ),
