@@ -58,6 +58,8 @@
 
 不得记录单次偏好、一次性措辞、仅仅讲过或执行过、未验证推断、文章观点、Agent 自述、工具宣传、私有对话、客户 / 生产敏感数据和密钥。候选只用于显式回流评审，不参与普通任务决策。
 
+候选写回前先把当前任务明确提供的材料整理成一个证据批次：每条证据只保留脱敏摘要、来源引用和摘要指纹，不保存原始对话或完整轨迹；批次声明独立任务数和最大编辑数，问题模式与每个拟议编辑都必须回链证据。普通重复失败至少覆盖两个不同 `task_ref`；单次高风险事件走 Owner / CR 路径，不用本批次门禁冒充重复证据。使用 `wise-agent/scripts/validate-learning-evidence.py` 做离线结构校验，校验通过仍只产生 `candidate`，不确认、不晋升、不修改 Skill。
+
 ## 3. 生命周期
 
 经验采纳的评审生命周期仍是 `candidate -> confirmed -> promoted`，也允许进入 `rejected` 或 `superseded`。不要把它与某个改动版本的成败混为同一个状态机：
@@ -88,6 +90,15 @@ candidate 账本与 confirmed 评审结论不得反向充当 Skill 指令。运�
 `scripts/skill-learning-ledger.py` 是离线载体：`enable / disable / status / record / list` 保持原有 candidate-only 行为；`lookup / revise-pattern / record-impact` 用于显式维护。它不联网、不扫描历史、不自动确认或晋升经验、不修改仓库或 Codex Skills，也不执行 Git。
 
 `record` 必须显式传入当前任务引用、证据类型、证据引用、观察失败、期望行为、复用范围、建议权威落点、验证方式和 `public-safe` 检查。`repeated-failure` 至少需要两个不同证据引用。
+
+证据批次校验输入是当前任务显式指定的 JSON 文件，不扫描历史、不联网、不写仓库；脚本只输出校验结果，失败即拒绝批次。示例验证命令如下：
+
+```bash
+python3 wise-agent/scripts/validate-learning-evidence.py \
+  wise-agent/fixtures/learning-evidence-batch-valid.json
+```
+
+该校验器只检查脱敏边界、独立 `task_ref`、证据回链、候选状态和编辑预算；它不能证明问题模式成立、改动有效或运行时已经采用。文章中关于批处理、固定预算和机械门禁的做法在这里作为工程方法吸收，外部工具、自动历史扫描和自动改写不属于本仓库能力。
 
 账本目录权限固定为 `0700`，模式和候选文件固定为 `0600`；记录器拒绝凭证以及带明确标签的身份证、手机号和银行卡号。该检查只作最后一道防线，不能替代调用前脱敏。
 

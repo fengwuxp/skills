@@ -180,6 +180,14 @@ wise-agent/scripts/check_dirty_worktree_commit.sh --self-test
 
 echo "==> wise-agent skill learning ledger"
 python3 wise-agent/scripts/skill-learning-ledger.py --self-test
+python3 wise-agent/scripts/validate-learning-evidence.py --self-test
+python3 wise-agent/scripts/validate-learning-evidence.py \
+  wise-agent/fixtures/learning-evidence-batch-valid.json
+if python3 wise-agent/scripts/validate-learning-evidence.py \
+  wise-agent/fixtures/learning-evidence-batch-invalid.json; then
+  echo "FAIL invalid learning evidence fixture was accepted" >&2
+  exit 1
+fi
 python3 scripts/test-skill-evolution-control.py
 python3 scripts/test-skill-learning-loop.py
 
@@ -237,6 +245,7 @@ python3 -m py_compile wise-agent/scripts/check-runtime-bundle.py
 python3 -m py_compile wise-agent/scripts/read-reference-sections.py
 python3 -m py_compile scripts/test-read-reference-sections-integration.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
+python3 -m py_compile wise-agent/scripts/validate-learning-evidence.py
 python3 -m py_compile scripts/skill-evolution-control.py
 python3 -m py_compile scripts/test-skill-evolution-control.py
 python3 -m py_compile scripts/test-skill-learning-loop.py

@@ -183,6 +183,8 @@
 
 - 微信文章 [《6个开源AI思维Skill：换一种用法，拉开你的思考差距，附Github链接》](https://mp.weixin.qq.com/s/GsO04gPxn9UnsNX0FocwIg)：原创作者 `Kenneth`，账号 `郑在聊AI`，页面发布时间为 2026-09-08 01:20；2026-09-14 通用网页读取失败，随后通过 Codex in-app Browser 读取标题、作者、发布时间和完整正文。文章仅作为逻辑梳理、逆向推演、第一性原理、批判性思维、经验积累和系统关系的选题线索；本次结合既有规则，将按当前缺口选择判断动作、取得能区分解释的证据、据新证据调整受影响行动归位到 `cognition-and-capability-model.md`，这是本仓库的工程化建议。文中六个 GitHub 地址未取得源码，浏览器访问 GitHub 被安全检查拒绝；不声明其实现、许可证或能力已经核验，不复制或安装这些 Skill，不吸收效率比例、成长效果或作者表达，也不以静态校验声明模型思维能力已提升。
 
+- 微信文章 [《AGENTS.md 终极指南》](https://mp.weixin.qq.com/s/Fkk-WupooYuQLul9kDfXNA)：正文页面显示作者为 `Tom`、账号为 `人工智能与安全笔记`、发布时间为 2026-08-24 08:04；2026-09-21 常规网页读取未取得正文，随后通过 Codex in-app Browser 实际读取标题、作者、发布时间和完整正文。文章提出用真实 Agent 轨迹归纳规则、批量积累证据、限制改动预算、把窄规则下沉到 Skill，并用机械校验和人工审核收口。本仓库将这些方法落实到 `skill-learning-backflow.md`、`validate-learning-evidence.py` 及其 fixtures：当前任务显式提供脱敏摘要和摘要指纹，要求不同 `task_ref`、证据回链和 `candidate` 状态，再进入现有人工评审与 `skill-evolution-control.py`。不吸收文章中外部工具的安装 / 运行、自动扫描历史、自动改写 `AGENTS.md`、固定数字阈值或作者宣传性效果结论；本条也不构成行为收益、规则已晋升或运行时已采用的证明。
+
 ## 提炼边界
 
 - 可以吸收 AI Native 产品研发流程、Agentic Engineering、OpenSpec/Harness/GSD/CAD、验证矩阵、CR、发布和复盘方法。

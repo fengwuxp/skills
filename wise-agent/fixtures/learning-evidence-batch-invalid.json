@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "batch": {
+    "objective": "无独立任务证据的候选",
+    "min_independent_tasks": 2,
+    "max_edits": 1
+  },
+  "evidence": [
+    {
+      "id": "evidence-a",
+      "task_ref": "task:only",
+      "kind": "validator-failure",
+      "source_ref": "fixture:only",
+      "summary": "只有一项任务证据。",
+      "excerpt_sha256": "0cf2fabcf040e4f0d2b1a5631f5a2887c21bc088bc0270e60abdaa68ca69c0b9",
+      "sensitivity_check": "public-safe"
+    },
+    {
+      "id": "evidence-b",
+      "task_ref": "task:only",
+      "kind": "confirmed-correction",
+      "source_ref": "fixture:only-again",
+      "summary": "重复引用同一项任务。",
+      "excerpt_sha256": "eed953030514bc11f9477799b278f956d612a94f2e213eb6c4a3e2f9d0d6b9dc",
+      "sensitivity_check": "public-safe"
+    }
+  ],
+  "pattern": {
+    "target_skill": "wise-agent",
+    "observed_failure": "证据批次缺少独立任务。",
+    "expected_behavior": "未达到门槛时保持候选。",
+    "reuse_scope": "当前任务。",
+    "proposed_authority": "task-only",
+    "validation": "应被 validator 拒绝。",
+    "evidence_refs": ["evidence-a", "evidence-b"]
+  },
+  "edits": [],
+  "review": {
+    "status": "candidate",
+    "owner": "skill-owner",
+    "sensitivity_check": "public-safe"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "batch": {
+    "objective": "收敛重复的规则偏离证据",
+    "min_independent_tasks": 2,
+    "max_edits": 2,
+    "max_changed_lines": 40
+  },
+  "evidence": [
+    {
+      "id": "evidence-a",
+      "task_ref": "task:alpha",
+      "kind": "validator-failure",
+      "source_ref": "fixture:alpha",
+      "summary": "独立任务在同一触发点缺少候选状态检查。",
+      "excerpt_sha256": "19d2847153d808184d29cdb8d59aefacaf987c444e237ea3c3db32a786939bb8",
+      "sensitivity_check": "public-safe"
+    },
+    {
+      "id": "evidence-b",
+      "task_ref": "task:beta",
+      "kind": "confirmed-correction",
+      "source_ref": "fixture:beta",
+      "summary": "人工纠正再次要求先保留候选状态并等待评审。",
+      "excerpt_sha256": "d826c74e0169a297a6ea4bb9366072c2dec7cdcc8f18bea483ac064b55a57498",
+      "sensitivity_check": "public-safe"
+    }
+  ],
+  "pattern": {
+    "target_skill": "wise-agent",
+    "observed_failure": "重复任务把候选经验当成已确认规则。",
+    "expected_behavior": "候选只进入显式评审，不参与普通任务运行时决策。",
+    "reuse_scope": "Skill 学习回流候选记录。",
+    "proposed_authority": "wise-agent/references/skill-learning-backflow.md",
+    "validation": "离线 validator 加 fixture 负例。",
+    "evidence_refs": ["evidence-a", "evidence-b"]
+  },
+  "edits": [
+    {
+      "id": "edit-a",
+      "action": "add",
+      "destination": "reference",
+      "target": "wise-agent/references/skill-learning-backflow.md",
+      "reason": "补充证据批次的脱敏与独立任务门禁。",
+      "evidence_refs": ["evidence-a", "evidence-b"]
+    }
+  ],
+  "review": {
+    "status": "candidate",
+    "owner": "skill-owner",
+    "sensitivity_check": "public-safe"
+  }
+}
