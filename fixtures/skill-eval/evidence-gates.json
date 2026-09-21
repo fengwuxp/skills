@@ -184,6 +184,12 @@
         "cases": "fixtures/skill-eval/wise-default-routing-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/wise-agent-responsibility-routing-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-grok-routing-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/wise-java-delivery-behavior-cases.json"
       },
       {

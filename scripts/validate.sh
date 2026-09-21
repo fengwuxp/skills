@@ -164,6 +164,8 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 
 echo "==> wise-agent state contract"
 python3 wise-agent/scripts/check_state_contract.py --self-test
+python3 wise-agent/scripts/validate-route-record.py --self-test
+python3 wise-agent/scripts/check-runtime-bundle.py --self-test
 
 echo "==> wise-agent dirty-worktree commit fixture"
 wise-agent/scripts/check_dirty_worktree_commit.sh --self-test
@@ -222,6 +224,8 @@ python3 -m py_compile ui-design-expert/scripts/check_ui_source.py
 python3 -m py_compile ui-design-expert/scripts/verify_fixtures.py
 python3 -m py_compile wind-coding-conventions/scripts/check_wind_conventions.py
 python3 -m py_compile wise-agent/scripts/check_state_contract.py
+python3 -m py_compile wise-agent/scripts/validate-route-record.py
+python3 -m py_compile wise-agent/scripts/check-runtime-bundle.py
 python3 -m py_compile wise-agent/scripts/read-reference-sections.py
 python3 -m py_compile scripts/test-read-reference-sections-integration.py
 python3 -m py_compile wise-agent/scripts/skill-learning-ledger.py
@@ -333,8 +337,14 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/planning-artifact-placement-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/planning-execution-proportionality-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-progressive-loading-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-architecture-research-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-contract-design-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-provider-abstraction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-java-delivery-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-default-routing-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-responsibility-routing-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-grok-routing-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-experience-routing-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-conversation-reanchor-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"

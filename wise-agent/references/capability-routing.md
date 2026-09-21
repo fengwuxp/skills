@@ -62,6 +62,23 @@
 
 能力组合按独立职责划分：专业 Skill 围绕独立责任、明确契约和可验证结果组合；知止者只编排任务目标、能力输入输出、协作顺序和验证，不成为吞并专项规则的万能业务编排层。
 
+### 二 0、最小路由记录契约
+
+复杂任务在实际执行前可留下一个内部 JSON 路由记录，供宿主或审查脚本校验责任是否清楚。它不是用户审批表、任务计划或第二人格，也不要求简单任务额外成文。记录至少包含 `version=1`、`task`（`deliverable`、`domain_object`、`risk`、`write_scope`、`authorization`）、`route`（一个 `primary`、零个或多个 `collaborators`、明确的 `skip` 和至少一条 `selection_basis`）、非空 `verification`（每项有 `kind` 与 `evidence`）以及非空 `stop_conditions`。
+
+使用 `wise-agent/scripts/validate-route-record.py` 做结构校验。校验器只确认字段、唯一主能力、协同 / 跳过集合不重叠和可执行的验证 / 停止边界，不替代知止者依据用户原话和一手材料作责任判断；`primary=direct` 适用于没有稳定专项能力的简单任务。路由依据仍以交付物、真实风险和责任边界为先，关键词只能作为线索。
+
+实际读取能力前，再对选中的 Skill 做运行时依赖预检：
+
+```bash
+python3 wise-agent/scripts/check-runtime-bundle.py \
+  --skills-root "${CODEX_HOME:-$HOME/.codex}/skills" \
+  --skill senior-software-architect \
+  --skill wind-coding-conventions
+```
+
+预检会递归读取安装目录中各 Skill 的 `admission.json`，确认依赖闭包存在且状态为 `installable`；缺失时只停止依赖该能力的动作，不自动安装、同步或预加载整棵能力树。同步脚本仍只执行用户明确指定的目标，预检是路由执行前的确定性证据。
+
 最小装载不能省略主能力的必需规则依赖。进入代码或测试写入时，实际读取 `../../senior-software-architect/SKILL.md` 并按其写前路径执行；Java/Wind 约规、编码卫生和适用测试实践属于工程任务的必要依据，不因“默认零或一个协同能力”被裁掉。规则来源不成为第二执行 Owner；选择了能力名称、目录存在或摘要声称已读，都不等于读取了适用规则。
 
 Skill 拆分先做二问：产物是否具有可独立使用或验收的价值，能力是否会跨场景单独复用。两问任一为否，不拆顶层 Skill；两问均为是，仍须确认稳定职责、输入、输出、失败边界和验收能够独立成立。只在当前流程有意义的步骤留在工作流，载体、工具或权限不同不能单独证明需要新 Skill；优先复用既有 Skill、reference、script 或 fixture。
@@ -141,6 +158,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具；表达型 Web 页面在用户显式调用 Hallmark，或已确认产品与交互契约后确有反模板化缺口时，可装载 `hallmark` | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner；Hallmark 自评不构成准出证据 |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 任务必须读取 `wind-coding-conventions` 通用层，按证据叠加 Wind 专项；测试写入再直达适用测试实践；符合前述候选条件时用 `document-authoring` 正式成文 | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段仍由当前 Agent 持有目标并遵守用户授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
+| 用户显式要求使用 Grok / xAI，或需要一次独立的外部模型只读审查、研究对照 | 当前任务的专业主能力 | `grok-router` 作为外部协作工具，默认只用 `analyze` / `review` 的只读工具白名单；代码写入仍由 `senior-software-architect` 主责 | 当前 Agent 回读原始产物、Grok 输出与目标项目测试；Grok 不替代领域 Owner、不作最终准出 |
 | 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；符合前述候选条件时用 `document-authoring` 整理设定集和正式载体 | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | 候选 `document-authoring`，仅在上述准入与可用性条件满足后协同；否则由当前 Agent 使用可用文档能力 | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
 | 用户显式要求把本地 Markdown、PRD、系分或正式文档上传、同步、更新或发布到语雀 | 候选 `yuque-document-publisher`；当前仅作用户显式候选评估，准入后按届时调用策略使用 | 正文语义仍由 `product-architecture-expert`、`senior-software-architect` 或符合前述候选条件的 `document-authoring` 持有；UI 操作使用环境可用 Browser Skill | 本地版本与 SHA-256、稳定 docRef、草稿对账、Markdown/Mermaid/图片回读、目录复核和动作时授权 |
@@ -159,6 +177,10 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 Hallmark 是 Web 视觉结构与反模板化方法，不是 UI 总权威。支付运营后台、高密度工作台、已有设计系统还原、Figma design-to-code、原生 App 和普通 UI 修复不自动装载；这些任务继续由 `ui-design-expert` 按真实内容、客户端、状态和交互契约裁决。Hallmark 只有在用户显式调用，或表达型 Web 页面存在明确的结构审美缺口时才作为可选协同能力，且不得因此获得联网、项目写入、删除或发布权限。调用前还要检查所选 verb、主题与 reference 的资源闭包；安装目录存在不等于每条上游引用都可用。
 
 `llm-coding-hygiene` 在实际代码写入时默认装载，但不改变工程主能力、不成为第二 Owner，也不要求额外输出检查卡。只读源码 CR、仅诊断且不写代码、纯项目编码规范检查和文档任务不自动触发；简单一步代码修改仍静默应用编码卫生并直接完成，不为展示流程而追加知止者、Ponytail、Superpowers 或完整协作链。
+
+`grok-router` 是外部模型协作工具，不是新的专业 Owner。用户明确点名 Grok、要求独立模型复核，或高风险结论确实需要独立上下文时，知止者才增加它；普通任务不因“可能有第二意见”自动调用。默认先选择 `analyze` / `review`，使用 `--tools "read_file,grep,list_dir"` 的只读白名单，提示中携带事实、交付物、禁止动作和证据要求；不得把项目规则、密钥、凭据、生产数据或未脱敏客户材料发送给外部模型。`exec`、`rescue` 或 `--always-approve` 只有用户明确授权、写入范围已冻结且有可回读 diff 时才可用，写入前仍遵守当前消费项目的 `AGENTS.md`、Wind 约规和工程主能力。
+
+路由执行前确认 Codex 插件 `grok-router` 已启用且 `grok` 二进制和登录 / API 状态可观测；缺失时将 Grok 协作标为 `PENDING`，继续当前 Agent 能独立完成的部分，不声称已经派发。Grok 返回的是候选分析或 Checker 证据，最终事实、取舍、修复、测试和交付仍由当前知止者负责。
 
 轻量产品任务同样适用：只要求为“退款申请”补通用验收种子，且没有原交易、支付轨道、资金账务、清结算、法域或合规事实时，只装载产品通用路径；需要卡组织退款、ACH return、资金回退或账务处理时才升级到 `payment-expert`。
 

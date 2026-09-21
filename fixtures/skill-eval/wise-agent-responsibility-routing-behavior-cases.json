@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "description": "知止者按交付物、责任和真实风险消解专业能力重叠的 contract-only 案例；不代表真实模型路由已被评分。",
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.2,
+      "concision": 0.05
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": false,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "responsibility-product-ui-boundary",
+      "category": "overlapping-product-ui-capabilities",
+      "risk": "medium",
+      "prompt": "定义一个退款申请的对象、状态和业务规则，并同时给出运营后台页面结构。当前没有实现任务，也没有支付轨道或账务事实。请选择主能力和必要协同。",
+      "criteria": [
+        "以产品语义、对象、状态和规则为主交付物时由 product-architecture-expert 主责，UI 只在页面结构确有独立交付物时协同。",
+        "不因退款一词自动装载 payment-expert，不把页面结构改成工程实现，也不让 UI 能力发明业务规则。",
+        "路由说明输入、输出、验证和停止条件，业务规则未确认时保留待确认。"
+      ]
+    },
+    {
+      "id": "responsibility-payment-security-boundary",
+      "category": "overlapping-payment-security-capabilities",
+      "risk": "high",
+      "prompt": "评估 VCC 资金责任、可用余额和失败回退，并检查授权接口是否可能越权。只需形成风险与控制结论，不修改代码。",
+      "criteria": [
+        "资金责任、账务和回退语义由 payment-expert 主责，跨主体越权、信任边界和控制证据由 security-engineering-expert 协同。",
+        "不因出现接口一词就加载 senior-software-architect，也不把安全能力改写成支付结论或接管修复。",
+        "高风险结论要求原始业务事实、攻击路径、控制证据和人类责任 Owner；证据不足时停止相关准出。"
+      ]
+    },
+    {
+      "id": "responsibility-java-code-boundary",
+      "category": "engineering-and-coding-hygiene",
+      "risk": "high",
+      "prompt": "在 Wind Java 项目中修复一个服务方法并补回归测试。需要遵守项目约规、接口依赖和可读性要求，授权仅限本地代码和测试。",
+      "criteria": [
+        "senior-software-architect 负责实现、架构边界、测试和最终交付；wind-coding-conventions 与 llm-coding-hygiene 作为规则协同，不成为第二 Owner。",
+        "按接口依赖而非实现耦合、保持职责边界和可读格式；不以三目运算符堆叠或无关重构替代修复。",
+        "实际读取消费项目 AGENTS.md、Java/Wind 规则、调用方和测试基座，报告真实测试与静态证据；发现授权外动作立即停止。"
+      ]
+    },
+    {
+      "id": "responsibility-huaxia-decision-boundary",
+      "category": "explicit-practical-wisdom",
+      "risk": "medium",
+      "prompt": "$huaxia-practical-wisdom：从察实、正名、审时、权衡和行验的角度评估是否应接入一个内部工具，只需要决策校准意见，不写 PRD、不改代码。",
+      "criteria": [
+        "华夏经世智慧在用户显式点名且交付物是现实决策校准时作为主能力，围绕事实、时势、取舍、反馈和责任给出意见。",
+        "不因内部工具一词自动转交产品或工程能力，不捏造成本、效果或授权事实，也不把经典镜片写成执行指令。",
+        "保留待确认事实、决策 Owner、反馈指标和停止条件；不写 PRD、代码或发布动作。"
+      ]
+    },
+    {
+      "id": "responsibility-system-product-architecture-boundary",
+      "category": "architecture-name-disambiguation",
+      "risk": "high",
+      "prompt": "根据已确认的产品对象和验收规则，设计承载它的模块、接口、数据和运行机制，并给出系统架构视图。没有新增产品规则，也不要求改代码。",
+      "criteria": [
+        "交付物回答系统结构、模块、接口、数据和运行机制时由 senior-software-architect 主责，消费已确认的产品事实。",
+        "不让 product-architecture-expert 重新定义已确认规则，不把系统架构图扩展成技术选型或代码实现，除非用户另有交付要求。",
+        "验证回读架构视图与产品对象 / 验收的映射；发现产品事实冲突时暂停受影响的设计结论。"
+      ]
+    }
+  ]
+}
