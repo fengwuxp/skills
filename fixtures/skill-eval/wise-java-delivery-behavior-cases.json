@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "知止者 Java/Wind 工程规则消费的 contract-only 回归：必需规则加载、已有接口消费、测试基座与事务证据。题集校验不证明模型已稳定遵守规则。",
+  "description": "知止者 Java/Wind 工程规则消费的 contract-only 回归：必需规则加载、已有接口消费、测试基座、事务证据与 Spring MVC 参数验证。题集校验不证明模型已稳定遵守规则。",
   "rubric": {
     "scale": {
       "min": 1,
@@ -99,6 +99,41 @@
         "按 Wind 实际分层映射职责，允许承责基础 ServiceImpl 封装自己的 Mapper/Entity/事务；不将所有 ServiceImpl 等同于纯 DDD 领域层。",
         "用例和 Controller 依赖稳定服务接口，不直连 Mapper 拼业务，也不把实体透传到外部契约。拒绝没有独立责任的新包装层，独立领域对象继续隔离基础设施。",
         "按项目测试基座验证公开行为及本轮状态失败边界，无统一臆造覆盖率阈值，不以结构检查代替事务事实。"
+      ]
+    },
+    {
+      "id": "spring-mvc-request-generation-should-load-validation-rules",
+      "category": "web-validation-rule-loading",
+      "risk": "high",
+      "prompt": "知止者，按已有 Wind 项目风格补一个创建联系人接口和请求模型。现有 Spring MVC 6.2、Jakarta Validator provider 和 MVC 测试基座均可用，Controller 没有类级代理注解，方法没有直接参数或返回值约束。结构已确认：CreateRequest.name 与 Address.city 均为 CreateGroup 下的 NotBlank，address 必填且需检查内部 city；只调用现有 ContactService.create。项目未规定使用哪种入口触发注解。另检查同一 Controller 的 GET list(String keyword)、DELETE remove(Long id)：没有 Bean Validation 约束，也没有额外验证要求。同事建议统一加 Validated 并补 NotNull。另一个 GET search(@ModelAttribute SearchQuery query) 的 keyword 已标 Size(max = 50)，这个约束需生效。请给最小代码及验证方案，不新增业务字段。",
+      "criteria": [
+        "即使用户未提到 Valid 或 Validated，仍从工程能力加载 Wind 必需规则，实际读取 Java 契约规约及 5.1 Spring MVC Web 参数验证；不依赖源仓库 AGENTS.md 才能触达规则。",
+        "在独立 DTO 参数校验路径使用参数级 Validated(CreateGroup.class)，不为保险叠加 Valid；address 通过 Valid 级联且必填约束属于生效组，name 和 city 的分组语义不丢失。",
+        "验证合法请求、空白 name、缺失 address 和空白 city 的 MVC 结果，非法请求不进入 Service；不以手工 new Controller 或静态注解检查声称运行通过，不在 Service 重复输入验证。",
+        "无约束且无特别要求的 GET list、DELETE remove 不补 Valid / Validated 或臆造 NotNull；保留原绑定契约。GET search 因对象已有 Size 而启用必要的 DTO 校验，不因 GET 豁免约束；能区分显式验证要求这一例外与按 HTTP 方法机械加注解。"
+      ]
+    },
+    {
+      "id": "spring-mvc-method-validation-should-preserve-cascade",
+      "category": "web-validation-method-path",
+      "risk": "high",
+      "prompt": "评审一个 Spring MVC 6.2 Controller 的小改动。项目采用内置方法校验，已有 Jakarta Validator provider。原方法为 create(@RequestParam @Min(1) int count, @RequestBody @Valid CreateRequest request)，DTO 内有 NotBlank name。补丁在 Controller 类上添加 Validated，又将 DTO 参数的 Valid 替换为 Validated，理由是统一注解且更保险。请按 Java 约规判断补丁，并说明所需验证，不迁移项目的校验机制。 另一个普通 DTO 方法只有返回值 NotNull、方法级 Validated(CreateGroup.class)，没有直接入参或容器约束；RequestBody 参数仅标 Valid，DTO 字段约束只属于 CreateGroup。也请检查这一写法是否真的校验了该组。",
+      "criteria": [
+        "加载并实际读取 Web 参数验证规则，识别 Min 触发方法校验；不能把独立 DTO 参数校验二选一的结论直接套入方法校验。",
+        "保持项目内置 MVC 路径，不添加类级 Validated，DTO 参数保留 Valid 以覆盖内部约束；不把参数级 Validated 当作 Bean Validation 级联标记。",
+        "通过 MVC 验证非法 count 和非法 name，检查 HandlerMethodValidationException 对应的响应契约；不将注解替换、编译或题集校验当作校验生效证明。",
+        "区分仅返回值校验与请求参数校验；后一方法的普通 DTO 仍走独立参数校验，不能认为方法级 Validated 已替请求 DTO 选择组。应按参数级 Validated(CreateGroup.class) 触发相应组，并要求通过 MVC 非法字段请求验证；不以返回值非空证明请求验证有效。"
+      ]
+    },
+    {
+      "id": "spring-mvc-aop-validation-should-not-delete-required-annotations",
+      "category": "web-validation-hard-negative",
+      "risk": "high",
+      "prompt": "Spring MVC 5.3 项目已配置 MethodValidationPostProcessor 和 javax.validation provider，Controller 类有 Validated(CreateGroup.class)，方法参数包含 RequestParam Min(value = 1, groups = CreateGroup.class) 与 RequestBody Valid CreateRequest，嵌套地址字段也有 Valid，使用的约束分组已有通过测试。同事提议全局删掉 Valid，只保留类级 Validated；也有人说新版本规范要求删除类级 Validated。只评审当前改动，不升级框架。",
+      "criteria": [
+        "读取实际版本、代理与分组事实及 Web 参数验证规则，保留类级 Validated 与 DTO 参数、嵌套字段上的 Valid，说明它们分别承担 AOP 切入、组选择与级联责任，不是重复注解。",
+        "不把 Framework 6.1+ 内置机制迁移到 5.3，不混用 javax.validation 与 jakarta.validation，不引入新版异常处理 API 或为风格批量替换。",
+        "复用项目 MVC 和代理配置验证直接参数约束、嵌套与分组失败以及异常响应，明确待验证边界；不要求纯能力模块新增 Controller，也不改 Service 重跑输入验证。"
       ]
     }
   ]

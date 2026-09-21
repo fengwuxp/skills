@@ -82,6 +82,8 @@
 
 - 来源：[Bean Validation 2.0 规范](https://beanvalidation.org/2.0/spec/)、[Jakarta Validation 3.1](https://jakarta.ee/specifications/bean-validation/3.1/)与[Spring MVC Validation](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html)。
 - 读取状态：2026-07-22 已核对 `javax.validation` / `jakarta.validation` 的 `@NotNull`、`@NotBlank`、`@NotEmpty`、`@Valid` 语义及 Spring MVC 控制层触发条件。
+- 补充核验：2026-09-21 实读 [Spring MVC 6.2 Validation](https://docs.spring.io/spring-framework/reference/6.2/web/webmvc/mvc-controller/ann-validation.html) 与 [Validated API](https://docs.spring.io/spring-framework/docs/6.2.x/javadoc-api/org/springframework/validation/annotation/Validated.html)，区分独立参数校验、级联、分组及 Spring Framework 6.1 起的内置 MVC 方法校验。落点为 `java-coding-conventions.md` 的“5.1 Spring MVC Web 参数验证”；普通 DTO 优先 `@Validated` 是本约规偏好，不是 Spring 强制要求。升级框架、切换 MVC / WebFlux、改变代理或分组配置时复核，不支持“所有位置只留 @Validated”的推论。
+- 触发边界：2026-09-21 实读 [Spring Framework 6.2.19 HandlerMethod](https://github.com/spring-projects/spring-framework/blob/v6.2.19/spring-web/src/main/java/org/springframework/web/method/HandlerMethod.java)，`checkArguments` 与 `checkReturnValue` 独立设置校验标志；仅返回值受约束不能推导请求参数已进入方法校验。源码核验不替代消费项目真实 MVC 测试，其他版本及容器参数按实际源码复核。
 - 采纳边界：按当前 artifact 与调用路径区分运行时协议入口和公共能力提供方；前者使用 `@Valid` / `@Validated` 执行输入验证，Service / ServiceImpl 不出现这两个触发注解。Service 参数及其 Request、Command、DTO 可以用约束注解声明调用前置契约；调用路径未证明或公共 Service 可被直接调用时，由显式业务断言或领域校验保护必要前置条件。
 - 不吸收：不把注解存在、依赖在 classpath 或 Service 被 Spring 管理当成运行时验证已执行的证据；不把 Service 方法校验作为入口验证的替代方案，不禁止 Service 契约使用 `jakarta.validation.constraints.*` 声明前置条件，也不因能力 artifact 没有 Controller 而判缺陷。
 

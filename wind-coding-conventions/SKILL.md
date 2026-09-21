@@ -27,7 +27,7 @@ description: Java/Wind 编码与测试约规。纯规范、注释/Javadoc 或 Ja
 ## 工作流程
 
 1. 先读消费项目实际生效的规则、`pom.xml` / Gradle 配置、相关源码包与 import、模块结构和用户任务上下文，记录实际技术信号；`AGENTS.md` 不存在时不要求补建或复制 Skills 源仓库规则。写 Java 时同时查 `.editorconfig`、构建中的 formatter / Checkstyle 任务和已提交的 `.idea/codeStyles/`，确定实际采用的格式及验证命令；不能读取时只使用用户已给事实，不猜依赖或 IDEA 设置。
-2. 任何包含 Java 源码的项目都先读取 `references/java-coding-conventions.md` 的适用章节；源码写入或 CR 必须包含“4.6 控制语句与代码格式”，修改或生成测试时必须包含“15. 测试代码规约”，涉及依赖类型时包含“4.3 OOP 与对象设计”。只启用与当前 JDK、框架、依赖和任务匹配的章节，不因 reference 提到某个库就要求项目新增该库。阿里巴巴手册采用范围见该 reference 的“3. 阿里 Java 规约采纳原则”，不声称全文规则均已自动检查。
+2. 任何包含 Java 源码的项目都先读取 `references/java-coding-conventions.md` 的适用章节；源码写入或 CR 必须包含“4.6 控制语句与代码格式”，修改或生成测试时必须包含“15. 测试代码规约”，涉及依赖类型时包含“4.3 OOP 与对象设计”。设计、生成、修改或评审 Spring MVC Controller、请求 DTO、参数校验或对应测试时，必须读取“5. 契约规约”及其“5.1 Spring MVC Web 参数验证”，不等待用户显式提到验证注解。只启用与当前 JDK、框架、依赖和任务匹配的章节，不因 reference 提到某个库就要求项目新增该库。阿里巴巴手册采用范围见该 reference 的“3. 阿里 Java 规约采纳原则”，不声称全文规则均已自动检查。
 3. 普通 Java 项目初始化或改进 `AGENTS.md` 时，只根据项目事实给最小 patch：记录 JDK/构建工具、项目本地规范优先级、实际依赖对应的约规章节、构建/测试/静态检查命令和验证边界；不读取 Wind 项目模板，不写 face/impl、Wind API 或 Wind 类型规则。
 4. 出现以下任一高置信度信号时叠加 Wind 专项：用户、任务或 `AGENTS.md` 明确声明 Wind；Maven/Gradle 坐标、包名或 import 明确属于 Wind；源码使用 `WindPagination`、`WindQuery`、`CurrencyIsoCode` 等 Wind 类型；`face` / `impl` 结构与 Wind 类型或项目族上下文同时出现。只有孤立的 `face`、`impl`、`ServiceImpl` 或通用 MyBatis 用法时，不判为 Wind。
 5. 命中 Wind 后读取 `references/wind-coding-conventions.md`：face/impl、Entity 不外露、服务/模型边界和所有币种字段使用 `CurrencyIsoCode` 属于 Wind 通用专项；JSpecify、MapStruct、MyBatis Flex 等依赖专项仍按实际依赖或源码启用；固定数据库字段只按项目已采用的 Wind MySQL 表约规启用。用户要求初始化或改进 Wind 项目 `AGENTS.md` 时再读 `references/wind-project-agents-template.md`；需要正反例时读 `references/wind-coding-examples.md`；涉及 Wind 项目族端口、Starter、Trace、安全或企业集成能力时读 `references/wind-architecture-patterns.md`。

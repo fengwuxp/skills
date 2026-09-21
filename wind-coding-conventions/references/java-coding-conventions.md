@@ -279,6 +279,21 @@
 - 【推荐】必然存在的查询使用 `getXxx` 表达；查不到时抛业务异常。
 - 【推荐】普通字段、参数、返回值使用 import 后的注解；只有 type-use 位置存在歧义时，才使用全限定注解。
 
+### 5.1 Spring MVC Web 参数验证
+
+- 【强制】先核对实际 Spring Framework 版本、Validator provider、Controller 注解位置和调用机制，再选择参数验证方式；不能只凭 Spring Boot 大版本推定机制，也不将本节直接套用于 WebFlux、非 Web 调用或纯公共能力 artifact。
+- 【强制】GET、DELETE 默认不添加 `@Valid` / `@Validated`，也不为套模板臆造非空、长度等约束。只有用户或项目明确要求验证，或对应参数、参数对象及其继承 / 嵌套结构已有 `@NotNull`、`@NotBlank`、`@Size` 等约束时，才按实际版本与调用机制启用必要的校验；直接参数约束可能由内置方法校验处理，不机械补触发注解。不得因 HTTP 方法是 GET / DELETE 而删除已有约束或必要的级联、分组配置；Spring 参数绑定的必填、类型转换规则保持原契约。这是本约规的默认策略，不是 Spring 对 HTTP 方法的限制。
+- 【推荐】需要启用普通 `@RequestBody`、`@ModelAttribute`、`@RequestPart` 请求 DTO 的独立参数校验时，优先在参数上使用 Spring `@Validated`，需要分组时使用 `@Validated(CreateGroup.class)`；同一参数不为“保险”叠加 `@Valid`。项目已有统一且有效的 `@Valid` 写法时沿用，不为注解偏好批量替换。这一选择不适用于已进入方法校验的 DTO 级联，也不得直接推广到顶层 `Collection` / `Map`。
+
+| 实际校验路径 | 注解职责与处理 |
+| --- | --- |
+| 请求 DTO 内嵌对象或集合元素 | 在需要级联的字段或类型使用位置保留 `@Valid`；它不由 `@Validated` 替代。是否允许空值由 `@NotNull` 等约束另行表达。 |
+| Controller 使用 AOP 方法校验 | 类级 `@Validated` 负责代理切入及分组，DTO 参数上的 `@Valid` 负责级联，两者可以同时存在且不算重复；仅保留类级 `@Validated` 不足以校验 DTO 内部约束。 |
+| Spring Framework 6.1+ 使用内置 MVC 方法校验 | 移除 Controller 类级 `@Validated` 以采用内置机制；参数上的 `@Min`、`@NotBlank` 等直接约束使请求参数进入方法校验时，DTO 级联保留 `@Valid`，不能把参数上的 `@Validated` 当作级联标记。请求参数与返回值的触发分别判断，只有返回值约束不代表请求 DTO 已进入方法校验；独立 DTO 校验仍按参数注解选择分组。普通非容器 DTO 仅有 `@Valid` 不触发请求参数的方法校验，顶层容器按实际版本另行核对。 |
+
+- 【强制】分组必须按实际路径生效：DTO 独立参数校验可由参数级 `@Validated` 指定，方法校验按方法 / 类上的 `@Validated` 选择组；同时检查 DTO 约束及嵌套对象的组传播 / `@ConvertGroup`，不得在去重时丢失分组语义。不能对旧版 Spring 或仍采用 AOP 的项目机械删除类级注解；校验机制迁移不属于普通注解整理。
+- 【强制】通过真实 MVC 调用路径验证本轮涉及的正常输入、非法字段、嵌套对象及分组，非法输入不得进入 Service；直接 `new Controller` 调用或注解文本检查不能证明生效。按实际机制核对 `MethodArgumentNotValidException`、`HandlerMethodValidationException` 或 AOP 校验异常的处理与响应契约；`Errors` / `BindingResult` 由 Controller 接收时必须先处理失败，不能继续调用 Service。没有运行证据时明确未验证，不以约规脚本通过代替。
+
 ## 6. 异常与日志规约
 
 ### 6.1 异常处理
