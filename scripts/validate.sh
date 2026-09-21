@@ -166,6 +166,14 @@ echo "==> wise-agent state contract"
 python3 wise-agent/scripts/check_state_contract.py --self-test
 python3 wise-agent/scripts/validate-route-record.py --self-test
 python3 wise-agent/scripts/check-runtime-bundle.py --self-test
+python3 wise-agent/scripts/validate-engineering-change.py --self-test
+python3 wise-agent/scripts/validate-engineering-change.py \
+  wise-agent/fixtures/engineering-change-contract-valid.json
+if python3 wise-agent/scripts/validate-engineering-change.py \
+  wise-agent/fixtures/engineering-change-contract-invalid.json; then
+  echo "FAIL invalid engineering change fixture was accepted" >&2
+  exit 1
+fi
 
 echo "==> wise-agent dirty-worktree commit fixture"
 wise-agent/scripts/check_dirty_worktree_commit.sh --self-test

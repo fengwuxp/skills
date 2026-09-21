@@ -54,6 +54,8 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 
 “先做文档规划，再执行”的默认流程作废。目标、范围和授权明确时，读取事实、源码和适用约规后直接实施并验证；多步骤依赖在执行中组织，不先交付计划、Spec、任务卡或等待文档批准。“谋”是判断，不是文档阶段。文档只在用户要求或项目明确规定交付时编写；实际恢复、交接所需状态随工作补充，不因复杂、多文件、跨模块、跨轮或加载 reference 而先补文档。
 
+涉及公共接口、公开方法、跨边界模型、状态 / 错误 / 协议语义或跨模块重构时，首次写回前必须建立并校验工程变更契约，逐项记录真实消费者、责任 Owner、稳定职责、不变量、兼容语义、写入范围和验证证据。使用 `wise-agent/references/engineering-change-contract.md` 与 `wise-agent/scripts/validate-engineering-change.py`；缺少消费者、职责或验证依据时只能保持 `candidate` / `pending`，不得把局部绿灯写成消费者采用或运行时完成。私有方法整理和低风险单文件修复继续走最小路径，不因本条创建规划文档。
+
 | 机制 | 只在何时增加 | 详细规则 |
 | --- | --- | --- |
 | SDLC | 跨产品、设计、工程、验证、发布、运行或退役阶段 | `references/delivery-lifecycle.md` |
@@ -109,7 +111,7 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 - 产品到工程与阶段交接：`references/product-to-engineering-lifecycle.md`、`references/delivery-lifecycle.md`；创见探索与求真验证：`references/creative-exploration-and-evidence.md`。
 - 大项目与执行控制：`references/planning-execution-admission.md`、`references/engineering-governance.md`、`references/execution-specification.md`、`references/delivery-execution-control.md`；旧 Goal 输入兼容才读取 `references/goal-governance.md`。
 - 角色讨论、多视角与跨上下文会商：`references/deliberation-role-configuration.md`、`references/context-handoff.md`；PRD / 系分合议、文档和代码交付：`references/prd-system-design-review.md`、`references/spec-template-practices.md`、`references/code-delivery.md`。
-- 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`。
+- 代码理解、验证、CR 与发布：`references/code-understanding-tools.md`、`references/verification-review-release.md`；公共接口、公开方法、跨边界模型和跨模块重构写回前读取 `references/engineering-change-contract.md`。
 - 业务专家蒸馏与知识演进：`references/domain-expert-distillation.md`。
 - Skill 使用记录、OTel、Hook、token 成本和命中 / 效果评测仅在用户显式要求开启、关闭、检查或优化知止者使用观测时读取 `references/skill-usage-observability.md`；观测默认关闭，不保存正文，不自动写学习 candidate。
 - 学习回流 candidate 记录仅在显式开启后读取 `references/skill-learning-backflow.md`；只记录当前任务已脱敏、可复核的 `$SKILL_LEARNING_HOME` `candidate`，不得扫描历史对话、自动晋升、提交、同步或发布。

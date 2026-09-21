@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "task": {
+    "objective": "收敛一个查询契约",
+    "write_scope": ["src/main", "src/test"],
+    "non_goals": ["不新增 HTTP 路由"],
+    "stop_conditions": ["发现未登记消费者或兼容语义冲突时停止"]
+  },
+  "change": {
+    "adoption": "provider-verified",
+    "items": [
+      {
+        "kind": "interface",
+        "name": "ValueQuery.query",
+        "owner": "查询模块",
+        "consumers": ["报表服务"],
+        "responsibility": "返回固定版本的查询结果",
+        "invariants": ["版本语义不丢失", "失败不伪装成零值"],
+        "compatibility": "preserve",
+        "reason": "统一已有查询入口",
+        "verification_refs": ["source", "tests"]
+      },
+      {
+        "kind": "method",
+        "name": "ValueQuery.validate",
+        "owner": "查询模块",
+        "consumers": ["ValueQuery.query"],
+        "responsibility": "在取数前拒绝不满足契约的条件",
+        "invariants": ["失败发生在事实读取前"],
+        "compatibility": "new",
+        "reason": "保留全量预检边界",
+        "verification_refs": ["source", "tests"]
+      },
+      {
+        "kind": "model",
+        "name": "QueryCriteria",
+        "owner": "查询模块",
+        "consumers": ["ValueQuery.query", "ValueQuery.validate"],
+        "responsibility": "承载共享查询条件",
+        "invariants": ["不携带指标身份", "不丢失旧聚合条件"],
+        "compatibility": "new",
+        "reason": "消除重复条件对象",
+        "verification_refs": ["source", "tests"]
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "id": "source",
+      "kind": "source",
+      "ref": "source-manifest.json",
+      "fingerprint": "sha256:source",
+      "result": "pass"
+    },
+    {
+      "id": "tests",
+      "kind": "test",
+      "ref": "focused-tests.xml",
+      "fingerprint": "sha256:tests",
+      "result": "pass"
+    },
+    {
+      "id": "consumer",
+      "kind": "consumer_compile",
+      "ref": "consumer-compile",
+      "fingerprint": "sha256:consumer",
+      "result": "pending"
+    }
+  ],
+  "claims": [
+    {
+      "id": "provider-tests",
+      "text": "提供者测试已通过",
+      "state": "fact",
+      "evidence_refs": ["tests"]
+    },
+    {
+      "id": "consumer-pending",
+      "text": "消费者尚未接入",
+      "state": "pending",
+      "owner": "消费者 Owner",
+      "reason": "等待消费者编译和真实调用链验证",
+      "evidence_refs": ["consumer"]
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "task": {
+    "objective": "声明消费者已接入但未将编译证据关联到变更项",
+    "write_scope": ["src/main", "src/test"],
+    "non_goals": ["不新增 HTTP 路由"],
+    "stop_conditions": ["消费者编译证据未逐项关联时停止接入声明"]
+  },
+  "change": {
+    "adoption": "consumer-adopted",
+    "items": [
+      {
+        "kind": "interface",
+        "name": "ValueQuery.query",
+        "owner": "查询模块",
+        "consumers": ["报表服务"],
+        "responsibility": "返回固定版本的查询结果",
+        "invariants": ["版本语义不丢失"],
+        "compatibility": "preserve",
+        "reason": "统一已有查询入口",
+        "verification_refs": ["source", "tests"]
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "id": "source",
+      "kind": "source",
+      "ref": "source-manifest.json",
+      "fingerprint": "sha256:source",
+      "result": "pass"
+    },
+    {
+      "id": "tests",
+      "kind": "test",
+      "ref": "focused-tests.xml",
+      "fingerprint": "sha256:tests",
+      "result": "pass"
+    },
+    {
+      "id": "consumer",
+      "kind": "consumer_compile",
+      "ref": "consumer-compile",
+      "fingerprint": "sha256:consumer",
+      "result": "pass"
+    }
+  ],
+  "claims": [
+    {
+      "id": "provider-tests",
+      "text": "提供者测试已通过",
+      "state": "fact",
+      "evidence_refs": ["tests"]
+    }
+  ]
+}
