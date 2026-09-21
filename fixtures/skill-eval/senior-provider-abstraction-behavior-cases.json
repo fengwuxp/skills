@@ -18,12 +18,13 @@
         "senior-software-architect/references/workflow.md",
         "senior-software-architect/references/coding-review-deep-dive.md",
         "senior-software-architect/references/architecture.md",
+        "wind-coding-conventions/references/code-style.md",
         "wind-coding-conventions/references/java-coding-conventions.md",
         "wind-coding-conventions/references/wind-coding-conventions.md",
         "wind-coding-conventions/references/wind-coding-examples.md",
         "llm-coding-hygiene/SKILL.md"
       ],
-      "sha256": "675d7653a9b02824b30ed63e5db938dc31f1f537aee44ced04aae0cf5c9439a3"
+      "sha256": "01040de9c8fbfa610e0ba5f7bc9b48f15faae1f73924b6aa59665d9085ea26e6"
     }
   },
   "rubric": {

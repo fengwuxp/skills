@@ -11055,11 +11055,8 @@ check(
     has_all(
         coding,
         [
-            "项目已提交且可复现的配置",
-            "构建 / CI 采用的 formatter 与 Checkstyle",
-            "适用 `.editorconfig` 和已提交的 IDEA Project Code Style",
-            "同模块邻近代码",
-            "个人 IDEA 默认值",
+            "样式来源优先级",
+            "统一读取 `code-style.md`",
             "不得借局部需求批量重排无关文件",
             "格式化后必须审查 diff",
             "`git diff --check` 只用于发现空白错误",
@@ -11067,10 +11064,20 @@ check(
         ],
     )
     and has_all(
+        "wind-coding-conventions/references/code-style.md",
+        [
+            "项目实际选用的 IntelliJ IDEA Code Style",
+            "`.editorconfig`",
+            "构建 / CI",
+            "邻近代码保守编辑",
+            "不默选个人 Default",
+        ],
+    )
+    and has_all(
         wind_skill,
         [
-            "项目已提交的格式配置",
-            "版本化 IDE 项目设置",
+            "项目已确认的 IDEA Code Style",
+            "`references/code-style.md`",
             "不得格式化无关代码",
         ],
     )

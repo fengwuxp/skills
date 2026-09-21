@@ -35,6 +35,9 @@
         "cases": "fixtures/skill-eval/senior-contract-design-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/senior-code-style-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
       },
       {

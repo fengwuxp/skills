@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "description": "跨语言代码样式的 contract-only 案例：验证配置权威、IDEA 实际选用、语言与模块作用域、缺配置提示及验证边界。题集校验不代表模型行为评分或消费项目格式化已通过。",
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.35, "autonomy": 0.2, "actionability": 0.2, "safety": 0.2, "concision": 0.05}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "style-unselected-local-default-is-not-project-authority",
+      "category": "missing-style",
+      "risk": "high",
+      "prompt": "整理本轮 Java Controller、Service 和测试的排版，并修复已确认的 null 返回空串缺陷。项目没有格式器、EditorConfig 或已共享 Code Style；本机 IDEA 有一个 Default.xml，但没有证据表明项目选用了它。当前样本既有短调用折行，也有很长的 SQL 字符串。允许局部代码修改，不授权安装工具或修改全局 IDE 设置。",
+      "criteria": [
+        "明确告知需要配置或确认 Java 代码风格，说明 IDEA scheme 的采用证据缺失；不以本机 Default、固定行宽或样本习惯裁决统一排版。",
+        "暂不实施依赖未定风格的批量格式化；已确认的独立 null 修复可保守修改并验证，不要求所有业务工作等待样式配置。",
+        "不安装格式器、不改全局设置、不自建全仓配置；不随意折写 SQL 内容或声称已按 IDEA 格式化。"
+      ]
+    },
+    {
+      "id": "style-language-options-and-editorconfig-scope",
+      "category": "polyglot-style",
+      "risk": "medium",
+      "prompt": "本轮只修改已列出的 Java、TSX 和 JavaScript 文件。项目实际采用已提交的 IDEA Project scheme：Java 与 TypeScript 行宽不同，JavaScript 引号设置也不同；根 EditorConfig 只定义行尾，web 子目录另外覆盖 JS/TS 缩进。未配置外部格式器。请在各自模块中实现已确认的小功能并补相邻测试。",
+      "criteria": [
+        "在普通源码和测试写入前读取通用样式规则，按目标语言、文件路径及生效选项组合 IDEA scheme 与 EditorConfig，不因用户没要求格式化而省略。",
+        "EditorConfig 只覆盖适用文件中已定义的选项，其余采用所选语言 scheme；不把 Java 行宽、导入阈值或另一模块的设置搬到 JS/TS。",
+        "非 Java 任务只消费通用样式规则，不加载 Java 专项；完成授权范围的功能与验证，不全仓重排。"
+      ]
+    },
+    {
+      "id": "style-existing-prettier-authority-and-module-boundary",
+      "category": "formatter-authority-hard-negative",
+      "risk": "high",
+      "prompt": "修复 monorepo 的 packages/web 中一个 TypeScript 错误。该包锁定 Prettier 版本及配置，CI 执行相应检查，IDEA Reformat 已配置委托该工具。packages/legacy 另有格式规则，本机 IDEA 原生 scheme 与 web 的格式结果不同。请保持现有构建和工具配置，仅修复目标文件。",
+      "criteria": [
+        "识别目标包已有明确且可复现的格式权威和 IDEA 委托关系，读取对应工具版本、配置与作用范围；不误报缺少代码样式。",
+        "按 web 已采用的 Prettier 契约完成局部修改和检查，不用 IDEA 原生默认强行覆盖，不安装另一格式器或修改 legacy。",
+        "保留 import type 与副作用导入语义，报告实际工具及验证，不因 Reformat 按钮名称声称使用 IDEA 原生排版。"
+      ]
+    },
+    {
+      "id": "style-keep-line-breaks-and-import-semantics",
+      "category": "targeted-reformat",
+      "risk": "high",
+      "prompt": "已确认并选用项目 IDEA scheme，授权统一本轮列明的 Java 与 JS 文件排版。短声明和调用过度折行，普通 Reformat 后仍保留；当前语言启用了 Keep line breaks。文件还有 import、链式调用、测试 SQL、JS 模板字符串和副作用模块导入。不改全局设置，不做代码重构。",
+      "criteria": [
+        "核对保留换行设置，先选代表性文件验证当前版本支持的局部不保留换行选项及导入整理效果，不把普通 Reformat 执行成功等同于过度折行消除。",
+        "分别检查排版和 Optimize Imports 的实际 diff；保持字符串内容、副作用导入顺序及语言语义，不用正则拼接代码或顺便 Rearrange / cleanup。",
+        "限定授权范围并运行适用格式检查和有语义风险处的编译或测试，报告实际覆盖，不把样本验证升级为全范围完成。"
+      ]
+    },
+    {
+      "id": "style-confirmed-rules-with-unavailable-tool",
+      "category": "tool-gap-hard-negative",
+      "risk": "medium",
+      "prompt": "只修复一个 JavaScript 函数的空值错误并补相邻测试。项目已共享并确认 IDEA JavaScript scheme，可以读取全部相关设置；当前环境没有可运行的 IDEA formatter，但既有测试命令可运行。没有安装或全局配置授权。",
+      "criteria": [
+        "区分已确认的样式与格式工具不可用，不误称项目未配置，也不要求用户重新选择 scheme。",
+        "按已确认设置保守完成局部修复、人工排版检查和既有测试，不安装工具、不扩大格式修改，也不无故阻断独立修复。",
+        "明确未执行自动格式化；测试、结构校验或 diff 空白检查通过不能替代 IDEA 格式验证。"
+      ]
+    }
+  ]
+}

@@ -91,3 +91,9 @@
 - 读取状态：2026-07-30 已核对 Spring 对必需依赖使用构造器、可选依赖使用 setter / 配置方法的建议，以及 Lombok `@RequiredArgsConstructor` 和 `@AllArgsConstructor` 的字段选择语义。
 - 采纳边界：Spring Bean 的必需依赖使用构造注入；模块已有 Lombok 时，用 `private final` 字段 + `@RequiredArgsConstructor` 生成必需参数构造器，没有 Lombok 或装配契约特殊时使用显式构造器。
 - 不吸收：不要求项目新增 Lombok，不把 setter 注入机械判错，不把生成构造器、stereotype 或编译通过写成 Bean 唯一装配和 Spring 上下文验证已经完成。
+
+## IDEA 跨语言代码样式（2026-09-21）
+
+- 实读 JetBrains 官方 [Code style schemes](https://www.jetbrains.com/help/idea/configuring-code-style.html)、[Reformat code](https://www.jetbrains.com/help/idea/reformat-and-rearrange-code.html)、[Prettier](https://www.jetbrains.com/help/idea/prettier.html) 与 [Auto import](https://www.jetbrains.com/help/idea/creating-and-optimizing-imports.html)。核对项目 / IDE 级 scheme、按语言设置、EditorConfig 覆盖、保留换行、导入整理及 Reformat 委托外部格式器的边界。
+- 归位到 `code-style.md`；“默认优先项目已确认的 IDEA 样式、缺配置时提示用户”是本仓库约规，不是 JetBrains 对所有项目的强制要求。不采纳本机未确认 Default、样本项目行宽或导入阈值为通用标准，不要求所有语言换用同一格式器。
+- 时效边界：IDEA / 插件 / 格式器升级或项目选用配置改变时复核；已读官方页面不证明消费项目实际选用某 scheme，也不证明已执行格式化。
