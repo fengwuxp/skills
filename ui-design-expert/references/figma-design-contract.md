@@ -20,6 +20,7 @@
 
 - Figma 文件组织、组件、变量、Auto Layout 和代码交接读取 `figma-file-engineering.md`。
 - 原型层级、交互证据和浏览器验证读取 `prototype-output.md`。
+- 产品事实到 Figma 节点的逐条标注、需求 / AC / Owner / revision 回链读取 `prototype-annotation-contract.md`；涉及产品对齐时在计划中增加可选 `Annotation Manifest`。
 - 具体产品事实和内容来源回到产品 brief、术语表、资产登记和品牌边界文件。
 
 ## 1. 先冻结权威边界
@@ -79,6 +80,8 @@
 `ready-for-code` 或 `approved` 只接受 `verified` / `completed` 的工程证据；`code_connect` 在前置条件不成立时可标为 `not-applicable` 并保留理由，其余 `planned` 项不能随状态一同准出。
 
 `ready-for-code` 或 `approved` 还要求 `target_role=approved-design`，并且全部 `is_current=true` 页面均为 `approved`；contract 不得越过页面生命周期单独准出。
+
+涉及产品事实、业务数据或验收回链时，增加 `annotation_revision` 和 `annotation-manifest`。每条 annotation 至少包含 `id / carrier_id / requirement_id / acceptance_id / fact_status / owner / annotation_type / exact_node / content / evidence / product_revision / revision`；校验器只验证字段、稳定节点和 revision 的结构一致性，不替代产品来源、Figma 回读或业务验收。
 
 ```bash
 python3 ui-design-expert/scripts/check_figma_design_plan.py --file plan.md

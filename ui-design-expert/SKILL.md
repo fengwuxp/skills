@@ -55,7 +55,7 @@ description: |
 - 设计系统与 UI 资产选型：`references/ui-library-landscape.md`。Ant Design 跨应用采用遵循其“Ant Design B+ 采用边界”：运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为；正式稿使用 `--kind ant-adoption --scenario <scenario>`，最多修复两轮。
 - 视觉风格、东方审美、参考页面或截图、设计 DNA：`references/visual-style-directions.md`。
 - 任务测试、证据等级、实现后 Design QA：`references/usability-validation-and-design-qa.md`。
-- 可操作原型、Figma 交接：`references/prototype-output.md`；整站 Page Manifest 读 `references/figma-design-contract.md`，文件工程读 `references/figma-file-engineering.md`，跨轮代码对账读 `references/design-code-reconciliation.md`。
+- 可操作原型、Figma 交接：`references/prototype-output.md`；产品事实与 HTML / Figma 载体共用标注契约时读 `references/prototype-annotation-contract.md`；整站 Page Manifest 读 `references/figma-design-contract.md`，文件工程读 `references/figma-file-engineering.md`，跨轮代码对账读 `references/design-code-reconciliation.md`。
 - Figma / 墨刀 / 截图保真审查：`references/design-draft-fidelity-review.md`；来源、版本、许可和吸收边界读 `references/source-map.md`。
 - 原生 iOS / Android 不适用；已有确认设计到代码或需要前端代码时交 `senior-software-architect`，本 Skill 不重新设计。
 

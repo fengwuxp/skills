@@ -12,14 +12,17 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 
 BLOCK_PATTERN = re.compile(
-    r"```(?P<tag>design-contract|page-manifest|navigation-map|figma-evidence)\s*\n"
+    r"```(?P<tag>design-contract|page-manifest|navigation-map|figma-evidence|annotation-manifest)\s*\n"
     r"(?P<body>.*?)```",
     re.DOTALL,
 )
-RECORD_PATTERN = re.compile(r"\[(?P<tag>page|item)\]\s*(?P<body>.*?)\s*\[/\1\]", re.DOTALL)
+RECORD_PATTERN = re.compile(
+    r"\[(?P<tag>page|item|annotation)\]\s*(?P<body>.*?)\s*\[/\1\]", re.DOTALL
+)
 FIGMA_NAME_PATTERN = re.compile(
     r"^(?P<prefix>Web PC|Web Mobile) / \d{2} [^/]+ / [^/]+ / \d+ / "
     r"(?P<status>Draft|Approved|Superseded)$",
@@ -41,6 +44,20 @@ CONTRACT_KEYS = (
     "brand_boundary",
     "owner",
     "status",
+)
+ANNOTATION_KEYS = (
+    "id",
+    "carrier_id",
+    "requirement_id",
+    "acceptance_id",
+    "fact_status",
+    "owner",
+    "annotation_type",
+    "exact_node",
+    "content",
+    "evidence",
+    "product_revision",
+    "revision",
 )
 PAGE_KEYS = (
     "id",
@@ -83,6 +100,8 @@ CLIENT_SCOPE_PREFIXES = {"web-pc": "Web PC", "web-mobile": "Web Mobile"}
 ALLOWED_TARGET_ROLES = {"current-draft-only", "approved-design", "reference-only"}
 REQUIRED_STATE_COVERAGE = {"loading", "empty", "error", "success", "permission", "return", "close"}
 STATE_ALIASES = {"error": {"error", "validation"}}
+ALLOWED_FACT_STATUSES = {"confirmed", "inferred", "pending"}
+ALLOWED_ANNOTATION_TYPES = {"scope", "content", "rule", "interaction", "trace", "metric", "data", "api", "state"}
 
 
 class ContractError(ValueError):
@@ -95,6 +114,7 @@ class PlanParts:
     pages: list[dict[str, str]]
     navigation: list[dict[str, str]]
     evidence: dict[str, tuple[str, str]]
+    annotations: list[dict[str, str]]
 
 
 def parse_key_values(body: str) -> dict[str, str]:
@@ -131,6 +151,54 @@ def parse_records(body: str, tag: str) -> list[dict[str, str]]:
     if not records:
         raise ContractError(f"{tag} block 至少需要一个 [{tag}] 记录")
     return records
+
+
+def has_exact_node(value: str) -> bool:
+    if re.fullmatch(r"node:\d+[:-]\d+", value):
+        return True
+    try:
+        url = urlsplit(value)
+    except ValueError:
+        return False
+    if url.scheme != "https" or url.hostname not in {"figma.com", "www.figma.com"}:
+        return False
+    if not re.fullmatch(r"/(?:design|file|proto)/[^/]+(?:/.*)?", url.path):
+        return False
+    node_ids = parse_qs(url.query, keep_blank_values=True).get("node-id", [])
+    return len(node_ids) == 1 and re.fullmatch(r"\d+[:-]\d+", node_ids[0]) is not None
+
+
+def validate_annotations(
+    annotations: list[dict[str, str]], contract: dict[str, str]
+) -> None:
+    if not annotations:
+        return
+    seen_ids: set[str] = set()
+    annotation_revision = contract.get("annotation_revision", "").strip()
+    if not annotation_revision:
+        raise ContractError("annotation-manifest 存在时 design contract 必须声明 annotation_revision")
+    for index, annotation in enumerate(annotations, start=1):
+        require_keys(annotation, ANNOTATION_KEYS, f"annotation[{index}]")
+        annotation_id = annotation["id"]
+        if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*", annotation_id):
+            raise ContractError(f"annotation[{index}] id 不稳定: {annotation_id}")
+        if annotation_id in seen_ids:
+            raise ContractError(f"annotation id 重复: {annotation_id}")
+        seen_ids.add(annotation_id)
+        if annotation["fact_status"] not in ALLOWED_FACT_STATUSES:
+            raise ContractError(f"annotation[{index}] fact_status 不受支持: {annotation['fact_status']}")
+        if annotation["annotation_type"] not in ALLOWED_ANNOTATION_TYPES:
+            raise ContractError(
+                f"annotation[{index}] annotation_type 不受支持: {annotation['annotation_type']}"
+            )
+        if not has_exact_node(annotation["exact_node"]):
+            raise ContractError(f"annotation[{index}] exact_node 必须包含精确节点标识")
+        if annotation["revision"] != annotation_revision:
+            raise ContractError(f"annotation[{index}] revision 与 annotation_revision 不一致")
+        if annotation["content"].strip().lower() in {"none", "n/a"}:
+            raise ContractError(f"annotation[{index}] content 不能为空")
+        if annotation["evidence"].strip().lower() in {"none", "n/a"}:
+            raise ContractError(f"annotation[{index}] evidence 必须可复核")
 
 
 def require_keys(values: dict[str, str], keys: tuple[str, ...], scope: str) -> None:
@@ -192,7 +260,7 @@ def validate_pages(pages: list[dict[str, str]], client_scope: str) -> None:
         is_current = parse_bool(page["is_current"], f"page[{index}].is_current")
         if page["status"] == "superseded" and is_current:
             raise ContractError(f"page[{index}] superseded 页面不能是 current")
-        if "node-id=" not in page["source_node"] and "node:" not in page["source_node"]:
+        if not has_exact_node(page["source_node"]):
             raise ContractError(f"page[{index}] source_node 必须包含精确节点标识")
         states = [state.strip() for state in page["states"].split(",") if state.strip()]
         if "default" not in states:
@@ -296,11 +364,22 @@ def parse_plan(text: str) -> PlanParts:
     pages = parse_records(extract_block(text, "page-manifest"), "page")
     navigation = parse_records(extract_block(text, "navigation-map"), "item")
     evidence = validate_evidence(extract_block(text, "figma-evidence"))
+    annotation_blocks = [
+        match.group("body")
+        for match in BLOCK_PATTERN.finditer(text)
+        if match.group("tag") == "annotation-manifest"
+    ]
+    if len(annotation_blocks) > 1:
+        raise ContractError("必须且只能有一个 annotation-manifest block")
+    annotations = (
+        parse_records(annotation_blocks[0], "annotation") if annotation_blocks else []
+    )
     validate_contract(contract)
     validate_pages(pages, contract["client_scope"])
     validate_navigation(navigation, pages)
+    validate_annotations(annotations, contract)
     validate_delivery_state(contract, pages, evidence)
-    return PlanParts(contract, pages, navigation, evidence)
+    return PlanParts(contract, pages, navigation, evidence, annotations)
 
 
 def parse_args() -> argparse.Namespace:

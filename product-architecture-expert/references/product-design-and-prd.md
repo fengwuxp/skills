@@ -471,7 +471,7 @@ PRD 是产品思考结构，不只是文档模板。面对模糊需求，先用�
 - 标注类型只按当前事实裁剪使用 `scope / content / rule / interaction / trace`；事实状态使用 `confirmed / inferred / pending`，不得把推断或待确认内容写成已确认事实。
 - HTML 标注表使用 `页面或能力 | HTML 锚点 | 类型 | 事实状态 | Owner`，页面或能力名称必须与产品正文一致。每个已覆盖的 `required` 页面或页面状态至少有一条标注；非页面能力继续留在原型覆盖追踪，不得进入 HTML 标注表。
 
-产品级页面标注仍是业务事实权威，HTML 标注表只负责把事实稳定绑定到可审阅载体，不复制布局、尺寸、token、组件 API 或开发注释。最终自包含 HTML 还必须内嵌 `id=prototype-annotations`、`type=application/json` 的数据块，包含非空 `revision` 以及 `id / target / content / status`；标注 ID 唯一、内容非空、状态只取 `confirmed / inferred / pending`，目标必须能解析到实际元素。
+产品级页面标注仍是业务事实权威，HTML / Figma 标注表只负责把事实稳定绑定到可审阅载体，不复制布局、尺寸、token、组件 API 或开发注释。跨载体字段与证据边界统一读取 `ui-design-expert/references/prototype-annotation-contract.md`；产品侧至少保留 `标注 ID / 需求 ID / AC / 承接 ID / 事实状态 / Owner / revision / 来源`，Figma 适配器还必须能回读精确 node。最终自包含 HTML 还必须内嵌 `id=prototype-annotations`、`type=application/json` 的数据块，包含非空 `revision` 以及 `id / target / content / status`；标注 ID 唯一、内容非空、状态只取 `confirmed / inferred / pending`，目标必须能解析到实际元素。
 
 正式、完整、可评审、提交前、CR 或触发验证场景中，先人工确认应用界面基线，再运行 `scripts/check_product_deliverable.py --kind prototype-scope-plan --file <原型范围规划.md>`。脚本检查三张追踪表、产品事实引用、规范值、稳定锚点及页面 / 页面状态的必需覆盖。最终 HTML 另运行 `python3 ui-design-expert/scripts/check_ui_source.py --require-prototype-annotations <prototype.html>`，检查真实文件中的默认模式、审阅入口、内嵌数据、内容和锚点解析。两项通过仍只证明静态契约与载体完整，不代表产品语义、交互隔离、可访问性或浏览器任务已经验收。
 

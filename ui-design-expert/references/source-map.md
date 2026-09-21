@@ -314,3 +314,10 @@
 - 未安装或复制上述候选 Skill、设计系统、组件库、CLI、Stitch / MCP 或 Figma 资产，也未授权项目升级、迁移和依赖变更；运行时只在当前环境已提供且任务需要时路由官方 Figma 能力。
 - 未把水墨、米色、红金、书法、印章、窗棂或屏风写成东方审美默认答案。
 - 未复制或维护 50 项 UI 风格百科，也不把风格名写成互斥单选、固定模板、质量评分或自动生成提示词。
+
+### HTML / Figma 标注与可访问命名（2026-09-21）
+
+- [WHATWG HTML Standard](https://html.spec.whatwg.org/)：实际读取公开标准页。吸收标准 HTML 属性优先、`data-*` 只承载自定义载体元数据的边界；不把自定义属性当业务事实源。
+- [WAI-ARIA Authoring Practices: Providing Accessible Names and Descriptions](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/)：实际读取。吸收交互元素可访问名称、优先可见文本和原生 HTML 技术、需要真实测试的边界；不把标注 checker 当 WCAG 或辅助技术验收。
+- [Figma Guide to Dev Mode](https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode)：实际读取。吸收 annotations、精确设计检查、dev resources、ready-for-dev 和版本对比作为 handoff 证据；不把 Figma 注释 / 状态当产品事实或浏览器运行证据。
+- 归位到 `prototype-annotation-contract.md`：Product Fact 只保留在产品层，HTML / Figma 作为 carrier adapter，并以 `annotation_id / requirement_id / acceptance_id / owner / revision` 对账。

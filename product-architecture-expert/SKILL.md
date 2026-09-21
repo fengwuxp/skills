@@ -57,7 +57,7 @@ description: |
 
 产品判断以三层主轴组织：**第一层：定方向**，确认用户、问题与目标；**第二层：通链路**，核对对象、状态、规则与承接责任；**第三层：定取舍并形成可验证方案**，比较现有替代、收益、成本和失败边界，给出最小切片与验收。这不是固定瀑布；从当前缺口进入，判断必须回指证据，复盘发现反例再回溯上层。
 
-当任务覆盖需求定性、目标概念、概要与详细设计、产品-系分-原型对齐或综合产品设计后的架构重构时，读取 `references/product-judgment-action-chain.md` 的“四门禁与六阶段收敛”；门禁只固定准出、回退和 Owner，不新增六份文档，也不让架构师或原型反向定义产品事实。
+当任务覆盖需求定性、目标概念、概要与详细设计、产品-系分-原型对齐或综合产品设计后的架构重构时，读取 `references/product-judgment-action-chain.md` 的“四门禁与六阶段收敛”；门禁只固定准出、回退和 Owner，不新增六份文档，也不让架构师或原型反向定义产品事实。涉及 HTML / Figma 标注时，产品事实字段与载体证据继续按 `ui-design-expert/references/prototype-annotation-contract.md` 对账。
 
 写作、生成、完善、补全或改写 PRD / 产品需求文档 / 模板时，读取 `references/product-prd-template.md` 与 `references/product-design-and-prd.md`。沿用项目权威和已批准裁剪，只修改受影响的事实与表达，交付正文而非提纲。正式评审或提交前自检加读 `references/product-prd-quality-gates.md`；运营、通知、数据或发布承诺需要展开时加读 `references/product-prd-operations-and-data.md`。
 

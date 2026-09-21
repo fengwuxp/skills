@@ -10,7 +10,7 @@
 
 - 当前权威端、同步方向、目标端、Owner 和写入授权。
 - exact Figma node 与稳定 code anchor 的逐行映射。
-- copy、geometry、asset、interaction 四类 delta。
+- copy、geometry、asset、interaction 四类 delta，以及单列的 annotation delta。
 - 已执行修改、未执行 writeback、冲突与阻塞。
 - 双端 readback 和最低充分验证证据。
 
@@ -58,7 +58,7 @@ owner
 
 1. 回读 Design Contract、Page Manifest、Owner 最新决策和被替代名称。
 2. 读取 exact Figma node 与代码锚点；无法定位时停止，不猜 node 或组件。
-3. 分离四类 delta：copy、geometry、asset、interaction。
+3. 分离四类 delta：copy、geometry、asset、interaction；另列 annotation 的新增、删除、事实引用、内容 / 状态、锚点和 revision 变化。
 4. 比较双端 revision 与 fingerprint，裁决同步方向。
 5. 只修改已授权目标端；另一个端只记录 pending。
 6. 回读实际目标，核对文本、字体、尺寸、资源、节点名和代码映射。
@@ -96,6 +96,7 @@ owner
 - authoritative_surface、sync_mode、Owner 和授权均唯一明确。
 - exact node 与 code anchor 可回读。
 - 双端变化没有被静默覆盖。
+- annotation_id、产品事实引用、载体锚点和 revision 的变化已单列，并有 Owner 与处理状态。
 - copy-only 修改没有顺带重构 geometry、asset 或 interaction。
 - 已执行和 pending 写回分开记录。
 - aligned 行具有双端 readback 和该 delta 所需的最低充分证据。

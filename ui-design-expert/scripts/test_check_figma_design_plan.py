@@ -126,6 +126,61 @@ class FigmaDesignPlanTests(unittest.TestCase):
         with self.assertRaisesRegex(VALIDATOR.ContractError, "状态覆盖"):
             VALIDATOR.parse_plan(text)
 
+    def test_annotation_manifest_requires_exact_node_and_matching_revision(self) -> None:
+        invalid_node = VALID.read_text(encoding="utf-8").replace(
+            "exact_node: https://www.figma.com/design/target/file?node-id=10-20",
+            "exact_node: home-frame",
+        )
+        with self.assertRaisesRegex(VALIDATOR.ContractError, "exact_node"):
+            VALIDATOR.parse_plan(invalid_node)
+
+        invalid_revision = re.sub(
+            r"(?m)^revision: ann-r1$", "revision: ann-r2", VALID.read_text(encoding="utf-8")
+        )
+        with self.assertRaisesRegex(VALIDATOR.ContractError, "revision"):
+            VALIDATOR.parse_plan(invalid_revision)
+
+    def test_annotation_ids_remain_valid_when_switching_to_html(self) -> None:
+        for annotation_id in ("ANN.HOME.001", "ANN:HOME:001", "001-HOME"):
+            with self.subTest(annotation_id=annotation_id):
+                text = VALID.read_text(encoding="utf-8").replace("ANN-HOME-001", annotation_id)
+                with self.assertRaisesRegex(VALIDATOR.ContractError, "id"):
+                    VALIDATOR.parse_plan(text)
+
+    def test_exact_nodes_reject_empty_or_spoofed_references(self) -> None:
+        for node in (
+            "node:",
+            "not-a-node:10-20",
+            "https://www.figma.com/design/target/file?node-id=",
+            "https://www.figma.com/design/target/file?node-id=home",
+            "https://example.org/design/target/file?node-id=10-20",
+            "https://www.figma.com/design/target/file?node-id=10-20&node-id=30-40",
+        ):
+            with self.subTest(node=node):
+                text = VALID.read_text(encoding="utf-8").replace(
+                    "exact_node: https://www.figma.com/design/target/file?node-id=10-20",
+                    f"exact_node: {node}",
+                )
+                with self.assertRaisesRegex(VALIDATOR.ContractError, "exact_node"):
+                    VALIDATOR.parse_plan(text)
+
+    def test_exact_nodes_accept_explicit_id_and_encoded_figma_url(self) -> None:
+        for node in ("node:10:20", "https://www.figma.com/design/target/file?node-id=10%3A20"):
+            with self.subTest(node=node):
+                text = VALID.read_text(encoding="utf-8").replace(
+                    "exact_node: https://www.figma.com/design/target/file?node-id=10-20",
+                    f"exact_node: {node}",
+                )
+                self.assertEqual(VALIDATOR.parse_plan(text).annotations[0]["exact_node"], node)
+
+    def test_page_source_nodes_use_the_same_exact_reference_check(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "source_node: https://www.figma.com/design/reference/file?node-id=1-2",
+            "source_node: node:",
+        )
+        with self.assertRaisesRegex(VALIDATOR.ContractError, "source_node"):
+            VALIDATOR.parse_plan(text)
+
 
 if __name__ == "__main__":
     unittest.main()

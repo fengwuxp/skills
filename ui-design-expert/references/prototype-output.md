@@ -21,6 +21,7 @@
 ## 需要继续读取的 reference
 
 - Figma 与代码多轮双向同步、节点级漂移和待写回状态读取 design-code-reconciliation.md。
+- 产品事实到 HTML / Figma 载体的统一标注、业务数据状态回链和跨工具适配读取 `prototype-annotation-contract.md`；本文件只保留原型层级、工具路由和证据上限。
 
 - 任务结构与设计契约读取 `design-and-review-workflow.md`。
 - 完整网站的来源权威、页面命名、Page Manifest 和跨页一致性读取 `figma-design-contract.md`。

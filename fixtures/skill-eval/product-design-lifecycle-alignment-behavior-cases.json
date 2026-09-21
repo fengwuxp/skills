@@ -99,6 +99,17 @@
         "只重开原型漂移影响的场景、状态和验收，未受影响的已确认结论作为权威输入，不自动重开范围或架构反馈门。",
         "修复并验证对齐后更新 revision、差异结论和停止条件；若新证据推翻上游不变量，再按影响显式退回相应门禁。"
       ]
+    },
+    {
+      "id": "product-should-align-domain-data-api-and-prototype",
+      "category": "data-prototype-api-alignment",
+      "risk": "high",
+      "prompt": "$product-architecture-expert：某个业务页面需要展示一个经过派生或异步交付的数据结果。当前只有业务名称和页面草图，来源、粒度、时间口径、刷新状态和失败恢复尚未确认；工程建议先生成查询/任务、统一 POST /query 接口和示例数字，再让 Figma 标注补充口径。请给对齐结论。",
+      "criteria": [
+        "先把业务事实、可选的派生交付、API/查询契约和原型标注分成各自 Owner 与 revision；来源、粒度或时间口径未确认时保持 blocked，停止查询、接口字段和原型示例数据的下游构造。",
+        "只有在确实存在派生或异步交付时，才要求承责方说明输入、刷新/新鲜度、重试、失败恢复和验收边界；生成查询/任务、HTTP 200 或静态草图不构成数据完成证据。",
+        "原型只引用确认的业务标识/annotation/AC 和 pending/stale/error 状态，不反向发明 API 路径或物理存储；对齐门按受影响 revision 重开，不能按页面完成度放行。"
+      ]
     }
   ]
 }

@@ -16,6 +16,7 @@ asset_registry: assets-v1.md
 brand_boundary: brand-boundary-v1.md
 owner: design-owner
 status: ready-for-figma
+annotation_revision: ann-r1
 ```
 
 ## Page Manifest
@@ -105,4 +106,23 @@ code_connect: status=planned; evidence=not-required-before-code-handoff
 component_playground: status=planned; evidence=component-contract-v1
 ready_for_dev: status=planned; evidence=handoff-contract-v1
 state_matrix: status=planned; evidence=state-matrix-v1
+```
+
+## Annotation Manifest
+
+```annotation-manifest
+[annotation]
+id: ANN-HOME-001
+carrier_id: home
+requirement_id: REQ-HOME-001
+acceptance_id: AC-HOME-001
+fact_status: confirmed
+owner: product-owner
+annotation_type: interaction
+exact_node: https://www.figma.com/design/target/file?node-id=10-20
+content: inquiry CTA opens the inquiry panel and preserves the page context
+evidence: product-source-v1.md#REQ-HOME-001
+product_revision: product-r1
+revision: ann-r1
+[/annotation]
 ```
