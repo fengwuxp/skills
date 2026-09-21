@@ -382,3 +382,10 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 - 外部 API、SDK、云产品、开源组件、法规标准和安全基线具有时效性。引用这类来源时，必须按最新官方来源、项目 lockfile、本地依赖树、合同或专业确认结果复核，并记录核验日期。
 - 不把外部文章中的传统文化、医学类比、个人修习语境或作者价值判断写成工程结论；只可吸收问题核心诊断、变化治理、反脑补证据边界和产品/架构协作门禁。
 - 与现有 Skill 规则重复时，只升级一个权威位置；其他文件只做摘要和链接，避免规则漂移。
+
+### HTTP API 与 RESTful 语义（2026-09-21）
+
+- MDN HTTP request methods：`https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods`。实际读取。吸收 `GET` / `POST` / `PUT` / `PATCH` / `DELETE` 的方法语义，以及 safe / idempotent 分类；不把 MDN 示例路径当项目 API。
+- MDN Idempotent：`https://developer.mozilla.org/en-US/docs/Glossary/Idempotent`。实际读取。吸收重复请求的意图效果与服务端保证边界；不把方法名本身当幂等证据。
+- RFC 9110 §9.3.3、§17.9：`https://www.rfc-editor.org/rfc/rfc9110.html`。2026-09-21 实读 POST 的资源处理语义和 URI 敏感信息风险；有依据的 POST 查询可作为正式契约，不强制迁移到 GET，也不把请求体本身当保密措施。复杂查询的长度限制须由项目事实另证。
+- 归位到 `project-governance-service-api-modeling.md` 的“HTTP API / RESTful 契约裁决”：资源、方法、状态码、查询参数、幂等、并发、兼容和业务数据 / 派生交付 / 原型责任边界。HTTP 规范只作技术基线，具体路径仍由项目消费者和兼容事实决定。

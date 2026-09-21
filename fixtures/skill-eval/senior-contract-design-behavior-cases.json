@@ -2,7 +2,10 @@
   "version": 1,
   "description": "架构师核心原则重构的 contract-only 题集：覆盖设计、编码、CR 与架构审查中的稳定语义、实现封装、组合、最小正确实现及取舍边界。与既有 provider-value、provider-abstraction、architecture-research 题集共同使用，不重复其调用数量、兼容包装及优化停止案例。静态校验不证明真实触发或收益；收益试验须冻结修订前后完整能力，使用相同输入、runner/model 与工具，取得独立盲评，不能以 no-skill 对照归因本轮重构。",
   "rubric": {
-    "scale": {"min": 1, "max": 5},
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
     "weights": {
       "correctness": 0.4,
       "autonomy": 0.15,
@@ -96,6 +99,28 @@
         "把文化思想用于责任、阶段和取舍的现代解释，不将类比或古籍当作拆服务、引擎选型和技术正确性的证据，也不捏造引文。",
         "基于已确认需求及现有能力选择保留简单结构，不用未来可能扩展制造实现工作。",
         "不增加逐项思维卡、强制文化 Skill 加载或重复确认；用简短工程结论、验证依据与必要复核条件收口。"
+      ]
+    },
+    {
+      "id": "contract-design-restful-api-with-derived-data-boundary",
+      "category": "web-api-contract",
+      "risk": "high",
+      "prompt": "设计一个 Web API 供页面查询一个已派生或异步交付的业务结果。已确认业务语义和页面标注各有 Owner，但现有提案统一使用 POST /query，把筛选条件、时间范围和 page 放在 JSON 中，所有失败都返回 HTTP 200；还要求页面根据物理存储名自行选择回退。请给最小接口契约和职责裁决，现有消费者兼容性未知。",
+      "criteria": [
+        "优先按 RESTful 资源、HTTP 方法、状态码、查询参数和分页语义审查；指出把所有失败包装为 200、把物理表名交给页面和用 POST 隧道化的风险，但不为形式重命名破坏未知消费者。",
+        "把业务语义、可选的派生交付、API 资源结果和原型标注分别归责；页面只消费稳定结果与 pending/stale/error 状态，不拼装物理回退流程。",
+        "要求补齐真实消费者、兼容约束、幂等/并发、状态码和验证证据；事实不足时保持 candidate/pending，不臆造 GET 路径、字段或物理存储。"
+      ]
+    },
+    {
+      "id": "contract-design-sensitive-post-query-is-not-a-write-command",
+      "category": "http-query-exception",
+      "risk": "high",
+      "prompt": "评审一个新建的查询接口，筛选中含不可公开的个人标识和嵌套条件；已确认资源结果、权限和只读查询契约，项目用 POST 请求体承载，避免把敏感条件写入 URI。有人认为只有创建和非幂等命令才可 POST，要求改成 GET query 参数，并设置退役窗口。请给最小裁决，不实现接口。",
+      "criteria": [
+        "认可基于敏感条件和真实契约的 POST 查询，说明普通 GET 查询的默认方案与本场景差异，不强制把敏感参数放进 URL 或把合法契约视作待退役违例。",
+        "核对资源表示、协议状态码、缓存、重试与权限，不从 POST 方法名推断业务有写副作用，也不把请求体当成天然安全。",
+        "保持只读评审和已确认业务边界，不新建查询任务、物理存储、幂等表或其他无需求能力。"
       ]
     }
   ]
