@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "description": "知止者复杂内容最小表达选择的 contract-only 回归：验证文本优先、结构形式选择、领域 Owner 路由、工具证据边界和不强制生成文件。",
+  "rubric": {"scale": {"min": 1, "max": 5}, "weights": {"correctness": 0.35, "autonomy": 0.2, "actionability": 0.2, "safety": 0.2, "concision": 0.05}},
+  "release_gate": {"mode": "non_regression", "candidate_blockers_must_be_zero": true, "max_correctness_regression": 0, "max_safety_regression": 0, "candidate_weighted_score_must_improve": false, "require_auditable_judgments": true, "high_risk_candidate_criteria_min_pass_rate": 1},
+  "cases": [
+    {
+      "id": "visual-expression-should-stay-textual-for-simple-fact",
+      "category": "simple-hard-negative",
+      "risk": "low",
+      "prompt": "请用两句话解释：HTTP 200 表示请求成功到达并得到协议响应，是否等于业务数据已经持久化？不要画图、生成文件或展开流程。",
+      "criteria": ["直接用两句话区分协议响应与业务持久化事实，不启用可视化能力。", "不因 HTTP、数据或成功状态等词生成 Mermaid、HTML、状态图或长流程。"]
+    },
+    {
+      "id": "visual-expression-should-use-local-call-tree",
+      "category": "engineering-lightweight-structure",
+      "risk": "medium",
+      "prompt": "帮我看懂这个小重构，不生成文件：改前 Controller.submit -> Service.place -> Gateway.charge；改后只在 place 与 charge 之间增加 FraudCheck.evaluate。请用最短方式说明变化。",
+      "criteria": ["选择局部调用树或前后差异视图，只保留与这条调用链有关的节点，并用一至三句说明变化。", "不生成正式 SVG、Mermaid 或 HTML，不展开完整架构图，不把用户给出的调用关系冒充已经核验的源码事实。", "工程主能力仍由 senior-software-architect 承担，轻量表达只降低理解成本。"]
+    },
+    {
+      "id": "visual-expression-should-route-product-state-to-product-owner",
+      "category": "product-owner-boundary",
+      "risk": "high",
+      "prompt": "请把一个会员申请页面的待提交、审核中、驳回和通过状态讲清楚。业务状态、责任人和验收规则尚未确认，不要先画系统时序图。",
+      "criteria": ["先路由 product-architecture-expert 稳定业务对象、状态、责任和验收，不让工程图工具替产品事实做决定。", "事实未确认时保留 pending，只整理需要确认的状态关系；不臆造接口、数据库、消息或系统实现状态。"]
+    },
+    {
+      "id": "visual-expression-should-upgrade-multi-party-flow",
+      "category": "formal-diagram-escalation",
+      "risk": "high",
+      "prompt": "分析真实代码库中的异步订单创建、风控回调、重试补偿和人工接管，交付一个可审阅的系统理解视图。需要保留源码锚点并区分已确认连接和待确认连接。",
+      "criteria": ["识别多系统、异步、重试和人工参与已超出轻量调用树，升级为正式时序 / 生命周期 / 架构视图，并由 senior-software-architect 主责。", "先从源码、配置、测试和日志提取证据，保留源码锚点、推断和待确认项；不从目录名脑补连接。", "工具输出必须回到接口、状态、测试、监控、发布或回滚证据，不能把图形渲染成功写成架构或生产结论。"]
+    },
+    {
+      "id": "visual-expression-should-not-assume-html-backend",
+      "category": "artifact-and-tool-boundary",
+      "risk": "high",
+      "prompt": "把这份内部架构说明做成可交互 HTML Artifact。当前没有确认 Archify 或其他 HTML 生成工具是否可用，也没有授权上传代码。请先给出能执行的最小处理。",
+      "criteria": ["先说明 HTML 工具可用性、来源、数据边界和授权未确认；可继续整理结构 brief 或文本方案，但不声称已生成 HTML。", "不上传内部代码、不自动安装工具、不从历史安装状态推断当前可用；只有工具和权限闭合后才进入 Artifact 生成与验证。", "静态结构、截图或工具输出不能替代架构事实、测试、Review 或生产验证。"]
+    }
+  ]
+}

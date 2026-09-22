@@ -79,4 +79,4 @@ description: Java/Wind 编码与测试约规。纯规范、注释/Javadoc 或 Ja
 - 空值责任必须按数据库持久化约束、参数验证和 Java 空安全契约归位；已经证明非空的值不得重复判空，数据库约束也不得替代不可信输入校验。
 - Wind 的 Bean Validation 服务边界以 `references/wind-coding-conventions.md` 为唯一详细规则源；仅在 Wind profile 中执行对应脚本守卫，通用 Java 仍按实际 artifact、调用路径和项目契约判责。
 - Spring Bean 注册、依赖注入与 Lombok 日志注解以 `references/java-coding-conventions.md` 为唯一详细规则源；仅在依赖或源码证据命中时启用，Wind 专项不得复制或放宽该规则。
-- 代码格式默认优先采用项目已确认的 IDEA Code Style，不得用个人 IDE 默认设置覆盖项目规则，也不得格式化无关代码；样式来源与缺配置处理统一读 `references/code-style.md`，Java 细则读通用 Java 约规“4.6 控制语句与代码格式”，命中 Wind 信号后再叠加 Wind 专项。
+- 代码格式默认优先采用项目已确认的 IDEA Code Style，不得用个人 IDE 默认设置覆盖项目规则，也不得格式化无关代码；样式来源与缺配置处理统一读 `references/code-style.md`，Java 细则读通用 Java 约规“4.6 控制语句与代码格式”，其中三目最多一层且不得滥用；命中 Wind 信号后再叠加 Wind 专项。

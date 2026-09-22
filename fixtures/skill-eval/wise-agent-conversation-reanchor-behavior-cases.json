@@ -13,11 +13,14 @@
         "wise-agent/SKILL.md",
         "wise-agent/references/delivery-execution-control.md"
       ],
-      "sha256": "3c497940f8af0fa56353335f876c16697feef89cab1eb79fab7d6b7860a4b128"
+      "sha256": "eef290fa3c97c7a3b90bc281b30a73bdd88faecd2a68a64508684eedb49b2ac2"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
     "weights": {
       "correctness": 0.35,
       "autonomy": 0.2,

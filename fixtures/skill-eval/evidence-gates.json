@@ -190,6 +190,9 @@
         "cases": "fixtures/skill-eval/wise-agent-responsibility-routing-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/wise-agent-visual-expression-routing-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/wise-java-delivery-behavior-cases.json"
       },
       {
