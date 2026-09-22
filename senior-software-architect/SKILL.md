@@ -49,7 +49,7 @@ description: |
 
 ## 工程编码红线
 
-所有语言的源码新增、修改、生成、测试写入及格式 CR 都必须先读 `wind-coding-conventions/references/code-style.md`，确认目标语言的 IDEA scheme 或项目明确采用的格式器；缺少可确认样式时告知用户需要配置，按该 reference 的边界继续独立工作。非 Java 任务只消费该通用 reference，不加载 Java / Wind 专项；不能因只改测试或用户未提格式而跳过。
+所有语言的源码新增、修改、生成、测试写入及源码 CR 都必须先读 `wind-coding-conventions/references/code-style.md`，执行“阅读与维护优先”的表达红线，并确认目标语言的 IDEA scheme 或项目明确采用的格式器；缺少可确认样式时告知用户需要配置，按该 reference 的边界继续独立工作。非 Java 任务只消费该通用 reference，不加载 Java / Wind 专项；不能因只改测试或用户未提可读性、格式而跳过。
 
 Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取项目本地规范与 `wind-coding-conventions` 的通用 Java 层；只有存在 Wind 高置信度信号时才叠加专项。它是必要规则依赖，不是可省略的另一个执行 Owner。首次写入生产或测试代码前按 `references/workflow.md` 的“代码修改前”核对已读取依据；所有 Java 写入都包含“4.6 控制语句与代码格式”和项目格式配置，涉及依赖声明读取“4.3 OOP 与对象设计”；测试写入必须包含“15. 测试代码规约”及所选测试对象的专项实践，不能只读测试总纲或照抄示例。架构师不复制约规正文，最终按源码事实、业务不变量、风险和验证证据裁决。
 

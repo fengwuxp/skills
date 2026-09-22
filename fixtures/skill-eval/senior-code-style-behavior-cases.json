@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "跨语言代码样式的 contract-only 案例：验证配置权威、IDEA 实际选用、语言与模块作用域、缺配置提示及验证边界。题集校验不代表模型行为评分或消费项目格式化已通过。",
+  "description": "跨语言代码样式与可读性的 contract-only 案例：覆盖样式权威、作用域、工具缺口，以及复杂条件的业务表达、短路和异常语义。题集校验不代表模型行为评分、消费项目格式化或行为等价已通过。",
   "rubric": {
     "scale": {"min": 1, "max": 5},
     "weights": {"correctness": 0.35, "autonomy": 0.2, "actionability": 0.2, "safety": 0.2, "concision": 0.05}
@@ -68,6 +68,38 @@
         "区分已确认的样式与格式工具不可用，不误称项目未配置，也不要求用户重新选择 scheme。",
         "按已确认设置保守完成局部修复、人工排版检查和既有测试，不安装工具、不扩大格式修改，也不无故阻断独立修复。",
         "明确未执行自动格式化；测试、结构校验或 diff 空白检查通过不能替代 IDEA 格式验证。"
+      ]
+    },
+    {
+      "id": "readability-range-assertion-preserves-short-circuit",
+      "category": "compound-assertion",
+      "risk": "high",
+      "prompt": "整理这一段 Java 条件表达，使维护者能直接理解规则，不改变契约：AssertUtils.state(!range.start().isBefore(bounds.start()) && (upperBound == null || !range.end().isAfter(upperBound)), () -> outOfRange()); 已确认起点等于下界、终点等于上界均允许；起点不合法时立即失败，不读取终点；上界为空时也不读取终点。只有失败才调用异常工厂。只改这段表达并说明聚焦验证，项目格式方案和断言工具均沿用。",
+      "criteria": [
+        "采用有业务含义的局部变量、分步断言、卫语句或必要的判定方法表达上下界，不只给原式换行、加括号或用注释翻译；名称能看出条件的业务含义。",
+        "保留两端允许相等、上界为空跳过终点、起点失败不读取终点的行为；不能先算出全部布尔变量再组合，也不改变异常类型、错误契约或惰性构造时机。",
+        "针对边界相等、越界、空上界和短路跳过提出或执行聚焦验证，保持本地改动范围；不凭编译、格式检查或布尔代数声称运行等价。"
+      ]
+    },
+    {
+      "id": "readability-typescript-branch-preserves-evaluation",
+      "category": "cross-language-short-circuit",
+      "risk": "high",
+      "prompt": "重构 TypeScript 的这一行，提高阅读维护性：assert(account.active && (isOperator() || await hasPermission()), () => accessDenied()); 契约明确：停用账户不能调用后两个检查，操作员为真时不调用权限服务，只有失败才构造错误。函数现有 async 契约与错误类型保持，禁止更改权限策略。请给局部改法和需要验证的边界。",
+      "criteria": [
+        "实际消费跨语言的阅读维护原则，用有意义的分支或局部命名表达账户资格与访问条件，不因没有 Java 代码而忽略；不为减少行数继续掩盖检查顺序。",
+        "保持 isOperator 和 hasPermission 的短路、调用次数与 await 行为，错误工厂仍按原契约惰性执行；不能用提前求值或 Promise.all 改变权限检查路径。",
+        "不抽取无业务价值的策略类或规则引擎，不依赖注释证明可读性；验证停用、操作员、普通用户授权及拒绝分支的行为。"
+      ]
+    },
+    {
+      "id": "readability-keeps-already-clear-conditions",
+      "category": "simple-expression-hard-negative",
+      "risk": "medium",
+      "prompt": "按代码首先供人阅读维护的原则，只读审查 AssertUtils.state(enabled && authorized, errors::forbidden)。两个布尔值都有明确业务含义，之前已计算，异常工厂仅在失败时调用。有人要求每个比较都包装成独立方法，再创建一个 ValidationPolicy 类，因为断言中不允许有 &&。本轮没有其他复杂规则。",
+      "criteria": [
+        "认可该组合条件已经清晰，拒绝把可读性规则机械解释成禁止逻辑运算或每个判断都要抽方法。",
+        "保留简单表达及惰性异常构造，不新增包装方法、策略类、注释或无关修改；保持只读。"
       ]
     }
   ]

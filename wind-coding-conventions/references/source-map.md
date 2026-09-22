@@ -27,6 +27,7 @@
 | 核验阿里手册采纳 | `阿里 Java 开发手册` | 不复制手册正文和旧版环境参数 |
 | 核验注释、Javadoc、注解位置与空行 | `Javadoc 与注释格式` | 不把团队格式选择当统一行业标准 |
 | 核验 Clean Code 启发 | `《代码整洁之道》公开学习材料` | 不把读书笔记或启发式建议升级成机械强制规则 |
+| 核验代码阅读优先原则的出处 | `SICP：面向人的程序表达` | 区分原句、译意和本项目编码约定 |
 | 核验 Bean Validation 语义与触发边界 | `Bean Validation / Jakarta Validation / Spring MVC 官方文档` | 不把注解声明误写成已执行验证 |
 | 核验 Spring Bean 依赖注入与 Lombok 构造器 | `Spring Dependency Injection / Lombok constructor 官方文档` | 不把 Lombok 构造器生成误写成 Spring 装配已验证 |
 | 核验 JSpecify 空值语义 | `JSpecify 官方文档` | 不把静态契约误写成运行时校验 |
@@ -46,6 +47,14 @@
 - 采纳边界：声明文档和实现说明按用途区分，保留类型注解位置与必要契约；具体规则统一在 `java-coding-conventions.md` 的“4.8 注释与 Javadoc”。块注释可用于 formatter 的段落重排，工具是否支持以项目配置为准。
 - 差异边界：Google 允许短且无块标签的单行 Javadoc、连续多行 `//` 与字段按需留空行；阿里该版本要求方法内多行说明用块注释，对声明文档要求更严格。本 Skill 的默认格式与按需注释策略是选择性采纳，不声明逐条符合两家规范；Oracle JDK 25 与所读 Google 版本也支持 Markdown Javadoc，传统 `/** ... */` 不是唯一文档形式。
 - 复核条件：项目更换 JDK、formatter 或明确采用其他团队规范时，重新核对受影响规则；不要求升级工具、切换文档格式或批量改写无关注释。
+
+## SICP：面向人的程序表达
+
+- 来源：[MIT 托管的 SICP 电子文本](https://web.mit.edu/6.001/6.037/sicp.pdf#page=22)，书名 *Structure and Interpretation of Computer Programs*，Harold Abelson、Gerald Jay Sussman 著，with Julie Sussman。
+- 读取状态：2026-09-22 实际读取上述第二版电子文本中保留的“Preface to the First Edition”；该 PDF 标注为非官方 Texinfo 排版，原句位于书内页码 xxii（PDF 第 22 页），不把它标成第一版原版扫描件。
+- 原句：“Thus, programs must be written for people to read, and only incidentally for machines to execute.”
+- 译意：程序必须写得让人能够阅读，机器执行是附带目的；`incidentally` 在这里表达主次，不是“偶尔执行”的频率。约规中的“阅读和维护”是工程化表述，“维护”不在这句英文中。
+- 采纳边界：原则归位到 `code-style.md` 的“阅读与维护优先”；复杂条件拆分、业务命名和短路语义保护是本项目的具体编码约定，不是对 SICP 原句的逐条转引，也不以可读性降低正确性要求。
 
 ## 《代码整洁之道》公开学习材料
 
