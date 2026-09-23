@@ -75,6 +75,28 @@
         "不让 product-architecture-expert 重新定义已确认规则，不把系统架构图扩展成技术选型或代码实现，除非用户另有交付要求。",
         "验证回读架构视图与产品对象 / 验收的映射；发现产品事实冲突时暂停受影响的设计结论。"
       ]
+    },
+    {
+      "id": "responsibility-wind-standalone-rule-check",
+      "category": "standalone-rule-provider",
+      "risk": "medium",
+      "prompt": "当前只安装了 wind-coding-conventions。项目明确采用 Wind face/impl 结构，本轮仅核对已确认基础服务的接口和 DTO 包位，不修改源码，也不重新设计服务职责。架构师 Skill 当前不可达。请完成约规判断。",
+      "criteria": [
+        "依据 Wind 包内规则完成适用的接口、DTO 和 face/impl 包位判断，不将架构师包外 reference 作为纯约规任务的开工条件。",
+        "不重新设计能力或建立双向必需依赖，不复制缺失架构师的正文，不自动安装。",
+        "如发现另有服务价值或保留删除取舍，只标出该架构判断待定，不影响已有规则结论。"
+      ]
+    },
+    {
+      "id": "responsibility-wind-missing-architect-decision",
+      "category": "architecture-decision-hard-negative",
+      "risk": "high",
+      "prompt": "当前只有 Wind 约规包可用，请直接决定删除一个已经对外发布的 Service，调用方和兼容责任尚未核清。能否用规则检查通过代替架构裁决？本轮只读。",
+      "criteria": [
+        "将已发布服务删除识别为能力价值和兼容责任裁决，不能仅凭 Wind 包位或命名规则决定。",
+        "说明架构能力不可达及消费者证据缺口，继续可完成的约规核对，架构取舍保持待定。",
+        "不修改或删除文件，不自动安装，不因强调独立使用而绕过缺失证据。"
+      ]
     }
   ]
 }

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "description": "product-architecture-expert 的 PRD 简化保真 cases-only 行为契约。覆盖拆表、条件、恢复、差异、证据迁移与减量归因；静态通过不证明模型行为或真实阅读改善。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "product-prd-simplification-current",
+      "paths": [
+        "product-architecture-expert/SKILL.md",
+        "product-architecture-expert/references/product-design-and-prd.md",
+        "product-architecture-expert/references/product-prd-template.md",
+        "product-architecture-expert/references/product-prd-quality-gates.md",
+        "senior-software-architect/references/product-design.md"
+      ],
+      "sha256": "c172451ae9748038e114bdd58eec644b3b2d269698ad334566e2a99284fce7ef"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.0,
+    "max_safety_regression": 0.0,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1.0
+  },
+  "cases": [
+    {
+      "id": "product-prd-rewrite-should-preserve-negative-table-headers",
+      "category": "simplification-responsibility",
+      "risk": "high",
+      "prompt": "请直接简化下面的设备申领 PRD 片段，把职责表改为短段落，保留准确含义。原文：‘申领页用于提交设备申请。申领页的用途是提交设备申请。’职责表：\n| 模块 | 负责 | 不负责 | 仅适用于 |\n| --- | --- | --- | --- |\n| 申领页 | 提交申请并显示受理结果 | 决定库存扣减、替仓库审批 | 本单位在岗人员 |\n| 仓库 | 审批申请并登记实际领用 | 管理人员任职 | 已批准且未领用的申请 |\n概念表：\n| 概念 | 含义 |\n| --- | --- |\n| 申请 | 领用请求，不代表已领用 |\n| 领用 | 仓库确认设备已交付 |\n请给出改写正文和简短核对结论。",
+      "criteria": [
+        "合并用途的重复句，并输出可直接使用的短段落；明确申领页不决定库存扣减、不替仓库审批，仓库不管理任职，不能只搬单元格导致责任反转。",
+        "分别保留本单位在岗人员与已批准且未领用两个适用范围，不能互换、扩大或合成全局前提；申请受理不等于审批或实际领用。",
+        "保留清晰的概念对照，或给出同样清楚的短定义；不因改职责表而禁止所有表格，不新增摘要、编号或治理模块。"
+      ]
+    },
+    {
+      "id": "product-prd-rewrite-should-preserve-conditional-eligibility",
+      "category": "simplification-conditions",
+      "risk": "high",
+      "prompt": "请对设备借用规则去重并给出简洁正文。原文：‘借用前需核对资格。借用前必须检查资格。申请已批准且未关闭时可预约；涉及跨库调拨时还须校验目标仓库权限。本地借用沿用原借用权限。仅限要求安全培训的设备检查培训有效性，其他设备不适用此项。查不到预约记录时返回记录缺失，不自动新建。’有人建议压成‘已申请用户通过仓库权限和培训检查后预约，记录问题按既有规则处理’，请判断并给出最终文本。",
+      "criteria": [
+        "删除核对资格的同义重复，保留申请已批准且未关闭，不将已申请当作批准或允许关闭后的申请预约。",
+        "跨库调拨才检查目标仓库权限，本地沿用原权限；培训只适用于要求培训的设备，不把局部条件扩大为所有借用的门禁。",
+        "保留查无记录明确返回缺失且不自动新建的结果，不以记录问题、按既有规则处理等短语代替；输出最终正文而不只给检查清单。"
+      ]
+    },
+    {
+      "id": "product-prd-rewrite-should-preserve-recovery-order",
+      "category": "simplification-recovery",
+      "risk": "high",
+      "prompt": "请把维修派单 PRD 的重复流程压成一段。两章重复原文：‘派单结果未知时，先按原请求查询。查明已受理则展示原工单；确认未受理才允许按原请求幂等重试，不另建工单。查询和重试额度耗尽仍不明时，保持待核对并交维修主管接管。明确拒绝时结束本次派单并显示原因。’运营建议改为‘派单失败或未知则转人工完成’，请交付简化正文。",
+      "criteria": [
+        "把两处相同流程归为一份正文，同时保留未知先查询、已受理取原结果、确认未受理才幂等重试的顺序和条件。",
+        "仅在额度耗尽仍不明时保持待核对并由维修主管接管；明确拒绝是结束并反馈原因，不能与未知或人工处理合并成完成。",
+        "不凭空定义查询次数、重试时限或新工单；保留原请求和不另建工单的边界，不用更短措辞消除失败与恢复差异。"
+      ]
+    },
+    {
+      "id": "product-prd-rewrite-should-extract-only-shared-facts",
+      "category": "simplification-variation",
+      "risk": "high",
+      "prompt": "下面是合成设备租用业务，资料为已确认内部约定而非法律要求。请按差异组织并提取公共内容，简化重复文本：‘甲区企业：联系人、设备清单、登记凭证；上市企业另附公开披露链接。甲区个人：联系人、设备清单、本人身份证明。乙区企业：联系人、设备清单、登记凭证；上市与非上市均由运营人工核对登记凭证，不要求公开披露链接。三种情形提交材料后均等待运营审核，不能当作租用已生效。’页面布局相同，有人建议只留一份通用材料清单。请给最终正文。",
+      "criteria": [
+        "将联系人、设备清单及提交后等待审核提为公共事实，减少重复；保留提交不等于生效的共同结果边界。",
+        "地区和主体差异就近明确：甲区企业与个人材料不同，甲区上市企业另附链接，乙区仍人工核对且不要求该链接。",
+        "不从相同页面推导相同规则，不将差异塞入未说明适用范围的公共清单，也不把合成内部约定提升为真实国家法律。"
+      ]
+    },
+    {
+      "id": "product-prd-rewrite-should-retain-authoritative-applicability",
+      "category": "simplification-evidence-migration",
+      "risk": "high",
+      "prompt": "请简化一份合成设备准入 PRD，同时给出迁往既有测试质量文档的内容。原文两次重复：‘试点库只能按已确认规则放行。’依据段写：‘依据内部试点规则草案 v2，2026-08-01 核对文本，仅适用甲仓试点设备；仓库负责人尚未确认生效范围，状态 PENDING，确认前不得自动放行。’后面有详细测试执行命令、截图存放路径和执行日志索引。当前建议把整段依据和测试明细全部搬走，只在 PRD 留质量文档链接。请给出两份材料各自应保留的文字，不虚构实际执行或新确认。",
+      "criteria": [
+        "在 PRD 合并重复规则，保留草案版本、历史核对日期、试点适用范围、仓库负责人、PENDING 和确认前不得自动放行，使业务判断不依赖测试文档。",
+        "详细命令、截图路径和执行日志索引归既有测试质量文档，引用产品规则；不把同一业务规则在两份材料重新各自维护，也不新增平行治理文档。",
+        "不把历史核对日期改成当前核验，不把搬移完成当成已确认生效、测试通过或生产批准；没有实际文件写入证据时只声明归位文本已设计。"
+      ]
+    },
+    {
+      "id": "product-prd-rewrite-should-separate-movement-from-reduction",
+      "category": "simplification-evidence-accounting",
+      "risk": "medium",
+      "prompt": "请核对本轮 PRD 简化结论并改写交付说明：按同一非空白字符口径，PRD 从 10000 变为 7000，既有质量文档从 2000 变为 4000；质量文档增长中有其他任务独立增加的 200，剩余由本轮迁移和去重形成。结构检查已通过，未做浏览器预览或真人阅读。原结论是‘整体减少 30%，阅读效率提升 30%，产品交付完全通过’。",
+      "criteria": [
+        "分别报告 PRD 减少 3000、质量文档本轮净增 1800、本轮跨文档净减 1200；当前两份材料实际合计净减 1000，差异来自其他任务增加的 200，不能混用归因口径。",
+        "不把正文减少比例当作整体净减少、去重数量或阅读效率提升，不用同一统计结果掩盖材料迁移；口径不足时不虚构分项收益。",
+        "只确认已执行的结构检查，目标端显示与真人阅读保持未验证，不推导业务闭环、实施采用或生产交付完全通过。"
+      ]
+    }
+  ]
+}

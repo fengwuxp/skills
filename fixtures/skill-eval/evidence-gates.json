@@ -179,10 +179,16 @@
         "cases": "fixtures/skill-eval/product-prd-semantic-deep-review-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/product-prd-simplification-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
       }
     ],
     "wise-agent": [
+      {
+        "cases": "fixtures/skill-eval/skill-composition-diagnosis-behavior-cases.json"
+      },
       {
         "cases": "fixtures/skill-eval/wise-default-routing-behavior-cases.json"
       },

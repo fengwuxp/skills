@@ -43,6 +43,21 @@ class ConsumerPreparationTests(unittest.TestCase):
     def test_valid_contract(self):
         self.module.validate_consumer_cases(self.cases)
 
+    def test_staged_profiles_include_required_runtime_rules(self):
+        spec = importlib.util.spec_from_file_location(
+            "runtime_bundle", ROOT / "wise-agent/scripts/check-runtime-bundle.py"
+        )
+        runtime = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runtime)
+        for case_id in ("consumer-direct-repair", "consumer-java-format-and-boundaries"):
+            with self.subTest(case_id=case_id):
+                output = self.output.with_name(case_id)
+                receipt = self.module.prepare_case(self.cases, case_id, output)
+                skills_root = output / "codex-home/skills"
+                resolved = runtime.resolve_bundle(skills_root, receipt["skills"])
+                self.assertEqual(set(receipt["skills"]), set(resolved))
+                self.assertTrue((skills_root / "wind-coding-conventions/references/code-style.md").is_file())
+
     def test_source_injection_profiles_are_rejected(self):
         for field in ("source_profiles", "input_profile"):
             with self.subTest(field=field):
@@ -105,8 +120,8 @@ class ConsumerPreparationTests(unittest.TestCase):
         with patch.object(self.module.subprocess, "run", wraps=subprocess.run) as run:
             receipt = self.module.prepare_case(self.cases, "consumer-direct-repair", self.output)
         self.assertEqual([call.args[0] for call in run.call_args_list], [
-            ["bash", str(ROOT / "sync-skills.sh"), "--dry-run", "senior-software-architect"],
-            ["bash", str(ROOT / "sync-skills.sh"), "senior-software-architect"],
+            ["bash", str(ROOT / "sync-skills.sh"), "--dry-run", *self.module.PYTHON_SKILLS],
+            ["bash", str(ROOT / "sync-skills.sh"), *self.module.PYTHON_SKILLS],
         ])
         for call in run.call_args_list:
             self.assertEqual(Path(call.kwargs["env"]["CODEX_HOME"]), self.output.resolve() / "codex-home")
@@ -117,7 +132,8 @@ class ConsumerPreparationTests(unittest.TestCase):
         self.assertFalse((home / "AGENTS.md").exists())
         self.assertFalse((home / "agents").exists())
         self.assertEqual({entry.name for entry in (home / "skills").iterdir()
-                          if not entry.name.startswith(".")}, {"senior-software-architect"})
+                          if not entry.name.startswith(".")}, {"senior-software-architect", "wind-coding-conventions"})
+        self.assertEqual(set(receipt["skills"]), {"senior-software-architect", "wind-coding-conventions"})
         self.assertEqual((home / "skills/senior-software-architect/SKILL.md").read_bytes(),
                          (ROOT / "senior-software-architect/SKILL.md").read_bytes())
         self.assertEqual({entry.name for entry in project.iterdir()},

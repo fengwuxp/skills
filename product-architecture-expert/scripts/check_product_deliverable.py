@@ -175,7 +175,7 @@ RULE_OWNER_ALIASES = ("Owner", "规则 Owner", "规则 owner", "责任方", "规
 RULE_OWNER_EXAMPLE_ALIASES = ("Owner / 例边界", "责任方 / 例边界")
 RULE_FIELD_GROUPS = (
     ("rule_name", ("规则名称",)),
-    ("rule_type", ("规则性质",)),
+    ("rule_type", ("规则性质", "性质")),
     ("rule_motivation", ("业务动机",)),
     ("rule_scope", ("适用对象与范围", "适用场景 / 步骤", "适用场景/步骤")),
     ("rule_input_facts", ("输入事实",)),
@@ -467,7 +467,8 @@ def has_keyword_only_section(text: str) -> bool:
         matched = matching_heading_positions(headings, aliases)
         if len(matched) != 1:
             continue
-        body = sections[matched[0]][1].casefold()
+        body = section_body(text, (sections[matched[0]][0],)).casefold()
+        body = HEADING_PATTERN.sub("", body)
         for keyword in keywords:
             body = body.replace(keyword, "")
         residue = re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", body)
@@ -1750,6 +1751,15 @@ def interface_abstraction_blocks(text: str) -> list[str]:
         )
         legacy_table = bool(re.search(r"(?m)^\s*\|\s*(?:产品能力|产品接口)\s*\|", body))
         if explicit_name or legacy_table or (in_contract_section and (has_fields or not has_children)):
+            name_declared = any(
+                labeled_value(body, alias) is not None
+                for alias in PRODUCT_INTERFACE_FIELD_GROUPS[0][1]
+            )
+            has_table = any(line.lstrip().startswith("|") for line in body.splitlines())
+            if in_contract_section and not explicit_section and not has_children and not name_declared and not has_table:
+                name = re.sub(r"^(?:PI-[A-Z0-9-]+|\d+(?:\.\d+)*[.)、]?)(?:\s+|$)", "", title).strip()
+                if meaningful_values([name]):
+                    body = "产品接口名称：" + name + "\n" + body
             blocks.append(body)
         parents.append((level, in_contract_section))
     return blocks
@@ -1888,10 +1898,11 @@ def has_rule_scope(text: str) -> bool:
     rules = section_body(text, ("业务规则",))
     rule_types = (
         field_values(rules, "规则性质")
+        or field_values(rules, "性质")
         or field_values(rules, "性质 / 场景")
         or field_values(rules, "规则名称 / 性质 / 业务动机")
         or field_values(rules, "规则名称/性质/业务动机")
-        or table_column_values(rules, ("规则性质",))
+        or table_column_values(rules, ("规则性质", "性质"))
     )
     scopes = (
         field_values(rules, "适用场景 / 步骤")

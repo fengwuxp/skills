@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "独立消费项目的离线试验准备契约：Python 单 Skill 与 Java 工程 Skill 组合。只暂存包、合成项目和任务，不注入源仓库 AGENTS.md 或人工拼接 Skill 全文；准备成功不证明实际模型加载或行为提升。",
+  "description": "独立消费项目的离线试验准备契约：Python 工程主能力及其必需的通用样式规则包，与 Java 工程 Skill 组合。Python 只读取适用的通用样式，不加载 Java/Wind 专项。只暂存包、合成项目和任务，不注入源仓库 AGENTS.md 或人工拼接 Skill 全文；准备成功不证明实际模型加载或行为提升。",
   "consumer_setup": {
     "skill": "senior-software-architect",
     "host_profiles": {

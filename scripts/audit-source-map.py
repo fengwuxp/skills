@@ -124,8 +124,31 @@ def source_bullets(text: str) -> list[tuple[int, str]]:
     return bullets
 
 
+URL_PATTERN = re.compile(
+    r"""
+    `(?P<backticked>https?://[^`]+)`
+    |
+    \[[^\]]+\]
+    \(
+        \s*
+        (?:
+            <(?P<angled>https?://[^>\s]+)>
+            |
+            (?P<inline>https?://(?:[^\s()]|\([^\s()]*\))+)
+        )
+        (?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?
+        \s*
+    \)
+    """,
+    re.VERBOSE,
+)
+
+
 def urls(line: str) -> list[str]:
-    return re.findall(r"`(https?://[^`]+)`", line)
+    return [
+        next(url for url in match.groupdict().values() if url is not None)
+        for match in URL_PATTERN.finditer(line)
+    ]
 
 
 def has_date(text: str) -> bool:
@@ -171,7 +194,7 @@ def audit_text(
     for lineno, bullet in source_bullets(text):
         bullet_urls = urls(bullet)
         if not bullet_urls:
-            failures.append(f"{source_label}:{lineno}: source bullet has http text but no backticked URL")
+            failures.append(f"{source_label}:{lineno}: source bullet has http text but no supported URL")
             continue
 
         for url in bullet_urls:
@@ -394,11 +417,20 @@ ORDINARY_DEMO_URL = "https://" + "example.com/source-map-demo"
 READABLE_BULLET = (
     f"- 微信公众号文章《已读取文章》：`{READABLE_DEMO_URL}`。公开内容用于参考支付账本观。"
 )
+MARKDOWN_READABLE_BULLET = (
+    f"- 微信公众号文章《已读取文章》：[已读取文章]({READABLE_DEMO_URL} \"Source title\")。"
+    "公开内容用于参考支付账本观。"
+)
 HTML_FALLBACK_DEMO_URL = "https://" + "mp.weixin.qq.com/s/html-fallback-demo"
 HTML_FALLBACK_BULLET = (
     f"- 微信公众号文章《HTML 可读取文章》：`{HTML_FALLBACK_DEMO_URL}`。"
     "2026-05-26 已尝试 Playwright，当前浏览器通道加载为空白；"
     "随后通过公开 HTML 读取到标题、作者、发布时间和正文，公开内容用于参考复杂度治理。"
+)
+MARKDOWN_KNOWN_GOOD_BULLET = (
+    "- 微信公众号文章《头部大厂，怎么做清结算全局规划，分享一个真实案例！》："
+    f"[历史页面]({KNOWN_BAD_URL})。2026-05-26 Playwright 核验结果为页面已被发布者删除，正文不可复核；"
+    "仅保留为历史索引线索，不得作为已吸收来源。"
 )
 VALID_FIXTURE = f"""# 公开资料来源与支付专项提炼边界
 
@@ -526,6 +558,70 @@ def run_self_test() -> list[str]:
     if valid_failures:
         failures.append("self-test valid fixture should pass")
         failures.extend(valid_failures)
+
+    inline_url = ORDINARY_DEMO_URL + "/path_(detail)"
+    if urls(f"`{ORDINARY_DEMO_URL}` [带标题链接]({inline_url} \"Source title\")") != [
+        ORDINARY_DEMO_URL,
+        inline_url,
+    ]:
+        failures.append("self-test URL parser: backticked and inline URLs with title were not parsed")
+    if urls(f"[尖括号链接](<{ORDINARY_DEMO_URL}/angled> 'Source title')") != [
+        ORDINARY_DEMO_URL + "/angled"
+    ]:
+        failures.append("self-test URL parser: angled inline URL with title was not parsed")
+    if urls("[未闭合链接](https://example.com/" + "a" * 4096):
+        failures.append("self-test URL parser: unclosed inline URL was parsed")
+
+    markdown_fixture = VALID_FIXTURE.replace(READABLE_BULLET, MARKDOWN_READABLE_BULLET).replace(
+        KNOWN_GOOD_BULLET, MARKDOWN_KNOWN_GOOD_BULLET
+    )
+    markdown_failures = audit_text(
+        markdown_fixture,
+        source_label="fixture:markdown-links",
+        skill_text=VALID_SKILL_FIXTURE,
+        skill_label="fixture:markdown-links:SKILL.md",
+        routing_text=VALID_ROUTING_FIXTURE,
+        routing_label="fixture:markdown-links:payment-scenario-routing.md",
+        require_freshness_terms=True,
+    )
+    if markdown_failures:
+        failures.append("self-test markdown links should preserve readable and unverifiable attribution")
+        failures.extend(markdown_failures)
+
+    markdown_link_cases = [
+        (
+            "markdown-duplicate-url",
+            markdown_fixture.replace(
+                MARKDOWN_READABLE_BULLET,
+                f"{MARKDOWN_READABLE_BULLET}\n{MARKDOWN_READABLE_BULLET}",
+            ),
+            "duplicate URL also appears",
+        ),
+        (
+            "markdown-absorbed-unverifiable",
+            markdown_fixture.replace(
+                MARKDOWN_KNOWN_GOOD_BULLET,
+                MARKDOWN_KNOWN_GOOD_BULLET.replace(
+                    "仅保留为历史索引线索，不得作为已吸收来源",
+                    "仅保留为历史索引线索，公开内容用于参考多业务线清结算全局规划，不得作为已吸收来源",
+                ),
+            ),
+            "unverifiable source must not be written as absorbed reference",
+        ),
+    ]
+    for name, source_text, expected in markdown_link_cases:
+        case_failures = audit_text(
+            source_text,
+            source_label=f"fixture:{name}",
+            skill_text=VALID_SKILL_FIXTURE,
+            skill_label=f"fixture:{name}:SKILL.md",
+            routing_text=VALID_ROUTING_FIXTURE,
+            routing_label=f"fixture:{name}:payment-scenario-routing.md",
+            require_freshness_terms=True,
+        )
+        if expected not in "\n".join(case_failures):
+            failures.append(f"self-test {name}: expected failure containing {expected!r}")
+            failures.extend(case_failures)
 
     senior_valid_failures = audit_text(
         VALID_SENIOR_FIXTURE,

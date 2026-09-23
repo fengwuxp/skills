@@ -2,7 +2,7 @@
 """Prepare a local consumer fixture without executing a model or its task.
 
 Input: checked-in cases and an explicit new directory under /tmp.
-Output: staged Python Skill or Java Skill bundle, synthetic project, task and hash receipt.
+Output: staged Python or Java Skill bundle, synthetic project, task and hash receipt.
 Uses only the repository sync script, first dry-run then temporary staging.
 No network, credentials, user configuration copy or real installation writes.
 Failure retains local setup evidence without a receipt; no retries or deletion.
@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CASES = ROOT / "fixtures/skill-eval/skill-consumer-behavior-cases.json"
 PROJECT = ROOT / "fixtures/skill-eval/consumer-project"
 SKILL = "senior-software-architect"
+PYTHON_SKILLS = ("wind-coding-conventions", SKILL)
 JAVA_SKILLS = ("wise-agent", SKILL, "wind-coding-conventions", "llm-coding-hygiene")
 JAVA_PROJECT = ROOT / "fixtures/skill-eval/java-consumer-project"
 JAVA_WRITES = (
@@ -49,7 +50,7 @@ def validate_consumer_cases(data):
     evaluator.validate_cases(data)
     setup = data.get("consumer_setup", {})
     if not isinstance(setup, dict) or setup.get("skill") != SKILL:
-        raise ValueError(f"consumer setup must stage only {SKILL}")
+        raise ValueError(f"consumer setup must select {SKILL} as the primary Skill")
     profiles = setup.get("host_profiles")
     if not isinstance(profiles, dict) or set(profiles) != {"minimal", "approval"}:
         raise ValueError("consumer setup requires minimal and approval host profiles")
@@ -77,7 +78,7 @@ def prepare_case(data, case_id, output_dir):
     if case is None:
         raise ValueError(f"unknown consumer case: {case_id}")
     java_project = case.get("project_profile") == "java"
-    skills = JAVA_SKILLS if java_project else (SKILL,)
+    skills = JAVA_SKILLS if java_project else PYTHON_SKILLS
     requested = Path(output_dir)
     output = requested.resolve()
     home = Path.home()

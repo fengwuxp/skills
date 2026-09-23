@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Check that a selected Skill route has its declared runtime dependencies."""
+"""Check admission dependencies for Skills distributed by this repository.
+
+External Skills use their provider's entrypoint and dependency contract; this
+project-specific checker is not their admission gate.
+"""
 
 from __future__ import annotations
 

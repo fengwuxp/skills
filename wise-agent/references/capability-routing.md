@@ -69,7 +69,7 @@
 
 使用 `wise-agent/scripts/validate-route-record.py` 做结构校验。校验器只确认字段、唯一主能力、协同 / 跳过集合不重叠和可执行的验证 / 停止边界，不替代知止者依据用户原话和一手材料作责任判断；`primary=direct` 适用于没有稳定专项能力的简单任务。路由依据仍以交付物、真实风险和责任边界为先，关键词只能作为线索。
 
-实际读取能力前，再对选中的 Skill 做运行时依赖预检：
+实际读取能力前，先按运行时能力目录与来源区分本仓库分发的 Skill 和外部 Skill。对本仓库分发的 Skill 做运行时依赖预检：
 
 ```bash
 python3 wise-agent/scripts/check-runtime-bundle.py \
@@ -79,6 +79,8 @@ python3 wise-agent/scripts/check-runtime-bundle.py \
 ```
 
 预检会递归读取安装目录中各 Skill 的 `admission.json`，确认依赖闭包存在且状态为 `installable`；缺失时只停止依赖该能力的动作，不自动安装、同步或预加载整棵能力树。同步脚本仍只执行用户明确指定的目标，预检是路由执行前的确定性证据。
+
+`check-runtime-bundle.py` 只检查本仓库分发契约。外部 Skill、官方插件或其他资源提供方按能力目录给出的实际位置读取入口，再核对其声明的依赖、来源、权限、网络与持久化边界；不要求它们携带本仓库的 `admission.json`，也不假设它们都位于 `$CODEX_HOME/skills`。缺少私有 metadata 不等于能力不可用，入口存在也不代表已审查或获执行授权。已确认来自本仓库的包缺少 metadata 或依赖时仍应报缺口，不能将其改判成外部包绕过预检。
 
 最小装载不能省略主能力的必需规则依赖。进入代码或测试写入时，实际读取 `../../senior-software-architect/SKILL.md` 并按其写前路径执行；Java/Wind 约规、编码卫生和适用测试实践属于工程任务的必要依据，不因“默认零或一个协同能力”被裁掉。规则来源不成为第二执行 Owner；选择了能力名称、目录存在或摘要声称已读，都不等于读取了适用规则。
 

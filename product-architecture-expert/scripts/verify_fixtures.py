@@ -15,6 +15,7 @@ from check_product_deliverable import (
     defined_scenario_ids,
     document_control_issues,
     field_values,
+    has_keyword_only_section,
     labeled_value,
     missing_groups,
     product_interface_contract_issues,
@@ -333,6 +334,8 @@ def business_commitment_failures() -> list[str]:
     negatives = []
     for line in second_promise.splitlines()[1:]:
         candidate = nested_document.replace("#### PI-002 通知事实查询\n" + second_promise, "#### PI-002 通知事实查询\n" + second_promise.replace(line, "", 1), 1)
+        if line.startswith("能力名称："):
+            candidate = candidate.replace("#### PI-002 通知事实查询", "#### PI-002", 1)
         negatives.append((candidate, "product_interface_contract_incomplete", "nested promise borrowed sibling field: " + line))
     negatives.append((nested_document.replace(second_promise, "", 1), "product_interface_contract_incomplete", "empty nested promise"))
     negatives.append((nested_document.replace("以下能力分别承接独立查询。", "使用方：运营工作台。", 1), "product_interface_contract_incomplete", "partial grouping contract borrowed child fields"))
@@ -604,8 +607,89 @@ def chinese_record_failures() -> list[str]:
     return failures
 
 
+def simplification_expression_failures() -> list[str]:
+    failures: list[str] = []
+    parent = "## 1. 背景与问题\n"
+    task = "仓库管理员需要核对设备归还情况，系统显示当前借用人和实际归还结果。\n"
+    section_cases = {
+        "direct prose": (parent + task, False),
+        "child prose": (parent + "### 1.1 业务任务\n" + task, False),
+        "deep child prose": (parent + "### 1.1 业务任务\n#### 归还设备\n" + task, False),
+        "empty child": (parent + "### 1.1 业务任务\n", True),
+        "keyword child": (parent + "### 1.1 业务任务\n背景与问题\n", True),
+        "sibling borrowing": (parent + "### 1.1 业务任务\n## 2. 目标与非目标\n" + task, True),
+        "title without facts": (parent + "### " + task, True),
+    }
+    for label, (candidate, expected) in section_cases.items():
+        if has_keyword_only_section(candidate) != expected:
+            failures.append("section content boundary: " + label)
+
+    envelope = "## 6. 业务规则\n### 6.2 独立业务承诺\n"
+    fields = (
+        "接口使用方：维修调度员查询原工单。",
+        "接口输入与前置条件：已认证身份、当前工单引用和查看权限。",
+        "接口业务输出与副作用：返回工单结果和记录引用，不修改业务状态。",
+        "接口失败语义：无权限时拒绝查询，结果未知时保留待核对结果。",
+        "接口责任边界：工单系统保留处理事实，维修调度员承接异常。",
+    )
+    body = "\n".join(fields) + "\n"
+    heading = "#### 查询处理结果\n"
+    complete = heading + "产品接口名称：查询处理结果。\n" + body
+    positives = {
+        "Chinese heading": envelope + heading + body,
+        "legacy identifier heading": envelope + "#### PI-DEMO-001 查询处理结果\n" + body,
+        "numbered heading": envelope + "#### 6.2.1 查询处理结果\n" + body,
+        "explicit name": envelope + complete,
+    }
+    negatives = {
+        "group heading is not a name": envelope + body,
+        "identifier without a name": envelope + "#### PI-DEMO-001\n" + body,
+        "placeholder name": envelope + "#### 〈待补充〉\n" + body,
+        "empty explicit name": envelope + heading + "产品接口名称：\n" + body,
+        "placeholder explicit name": envelope + heading + "能力名称：〈待补充〉\n" + body,
+        "empty child": envelope + complete + "#### 第二项承诺\n",
+        "partial group": envelope + fields[0] + "\n" + complete,
+    }
+    for field in fields:
+        incomplete = heading + body.replace(field, "", 1)
+        for label, suffix in (
+            ("sibling", complete.replace("查询处理结果", "查询历史记录")),
+            ("appendix", "## 附录\n" + field),
+        ):
+            negatives[label + " borrowing " + field.split("：", 1)[0]] = envelope + incomplete + suffix
+    table = (
+        "| 能力名称 | 使用方 | 输入与前置 | 结果与状态变化 | 失败承接 | 责任边界 |\n"
+        "| --- | --- | --- | --- | --- | --- |\n"
+        "| 查询处理结果 | 调度员 | 查看权限及工单 | 返回结果不改状态 | 无权限拒绝并交管理员 | 系统保存，调度员核对 |\n"
+    )
+    positives["table with heading"] = envelope + heading + table
+    negatives["heading cannot supply table row name"] = envelope + heading + table.replace("| 查询处理结果 |", "|  |")
+    for label, candidate in positives.items():
+        if product_interface_contract_issues(candidate):
+            failures.append("heading contract rejected: " + label)
+    for label, candidate in negatives.items():
+        if "product_interface_contract_incomplete" not in product_interface_contract_issues(candidate):
+            failures.append("incomplete heading contract accepted: " + label)
+
+    original = (FIXTURES / "prd-compact-readable-valid.md").read_text(encoding="utf-8")
+    alias = original.replace("规则性质：", "性质：")
+    if missing_groups("prd", alias) != missing_groups("prd", original):
+        failures.append("rule nature alias changes full-document diagnostics")
+    rules = "## 业务规则\n" + section_body(alias, ("业务规则",))
+    for field in ("性质：版本化 / 外部规则；", "适用场景 / 步骤：SCN-001 / SCN-002 / 版本校验；"):
+        invalid = rules.replace(field, "", 1)
+        sibling_rule = rules.removeprefix("## 业务规则\n").replace("外部资质版本裁决", "另一版本裁决")
+        for suffix in ("\n## 附录\n" + field, sibling_rule):
+            if "rule_contract_incomplete" not in business_rule_contract_issues(invalid + suffix):
+                failures.append("rule alias borrows another record: " + field)
+    print(f"Checked simplification expressions: {len(section_cases)} section cases, "
+          f"{len(positives)} complete / {len(negatives)} incomplete commitments and 5 rule alias cases.")
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
+    failures.extend(simplification_expression_failures())
     failures.extend(template_reading_path_failures())
     failures.extend(natural_contract_failures())
     failures.extend(success_criteria_record_failures())

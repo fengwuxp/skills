@@ -68,6 +68,26 @@ check_script_patterns() {
   reviewed_consumer_patterns='^\./scripts/(prepare-skill-consumer-eval|test-prepare-skill-consumer-eval)\.py:[0-9]+:import subprocess$|^\./scripts/prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*(result = subprocess\.run\(command, cwd=ROOT, env=environment,|stdout=subprocess\.PIPE, stderr=subprocess\.STDOUT, text=True\))$|^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*(with (self\.subTest\(output=output\), )?patch\.object\(self\.module\.subprocess, "run"(, (return_value=result|wraps=subprocess\.run))?\) as run:|result = subprocess\.CompletedProcess\(\[\], 1, "controlled failure\\n"\)|(failed|passed) = subprocess\.run\(checker, cwd=self\.output, capture_output=True, text=True\))$'
   output="$(echo "${output}" | grep -Ev "${reviewed_consumer_patterns}" || true)"
 
+  # These two fixture commands only compile and run the checked-in Java sample.
+  local reviewed_java_fixture_patterns
+  reviewed_java_fixture_patterns='^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*compilation = subprocess\.run\(\["javac", "-d", str\(classes\), \*sources\], capture_output=True, text=True\)$|^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*execution = subprocess\.run\(\["java", "-cp", str\(classes\), "sample\.OrderLabelTests"\], capture_output=True, text=True\)$'
+  output="$(echo "${output}" | grep -Ev "${reviewed_java_fixture_patterns}" || true)"
+
+  # Reviewed historical pilots are never executed by validation. The runner still
+  # requires separate model/network authorization. Any file edit restores review.
+  # The supply-chain scanner above continues to inspect both complete files.
+  local reviewed_sha reviewed_path actual_sha
+  while read -r reviewed_sha reviewed_path; do
+    [[ -f "${reviewed_path}" ]] || continue
+    actual_sha="$(shasum -a 256 "${reviewed_path}")"
+    if [[ "${actual_sha%% *}" == "${reviewed_sha}" ]]; then
+      output="$(printf '%s\n' "${output}" | awk -v prefix="./${reviewed_path}:" 'index($0, prefix) != 1')"
+    fi
+  done <<'REVIEWED_PILOTS'
+4cd0cc51f343b35a9ab7007514fb440a7029ccbbddb64c0f8d7ce0cc5d7224b7 docs/reviews/2026-09-09-learning-behavior-pilot/prepare.py
+a94df8997bffa46200c84b8628bee07cf4d7158799147c0d2fa395b8568e724d docs/reviews/2026-09-09-learning-behavior-pilot/run-pilot.py
+REVIEWED_PILOTS
+
   if [[ -n "${output}" ]]; then
     warn "review high-risk script patterns:"
     echo "${output}" >&2
