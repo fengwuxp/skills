@@ -264,6 +264,7 @@
 - 【强制】`@Valid` 只标记级联验证，本身不是约束；运行时入口只有确实触发校验且嵌套约束通过后，才能把输入视为已验证；纯公共能力 artifact 则把嵌套约束作为调用方前置契约。Service 仍负责业务前置条件、状态、不变量、权限、查无数据和持久化结果，这些业务判断不得冒充或误删为输入验证。
 - 【强制】实际拥有运行时入口的 artifact 中，绕过 Controller 的 MQ、定时任务、内部 RPC、批处理或其他调用必须在自己的 Listener、Adapter 或协议入口执行同一契约验证，再调用 Service。纯公共能力 artifact 不检查或猜测消费方如何触发验证；只有项目明确把 Service 方法定义为独立验证边界，并用配置、代理调用、validation group 和测试证明方法校验真实生效时，才把方法校验作为该 artifact 的责任。
 - 【推荐】项目已依赖 JSpecify 时，内部 Java 契约使用 `org.jspecify.annotations.Nullable`、`NonNull`、`NullMarked`、`NullUnmarked` 表达空值语义；未依赖时沿用项目现有空值契约，不为套规约新增依赖。
+- 【强制】模型对象（DTO、Request、Command、值对象等）和 `record` 优先通过项目已采用的空值注解声明契约，再判断是否需要运行时检查；使用 JSpecify 时优先由类型级或已有包级 `@NullMarked` 表达默认非空，并在允许为空的字段、`record` 组件或类型用法上显式标注 `@Nullable`。不得仅为重复证明受信任的非空契约而添加构造器、`record` 紧凑构造器、`if (x == null)`、`Objects.requireNonNull` 或同义断言。注解不替代不可信边界校验、业务前置条件或跨字段不变量检查，运行时检查仍按本节责任边界保留。
 - 【强制】启用 JSpecify 后必须先识别实际注解和作用域，再按下表决定是否判空或断言：
 
 | 注解或作用域 | 空值契约 | 判空或断言要求 |

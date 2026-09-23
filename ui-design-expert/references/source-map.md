@@ -321,3 +321,8 @@
 - [WAI-ARIA Authoring Practices: Providing Accessible Names and Descriptions](https://www.w3.org/WAI/ARIA/apg/practices/names-and-descriptions/)：实际读取。吸收交互元素可访问名称、优先可见文本和原生 HTML 技术、需要真实测试的边界；不把标注 checker 当 WCAG 或辅助技术验收。
 - [Figma Guide to Dev Mode](https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode)：实际读取。吸收 annotations、精确设计检查、dev resources、ready-for-dev 和版本对比作为 handoff 证据；不把 Figma 注释 / 状态当产品事实或浏览器运行证据。
 - 归位到 `prototype-annotation-contract.md`：Product Fact 只保留在产品层，HTML / Figma 作为 carrier adapter，并以 `annotation_id / requirement_id / acceptance_id / owner / revision` 对账。
+
+### Visual PRD 单页评审投影（2026-09-23）
+
+- 微信文章 [《07｜我把 PRD、原型和业务标注装进同一个网页》](https://mp.weixin.qq.com/s/TkeHLw0cdLw818mK7Jh2Cw)：作者字段为 `智障研究员`，账号 `AI翻车现场`，页面发布时间为 2026-09-15 21:00；2026-09-23 通过 Codex in-app Browser 读取标题、作者、发布时间和正文。
+- 只吸收“PRD、可操作原型和业务标注共享一个评审入口、以真实交互任务和标注映射做交付前核对”的方法，归位到 `prototype-annotation-contract.md` 的“可选单页评审投影”。不复制三栏模板、OKR 示例、作者表达、领取 Skill 包的提示或文章自报的通过结果；不把单页投影写成 PRD 事实源、生产代码或用户验收替代。

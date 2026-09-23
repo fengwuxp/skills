@@ -15,12 +15,21 @@
         "product-architecture-expert/references/product-design-and-prd.md",
         "product-architecture-expert/references/product-deliberation-workflow.md"
       ],
-      "sha256": "43030218eb3745582931f75670b3e22e8822f2dc59c3b8648c4b73de9ae6a84d"
+      "sha256": "d077a629c4371fb234effa5de514cbfee5276979cfae9672293053fa4bf019e1"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
-    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
   },
   "release_gate": {
     "mode": "non_regression",

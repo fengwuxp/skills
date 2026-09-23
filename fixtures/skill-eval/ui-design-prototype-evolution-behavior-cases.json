@@ -15,12 +15,21 @@
         "ui-design-expert/references/usability-validation-and-design-qa.md",
         "senior-software-architect/references/ai-assisted-engineering.md"
       ],
-      "sha256": "eb86a454d772156dad0fa04912f6bd40ec8a10b74df30b05305e9cdb69280aff"
+      "sha256": "59823af398ab18730429de62a9007542fa1e99edbede63f94dc63dc83449c7af"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
-    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
   },
   "release_gate": {
     "mode": "non_regression",

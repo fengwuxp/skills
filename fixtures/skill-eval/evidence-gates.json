@@ -282,6 +282,9 @@
         "cases": "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/ui-visual-prd-projection-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
       },
       {

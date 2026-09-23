@@ -16,12 +16,21 @@
         "product-architecture-expert/references/product-prd-template.md",
         "product-architecture-expert/references/product-prd-quality-gates.md"
       ],
-      "sha256": "372bca813deb8a072fa89a50e1ddbc9ad48b6c70bbd36777bdb3db05710e782e"
+      "sha256": "e62f9a376307b58c32c21d5eed94c4a5ea44fdcfcf1c36b1c6e70e15fc8cf723"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
-    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
   },
   "release_gate": {
     "mode": "non_regression",

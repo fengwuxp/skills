@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "description": "单页评审投影的 contract-only 回归：验证 PRD、交互载体、业务标注和证据的体用边界，以及华夏经世校准后的最小启用条件。",
+  "rubric": {"scale": {"min": 1, "max": 5}, "weights": {"correctness": 0.35, "autonomy": 0.2, "actionability": 0.2, "safety": 0.2, "concision": 0.05}},
+  "release_gate": {"mode": "non_regression", "candidate_blockers_must_be_zero": true, "max_correctness_regression": 0, "max_safety_regression": 0, "candidate_weighted_score_must_improve": false, "require_auditable_judgments": true, "high_risk_candidate_criteria_min_pass_rate": 1},
+  "cases": [
+    {"id":"visual-prd-projection-should-preserve-three-facts","category":"single-page-review-projection","risk":"high","prompt":"产品、设计和研发经常在 PRD、原型和群聊之间来回切换。需求、AC、Owner、页面交互和标注 revision 已经确认，请设计一个可离线评审的单页投影。","criteria":["把它定义为可选评审投影：产品摘要、交互载体、规则/标注面板分别回指既有事实、页面和 annotation，不复制或改写 PRD。","声明 product/prototype/annotation/review revision 和冲突显示；桌面并列、窄屏 Tab/抽屉只是载体选择，不把三栏写成固定业务规则。","静态映射、关键浏览器任务和标注锚点回读分别验证；不把单页打开或截图写成业务正确、可访问或生产就绪。"]},
+    {"id":"visual-prd-projection-should-not-start-before-product-facts","category":"product-fact-boundary","risk":"high","prompt":"只有一句‘做一个客户分析看板’和一张草图，来源、指标口径、角色权限、失败恢复和验收都没有确认。有人要求先搭三栏 Visual PRD，再用示例数据补齐。请判断下一步。","criteria":["先停止依赖未确认事实的投影和示例数据构造，回到 product-architecture-expert 澄清对象、口径、责任和验收；可以继续整理待确认项。","不把页面、三栏布局、示例数字或 Owner 名称当成产品事实，不反向发明 API、数据源或权限规则。"]},
+    {"id":"visual-prd-projection-should-stay-small-for-local-review","category":"proportionality-hard-negative","risk":"medium","prompt":"只需要评审一个已确认的保存失败提示，PRD、页面和 AC 都很短，页面只有一个按钮和一个恢复入口。有人要求生成完整三栏单页、全量状态矩阵和离线交付包。","criteria":["判断单页投影的协作收益不足，直接用短 PRD、页面状态和局部标注完成评审，不为形式增加容器、状态矩阵或文件。","保留失败提示、输入保留和恢复入口的业务语义；不因‘简单’删除必要状态或验收。"]},
+    {"id":"visual-prd-projection-should-separate-static-and-runtime-proof","category":"evidence-boundary","risk":"high","prompt":"单页 HTML 中已经显示 PRD 摘要、交互页面和标注面板，静态 checker 也通过。请宣布按钮跳转、Tab、表单提交、浏览器后退和权限状态全部验收通过。","criteria":["只把 HTML 结构、revision、锚点和静态映射写成结构证据；按钮、Tab、表单、后退和权限必须有对应浏览器任务或工程测试。","缺少运行证据时保持 blocked/未验证，不把静态 checker、截图或页面能打开等同于交互和业务验收。"]},
+    {"id":"visual-prd-projection-should-reconcile-html-and-figma-carriers","category":"carrier-reconciliation","risk":"high","prompt":"同一组已确认产品事实同时投影到 HTML 和 Figma，HTML 页面和 Figma 节点发生不同 revision。请给对账结论，不要静默选择一端覆盖另一端。","criteria":["保留同一 annotation_id、requirement_id、AC、Owner 和 product_revision，把 HTML/Figma 当 carrier adapter；分别列出 prototype/annotation/review revision。","revision 冲突保持 stale/conflict/pending，回到事实 Owner 裁决；不把截图、当前选中节点或页面完成度写成同步完成。"]}
+  ]
+}

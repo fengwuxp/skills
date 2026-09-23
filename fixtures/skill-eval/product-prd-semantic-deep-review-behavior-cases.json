@@ -16,12 +16,21 @@
         "product-architecture-expert/references/product-prd-quality-gates.md",
         "senior-software-architect/references/product-design.md"
       ],
-      "sha256": "cf250938942544e2144b3cef174e76a357b0a91c699e58f12d7d57fbecfd4e85"
+      "sha256": "334e38a4cd8e293be39d9d9b9dba923dd2733b4dc578f450daeff7ffa0c2d6f6"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
-    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
   },
   "release_gate": {
     "mode": "improvement",

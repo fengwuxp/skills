@@ -414,6 +414,7 @@ python3 ui-design-expert/scripts/style_gallery.py check
 python3 ui-design-expert/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-visual-reproduction-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-prototype-evolution-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-visual-prd-projection-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-responsive-media-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-ant-adoption-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/ui-design-agent-ready-system-behavior-cases.json"
