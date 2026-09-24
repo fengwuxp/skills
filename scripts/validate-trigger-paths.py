@@ -1271,15 +1271,12 @@ check(
         wise_agent_global_kernel,
         [
             "简单任务直接完成",
-            "最短可验证路径",
-            "最小专业 Skill",
-            "默认加载 `wise-agent/SKILL.md`",
-            "用户无需显式点名",
-            "必须取得用户明确授权",
-            "更深目录的 `AGENTS.md` 可以补充或覆盖",
-            "学习回流模式",
-            "候选证据",
-            "任务收口",
+            "最小可验证方案",
+            "按需装载专业能力及必需规则",
+            "默认加载 `wise-agent`",
+            "用户明确禁用时遵从",
+            "须有明确授权",
+            "根目录及局部规则",
         ],
     )
     and "每次都加载 `$wise-agent`" not in read(wise_agent_global_kernel)
@@ -1289,6 +1286,8 @@ check(
             "`assets/codex-global-agents.md`",
             "已有非空规则时合并",
             "不得直接覆盖",
+            "默认加载不等于启用 Worker、Checker、学习回流或观测",
+            "学习回流 candidate 记录仅在显式开启后读取",
         ],
     ),
 )
@@ -19751,9 +19750,8 @@ check(
     and has_all(
         wise_agent_global_kernel,
         [
-            "需求讨论和设计先做轻量能力归位",
-            "默认只审视",
-            "有多场景或真实变化轴证据时才展开",
+            "核对一手事实、根因及现有替代",
+            "优先最小可验证方案",
         ],
     )
     and has_all(

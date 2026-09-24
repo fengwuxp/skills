@@ -173,6 +173,8 @@ $wise-agent：请协调以下现有任务围绕 <共享决策> 进入主持式�
 
 需要让所有仓库默认继承知止者的最小行动原则时，可在明确授权后，把[全局行动内核](./wise-agent/assets/codex-global-agents.md)合并到 `$CODEX_HOME/AGENTS.md`。该规则让会话默认读取 `wise-agent/SKILL.md`，已读取且规则未变时复用；references 和专业能力仍按需加载。`allow_implicit_invocation: true` 只允许隐式选择，默认入口由行动内核约定；已有全局规则必须合并，不得直接覆盖。
 
+该文件也是全局 `AGENTS.md` 的仓库恢复副本。更换环境时，目标为 `${CODEX_HOME:-$HOME/.codex}/AGENTS.md`：不存在时可复制恢复；已有内容时先备份并核对差异，再按授权合并或替换。普通 Skill 同步不会更新该全局文件。
+
 ### 2. 任务与专业能力
 
 下表用于确认边界，不是使用前必须选择的菜单。产品、架构、文档、考据、生成和约规不是平级角色，它们是知止者按需使用的专业能力。
