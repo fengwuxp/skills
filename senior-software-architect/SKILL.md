@@ -104,6 +104,7 @@ Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取项目本地�
 | 新增或修改接口、方法 | 首次写回前读 `references/project-governance-service-api-modeling.md`；已确认设计只核对本轮变化，快速编码亦适用。 |
 | 系统分析设计 / 系分 | `references/system-analysis-design.md`、`references/system-analysis-template.md`；产品交接语义需要核对时补 `references/product-design.md`。 |
 | 跨模块、公共契约、迁移或旧能力退役 | `references/refactoring-design-template.md`；局部、行为保持且可测试的重构不创建独立设计文档。 |
+| 架构治理、机器门禁维护或治理收益评审 | `references/evolutionary-architecture.md` 的“架构治理的持续验证”；按实际变更核对决策前提、保护机制与长期成本，不自动重写或平台化。 |
 | 工程图 | `references/diagram-output.md`；正式图形化交付默认只生成 SVG。 |
 | 外部 API / SDK / 云产品、生命周期或验证命令 | `references/workflow.md` 对应章节；外部知识核验不触发 AI 编排。 |
 | 生产、数据、安全或分布式一致性 | 按实际风险读 `references/production-readiness.md`、`references/security-architecture.md`、`references/distributed-consistency.md`；不因高风险自动启用 Wave 或 Loop。 |

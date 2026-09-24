@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -193,6 +194,57 @@ class SkillEvidenceTests(unittest.TestCase):
             failures = CHECKER.audit_evidence(skill_dir, root)
 
             self.assertTrue(any("source set changed" in failure for failure in failures))
+
+    def test_scored_evidence_requires_source_profiles_and_auditable_judgments(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.build_repository(root)
+            cases_path = root / "fixtures" / "skill-eval" / "demo-behavior-cases.json"
+            original_case_data = cases_path.read_text(encoding="utf-8")
+
+            with self.subTest("source profiles"):
+                case_data = json.loads(cases_path.read_text(encoding="utf-8"))
+                del case_data["source_profiles"]
+                cases_path.write_text(json.dumps(case_data), encoding="utf-8")
+                failures = CHECKER.audit_evidence(skill_dir, root)
+                self.assertTrue(any("source_profiles" in failure for failure in failures))
+
+            with self.subTest("auditable judgments"):
+                cases_path.write_text(original_case_data, encoding="utf-8")
+                case_data = json.loads(original_case_data)
+                case_data["release_gate"]["require_auditable_judgments"] = False
+                cases_path.write_text(json.dumps(case_data), encoding="utf-8")
+                failures = CHECKER.audit_evidence(skill_dir, root)
+                self.assertTrue(
+                    any("require_auditable_judgments" in failure for failure in failures)
+                )
+
+            with self.subTest("empty candidate source"):
+                case_data = json.loads(original_case_data)
+                case_data["source_profiles"]["baseline"]["paths"] = []
+                case_data["source_profiles"]["baseline"]["sha256"] = EVALUATOR.source_set_digest([])
+                with patch.object(EVALUATOR, "ROOT", root):
+                    CHECKER.validate_case_contract(EVALUATOR, case_data, "behavior-scored")
+                case_data["source_profiles"]["candidate"]["paths"] = []
+                case_data["source_profiles"]["candidate"]["sha256"] = EVALUATOR.source_set_digest([])
+                with patch.object(EVALUATOR, "ROOT", root):
+                    with self.assertRaisesRegex(EVALUATOR.ContractError, "candidate.*non-empty"):
+                        CHECKER.validate_case_contract(EVALUATOR, case_data, "behavior-scored")
+
+            with self.subTest("judgment provenance"):
+                cases_path.write_text(original_case_data, encoding="utf-8")
+                scores_path = root / "fixtures" / "skill-eval" / "demo-scores.jsonl"
+                score_rows = [
+                    json.loads(line)
+                    for line in scores_path.read_text(encoding="utf-8").splitlines()
+                ]
+                del score_rows[0]["judge"]
+                scores_path.write_text(
+                    "".join(json.dumps(row) + "\n" for row in score_rows),
+                    encoding="utf-8",
+                )
+                failures = CHECKER.audit_evidence(skill_dir, root)
+                self.assertTrue(any("judge" in failure for failure in failures))
 
     def test_response_case_digest_drift_blocks_delivery(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

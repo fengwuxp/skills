@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -21,10 +22,6 @@ STATUSES = {"installable", "candidate"}
 EVIDENCE_MODES = {"structural-only", "contract-only", "behavior-scored"}
 ISO_DATE = re.compile(r"^20\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$")
 SKILL_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-IMPLICIT_INVOCATION = re.compile(
-    r"^\s*allow_implicit_invocation:\s*(true|false)\s*(?:#.*)?$",
-    re.MULTILINE,
-)
 CROSS_SKILL_REFERENCE = re.compile(r"\.\./([a-z0-9]+(?:-[a-z0-9]+)*)/")
 
 
@@ -41,6 +38,26 @@ def read_metadata(skill_dir: Path) -> tuple[dict[str, Any], list[str]]:
     return data, []
 
 
+def read_invocation_policy(agent_path: Path) -> bool:
+    parser = Path(__file__).with_name("read-agent-invocation-policy.rb")
+    try:
+        result = subprocess.run(
+            ["ruby", str(parser), str(agent_path)],
+            check=False, capture_output=True, text=True,
+        )
+    except OSError as exc:
+        raise ValueError(f"{agent_path}: cannot read invocation policy: {exc}") from exc
+    if result.returncode:
+        raise ValueError(f"{agent_path}: {result.stderr.strip()}")
+    try:
+        value = json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{agent_path}: invalid invocation policy parser output") from exc
+    if not isinstance(value, bool):
+        raise ValueError(f"{agent_path}: invocation policy must be a boolean")
+    return value
+
+
 def explicit_invocation_skills(repository_root: Path = ROOT) -> set[str]:
     explicit_skills: set[str] = set()
     for entrypoint in sorted(repository_root.glob("*/SKILL.md")):
@@ -50,17 +67,9 @@ def explicit_invocation_skills(repository_root: Path = ROOT) -> set[str]:
             raise ValueError("; ".join(failures))
         if metadata.get("status") not in STATUSES:
             raise ValueError(f"{skill_dir / 'admission.json'}: invalid admission status")
-        if metadata["status"] == "candidate":
-            explicit_skills.add(skill_dir.name)
-            continue
         agent_path = skill_dir / "agents" / "openai.yaml"
-        try:
-            implicit_values = IMPLICIT_INVOCATION.findall(agent_path.read_text(encoding="utf-8"))
-        except OSError as exc:
-            raise ValueError(f"{agent_path}: cannot read invocation policy: {exc}") from exc
-        if implicit_values not in (["true"], ["false"]):
-            raise ValueError(f"{agent_path}: invocation policy must declare one boolean value")
-        if implicit_values == ["false"]:
+        implicit_invocation = read_invocation_policy(agent_path)
+        if metadata["status"] == "candidate" or not implicit_invocation:
             explicit_skills.add(skill_dir.name)
     return explicit_skills
 
@@ -97,12 +106,11 @@ def audit_skill(skill_dir: Path) -> tuple[str, list[str]]:
     if status == "candidate":
         agent_path = skill_dir / "agents" / "openai.yaml"
         try:
-            implicit_values = IMPLICIT_INVOCATION.findall(
-                agent_path.read_text(encoding="utf-8")
-            )
-        except OSError:
-            implicit_values = []
-        if implicit_values != ["false"]:
+            implicit_invocation = read_invocation_policy(agent_path)
+        except ValueError as exc:
+            failures.append(str(exc))
+            implicit_invocation = None
+        if implicit_invocation is not False:
             failures.append(
                 f"{agent_path}: candidate must set allow_implicit_invocation: false"
             )

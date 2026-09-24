@@ -362,6 +362,8 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-java-delivery-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-default-routing-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-responsibility-routing-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/governance-authority-alignment-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-failure-containment-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-visual-expression-routing-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-experience-routing-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-reusable-workflow-loop-behavior-cases.json"
@@ -388,6 +390,7 @@ senior-software-architect/scripts/check_harness_plan.py --self-test
 python3 senior-software-architect/scripts/test_check_system_intervention_card.py
 senior-software-architect/scripts/verify_fixtures.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-design-principles-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-architecture-governance-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --verify-sources --cases "fixtures/skill-eval/senior-provider-value-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-system-intervention-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/senior-public-contract-migration-behavior-cases.json"

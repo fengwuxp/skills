@@ -73,6 +73,18 @@ check_script_patterns() {
   reviewed_java_fixture_patterns='^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*compilation = subprocess\.run\(\["javac", "-d", str\(classes\), \*sources\], capture_output=True, text=True\)$|^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*execution = subprocess\.run\(\["java", "-cp", str\(classes\), "sample\.OrderLabelTests"\], capture_output=True, text=True\)$'
   output="$(echo "${output}" | grep -Ev "${reviewed_java_fixture_patterns}" || true)"
 
+  # Reviewed offline YAML reader: fixed local Ruby argv, no shell/network/writes.
+  # Pin both caller and parser; any change restores the required review.
+  local invocation_caller_sha invocation_parser_sha
+  if [[ -f scripts/check-skill-admission.py && -f scripts/read-agent-invocation-policy.rb ]]; then
+    invocation_caller_sha="$(shasum -a 256 scripts/check-skill-admission.py)"
+    invocation_parser_sha="$(shasum -a 256 scripts/read-agent-invocation-policy.rb)"
+    if [[ "${invocation_caller_sha%% *}" == "61f2cc61ed46d742899780682bbd2ec7b008472d222885b4e78d504dd1c9ea04" \
+       && "${invocation_parser_sha%% *}" == "d4b9731a7038b8b863463f03b9c5859c563a4297edbb5193356c8841a0afcaf1" ]]; then
+      output="$(printf '%s\n' "${output}" | awk -v prefix='./scripts/check-skill-admission.py:' 'index($0, prefix) != 1')"
+    fi
+  fi
+
   # Reviewed historical pilots are never executed by validation. The runner still
   # requires separate model/network authorization. Any file edit restores review.
   # The supply-chain scanner above continues to inspect both complete files.

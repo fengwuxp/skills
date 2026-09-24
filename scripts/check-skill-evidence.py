@@ -136,7 +136,25 @@ def validate_case_contract(
         contract_data.pop("input_profile", None)
         evaluator.validate_cases(contract_data)
         return
+    if evidence_mode == "behavior-scored":
+        if case_data.get("source_profiles") is None:
+            raise evaluator.ContractError(
+                "source_profiles: behavior-scored evidence requires current sources"
+            )
+        release_gate = case_data.get("release_gate")
+        if (
+            not isinstance(release_gate, dict)
+            or release_gate.get("require_auditable_judgments") is not True
+        ):
+            raise evaluator.ContractError(
+                "release_gate.require_auditable_judgments: "
+                "behavior-scored evidence requires auditable judgments"
+            )
     evaluator.validate_cases(case_data)
+    if evidence_mode == "behavior-scored" and not case_data["source_profiles"]["candidate"]["paths"]:
+        raise evaluator.ContractError(
+            "source_profiles.candidate.paths: behavior-scored requires non-empty candidate sources"
+        )
 
 
 def audit_evidence(

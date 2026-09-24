@@ -597,6 +597,31 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             with self.assertRaisesRegex(MODULE.ContractError, "input profile path"):
                 MODULE.validate_cases(escaped)
 
+    def test_contract_validation_allows_unavailable_input_but_keeps_lexical_bounds(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            case_data = deepcopy(self.case_data)
+            unavailable_root = Path(temp_dir) / "unavailable-skill-input"
+            case_data["input_profile"] = {
+                "id": "archived-project-input",
+                "root": str(unavailable_root),
+                "paths": ["canon.md"],
+                "sha256": "0" * 64,
+            }
+
+            MODULE.validate_cases(case_data, verify_source_profiles=False)
+            with self.assertRaisesRegex(MODULE.ContractError, "existing directory"):
+                MODULE.validate_cases(case_data)
+
+            escaped = deepcopy(case_data)
+            escaped["input_profile"]["paths"] = ["../outside.md"]
+            with self.assertRaisesRegex(MODULE.ContractError, "input profile path"):
+                MODULE.validate_cases(escaped, verify_source_profiles=False)
+
+            leaked = deepcopy(case_data)
+            leaked["cases"][0]["prompt"] = f"Read {unavailable_root / 'canon.md'}"
+            with self.assertRaisesRegex(MODULE.ContractError, "external input path"):
+                MODULE.validate_cases(leaked, verify_source_profiles=False)
+
     def test_input_profile_rejects_external_paths_in_blind_content(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

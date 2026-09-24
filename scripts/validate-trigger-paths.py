@@ -9576,7 +9576,7 @@ check(
         ai_engineering,
         [
             "## 工程生命周期映射",
-            "必须服从 `workflow.md`",
+            "AI 编码协作按 `workflow.md`",
             "不得把“用户说继续”解释为扩大范围、跳过 Plan Grant / Execution Grant、验证或高风险人工确认点",
         ],
     ),
@@ -9586,7 +9586,7 @@ check(
     has_all(
         ai_engineering,
         [
-            "OpenSpec / Superpowers / Harness 的责任边界",
+            "项目已采用 OpenSpec / Superpowers / Harness 时，各自的责任边界",
             "OpenSpec | 规定要做什么",
             "Superpowers | 规定怎么高质量地做",
             "Harness | 规定谁做、按什么顺序做、能改哪里、怎么验证、怎么交接",

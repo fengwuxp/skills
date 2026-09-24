@@ -292,7 +292,9 @@ def validate_source_profiles(data: dict[str, Any]) -> None:
             )
 
 
-def validate_input_profile(data: dict[str, Any]) -> None:
+def validate_input_profile(
+    data: dict[str, Any], *, verify_paths: bool = True
+) -> None:
     profile = data.get("input_profile")
     if profile is None:
         return
@@ -309,6 +311,14 @@ def validate_input_profile(data: dict[str, Any]) -> None:
         raise ContractError("input_profile.paths: expected a non-empty string list")
     if len(paths) != len(set(paths)):
         raise ContractError("input_profile.paths: duplicate path")
+    if not Path(root).is_absolute():
+        raise ContractError("input_profile.root: expected an absolute directory")
+    for path in paths:
+        relative_path = Path(path)
+        if relative_path.is_absolute() or ".." in relative_path.parts or not path:
+            raise ContractError(
+                f"input profile path must stay under input root: {path!r}"
+            )
     expected_sha256 = profile.get("sha256")
     if (
         not isinstance(expected_sha256, str)
@@ -320,12 +330,13 @@ def validate_input_profile(data: dict[str, Any]) -> None:
         int(expected_sha256, 16)
     except ValueError as exc:
         raise ContractError("input_profile.sha256: expected lowercase SHA-256") from exc
-    actual_sha256 = input_set_digest(root, paths)
-    if actual_sha256 != expected_sha256:
-        raise ContractError(
-            "input_profile: input set changed "
-            f"expected={expected_sha256} actual={actual_sha256}"
-        )
+    if verify_paths:
+        actual_sha256 = input_set_digest(root, paths)
+        if actual_sha256 != expected_sha256:
+            raise ContractError(
+                "input_profile: input set changed "
+                f"expected={expected_sha256} actual={actual_sha256}"
+            )
 
 
 def _input_binding(profile: dict[str, Any]) -> dict[str, str]:
@@ -333,13 +344,17 @@ def _input_binding(profile: dict[str, Any]) -> dict[str, str]:
 
 
 def _reject_external_input_path(
-    text: str, label: str, profile: dict[str, Any]
+    text: str, label: str, profile: dict[str, Any], *, verify_paths: bool
 ) -> None:
     root = Path(profile["root"])
-    markers = {str(root), str(root.resolve(strict=True))}
+    markers = {str(root)}
+    if verify_paths:
+        markers.add(str(root.resolve(strict=True)))
     for path in profile["paths"]:
         input_path = root / path
-        markers.update((path, str(input_path), str(input_path.resolve(strict=True))))
+        markers.update((path, str(input_path)))
+        if verify_paths:
+            markers.add(str(input_path.resolve(strict=True)))
     if any(marker in text for marker in markers):
         raise ContractError(f"{label}: external input path must not enter blind content")
 
@@ -442,21 +457,28 @@ def validate_cases(
             raise ContractError(f"release_gate.{field}: expected a non-negative number")
     if verify_source_profiles:
         validate_source_profiles(data)
-        validate_input_profile(data)
+    validate_input_profile(data, verify_paths=verify_source_profiles)
     input_profile = data.get("input_profile")
     if isinstance(input_profile, dict):
         for index, case in enumerate(cases):
             _reject_external_input_path(
-                case["id"], f"cases[{index}].id", input_profile
+                case["id"],
+                f"cases[{index}].id",
+                input_profile,
+                verify_paths=verify_source_profiles,
             )
             _reject_external_input_path(
-                case["prompt"], f"cases[{index}].prompt", input_profile
+                case["prompt"],
+                f"cases[{index}].prompt",
+                input_profile,
+                verify_paths=verify_source_profiles,
             )
             for criterion_index, criterion in enumerate(case["criteria"]):
                 _reject_external_input_path(
                     criterion,
                     f"cases[{index}].criteria[{criterion_index}]",
                     input_profile,
+                    verify_paths=verify_source_profiles,
                 )
 
 
@@ -523,7 +545,10 @@ def blind_responses(
             )
         if isinstance(input_profile, dict):
             _reject_external_input_path(
-                response, f"responses[{index}].response", input_profile
+                response,
+                f"responses[{index}].response",
+                input_profile,
+                verify_paths=True,
             )
         _validate_execution_evidence(row, f"responses[{index}]")
         runner = _non_empty_string(row.get("runner"), f"responses[{index}].runner")

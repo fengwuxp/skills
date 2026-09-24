@@ -22,6 +22,46 @@ SPEC.loader.exec_module(MODULE)
 
 
 class SkillAdmissionTests(unittest.TestCase):
+    def test_candidate_policy_requires_a_real_boolean_at_the_policy_path(self) -> None:
+        policies = {
+            "block-scalar": "notes: |\n  allow_implicit_invocation: false\n",
+            "wrong-parent": "interface:\n  allow_implicit_invocation: false\n",
+            "quoted-boolean": 'policy:\n  allow_implicit_invocation: "false"\n',
+            "duplicate-policy": "policy:\n  allow_implicit_invocation: false\npolicy: {}\n",
+            "duplicate-field": "policy:\n  allow_implicit_invocation: false\n  allow_implicit_invocation: false\n",
+            "multiple-documents": "policy:\n  allow_implicit_invocation: false\n---\npolicy: {}\n",
+        }
+        for name, text in policies.items():
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as temp_dir:
+                root = Path(temp_dir)
+                skill_dir = self.write_skill(root, "candidate", {
+                    "status": "candidate", "updated_at": "2026-09-24",
+                    "blockers": [{"id": "Q-1", "summary": "pending", "owner": "Owner"}],
+                })
+                (skill_dir / "agents" / "openai.yaml").write_text(text, encoding="utf-8")
+
+                _, failures = MODULE.audit_skill(skill_dir)
+
+                self.assertTrue(any("invocation" in item for item in failures), failures)
+                with self.assertRaisesRegex(ValueError, "invocation"):
+                    MODULE.explicit_invocation_skills(root)
+
+    def test_candidate_policy_accepts_valid_flow_mapping(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            skill_dir = self.write_skill(root, "candidate", {
+                "status": "candidate", "updated_at": "2026-09-24",
+                "blockers": [{"id": "Q-1", "summary": "pending", "owner": "Owner"}],
+            })
+            (skill_dir / "agents" / "openai.yaml").write_text(
+                "policy: {allow_implicit_invocation: false}\n", encoding="utf-8"
+            )
+
+            _, failures = MODULE.audit_skill(skill_dir)
+
+            self.assertEqual([], failures)
+            self.assertEqual({"candidate"}, MODULE.explicit_invocation_skills(root))
+
     def test_invocation_policy_rejects_unreadable_authority(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

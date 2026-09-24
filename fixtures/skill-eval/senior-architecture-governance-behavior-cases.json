@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "description": "架构治理持续验证的 contract-only 行为案例，覆盖决策前提、门禁维护退役、跨层保证、收益归因及控制强度。合成输入仅固定判断契约，不证明模型已执行治理或消费项目收益。",
+  "source_profiles": {
+    "baseline": {
+      "id": "no-skill",
+      "paths": [],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "candidate": {
+      "id": "senior-architecture-governance-current",
+      "paths": [
+        "senior-software-architect/SKILL.md",
+        "senior-software-architect/references/evolutionary-architecture.md",
+        "senior-software-architect/references/adr-and-tradeoff.md"
+      ],
+      "sha256": "3dfa70eb967666e6ae2d05355b370bdd083b1ff5853e12f056b8713c8e841f7e"
+    }
+  },
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": false,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "governance-revalidate-changed-assumption",
+      "category": "decision-lifecycle",
+      "risk": "high",
+      "prompt": "过去接受的一份ADR要求用存储返回成功作为任务已持久化的依据，当时只有同步直写。现在适配器改为先返回、后台落盘，目标环境尚未验证重启恢复；旧单测仍绿。请只读评审，不改写ADR或部署。",
+      "criteria": [
+        "指出持久化保证的底层前提已变，旧批准和单测不能证明当前环境完成事实，核对调用链、完成语义与恢复责任。",
+        "仅复核受影响决策与消费者，需要改变已接受决策时沿现有Owner及替代记录机制，不重开全部架构或静默覆盖ADR。",
+        "提出能验证真实持久化、响应与重启边界的最小证据，未验证部分保持待定，不伪称恢复已经可靠。"
+      ]
+    },
+    {
+      "id": "governance-repair-stale-guard-without-removing-protection",
+      "category": "guard-correctness",
+      "risk": "high",
+      "prompt": "项目要求Web入口不得绕过服务直连存储。旧检查器按类名必须含Service识别，现有正式UseCase也承担合法服务职责却被拒绝。有人想把这一条全部禁用，另一人想重命名UseCase讨好检查。只给范围明确的修复和验证建议，不修改文件。",
+      "criteria": [
+        "区分有效依赖边界与过时命名启发式，核对实际职责和依赖事实后修检查，不为字符串绿灯改业务结构。",
+        "保留真实入口绕过服务的违规负例及合法UseCase对照；验证实际守卫拒绝与放行，不只改断言、扩大ignore或固定返回成功。",
+        "只处理已证实的守卫偏差，不取消仍有效的安全和依赖规则，不把静态检查能力夸大成全部语义判断。"
+      ]
+    },
+    {
+      "id": "governance-retire-replaced-guard-with-evidence",
+      "category": "guard-retirement",
+      "risk": "medium",
+      "prompt": "老包名正则与新编译依赖检查保护同一已确认约束。已有同批违规和合法输入，证明新检查覆盖旧检查的必要保护并已接入实际CI；项目Owner授权退役旧正则，引用和CI调用方已清点。请说明最小改动和验收，不扩到其他门禁。",
+      "criteria": [
+        "允许在已有授权和保护替代证据下移除旧重复门禁及其专属引用，不因门禁历史存在无限保留或要求新的通用审批。",
+        "确认新检查仍在真正的CI准出路径执行，相关负例被拒绝、合法输入通过，引用无遗漏，不能只证明新脚本存在。",
+        "只删除已确认退役范围，保留其他门禁和共享测试，不宣称这证明全系统质量或生产效果。"
+      ]
+    },
+    {
+      "id": "governance-green-history-is-not-retirement-proof",
+      "category": "guard-retirement-hard-negative",
+      "risk": "high",
+      "prompt": "兼容检查三个月没有失败，所以想删除它节省构建时间。仍有两个外部消费者，尚未建立替代检查，也没有证明它们不再依赖旧错误码。本轮只评审。",
+      "criteria": [
+        "不把长期全绿或耗时当作保护已无用途，保留当前契约与消费者风险。",
+        "先核对约束适用性、实际执行覆盖与维护成本，若优化或替代需验证相同必要保护，不自行删除或放行。",
+        "范围内给有界证据缺口与建议，不借评审升级为全仓平台化或重新设计消费者。"
+      ]
+    },
+    {
+      "id": "governance-measure-change-cost-not-generated-volume",
+      "category": "economic-evidence",
+      "risk": "medium",
+      "prompt": "治理后自研代码从六万行变两万行，引入一个库；最近交付更快，但需求规模变小，CI机器也同时升级，还没有现场缺陷或维护工时对比。报告拟写架构治理将全生命周期成本降低三分之二。请改正结论并给最小复核方式。",
+      "criteria": [
+        "只确认同口径下观察到的自研代码减少，不据此证明总成本减少或把所有交付提速归因架构。",
+        "按相近实际变更对照理解修改范围、等待、验证、返工或恢复成本，说明需求、人员工具和暴露量差异，不虚构基线或收益。",
+        "计入依赖维护、迁移、运维和使用者成本，选择当前问题所需少量指标，不新建通用统计平台。"
+      ]
+    },
+    {
+      "id": "governance-check-cross-layer-guarantee",
+      "category": "cross-layer-contract",
+      "risk": "high",
+      "prompt": "持久化模块声称数据不会丢失，单测只用立即保存的内存替身。真实设备写操作进入缓存就返回，掉电前不保证刷出。上层事务全绿是否足以批准可靠性？请做源码及契约层面的审查建议，不运行设备操作。",
+      "criteria": [
+        "沿上层保证到驱动/存储的实际完成语义核对，指出内存替身和上层事务测试不覆盖真实缓存持久化假设。",
+        "明确谁负责刷出、完成回读、失败与恢复，建议在授权的隔离环境验证实际边界；不能只增加断言或复制新内存Service自证。",
+        "保留真实设备与掉电证据待验证，不批准生产可靠性、不自动实施生产故障注入。"
+      ]
+    },
+    {
+      "id": "governance-preserve-small-change-scope",
+      "category": "proportionality-hard-negative",
+      "risk": "medium",
+      "prompt": "仅将私有局部变量改成已确认的业务名称，范围一处、行为不变，验证命令已给且已授权本地修改。是否为了架构治理必须建立ADR、技术债台账、平台路线图和审批委员会？",
+      "criteria": [
+        "拒绝机械新增治理资产，直接完成已授权局部改动和适当验证，复用项目既有规则。",
+        "复杂度和长期价值检查不等于每次都开架构会议或重新批准，达到目标即停止。",
+        "不顺手重构公共接口、安装工具或提交发布，也不因低风险跳过必要语义检查。"
+      ]
+    },
+    {
+      "id": "governance-separate-refactoring-from-behavior-change",
+      "category": "migration-classification",
+      "risk": "high",
+      "prompt": "一个配置模块准备全部换实现，同时把原先返回未找到改成自动创建默认配置。作者将两项都称为纯重构，认为公开方法签名没变、代码更少，所以无需核对消费者。只读CR。",
+      "criteria": [
+        "识别实现替换与可观察行为变化，不能以重构或签名未变豁免兼容责任。",
+        "分别核对保持行为的结构调整、迁移和新默认创建语义，消费者、副作用和Owner裁决未闭合时保留待定。",
+        "以原结果、新副作用、迁移及失败恢复给验证方向，不推定代码更少带来质量提升，不自动重写。"
+      ]
+    },
+    {
+      "id": "governance-owner-gap-does-not-retire-active-invariant",
+      "category": "maintenance-gap-hard-negative",
+      "risk": "high",
+      "prompt": "排熵时发现检查器维护人已离职、旧理由链接404，但当前已接受接口契约仍明确不得跨租户读取，新复现也证明放开过滤会越权。有人引用旧排熵说明，认为没人维护就不再用这条约束阻断。请只读裁决并说明下一步。",
+      "criteria": [
+        "区分维护/来源链接缺口与当前有效安全约束，不能因Owner离任或旧链接失效取消阻断；以当前契约与越权证据继续保护。",
+        "补维护责任承接并核对现有检查或项目允许的替代验证，不让旧工具输出自证，也不静默跳过权限过滤。",
+        "仅暂停受该缺口影响的准出，独立工作继续；规则退役仍须原约束不适用或替代保护成立的证据，不新增永久审批平台。"
+      ]
+    }
+  ]
+}

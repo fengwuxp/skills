@@ -149,20 +149,20 @@ Codex 的 thread、voice、tool、automation、side panel 和 artifact 能把工
 
 ## 工程生命周期映射
 
-AI 编码协作必须服从 `workflow.md` 的 `Clarify -> Design -> Plan -> Build -> Verify -> Review/Ship` 生命周期；OpenSpec、Superpowers、Harness 和受控工程执行 Loop 是生命周期上的工程化增强，不是绕过澄清、设计、验证或人工确认的捷径。
+AI 编码协作按 `workflow.md` 核对目标、设计依据、执行范围和验证，已有依据足够时直接实施。下表是项目实际采用相关阶段时的职责映射，不要求每项任务顺序执行或先产出文档；OpenSpec、Superpowers、Harness 和受控工程执行 Loop 只在已选用且适用时消费，不因 AI 协作补齐整套框架。
 
 | 生命周期阶段 | AI 协作映射 |
 | --- | --- |
-| Clarify | 判断任务风险、适用轻量执行 / OpenSpec / Harness Plan / 受控工程执行 Loop，并列出关键假设、待确认点和禁止事项。 |
-| Design | 用 OpenSpec 固定目标、范围、非目标、契约、边界、异常路径、测试用例和验收标准。 |
-| Plan | 用 Harness Plan 明确 Owner、写入范围、只读范围、依赖顺序、验证命令、停止条件和交接方式。 |
+| Clarify | 从现有事实核对任务目标、范围、授权与验收，只澄清会改变行动的真实缺口。 |
+| Design | 核对当前契约、边界、异常和验收；已有 OpenSpec 等权威时消费它，不要求为编码另建。 |
+| Plan | 按实际依赖安排工作，明确责任、读写范围、验证和必要交接；已有计划或 Harness 时沿用，不把成文作为开工条件。 |
 | Build | 按最小实现推进，不扩大重构，不编造 API，不引入无主依赖，不越过项目本地约规。 |
-| Verify | 用 Superpowers 执行 TDD、Review、Refactor、编译、测试、lint、静态检查和 AI 产物复核。 |
+| Verify | 按项目技术栈执行适当测试、编译、lint 和 AI 产物复核；专项方法按需使用，不要求加载指定框架，也不顺带重构。 |
 | Review/Ship | 输出行为影响、验证证据、残余风险、回滚/监控边界、Git 策略和需要用户判断的事项。 |
 
 受控工程执行 Loop 只是在上述生命周期中对一个已选任务连续推进；不得把“用户说继续”解释为扩大范围、跳过 Execution Grant、验证或高风险人工确认点。
 
-OpenSpec / Superpowers / Harness 的责任边界：
+项目已采用 OpenSpec / Superpowers / Harness 时，各自的责任边界：
 
 | 层级 | 一句话 | 负责回答 | 不能替代 |
 | --- | --- | --- | --- |

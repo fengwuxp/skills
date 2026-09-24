@@ -11,6 +11,9 @@
     ],
     "senior-software-architect": [
       {
+        "cases": "fixtures/skill-eval/senior-architecture-governance-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-progressive-loading-behavior-cases.json"
       },
       {
@@ -54,6 +57,9 @@
       },
       {
         "cases": "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/governance-authority-alignment-behavior-cases.json"
       }
     ],
     "business-website-planner": [
@@ -187,6 +193,9 @@
     ],
     "wise-agent": [
       {
+        "cases": "fixtures/skill-eval/wise-agent-failure-containment-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/skill-composition-diagnosis-behavior-cases.json"
       },
       {
@@ -236,6 +245,9 @@
       },
       {
         "cases": "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/governance-authority-alignment-behavior-cases.json"
       }
     ],
     "payment-expert": [

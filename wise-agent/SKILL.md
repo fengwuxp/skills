@@ -25,6 +25,8 @@ description: |
 
 人类责任 Owner 负责价值取舍、公共契约、高风险授权、发布和不可逆责任；知止者负责行动与综合；专业能力负责专项判断和动作；独立 Checker 负责证明。详细模型读取 `references/cognition-and-capability-model.md`。
 
+涉及人机分工、架构决策权、人工审查或 AI 自主范围时，读取该 reference 的“人、架构与 AI 的协作边界”，分别核对能力、权限、责任和证据，不机械限定为人设计、AI 实现。
+
 阴阳一体、互用互制是运行关系，不是两个角色或新增模式：复杂 / 受控任务在同一任务单元内同时保留约束面与推进面，不拆成两个 Agent、两个模式或两个 Owner；详细规则读取 `references/cognition-and-capability-model.md` 的 1B。需要经典智慧校准现实取舍时按需装载 `huaxia-practical-wisdom`，不在本 Skill 复制其框架。
 
 AI 推理偏向与方差校准不新增运行模式：遇到长上下文、强前提、输出敏感或高风险结论时读取 `references/cognition-and-capability-model.md` 的 1C；同一模型重复输出只能作为方差探针，不能充当独立证据。

@@ -102,6 +102,8 @@
 
 ## 已参考的公开来源
 
+- Microsoft 数据库规范化说明 `https://learn.microsoft.com/en-us/previous-versions/troubleshoot/microsoft-365/microsoft-365-apps/access/database-normalization-description`：2026-09-24 读取规范化、重复与依赖、实际取舍相关正文；只采纳重复维护可能造成更新不一致以及形式规则不能替代语义判断的边界。`product-design-and-prd.md` 的“事实身份、时间与派生视图”是本仓库据此作出的语义补充，不把当前资料和历史事实视为同一数据，也不把来源示例推广为一律去重、范式强制要求或存储方案；不复制正文或表格。
+
 - W3C《Web Content Accessibility Guidelines (WCAG) 2.2》：`https://www.w3.org/TR/WCAG22/`。2026-08-21 已读取公开规范，吸收 Web/移动 Web 的键盘可用、焦点顺序、焦点不被遮挡、内容重排（reflow）、输入方式和目标尺寸检查项，用于 `product-client-interaction.md` 的体验验收；不把 WCAG 合规等级等同于产品可用性、视觉质量或上线批准。
 - Apple《Human Interface Guidelines - Layout》《Accessibility》：`https://developer.apple.com/design/human-interface-guidelines/layout`、`https://developer.apple.com/design/human-interface-guidelines/accessibility`。2026-08-21 已读取公开页面，吸收跨窗口/方向/安全区/动态字体/多输入方式、层级、渐进披露、平台控制尺寸与可访问性检查项；不复制 Apple 组件、素材、token 或把 iOS/macOS 约束外推到其他平台。
 - Material Design 3《Canonical layout examples》与 Android Developers《Design an Adaptive Layout with Material Design》：`https://m3.material.io/foundations/layout/canonical-examples/overview`、`https://developer.android.com/codelabs/adaptive-material-guidance`。2026-08-21 已读取公开页面，吸收按窗口可用空间和人体工学选择断点、列表-详情/多栏等布局策略、在断点之间保持弹性和系统栏上下文的检查项；不把 Material 的窗口尺寸、组件或 Compose 实现当作本项目标准。

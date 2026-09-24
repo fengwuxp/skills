@@ -37,14 +37,16 @@
 采用层级必须与证据一致：
 
 - `candidate`：设计候选或在途变更。
-- `provider-verified`：提供者源码、目标测试和必要 validator 已通过。
-- `consumer-adopted`：保留提供者源码与目标测试证据，并有真实消费者重新编译或通过契约 / 集成验证。
-- `runtime-accepted`：保留提供者与消费者证据，并验证真实运行路径和失败边界。
+- `provider-verified`：每个变更项直接关联通过的提供者源码和目标测试证据；必要 validator 另按任务约束补充。
+- `consumer-adopted`：每个变更项保留通过的提供者源码、目标测试和真实消费者重新编译或契约 / 集成验证证据。
+- `runtime-accepted`：每个变更项保留通过的提供者、消费者证据，并关联真实运行路径和失败边界验证。
 - `blocked`：存在失败或未关闭的承重阻塞。
 
 局部测试、静态扫描、文档检查、队列投递或单方 ACK 不能单独把状态提升到 `consumer-adopted` 或 `runtime-accepted`。缺少证据时报告 `partial` 或 `pending`，不要用“已完成重构”覆盖范围外缺口。
 
-当声明 `consumer-adopted` 或 `runtime-accepted` 时，每个变更项的 `verification_refs` 还必须直接引用对应的通过证据：消费者编译证据或运行时证据。全局证据存在但没有逐项关联，仍不能证明该接口、方法或模型已经被消费或运行。
+`verification_refs` 是该变更项当前采用层级的验证依据。`provider-verified` 的每个项必须直接引用通过的 `source` 与 `test`；`consumer-adopted` 还需通过的 `consumer_compile`；`runtime-accepted` 再需通过的 `runtime`。全局证据存在但没有逐项关联，或同一项仍引用这些必需类别的 `fail` / `pending` 证据，都不能证明该接口、方法或模型已经达到当前层级。
+
+未被当前项引用的历史失败或未决证据可保留在全局记录中，用于追溯；它不替代当前通过证据，也不会阻断已修复且逐项关联了当前通过证据的采用层级。
 
 ## 机器校验
 

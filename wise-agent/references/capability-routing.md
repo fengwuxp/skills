@@ -220,7 +220,7 @@ Hallmark 是 Web 视觉结构与反模板化方法，不是 UI 总权威。支�
 
 ## 五、单体、Worker 与 Checker
 
-Worker 和 Checker 是两条正交判断，不是 Maker 完成后固定依次经过的两个阶段。Worker 只解决独立子任务是否值得分派，Checker 只解决结果是否需要独立证据；可以只用 Checker 而不派 Worker，也可以由确定性测试、validator 或人工评审承担 Checker。
+Worker 和 Checker 是两条正交判断，不是 Maker 完成后固定依次经过的两个阶段。Worker 只解决独立子任务是否值得分派，Checker 只解决结果是否需要独立复核；可以只用 Checker 而不派 Worker。低风险任务可以用测试、validator 和回读完成适当验证，不必另设 Checker；这些校验是证据，不能替代已经要求的独立复核。
 
 ### 直接单体工作
 
@@ -232,7 +232,7 @@ Worker 和 Checker 是两条正交判断，不是 Maker 完成后固定依次经
 
 ### 调用 Checker
 
-出现生产风险、资金/合规/安全、重大架构决策、正式发布、不可逆动作、Maker 容易自洽或用户明确要求独立 CR 时启用。Checker 必须能读取原始产物和证据，不能只审 Maker 摘要。
+出现生产风险、资金/合规/安全、重大架构决策、正式发布、不可逆动作、Maker 容易自洽或用户明确要求独立 CR 时启用。读取 `verification-review-release.md` 的“1.1 证据身份、独立性与失效”；Checker 必须能读取原始产物和证据，不能只审 Maker 摘要。
 
 ## 六、新能力接入门禁
 

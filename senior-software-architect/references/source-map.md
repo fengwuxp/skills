@@ -70,6 +70,11 @@
 不吸收边界：不把 AI 回答当作来源事实，不照搬案例技术栈、规模或服务数量，不把“每步 Spec 化”变成多套文档；不认为 AI 不能辅助分析瓶颈，也不允许它在没有数据时编造测量结论。既有证据足够时直接决定，不强制行业调研、额外审批或新增 Skill。
 
 ## 已参考的公开来源：软件本质与非标工程问题
+
+- 架构治理讨论的核对来源：`https://zhuanlan.zhihu.com/p/589725351`，赵俊民《关于架构治理一些思考》，页面编辑时间 2022-12-06；`https://zhuanlan.zhihu.com/p/1930324372343718672`，同作者《软件系统工程总览》，页面编辑时间 2026-09-07。2026-09-24 常规抓取失败后，经 Codex in-app Browser 读取标题、作者、编辑时间与正文；图中细节与索引下游文章未逐一核验。只提炼保护约束、工具化执行及工程反馈的讨论方向，落到 `evolutionary-architecture.md` 的“架构治理的持续验证”；不采纳规模或头衔决定能力、质量上限已固定、平台化必然正确、AI 相关代码比例或厂商动机等未验证断言，不复制正文与图。
+- Google《Software Engineering at Google》第一章 `https://abseil.io/resources/swe-book/html/ch01.html` 与 DORA `https://dora.dev/capabilities/loosely-coupled-teams/`：2026-09-24 读取时间、规模、取舍、可持续变化和独立测试/交付及度量相关正文，用于校准上述治理的成本、协作和反馈边界；不把架构与 DevOps 对立，不将统计关联写成本项目因果收益，也不以大厂规模或微服务作为默认目标。门禁维护及退役的具体条目是本仓库的工程化规则，不冒充来源原句。
+- Martin Fowler 重构定义 `https://martinfowler.com/bliki/DefinitionOfRefactoring.html`：2026-09-24 读取原文定义，只用于区分保持可观察行为的结构调整与替换、迁移、行为修正；不从代码行数判断是否重构或推定收益，不复制原文。
+- SEBoK `https://sebokwiki.org/wiki/What_is_a_Model%3F`：2026-09-24 读取 Definition of a Model、Modeling Language 与模型验证相关正文，只采纳按目标选择抽象、模型语义须验证的边界，落到 `project-governance-service-api-modeling.md` 的“业务语义与软件结构”。事实责任、变化与实现反例检查是本仓库的工程化提炼，不声称为来源原句；不采用现实对象与软件实体一一对应、神经网络仿生必然产生智能或实现不再重要的推论，不复制原文或图。
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/rIyajlYyWD38ppLJ9bBSbg`；标题：`回到本质：软件到底应该怎么造？`；作者字段：`建国`；页面 `ct` 字段：`1777106205`；读取日期：2026-06-15。已通过移动端微信 UA 公开 HTML 读取标题、作者、meta 描述和正文。应用到 `architecture.md` 的知识表达与工程验证边界，强调架构师要把业务知识落到对象、规则、约束、接口、测试、监控和反馈，不把代码生成速度当成工程质量。
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/j1NQJDM7wpOOI9sIi2SLPA`；标题：`高水平工程师都擅长解决“非标问题”`；作者字段：`杨光西`；页面 `ct` 字段：`1781356080`；读取日期：2026-06-15。已通过移动端微信 UA 公开 HTML 读取标题、作者、meta 描述和正文。应用到 `architecture.md` 和 `scenario-routing.md` 的非标工程问题入口，要求先输出问题机制、影响面、证据、关键不确定性、候选方案、最小可逆实验、验证命令和停止条件，再进入 TDD、实现、重构或 GSD/CAD。
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/TNz_MRfuAM0tAVlWBOk3yA`；标题：`屎山代码的本质`；作者字段：`井文严`；账号字段：`c++工程应用经验`；页面 `ct` 字段换算为 2026-06-06 09:50:47 Asia/Shanghai；读取日期：2026-07-02。`web.open` 未取得正文，随后通过移动端微信 UA `curl` 公开 HTML 读取标题、作者、账号、页面时间字段和正文。应用到 `SKILL.md` 和 `wind-coding-conventions/references/java-coding-conventions.md` 的体用不混 / 业务与控制分离原则，要求先定业务不变量、状态、规则和决策，再把遍历、查找、异步、回调、线程、IO、协议解析等控制机制收进 helper、适配层、状态机或基础设施。

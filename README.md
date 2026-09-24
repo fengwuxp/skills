@@ -15,7 +15,7 @@
 - **人类责任 Owner**：确认价值取舍、公共契约、高风险授权、发布和不可逆责任。
 - **知止者**：理解目标、选择能力、保持状态、执行工作并综合最终交付。
 - **专业能力**：项目 Skills、references、scripts 和工具，提供专项知识与动作。
-- **独立 Checker**：测试、validator、人工评审或外部证据，负责证明而不是自证。
+- **独立 Checker**：从独立视角复核产物、语义和风险，消费测试、validator 与原始证据；低风险任务可只做适当验证，具体独立性边界见 `wise-agent/references/verification-review-release.md`。
 
 人类责任 Owner、知止者、专业能力和独立 Checker 分开；内部可以协作，最终责任不能混写。
 

@@ -31,6 +31,11 @@ EVIDENCE_KINDS = {
     "independent_review",
 }
 EVIDENCE_RESULTS = {"pass", "fail", "pending"}
+ADOPTION_EVIDENCE_KINDS = {
+    "provider-verified": ("source", "test"),
+    "consumer-adopted": ("source", "test", "consumer_compile"),
+    "runtime-accepted": ("source", "test", "consumer_compile", "runtime"),
+}
 
 
 class ContractError(ValueError):
@@ -162,7 +167,6 @@ def validate_contract(contract: Any) -> dict[str, Any]:
             _string(entry.get("reason"), f"claims[{index}].reason")
 
     passing = [entry for entry in evidence.values() if entry["result"] == "pass"]
-    passing_ids = {entry["id"] for entry in passing}
     passing_kinds = {entry["kind"] for entry in passing}
     if adoption == "provider-verified" and not {"source", "test"} <= passing_kinds:
         raise ContractError("provider-verified requires passing source and test evidence")
@@ -190,27 +194,16 @@ def validate_contract(contract: Any) -> dict[str, Any]:
         or claim_states & {"pending", "not_done"}
     ):
         raise ContractError("blocked requires failed evidence or pending/not_done claims")
-    if adoption == "provider-verified" and any(
-        not refs & passing_ids for refs in item_evidence.values()
-    ):
-        raise ContractError("every change item needs at least one passing verification reference")
-    if adoption in {"consumer-adopted", "runtime-accepted"} and any(
-        not refs & passing_ids for refs in item_evidence.values()
-    ):
-        raise ContractError("every change item needs at least one passing verification reference")
-    required_item_evidence = {
-        "consumer-adopted": "consumer_compile",
-        "runtime-accepted": "runtime",
-    }.get(adoption)
-    if required_item_evidence:
+    for required_kind in ADOPTION_EVIDENCE_KINDS.get(adoption, ()):
         for name, refs in item_evidence.items():
-            if not any(
-                evidence[ref]["result"] == "pass"
-                and evidence[ref]["kind"] == required_item_evidence
-                for ref in refs
-            ):
+            matching_refs = [ref for ref in refs if evidence[ref]["kind"] == required_kind]
+            if any(evidence[ref]["result"] != "pass" for ref in matching_refs):
                 raise ContractError(
-                    f"{name} needs passing {required_item_evidence} evidence in verification_refs"
+                    f"{name} has non-passing {required_kind} evidence in verification_refs"
+                )
+            if not any(evidence[ref]["result"] == "pass" for ref in matching_refs):
+                raise ContractError(
+                    f"{name} needs passing {required_kind} evidence in verification_refs"
                 )
     return root
 
@@ -290,6 +283,117 @@ def _valid_contract() -> dict[str, Any]:
 
 def self_test() -> None:
     validate_contract(_valid_contract())
+
+    missing_item_test = _valid_contract()
+    missing_item_test["change"]["items"][0]["verification_refs"] = ["src"]
+    try:
+        validate_contract(missing_item_test)
+    except ContractError as error:
+        assert "ValueQuery.query" in str(error)
+        assert "test" in str(error)
+    else:
+        raise AssertionError("provider item without its own test evidence was accepted")
+
+    item_failed_test = _valid_contract()
+    item_failed_test["evidence"][1]["result"] = "fail"
+    item_failed_test["claims"][0]["evidence_refs"] = ["src"]
+    item_failed_test["evidence"].append(
+        {
+            "id": "unrelated-tests",
+            "kind": "test",
+            "ref": "unrelated-module-tests.xml",
+            "fingerprint": "sha256:unrelated",
+            "result": "pass",
+        }
+    )
+    try:
+        validate_contract(item_failed_test)
+    except ContractError as error:
+        assert "ValueQuery.query" in str(error)
+        assert "test" in str(error)
+    else:
+        raise AssertionError("unrelated passing test evidence masked an item failure")
+
+    consumer_item_without_compile = _valid_contract()
+    consumer_item_without_compile["change"]["adoption"] = "consumer-adopted"
+    consumer_item_without_compile["evidence"][2]["result"] = "pass"
+    for item in consumer_item_without_compile["change"]["items"]:
+        item["verification_refs"].append("consumer")
+    consumer_item_without_compile["change"]["items"][0]["verification_refs"].remove("consumer")
+    try:
+        validate_contract(consumer_item_without_compile)
+    except ContractError as error:
+        assert "ValueQuery.query" in str(error)
+        assert "consumer_compile" in str(error)
+    else:
+        raise AssertionError("consumer adoption without per-item compile evidence was accepted")
+
+    runtime_item_without_runtime = _valid_contract()
+    runtime_item_without_runtime["change"]["adoption"] = "runtime-accepted"
+    runtime_item_without_runtime["evidence"][2]["result"] = "pass"
+    runtime_item_without_runtime["evidence"].append(
+        {
+            "id": "runtime",
+            "kind": "runtime",
+            "ref": "runtime-run",
+            "fingerprint": "sha256:runtime",
+            "result": "pass",
+        }
+    )
+    runtime_item_without_runtime["claims"] = [runtime_item_without_runtime["claims"][0]]
+    for item in runtime_item_without_runtime["change"]["items"]:
+        item["verification_refs"].extend(["consumer", "runtime"])
+    runtime_item_without_runtime["change"]["items"][0]["verification_refs"].remove("runtime")
+    try:
+        validate_contract(runtime_item_without_runtime)
+    except ContractError as error:
+        assert "ValueQuery.query" in str(error)
+        assert "runtime" in str(error)
+    else:
+        raise AssertionError("runtime acceptance without per-item runtime evidence was accepted")
+
+    linked_pending_test = _valid_contract()
+    linked_pending_test["evidence"][1]["result"] = "pending"
+    linked_pending_test["claims"][0]["evidence_refs"] = ["src"]
+    linked_pending_test["evidence"].append(
+        {
+            "id": "current-tests",
+            "kind": "test",
+            "ref": "current-focused-tests.xml",
+            "fingerprint": "sha256:current-tests",
+            "result": "pass",
+        }
+    )
+    for item in linked_pending_test["change"]["items"]:
+        item["verification_refs"].append("current-tests")
+    try:
+        validate_contract(linked_pending_test)
+    except ContractError as error:
+        assert "ValueQuery.query" in str(error)
+        assert "test" in str(error)
+    else:
+        raise AssertionError("linked pending evidence was accepted as a current basis")
+
+    valid_shared_evidence = _valid_contract()
+    validate_contract(valid_shared_evidence)
+
+    unlinked_historical_failure = _valid_contract()
+    unlinked_historical_failure["evidence"].append(
+        {
+            "id": "historical-tests",
+            "kind": "test",
+            "ref": "previous-focused-tests.xml",
+            "fingerprint": "sha256:historical-tests",
+            "result": "fail",
+        }
+    )
+    validate_contract(unlinked_historical_failure)
+
+    candidate_with_pending_evidence = _valid_contract()
+    candidate_with_pending_evidence["change"]["adoption"] = "candidate"
+    candidate_with_pending_evidence["evidence"][1]["result"] = "pending"
+    candidate_with_pending_evidence["claims"][0]["evidence_refs"] = ["src"]
+    validate_contract(candidate_with_pending_evidence)
 
     missing_consumer = _valid_contract()
     del missing_consumer["change"]["items"][0]["consumers"]

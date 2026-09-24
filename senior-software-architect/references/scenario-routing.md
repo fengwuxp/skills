@@ -101,8 +101,8 @@
 - **微服务拆分 + 数据一致性**：先确认业务边界、数据归属和团队能力，再设计事务边界、幂等、补偿、对账、告警和人工兜底。
 - **遗留系统迁移 + 生产发布**：优先小步迁移，使用防腐层、双写/回填/切流、契约测试和灰度观测，避免一次性替换核心链路。
 - **安全改造 + 遗留系统**：先识别现有权限和数据隔离缺口，再用防腐层、灰度开关和回归测试逐步收敛，不一次性重写认证授权体系。
-- **AI 编码协作 + Java/Spring 修改**：先用 `ai-assisted-engineering.md` 定义 OpenSpec、Superpowers 和 Harness，再加载项目本地规范、`wind-coding-conventions` 的通用 Java 层与 `coding-review-deep-dive.md`；Wind 专项按依赖或上下文启用。若进入受控工程执行 Loop，再读 `cad-mode.md` 确认工程准入与逐轮推进边界。
-- **AI 编码协作 + 高风险生产行为**：先确认 OpenSpec 中的业务不变量、验收场景和回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范。
+- **AI 编码协作 + Java/Spring 修改**：加载项目本地规范、`wind-coding-conventions` 的通用 Java 层与 `coding-review-deep-dive.md`；Wind 专项按依赖或上下文启用。已有 AI 协作机制时按 `ai-assisted-engineering.md` 消费其分工与证据，不要求补建 OpenSpec、Superpowers 或 Harness。若进入受控工程执行 Loop，再读 `cad-mode.md` 确认工程准入与逐轮推进边界。
+- **AI 编码协作 + 高风险生产行为**：从项目已确认的需求、设计、源码和验证中核对业务不变量、验收场景与回滚边界，再补充 `production-readiness.md`、`negative-constraints.md` 和专项安全/一致性规范；已有 OpenSpec 时消费它，不把指定文档作为风险控制的替代。
 - **AI 编码协作 + 中大型长任务**：需求不清时只暂停依赖该缺口的动作，由现有产品/系分事实或对应 Owner 补齐；真实恢复、交接或已获准的编排才读 `ai-large-project-orchestration.md` 对应章节。上下文账本、阶段状态、原子任务包、Wave 依赖、验证矩阵、暂停恢复和收口流程按实际需要取用；目标与授权已清楚的多文件任务直接执行。
 - **GSD-like 编排 + 受控工程执行 Loop**：先用 `ai-large-project-orchestration.md` 拆出 Stage、Wave 和原子任务包，再只对已选定且门禁完整的单个 Task ID 或阶段切片读取 `cad-mode.md`。不得把整个大项目直接交给工程执行 Loop，不得把 Roadmap、Wave 或任务清单当作 Plan Grant / Execution Grant。
 
