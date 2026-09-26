@@ -1702,33 +1702,17 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "`wind-coding-conventions` Skill 的项目本地 `AGENTS.md` 模板",
-            "多个本地 Java 项目",
-            "知止者",
-            "LLM 编码卫生",
-            "`$llm-coding-hygiene`",
-            "本模板不复制其规则",
-            "不知道就问",
-            "没要求的不写",
-            "只改被要求的部分",
-            "给验收标准、验证结果和停止条件",
-            "从第一性原理看原始需求和问题本质",
-            "每一行修改都要能回到用户目标、验收标准、源码事实或失败测试",
-            "本项目遵守 Wind 编码约规",
-            "项目身份",
-            "AI 协作入口",
-            "项目约规入口",
-            "Wind 规则权威只读 `wind-coding-conventions`",
-            "本文件不复制完整规则",
-            "项目级红线",
-            "交付格式",
-            "face/impl",
-            "模型归位",
-            "不把 Entity、Mapper、Repository、MyBatis Page 或 QueryWrapper 暴露到 Controller、face Service、ApplicationService 对外方法、Facade、Adapter、跨模块接口或事件消息契约",
-            "不新增一行透传方法、Mapper 包装、浅服务、似是而非的 ApplicationService、内存版业务 Service",
-            "TDD 和测试按公开契约黑盒验证",
-            "不得把“可继续推进”写成“已经授权”",
-            "不把任何样本项目的历史包名、业务模块名或命令照搬成新项目事实",
+            "Java/Wind 差量",
+            "普通 Java 项目从通用 Java 约规提取差量",
+            "不再复制全局行动规则",
+            "本项目遵循 Wind 编码约规",
+            "项目事实",
+            "适用规则",
+            "模块与源码边界",
+            "对外契约不泄露 Entity、Mapper、Repository、MyBatis Page 或 QueryWrapper",
+            "测试覆盖公开行为",
+            "模板没有授予安装、Git、部署、生产、迁移或删除权限",
+            "不把任何样本项目的包名、业务模块或命令照搬到新项目",
         ],
     )
     and has_reference_header(wind_skill_examples)
@@ -10555,9 +10539,9 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "空值责任按边界处理一次",
-            "数据库约束不能替代不可信输入校验",
-            "契约冲突必须修正 schema、注解、映射或代码语义",
+            "空值责任按不可信输入、持久化约束和 Java 空安全契约归位",
+            "已证明非空不层层判空",
+            "数据库约束不代替输入校验",
         ],
     )
     and has_all(
@@ -10656,7 +10640,9 @@ check(
     )
     and has_all(
         wind_skill_agents_template,
-        ["Spring Bean 注册、依赖注入与 Lombok 日志注解直接遵循通用 Java 的依赖专项规则"],
+        [
+            "Spring Bean 注册、依赖注入与 Lombok 日志注解按通用 Java 的实际依赖规则执行",
+        ],
     ),
 )
 check(
@@ -10782,8 +10768,8 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "Bean Validation 直接遵循 `wind-coding-conventions` 的 Wind 服务边界规则",
-            "不复制通用规则正文",
+            "Bean Validation 的服务边界直接读取 Wind 规则",
+            "不在此复制注解组合",
         ],
     )
     and has_all(
@@ -11082,10 +11068,10 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "版本化 IDEA Project Code Style",
-            "不得使用个人 IDE 默认设置覆盖项目约规",
-            "不得格式化本次修改范围外的代码",
-            "格式化后审查 diff",
+            "项目实际选用的 IDEA Code Style",
+            "已有明确的 formatter/CI 权威时遵从它",
+            "不用个人默认设置或样本行宽填空",
+            "不格式化无关代码",
         ],
     ),
 )
@@ -20138,9 +20124,9 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "已由统一日志链路 / MDC 注入",
-            "不得在业务日志中重复打印",
-            "依靠业务 ID 和 MDC 中的 traceId 串起时间线",
+            "使用项目已有 MDC 上下文",
+            "不在每条日志重复已注入的 traceId 等字段",
+            "异步缺失上下文时修复传播和清理",
         ],
     ),
 )
@@ -20197,9 +20183,9 @@ check(
     and has_all(
         wind_skill_agents_template,
         [
-            "新增生产 Java 命名类型使用 Wind 类型头 Javadoc",
-            "`class`、`interface`、`record`、`enum` 和 `@interface`",
-            "首次引入信息不随修改刷新",
+            "新增生产 Java 命名类型按 Wind 类型头 Javadoc 规则",
+            "`@author` 和 `@since`",
+            "注释必要性及继承例外回到通用 Java 约规",
         ],
     ),
 )
@@ -20335,7 +20321,7 @@ check(
             "作者侧正典档案",
             "读者附录",
             "出版编辑用梗概",
-            "不把所有文档统一成同一种机关腔",
+            "先按文种与效力、读者关系和阅读后动作选择结构",
         ],
     )
     and has_all(

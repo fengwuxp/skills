@@ -84,6 +84,8 @@
 
 ## 组合场景处理
 
+- **项目 AGENTS.md 初始化 / 改进**：直接读取 `project-agents-template.md`，从项目事实形成最小规则；Java/Wind 专项按实际信号交规则 Skill 补充，不加载整套长期治理规范或强制指定规划框架。
+
 - **系分 + 生产变更**：先用 `system-analysis-design.md` 固定背景、目标、边界和详细设计，再用 `production-readiness.md` 检查 SLO、容量、灰度、监控、应急和回滚。
 - **系分 + 高风险重构 / 迁移**：目标结构以 `system-analysis-template.md` 为准；跨模块、公共契约、数据迁移、核心链路替换、双轨切流或旧能力退役再读 `refactoring-design-template.md` 设计迁移路径。局部、行为保持且可测试的重构不创建独立重构设计文档。
 - **PRD/产品方案 + 系统设计**：先用 `product-design.md` 检查目标、核心业务用例、对象状态、规则、数据和验收是否足以支撑工程落地；缺口回到产品专家补齐，已确认内容再进入 `architecture.md` 和 `system-analysis-design.md`。

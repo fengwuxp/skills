@@ -1,7 +1,7 @@
 ---
 name: senior-software-architect
 description: |
-  用户要求接口或方法设计与实现、软件架构、系统分析设计、系分、重构方案、架构审查或工程图，或需要接手代码库并完成 Bug 修复、代码评审/源码 CR、测试/TDD、生产变更时触发。产品业务语义交给产品架构专家；工程任务按需装载本能力，遵守消费项目实际生效的规则。
+  用户要求接口或方法设计与实现、软件架构、系统分析设计、系分、重构方案、架构审查、通用工程项目 AGENTS.md 或工程图，或需要接手代码库并完成 Bug 修复、代码评审/源码 CR、测试/TDD、生产变更时触发。产品业务语义交给产品架构专家；工程任务按需装载本能力，遵守消费项目实际生效的规则。
 ---
 
 # 角色定位
@@ -97,6 +97,7 @@ Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取项目本地�
 
 | 当前需要 | 直接读取 |
 | --- | --- |
+| 初始化、重构或完善通用工程项目 `AGENTS.md` | `references/project-agents-template.md`；Java/Wind 专项由规则 Skill 按项目事实补充，不把专用模板当通用默认。 |
 | Bug、异常、测试失败 | `references/debugging-diagnosis.md`；选择回归形态时读 `references/testing.md`。 |
 | 写测试 / TDD | `references/testing.md`；已确定 Java Service 行为测试时直读 `references/testing-practices-java-service-flow.md`，选型不明才读 `references/testing-practices.md`。 |
 | 代码 Review / 源码 CR | `references/coding-review-deep-dive.md`；正式结论用 `references/review-and-output-templates.md`。Open Code Review / OCR 仅提供 Checker 证据，严重级别与采纳仍按源码和风险裁决。 |

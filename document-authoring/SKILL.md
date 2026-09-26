@@ -34,7 +34,7 @@ description: Use when 用户要把分散材料或稳定领域结论整理、审�
 ## 工作流
 
 1. **建立文档契约**：读取 `references/document-contract.md`，确认文种与效力、读者关系、阅读后动作、范围、来源、输出格式、owner 和验收方式。
-2. **选择结构**：读取 `references/writing-and-structure.md`，按中文场景、读者任务和载体选择结构与语体，不机械套全量模板或统一机关腔。
+2. **选择结构**：读取 `references/writing-and-structure.md`，按中文场景、读者任务和载体选择结构与语体；新写和改写都按“自然表达与读者关系”组织连贯正文，不机械套全量模板或统一机关腔。
 3. **写入证据**：读取 `references/citation-and-traceability.md`，让关键结论能回到材料、链接、版本、记录或领域证据卡。
 4. **评审与修订**：读取 `references/review-and-revision.md`，区分评审、改写、合并和最终版收口；未经授权不重写全文。
 5. **生成载体**：所有正式文档读取 `references/format-and-rendering.md`；需要 DOCX、PDF、PPTX 或表格时调用对应文档工具，工具不可用时交付 Markdown 并说明限制。

@@ -57,7 +57,7 @@ description: Use when 用户要创作、规划、续写、重写或评审小说�
 3. **审时造势**：按篇幅与叙事范围读取 `references/worldbuilding-and-research.md`，判断时代、制度、资源和力量格局怎样限制行动。
 4. **发散创见**：保留积厚而发与灵感天成的原始核；多轮讨论只增量收集有依据的承重素材，候选不冒充作者确认。
 5. **权衡落地**：输出关键分叉与依赖清单、当前主 blocker、推荐及影响；故事设计读 `references/story-design-and-drafting.md`，人物读 `references/character-craft.md`。
-6. **行验成篇**：按当前故事层级落笔，场景成篇读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
+6. **行验成篇**：按当前故事层级落笔，场景成篇读 `references/scene-and-prose-craft.md`，按其中“文风校准”处理声气、情感与句段，再连续复读；不等用户指出 AI 味才检查人物同声和解释腔。只交付正文时不展示规划过程。
 7. **化而承续**：逐轮写明改变的事实、人物知情、读者承诺或下游行动；只有作者明确确认或纳入本轮自决授权范围的候选才写回权威。
 
 复杂主线按需用 `huaxia-practical-wisdom` 生成叙事校准卡，但不让现实决策卡或经典名词替代人物选择。三层真实、巧合与反常事件、历史融合、直笔与曲笔、幻想归来和发布适配分别由场景路由中的对应 reference 承载。

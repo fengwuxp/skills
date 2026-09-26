@@ -60,6 +60,9 @@
       },
       {
         "cases": "fixtures/skill-eval/governance-authority-alignment-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/project-agents-template-behavior-cases.json"
       }
     ],
     "business-website-planner": [
@@ -73,6 +76,9 @@
       },
       {
         "cases": "fixtures/skill-eval/document-authoring-visual-explanation-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/natural-expression-behavior-cases.json"
       }
     ],
     "fiction-visual-designer": [
@@ -151,6 +157,9 @@
       },
       {
         "cases": "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/natural-expression-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [
@@ -248,6 +257,12 @@
       },
       {
         "cases": "fixtures/skill-eval/governance-authority-alignment-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/natural-expression-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/project-agents-template-behavior-cases.json"
       }
     ],
     "payment-expert": [
