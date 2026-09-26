@@ -8,7 +8,10 @@ import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
+from io import StringIO
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -160,6 +163,140 @@ class SkillAdmissionTests(unittest.TestCase):
                     for item in failures
                 )
             )
+
+    def test_dependency_check_rejects_invalid_and_outside_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "root"
+            outside = Path(temp_dir) / "outside"
+            root.mkdir()
+            outside.mkdir()
+            self.write_skill(outside, "target", {"status": "installable", "blockers": []})
+            for dependency in ("../outside/target", str(outside / "target")):
+                with self.subTest(dependency=dependency):
+                    caller = self.write_skill(
+                        root,
+                        "caller",
+                        {
+                            "status": "installable",
+                            "blockers": [],
+                            "requires": [dependency],
+                        },
+                    )
+
+                    failures = MODULE.audit_dependencies(caller, root)
+
+                    self.assertTrue(any("valid Skill ID" in item for item in failures), failures)
+                    output = StringIO()
+                    with patch.object(
+                        sys,
+                        "argv",
+                        [str(SCRIPT), "--check-dependencies", str(caller)],
+                    ), redirect_stdout(output):
+                        self.assertEqual(1, MODULE.main())
+                    self.assertIn("valid Skill ID", output.getvalue())
+                    for path in caller.iterdir():
+                        path.unlink()
+                    caller.rmdir()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "root"
+            outside = Path(temp_dir) / "outside"
+            root.mkdir()
+            outside.mkdir()
+            self.write_skill(outside, "target", {"status": "installable", "blockers": []})
+            (root / "target").symlink_to(outside / "target")
+            caller = self.write_skill(
+                root,
+                "caller",
+                {"status": "installable", "blockers": [], "requires": ["target"]},
+            )
+
+            failures = MODULE.audit_dependencies(caller, root)
+
+            self.assertTrue(any("outside repository root" in item for item in failures), failures)
+
+    def test_candidate_caller_can_depend_on_an_installable_skill(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            caller = self.write_skill(
+                root,
+                "candidate",
+                {
+                    "status": "candidate",
+                    "updated_at": "2026-09-26",
+                    "blockers": [{"id": "Q-1", "summary": "pending", "owner": "Owner"}],
+                    "requires": ["provider"],
+                },
+            )
+            self.write_skill(root, "provider", {"status": "installable", "blockers": []})
+
+            self.assertEqual([], MODULE.audit_dependencies(caller, root))
+
+    def test_dependency_check_rejects_cycles(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            caller = self.write_skill(
+                root,
+                "caller",
+                {"status": "installable", "blockers": [], "requires": ["provider"]},
+            )
+            self.write_skill(
+                root,
+                "provider",
+                {"status": "installable", "blockers": [], "requires": ["caller"]},
+            )
+
+            failures = MODULE.audit_dependencies(caller, root)
+
+            self.assertTrue(any("dependency cycle caller -> provider -> caller" in item for item in failures), failures)
+
+    def test_dependency_check_keeps_root_aliases_as_distinct_nodes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            first_target = root / "one" / "shared"
+            second_target = root / "two" / "shared"
+            first_target.parent.mkdir()
+            second_target.parent.mkdir()
+            self.write_skill(first_target.parent, "shared", {"status": "installable", "blockers": []})
+            self.write_skill(
+                second_target.parent,
+                "shared",
+                {"status": "installable", "blockers": [], "requires": ["missing"]},
+            )
+            (root / "first").symlink_to(first_target)
+            (root / "second").symlink_to(second_target)
+            caller = self.write_skill(
+                root,
+                "caller",
+                {"status": "installable", "blockers": [], "requires": ["first", "second"]},
+            )
+
+            failures = MODULE.audit_dependencies(caller, root)
+
+            self.assertTrue(any("requires unknown skill missing" in item for item in failures), failures)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            first_target = root / "one" / "shared"
+            second_target = root / "two" / "shared"
+            first_target.parent.mkdir()
+            second_target.parent.mkdir()
+            self.write_skill(first_target.parent, "shared", {"status": "installable", "blockers": []})
+            self.write_skill(
+                second_target.parent,
+                "shared",
+                {"status": "installable", "blockers": [], "requires": ["provider"]},
+            )
+            self.write_skill(root, "provider", {"status": "installable", "blockers": []})
+            (root / "first").symlink_to(first_target)
+            (root / "second").symlink_to(second_target)
+            caller = self.write_skill(
+                root,
+                "caller",
+                {"status": "installable", "blockers": [], "requires": ["first", "second"]},
+            )
+
+            self.assertEqual([], MODULE.audit_dependencies(caller, root))
 
     def test_candidate_must_disable_implicit_invocation(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

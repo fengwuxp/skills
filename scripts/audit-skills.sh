@@ -79,7 +79,7 @@ check_script_patterns() {
   if [[ -f scripts/check-skill-admission.py && -f scripts/read-agent-invocation-policy.rb ]]; then
     invocation_caller_sha="$(shasum -a 256 scripts/check-skill-admission.py)"
     invocation_parser_sha="$(shasum -a 256 scripts/read-agent-invocation-policy.rb)"
-    if [[ "${invocation_caller_sha%% *}" == "61f2cc61ed46d742899780682bbd2ec7b008472d222885b4e78d504dd1c9ea04" \
+    if [[ "${invocation_caller_sha%% *}" == "ba9d38dc730b700c77ce4fc809eac753152ff7f0e54ea199f5379873e633867b" \
        && "${invocation_parser_sha%% *}" == "d4b9731a7038b8b863463f03b9c5859c563a4297edbb5193356c8841a0afcaf1" ]]; then
       output="$(printf '%s\n' "${output}" | awk -v prefix='./scripts/check-skill-admission.py:' 'index($0, prefix) != 1')"
     fi

@@ -8,7 +8,7 @@ import json
 import sys
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
@@ -23,6 +23,30 @@ SPEC.loader.exec_module(MODULE)
 
 
 class YuqueProjectionTests(unittest.TestCase):
+    def assert_cli_rejects_collision(
+        self, source_path: Path, output_dir: Path, link_map: Path | None = None
+    ) -> None:
+        argv = [
+            str(SCRIPT),
+            "--source",
+            str(source_path),
+            "--source-version",
+            "v1.2",
+            "--output-dir",
+            str(output_dir),
+        ]
+        if link_map is not None:
+            argv.extend(["--link-map", str(link_map)])
+        stderr = io.StringIO()
+        with (
+            patch.object(sys, "argv", argv),
+            redirect_stdout(io.StringIO()),
+            redirect_stderr(stderr),
+        ):
+            result = MODULE.main()
+        self.assertEqual(1, result)
+        self.assertIn("output path", stderr.getvalue())
+
     def test_preserves_markdown_syntax_inside_fenced_code_blocks(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             source_path = Path(temp_dir) / "source.md"
@@ -118,6 +142,49 @@ class YuqueProjectionTests(unittest.TestCase):
             self.assertTrue((output_dir / "manifest.json").is_file())
             manifest = json.loads((output_dir / "manifest.json").read_text(encoding="utf-8"))
             self.assertEqual("v1.2", manifest["source_version"])
+
+    def test_cli_rejects_output_collisions_without_mutating_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_path = root / "projection.md"
+            source_path.write_text("# Source\n", encoding="utf-8")
+            original_source = source_path.read_bytes()
+            self.assert_cli_rejects_collision(source_path, root)
+            self.assertEqual(original_source, source_path.read_bytes())
+            self.assertFalse((root / "manifest.json").exists())
+
+            source_path = root / "source.md"
+            source_path.write_text("# Source\n", encoding="utf-8")
+            link_map = root / "manifest.json"
+            link_map.write_text("{}\n", encoding="utf-8")
+            original_link_map = link_map.read_bytes()
+            original_projection = (root / "projection.md").read_bytes()
+            self.assert_cli_rejects_collision(source_path, root, link_map)
+            self.assertEqual(original_link_map, link_map.read_bytes())
+            self.assertEqual(original_projection, (root / "projection.md").read_bytes())
+
+    def test_cli_rejects_symlink_and_hardlink_output_collisions(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_path = root / "source.md"
+            source_path.write_text("# Source\n", encoding="utf-8")
+            original_source = source_path.read_bytes()
+            projection_path = root / "projection.md"
+            projection_path.symlink_to(source_path)
+            self.assert_cli_rejects_collision(source_path, root)
+            self.assertEqual(original_source, source_path.read_bytes())
+
+            projection_path.unlink()
+            projection_path.hardlink_to(source_path)
+            self.assert_cli_rejects_collision(source_path, root)
+            self.assertEqual(original_source, source_path.read_bytes())
+
+            projection_path.unlink()
+            manifest_path = root / "manifest.json"
+            projection_path.write_text("linked output\n", encoding="utf-8")
+            manifest_path.hardlink_to(projection_path)
+            self.assert_cli_rejects_collision(source_path, root)
+            self.assertEqual("linked output\n", projection_path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -120,6 +121,31 @@ def load_link_map(path: Path | None) -> dict[str, str]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def same_file_identity(left: Path, right: Path) -> bool:
+    if left.resolve() == right.resolve():
+        return True
+    try:
+        return left.samefile(right)
+    except FileNotFoundError:
+        return False
+
+
+def validate_output_paths(
+    source_path: Path, link_map_path: Path | None, output_dir: Path
+) -> tuple[Path, Path]:
+    projection_path = output_dir / "projection.md"
+    manifest_path = output_dir / "manifest.json"
+    for output_path in (projection_path, manifest_path):
+        for input_path in (source_path, link_map_path):
+            if input_path is not None and same_file_identity(output_path, input_path):
+                raise ValueError(
+                    f"output path conflicts with input: {output_path}"
+                )
+    if same_file_identity(projection_path, manifest_path):
+        raise ValueError("output path conflicts: projection and manifest are aliases")
+    return projection_path, manifest_path
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
@@ -131,16 +157,22 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    projection, manifest = prepare_projection(
-        args.source, args.source_version, load_link_map(args.link_map)
-    )
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    projection_path = args.output_dir / "projection.md"
-    manifest_path = args.output_dir / "manifest.json"
-    projection_path.write_text(projection, encoding="utf-8")
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    try:
+        projection_path, manifest_path = validate_output_paths(
+            args.source, args.link_map, args.output_dir
+        )
+        projection, manifest = prepare_projection(
+            args.source, args.source_version, load_link_map(args.link_map)
+        )
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        projection_path.write_text(projection, encoding="utf-8")
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    except (OSError, ValueError) as exc:
+        print(f"FAIL output path or input: {exc}", file=sys.stderr)
+        return 1
     print(
         json.dumps(
             {

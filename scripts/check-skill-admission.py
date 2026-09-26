@@ -175,6 +175,13 @@ def audit_dependencies(
     failures: list[str] = []
     visited: set[str] = set()
     active: list[str] = []
+    try:
+        root = repository_root.resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        return [f"{repository_root}: cannot resolve repository root: {exc}"]
+    _, caller_failures = audit_skill(skill_dir)
+    if caller_failures:
+        return caller_failures
 
     def visit(current_dir: Path) -> None:
         current_name = current_dir.name
@@ -192,7 +199,21 @@ def audit_dependencies(
 
         active.append(current_name)
         for dependency in data.get("requires", []):
-            dependency_dir = repository_root / dependency
+            dependency_dir = root / dependency
+            try:
+                resolved_dependency_dir = dependency_dir.resolve(strict=True)
+            except (OSError, RuntimeError):
+                failures.append(
+                    f"{current_dir / 'admission.json'}: requires unknown skill {dependency}"
+                )
+                continue
+            try:
+                resolved_dependency_dir.relative_to(root)
+            except ValueError:
+                failures.append(
+                    f"{current_dir / 'admission.json'}: dependency {dependency} is outside repository root"
+                )
+                continue
             if not (dependency_dir / "SKILL.md").is_file():
                 failures.append(
                     f"{current_dir / 'admission.json'}: requires unknown skill {dependency}"

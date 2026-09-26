@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -19,11 +20,34 @@ class BundleError(ValueError):
     """Raised when a selected runtime bundle is incomplete or invalid."""
 
 
-def _metadata(skills_root: Path, skill: str) -> dict[str, Any]:
-    skill_dir = skills_root / skill
-    metadata_path = skill_dir / "admission.json"
+SKILL_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def _skill_dir(skills_root: Path, skill: str) -> Path:
+    if not isinstance(skill, str) or not SKILL_ID.fullmatch(skill):
+        raise BundleError(f"runtime Skill must be a valid Skill ID: {skill!r}")
+    try:
+        root = skills_root.resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        raise BundleError(f"invalid skills root: {skills_root}") from error
+    try:
+        skill_dir = (root / skill).resolve(strict=True)
+    except FileNotFoundError as error:
+        raise BundleError(f"missing runtime Skill: {skill}") from error
+    except (OSError, RuntimeError) as error:
+        raise BundleError(f"cannot resolve runtime Skill: {skill}") from error
+    try:
+        skill_dir.relative_to(root)
+    except ValueError as error:
+        raise BundleError(f"runtime Skill {skill} resolves outside skills root") from error
     if not skill_dir.is_dir():
         raise BundleError(f"missing runtime Skill: {skill}")
+    return skill_dir
+
+
+def _metadata(skills_root: Path, skill: str) -> dict[str, Any]:
+    skill_dir = _skill_dir(skills_root, skill)
+    metadata_path = skill_dir / "admission.json"
     if not metadata_path.is_file():
         raise BundleError(f"missing admission.json for runtime Skill: {skill}")
     try:
@@ -91,6 +115,68 @@ def self_test() -> None:
             assert "missing admission.json" in str(error)
         else:
             raise AssertionError("missing dependency was accepted")
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        root = Path(tmp_dir) / "skills"
+        outside = Path(tmp_dir) / "outside"
+        root.mkdir()
+        outside.mkdir()
+        _write_metadata(root, "wind-coding-conventions", [])
+        _write_metadata(outside, "outside-skill", [])
+        (root / "outside-skill").symlink_to(outside / "outside-skill")
+        (root / "alias").symlink_to(root / "wind-coding-conventions")
+        (root / "loop").symlink_to("loop")
+
+        for selected in (
+            ["../outside/outside-skill"],
+            [str(outside / "outside-skill")],
+        ):
+            try:
+                resolve_bundle(root, selected)
+            except BundleError as error:
+                assert "valid Skill ID" in str(error)
+            else:
+                raise AssertionError("invalid selected Skill ID was accepted")
+
+        try:
+            resolve_bundle(root, ["outside-skill"])
+        except BundleError as error:
+            assert "outside skills root" in str(error)
+        else:
+            raise AssertionError("external symlink was accepted")
+
+        _write_metadata(root, "invalid-parent", ["../outside/outside-skill"])
+        try:
+            resolve_bundle(root, ["invalid-parent"])
+        except BundleError as error:
+            assert "valid Skill ID" in str(error)
+        else:
+            raise AssertionError("invalid dependency Skill ID was accepted")
+
+        try:
+            resolve_bundle(root, ["missing-skill"])
+        except BundleError as error:
+            assert "missing runtime Skill" in str(error)
+        else:
+            raise AssertionError("missing runtime Skill was accepted")
+
+        try:
+            resolve_bundle(root, ["loop"])
+        except BundleError as error:
+            assert "cannot resolve runtime Skill" in str(error)
+        else:
+            raise AssertionError("symlink loop was accepted")
+
+        _write_metadata(root, "cycle-a", ["cycle-b"])
+        _write_metadata(root, "cycle-b", ["cycle-a"])
+        try:
+            resolve_bundle(root, ["cycle-a"])
+        except BundleError as error:
+            assert "dependency cycle detected" in str(error)
+        else:
+            raise AssertionError("dependency cycle was accepted")
+
+        assert resolve_bundle(root, ["alias"]) == ["alias"]
     print("OK runtime bundle self-test")
 
 

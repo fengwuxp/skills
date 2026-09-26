@@ -105,6 +105,19 @@ def safe_metadata(value: str | None) -> str | None:
     return clean or None
 
 
+def parse_read_at(read_at: str | None) -> tuple[str, str]:
+    timestamp = (
+        datetime.now(timezone.utc).isoformat(timespec="seconds")
+        if read_at is None
+        else read_at
+    )
+    try:
+        parsed = datetime.fromisoformat(timestamp)
+    except (TypeError, ValueError):
+        fail(f"read_at must be an ISO date or datetime: {read_at!r}")
+    return timestamp, parsed.date().isoformat()
+
+
 def metadata_path_for(destination_dir: Path, archive_id: str) -> Path:
     return destination_dir / f"{archive_id}.metadata.json"
 
@@ -161,11 +174,13 @@ def archive_evidence(
     if is_within(archive_root, ROOT):
         fail("archive home must be outside this repository")
     digest = sha256_file(evidence)
-    timestamp = read_at or datetime.now(timezone.utc).isoformat(timespec="seconds")
-    archive_id = f"{timestamp[:10]}-{host_slug(source_url)}-{digest[:12]}"
+    timestamp, archive_date = parse_read_at(read_at)
+    archive_id = f"{archive_date}-{host_slug(source_url)}-{digest[:12]}"
     destination_dir = archive_root / "sources" / archive_id
     destination_file = destination_dir / f"evidence{evidence.suffix.lower()}"
     metadata_file = metadata_path_for(destination_dir, archive_id)
+    if not is_within(destination_dir, archive_root):
+        fail(f"archive directory must stay inside archive home: {destination_dir}")
 
     if not dry_run:
         if destination_dir.exists() and not overwrite:
@@ -247,6 +262,23 @@ def run_self_test() -> None:
             fail("self-test evidence file must be private")
         if metadata_file.stat().st_mode & 0o777 != 0o600:
             fail("self-test metadata file must be private")
+        if metadata["read_at"] != "2026-05-26T12:00:00+00:00":
+            fail("self-test metadata did not preserve read_at")
+
+        date_metadata = archive_evidence(
+            source_url=SELF_TEST_READ_URL,
+            evidence_file=outside_repo,
+            title=None,
+            author=None,
+            published_at=None,
+            read_at="2026-05-27",
+            capture_method="manual",
+            archive_root=archive_root,
+            overwrite=False,
+            dry_run=True,
+        )
+        if date_metadata["read_at"] != "2026-05-27":
+            fail("self-test metadata did not preserve a date-only read_at")
 
         evidence_victim = base / "evidence-victim.txt"
         metadata_victim = base / "metadata-victim.txt"
@@ -272,6 +304,58 @@ def run_self_test() -> None:
             fail("self-test archive overwrite followed an evidence symlink")
         if metadata_victim.read_text(encoding="utf-8") != "KEEP-METADATA":
             fail("self-test archive overwrite followed a metadata symlink")
+
+        for index, invalid_read_at in enumerate(("", "2026-02-30", "../../escape")):
+            invalid_read_root = base / f"invalid-read-at-{index}"
+            try:
+                archive_evidence(
+                    source_url=SELF_TEST_READ_URL,
+                    evidence_file=outside_repo,
+                    title=None,
+                    author=None,
+                    published_at=None,
+                    read_at=invalid_read_at,
+                    capture_method="manual",
+                    archive_root=invalid_read_root,
+                    overwrite=False,
+                    dry_run=False,
+                )
+            except SystemExit as exc:
+                if "read_at" not in str(exc):
+                    fail(f"self-test unexpected invalid read_at failure: {exc}")
+            else:
+                fail("self-test expected invalid read_at rejection")
+            if invalid_read_root.exists():
+                fail("self-test invalid read_at created an archive directory")
+
+        symlink_root = base / "symlink-root"
+        symlink_root.mkdir()
+        symlink_root.chmod(0o755)
+        symlink_victim = base / "symlink-victim"
+        symlink_victim.mkdir()
+        (symlink_root / "sources").symlink_to(symlink_victim, target_is_directory=True)
+        try:
+            archive_evidence(
+                source_url=SELF_TEST_READ_URL,
+                evidence_file=outside_repo,
+                title=None,
+                author=None,
+                published_at=None,
+                read_at="2026-05-26T12:00:00+00:00",
+                capture_method="manual",
+                archive_root=symlink_root,
+                overwrite=False,
+                dry_run=False,
+            )
+        except SystemExit as exc:
+            if "archive" not in str(exc):
+                fail(f"self-test unexpected archive symlink failure: {exc}")
+        else:
+            fail("self-test expected archive symlink rejection")
+        if any(symlink_victim.iterdir()):
+            fail("self-test archive wrote through a parent symlink")
+        if symlink_root.stat().st_mode & 0o777 != 0o755:
+            fail("self-test archive symlink rejection changed root permissions")
 
         repo_evidence = ROOT / "AGENTS.md"
         try:

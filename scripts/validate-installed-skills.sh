@@ -25,14 +25,20 @@ while IFS= read -r skill_md; do
     continue
   fi
 
+  diff_status=0
   differences="$(diff -qr \
     -x '.DS_Store' \
     -x '.idea' \
     -x '__pycache__' \
     -x '*.pyc' \
-    "${source_dir}" "${target_dir}" || true)"
-  if [[ -n "${differences}" ]]; then
+    "${source_dir}" "${target_dir}" 2>&1)" || diff_status=$?
+  if [[ ${diff_status} -eq 1 ]]; then
     fail "installed skill differs: ${skill_name}"
+  # 部分递归 diff 遇到断链只输出诊断，返回值仍为 0。
+  elif [[ ${diff_status} -ne 0 || -n "${differences}" ]]; then
+    fail "installed skill comparison failed: ${skill_name} (diff exit ${diff_status})"
+  fi
+  if [[ -n "${differences}" ]]; then
     echo "${differences}" >&2
   fi
 

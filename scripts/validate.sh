@@ -505,6 +505,14 @@ if CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh >/dev/null 2
 fi
 CODEX_HOME="${parity_home}" ./sync-skills.sh product-architecture-expert >/dev/null
 CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh
+content_probe="${parity_home}/skills/wind-coding-conventions/references/code-style.md"
+mv "${content_probe}" "${tmp_dir}/parity-original.md"
+ln -s "${tmp_dir}/missing-parity-reference" "${content_probe}"
+if CODEX_HOME="${parity_home}" scripts/validate-installed-skills.sh >"${tmp_dir}/parity-read-error.log" 2>&1; then
+  echo "FAIL installed skill parity ignored a comparison error" >&2
+  exit 1
+fi
+mv -f "${tmp_dir}/parity-original.md" "${content_probe}"
 if [[ "${require_installed_parity}" == "1" ]]; then
   scripts/validate-installed-skills.sh
 else
