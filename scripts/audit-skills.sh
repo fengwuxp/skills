@@ -85,6 +85,15 @@ check_script_patterns() {
     fi
   fi
 
+  # 已审查的分发回归只执行暂存目录中的固定 Python 脚本；内容变化后重新复核。
+  local distributed_test_sha
+  if [[ -f scripts/test-distributed-skill-bundles.py ]]; then
+    distributed_test_sha="$(shasum -a 256 scripts/test-distributed-skill-bundles.py)"
+    if [[ "${distributed_test_sha%% *}" == "c01dcd522b80562549c003c07b61ce73e2f02c2c82642c6335294de01fbcc855" ]]; then
+      output="$(printf '%s\n' "${output}" | awk -v prefix='./scripts/test-distributed-skill-bundles.py:' 'index($0, prefix) != 1')"
+    fi
+  fi
+
   # Reviewed historical pilots are never executed by validation. The runner still
   # requires separate model/network authorization. Any file edit restores review.
   # The supply-chain scanner above continues to inspect both complete files.

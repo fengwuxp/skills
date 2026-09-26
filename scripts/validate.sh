@@ -190,6 +190,7 @@ if python3 wise-agent/scripts/validate-learning-evidence.py \
 fi
 python3 scripts/test-skill-evolution-control.py
 python3 scripts/test-skill-learning-loop.py
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/skill-optimization-boundaries-behavior-cases.json"
 
 echo "==> wise-agent user collaboration profile"
 python3 wise-agent/scripts/user-context-ledger.py --self-test
@@ -255,6 +256,7 @@ python3 -m py_compile wise-agent/scripts/user-context-ledger.py
 python3 -m py_compile scripts/audit-reference-indexes.py
 python3 -m py_compile scripts/check-skill-admission.py
 python3 -m py_compile scripts/test-check-skill-admission.py
+python3 -m py_compile scripts/test-distributed-skill-bundles.py
 python3 -m py_compile scripts/check-skill-evidence.py
 python3 -m py_compile scripts/test-check-skill-evidence.py
 python3 -m py_compile scripts/audit-skill-security.py
@@ -469,6 +471,7 @@ python3 scripts/test-evaluate-skill-behavior.py
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/skill-consumer-behavior-cases.json"
 run_gate python3 scripts/prepare-skill-consumer-eval.py --validate
 python3 scripts/test-prepare-skill-consumer-eval.py
+python3 scripts/test-distributed-skill-bundles.py
 
 echo "==> skill quality advisory"
 python3 scripts/test-audit-skill-security.py

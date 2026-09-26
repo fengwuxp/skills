@@ -78,7 +78,9 @@ python3 wise-agent/scripts/check-runtime-bundle.py \
   --skill wind-coding-conventions
 ```
 
-预检会递归读取安装目录中各 Skill 的 `admission.json`，确认依赖闭包存在且状态为 `installable`；缺失时只停止依赖该能力的动作，不自动安装、同步或预加载整棵能力树。同步脚本仍只执行用户明确指定的目标，预检是路由执行前的确定性证据。
+预检会递归读取安装目录中各 Skill 的 `admission.json`，确认依赖闭包存在、状态为 `installable` 且入口 `SKILL.md` 可读；缺失时只停止依赖该能力的动作，不自动安装、同步或预加载整棵能力树。需要验证当前任务的必需资源时，重复传入 `--resource <skill-id/包内文件路径>`，例如 `--resource wind-coding-conventions/references/code-style.md`；资源必须属于本次依赖闭包，实际文件留在归属包内并可读。它只检查显式资源，不发现全部隐式依赖，也不执行脚本。同步仍只复制用户指定的目标，预检和分发后的回归各自独立。
+
+分发验证应从新的消费工作目录检查暂存包及其声明依赖，避免源仓库规则或全量安装掩盖缺失资源；只执行已审查、明确列入验证范围的本地脚本。源仓库的 `scripts/test-distributed-skill-bundles.py` 覆盖知止者单包、架构师与 Wind 约规组合的代表性链路，不随 Skill 安装。入口和资源可读、离线脚本成功不证明模型已经加载规则、全部隐式依赖闭合或行为效果提升。
 
 `check-runtime-bundle.py` 只检查本仓库分发契约。外部 Skill、官方插件或其他资源提供方按能力目录给出的实际位置读取入口，再核对其声明的依赖、来源、权限、网络与持久化边界；不要求它们携带本仓库的 `admission.json`，也不假设它们都位于 `$CODEX_HOME/skills`。缺少私有 metadata 不等于能力不可用，入口存在也不代表已审查或获执行授权。已确认来自本仓库的包缺少 metadata 或依赖时仍应报缺口，不能将其改判成外部包绕过预检。
 

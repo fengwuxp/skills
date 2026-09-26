@@ -407,7 +407,11 @@ git diff --check
 
 正式同步 Codex 后运行 `scripts/validate-installed-skills.sh`；也可用 `./scripts/validate.sh --require-installed-parity` 将真实 Codex 安装态纳入完整验证。默认 `./scripts/validate.sh` 只验证源仓库和隔离的同步 fixture，并会明确输出 parity 未检查。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在目标的 `skills/.backups/` 下。Claude Code 目标使用同一份复制与备份逻辑，但当前安装一致性脚本只检查 Codex 目标，可用 `diff -qr` 对照 Claude 目标。
 
+分发后的定向回归运行 `python3 scripts/test-distributed-skill-bundles.py`，统一验证也会执行。它只暂存知止者单包、架构师与 Wind 约规组合，从新消费目录检查入口、指定资源和已审查的离线脚本；缺依赖、缺资源及越界链接必须失败。运行时用 `wise-agent/scripts/check-runtime-bundle.py --skills-root <能力目录> --skill <技能ID> --resource <技能ID/必需文件>` 检查本次所需资源，可重复传 `--skill` 和 `--resource`。这些结果不证明全部引用闭包、操作系统级隔离、模型自然加载或真实任务效果。
+
 `admission.json` 的 `evidence_mode` 与 `fixtures/skill-eval/evidence-gates.json` 共同声明证据强度：`structural-only` 只表示结构、脚本或普通 fixture 已校验且不得声明行为门禁；`contract-only` 必须有至少一个行为案例门禁，只证明案例契约可用，不证明 `source_profiles` 仍匹配当前源码，也不代表已取得 live 评分；`behavior-scored` 还必须有 active baseline/candidate、盲评、评分和 release gate。`scripts/check-skill-evidence.py` 按声明模式检查对应门禁：`contract-only` 只核对案例契约，`behavior-scored` 才强制核对 source、case digest、baseline/candidate runner/model、blind judgments、scores 和 release gate。模式缺失或与门禁不一致时直接阻断；进入行为收集或评分前必须用 `validate --verify-sources` 重新核对来源，漂移时基于当前 source profile 重新采集、盲评和评分，不得只更新 hash、case digest 或既有 score。
+
+反复调优候选文本并要声明泛化收益时，按 [优化实验的固定契约与留出集](./wise-agent/references/skill-learning-backflow.md#61-优化实验的固定契约与留出集) 区分可改文本、固定验收依据、开发集与独立留出集，复用现有章节冻结、盲评和版本证据。普通修复不触发该流程；未见数据、隔离和真实评测仍须另有证据，新增案例文件只表示契约已登记。
 
 `scripts/evaluate-skills.py` 只做离线静态预检，不能替代真实 Agent 行为。默认检查项目目录；需要核对指定目录时，显式传入来源和路径，递归报告重复 Skill ID、完全重复的 `description` 与无效 metadata，指向同一真实目录的软链接只记为 alias。语义相似不做词法自动裁决；`fixtures/skill-eval/prompt-cases.json` 中同一 `competition_group` 的真实请求只声明并静态校验唯一触发 Owner 和竞争者 hard negative，真实触发行为仍需 live eval / smoke：
 

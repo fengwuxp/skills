@@ -263,6 +263,9 @@
       },
       {
         "cases": "fixtures/skill-eval/project-agents-template-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/skill-optimization-boundaries-behavior-cases.json"
       }
     ],
     "payment-expert": [

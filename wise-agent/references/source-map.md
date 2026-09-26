@@ -52,6 +52,8 @@
 
 ## 已参考的公开来源
 
+- [skill-spec 工程规范文章](https://mp.weixin.qq.com/s/UDsGCZnnbR_ED8WzpuvT8g)：Alan Hsu，2026-09-21 发布；2026-09-26 普通抓取失败后通过浏览器读取完整正文，并检查 [源码提交 28c8111](https://github.com/xsoway/skill-spec/tree/28c81116a6b4eedf02a7b6b374240a5da8442d42)。本地包校验与 5 项单测通过；定向反例表明其校验器未实际解析 YAML 或检查链接，优化 preflight 仅检查文件存在，不能把静态成功当作模型效果或训练就绪。只吸收分发后的必要资源验证、优化实验固定契约与独立留出集，分别归位到 `capability-routing.md` 与 `skill-learning-backflow.md`；复用现有依赖闭包、章节冻结和评测机制，不照搬强制 `prompts/`、固定标题、每包复制校验器或禁止所有跨 Skill 依赖。其 `metadata.key` 是作者约定，非当前 [官方 Skill 文档](https://learn.chatgpt.com/docs/build-skills) 的必需发现字段。未运行 Skill-up 模型评测或 SkillOpt 训练，不安装其工具、不复制正文或实现；上游版本、官方元数据或工具接口变化时重新核验。
+
 - [AI 时代，给自己做一件作品](https://zhuanlan.zhihu.com/p/2081390049430713421)：作者 `NGINX洪志道`，页面发布时间 2026-09-10 15:13；2026-09-24 常规抓取失败后通过 Codex in-app Browser 读取标题、作者、时间与正文。只提炼小范围完整交付、专业反馈和实际修改校正理解的方法，应用到 `cognition-and-capability-model.md` 的“人、架构与 AI 的协作边界”；作者经历及对具体模型的评价只作自述，不作为当前模型能力、产品可用或学习效果证据，不复制正文。人机能力、权限、责任和证据的分离是本仓库结合现有规则的判断；华夏智慧只校准名实、时位与知止，不据经典断定人或 AI 的能力高低。
 - NASA [Avionics and Software](https://www.nasa.gov/reference/avionics-and-software/)：2026-09-24 读取 Flight Computers 与 Backup Flight Software 相关正文，核对故障检测、停止异常输出、恢复及不同实现的备份机制。只将发现、限制影响与恢复的思路提炼到 `verification-review-release.md` 的“可错组件的发现、限制与恢复”；Agent 共同错误前提与证据边界属于本仓库工程判断，不把航天实现、冗余数量或恢复时长移植为 Agent 标准，不从案例推导当前 Harness 或多模型投票已经可靠，不复制原文、配图或设备参数。
 
