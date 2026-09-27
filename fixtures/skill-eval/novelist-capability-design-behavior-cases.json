@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.2,
+      "concision": 0.05
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "description": "小说能力与传习共同体设计的合成 contract-only 案例：取象不预授能力，分辨根本与行用，保留作者分类和不同完成层级；不代表真实创作效果或正典准入。",
+  "cases": [
+    {
+      "id": "capability-design-beyond-renamed-effects",
+      "category": "root-and-application",
+      "risk": "medium",
+      "prompt": "正在设计两门虚构技艺：一门称“照影”，一门称“闻纹”，目前都只是让使用者先察觉对方动作再抢先出手，差异只有光色和招名。作者尚未要求它们必须是两条根本道路。请梳理当前设计并提出最小改进，不写完整招式表。",
+      "criteria": [
+        "去掉名称比较实际问题、学习方法、行动选择和失效方式，识别当前只是同一种行用机制；不把换名换色当根本差异。",
+        "允许承认同路异用，或提出真正改变问题与实践的候选；区分根本方法、个人路径、例招和现象，不用单招倒推完整传承。",
+        "保留候选与作者决定边界，不为凑道路数量强补历史、人物或统一升级表。"
+      ]
+    },
+    {
+      "id": "unconfirmed-ability-is-not-granted-or-forbidden",
+      "category": "open-capability",
+      "risk": "high",
+      "prompt": "作者只确认某学派用羽纹象征轻快，尚未决定门人能否飞行。协作者先写他们可以飞越高墙，被指出无依据后又加上永久禁止飞行的规则。现在需要设计一个潜入庭院的场景，门人的体能、工具和权限也未交代。请处理。",
+      "criteria": [
+        "同时撤回由意象自动授能与未经作者确认的永久禁令；保留飞行尚未定案，不替作者选定。",
+        "场景实际调用前核对触发、身体或器物承载、作用范围、代价、失败与权限，不直接写成飞越或潜入成功。",
+        "可提出依已知条件成立的有界候选，缺失条件保持待确认；不据此另造全项目禁题。"
+      ]
+    },
+    {
+      "id": "preserve-confirmed-elemental-classification",
+      "category": "author-choice-hard-negative",
+      "risk": "high",
+      "prompt": "作者已确认三门法术分别以风、火、石为主要分类，也有意让其中两门共享训练基础。本轮仅检查已写出的使用条件，不允许修改分类或展开其它设定。有人要求按取象校准把属性分类全部推翻。请推进当前检查。",
+      "criteria": [
+        "保留已确认的分类和有意同源，只检查本轮实际使用条件与现有约束；不把方法提示变成改写作者决定的授权。",
+        "不会为证明差异而补齐新人物、组织或训练级数；给出当前已知与待核部分即可。"
+      ]
+    },
+    {
+      "id": "separate-teaching-membership-office-and-ability",
+      "category": "community-responsibility",
+      "risk": "high",
+      "prompt": "一个虚构制陶社中，有人师从外地窑师但在本社居住，技艺最好的人不负责公窑，一位不会烧窑的成员受托保管共同粮钱。请让这个共同体在日常中可运作，只做组织大纲，不给出最终人名。",
+      "criteria": [
+        "分别处理技艺传承、共同体归属、受托职事和个人本领，不因高手身份自动授予掌账或公窑决定权，也不把外地师承解释为无法共同生活。",
+        "按给定规模说明供养、共用空间、传教任事、交接和失灵反馈，不填一套统一堂口、等级或官署。",
+        "只交付大纲和明确待定项，不把人物候选、某次交接或具体事故写成已发生。"
+      ]
+    },
+    {
+      "id": "ordinary-desire-without-compulsory-moral-reform",
+      "category": "reuse-character-and-daily-life",
+      "risk": "medium",
+      "prompt": "写一个非正典生活片段：两位朋友比赛折纸，其中一人只想赢，另一人喜欢把纸角压得整齐，结束后一起吃点心。这里的纸鹤会短暂模仿折纸人的步态。没有危机，也不需要他们学会放下执着。",
+      "criteria": [
+        "让争胜、审美、关系与可感动作自然发动片段，人物可保留原有兴致，不统一收成被提醒后放下的道德弧。",
+        "不强造伤亡、救灾、阴谋或不可逆损失来证明幻想有用，纸鹤不升级成身份或品德证物。",
+        "维持候选身份和有限设定，生活片段不能反向证明尚未设计的高风险能力已经成立。"
+      ]
+    },
+    {
+      "id": "narrow-old-open-state-without-promoting-the-whole-design",
+      "category": "reuse-state-closure",
+      "risk": "high",
+      "prompt": "作者明确采用了工坊大纲中的轮值交接原则，但具体轮值人选和下一次交接仍未定。摘要却保留“交接制度全部待定”，一份演示场景也尚未采用。本轮已授权同步这条原则的正文与摘要，请处理并说明完成范围。",
+      "criteria": [
+        "将旧摘要收窄为具体人选、执行条件或场景仍待定，保持已采用原则与唯一权威一致，不重问已确认原则。",
+        "不把原则确认扩大为整份提案、人物或演示事件确认；区分大纲归位、场景发生与更高阶段准入。",
+        "只同步本轮授权的真实依赖，不新增事件或用大纲闭合代替承重场景的能力、时距和因果检查。"
+      ]
+    }
+  ]
+}

@@ -160,6 +160,9 @@
       },
       {
         "cases": "fixtures/skill-eval/natural-expression-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-capability-design-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [
