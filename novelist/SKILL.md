@@ -21,6 +21,7 @@ description: Use when 用户要创作、规划、续写、重写或评审小说�
 - **让选择推动因果，让代价与承诺完成结算**：偶然可以制造困境，不能替人物作出核心选择。
 - **容纳偶然、误判、多解与未知**：世界规则与后果自洽，人物可以不理性，但须有可回望的处境或心理支点。
 - **让立意、文明与幻想回到人间，让技法退居其位**：幻想、结构、视角和文风最终服务人物、生活、因果及读者承诺。
+- **正文默认以古典白话为第一语体基线**：小说正文与小说性片段优先使用现代读者可读的古典白话句法、句读和汉语气韵；项目已确认的其他语体或用户本轮更具体的语体要求优先。分析、规划、状态和验证文档不套用正文腔调。
 
 ## 创作契约
 
@@ -71,7 +72,7 @@ description: Use when 用户要创作、规划、续写、重写或评审小说�
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
 - 需要参考案例、示例对照或反例诊断：只按任务读取 `references/craft-case-library.md` 对应一节；合成案例不成为正典或来源证据。需要复核外部方法的出处、固定版本或许可证时，另读 `references/source-map.md`，普通创作不加载来源索引。
 - 人物设计、人物弧光、重要配角或对手、人物动态档案、人物外号、绰号、诨名与群体称呼，以及人物代入、角色扮演或人物反应推演：读 `references/character-craft.md`；确需成篇再读 `references/scene-and-prose-craft.md`。角色扮演只是受正典与有限认知约束的临时创作方法，不创建持久人格或第二角色 Owner；确需建档时使用 `assets/character-dynamic-profile-template.md`，不强制所有人物填满。
-- 场景展开、凡人 / 武侠 / 玄幻 / 仙侠 / 魔法等打斗与斗法、功法 / 武器 / 法宝和人物成长、妖鬼神魔或灵兽行动、战争、市井、家庭、朝堂、礼制与风土场面，以及导演调度、编辑 / 观众复核、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md`；只交付正文时不展示规划过程。
+- 场景展开、凡人 / 武侠 / 玄幻 / 仙侠 / 魔法等打斗与斗法、功法 / 武器 / 法宝和人物成长、妖鬼神魔或灵兽行动、战争、市井、家庭、朝堂、礼制与风土场面，以及导演调度、编辑 / 观众复核、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`；用户要求古典白话文、句读、汉语气韵或四大名著功能参照时，再读 `references/classical-vernacular-style.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md` 与语体 reference；只交付正文时不展示规划过程。
 - 短篇 / 长篇 / 超长篇开写前的世界准备度，以及天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进和东方幻想：读 `references/worldbuilding-and-research.md`。修行道路、技艺体系或传习共同体只剩名相、属性或职位表时，定位其中的“取象、能力与传承”，分辨实际行用与承责关系。
 - 旧稿提炼、版本归位、人物知情、时间地理一致性、伏笔与承诺闭环、三层真实和重写：读 `references/continuity-and-revision.md`。
 - 项目已经用 `RW-nnn` 维护单一决策台账时，执行 `python3 scripts/check-novelist-continuity-ledger.py --root <项目根目录> --ledger <相对台账路径>` 检查定义唯一和引用可解析；输入只限显式项目根与台账，脚本只读 Markdown，输出本地校验摘要，不写文件、不联网。项目未采用该编号契约时不创建或强推此台账。

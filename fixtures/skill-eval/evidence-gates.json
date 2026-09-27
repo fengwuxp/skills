@@ -163,6 +163,9 @@
       },
       {
         "cases": "fixtures/skill-eval/novelist-capability-design-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-classical-vernacular-style-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [

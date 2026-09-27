@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.25,
+      "actionability": 0.2,
+      "safety": 0.1,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0.1,
+    "max_safety_regression": 0.1,
+    "candidate_weighted_score_must_improve": true,
+    "require_auditable_judgments": true
+  },
+  "description": "小说家古典白话文、汉语句读与训诂边界的 contract-only 案例。只固定规则可观察方向，不证明模型文风质量、古典小说仿写效果或读者验收。",
+  "cases": [
+    {
+      "id": "classical-vernacular-is-primary-prose-baseline",
+      "category": "style-routing",
+      "risk": "high",
+      "prompt": "为一段东方历史幻想正文定调。作者要求古典白话文为第一优先级，并以三国、水浒、西游、红楼的功能经验作参照。请写出语体选择和落笔原则，分析部分用现代中文，不直接仿写任何作品。",
+      "criteria": [
+        "明确古典白话文是正文叙述底色，现代白话句法为骨，不写成整篇文言、翻译腔或辞藻堆砌。",
+        "将四部作品拆为叙事功能参照，说明取舍而非拼接成一套固定腔调；不复制原句、人物口吻或标志性套语。",
+        "区分正文风格与分析、规划、验证文档的表达范围。"
+      ]
+    },
+    {
+      "id": "sentence-punctuation-carries-rhythm",
+      "category": "sentence-rhythm",
+      "risk": "high",
+      "prompt": "修订一段赶路后入城的正文。当前草稿每句都独立成段，短句密集，读来像分镜提示；用户要求句读自然、文辞相接、长短有致。请说明应如何改，不补新的故事事实。",
+      "criteria": [
+        "用逗号、分号、句号等承接动作、注意、转折和落点，让句读服务汉语语义和呼吸，不靠每句另起一段制造节奏。",
+        "长句用于连续感受、铺陈或判断，短句用于决定、突变和落槌；不把长句写成无主次的堆叠，也不把关键动作切成电报。",
+        "不因修节奏新增人物往事、场外动作或未给出的因果。"
+      ]
+    },
+    {
+      "id": "preserve-sinitic-expression-without-translationese",
+      "category": "sinitic-expression",
+      "risk": "high",
+      "prompt": "请把一段现代翻译腔的玄幻叙述改成古典白话底色：反复出现“他意识到自己必须作出决定”“与此同时环境发生了变化”“值得注意的是”等抽象连接。保持事实和 POV 不变。",
+      "criteria": [
+        "用汉语的动词、话题、意合、虚词和自然省略重写，让句子围绕人物所见所做相接。",
+        "删除或改写翻译腔、抽象名词堆叠和说明腔，但保留必要的时间、转折与因果清晰度。",
+        "不以生僻古词、整齐排比或全篇文言替换现代翻译腔。"
+      ]
+    },
+    {
+      "id": "four-classics-as-functional-reference",
+      "category": "reference-boundary",
+      "risk": "high",
+      "prompt": "用户说“写得像三国、水浒、西游、红楼”，但没有指定要仿哪一部。请先拆解可借鉴的功能维度，再给一个综合叙述基线；不引用原文，不把四部作品当作同一种声音。",
+      "criteria": [
+        "把参照拆成叙事推进、口语与人物出场、奇诞伸缩、日常关系与细密观察等功能维度，说明本段只选当前需要的少数维度。",
+        "明确不复制原文、角色、标志性句式和作者口吻；古典白话底色优先于作品表面标签。",
+        "保留作品自身人物声音、时代、阶层和 POV，不用四种风格平均混合。"
+      ]
+    },
+    {
+      "id": "philology-checks-archaic-word-use",
+      "category": "exegesis-boundary",
+      "risk": "high",
+      "prompt": "正文想用“霜华”“觌面”“却说”等带古典色彩的词。请判断写作时应检查什么；材料没有指定具体古籍句例，也没有要求考据报告。",
+      "criteria": [
+        "检查词在本句的语法位置、语境义、感情色彩、时代层级和人物语体；没有证据时保持文学构义或换成清楚白话。",
+        "涉及字源、通假、音韵、训释或时代语感的事实转给 hanzi-philology，不凭字形相似、现代同音或模型记忆下结论。",
+        "不把训诂卡变成正文，不为古雅而堆生僻词，也不因未做考据就阻断普通文学构义。"
+      ]
+    },
+    {
+      "id": "vital-long-sentences-and-force",
+      "category": "vitality-and-force",
+      "risk": "medium",
+      "prompt": "写一小段雨夜送信的正文：人物焦急，却不能靠连续感叹、形容词和“命运”“沉重”等抽象词制造力量。要求句子有生命力，读来舒服而有气力。",
+      "criteria": [
+        "让力量来自具体动词、器物、身体、阻力、选择和后果；气韵从前一句的注意或动作自然接到后一句。",
+        "关键决定或撞击可短，蓄势、雨声、路途和心理相连处可用有呼吸的长句；不机械追求短句或长句。",
+        "不追加用户未给出的背景、秘密或象征解释，不以作者点评替代人物行动。"
+      ]
+    },
+    {
+      "id": "de-character-should-be-reduced-by-function-not-counted",
+      "category": "grammar-and-rhythm",
+      "risk": "high",
+      "prompt": "请审一段古典白话正文，其中连续出现“他所看见的山门的旧匾的字样的颜色已经褪了”。作者建议全篇删除“的”字，以求古雅。请按汉语句法、句读和气韵判断。",
+      "criteria": [
+        "先辨每个“的”的领属、定语和说明功能，保留必要的边界，指出可以用动词、短分句、并列或自然省略收束的部分。",
+        "明确“少用的”是局部朗读和改写提示，不是禁词、统计阈值或古典白话准入条件；删改后仍须清楚谁看见什么、字样如何褪色。",
+        "不以全篇改成文言、强行倒装或生造古语替代现代翻译腔；改写应保持人物声音、事实和POV。"
+      ]
+    },
+    {
+      "id": "style-scope-negative-for-analysis",
+      "category": "scope-boundary",
+      "risk": "medium",
+      "prompt": "用户要求输出一份小说大纲和一份正文片段。请判断两者的语体：大纲用于讨论结构和状态，正文按已确认的古典白话基线落笔。",
+      "criteria": [
+        "大纲、状态、验证与作者讨论使用清楚的现代中文，不把古典白话装饰扩散到项目文档。",
+        "正文片段才执行古典白话、句读、汉语气韵和人物声音基线；两种交付不混淆。"
+      ]
+    }
+  ]
+}
