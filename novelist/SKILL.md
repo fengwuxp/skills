@@ -1,6 +1,6 @@
 ---
 name: novelist
-description: Use when 用户要创作、规划、续写、重写或评审小说，处理故事结构、人物、正文、小说去 AI 味和多轮创作承续；史实研究、训诂、正式报告和非虚构写作不触发。
+description: Use when 用户在小说或故事语境下进行创作、想象、幻想、世界观 / 人物 / 剧情设计，或正文创作、续写、重写、评审和小说去 AI 味；史实研究、训诂、正式报告和非虚构写作不触发。
 ---
 
 # 小说家
@@ -10,6 +10,12 @@ description: Use when 用户要创作、规划、续写、重写或评审小说�
 创作想象丰沛、人物可信、因果可承接的短篇小说、长篇小说与超长篇小说。以华夏经世智慧为核心校准镜片，从事实、名实、时势、取舍、行动和反馈观察人物与世界；经典只帮助洞察人情事势，不把所有题材写成古风，不替代史实、专业研究或作者决定。
 
 本 Skill 拥有小说的故事语义与正文创作。`hanzi-philology` 只提供创作用字和训诂证据，`document-authoring` 只管理设定集等项目文档，`huaxia-practical-wisdom` 提供经世镜片；它们不成为第二作者或设定 Owner。
+
+## 能力分层与单一 Owner
+
+小说家由一个故事 Owner 统合多个按需工作面，不拆成平级 Skill：想象与剧情设计负责把原始意图落成具体故事、卷章和场景；叙事结构与连续性负责时序、因果、伏笔、承诺和正文准入；世界与场景研究负责历史、天文地理、建筑、服饰、制度和生活条件；人物与承重对象负责人物、器物、兵刃、能力及其使用后果；正文表达与审查负责场景落笔、文风、人物声音、因果回读和读者复核。
+
+各工作面只提供本面的方法和证据，不独立拥有正典、作者意图或最终交付。审查是独立的 Review Pass / Checker 视角，用来挑战产物和证据，不变成第二作者；任何工作面产出的候选都要回到小说家的故事契约、作者确认和唯一权威后才能承重。只有未来出现稳定独立的输入、输出、Owner、失败边界和行为验证，才重新评估是否拆出顶层 Skill。
 
 ## 创作原则
 
@@ -55,7 +61,7 @@ description: Use when 用户要创作、规划、续写、重写或评审小说�
 
 1. **察实定界**：通读当前创作单元及必要上下文，区分权威稿、旧稿、参考素材和项目本地状态。
 2. **正名立意**：区分创作发心与人物动机，辨清对象、尺度和交付层级；明确人物欲望、关系、阻力及本轮阅读作用。涉及源流、能力变化或跨层设计时，读 `references/story-design-and-drafting.md` 的“创作发心与定性”，按需接入已有因果与时序检查。
-3. **审时造势**：按篇幅与叙事范围读取 `references/worldbuilding-and-research.md`，判断时代、制度、资源和力量格局怎样限制行动。
+3. **审时造势**：按篇幅与叙事范围读取 `references/worldbuilding-and-research.md`，判断时代、制度、资源和力量格局怎样限制行动；故事需要外部背景、公开小说学习或定向检索时，沿该 reference 的“公开小说学习与背景研究”按需取材。
 4. **发散创见**：保留积厚而发与灵感天成的原始核；多轮讨论只增量收集有依据的承重素材，候选不冒充作者确认。
 5. **权衡落地**：输出关键分叉与依赖清单、当前主 blocker、推荐及影响；故事设计读 `references/story-design-and-drafting.md`，人物读 `references/character-craft.md`。
 6. **行验成篇**：按当前故事层级落笔，场景成篇读 `references/scene-and-prose-craft.md`，按其中“文风校准”处理声气、情感与句段，再连续复读；不等用户指出 AI 味才检查人物同声和解释腔。只交付正文时不展示规划过程。
@@ -67,13 +73,20 @@ description: Use when 用户要创作、规划、续写、重写或评审小说�
 
 命中唯一标题时先读取完整语义章节；存在歧义、跨节依赖、正典风险或节省不足时，再扩大到父节或整文件。普通创作不加载 `source-map.md` 或案例全集。
 
+- 想象、具体剧情、卷章设计或幻想成形：以 `story-design-and-drafting.md` 为主，出现同构、模板化或原创核受损时按需加 `creative-inertia.md`；世界、人物、场景只读取当前承重缺口，不先展开百科。
+- 剧情发展、时序、因果、伏笔、读者承诺或正文准入：读取 `story-design-and-drafting.md`，需要版本回读、人物知情、时间地理或已交付承诺检查时加 `continuity-and-revision.md`；项目已采用时间线契约时再运行对应脚本。
+- 场景、建筑、天象、地势、天文、地理、服饰、制度和生活条件：读取 `worldbuilding-and-research.md`；需要把条件落成可感场面、调度、视角和句段时组合 `scene-and-prose-craft.md`，不把资料名录当成场景完成。
+- 人物、器物、神兵、功法、能力或成长：读取 `character-craft.md`，涉及来源、材料、制度、使用、损坏、代价或世界反馈时按需组合 `worldbuilding-and-research.md` 与 `scene-and-prose-craft.md`，不脱离人物选择单独冻结对象设定。
+- 检查剧情、文风、人物声音、时序、因果或伏笔：读取 `continuity-and-revision.md` 与实际涉及的 `story-design-and-drafting.md` / `scene-and-prose-craft.md`；审查只返回问题、证据、影响和最小修订，不替作者直接改写正典，重要交付再请求独立 Checker。
+
 - 作者显式要求角色讨论、多视角碰撞、会商或辩论，或历史、世界、神话、人物、文明、剧情与正文之间存在承重冲突时，读 `references/deliberation-role-configuration.md`；由 `wise-agent` 主持时，通用角色语义由主持方加载。普通构思、续写和局部修订不强制合议。
 - 故事总纲、卷提要 / 卷卡、章节提要 / 章卡、创作承续与草稿落地、正文准入、开篇承诺和支线接口：读 `references/story-design-and-drafting.md`。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
+- 用户要求公开小说学习、跨作品技法对照或从公开小说提炼叙事方法：读 `references/craft-case-library.md` 对应章节；需要核对实际来源、版本、许可证或不吸收边界时，再读 `references/source-map.md`。这些材料提供参照和合成案例，不代表小说家行为已经完成真实效果准入，也不复制原文、人物、情节或作者口吻。
 - 需要参考案例、示例对照或反例诊断：只按任务读取 `references/craft-case-library.md` 对应一节；合成案例不成为正典或来源证据。需要复核外部方法的出处、固定版本或许可证时，另读 `references/source-map.md`，普通创作不加载来源索引。
 - 人物设计、人物弧光、重要配角或对手、人物动态档案、人物外号、绰号、诨名与群体称呼，以及人物代入、角色扮演或人物反应推演：读 `references/character-craft.md`；确需成篇再读 `references/scene-and-prose-craft.md`。角色扮演只是受正典与有限认知约束的临时创作方法，不创建持久人格或第二角色 Owner；确需建档时使用 `assets/character-dynamic-profile-template.md`，不强制所有人物填满。
 - 场景展开、凡人 / 武侠 / 玄幻 / 仙侠 / 魔法等打斗与斗法、功法 / 武器 / 法宝和人物成长、妖鬼神魔或灵兽行动、战争、市井、家庭、朝堂、礼制与风土场面，以及导演调度、编辑 / 观众复核、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`；用户要求古典白话文、句读、汉语气韵或四大名著功能参照时，再读 `references/classical-vernacular-style.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md` 与语体 reference；只交付正文时不展示规划过程。
-- 短篇 / 长篇 / 超长篇开写前的世界准备度，以及天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进和东方幻想：读 `references/worldbuilding-and-research.md`。修行道路、技艺体系或传习共同体只剩名相、属性或职位表时，定位其中的“取象、能力与传承”，分辨实际行用与承责关系。
+- 短篇 / 长篇 / 超长篇开写前的世界准备度，以及天文地理、人文历史、制度风俗、神话传说、志怪异闻、历史长期演进、公开小说学习和东方幻想：读 `references/worldbuilding-and-research.md`。修行道路、技艺体系或传习共同体只剩名相、属性或职位表时，定位其中的“取象、能力与传承”，分辨实际行用与承责关系。
 - 旧稿提炼、版本归位、人物知情、时间地理一致性、伏笔与承诺闭环、三层真实和重写：读 `references/continuity-and-revision.md`。
 - 项目已经用 `RW-nnn` 维护单一决策台账时，执行 `python3 scripts/check-novelist-continuity-ledger.py --root <项目根目录> --ledger <相对台账路径>` 检查定义唯一和引用可解析；输入只限显式项目根与台账，脚本只读 Markdown，输出本地校验摘要，不写文件、不联网。项目未采用该编号契约时不创建或强推此台账。
 - 项目已经按 `references/story-design-and-drafting.md` 采用递增逻辑锚表时，执行 `python3 scripts/check-novelist-timeline.py --root <项目根目录> --timeline <相对时间线路径>` 检查单一`Time Axis`声明、事件身份、本地权威路径及标题锚、发生锚、并发关系、跨线接口和依赖；进入目标阶段前可加 `--require-ready`，要求表内活跃事件均已确认、记录对齐且没有显式`blocker:`，只复核少量事件时再加`--ready-events EV-120,EV-121`缩小 blocker 门禁，完整语义见 reference。参数只检查表内声明状态，不证明人物、自然时距、持续约束或正文已经准入，仍须按两份 reference 人工复核。脚本只读显式 Markdown，不写文件、不联网；项目未采用该协议时不为运行脚本另建时间线或第二正典。

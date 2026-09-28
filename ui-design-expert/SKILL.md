@@ -12,6 +12,12 @@ description: |
 
 它不负责定义产品业务语义、规则和验收口径，也不替代前端工程实现、源码 CR 或生产发布。跨产品、设计和工程推进仍由当前 Agent 持有目标，能力装载遵守当前消费项目实际生效的规则，不依赖 Skills 源仓库 `AGENTS.md`；产品事实由 `product-architecture-expert` 稳定，界面设计由本 Skill 负责，代码实现与工程验证由 `senior-software-architect` 负责。
 
+## 能力分层与单一 Owner
+
+UI 设计专家由一个界面设计 Owner 统合四个工作面：任务流与信息架构、视觉与设计系统、原型和设计资产适配、可用性验证与实现后 Design QA。Figma、墨刀、HTML、截图和浏览器是不同载体或证据，不是平级 Skill；视觉、交互和可用性也不能互相替代，但共同服务同一界面契约。
+
+产品语义和业务规则回到 `product-architecture-expert`，源码实现与工程验证回到 `senior-software-architect`；候选 `requirement-acceptance-testing` 仅在 admission 通过后使用。Design QA 可以独立挑战设计或实现证据，但不改变产品正典或替代前端工程 Owner。
+
 ## 快速止损门
 
 先识别本轮要验证的 Web 页面或流程。完整 Figma / 整站、全套设计系统、未来角色 / 多端或迁移层只有具备当前目标、来源权威、Owner 和独立验收依据时才进入范围；剔除无依据的整站、设计系统或迁移前置，继续当前已授权任务，读取与它直接相关的 reference 和页面证据。选择能回答当前问题的最低原型层级；缺口只暂停依赖它的裁决，不中断有证据支持的局部分析、自检或已授权修复。

@@ -11,6 +11,12 @@ description: Java/Wind 编码与测试约规。纯规范、注释/Javadoc 或 Ja
 
 本 Skill 只回答“当前 Java 项目应启用哪层约规、具体约规是什么、当前设计或代码是否偏离约规”。纯约规检查由本 Skill 主责；源码设计、代码 CR、Bug 修复、TDD 和验证不触发本 Skill 主责，但必须作为规则依赖由 `senior-software-architect` 实际读取适用章节，不能把“不主责”解释成“不加载”；结构化 Java Service 生成继续交给 `java-service-code-generator` 并在生成前消费规则。
 
+## 能力分层与单一 Owner
+
+本 Skill 是一套规则权威，不拆成通用 Java、格式、测试、Wind、Spring 或数据库等平级 Skill。规则按证据分层：通用 Java 是所有 Java 项目的基础；IDEA / 格式与可读性约束表达方式；框架和依赖 profile 只在真实依赖出现时启用；Wind profile 只在 Wind 信号成立时启用；测试规则随被测对象和测试类型读取。
+
+纯约规判断由本 Skill 负责，架构师负责把规则映射到源码、职责、契约和风险，代码生成器负责确定性脚手架，项目本地 `AGENTS.md` 和 formatter / 静态检查负责消费项目最终事实。规则检查、源码实现和测试验证可以分工，但不产生多个约规 Owner；孤立关键词也不能触发整棵专项规则树。
+
 ## 触发条件
 
 - 用户要求制定或检查 Java 单行注释、块注释、Javadoc 的格式、场景和使用时机；只读 `references/java-coding-conventions.md` 的“4.8 注释与 Javadoc”，不因注释任务加载 Wind 专项。
