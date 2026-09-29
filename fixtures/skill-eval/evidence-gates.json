@@ -93,6 +93,9 @@
     ],
     "novelist": [
       {
+        "cases": "fixtures/skill-eval/novelist-practice-transfer-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/novelist-knowledge-library-behavior-cases.json"
       },
       {
