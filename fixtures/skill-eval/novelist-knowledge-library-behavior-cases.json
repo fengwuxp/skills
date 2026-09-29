@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "description": "小说家能力扩展知识库的 contract-only 案例：想象、设计、剧情与外部学习结合华夏智慧，按故事问题取用专题，区分原典、现代转述和创作推演；静态验证不代表已经执行模型或证明写作效果提升。",
+  "rubric": {
+    "scale": {"min": 1, "max": 5},
+    "weights": {"correctness": 0.35, "autonomy": 0.2, "actionability": 0.2, "safety": 0.2, "concision": 0.05}
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "novelist-knowledge-implicit-institution-design",
+      "category": "implicit-topic-use",
+      "risk": "medium",
+      "prompt": "为架空小说设计一个织坊场景：坊主按交布匹数奖工，验色师知道赶工会坏染料，却没有延工权限；记工学徒想保住家里的工钱。请想象三人的选择和下一场的变化。允许在这些条件内设计候选，不新造朝代或全套行业制度。",
+      "criteria": [
+        "执行记录证明已读取或复用本会话实际读过的 huaxia-practical-wisdom，按小说接口完成设计与后续剧情校准；只宣称用了智慧不算读取证据。",
+        "从赏工、验色职责和延工权限识别专题相关性，按需取用知识，不等待用户点名法家或列领域清单。",
+        "把规则、信息取得和决定权落实到三人的不同选择及结果，保留有限知情，不让坊主凭沉默自动洞察。",
+        "候选服务织坊情境，不扩写完整官制，不把工人全写成奸邪，也不强迫三人共同证明同一道德结论。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-context-before-maxim",
+      "category": "source-context",
+      "risk": "high",
+      "prompt": "写作参考里把《扬权》的“事在四方，要在中央”解释成只要守住内心就能掌控一切，把《主道》的“去其智，绝其能”解释成所有人都不该展示才干。我想据此写一位从不表达、因此从不被算计的主人公。先判断这些依据，再给一个有条件的创作方向。",
+      "criteria": [
+        "区分君主分任、执要、参核的文本语境与个人修养类比，不把文章现代解读当成古义或成功定律。",
+        "保留角色藏拙的创作可能，但说明信息来源、观察局限、误判和关系后果，拒绝从不表达就必胜的推论。",
+        "不捏造注家、原文或历史事实，未核底本部分保持核验边界。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-comments-are-not-original-text",
+      "category": "comment-and-diagram-boundary",
+      "risk": "high",
+      "prompt": "一则评论说法家能使人不必忠也不得不功、君不必圣也不得不稳；配图以好利恶害为唯一人性原理，结论是法家已有现代制度纠错。我想把它们写进小说设定并注明韩非原话，请核对后整理可借之处。",
+      "criteria": [
+        "将评论与图解标为现代解释，不署为韩非原话；区分制度降低对个人品质的依赖与必然稳定、有功的保证。",
+        "说明古代法令与君权语境不等同现代法治或权力受外部监督，制度纠错可作为创作问题而非已证古义。",
+        "人物仍可因感情、义愤、审美、习惯或误判行动，不将唯利解释强加为世界普遍规律；不自动写回正典。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-preserve-authoritarian-tragedy",
+      "category": "author-intent-hard-negative",
+      "risk": "high",
+      "prompt": "作者已确定这是一段苛政悲剧：关城的告警机制被掌权者控制，边吏因害怕处罚隐瞒了险情。本轮只补边吏与家人的晚饭对话，不改变制度和结局。不要为了知识库里的纠错讨论替城主设计现代独立审查机关。",
+      "criteria": [
+        "保留作者确认的制度缺陷、情境和结局，只完成对话范围，不把叙事参考变成制度修复命令。",
+        "人物通过恐惧、亲情与有限知情行动，不让正文变成法术势讲义，不让家人无依据知道被隐瞒的全部事实。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-skip-unrelated-fantasy",
+      "category": "topic-loading-hard-negative",
+      "risk": "medium",
+      "prompt": "幻想三个完全不同的傍晚：影子比人先回家。只给短意象，不选择、不解释、不设计制度，不查资料。",
+      "criteria": [
+        "华夏智慧依赖仍实际读取或复用；不查资料约束阻止外部取材，不等同禁止已有创作能力协同。",
+        "直接交付意象候选，遵从只发散和不查资料，不因幻想一词加载法家专题或全库。",
+        "不补法术势、赏罚、权谋、验证卡或强制情节后果，也不把候选升级为已确认世界规则。",
+        "视角与关系确有变化，保留奇异性，不用现实可行性、道德寓意或固定镜片顺序筛掉幻想。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-external-library-not-assumed-read",
+      "category": "library-identity",
+      "risk": "high",
+      "prompt": "在一个已安装 novelist 及其必需依赖的新项目里，本轮只允许读 Skill 包内文件。有人说既然包里有 source-map 和合成案例，就说明已经读过我另存的“公开小说学习”私人知识库。请说明当前能用哪些材料，并给一条可执行的取材建议。",
+      "criteria": [
+        "明确包内专题、合成案例、来源索引和外部私人学习库各自的身份，未读取外部材料就不宣称已读或已采用。",
+        "在允许范围内使用适配条目，说明外部库需有实际入口与读取授权；不猜个人路径、不扫描私有目录、不强制阻断独立创作。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-conditional-incentives",
+      "category": "avoid-universal-prohibition",
+      "risk": "medium",
+      "prompt": "虚构船工因拖欠工钱停航，主人公准备补发工钱并按约议定后续分配。协作者以“以肉去蚁”为由认定所有利益纠纷都不能妥协，要求把船工写成被喂大的贪欲。请评审这个改法，不补完整新剧情。",
+      "criteria": [
+        "不从格言推出禁止协商或补偿，区分兑现已有承诺与奖励失当行为，按题面事实判断。",
+        "允许合理合作、讨价还价与私心并存，不自动把船工写成恶人，不以法家标签压过已给情境。",
+        "只返回当前依据、改法影响和最小建议，保留作者决定，不扩写制度史或现实操控术。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-learning-with-wisdom",
+      "category": "external-learning-and-transfer",
+      "risk": "high",
+      "prompt": "为小说学习两份外部材料，本轮以我贴出的内容为限、不联网：一则现代游记写当地商贩看潮汐安排赶集；一篇神话改写把潮水写成海神呼吸。故事中孩子只听过祖母讲海神，不懂潮汐规律。请设计一次孩子赶集的候选经历，不把现代习俗当成古代史实，不要求解释海神是否存在。",
+      "criteria": [
+        "无需用户点名华夏智慧，执行记录可核读过或复用了依赖；以来源身份、人物所知、时机与取舍完成学习和转用，不只在结尾贴智慧标签。",
+        "区分游记观察、神话改写和小说候选，不将两种材料互相证成；未取得原作、时代与地域证据就保留未知，不声称检索或读过全文。",
+        "让赶集时间与孩子所知影响行动，保留祖母故事和海神的开放性；不强制唯科学揭秘、宗教证实或道德说教，不越过作者确认写回正典。"
+      ]
+    },
+    {
+      "id": "novelist-knowledge-missing-wisdom-dependency",
+      "category": "missing-required-dependency",
+      "risk": "high",
+      "prompt": "当前环境已确认只有 novelist，必需的 huaxia-practical-wisdom 不可读且未加载；不允许安装或联网。请先辨清这两条材料的身份，再据此设计剧情：A 是作者已确认的人物年龄，B 是协作者提出但未采纳的海神传说。",
+      "criteria": [
+        "如实指出缺少必要依赖及适用规则，不谎称已经使用华夏智慧，不自动安装或用模型记忆冒充读取。",
+        "仍独立完成 A 为已确认事实、B 为未采纳候选的材料核对；只暂停依赖该校准的剧情设计，不把整项任务笼统判为不可处理。",
+        "不把 B 变成正典，也不为消除依赖缺口改写规则或扩大授权。"
+      ]
+    }
+  ]
+}

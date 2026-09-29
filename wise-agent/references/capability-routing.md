@@ -169,7 +169,7 @@ python3 wise-agent/scripts/read-reference-sections.py wise-agent/references \
 | Web UI 或浏览器应用界面、信息架构、任务流、页面层级、交互状态、响应式、视觉系统、可访问性、可用性评审 | `ui-design-expert` | 产品事实未稳定时先消费 `product-architecture-expert`；需要实现时协同 `senior-software-architect`；Figma 仅作执行工具；表达型 Web 页面在用户显式调用 Hallmark，或已确认产品与交互契约后确有反模板化缺口时，可装载 `hallmark` | 设计契约回读、状态矩阵、桌面/移动证据、键盘/焦点检查、UED/产品 Owner；Hallmark 自评不构成准出证据 |
 | 系分、架构、ADR、重构、代码、Bug、TDD、源码 CR、发布、生产变更、工程图 | `senior-software-architect` | Java 任务必须读取 `wind-coding-conventions` 通用层，按证据叠加 Wind 专项；测试写入再直达适用测试实践；符合前述候选条件时用 `document-authoring` 正式成文 | 测试、静态检查、源码回读、独立 CR、发布证据 |
 | 实际新增、修改、重构、修复或测试代码写入，或显式 Karpathy Guidelines / `karpathy-guidelines` 编码卫生专项审查 | `llm-coding-hygiene` | 实际代码写入默认装载，作为静默协同护栏；跨阶段仍由当前 Agent 持有目标并遵守用户授权，工程实现、Bug 修复、TDD 和源码 CR 仍由 `senior-software-architect` 主责 | 行为 fixture、validator、目标项目测试、diff 回读和独立 Checker |
-| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 只返回叙事校准卡；创作用字考据用 `hanzi-philology`；符合前述候选条件时用 `document-authoring` 整理设定集和正式载体 | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
+| 短篇小说、长篇小说、连载小说、世界观、人物弧光、故事总纲、卷纲、章卡、正文创作、重写或连续性审查 | `novelist` | 必要校准依赖 `huaxia-practical-wisdom` 按小说接口轻量协同，按需形成叙事校准卡；创作用字考据用 `hanzi-philology`；符合前述候选条件时用 `document-authoring` 整理设定集和正式载体 | 作者确认、稿件权威回读、小说家/连载读者双视角、人物/时间/地理/规则/因果/揭示连续性 |
 | 报告、制度、手册、研究说明、材料合并、正式载体 | 候选 `document-authoring`，仅在上述准入与可用性条件满足后协同；否则由当前 Agent 使用可用文档能力 | 先消费产品、工程、法律、合规或考据结论 | 文档检查器、引用回读、渲染检查、领域 Owner |
 | 用户显式要求把本地 Markdown、PRD、系分或正式文档上传、同步、更新或发布到语雀 | 候选 `yuque-document-publisher`；当前仅作用户显式候选评估，准入后按届时调用策略使用 | 正文语义仍由 `product-architecture-expert`、`senior-software-architect` 或符合前述候选条件的 `document-authoring` 持有；UI 操作使用环境可用 Browser Skill | 本地版本与 SHA-256、稳定 docRef、草稿对账、Markdown/Mermaid/图片回读、目录复核和动作时授权 |
 | 教程、视频、代码、文档、规范和成功/失败产物到能力资产候选 | `resource-capability-distiller` | 领域事实仍由对应主能力裁决；只提炼和归位能力单元 | 来源锚点、冲突矩阵、正负 fixture、产物对比 |
@@ -201,7 +201,7 @@ Hallmark 是 Web 视觉结构与反模板化方法，不是 UI 总权威。支�
 
 - 小说故事语义、人物弧光、世界构建、卷章设计、正文和连续性由 `novelist` 主责；`huaxia-practical-wisdom` 只以察实、正名、审时、权衡、行验、化校准人情事势、制度、代价和反馈，不替作者决定，不把经典框架直接写成故事。
 - 单次构思、正文、重写或评审由知止者装载 `novelist` 后直接完成，不展开额外协作；跨轮长篇、多稿权威、状态恢复或需要组合专业能力时，按需增加状态与交接控制，`novelist` 仍是故事主能力。
-- `huaxia-practical-wisdom` 是 `novelist` 的必要校准依赖，不是并列主能力；普通创作只消费最小叙事校准卡，复杂主线、群像、制度冲突或兴衰取舍才扩展 1-3 个镜片，均不输出经世决策卡。
+- `huaxia-practical-wisdom` 是 `novelist` 的必要校准依赖，不是并列主能力；想象、幻想、设计、剧情推进和外部知识学习均须实际加载或复用已读依赖，按其 `SKILL.md`“输入输出契约”的小说接口协同。普通创作只作轻量校准，不强制填卡；复杂主线、群像、制度冲突或兴衰取舍才按需展开，均不输出经世决策卡。
 - 专业文档撰写按上述准入与可用性条件选用 `document-authoring` 或当前可用文档能力，领域事实仍由产品、工程、法律、合规或其它专项能力负责；成稿后重新运行产品或架构交付物检查。
 - 汉字学与训诂由 `hanzi-philology` 提供，正式结论形成训诂证据卡，不设单一权威书。
 - 小说人物名、地名、称号、器物名和拟古语言只有出现真实形音义、训诂或时代语感问题时才装载 `hanzi-philology`；它只返回创作用字证据卡。设定集、人物档案、时间线和决策台账需要权威整理或正式载体时，默认由当前 Agent 使用可用文档能力；只有符合前述候选条件时才装载 `document-authoring`。两者都不得升级候选设定或续写正文。
