@@ -17,6 +17,14 @@
       "license": "MIT",
       "read_at": "2026-08-13",
       "usage_boundary": "Only the method of removing unsupported vague evaluation so verified facts carry the paragraph is used; no phrase lists, blanket grammar bans, scores, examples, or automatic final gate copied."
+    },
+    {
+      "title": "larashero3-dotcom/lieflat-less-ai-tone",
+      "url": "https://github.com/larashero3-dotcom/lieflat-less-ai-tone",
+      "commit": "27d29232f10124db904ca9c0536d0b67cb3b2833",
+      "license": "MIT",
+      "read_at": "2026-10-02",
+      "usage_boundary": "仅参考按文体核验实际命中、限定编辑范围和以反例校正写作规则的方法；案例另行合成，不复制外部语料、示例、禁词表、统计阈值或脚本，不声明原研究倍率已独立复算或行为质量提升。"
     }
   ],
   "source_profiles": {
@@ -147,6 +155,28 @@
         "删除不可追溯的业内人士归因，不换成现有判断、有关方面、消息称或仍然无来源的同义外壳，也不虚构具名来源。",
         "不能把可能在第四季度调整升级为确定调整；明确当前没有可核验的公开文件或具名来源可供验证该判断，且不扩大为没有任何来源支持，保留不确定性与证据缺口。",
         "保留企业提前完成预算调整为建议或应对动作，不把它包装成政策事实、强制要求或已经批准的决定。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-preserve-enumerated-scope",
+      "category": "enumeration-fidelity",
+      "risk": "high",
+      "prompt": "把下面的合成功能说明去掉 AI 味，少用密集顿号，写得自然紧凑。只改表达，不增删功能或扩大范围，只交正文。\n检查器支持目录扫描、重复文件识别、结果导出。当前只处理用户指定目录中的 PDF 文件。",
+      "criteria": [
+        "目录扫描、重复文件识别、结果导出三项能力仍分别明确可辨，不能压成只剩起终点的说法而隐藏中间能力，也不补造执行顺序。",
+        "保留用户指定目录和仅处理 PDF 的限制，不扩成所有目录或其他文件类型。",
+        "可用连接词或局部句法调整减少拥挤，也可保留清楚的并列；不因顿号数量新增禁令、空泛评价或解释尾注。"
+      ]
+    },
+    {
+      "id": "document-authoring-should-preserve-trigger-and-exception",
+      "category": "condition-fidelity",
+      "risk": "high",
+      "prompt": "润色这段合成操作说明，减少翻译腔和生硬的连接，让它读得自然；只改表达，不改变运行行为，只交正文。\n当缓存已过期且刷新任务成功时，服务才替换当前配置；刷新失败时保留旧配置并记录错误。未过期时不启动刷新。",
+      "criteria": [
+        "替换当前配置仍同时以缓存过期、刷新成功为前提，保留“才”所表达的必要条件，不把条件改成已经发生的事实或无条件动作。",
+        "刷新失败仍保留旧配置并记录错误，未过期仍不启动刷新；不因拆句或删除连接词丢失任何分支，也不新增重试、定时或降级行为。",
+        "允许自然改写条件表达，不强制保留原连接词字面，也不把当/时、长句或分号本身视为必须清除的错误。"
       ]
     }
   ]
