@@ -77,9 +77,9 @@ description: Use when 用户在小说或故事语境下进行创作、想象、�
 
 小说想象、幻想或设计需要专题知识时，查 `references/knowledge-library.md`，只读适配当前背景与剧情的条目；涉及任官、赏罚、权柄、制度或权谋时可直接读 `references/knowledge-hanfeizi.md` 对应章节。无需额外提示词；普通生活、纯审美或无取材缺口的发散跳过专题库，仍保留上述轻量协同，知识不自动成为正典。
 
-- 想象、具体剧情、卷章设计或幻想成形：以 `story-design-and-drafting.md` 为主，出现同构、模板化或原创核受损时按需加 `creative-inertia.md`；世界、人物、场景只读取当前承重缺口，不先展开百科。
+- 想象、具体剧情、卷章设计、群像取舍与并行线或幻想成形：以 `story-design-and-drafting.md` 为主，出现同构、模板化或原创核受损时按需加 `creative-inertia.md`；世界、人物、场景只读取当前承重缺口，不先展开百科。
 - 剧情发展、时序、因果、伏笔、读者承诺或正文准入：读取 `story-design-and-drafting.md`，需要版本回读、人物知情、时间地理或已交付承诺检查时加 `continuity-and-revision.md`；项目已采用时间线契约时再运行对应脚本。
-- 场景、建筑、天象、地势、天文、地理、服饰、制度和生活条件：读取 `worldbuilding-and-research.md`；需要把条件落成可感场面、调度、视角和句段时组合 `scene-and-prose-craft.md`，不把资料名录当成场景完成。
+- 场景、建筑、天象、地势、天文、地理、服饰、制度和生活条件：读取 `worldbuilding-and-research.md`；需要把条件落成可感场面、调度、视角和句段时组合 `scene-and-prose-craft.md`，背景怎样随事显现直接读其“社会场面、礼制与尺度”，不把资料名录当成场景完成。
 - 人物、器物、神兵、功法、能力或成长：读取 `character-craft.md`，涉及来源、材料、制度、使用、损坏、代价或世界反馈时按需组合 `worldbuilding-and-research.md` 与 `scene-and-prose-craft.md`，不脱离人物选择单独冻结对象设定。
 - 检查剧情、文风、人物声音、时序、因果或伏笔：读取 `continuity-and-revision.md` 与实际涉及的 `story-design-and-drafting.md` / `scene-and-prose-craft.md`；审查只返回问题、证据、影响和最小修订，不替作者直接改写正典，重要交付再请求独立 Checker。
 

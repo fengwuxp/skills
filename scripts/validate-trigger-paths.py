@@ -22039,7 +22039,7 @@ check(
         [
             "开篇抓手与长期承诺",
             "第一拍抓手与作品长期承诺",
-            "两向主线接口",
+            "支线与全篇的联系",
             "短意象、生活纹理和一次性呼应",
         ],
     )
@@ -22058,7 +22058,7 @@ check(
             "novelist-should-open-with-durable-promise-not-cheap-shock",
             "novelist-should-diagnose-pacing-across-scales-without-fixed-ratios",
             "novelist-should-diagnose-ai-like-prose-after-structural-facts",
-            "novelist-should-give-major-subplot-a-two-way-mainline-interface",
+            "novelist-should-connect-major-subplot-to-whole-story",
             "novelist-should-calibrate-style-only-from-authorized-functional-samples",
             "novelist-should-use-banter-only-when-humor-carries-pressure",
             "novelist-should-name-story-entities-for-fit-without-overclaiming-etymology",
