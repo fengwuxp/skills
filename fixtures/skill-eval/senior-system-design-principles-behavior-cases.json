@@ -17,11 +17,14 @@
         "senior-software-architect/references/distributed-consistency.md",
         "senior-software-architect/references/coding-review-deep-dive.md"
       ],
-      "sha256": "bb8d7ada91e942b4e7ab54193e4a45a0c5b5001e63decd7d28c9c41098754459"
+      "sha256": "6e833ace8151ed4954171e50f1cec900959bc4055f573ae3517e3801666a9227"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
     "weights": {
       "correctness": 0.4,
       "autonomy": 0.15,
@@ -91,6 +94,28 @@
         "异常路径日志记录最终决策分支、原因类别、结果和关联 ID，避免敏感原文，并能支持回放排障。",
         "接口和任务分别观察 P95/P99、错误/超时、重试、死信、积压和补偿结果，不能只看平均值。",
         "每个告警绑定 Owner、阈值、持续时间、处置动作和 Runbook；指标必须能支撑暂停、回滚、降级或人工介入。"
+      ]
+    },
+    {
+      "id": "senior-should-accept-persisted-random-replay-key-with-business-identity",
+      "category": "idempotency-key-semantics",
+      "risk": "high",
+      "prompt": "评审一个外部资源创建设计：服务先保存内部业务唯一键和一次请求的 UUID，再调用外部 API。API 已核验在同账户、同端点、有效期内以该 UUID 和相同参数保证幂等。响应丢失后，团队准备复用 UUID 和原参数重试。评审者说随机值一律不能作幂等键，必须改成订单号；另有人建议每次重试生成新 UUID。请判断，不写代码。",
+      "criteria": [
+        "认可首次生成并保存、绑定一次逻辑请求的 UUID 可以作为重放键，不机械要求改用订单号；区分业务唯一身份与请求重放职责。",
+        "同请求重试复用原键和参数，禁止每次新 UUID；重复业务提交仍须由既有业务唯一约束保护，不能用两个 UUID 绕过同一业务身份。",
+        "按已核验的作用域与有效期允许有界恢复，不一概阻断合法幂等重试；说明过期、参数改变或切端点时需重新核对契约。"
+      ]
+    },
+    {
+      "id": "senior-should-not-assume-cross-provider-deduplication",
+      "category": "unknown-outcome-failover",
+      "risk": "high",
+      "prompt": "外部服务 A 的写请求超时，可能已经创建对象，查询暂不可用。原请求使用 key-17；备用服务 B 是独立供应商，只承诺在自己的账户内去重。团队要把同一个 key-17 发给 B 并宣布恢复成功。稍后查询恢复但仅显示当前无对象，A 的队列仍可能迟到执行。请判断两种情况下能否转 B；另有一项已授权的只读配置核对可独立继续。",
+      "criteria": [
+        "两种情况均保留 A 的未知结果；同键不代表 A/B 共享去重，当前查无记录也不证明以后不会执行。只有证明原请求未执行且不会迟到生效，或有已核验的跨入口防重复保障，才可换入口恢复。",
+        "围绕 A 的原标识查询、等待通知或在其真实幂等契约允许时恢复；证据不能取得则有界停止并给人工责任与恢复条件，不关闭幂等保护。",
+        "继续独立只读核对，只阻塞依赖未知结果的副作用；不把重试、退避或熔断本身当作无重复效果的证明。"
       ]
     }
   ]

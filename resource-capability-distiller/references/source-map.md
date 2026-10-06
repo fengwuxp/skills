@@ -29,6 +29,21 @@
 
 ## 一、公开文章
 
+### Skill 质量评审与 Anthropic internal-comms 示例
+
+- 文章：`想30分钟写出一个好skill？先学会“挑刺”：我拿Anthropic官方示例开了刀`
+- URL：<https://mp.weixin.qq.com/s/PeAf5MP2aZC6g652fQdqXg>
+- 账号 / 作者：架构师之路 / 58沈剑
+- 发布时间：2026-10-05 11:46（页面显示，北京）
+- 读取日期：2026-10-05
+- 读取状态：标题、账号、发布时间与正文已读取。
+- 读取方式：Codex in-app Browser DOM snapshot；未只依赖标题、搜索摘要或历史索引。
+- 关联一手项目：<https://github.com/anthropics/skills/tree/main/skills/internal-comms>
+- 项目核验：读取 2026-10-05 当时 `main` 的 `SKILL.md` 及 `examples/3p-updates.md`、`examples/company-newsletter.md`，未冻结 commit；确认所读版本的入口负责类型识别和 reference 路由，具体格式在 examples，入口保留不匹配时澄清出口。
+- 用途：吸收 Description、触发策略、入口路由、按需第三层和言行一致五项审查方法；不复制示例正文、工具清单、公司语气或固定格式，不把 1.5KB 入口长度当作通用阈值。
+
+### Resource2Skill
+
 - 标题：`微软开源 Resource2Skill：把教程、代码和文档“炼”成 Agent Skill`
 - URL：<https://mp.weixin.qq.com/s/bzARJycmoxkXLvoMJqqBRg>
 - 作者：翻斗花园二蛋

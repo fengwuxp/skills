@@ -4175,8 +4175,8 @@
         "trigger_accuracy",
         "efficiency_metrics"
       ],
-      "preferred_skill": "document-authoring",
-      "negative_reason": "任务是专业文档结构、表达和 PDF 交付，应由 document-authoring 处理；没有汉字学或训诂问题。"
+      "preferred_skill": "none",
+      "negative_reason": "任务是文档结构、表达和 PDF 交付，由当前 Agent 使用可用文档能力处理；document-authoring 尚为显式候选，不隐式路由。没有汉字学或训诂问题。"
     },
     {
       "id": "grill-me-should-stress-test-with-question-ledger",
@@ -4665,14 +4665,14 @@
       "skill": "resource-capability-distiller",
       "query": "请把我提供的一篇行业文章整理成一页正式中文摘要，保留出处、主要观点和结论，供管理层阅读；不需要设计可复用 Agent 能力。",
       "should_trigger": false,
-      "preferred_skill": "document-authoring",
+      "preferred_skill": "none",
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": [
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "用户只要求把单篇材料整理成正式摘要，没有能力复用、可执行流程或资产归位目标；应由 document-authoring 成文，不触发资源炼技。"
+      "negative_reason": "用户只需正式摘要，没有能力提炼或归位目标，由当前 Agent 直接成文；document-authoring 尚为显式候选，不隐式路由，也不触发资源炼技。"
     },
     {
       "id": "resource-capability-distiller-negative-domain-expert-modeling",
@@ -4907,14 +4907,14 @@
       "skill": "ui-design-expert",
       "query": "请整理一份东方审美研究报告，讨论留白、虚实、疏密和器物精神的历史观点，供内部文化学习；不涉及 Web 页面、交互或设计交付。",
       "should_trigger": false,
-      "preferred_skill": "document-authoring",
+      "preferred_skill": "none",
       "difficulty": "hard_negative",
       "hard_negative": true,
       "dimensions": [
         "trigger_accuracy",
         "baseline_comparison"
       ],
-      "negative_reason": "这是文化研究材料的正式成文任务，并明确排除界面和设计交付；由 document-authoring 主责，需要古籍证据时协同 hanzi-philology，不触发 UI 设计专家。"
+      "negative_reason": "任务是文化研究报告，明确排除界面和设计交付；由当前 Agent 使用可用文档能力成文，需要古籍证据时协同 hanzi-philology，不触发 UI 设计专家，也不隐式路由到候选 document-authoring。"
     },
     {
       "id": "competition-payment-product-owner-payment-expert",
