@@ -1,6 +1,6 @@
 ---
 name: wind-coding-conventions
-description: Java/Wind 编码与测试约规。纯规范、注释/Javadoc 或 Java 项目 AGENTS.md 任务由本 Skill 主责；Java 源码设计、编码、CR、Bug 修复、TDD 和代码生成必须把本 Skill 作为规则依赖加载，执行仍归架构师或代码生成器。按项目声明、依赖、包名或类型启用 Wind 专项；仅有 JVM、Maven 或 Gradle 不触发。
+description: Java/Wind 编码与测试约规。纯规范、注释/Javadoc 或 Java 项目 AGENTS.md 任务由本 Skill 主责；Java 源码设计、编码、CR、Bug 修复、TDD 和代码生成必须作为规则依赖加载，执行仍归架构师或代码生成器。普通 Java 同样适用；Wind 专项另按明确声明、依赖、包名或类型启用，仅有 JVM、Maven 或 Gradle 不足以启用 Wind 专项。
 ---
 
 # Java/Wind 编码约规

@@ -1,7 +1,7 @@
 ---
 name: ui-design-expert
 description: |
-  用户要求设计、评审或验证 Web UI 或浏览器应用界面的任务流、界面结构、交互状态、可操作原型、设计稿、视觉系统或 Design QA 时触发。原生 iOS/Android、产品业务语义、后端实现和已确认设计到代码的工程还原不触发。
+  用户要求设计、评审或验证 Web UI 或浏览器应用界面的任务流、界面结构、交互状态、可操作原型、多端业务演示、设计稿、视觉系统或 Design QA 时触发。原生 iOS/Android、产品业务语义、后端实现和已确认设计到代码的工程还原不触发。
 ---
 
 # UI 设计专家
@@ -28,7 +28,7 @@ UI 设计专家由一个界面设计 Owner 统合四个工作面：任务流与�
 
 1. **先任务后画面**：先确认用户、场景、主任务、成功结果和失败恢复，再决定页面结构与视觉表达。
 2. **先继承后创造**：先读现有设计系统、tokens、组件、页面和品牌资产；局部需求继承现状，只有明确的新界面或重设计才建立新方向。
-3. **结构先于装饰**：信息架构、阅读顺序、操作路径、状态反馈和内容范围未稳定前，不用视觉润色掩盖问题。
+3. **简洁明了、交互清晰**：围绕当前任务安排信息、操作和反馈，让人看懂当前状态、下一动作及其结果；复用熟悉模式、按需展开细节，不用装饰、术语堆砌或额外层级增加理解成本。
 4. **简单不等于不完整**：按当前验证问题选择最低原型层级和最少页面 / 状态；凡目标名为流程或可操作原型，最小闭环至少包含主路径、一条主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界。用户要求整体省略这些契约时，必须拒绝以流程或可操作原型名义交付；若用户只授权局部状态稿，可正名为孤立页面 / 静态状态稿，但流程验证保持 blocked，不得把它降名后宣称完成。只有有证据不适用的单项才可裁剪并说明理由。
 5. **情境决定表达**：任务型界面优先扫描、比较、重复操作效率和熟悉感；转化、阅读或展示界面再按目的提高表现力。
 6. **状态属于设计**：default、hover、focus、active、disabled、loading、empty、error、success、权限、弱网、溢出和本地化不是实现补丁，而是设计契约。
@@ -40,7 +40,7 @@ UI 设计专家由一个界面设计 Owner 统合四个工作面：任务流与�
 ## 工作流
 
 1. **读事实**：读取需求、产品契约、真实内容/数据范围、现有页面、设计系统、品牌资产和平台约束；区分事实、推断、待确认与范围外不做。
-2. **定范围**：判断界面任务类型与变更范围，复用已有 brief、来源权威和约束，只补影响当前判断的缺口；涉及 Figma 时确认 `change_mode`、`client_scope` 和页面完整性。只有关键分叉会改变结果时才提问。
+2. **定范围**：判断界面任务类型与变更范围，复用已有 brief、来源权威和约束，只补影响当前判断的缺口；业务演示按已确认责任确定必要端与交接，不将多端误作设备尺寸。涉及 Figma 时确认 `change_mode`、`client_scope` 和页面完整性。只有关键分叉会改变结果时才提问。
 3. **完成设计或评审**：局部优化继承现有结构和视觉，只处理受影响的组件与状态；只读评审直接给 findings，不先重写设计方案。新界面、体系扩展或重设计再按需形成信息架构、交互、状态矩阵、视觉、响应式和可访问性契约。
 4. **交付并验证**：核对当前任务、原失败条件及受影响范围；复用有效证据，仅补缺失或因修改失效的验证。需要证明可用性或核对实现时执行任务测试或 Design QA，实际结果与未验证项分别报告。
 
@@ -61,7 +61,7 @@ UI 设计专家由一个界面设计 Owner 统合四个工作面：任务流与�
 - 设计系统与 UI 资产选型：`references/ui-library-landscape.md`。Ant Design 跨应用采用遵循其“Ant Design B+ 采用边界”：运营 / 管理 Web 可完整采用，C 端浏览器与 H5 默认只共享语义和组件行为；正式稿使用 `--kind ant-adoption --scenario <scenario>`，最多修复两轮。
 - 视觉风格、东方审美、参考页面或截图、设计 DNA：`references/visual-style-directions.md`。
 - 任务测试、证据等级、实现后 Design QA：`references/usability-validation-and-design-qa.md`。
-- 可操作原型、Figma 交接：`references/prototype-output.md`；产品事实与 HTML / Figma 载体共用标注契约时读 `references/prototype-annotation-contract.md`；整站 Page Manifest 读 `references/figma-design-contract.md`，文件工程读 `references/figma-file-engineering.md`，跨轮代码对账读 `references/design-code-reconciliation.md`。
+- 可操作原型、业务演示、Figma 交接：`references/prototype-output.md`；涉及多端闭环或面向技术 / 非技术观众演示时，读其中“二 B、业务闭环与演示”。产品事实与 HTML / Figma 载体共用标注契约时读 `references/prototype-annotation-contract.md`；整站 Page Manifest 读 `references/figma-design-contract.md`，文件工程读 `references/figma-file-engineering.md`，跨轮代码对账读 `references/design-code-reconciliation.md`。
 - Figma / 墨刀 / 截图保真审查：`references/design-draft-fidelity-review.md`；来源、版本、许可和吸收边界读 `references/source-map.md`。
 - 原生 iOS / Android 不适用；已有确认设计到代码或需要前端代码时交 `senior-software-architect`，本 Skill 不重新设计。
 

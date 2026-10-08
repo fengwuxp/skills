@@ -6288,6 +6288,191 @@
         "variance_check"
       ],
       "negative_reason": "用户明确禁用 Skill，当前指令覆盖默认加载规则；按用户指定范围直接完成，不强行加载知止者或展开协调流程。"
+    },
+    {
+      "id": "description-product-local-rule",
+      "skill": "product-architecture-expert",
+      "query": "只评审普通会员每月领取一次权益的业务规则，并补重复领取的验收条件。本轮不写 PRD，不涉及支付或代码。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "应覆盖轻量业务规则与验收，不以复杂度或正式 PRD 作为触发前提。"
+    },
+    {
+      "id": "description-website-existing-page-responsibility",
+      "skill": "business-website-planner",
+      "query": "使用 $business-website-planner 作候选评估：公司业务已经确认，首页和服务页内容重复，请仅梳理页面职责与内容取舍，不做视觉设计。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "沿用候选调用策略；既有官网的内容职责调整也属于能力范围，不要求新建整站或同时提供所有素材。"
+    },
+    {
+      "id": "description-acceptance-single-evidence-layer",
+      "skill": "requirement-acceptance-testing",
+      "query": "使用 $requirement-acceptance-testing 作候选评估：按已确认需求与实现版本，只验收服务测试中的失败不写入这一条，不涉及 UI、视觉或端到端浏览器。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "使用最低充分证据层完成独立验收，不把同时覆盖多个证据面设为前提。"
+    },
+    {
+      "id": "description-yuque-plain-markdown",
+      "skill": "yuque-document-publisher",
+      "query": "使用 $yuque-document-publisher 作候选评估：把已经确认的纯文本 Markdown 发布到指定语雀知识库，没有 Mermaid、图片或相对链接。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "普通发布也适用；复杂内容处理是执行分支，不是选择本能力的必要条件，发布仍遵守动作授权。"
+    },
+    {
+      "id": "description-security-account-takeover-design",
+      "skill": "security-engineering-expert",
+      "query": "设计开放平台的账户接管防护与告警恢复，重点分析身份边界与滥用路径，不扫描仓库或编写代码。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "具体安全设计问题可触发，不要求用户先列出完整资产、控制与残余风险交付清单。"
+    },
+    {
+      "id": "description-architect-feature-implementation",
+      "skill": "senior-software-architect",
+      "query": "在已有 TypeScript 服务实现已确认的分页功能并补测试，不重新做产品或界面设计。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "普通功能开发也是工程实现；同时装载编码卫生，不把功能开发误路由到产品或 UI。"
+    },
+    {
+      "id": "description-wind-ordinary-java-rule-dependency",
+      "skill": "wind-coding-conventions",
+      "query": "只读审查普通 Spring Java 控制器和 DTO 的源码，项目没有 Wind 依赖，也不修改文件。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "作为 Java 规则依赖，工程 CR 主责仍为架构师；无 Wind 依赖不阻止通用 Java 规则，不因此加载 Wind 专项。"
+    },
+    {
+      "id": "description-wind-not-kotlin-gradle",
+      "skill": "wind-coding-conventions",
+      "query": "只读检查 Kotlin Gradle 项目的依赖冲突，仓库没有 Java 源码，也未声明或依赖 Wind。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "senior-software-architect",
+      "negative_reason": "JVM 或构建工具不等于 Java/Wind 任务，由架构师诊断，不加载不适用约规。"
+    },
+    {
+      "id": "description-readonly-diagnosis",
+      "skill": "senior-software-architect",
+      "query": "根据异常日志与源码定位接口超时的原因，只诊断，不修改代码或配置。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "只读排障本身即可触发工程分析；不要求承诺修复，不引入写入或编码卫生流程。"
+    },
+    {
+      "id": "description-payment-learning",
+      "skill": "payment-expert",
+      "query": "向支付新人讲清交易、支付、清算和结算各自何时算完成，不写产品方案或正式报告。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "支付领域基础学习属于既有能力，不要求先提出完整产品方案；完成层级仍保持准确。"
+    },
+    {
+      "id": "description-load-testing",
+      "skill": "grill-me",
+      "query": "为已实现接口给性能压力测试方案，测吞吐量和延迟；业务与架构决策已经确认，不做决策盘问，不写脚本。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "senior-software-architect",
+      "negative_reason": "这是性能负载压测，不是决策盘问；不得因压力测试字样重开已确认业务与架构决策。"
+    },
+    {
+      "id": "description-novel-background",
+      "skill": "novelist",
+      "query": "为当前历史小说构思研究船运行当的生活条件并提炼可用素材，这轮不写正文，不形成独立史学报告。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "创作语境内的背景研究由小说家承接，并结合必要华夏校准；独立史实研究仍不触发。"
+    },
+    {
+      "id": "description-prose-review",
+      "skill": "novelist",
+      "query": "评审这篇现实主义小说的文风、叙事节奏与对白，不只查时间线，也不直接重写。",
+      "should_trigger": true,
+      "difficulty": "realistic",
+      "hard_negative": false,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "expected_handling": "一般正文风格、节奏和对白评审也触发小说家，不限连续性检查；没有改写授权时只审查。"
+    },
+    {
+      "id": "description-repo-threat-model",
+      "skill": "security-engineering-expert",
+      "query": "仅为这个源码仓库建立威胁模型，不做跨业务安全方案，不修代码。",
+      "should_trigger": false,
+      "difficulty": "hard_negative",
+      "hard_negative": true,
+      "dimensions": [
+        "trigger_accuracy",
+        "baseline_comparison"
+      ],
+      "preferred_skill": "none",
+      "negative_reason": "单纯仓库威胁建模使用对应 codex-security:threat-model 能力，不用跨层安全工程 Skill 接管。"
     }
   ]
 }
