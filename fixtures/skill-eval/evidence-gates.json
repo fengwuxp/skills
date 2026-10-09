@@ -138,6 +138,9 @@
         "cases": "fixtures/skill-eval/novelist-character-life-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/novelist-character-depth-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/novelist-creative-technique-behavior-cases.json"
       },
       {
