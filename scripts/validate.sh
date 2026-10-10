@@ -384,6 +384,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 
 echo "==> deliberation role configuration behavior cases"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-project-reconciliation-behavior-cases.json"
 
 echo "==> product design lifecycle alignment behavior cases"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-design-lifecycle-alignment-behavior-cases.json"

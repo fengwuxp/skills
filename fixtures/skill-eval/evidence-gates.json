@@ -274,6 +274,9 @@
         "cases": "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/wise-agent-project-reconciliation-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/governance-authority-alignment-behavior-cases.json"
       },
       {

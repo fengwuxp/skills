@@ -272,11 +272,11 @@ required_input / expected_output / dispatch_status / response_status:
 evidence_refs / decision_status / owner / next_action / wake_condition / last_receipt / last_observed_at:
 ```
 
-`Meeting Control Ledger` 是会议状态载体中的一个逻辑区块，默认不新建平行文件。主持者在每次派发、回执、阻塞或检查点变化后刷新它；`coordination_signal` 只表示当前控制信号，不是新的全局执行状态：`balanced` 表示可按当前计划推进，`ahead_wait` 表示该席已到共享检查点需等待，`overloaded` 表示待处理项或当前任务已超过可承接范围，`single_point_pressure` 表示关键依赖集中在一个席位，`dependency_wait` 表示其他席位只能等待依赖。
+`Meeting Control Ledger` 是会议状态载体中的一个逻辑区块，默认不新建平行文件。主持者在每次派发、回执、阻塞或检查点变化后刷新它；`coordination_signal` 只表示当前控制信号，不是新的全局执行状态：`balanced` 表示可按当前计划推进，`ahead_wait` 表示该席已到共享检查点且下一动作确需等待他席结论，`overloaded` 表示待处理项或当前任务已超过可承接范围，`single_point_pressure` 表示关键依赖集中在一个席位，`dependency_wait` 表示受影响动作正在等待依赖。
 
 单点压力来自上下文、工具或可观察的用量限制时，主持者按第 3A 节保存现场、判断可转移部分并对账，继续复用本台账，不另建通道状态源。
 
-进度以同一 `meeting_revision`、共享检查点和真实回执对齐，不以消息数、模型自述或谁先提交方案判定。主持者发现某席领先时暂停其无依赖的后续方案；发现某席积压或单点压力时暂停该席新派发，先收敛、拆分或转移可独立完成的子任务。其他席位对依赖项保持 `PENDING / dependency_wait`，对不依赖该席裁定的证据整理、场景准备或验证准备可以分流；任何分流都不得复制权威裁定、越过 `decision_owner` 或改写他席事实。权威单点无法替代时记录 Owner、`current_execution_id`（如有）、唤醒和失效条件，等待不计为完成。
+进度以同一 `meeting_revision`、共享检查点和真实回执对齐，不以消息数、模型自述或谁先提交方案判定。仅因进度领先不暂停工作；后续动作依赖未决结论，或将越过共享权威、与活动写入冲突时，只暂停受影响动作。已获授权、无上述依赖或冲突且可独立验证的工作继续，不限于证据或验证准备。发现某席积压或单点压力时暂停该席新派发，先收敛、拆分或转移可独立完成的子任务；分流不得复制权威裁定或越过 `decision_owner`。依赖项保持 `PENDING / dependency_wait`；权威单点无法替代时记录 Owner、`current_execution_id`（如有）、唤醒和失效条件，等待不计为完成。
 
 主持者在投递前冻结参与任务清单、责任、输入、输出、验收和停止条件；每次回执按 `task_id + message_id / inquiry_id` 一一对账，保留原始证据指针或授权的脱敏摘录，不能只保留总结。要声称活动任务已安全排队或续接，至少要有可回链的事件顺序：投递接受 -> `queued`（带目标 `execution_id`）-> 原活动继续或完成 -> 安全边界消费 -> 回执完成；缺少任一运行时事件只能记为 `conditional` / `PENDING`，不能由文件哈希、模型自述或普通完成回执补足。失败、超时、拒绝、未答、`PENDING` 和 `DEFERRED` 必须分别记录 Owner 与下一动作；恢复时先扫描未对账行和待处理指针，再继续调度。当前阶段的任务行都已回执、明确排除或绑定未决承接后，可按 4.6 结束本阶段会商；只有实际形成裁决时才归档 `Meeting Resolution`，阶段结束不解除未决阻断或替代缺失证据。
 
