@@ -38,7 +38,7 @@ description: Use when 用户要把分散材料或稳定领域结论整理、审�
 3. **写入证据**：读取 `references/citation-and-traceability.md`，让关键结论能回到材料、链接、版本、记录或领域证据卡。
 4. **评审与修订**：读取 `references/review-and-revision.md`，区分评审、改写、合并和最终版收口；未经授权不重写全文。
 5. **生成载体**：所有正式文档读取 `references/format-and-rendering.md`；需要 DOCX、PDF、PPTX 或表格时调用对应文档工具，工具不可用时交付 Markdown 并说明限制。
-6. **验证准出**：本技能主责的报告、制度、手册和研究说明在正式、完整、提交前或用户要求验证时，运行 `scripts/check_document_deliverable.py --kind <kind> --file <path>`；培训材料、课程讲义、讲师手册和情景演练手册复用 `--kind manual`，并由领域 Owner 复核专业事实、由训练验收方复核可观察行为。通俗视觉讲解由领域 Owner 复核事实保真，由目标读者完成复述、近迁移或任务测试，并按实际载体检查视觉语义和可访问性。Markdown、HTML、文本或 DOCX 产物再运行 `scripts/check_document_style.py --file <path>`；PDF、PPTX 和其它载体逐页渲染检查。PRD、系分等领域文档不套用本技能的结构检查器，编辑后重新运行领域 Skill 的交付物检查，再检查实际派生载体。
+6. **验证准出**：本技能主责的报告、制度、手册和研究说明在正式、完整、提交前或用户要求验证时，按文档契约复核内容与证据；采用与检查器匹配的字段或标题模板时，再运行 `scripts/check_document_deliverable.py --kind <kind> --file <path>`。连续正文按契约逐项核对语义，不为通过结构脚本补标签，也不把脚本不适用写成缺少内容或校验通过。培训材料、课程讲义、讲师手册和情景演练手册采用对应模板时复用 `--kind manual`；专业事实仍由领域 Owner 复核，可观察行为由训练验收方复核。通俗视觉讲解由领域 Owner 复核事实保真，由目标读者完成复述、近迁移或任务测试，并按实际载体检查视觉语义和可访问性。Markdown、HTML、文本或 DOCX 产物再运行 `scripts/check_document_style.py --file <path>`；PDF、PPTX 和其它载体逐页渲染检查。PRD、系分等领域文档不套用本技能的结构检查器，编辑后重新运行领域 Skill 的交付物检查，再检查实际派生载体。
 
 创作项目文档不套用报告结构检查器；运行样式检查后，由 `novelist` 或作者复核设定状态、作者本真 / 人物所知 / 读者所知、阅读进度、剧透等级和故事连续性。
 

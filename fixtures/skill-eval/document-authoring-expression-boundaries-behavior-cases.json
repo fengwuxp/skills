@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "description": "正式文档的结构校验适用性与效力保真边界；语义审查不靠标签或词频代替，结构 fixture 不证明自然表达质量。",
+  "cases": [
+    {
+      "id": "document-prose-report-without-template-labels",
+      "category": "prose-report-validation",
+      "risk": "medium",
+      "prompt": "用 $document-authoring 审校下面的正式报告并完成必要检查。读者与验收方是客服经理，目的是决定是否扩大试点。保持三段连续正文，不增加标题或字段。原文：本次试点只覆盖东门服务台，评估自助取号是否减少等候。依据运营组提供的10月1日至3日计时记录，120位到访者的平均等候从12分钟降至9分钟；同期咨询台人数没有变化，因此只能确认试点现象，尚不能证明因果。\n据此建议保留当前试点一周，暂不推广到其他服务台。运营负责人林岚在10月10日前补查早晚高峰记录，并将原始记录交客服经理复核。\n风险是三天样本没有覆盖周末。下一轮以相同计时口径核验平均等候和漏号情况；若等候反弹或漏号增加，暂停扩大并复查设备。",
+      "criteria": [
+        "保留范围、来源、数字、因果限制、建议、责任时限及复核条件，读者能据此行动。",
+        "连续正文不因不含字段或标题而被要求补模板；结构检查器不适用时说明适用性，不能把未运行写成通过。",
+        "仍做内容和样式复核，不能用跳过结构检查掩盖缺项或未验证状态。"
+      ]
+    },
+    {
+      "id": "document-capability-wording-not-normative-frequency",
+      "category": "semantic-fidelity",
+      "risk": "medium",
+      "prompt": "用 $document-authoring 润色操作手册的一小段，只给正文，允许合并无独有含义的重复。材料：软件功能说明：用户可以搜索项目，也可以导出项目清单。操作制度：经负责人批准后，维护人员可以重启服务；重启前必须保存未提交内容，未经批准不得操作。以上事实、主体和制度效力均不改变。",
+      "criteria": [
+        "一般功能说明可合并两个可以而保留搜索与导出两种能力，不能仅因词频变化回退自然表达。",
+        "制度条款中的可以、必须、不得及其主体、审批条件和先后次序原样保持，不把局部放宽扩成全部近义替换。",
+        "不新增权限、承诺或操作路径，成文顺畅，不输出规则自评。"
+      ]
+    },
+    {
+      "id": "document-required-template-still-validated",
+      "category": "template-positive-control",
+      "risk": "medium",
+      "prompt": "用 $document-authoring 整理并检查一份结构化交付报告，必须采用目标、读者、来源、事实、范围、结论、行动、负责人、风险、验证这些字段。材料：为现场运营主管判断标签机试点是否扩大；材料来源是现场组昨日抽样记录；抽查20张标签全部可读，仅代表昨日这一设备；建议维持试点，暂不扩大；现场组长周宁负责再抽查一天，使用相同读码器复验；风险是尚未覆盖高湿环境。",
+      "criteria": [
+        "用户明确要求的字段模板得到保留；匹配检查器时运行结构检查，不能将连续正文例外外推为全部免检。",
+        "保留样本与范围、建议未成为批准、负责人和验证方法；未给具体截止日期不编造。",
+        "分别报告结构、样式与语义检查的实际状态，不用脚本替代领域确认。"
+      ]
+    },
+    {
+      "id": "document-prose-missing-evidence-stays-open",
+      "category": "prose-negative-control",
+      "risk": "high",
+      "prompt": "用 $document-authoring 审核这份提交给运营经理的连续正文报告，不要加模板或补造事实：新页面非常成功，大家都满意，因此明天向所有门店发布。负责人和复验办法以后再定。目前没有访问量、满意度调查或试点范围记录。给出是否足以支持发布以及最小缺口。",
+      "criteria": [
+        "发现成功结论、全量发布依据、责任和验证缺口；正文没有标题本身不是不通过原因。",
+        "结构脚本不适用不等于报告就绪；不得用流畅改写或一般最佳实践代填数据和负责人。",
+        "只指出影响当前发布判断的具体缺口与后续动作，保持发布尚无依据。"
+      ]
+    },
+    {
+      "id": "document-probability-and-permission-remain-distinct",
+      "category": "modality-boundaries",
+      "risk": "high",
+      "prompt": "用 $document-authoring 修顺这段研究说明，只改表达并合并无信息重复：目前设备可以识别清晰的打印体，也可以识别倾斜不超过5度的打印体。模糊影像可能漏识，发生比例尚未统计。制度另规定：研究人员可以查看脱敏样本，不得下载原始影像。",
+      "criteria": [
+        "合并一般能力说明时保留清晰、倾斜不超过5度等各自条件，不扩大可识别范围。",
+        "可能漏识与比例未知保持不确定，不改成必然或已经证明可避免。",
+        "许可与禁止的效力词、对象保持，不能将可以一概当作非规范重复删除。"
+      ]
+    }
+  ]
+}
