@@ -184,6 +184,9 @@
       },
       {
         "cases": "fixtures/skill-eval/novelist-literary-craft-loop-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-learning-and-review-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [

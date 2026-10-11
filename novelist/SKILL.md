@@ -80,7 +80,7 @@ description: Use when 用户在小说或故事语境下进行想象、幻想、�
 - 作者显式要求角色讨论、多视角碰撞、会商、辩论或分角色试写 / Loop，或历史、世界、神话、人物、文明、剧情与正文之间存在承重冲突时，读 `references/deliberation-role-configuration.md`；由 `wise-agent` 主持时，通用角色语义由主持方加载。普通构思、续写和局部修订不强制合议。
 - 想象与剧情设计、故事总纲、卷章提要 / 卡片、群像取舍、并行线、创作承续与草稿落地、正文准入和读者承诺：读 `references/story-design-and-drafting.md`；世界、人物和场景只补当前承重缺口，不展开百科。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
-- 用户要求公开小说学习、跨作品技法对照或从公开小说提炼叙事方法：读 `references/craft-case-library.md` 对应章节；需要核对实际来源、版本、许可证或不吸收边界时，再读 `references/source-map.md`。这些材料提供参照和合成案例，不代表小说家行为已经完成真实效果准入，也不复制原文、人物、情节或作者口吻。
+- 用户要求公开小说学习、跨作品技法对照、持续研习或学习汇总：先读 `references/worldbuilding-and-research.md` 的“公开小说学习与背景研究”，按本轮问题取材与转用；需要合成案例再读 `references/craft-case-library.md` 对应节，需要复核包内来源再查 `references/source-map.md`。写作效果由实际产物与回读判断，不能以已读材料或案例代替。
 - 需要参考案例、示例对照或反例诊断：只按任务读取 `references/craft-case-library.md` 对应一节；合成案例不成为正典或来源证据。需要复核外部方法的出处、固定版本或许可证时，另读 `references/source-map.md`，普通创作不加载来源索引。
 - 人物、重要配角或对手、弧光与成长、人物外号、绰号、诨名与群体称呼、人物动态档案、人物代入、角色扮演或人物反应推演，以及器物、神兵、功法与能力设计：读 `references/character-craft.md`；来源、材料、制度和代价缺口加世界研究，成篇加场景技法，不脱离人物选择冻结设定。角色扮演只是受正典与限知约束的临时方法，不创建持久人格或第二角色 Owner；确需建档才用 `assets/character-dynamic-profile-template.md`。
 - 场景展开、凡人 / 武侠 / 玄幻 / 仙侠 / 魔法等打斗与斗法、功法 / 武器 / 法宝和人物成长、妖鬼神魔或灵兽行动、战争、市井、家庭、朝堂、礼制与风土场面，以及导演调度、编辑 / 观众复核、转场、POV、内心、对白、打趣或项目文风校准：读 `references/scene-and-prose-craft.md`；用户要求古典白话文、句读、汉语气韵或四大名著功能参照时，再读 `references/classical-vernacular-style.md`。正文续写先读 `references/story-design-and-drafting.md`，通过内部章级准入后再读 `references/scene-and-prose-craft.md` 与语体 reference；只交付正文时不展示规划过程。
