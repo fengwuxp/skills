@@ -178,6 +178,9 @@
       },
       {
         "cases": "fixtures/skill-eval/novelist-classical-vernacular-style-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/novelist-literary-craft-loop-behavior-cases.json"
       }
     ],
     "product-architecture-expert": [

@@ -77,7 +77,7 @@ description: Use when 用户在小说或故事语境下进行想象、幻想、�
 
 小说想象、幻想或设计需要专题知识时，查 `references/knowledge-library.md`，只读适配当前背景与剧情的条目；涉及任官、赏罚、权柄、制度或权谋时可直接读 `references/knowledge-hanfeizi.md` 对应章节。无需额外提示词；普通生活、纯审美或无取材缺口的发散跳过专题库，仍保留上述轻量协同，知识不自动成为正典。
 
-- 作者显式要求角色讨论、多视角碰撞、会商或辩论，或历史、世界、神话、人物、文明、剧情与正文之间存在承重冲突时，读 `references/deliberation-role-configuration.md`；由 `wise-agent` 主持时，通用角色语义由主持方加载。普通构思、续写和局部修订不强制合议。
+- 作者显式要求角色讨论、多视角碰撞、会商、辩论或分角色试写 / Loop，或历史、世界、神话、人物、文明、剧情与正文之间存在承重冲突时，读 `references/deliberation-role-configuration.md`；由 `wise-agent` 主持时，通用角色语义由主持方加载。普通构思、续写和局部修订不强制合议。
 - 想象与剧情设计、故事总纲、卷章提要 / 卡片、群像取舍、并行线、创作承续与草稿落地、正文准入和读者承诺：读 `references/story-design-and-drafting.md`；世界、人物和场景只补当前承重缺口，不展开百科。
 - 网文 / 连载点子的可行性、开头留人、连载持续力或按追更节奏诊断章节：先读 `references/story-design-and-drafting.md`，再读 `references/web-serial-craft.md`，只补充连载语境的分层定位与持续力检查，不套固定字数、黄金三章或强制逐章门禁。
 - 用户要求公开小说学习、跨作品技法对照或从公开小说提炼叙事方法：读 `references/craft-case-library.md` 对应章节；需要核对实际来源、版本、许可证或不吸收边界时，再读 `references/source-map.md`。这些材料提供参照和合成案例，不代表小说家行为已经完成真实效果准入，也不复制原文、人物、情节或作者口吻。
