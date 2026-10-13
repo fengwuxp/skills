@@ -34,6 +34,13 @@
 
 S11 的恢复边界另以 Stripe [错误处理](https://docs.stripe.com/error-low-level)、[拒绝码](https://docs.stripe.com/declines/codes)（2026-10-05 已读），及 Stripe [幂等请求](https://docs.stripe.com/api/idempotent_requests)、Adyen [API 幂等](https://docs.adyen.com/development-resources/api-idempotency)（2026-10-06 复核）交叉检查：结果未知须按原请求收敛，业务拒绝的后续动作依具体契约，幂等保证有作用域。只用于校准既有边界，不把厂商字段、有效期或重试策略推广为通用规范，也不因文档列出替代方案而默认关闭幂等保护。
 
+### S12 对账完整性、依赖与截止处置（2026-10-13）
+
+- 来源：[陈天宇宙《一文搞懂「对账系统」》](https://mp.weixin.qq.com/s/KJZYmE-F-IYIDR0HjArbgw)，页面显示 2026-10-12 20:19。2026-10-13 常规网页读取失败后，通过 Codex 应用内浏览器实际读取标题、作者、发布时间及分段文字正文；配图字段、流程和会计分录未逐项核验。与 S1/S8 同作者，不算作三个独立证据源。
+- 采用范围：数据来源到核对结果、差错处置的连续关系，以及对账与结算需要兼顾业务时效的 D1 设计线索。完整性证据、按实际依赖局部阻断、截止时有条件处置是本项目结合既有 M05/M07 作出的设计补充，正文归 `clearing-settlement.md`，方法卡只保留路由。合成行为用例检验这些边界，不构成真实用户、生产或财务确认。
+- 同日核读官方 [Stripe Balance report](https://docs.stripe.com/reports/balance) 与 [Adyen Payout reconciliation](https://docs.adyen.com/platforms/payout-reconciliation)：前者提供期间、币种、时区、汇总与明细，并说明明细 PDF 行数有限；后者按核对用途和出款类型选择不同报告。只用于反证“一种报表 / 汇总方式适用于所有核对”和“看到导出文件即证明数据完整”，不推广厂商固定行数、报告形态、出款政策或精确状态为通则。
+- 未采用：所有对账必须逐日串行、资金对账只做汇总、差异一律触发记账、到点无条件结算，以及具体表结构、分录和配置平台。无独立证据的时效、资金或会计判断仍待目标合同、账务 / 财务及资金风险 Owner 确认；不得据文章新增垫资、准备金或自动放行授权。
+
 S2/S3 仅登记已经脱敏的冻结设计、源码和测试锚点；不读取或泄露客户数据、密钥、生产配置和未提交工作区。
 
 ## 来源独立公共核心

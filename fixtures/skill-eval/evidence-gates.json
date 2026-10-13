@@ -304,6 +304,9 @@
       },
       {
         "cases": "fixtures/skill-eval/payment-domain-foundations-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/payment-reconciliation-boundaries-behavior-cases.json"
       }
     ],
     "requirement-acceptance-testing": [
