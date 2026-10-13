@@ -271,6 +271,9 @@
         "cases": "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/wise-agent-message-delivery-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"
       },
       {
