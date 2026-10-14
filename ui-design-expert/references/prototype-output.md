@@ -24,7 +24,7 @@
 - 产品事实到 HTML / Figma 载体的统一标注、业务数据状态回链和跨工具适配读取 `prototype-annotation-contract.md`；本文件只保留原型层级、工具路由和证据上限。
 - PRD、交互载体和业务标注需要同一评审入口时，按该 contract 的“可选单页评审投影”执行；它不替代 PRD、产品事实或浏览器验收。
 
-- 任务结构与设计契约读取 `design-and-review-workflow.md`。
+- 绘制原型前，按 `design-and-review-workflow.md` 的“业务理解与双向推敲”承接产品事实、受众关系和提供方承诺，再确定任务结构与设计契约；局部修改只回看受影响的依据。
 - 完整网站的来源权威、页面命名、Page Manifest 和跨页一致性读取 `figma-design-contract.md`。
 - Figma 文件骨架、组件、变量、Auto Layout、资产登记和代码映射读取 `figma-file-engineering.md`。
 - 组件、tokens、响应式与可访问性读取 `design-foundations.md`。
