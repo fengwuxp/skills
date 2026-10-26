@@ -21100,7 +21100,8 @@ check(
     and has_all(
         novelist_skill,
         [
-            "关键分叉与依赖清单",
+            "只有影响本轮方向的真实分叉才比较方案",
+            "不机械输出分叉、依赖或 blocker 清单",
             "最短证据链",
             "正文续写先读 `references/story-design-and-drafting.md`",
             "再读 `references/scene-and-prose-craft.md`",
