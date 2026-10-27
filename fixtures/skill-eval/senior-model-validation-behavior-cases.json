@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": false,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "description": "模型约束、校验责任与测试证据的 contract-only 题集，含相似代码及小修的克制反例。静态通过不证明编码能力改善；比较时冻结本轮修改前后相同的架构师与规则依赖，用同一代码输入、模型和工具执行并审查实际产物，不用无 Skill 对照归因本次增量。",
+  "cases": [
+    {
+      "id": "contract-model-valid-outcome-without-framework",
+      "category": "model-invariants",
+      "risk": "medium",
+      "prompt": "整理模块内部的 Outcome(succeeded, value, error)：合同只允许成功且有非空结果、失败且有非空原因，建立后不可被赋值改成矛盾状态。调用者只有本模块 render 与已有测试，没有外部序列化契约。请给最小实现与验证，保持显示内容。",
+      "criteria": [
+        "用已确认的合法组合约束现有模型、构造或局部类型，并保证后续普通赋值不破坏约束；不把类型标注本身当成运行时保证。",
+        "验证两种合法结果、矛盾组合及不可变性；不新增处理中等未确认状态，不要求每个字段各造值对象、工厂或框架。",
+        "复用已有调用和测试，变更限于模型及必要调用，不为形式拆服务或建立全局校验机制。"
+      ]
+    },
+    {
+      "id": "contract-validation-stable-value-and-live-state",
+      "category": "validation-ownership",
+      "risk": "high",
+      "prompt": "简化预约模块的重复处理：ReserveCommand 构造时已检查 sku 非空、quantity 为正整数，且对象不可变；submit 与 Store.reserve 又各查一次这两项。命令只由此构造器产生，两个内部入口无反序列化和其它调用路径。Store.reserve 还检查当前权限及库存。权限和库存可在构造后变化，目前调用串行。请推进最小改动并说明验证。",
+      "criteria": [
+        "区分已保证且不变的输入约束与会变化的业务事实，可收敛重复格式检查，不以内部也许被绕过的假设继续堆防御。",
+        "保留承责位置的实时权限和库存判断，验证构造后权限撤销、库存变化及失败无副作用；不把早先校验当作永久许可。",
+        "复用当前模型、构造器与测试，不新增锁、共享校验平台或生产测试旁路，不改变串行调用和既有结果语义。"
+      ]
+    },
+    {
+      "id": "contract-test-evidence-does-not-count-every-failure",
+      "category": "test-effectiveness",
+      "risk": "high",
+      "prompt": "discounted_total 的已确认规则是金额小于 100 不优惠，否则减 10；实现正确，测试仅断言 discounted_total(120) 非空。请改进测试。另有独立报告：原基线通过；去掉折扣被断言捕获；>= 改成 > 后测试仍通过；一个变异无法编译；一个测试环境缺包；一个变异循环超时；减零变加零后仍通过且行为相同；一条路径未覆盖且未执行。如何判读这些结果？",
+      "criteria": [
+        "通过精确输出与阈值上下的行为断言补测试，保护包含等于 100 的契约，不修改正确生产语义或测试内部实现。",
+        "区分断言捕获、存活、无效变异、环境失败、超时、等价及未覆盖，不将无法编译、未启动或未知原因超时合计为业务断言有效。",
+        "等价判断回到行为依据；未覆盖不等于死代码，采集失败不等于实测零覆盖，不为统一分数全仓库变异、安装工具或删代码。",
+        "只报告实际执行的本地验证，给定报告的判读不冒充已重现；所选行为得到保护后收口。"
+      ]
+    },
+    {
+      "id": "contract-similar-code-different-business-knowledge",
+      "category": "duplication-review",
+      "risk": "medium",
+      "prompt": "只读评审：can_dispatch(order) 返回 order.paid and order.stock_ready；can_return(order) 返回 order.delivered and order.within_return_window。扫描器因结构相似建议合并成通用资格判断器。发货和退货规则分别维护，未确认共同变化需求。请给取舍。",
+      "criteria": [
+        "基于不同业务语义保留清晰的独立表达，不为相似度阈值强造参数、策略或通用判断器。",
+        "说明结构相似不能证明知识重复，复用既有原则即可，不新增工具或全局流程。",
+        "保持只读，缺少当前缺陷可以结论为无需修改，不将没有 diff 当作未完成。"
+      ]
+    },
+    {
+      "id": "contract-trusted-java-nullness-needs-no-runtime-guard",
+      "category": "trusted-static-contract",
+      "risk": "medium",
+      "prompt": "只读评审 Java 模块中新加的 record ReceiptView(String reference) {}。包使用 org.jspecify.annotations.NullMarked，项目已采用该空安全契约，构建的静态检查通过；该返回模型只由受信任内部服务构造，无反序列化或外部构造路径。reference 没有非空白、格式或跨字段约束。这个实现还需要补哪些代码与验证？",
+      "criteria": [
+        "认可已采用的内部非空契约，不仅因注解不会自动运行就要求增加紧凑构造器、Objects.requireNonNull 或重复判空；现有实现满足要求时允许保持不变。",
+        "按 Java 约规核对 JSpecify 作用域、内部调用和已有静态检查依据，不把静态契约说成自动运行的 Bean Validation。",
+        "不虚构外部入口、空白限制或其它业务规则，不为证明防御编造非法内部调用或新增生产旁路；保持只读。"
+      ]
+    },
+    {
+      "id": "contract-external-java-input-still-needs-validation",
+      "category": "untrusted-runtime-boundary",
+      "risk": "high",
+      "prompt": "只读评审一个 Java Spring MVC POST 创建接口：Controller 用 @RequestBody 接收 CreateRequest(String reference) record 并调用 Service，接口合同要求 reference 不可为 null。请求包只有 org.jspecify.annotations.NullMarked，未配置请求验证触发或字段约束，静态检查通过。项目已使用 Jakarta Bean Validation。请评审参数处理，给最小修正和验证建议。",
+      "criteria": [
+        "识别 JSON 输入尚未完成运行时校验，JSpecify 静态检查不能证明来自客户端的 reference 非空。",
+        "按项目规则在实际 Controller 请求入口触发已采用的验证并声明非空约束，核验拒绝结果及未调用业务写入；不要求 Service 每层重复同义验证。",
+        "保留合法输入与既有错误契约，只落实不可为 null 的要求，不擅自提升为非空白或新格式；保持只读，不把建议写成已执行验证。"
+      ]
+    },
+    {
+      "id": "contract-local-limit-fix-stays-local",
+      "category": "bounded-bug-fix",
+      "risk": "low",
+      "prompt": "within_limit(size, limit) 目前返回 size < limit；需求允许等于上限。修复这一处并补必要回归，保持参数和其它行为。项目已有测试入口，无其它已知缺陷。",
+      "criteria": [
+        "局部修复边界比较，验证小于、等于、大于的可观察结果，复用项目测试入口。",
+        "不新增值对象、接口、工厂、配置、参数防御或强制变异工具，不为小修展开架构重构和规划审批。",
+        "测试通过且无新问题即收口，不以吸收外部原则为由顺手清理无关代码。"
+      ]
+    }
+  ]
+}

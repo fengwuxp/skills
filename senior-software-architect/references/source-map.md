@@ -392,6 +392,14 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 - 来源/读取：`https://mp.weixin.qq.com/s/L5npvArj6EZhy20o-AsJ1Q`；标题：`需求分析和设计活动关键要点总结`；公众号：`软件需求分析和设计`；作者：`常识`；发布时间：2026-05-26 10:29:23；读取日期：2026-06-01。已通过移动端微信 UA 公开 HTML 读取标题、公众号、作者、发布时间和正文；随后使用本机 Chrome headless 作为 Playwright 等价浏览器读取到标题、作者、发布时间和正文；未见明确复用许可证。
 - 应用记录：`system-analysis-design.md` 补充功能不是头脑风暴功能点，而是对象对外提供的可见、有价值交互行为、正向分解和逆向追溯，以及需求分析外部视角和设计内部视角；`skill-tree-architecture-design.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 同步功能分配追溯、需求/设计分工与防漂移断言。
 - 未吸收内容：不复制文章中的 GJB 章节表述、书籍推荐、课程机构推荐、作者自述或原文表达；不把军标/适航语境直接写成通用软件项目强制流程；不把“功能分配”绝对化为排斥用户反馈、业务探索或产品发现。
+## ub-mode：模型约束与验证证据
+
+- 来源：`https://github.com/unclebob/ub-mode/tree/57a8bdd28e45ed41900ace0bafa2ff76dd9ed70f`；2026-10-27 实际读取该版本完整 `README.md` 与 `SKILL.md`，核对文件树仅有这两份文档，未见 LICENSE。只用自有表述提炼通用方法，不复制原文、代码或安装该 Skill。
+- 应用：`project-governance-service-api-modeling.md` 的“模型约束与校验责任”补充稳定约束与动态事实的责任区分；`testing.md` 的“有限变异与验证结果判读”补充有界检查和证据分类。最小修改、根因修复、行为测试、重构保行为及减少共享状态已有覆盖，复用既有规则，不建立新模式。
+- 对照：2026-10-27 实际读取 `https://pitest.org/quickstart/basic_concepts/`，核对等价变异及 Killed、Survived、No coverage、Non viable、Timed Out、Memory error、Run error 的区分；借鉴判读方法，不要求消费项目采用 PIT。
+- 工具边界：同日实际读取 `https://github.com/unclebob/crapper`、`https://github.com/unclebob/dryer`、`https://github.com/unclebob/mutator` 的 README。说明文档中存在自动安装依赖、采集失败按零覆盖处理、无法编译计为变异已杀死等行为；本轮未运行或完成这些工具的源码安全审计，不视为可直接接入。未来评估须固定版本，核对项目工具链、副作用、输入报告与结果语义。
+- 不吸收：固定 CRAP / 相似度阈值、强制纯函数或单写者、每个动作记录日志、自动清理工作树及提交推送。既有能力足够时不添加工具或规则；类型保证不替代动态权限与一致性检查，扫描命中不替代业务判断，结构校验与小样本试验不证明稳定编码能力提升。
+
 ## 提炼边界
 - 代码评审类来源适合沉淀为 Review 判断顺序、评论分级、协作礼仪、变更颗粒度和提交说明质量。
 - 不复制文章正文、付费内容、仓库示例、站点图像、品牌表达、组织内部流程或外部脚本。
