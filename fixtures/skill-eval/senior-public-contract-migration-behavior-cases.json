@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "senior-software-architect 对公共契约硬切、校验边界迁移与真实构建证据的 cases-only 行为 contract。场景来自已复核的真实工程失败；静态通过只证明契约可复跑，真实改善仍需同一 runner/model 的重复响应、盲评和独立复核。",
+  "description": "senior-software-architect 对公共契约演进、校验边界迁移、生成产物维护与真实构建证据的 cases-only 行为 contract。包含已复核的工程失败场景和合成的生成产物维护对照；静态通过只证明契约可复跑，真实改善仍需同一 runner/model 的重复响应、盲评和独立复核。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -12,9 +12,11 @@
       "paths": [
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/refactoring-design-template.md",
+        "senior-software-architect/references/workflow.md",
+        "senior-software-architect/references/coding-review-deep-dive.md",
         "senior-software-architect/references/testing-practices-java-spring-common.md"
       ],
-      "sha256": "8fa7f48d1a65e52c26a7159e12ea269f2740463537822d15e2a6dc869f158c4c"
+      "sha256": "41493146451d60a9936c2f9e40cf1e8d480ecac99de16ec254ea00f4615baa54"
     }
   },
   "rubric": {
@@ -74,6 +76,39 @@
         "立即中止意外 metadata 访问，本次执行不计入正式编译、测试或 PMD 证据。",
         "核验任务运行器实际启动的子进程、PATH / 环境传播和最终 Maven 参数，不因外层声明 offline 就假定子进程已离线。",
         "使用项目已有且可审计的 offline 入口重新执行，并以新产物和 fresh 报告证明结果；不为此安装依赖或改业务源码。"
+      ]
+    },
+    {
+      "id": "senior-should-fix-generated-client-at-its-source",
+      "category": "generated-contract-authority",
+      "risk": "medium",
+      "prompt": "仓库的 api/schema.yaml 是客户端类型的权威源，项目已有 generate-client 命令，src/client 下文件标记由它持续生成，且没有人工改动。已确认并授权新增可选字段 displayName，保留其它契约。有人先在生成的 client/types.ts 手工加了该字段。请推进最小完整修正。",
+      "criteria": [
+        "回到 schema 修改字段，再使用项目既有生成入口更新客户端，不只保留输出文件的手工补丁。",
+        "核对输出范围、源与结果一致以及可选字段兼容性，运行相关类型或契约验证；不新增生成工具或改无关模板。",
+        "工具不可用或生成失败时保留未完成状态，不把手工编辑或命令退出前的旧产物称为再生成成功。"
+      ]
+    },
+    {
+      "id": "senior-should-edit-maintained-scaffold-as-source",
+      "category": "maintained-scaffold-hard-negative",
+      "risk": "low",
+      "prompt": "DeliveryService 最初由脚手架创建，文件头仍有 generated 字样；项目规则已明确该骨架交付后由开发者维护，构建不会再生成它。当前包含人工业务逻辑。请只修复允许值等于上限时被拒绝的问题，现有行为测试可复用。",
+      "criteria": [
+        "按明确维护约定直接修改当前源码及必要测试，不仅凭 generated 标记拒绝编辑。",
+        "保留人工业务逻辑，不修改通用生成模板、不重新生成覆盖 Service，也不要求把本地业务规则反写到脚手架模板。",
+        "局部验证边界相等及原有行为，不新增工具、审批或生成体系。"
+      ]
+    },
+    {
+      "id": "senior-should-preserve-edits-before-regeneration",
+      "category": "regeneration-write-boundary",
+      "risk": "high",
+      "prompt": "需要修复一份持续生成的 SDK。已找到 schema 与生成命令，但命令会重写整个 sdk 目录，目录中有另一项任务尚未提交的人工修正，尚未查明这些修正应归模板、可编辑区域还是消费层。请推进本轮修复并说明当前能做什么。",
+      "criteria": [
+        "先核对输出范围和人工改动归属，不直接重写目录、丢弃或擅自搬迁另一任务的内容；保留现有工作区。",
+        "继续定位源头、分析本轮修正和验证方式，必要时在隔离候选输出中比较差异；只暂缓可能覆盖未归位改动的动作。",
+        "隔离候选生成不等于工作区已更新或修复已采用，不把保护人工改动升级成每次生成都必须新增审批或框架。"
       ]
     },
     {

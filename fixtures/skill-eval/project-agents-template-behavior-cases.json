@@ -22,7 +22,7 @@
     "require_auditable_judgments": true,
     "high_risk_candidate_criteria_min_pass_rate": 1
   },
-  "description": "通用工程AGENTS及语言差量模板的 contract-only 场景；保护兼容裁决、完整增量、依赖复用和任务作用域。",
+  "description": "通用工程AGENTS及语言差量模板的 contract-only 场景；保护兼容裁决、完整增量、依赖复用、校验边界、生成维护和任务作用域。静态校验不证明自然触发或执行质量提升。",
   "cases": [
     {
       "id": "agents-confirm-consumers-before-removal",
@@ -92,6 +92,28 @@
       "criteria": [
         "只补该决策缺口，保留已确认命令和模块规则，不整体覆盖或追加完整能力菜单。",
         "生成或修改项目约规不自动授权Git、安装、部署、删除或写全局规则。"
+      ]
+    },
+    {
+      "id": "agents-adapt-opencode-without-speculative-guards",
+      "category": "bounded-engineering-rules",
+      "risk": "medium",
+      "prompt": "为一个 TypeScript 服务完善 AGENTS。项目使用 pnpm 和既有格式器，外部输入由 schema 解析，内部对象采用已确认的类型契约；权限与库存可能变化。请借鉴 OpenCode 的规则，但保持现有工具和风格。当前没有新增并发或安全缺陷的证据。",
+      "criteria": [
+        "新增防御要求具体失效路径与后果依据，不为假想风险加锁、重试或回退，不编造概率或把每项普通实现变成审批；必要的正确性、安全与测试仍保留。",
+        "区分外部输入解析、内部可信契约和执行时的动态权限/库存，允许复用既有保证，不笼统要求内部重复检查或删除所有后续校验。",
+        "沿用现有工具和风格，不搬入 Bun、三目偏好或 Java/Wind 细则；函数抽取按概念、复杂边界和复用判断，短卫语句和合理的单次调用辅助函数均可保留。"
+      ]
+    },
+    {
+      "id": "agents-express-generation-ownership-and-real-tests",
+      "category": "generation-and-test-boundaries",
+      "risk": "medium",
+      "prompt": "为工程补充 AGENTS：api/openapi.yaml 通过已核对的 pnpm gen:client 生成 src/client；services 下的代码最初由 AI 脚手架生成，现已交付开发者持续维护。现有单测可直接运行，远程依赖使用 Fake。请写清修改和验证边界，保留其它项目规则。",
+      "criteria": [
+        "记录真实源、输出和生成命令，持续生成客户端改源后再生成并保护输出范围内人工改动；services 按人工源码维护，不仅凭创建方式或生成标记禁止编辑。",
+        "测试调用真实被测实现并检查外显结果，不复制业务算法作为预期计算器；允许外部 Fake，不强制启动远程依赖或换测试底座。",
+        "只补项目实际缺口，生成的 AGENTS 自身能表达必要边界，不依赖消费项目不存在的 Skills 源库文件；不新增全局规则或自动授予 Git、覆盖、安装权限。"
       ]
     },
     {
