@@ -16,6 +16,7 @@ VALID_CASES = [
     ("system-design", FIXTURES / "system-design-valid.md"),
     ("refactoring-design", FIXTURES / "refactoring-design-valid.md"),
     ("code-review", FIXTURES / "code-review-valid.md"),
+    ("code-review", FIXTURES / "code-review-clean-valid.md"),
     ("production-change", FIXTURES / "production-change-valid.md"),
     ("diagram-brief", FIXTURES / "diagram-brief-valid.md"),
 ]

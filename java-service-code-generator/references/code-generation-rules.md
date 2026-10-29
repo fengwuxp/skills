@@ -169,6 +169,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - 声明 `public static final String TABLE_NAME = "...";`。
 - 实现 `Serializable`。
 - `serialVersionUID` 使用 `@Serial`，并导入 `java.io.Serial`。
+- 当前确定性脚手架只支持唯一物理主键 `id`，归一后 Java 属性也为 `id`、类型为 `Long`，且输入明确声明自增；非 id、非 Long、复合或缺失主键、未支持的主键生成策略均在任何源码或 DDL 写入前拒绝。创建请求不接收 id，因此普通 `@Id`（默认无生成策略）不能作为可用创建契约；需要其他策略时先由目标项目适配，脚本不猜测。
 - 自增主键使用 `@Id(keyType = KeyType.Auto)`。
 - 主键使用 `@NotNull`。
 - 非空且无默认值的 `String` 字段使用 `@NotBlank`，其他非空字段使用 `@NotNull`。
@@ -182,6 +183,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 - `tenant_id` 或字段名 `tenantId` 使用 `@Column(tenantId = true)`。
 - `version`、`lock_version`，或字段注释包含“乐观锁”“版本号”时，使用 `@Column(version = true)`。
 - `is_deleted`、`deleted`，或字段注释包含“逻辑删除”时，使用 `@Column(value = "实际列名", isLogicDelete = true)`。
+- 归一后的 Java 字段必须是合法且唯一的标识符，不得与生成器自带字段冲突；关键字及 `true` / `false` / `null` / `_` 使用 `Value` 后缀并保留物理列映射，归一碰撞或非法显式 Java 属性名在写入前拒绝。
 - Boolean 类型 `is_*` 字段默认去掉 `is` 前缀，例如 `is_enabled -> enabled`，并保留 `@Column("is_enabled")`。
 - `u_id` 转为 Java 字段 `uid`，并保留 `@Column("u_id")`。
 - Java 关键字、保留字或受限标识符必须重命名并保留映射，例如 `record -> recordValue`、`var -> varValue`、`yield -> yieldValue`、`group -> groupValue`；如果相邻代码有其他明确约定，遵循本地约定。字段表格显式提供的 Java 属性名同样必须净化，不能让外部输入绕过命名红线。
@@ -208,7 +210,7 @@ python3 java-service-code-generator/scripts/generate_scaffold.py \
 
 ## 类型映射规程
 
-- 整型主键和 `bigint` 映射为 `Long`。
+- `bigint` 映射为 `Long`；`int` 等较小整数映射为 `Integer`，不满足当前脚手架的主键契约。
 - `int`、`integer`、`smallint`、`mediumint` 映射为 `Integer`。
 - `tinyint(1)`、`bit(1)` 映射为 `Boolean`；其他 `tinyint` 映射为 `Integer`。
 - `decimal`、`numeric` 映射为 `BigDecimal`。

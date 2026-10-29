@@ -231,7 +231,10 @@ def validate_contract(values: dict[str, str]) -> None:
             raise ContractError(f"{field} 不能与 target_figma 相同")
 
 
-def validate_pages(pages: list[dict[str, str]], client_scope: str) -> None:
+def validate_pages(pages: list[dict[str, str]], contract: dict[str, str]) -> None:
+    client_scope = contract["client_scope"]
+    new_interface = contract["change_mode"] == "new-interface"
+    delivered = contract["status"] in {"ready-for-code", "approved"}
     seen_ids: set[str] = set()
     seen_routes: set[str] = set()
     seen_names: set[str] = set()
@@ -260,8 +263,13 @@ def validate_pages(pages: list[dict[str, str]], client_scope: str) -> None:
         is_current = parse_bool(page["is_current"], f"page[{index}].is_current")
         if page["status"] == "superseded" and is_current:
             raise ContractError(f"page[{index}] superseded 页面不能是 current")
-        if not has_exact_node(page["source_node"]):
+        no_source = new_interface and page["source_node"].casefold() == "none"
+        if not no_source and not has_exact_node(page["source_node"]):
             raise ContractError(f"page[{index}] source_node 必须包含精确节点标识")
+        target_node = page.get("target_node", "")
+        if target_node or (new_interface and delivered):
+            if not has_exact_node(target_node):
+                raise ContractError(f"page[{index}] target_node 必须包含已创建的精确节点标识")
         states = [state.strip() for state in page["states"].split(",") if state.strip()]
         if "default" not in states:
             raise ContractError(f"page[{index}] states 必须包含 default")
@@ -375,7 +383,7 @@ def parse_plan(text: str) -> PlanParts:
         parse_records(annotation_blocks[0], "annotation") if annotation_blocks else []
     )
     validate_contract(contract)
-    validate_pages(pages, contract["client_scope"])
+    validate_pages(pages, contract)
     validate_navigation(navigation, pages)
     validate_annotations(annotations, contract)
     validate_delivery_state(contract, pages, evidence)

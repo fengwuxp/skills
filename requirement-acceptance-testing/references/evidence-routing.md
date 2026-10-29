@@ -49,6 +49,8 @@
 
 视觉通过仍需要 design-context、声明视口的 runtime-screenshot 和独立 visual-review；交互通过仍需要 browser-trace 或 browser-assertion。缺少这些证据时按 required 条件输出 blocked 或 cant-tell，不用源码契约补成 Pass。
 
+无论 `risk_level` 高低，`visual-review` 的 `producer` 必须具名并独立于被复核实现和截图的生产者；关联证据中的生产者身份必须如实填写，方法说明应列明复核对象。校验器比较该条件所关联的实现/运行证据与视觉复核生产者，不能核实真实身份或未记录的分工。独立视觉评审本身无需第四位 Reviewer。
+
 ## 四、需求到示例
 
 复杂规则先列：规则、具体正反例、未决问题、范围外项。`Given / When / Then` 可用于表达可执行示例，但不要求引入 Cucumber，也不能用格式完整掩盖需求未定。

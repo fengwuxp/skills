@@ -270,10 +270,70 @@ def missing_ordered_sections(text: str, sections: list[tuple[str, tuple[str, ...
     return missing
 
 
+def current_review_text(text: str) -> str:
+    """仅取当前正文，引用、代码围栏和明确历史资料不参与准出结论。"""
+    lines: list[str] = []
+    fence = ""
+    historical_level: int | None = None
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith(">"):
+            continue
+        marker = re.match(r"^(`{3,}|~{3,})", stripped)
+        if marker:
+            delimiter = marker.group(1)
+            if not fence:
+                fence = delimiter
+            elif delimiter[0] == fence[0] and len(delimiter) >= len(fence):
+                fence = ""
+            continue
+        if fence:
+            continue
+        heading = re.match(r"^(#{1,6})\s+(.+)$", stripped)
+        if heading:
+            level = len(heading.group(1))
+            if historical_level is not None and level <= historical_level:
+                historical_level = None
+            if historical_level is None and re.fullmatch(
+                r"(?:历史|旧版)(?:资料|记录|模板|结论|片段|示例)|引用(?:资料|片段|示例)",
+                heading.group(2),
+            ):
+                historical_level = level
+        if historical_level is None:
+            lines.append(line)
+    return "\n".join(lines)
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
     groups = CHECKS[kind]
+    clean_review = False
+    review_text = current_review_text(text) if kind == "code-review" else ""
+    if kind == "code-review":
+        conclusions = re.findall(
+            r"(?:^|[\n。；])\s*(?:(?:[-+*]|\d+[.)])\s+)?"
+            r"(?:结论|评审结论|发现|问题)(?:\s*\d+)?\s*[：:]\s*([^\n。；]+)", review_text
+        )
+        clean_conclusions = [value for value in conclusions if re.fullmatch(
+            r"未发现(?:需修复的|需要修复的|可报告的|应修复的)?问题", value.strip()
+        )]
+        if clean_conclusions:
+            has_findings = re.search(r"(?m)^\s*#{1,6}\s*(?:发现|问题)(?:[：:\s]|$|列表|清单)|\[P[0-3]\]", review_text)
+            if len(conclusions) != 1 or has_findings:
+                missing.append("conflicting_review_conclusion")
+            else:
+                clean_review = True
+    if clean_review:
+        groups = []
+        for name, labels in (
+            ("scope", ("范围", "评审范围")),
+            ("evidence", ("证据",)),
+            ("verification", ("验证", "测试")),
+            ("risk", ("风险", "残余风险", "未覆盖")),
+        ):
+            if not any(has_meaningful_labeled_value(review_text, label) for label in labels):
+                missing.append(name)
     if kind == "system-design" and all(marker.casefold() in normalized for marker in TABLE_DESIGN_MARKERS):
         groups = [*groups, *TABLE_DESIGN_CHECKS]
     for group in groups:

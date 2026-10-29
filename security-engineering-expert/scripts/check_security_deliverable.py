@@ -305,7 +305,7 @@ def ids(value: str, kind: str) -> set[str]:
     return set(ID_PATTERNS[kind].findall(value.upper()))
 
 
-def validate_trace_rows(parsed: dict[str, str]) -> tuple[list[dict[str, str]], list[str]]:
+def validate_trace_rows(parsed: dict[str, str], recommendation: str | None) -> tuple[list[dict[str, str]], list[str]]:
     rows, failures = trace_rows(parsed.get("风险控制证据追踪", ""))
     declared = {
         "RISK": ids(parsed.get("威胁与滥用路径", ""), "RISK"),
@@ -361,11 +361,30 @@ def validate_trace_rows(parsed: dict[str, str]) -> tuple[list[dict[str, str]], l
             )
         if enum_value(row["状态"]) not in VALID_TRACE_STATUSES:
             failures.append(f"风险控制证据追踪: row {row_number} invalid 状态")
-        if is_blocking_value(row["控制 Owner"], "风险 Owner"):
-            failures.append(
-                f"风险控制证据追踪: row {row_number} unresolved 控制 Owner"
-            )
+        unresolved_owner = is_blocking_value(row["控制 Owner"], "风险 Owner")
+        unresolved_owner = unresolved_owner or has_unresolved_marker(row["控制 Owner"], "控制 Owner", strict_unknown=True)
+        if unresolved_owner:
+            if recommendation == "ENGINEERING_BLOCKED" and enum_value(row["状态"]) == "OPEN":
+                body = parsed.get("残余风险与工程建议", "")
+                for field in ("未闭合阻断项", "风险 Owner", "复核触发器"):
+                    value = field_value(body, field)
+                    unresolved = not value or is_none_value(value)
+                    if value and field == "未闭合阻断项":
+                        # 阻断说明可以如实描述“控制责任未知”，但不能只填占位状态。
+                        unresolved = unresolved or enum_value(value) in {"PENDING", "TBD", "TODO", "UNKNOWN", "待确认", "待定", "未知"}
+                    elif value:
+                        unresolved = unresolved or is_blocking_value(value, field)
+                    if unresolved:
+                        failures.append(
+                            f"风险控制证据追踪: row {row_number} 未知控制 Owner 需要明确 {field}"
+                        )
+            else:
+                failures.append(
+                    f"风险控制证据追踪: row {row_number} unresolved 控制 Owner"
+                )
         for column, value in row.items():
+            if column == "控制 Owner":
+                continue
             if has_unresolved_marker(value, column, strict_unknown=True):
                 failures.append(
                     f"风险控制证据追踪: row {row_number} unresolved {column}"
@@ -401,7 +420,9 @@ def audit(text: str) -> list[str]:
             elif is_placeholder_value(value, field):
                 failures.append(f"{heading}: placeholder value for {field}")
 
-    rows, trace_failures = validate_trace_rows(parsed)
+    recommendation_body = parsed.get("残余风险与工程建议", "")
+    recommendation = enum_value(field_value(recommendation_body, "工程建议"))
+    rows, trace_failures = validate_trace_rows(parsed, recommendation)
     failures.extend(trace_failures)
 
     range_body = parsed.get("范围与证据", "")
@@ -419,8 +440,6 @@ def audit(text: str) -> list[str]:
             "范围与证据: 准出目标 must be DESIGN_D1, IMPLEMENTATION_D2, ENABLEMENT_D3, RUNTIME_D4, or PRODUCTION_D5"
         )
 
-    recommendation_body = parsed.get("残余风险与工程建议", "")
-    recommendation = enum_value(field_value(recommendation_body, "工程建议"))
     if recommendation and recommendation not in VALID_RECOMMENDATIONS:
         failures.append(
             "残余风险与工程建议: 工程建议 must be ENGINEERING_READY, ENGINEERING_READY_WITH_RISK, or ENGINEERING_BLOCKED"
@@ -887,6 +906,32 @@ def self_test() -> None:
     )
     if audit(blocked):
         raise SystemExit(f"self-test failed: honest ENGINEERING_BLOCKED rejected: {audit(blocked)}")
+    owner_blocked = (
+        sample.replace("ENGINEERING_READY_WITH_RISK", "ENGINEERING_BLOCKED")
+        .replace("| CONDITIONAL |", "| OPEN |")
+        .replace("未闭合阻断项：NONE", "未闭合阻断项：RISK-001 控制责任未知，由风险 Owner 落实")
+        .replace("复核触发器：依赖、权限模型或目标环境发生变化。", "复核触发器：风险 Owner 指定控制负责人并确认责任后重审。")
+    )
+    for owner in ("PENDING", "UNKNOWN", "待确认", "未知"):
+        report = owner_blocked.replace("| 平台安全负责人 |", f"| {owner} |")
+        if audit(report):
+            raise SystemExit(f"self-test failed: OPEN unknown control owner rejected: {audit(report)}")
+        for status in ("CLOSED", "CONDITIONAL"):
+            failures = audit(report.replace("| OPEN |", f"| {status} |"))
+            if not any("unresolved 控制 Owner" in failure for failure in failures):
+                raise SystemExit("self-test failed: non-OPEN unknown control owner accepted")
+        for recommendation in ("ENGINEERING_READY", "ENGINEERING_READY_WITH_RISK"):
+            failures = audit(report.replace("ENGINEERING_BLOCKED", recommendation))
+            if not any("unresolved 控制 Owner" in failure for failure in failures):
+                raise SystemExit("self-test failed: ready unknown control owner accepted")
+        for field, old_value in (
+            ("未闭合阻断项", "RISK-001 控制责任未知，由风险 Owner 落实"),
+            ("风险 Owner", "平台安全负责人。"),
+            ("复核触发器", "风险 Owner 指定控制负责人并确认责任后重审。"),
+        ):
+            failures = audit(report.replace(f"{field}：{old_value}", f"{field}：NONE"))
+            if not any(f"需要明确 {field}" in failure for failure in failures):
+                raise SystemExit(f"self-test failed: unknown owner without {field} accepted")
     print("OK security deliverable checker self-test")
 
 

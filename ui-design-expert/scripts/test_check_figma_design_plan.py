@@ -173,6 +173,40 @@ class FigmaDesignPlanTests(unittest.TestCase):
                 )
                 self.assertEqual(VALIDATOR.parse_plan(text).annotations[0]["exact_node"], node)
 
+    def test_new_interface_allows_no_source_before_figma_write(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "change_mode: visual-adjustment-with-bounded-content-optimization", "change_mode: new-interface"
+        )
+        text = re.sub(r"source_node: .*", "source_node: none", text)
+        text = re.sub(r"```annotation-manifest\n[\s\S]*?```", "", text)
+        for status in ("draft", "ready-for-figma"):
+            with self.subTest(status=status):
+                plan = text.replace("status: ready-for-figma", f"status: {status}")
+                self.assertEqual(VALIDATOR.parse_plan(plan).pages[0]["source_node"], "none")
+
+    def test_new_interface_delivery_requires_actual_target_node(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "change_mode: visual-adjustment-with-bounded-content-optimization", "change_mode: new-interface"
+        )
+        text = re.sub(r"source_node: .*", "source_node: none", text)
+        text = text.replace("target_role: current-draft-only", "target_role: approved-design")
+        text = text.replace("status: draft", "status: approved").replace("/ Draft", "/ Approved")
+        text = text.replace("status=planned", "status=completed")
+        for status in ("ready-for-code", "approved"):
+            plan = text.replace("status: ready-for-figma", f"status: {status}")
+            with self.subTest(status=status):
+                with self.assertRaisesRegex(VALIDATOR.ContractError, "target_node"):
+                    VALIDATOR.parse_plan(plan)
+                delivered = plan.replace("source_node: none", "source_node: none\ntarget_node: node:10:20")
+                self.assertEqual(VALIDATOR.parse_plan(delivered).pages[0]["target_node"], "node:10:20")
+                with self.assertRaisesRegex(VALIDATOR.ContractError, "target_node"):
+                    VALIDATOR.parse_plan(delivered.replace("target_node: node:10:20", "target_node: pending"))
+
+    def test_existing_design_still_requires_exact_source_node(self) -> None:
+        text = re.sub(r"source_node: .*", "source_node: none", VALID.read_text(encoding="utf-8"))
+        with self.assertRaisesRegex(VALIDATOR.ContractError, "source_node"):
+            VALIDATOR.parse_plan(text)
+
     def test_page_source_nodes_use_the_same_exact_reference_check(self) -> None:
         text = VALID.read_text(encoding="utf-8").replace(
             "source_node: https://www.figma.com/design/reference/file?node-id=1-2",

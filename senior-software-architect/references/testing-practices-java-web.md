@@ -83,11 +83,19 @@ public abstract class AbstractControllerTest {
 ## 3. Controller 测试子类示例
 
 ```java
-@Import(ExampleControllerTests.TestConfig.class)
+@ContextConfiguration(classes = ExampleControllerTests.TestConfig.class)
 class ExampleControllerTests extends AbstractControllerTest {
 
     @Autowired
     private ExampleApplicationService exampleApplicationService;
+
+    @Autowired
+    private I18nMetadataService i18nMetadataService;
+
+    @BeforeEach
+    void resetMocks() {
+        Mockito.reset(exampleApplicationService, i18nMetadataService);
+    }
 
     @Test
     void testCreateExampleReturnsBusinessId() throws Exception {
@@ -140,6 +148,7 @@ class ExampleControllerTests extends AbstractControllerTest {
 - 子类负责目标 Controller、必要配置和外部依赖替身；不要把全量业务 Bean、远程客户端、MQ、Redis、Nacos 等带进 Controller 测试。
 - 每个测试方法上方或方法名必须表达场景、输入、行为、输出和红线；复杂场景再补短注释。
 - `@WebMvcTest` 适合验证单个或少量 Controller 的 HTTP 行为；如果使用 `@WebMvcTest`，不要再混入会扫描全应用的 `@SpringBootApplication(scanBasePackages = ...)`。
-- 使用 `@ContextConfiguration` 基类时，子类优先通过精确 `@Import(ExampleController.class)` 装配目标 Controller；确需扫描时使用真实基础包名，不使用通配符表达式。
+- 使用 `@ContextConfiguration` 基类时，子类通过自己的 `@ContextConfiguration(classes = TestConfig.class)` 加入配置，再在该配置上精确 `@Import(ExampleController.class)`；普通 Spring Test 不会把测试子类上的 `@Import` 自动作为配置加载。确需扫描时使用真实基础包名，不使用通配符表达式。
+- 普通 `@Bean` 创建的 mock 会随 Spring 上下文缓存复用，每个用例开始前 reset 全部共享 mock，并在 reset 后设置本用例需要的桩；仅重建测试实例或 MockMvc 不会清除调用记录与桩。项目支持自动重置的测试 mock 注解时可沿用，无需每用例重启上下文。
 - 断言至少覆盖 HTTP 状态、响应内容、错误码/错误消息、Header、路径参数、查询参数、请求体绑定和校验结果；不要只断言响应非空。
 - Controller 测试可以 mock 应用服务或外部端口，但不能 mock 掉参数绑定、校验、序列化、异常处理和安全拦截这些 HTTP 层语义。

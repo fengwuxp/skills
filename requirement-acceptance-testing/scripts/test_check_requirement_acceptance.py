@@ -7,6 +7,7 @@ from contextlib import redirect_stderr, redirect_stdout
 import importlib.util
 from io import StringIO
 import sys
+import re
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -76,6 +77,101 @@ class RequirementAcceptanceTests(unittest.TestCase):
             "independent_reviewer: acceptance-checker", "independent_reviewer: none"
         )
         with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "independent_reviewer"):
+            VALIDATOR.parse_report(text)
+
+    def test_high_risk_rejects_unresolved_reviewers(self) -> None:
+        for reviewer in ("pending", "UNKNOWN", "待确认", "TBD"):
+            with self.subTest(reviewer=reviewer):
+                text = VALID.read_text(encoding="utf-8").replace(
+                    "independent_reviewer: acceptance-checker", f"independent_reviewer: {reviewer}"
+                )
+                with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "independent_reviewer"):
+                    VALIDATOR.parse_report(text)
+
+    def test_visual_review_requires_independence_at_every_risk_level(self) -> None:
+        for risk in ("low", "medium", "high", "critical"):
+            text = VALID.read_text(encoding="utf-8").replace("risk_level: high", f"risk_level: {risk}")
+            text = text.replace("producer: design-checker", "producer: UI-MAKER")
+            with self.subTest(risk=risk):
+                with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "visual-review"):
+                    VALIDATOR.parse_report(text)
+
+    def test_visual_review_producer_must_be_resolved(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace("risk_level: high", "risk_level: low")
+        text = text.replace("producer: design-checker", "producer: pending")
+        with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "visual-review"):
+            VALIDATOR.parse_report(text)
+
+    def test_visual_independence_cannot_be_proven_against_unknown_maker(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace("risk_level: high", "risk_level: low")
+        text = text.replace("producer: ui-maker", "producer: unknown")
+        with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "visual-review"):
+            VALIDATOR.parse_report(text)
+
+    def test_declared_pending_visual_reviewer_is_not_treated_as_unneeded(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "producer: design-checker\nindependent_reviewer: acceptance-checker",
+            "producer: design-checker\nindependent_reviewer: pending",
+        )
+        with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "independent_reviewer"):
+            VALIDATOR.parse_report(text)
+
+    def test_independent_visual_review_needs_no_fourth_reviewer(self) -> None:
+        for risk in ("low", "high"):
+            text = VALID.read_text(encoding="utf-8").replace("risk_level: high", f"risk_level: {risk}")
+            text = text.replace(
+                "producer: design-checker\nindependent_reviewer: acceptance-checker",
+                "producer: design-checker\nindependent_reviewer: none",
+            )
+            if risk == "low":
+                text = text.replace("independent_reviewer: acceptance-checker", "independent_reviewer: none")
+            else:
+                text = text.replace("independent_reviewer: acceptance-checker", "independent_reviewer: design-checker")
+            with self.subTest(risk=risk):
+                self.assertEqual(VALIDATOR.parse_report(text).verdict["verdict"], "pass")
+
+    def test_unexecuted_report_is_valid_but_cannot_pass_release_gate(self) -> None:
+        for outcome in ("blocked", "untested"):
+            text = VALID.read_text(encoding="utf-8")
+            text = re.sub(r"```acceptance-evidence\n[\s\S]*?```", "```acceptance-evidence\n```", text)
+            text = re.sub(r"evidence_refs: .*", "evidence_refs: none", text)
+            text = re.sub(r"rationale: .*", "rationale: 环境尚未开放；环境就绪后由 owner 重跑声明范围", text)
+            text = text.replace("outcome: pass", f"outcome: {outcome}")
+            text = text.replace("verdict: pass", "verdict: blocked").replace("pass_count: 3", "pass_count: 0")
+            text = text.replace(f"{outcome}_count: 0", f"{outcome}_count: 3")
+            with self.subTest(outcome=outcome):
+                parts = VALIDATOR.parse_report(text)
+                self.assertEqual(parts.evidence, [])
+                self.assertEqual(parts.verdict["verdict"], "blocked")
+                for malformed in ("无法解析的证据内容", "[evidence]\nid: EV-001"):
+                    invalid = text.replace("```acceptance-evidence\n```", f"```acceptance-evidence\n{malformed}\n```")
+                    with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "evidence.*记录"):
+                        VALIDATOR.parse_report(invalid)
+                for require_pass, expected_exit in ((False, 0), (True, 1)):
+                    argv = ["checker", "--file", "report.md"]
+                    if require_pass:
+                        argv.append("--require-pass")
+                    with (
+                        patch.object(VALIDATOR.Path, "read_text", return_value=text),
+                        patch.object(VALIDATOR.sys, "argv", argv),
+                        redirect_stdout(StringIO()), redirect_stderr(StringIO()),
+                    ):
+                        self.assertEqual(VALIDATOR.main(), expected_exit)
+
+    def test_empty_evidence_cannot_support_pass_or_fail(self) -> None:
+        for text in (VALID.read_text(encoding="utf-8"), failed_report()):
+            text = re.sub(r"```acceptance-evidence\n[\s\S]*?```", "```acceptance-evidence\n```", text)
+            text = re.sub(r"evidence_refs: .*", "evidence_refs: none", text)
+            with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "AC-001.*evidence"):
+                VALIDATOR.parse_report(text)
+
+    def test_criteria_still_cannot_be_empty(self) -> None:
+        text = re.sub(
+            r"```acceptance-criteria\n[\s\S]*?```",
+            "```acceptance-criteria\n```",
+            VALID.read_text(encoding="utf-8"),
+        )
+        with self.assertRaisesRegex(VALIDATOR.AcceptanceError, "criterion.*记录"):
             VALIDATOR.parse_report(text)
 
     def test_verdict_counts_must_match_criteria(self) -> None:

@@ -109,6 +109,8 @@
 
 状态只使用 `CLOSED / CONDITIONAL / OPEN`。`CONDITIONAL` 只表示工程上有具名残余风险，不替代人类接受；`OPEN` 必须进入阻断项。
 
+控制责任尚未确定时，可在 `OPEN` 且总建议为 `ENGINEERING_BLOCKED` 的记录中如实填 `PENDING / UNKNOWN`。同时明确未闭合阻断项，由具名 `风险 Owner` 负责落实责任，并在 `复核触发器` 中说明解除条件；这表示报告结构完整，不能作为准出。其他状态及两种 `ENGINEERING_READY*` 建议仍要求控制 Owner 已确定。
+
 ## 可检查交付结构
 
 运行确定性检查器的文档使用下列二级标题和字段：

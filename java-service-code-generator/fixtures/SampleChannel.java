@@ -1,6 +1,7 @@
 package com.example.skill.codegen.model;
 
 import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ public class SampleChannel {
     /**
      * 主键 ID
      */
-    @Id
+    @Id(keyType = KeyType.Auto)
     private Long id;
 
     /**

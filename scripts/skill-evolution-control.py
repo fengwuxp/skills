@@ -298,8 +298,17 @@ def record_canary(
 ) -> None:
     candidate = _candidate(registry, version_id)
     automation = registry.get("automation", {})
-    automated = candidate.get("state") == "CHECKED" and automation.get("enabled") is True
-    if candidate.get("state") != "APPROVED_FOR_CANARY" and not automated:
+    state = candidate.get("state")
+    stale_canary = (
+        state == "CANARY_PASSED"
+        and candidate["canary"]["control_version_id"] != registry["current_version"]
+    )
+    approved = state == "APPROVED_FOR_CANARY" or (stale_canary and candidate.get("approved_by") is not None)
+    automation_requested = state == "CHECKED" or (
+        stale_canary and candidate.get("approval_mode") == "AUTOMATION_POLICY"
+    )
+    automated = automation_requested and automation.get("enabled") is True
+    if not approved and not automated:
         raise StateError("candidate requires human approval before canary")
     if candidate.get("checker", {}).get("passed") is not True:
         raise StateError("independent checker evidence is required before canary")
@@ -391,12 +400,14 @@ def promote_candidate(
         raise StateError("human approval is required before promotion")
     if candidate.get("state") != "CANARY_PASSED":
         raise StateError("positive canary evidence is required before promotion")
+    canary = candidate["canary"]
+    if canary["control_version_id"] != registry["current_version"]:
+        raise StateError("canary control does not match current version; run a new experiment")
     previous = registry["current_version"]
     registry["last_known_good"] = previous
     registry["current_version"] = version_id
     candidate["state"] = "PROMOTED"
     candidate["promoted_at"] = _now()
-    canary = candidate["canary"]
     if candidate.get("approved_by") is not None:
         automation["first_round_completed"] = True
         automation.pop("paused_reason", None)

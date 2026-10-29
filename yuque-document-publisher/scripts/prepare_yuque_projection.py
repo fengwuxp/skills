@@ -12,8 +12,17 @@ from pathlib import Path
 from typing import Any
 
 
-IMAGE_PATTERN = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
-LINK_PATTERN = re.compile(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)")
+TARGET_PATTERN = re.compile(
+    r'(?P<path><[^<>\n]+>|(?:\\[^\n]|[^\s()<>\\])+)'
+    r'''(?P<title>[ \t]+(?:"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|\([^()\n]*\)))?[ \t]*'''
+)
+REFERENCE_PATTERN = re.compile(r"(?m)^ {0,3}\[([^\]\n]+)\]:[ \t]*([^\n]*)$")
+RESOURCE_PATTERN = re.compile(
+    r"(?P<definition>^ {0,3}\[[^\]\n]+\]:[^\n]*$)|"
+    r"(?P<escape>\\[^\n])|(?P<code>`+)|(?P<nested>!?\[(?=[^\]\n]*\[))|"
+    r"(?P<resource>!?\[[^\]\n]*\])|(?P<unsupported_image>!\[)",
+    re.MULTILINE,
+)
 MERMAID_PATTERN = re.compile(r"(?m)^(?:```|~~~)mermaid\s*$")
 FENCE_START_PATTERN = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 
@@ -50,20 +59,39 @@ def transform_outside_fences(text: str, transform: Any) -> str:
     return "".join(result)
 
 
+def reference_key(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def parse_target(text: str, start: int = 0) -> tuple[str, str, int]:
+    while text[start:start + 1] in (" ", "\t"):
+        start += 1
+    match = TARGET_PATTERN.match(text, start)
+    if match is None:
+        raise ValueError("不支持的 Markdown 资源目标；请使用单行目标和可选 title")
+    target = match.group("path")
+    if target.startswith("<"):
+        target = target[1:-1]
+    target = re.sub(r"\\([!\"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])", r"\1", target)
+    return target, match.group("title") or "", match.end()
+
+
 def prepare_projection(
     source_path: Path, source_version: str, link_map: dict[str, str]
 ) -> tuple[str, dict[str, Any]]:
-    source = source_path.read_text(encoding="utf-8")
+    source_bytes = source_path.read_bytes()
+    source = source_bytes.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
     images: list[dict[str, str]] = []
     missing_images: list[dict[str, str]] = []
     mapped_links: list[dict[str, str]] = []
     unresolved_links: list[dict[str, str]] = []
 
-    def replace_image(match: re.Match[str]) -> str:
-        alt = match.group(1).strip() or "未命名图片"
-        target = match.group(2).strip()
+    references: dict[str, tuple[str, str]] = {}
+
+    def replace_image(label: str, target: str, original: str) -> str:
+        alt = label.strip() or "未命名图片"
         if target.startswith(("http://", "https://", "data:")):
-            return match.group(0)
+            return original
         image = {"alt": alt, "path": target}
         images.append(image)
         local_target = target.split("#", 1)[0].split("?", 1)[0]
@@ -71,26 +99,98 @@ def prepare_projection(
             missing_images.append(image)
         return f"【待插图：{alt}】"
 
-    def replace_link(match: re.Match[str]) -> str:
-        label = match.group(1)
-        target = match.group(2).strip()
+    def replace_link(label: str, target: str, title: str, original: str) -> str:
         if target.startswith(("http://", "https://", "mailto:", "#")):
-            return match.group(0)
+            return original
         mapped = link_map.get(target) or link_map.get(target.split("#", 1)[0])
         if mapped:
             mapped_links.append({"label": label, "source": target, "target": mapped})
-            return f"[{label}]({mapped})"
+            return f"[{label}]({mapped}{title})"
         unresolved_links.append({"label": label, "target": target})
         return label
 
-    projection = transform_outside_fences(
-        source,
-        lambda text: LINK_PATTERN.sub(
-            replace_link,
-            IMAGE_PATTERN.sub(replace_image, text),
-        ),
-    )
-    source_sha256 = hashlib.sha256(source.encode("utf-8")).hexdigest()
+    def project_text(text: str, collect_only: bool = False) -> str:
+        parts: list[str] = []
+        start = 0
+        for match in RESOURCE_PATTERN.finditer(text):
+            if match.start() < start:
+                continue
+            if match.lastgroup == "escape":
+                continue
+            if match.lastgroup == "definition":
+                definition = REFERENCE_PATTERN.fullmatch(match.group())
+                target, title, end = parse_target(definition.group(2))
+                if end != len(definition.group(2)):
+                    raise ValueError("不支持的 Markdown 引用定义；请使用单行目标和可选 title")
+                references.setdefault(reference_key(definition.group(1)), (target, title))
+                continue
+            if match.lastgroup == "code":
+                # 按原始位置跳过整段代码，不切断外层链接标签或 title。
+                closing = re.search(rf"(?<!`){match.group()}(?!`)", text[match.end():])
+                if closing is not None:
+                    end = match.end() + closing.end()
+                    parts.append(text[start:end])
+                    start = end
+                continue
+            if match.lastgroup == "nested":
+                # 普通矩阵或方括号说明不属于资源，只有资源目标才触发拒绝。
+                depth = 1
+                end = match.end()
+                while end < len(text) and depth:
+                    char = text[end]
+                    if char == "\\":
+                        end += 2
+                        continue
+                    if char == "[":
+                        depth += 1
+                    elif char == "]":
+                        depth -= 1
+                    end += 1
+                has_target = text[end:end + 1] in ("(", "[")
+                contains_link = re.search(r"\]\s*\(", text[match.end():end])
+                if match.group().startswith("!") or has_target or contains_link:
+                    raise ValueError("不支持的嵌套 Markdown 资源标签；请改为普通单行标签")
+                parts.append(text[start:end])
+                start = end
+                continue
+            if match.lastgroup != "resource":
+                raise ValueError("不支持的嵌套或跨行 Markdown 资源标签；请改为普通单行标签")
+            original = match.group()
+            is_image = original.startswith("!")
+            label = original[2:-1] if is_image else original[1:-1]
+            end = match.end()
+            if text[end:end + 1] == "(":
+                target, title, end = parse_target(text, end + 1)
+                if text[end:end + 1] != ")":
+                    raise ValueError("不支持的 Markdown 资源目标；含括号的路径请用尖括号包围")
+                end += 1
+            else:
+                reference = re.match(r"\[([^\]\n]*)\]", text[end:])
+                key = reference_key((reference.group(1) or label) if reference else label)
+                if reference:
+                    end += reference.end()
+                if collect_only or key not in references:
+                    if is_image and not collect_only:
+                        raise ValueError(f"Markdown 图片引用未定义：{key}")
+                    parts.append(text[start:end])
+                    start = end
+                    continue
+                target, title = references[key]
+            original = text[match.start():end]
+            if collect_only:
+                replacement = original
+            elif is_image:
+                replacement = replace_image(label, target, original)
+            else:
+                replacement = replace_link(label, target, title, original)
+            parts.extend((text[start:match.start()], replacement))
+            start = end
+        parts.append(text[start:])
+        return "".join(parts)
+
+    transform_outside_fences(source, lambda text: project_text(text, collect_only=True))
+    projection = transform_outside_fences(source, project_text)
+    source_sha256 = hashlib.sha256(source_bytes).hexdigest()
     marker = (
         "> 语雀协作副本；本地源文件为权威。"
         f"SourceVersion={source_version}；SourceSHA256={source_sha256}。"

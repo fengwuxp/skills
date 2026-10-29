@@ -58,7 +58,7 @@
 
 - 顺序、路由、导航标签和 Figma frame 名必须一一对应；不使用 `Page 1`、`Final`、`最新版` 等不可检索名称。
 - 命名前缀必须与 `client_scope` 一致，末尾状态必须与页面 `status` 一致。
-- `source_node` 必须能回到精确节点；参考节点与目标节点不得混写。
+- `source_node` 记录已有设计来源的精确节点。`new-interface` 没有来源节点时明确填 `none`，由稳定 `id`、`content_source` 与已确认 brief 冻结新建范围，允许在 `draft / ready-for-figma` 通过写入前检查。新建后的目标节点使用 `target_node` 回填，不冒充来源节点；`ready-for-code / approved` 的新建页面必须提供精确 `target_node`，已填写的目标节点在任何状态都必须精确有效。其他变更模式仍要求精确 `source_node`。
 - 每页至少声明 `default`，并覆盖 `loading`、`empty`、`error`、`success`、权限、弱网、长内容等适用状态；不适用也要写明理由。
 - `state_exclusions` 显式列出不适用的 `loading`、`empty`、`error`、`success`、`permission`、`return`、`close`；没有排除项写 `none`，不能只在自由文本中笼统说明。
 - `state_notes` 说明入口、退出、返回、取消、重置、焦点和失败恢复；只画最终成功屏不能算完整页面。
@@ -97,4 +97,4 @@ python3 ui-design-expert/scripts/check_figma_design_plan.py --file plan.md
 | L1 | Figma 结构、组件、变量、Auto Layout、反应和精确节点交接 | 浏览器可用、生产代码或线上收益 |
 | L2 | 目标代码库中的浏览器流程、真实内容、响应式、键盘 / 焦点和失败恢复证据 | 样本外总体可用性或商业因果 |
 
-只有在 `owner` 已确认、目标文件 / 节点和写入权限明确、版本基线已记录、页面契约通过校验后，才允许执行 Figma 写入。权限、来源或关键内容发生冲突时止于 L0/L1 计划，列出冲突，不用工具结果替代确认。
+只有在 `owner` 已确认、目标文件 / 写入范围和权限明确、版本基线已记录、页面契约通过校验后，才允许执行 Figma 写入。修改已有节点须先定位精确节点；新建页面先按稳定页面 ID 与内容来源确定范围，创建后回填实际 `target_node`。权限、来源或关键内容发生冲突时止于 L0/L1 计划，列出冲突，不用工具结果替代确认。

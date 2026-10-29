@@ -52,6 +52,8 @@
 
 每条证据至少包含：`id`、关联条件、类型、来源、SHA-256 指纹、环境、命令或方法、结果、采集时间、生产者、独立复核者和限制。
 
+尚未执行的 `blocked / untested` 条件可将 `evidence_refs` 写为 `none`；全部未执行时保留空的 `acceptance-evidence` block，不编造测试产物。条件仍须保留承责 `owner`、`rationale` 中的阻断原因与解除条件，以及 `retest_scope`。`pass / fail` 仍必须引用相应执行证据。
+
 证据失效条件：
 
 - 需求、实现、环境、数据或测试工具的实质版本已变化。
@@ -69,6 +71,6 @@
 3. 否则任一 `cant-tell` -> `Need Owner`。
 4. 其余必选项全部 `pass` -> `Pass`。
 
-`Pass` 只覆盖声明的版本、环境、数据和范围；残余风险、非目标和下一 Owner 必须保留。高风险与关键风险通过证据应有独立复核者。
+`Pass` 只覆盖声明的版本、环境、数据和范围；残余风险、非目标和下一 Owner 必须保留。高风险与关键风险通过证据应有已确定且不同于生产者的独立复核者；`pending / unknown / 待确认` 等不能充当身份。独立 `visual-review` 本身是评审证据，可将其 `independent_reviewer` 写为 `none`，不再增加一层评审。
 
 校验器默认只验证报告是否合法，并原样输出 `verdict`；报告合法但裁决为 `Fail / Blocked / Need Owner` 时仍可返回结构校验成功。只有调用方显式使用 `--require-pass` 时，非 `Pass` 裁决才作为自动准出失败返回非零；结构或证据契约无效使用独立错误码。

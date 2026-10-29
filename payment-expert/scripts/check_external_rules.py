@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check whether a product方案记录了外部规则核验字段。
+"""检查单条外部规则记录的核验字段，不跨记录拼接。
 
 The script only inspects local text or an explicit local file. It does not
 access the network, upload content, read secrets, or decide whether a rule is
@@ -55,12 +55,18 @@ VALID_SELF_TEST = "规则来源：Nacha 官方规则；版本：2026；适用法
 INVALID_SELF_TEST = "规则来源：Nacha 官方规则。"
 
 
+class RuleRecordError(ValueError):
+    """输入没有限定到一条可独立核验的规则记录。"""
+
+
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().lower()
 
 
 def extract_fields(text: str) -> dict[str, str]:
     extracted: dict[str, str] = {}
+    section = 0
+    record_section: int | None = None
     aliases = [
         (field, alias.lower())
         for field, field_aliases in REQUIRED_FIELDS
@@ -70,18 +76,26 @@ def extract_fields(text: str) -> dict[str, str]:
         line = raw_line.strip().lstrip("-* ").strip()
         if not line:
             continue
+        if re.match(r"^#{1,6}\s+", line):
+            section += 1
+            continue
         if line.startswith("|") and line.endswith("|"):
             cells = [cell.strip() for cell in line.strip("|").split("|")]
             if len(cells) >= 2:
                 line = f"{cells[0]}: {cells[1]}"
-        match = re.match(r"^([^:：]{1,40})\s*[:：]\s*(.+?)\s*$", line)
+        match = re.match(r"^([^:：]{1,40})\s*[:：]\s*(.*?)\s*$", line)
         if not match:
             continue
         label = normalize(match.group(1))
         value = match.group(2).strip().rstrip("。.")
         for field, alias in aliases:
             if label == alias:
-                extracted.setdefault(field, value)
+                if field in extracted:
+                    raise RuleRecordError(f"字段 {field} 重复；每次只校验一条规则，请逐条调用")
+                if record_section is not None and record_section != section:
+                    raise RuleRecordError("核验字段跨章节；每次只校验一条规则，请逐条调用")
+                record_section = section
+                extracted[field] = value
                 break
     return extracted
 
@@ -104,7 +118,10 @@ def is_valid_date(value: str) -> bool:
 
 
 def missing_fields(text: str) -> list[str]:
-    fields = extract_fields(text)
+    try:
+        fields = extract_fields(text)
+    except RuleRecordError as error:
+        return [str(error)]
     missing: list[str] = []
     for field, _ in REQUIRED_FIELDS:
         value = fields.get(field, "").strip()
@@ -132,12 +149,24 @@ def run_self_test() -> int:
         failures.append("valid fixture missing " + ", ".join(valid_missing))
     if not invalid_missing:
         failures.append("invalid fixture unexpectedly passed")
+    for label, text in (
+        ("multiline", "## 规则 A\n" + VALID_SELF_TEST.replace("；", "\n")),
+        ("table", "## 规则 A\n| 字段 | 值 |\n| --- | --- |\n| source | 官方资料 A |\n| version | 2026 |\n| scope | A |\n| verified at | 2026-10-29 |\n| confirming party | 合规负责人 |"),
+    ):
+        if missing_fields(text):
+            failures.append(f"{label} single record was rejected")
     for label, text in [
         ("placeholder", "规则来源：待定；版本：待定；适用范围：待定；核验日期：待定；确认方：待定。"),
         ("semantic placeholder", "规则来源：没有可核验来源；版本：版本待补；适用范围：未知范围；核验日期：2026-05-22；确认方：暂无负责人。"),
         ("negated", "没有规则来源，没有版本，没有适用范围，也没有核验日期和确认方。"),
         ("invalid date", VALID_SELF_TEST.replace("2026-05-22", "昨天")),
         ("invalid calendar date", VALID_SELF_TEST.replace("2026-05-22", "2026-02-31")),
+        ("split rules", "## 规则 A\n规则来源：A 官方资料\n版本：2026\n适用范围：A\n核验日期：2026-10-29\n## 规则 B\n确认方：B 负责人"),
+        ("later pending rule", VALID_SELF_TEST + "\n## 规则 B\n规则来源：B\n版本：pending\n适用范围：pending\n核验日期：pending\n确认方：pending"),
+        ("duplicate alias", VALID_SELF_TEST + "\nsource: B 官方资料"),
+        ("two complete rules", VALID_SELF_TEST + "\n" + VALID_SELF_TEST),
+        ("empty duplicate alias", VALID_SELF_TEST + "\nsource:"),
+        ("later empty rule", VALID_SELF_TEST + "\n## 规则 B\n规则来源：\n版本：\n适用范围：\n核验日期：\n确认方："),
     ]:
         if not missing_fields(text):
             failures.append(f"{label} fixture unexpectedly passed")
@@ -151,8 +180,8 @@ def run_self_test() -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="检查外部规则核验字段是否完整")
-    parser.add_argument("--file", help="待检查的本地 Markdown/文本文件")
+    parser = argparse.ArgumentParser(description="检查单条外部规则核验字段；多条规则须逐条调用")
+    parser.add_argument("--file", help="只含一条规则记录的本地 Markdown/文本文件")
     parser.add_argument("--text", help="直接传入待检查文本")
     parser.add_argument("--self-test", action="store_true", help="运行内置正反例自测")
     args = parser.parse_args()

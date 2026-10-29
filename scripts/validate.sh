@@ -405,6 +405,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 
 echo "==> architecture deliverable checker"
 senior-software-architect/scripts/check_architecture_deliverable.py --self-test
+python3 senior-software-architect/scripts/test_check_architecture_deliverable.py
 senior-software-architect/scripts/check_harness_plan.py --self-test
 python3 senior-software-architect/scripts/test_check_system_intervention_card.py
 senior-software-architect/scripts/verify_fixtures.py
@@ -456,6 +457,7 @@ echo "==> wind convention guard"
 wind-coding-conventions/scripts/check_wind_conventions.py --self-test
 python3 wind-coding-conventions/scripts/test_interface_dependencies.py
 python3 wind-coding-conventions/scripts/test_readability_boundaries.py
+python3 wind-coding-conventions/scripts/test_maven_frameworks.py
 
 echo "==> reference index audit"
 scripts/audit-reference-indexes.py

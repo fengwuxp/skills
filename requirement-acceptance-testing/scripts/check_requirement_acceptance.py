@@ -118,7 +118,7 @@ def extract_block(text: str, tag: str) -> str:
 
 def parse_records(body: str, kind: str) -> list[dict[str, str]]:
     records = [parse_key_values(match.group("body")) for match in RECORD_PATTERNS[kind].finditer(body)]
-    if not records:
+    if not records and (kind == "criterion" or body.strip()):
         raise AcceptanceError(f"至少需要一个 [{kind}] 记录")
     return records
 
@@ -222,10 +222,26 @@ def validate_links(
             raise AcceptanceError(
                 f"criterion[{criterion_id}] {criterion['verification_kind']} evidence 不充分"
             )
+        if criterion["verification_kind"] == "visual-fidelity":
+            makers = {
+                item["producer"].strip().casefold()
+                for item in linked
+                if item["evidence_type"] not in {"design-context", "visual-review"}
+            }
+            for item in linked:
+                if item["evidence_type"] != "visual-review":
+                    continue
+                reviewer = item["producer"].strip().casefold()
+                if makers & UNRESOLVED_MARKERS or reviewer in UNRESOLVED_MARKERS or reviewer in makers:
+                    raise AcceptanceError(f"evidence[{item['id']}] visual-review 必须独立于实现/截图生产者")
         if contract["risk_level"] in {"high", "critical"} and criterion["required"] == "true":
             for item in linked:
                 reviewer = item["independent_reviewer"].strip().casefold()
-                if reviewer in EMPTY_MARKERS or reviewer == item["producer"].strip().casefold():
+                # 独立视觉复核本身就是评审证据，不额外要求评审者再被复核。
+                is_visual_review = criterion["verification_kind"] == "visual-fidelity" and item["evidence_type"] == "visual-review"
+                if is_visual_review and reviewer in EMPTY_MARKERS:
+                    continue
+                if reviewer in UNRESOLVED_MARKERS or reviewer == item["producer"].strip().casefold():
                     raise AcceptanceError(f"evidence[{item['id']}] 缺少 independent_reviewer")
 
 

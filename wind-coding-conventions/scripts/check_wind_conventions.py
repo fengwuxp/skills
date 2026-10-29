@@ -233,9 +233,9 @@ def check_nested_ternary_expressions(path: Path, root: Path, text: str) -> list[
 
 
 @cache
-def build_dependency_markers(path: Path) -> str:
+def build_dependency_markers(path: Path, *, maven: bool = False) -> str:
     text = path.read_text(encoding="utf-8", errors="ignore")
-    if path.name != "pom.xml":
+    if path.name != "pom.xml" and not maven:
         return GRADLE_COMMENT.sub("", text)
     try:
         document = ET.fromstring(text)
@@ -262,15 +262,50 @@ def build_dependency_markers(path: Path) -> str:
     return "\n".join(markers)
 
 
+@cache
+def local_maven_parent(path: Path) -> Path | None:
+    try:
+        document = ET.parse(path).getroot()
+    except (OSError, ET.ParseError):
+        return None
+    parent = document.find("{*}parent")
+    if parent is None:
+        return None
+    relative = parent.find("{*}relativePath")
+    relative_path = "../pom.xml" if relative is None else (relative.text or "").strip()
+    if not relative_path or "${" in relative_path:
+        return None
+    candidate = (path.parent / relative_path).resolve()
+    if candidate.is_dir():
+        candidate = candidate / "pom.xml"
+    try:
+        candidate_document = ET.parse(candidate).getroot()
+    except (OSError, ET.ParseError):
+        return None
+    for key in ("groupId", "artifactId", "version"):
+        expected = parent.findtext(f"{{*}}{key}", "").strip()
+        actual = candidate_document.findtext(f"{{*}}{key}", "").strip()
+        if not actual and key != "artifactId":
+            actual = candidate_document.findtext(f"{{*}}parent/{{*}}{key}", "").strip()
+        if not expected or "${" in expected or actual != expected:
+            return None
+    return candidate
+
+
 def module_frameworks(path: Path, root: Path) -> tuple[bool, bool]:
     markers: list[str] = []
     current = path.parent
     while True:
-        markers.extend(
-            build_dependency_markers(current / name)
-            for name in BUILD_FILE_NAMES
-            if (current / name).is_file()
-        )
+        build_files = [current / name for name in BUILD_FILE_NAMES if (current / name).is_file()]
+        if build_files:
+            for build_file in build_files:
+                maven = build_file.name == "pom.xml"
+                visited: set[Path] = set()
+                while build_file is not None and build_file not in visited:
+                    visited.add(build_file)
+                    markers.append(build_dependency_markers(build_file, maven=maven))
+                    build_file = local_maven_parent(build_file) if maven else None
+            break
         if current == root or root not in current.parents:
             break
         current = current.parent

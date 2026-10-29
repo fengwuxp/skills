@@ -127,7 +127,7 @@ PLACEHOLDER_PREFIXES = (
     "未填写",
     "未填寫",
 )
-FIELD_ASSIGNMENT = re.compile(r"(?:^|[。；;\n|])\s*(?:[-*]\s*)?([^：:。；;\n|]+)[：:]\s*([^。；;\n|]*)")
+FIELD_ASSIGNMENT = re.compile(r"(?:^|[。；;\r\n|])[ \t]*(?:[-*][ \t]*)?([^：:。；;\r\n|]+)[：:][ \t]*([^。；;\r\n|]*)")
 NEGATED_EVIDENCE = re.compile(
     r"无需查|無需查|无须查|無須查|不必查|不需查|未查|尚未查|待查|待补|待補|"
     r"未知|不明|不存在|没有(?:材料|证据|记录|相关)?|沒有(?:材料|證據|記錄|相關)?|"
@@ -156,6 +156,8 @@ def has_placeholder_required_field(kind: str, text: str) -> bool:
     required_fields = REQUIRED_VALUE_FIELDS[kind]
     for match in FIELD_ASSIGNMENT.finditer(text):
         field, value = (part.strip() for part in match.groups())
+        if not value and any(alias in field for group in CHECKS[kind] for alias in group.aliases):
+            return True
         if any(alias in field for alias in required_fields) and is_placeholder_value(value):
             return True
     return False
@@ -233,6 +235,51 @@ def read_input(args: argparse.Namespace) -> str:
 
 def run_self_test() -> int:
     failures: list[str] = []
+    entrypoint = (FIXTURE_ROOT.parent / "references" / "evidence-method.md").read_text(encoding="utf-8")
+    templates = re.findall(r"### [^\n]*`([^`]+)`\n\n```text\n(.*?)```", entrypoint, re.DOTALL)
+    if {kind for kind, _ in templates} != set(CHECKS):
+        failures.append("entrypoint: missing research-kind template")
+    # 直接填写入口指定的权威模板，避免自测另造一套能通过的证据卡。
+    values = {
+        "研究对象": "合成测试字，不形成真实考据结论",
+        "所问层次": "字形",
+        "出土材料": "合成甲骨辞例，释文来自测试底本",
+        "出土材料（甲骨 / 金文等）": "合成甲骨与金文对照材料",
+        "时代": "合成样本设为商代",
+        "图版或合集号": "测试图版 F-001，不是真实文献编号",
+        "构形": "合成图版中两笔相接，仅说明结构",
+        "辞例": "合成辞例保留原句用于比对",
+        "传统训释（说文 / 尔雅）": "汉代字书与训诂材料只作对照",
+        "现代研究": "合成学者甲的测试论文，仅作结构输入",
+        "支持与反证": "合成辞例相合，但异体仍有分歧",
+        "结论等级": "争议，待考",
+        "原文": "合成原句",
+        "上下文": "合成前后两句",
+        "篇章与底本": "合成测试篇与测试底本",
+        "传世文献": "合成平行句来自测试底本",
+        "语境": "合成句中作动词",
+        "传统训释（注疏）": "合成旧注只作对照，不认作真实古籍引文",
+        "音韵": "测试体系只供结构验证，不下真实拟音结论",
+        "分析与反证": "合成句法支持一解，异文仍可作另一解",
+    }
+    for kind, template in templates:
+        if kind not in CHECKS:
+            continue
+        fields = [line.removesuffix("：") for line in template.strip().splitlines()]
+        missing_values = set(fields) - values.keys()
+        if missing_values:
+            failures.append(f"{kind}: entrypoint fields lack test values: {missing_values}")
+            continue
+        filled = "\n".join(f"{field}：{values[field]}" for field in fields)
+        if missing := missing_groups(kind, filled):
+            failures.append(f"{kind}: filled entrypoint template rejected: {missing}")
+        if not missing_groups(kind, template):
+            failures.append(f"{kind}: blank entrypoint template unexpectedly passed")
+        for field in fields:
+            for blank in ("", "   ", "\t"):
+                partial = filled.replace(f"{field}：{values[field]}", f"{field}：{blank}")
+                if not missing_groups(kind, partial):
+                    failures.append(f"{kind}: blank field {field!r} unexpectedly passed")
     for kind, (valid_text, invalid_text) in SELF_TESTS.items():
         valid_missing = missing_groups(kind, valid_text)
         if valid_missing:

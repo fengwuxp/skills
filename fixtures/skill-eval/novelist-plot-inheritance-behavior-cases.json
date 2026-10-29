@@ -20,7 +20,7 @@
         "novelist/references/story-design-and-drafting.md",
         "novelist/references/continuity-and-revision.md"
       ],
-      "sha256": "9f81cf1cb54d1d709d3f2b5fb7a0ec895fa86e3355b1de609f8bc382dca63dd4"
+      "sha256": "a3c446a8b33caa71ad41db401d3537b6b5e4ce530b00a15b007875e772187040"
     }
   },
   "rubric": {
@@ -116,6 +116,17 @@
         "既有支点经新信息获得更完整含义，同时保留人物当时有限认知、多重动机和读者原有的合理理解，不把一切收编成单一阴谋。",
         "揭示所处的作品内行动有发生锚点，正文揭示位置另记；身份责任、关系震荡、资源变化和追查风险形成状态增量并约束下一剧情。",
         "伏笔不能自动确认未给出的身份细节、证物、同谋和前史；未确认内容保持候选。"
+      ]
+    },
+    {
+      "id": "novelist-should-preserve-retired-values-only-in-history",
+      "category": "authorized-outline-revision",
+      "risk": "high",
+      "prompt": "作者已确认把北关失守从旧版卷纲 v1 的秋收后改为 v2 的夏末。当前有效卷纲、章卡、人物行程引用都应采用夏末，但历史 Decision Log 需要保留原值、为何修改和作者确认证据，以便以后复核。请给出本次应如何修订这些载体的具体内容，不要新建流程。",
+      "criteria": [
+        "当前有效卷纲、章卡、人物行程与事实引用只采用夏末，并清除秋收后失守及下游依赖；未清理完的受影响内容保持 pending-writeback / conflict。",
+        "历史 Decision Log 或审计行可保留必要原值“秋收后失守”、旧版 v1、修改原因及确认证据，但显式标记已废止并指向当前 v2 的夏末失守权威。",
+        "历史旧值不参与当前事实裁决，不因为保留审计证据而让两个互斥时点并存为有效方案；也不以防漂移为由抹去必要旧值。"
       ]
     }
   ]

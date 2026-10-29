@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import tempfile
 import unittest
@@ -252,6 +253,86 @@ class SkillEvolutionControlTests(unittest.TestCase):
             MODULE.record_canary(registry, candidate["version_id"], canary_evidence(registry, candidate["version_id"], "experiment:demo-006"))
             with self.assertRaisesRegex(MODULE.StateError, "current version changed"):
                 MODULE.promote_candidate(registry, candidate["version_id"], "skill-owner", "stale-version")
+
+    def test_stale_canary_rejected_without_mutation_and_retested_against_current(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry = MODULE.new_registry("demo-skill", BASELINE)
+            versions = []
+            for index, content in enumerate((CANDIDATE, CANDIDATE.replace("再验证输出", "记录处理结果"))):
+                candidate = MODULE.check_candidate(policy(), BASELINE, content)
+                version = candidate["version_id"]
+                versions.append(version)
+                MODULE.add_candidate(registry, candidate, content, Path(tmp_dir))
+                MODULE.approve_candidate(registry, version, "skill-owner")
+                MODULE.record_checker(registry, version, True, "independent-checker", f"validation:{index}")
+                MODULE.record_canary(registry, version, canary_evidence(registry, version, f"experiment:{index}"))
+
+            first, second = versions
+            MODULE.promote_candidate(registry, first, "skill-owner", registry["current_version"])
+            before = copy.deepcopy(registry)
+            with self.assertRaisesRegex(MODULE.StateError, "canary.*current version"):
+                MODULE.promote_candidate(registry, second, "skill-owner", first)
+            self.assertEqual(registry, before)
+
+            evidence = canary_evidence(registry, second, "experiment:current-control")
+            MODULE.record_canary(registry, second, evidence)
+            MODULE.promote_candidate(registry, second, "skill-owner", first)
+            self.assertEqual(registry["current_version"], second)
+            self.assertEqual(registry["last_known_good"], first)
+            self.assertEqual(registry["promotion_decisions"][-1]["experiment_id"], evidence["experiment_id"])
+            outcomes = registry["candidates"][second]["outcomes"]
+            self.assertTrue(any(item["evidence_ref"] == "experiment:1:completed" for item in outcomes))
+
+    def test_current_canary_cannot_be_overwritten_by_another_experiment(self) -> None:
+        candidate = MODULE.check_candidate(policy(), BASELINE, CANDIDATE)
+        version = candidate["version_id"]
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry = MODULE.new_registry("demo-skill", BASELINE)
+            MODULE.add_candidate(registry, candidate, CANDIDATE, Path(tmp_dir))
+            MODULE.approve_candidate(registry, version, "skill-owner")
+            MODULE.record_checker(registry, version, True, "independent-checker", "validation:current")
+            MODULE.record_canary(registry, version, canary_evidence(registry, version))
+            before = copy.deepcopy(registry)
+            with self.assertRaises(MODULE.StateError):
+                MODULE.record_canary(registry, version, canary_evidence(registry, version, "experiment:replacement"))
+            self.assertEqual(registry, before)
+
+    def test_automated_retest_requires_the_automation_permission_to_remain_active(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            registry = MODULE.new_registry("demo-skill", BASELINE)
+            seed = MODULE.check_candidate(policy(), BASELINE, CANDIDATE)
+            seed_id = seed["version_id"]
+            MODULE.add_candidate(registry, seed, CANDIDATE, Path(tmp_dir))
+            MODULE.approve_candidate(registry, seed_id, "skill-owner")
+            MODULE.record_checker(registry, seed_id, True, "independent-checker", "validation:seed")
+            MODULE.record_canary(registry, seed_id, canary_evidence(registry, seed_id))
+            MODULE.promote_candidate(registry, seed_id, "skill-owner", registry["current_version"])
+            MODULE.enable_automation(registry, "skill-owner")
+
+            versions = []
+            for index, extra in enumerate(("- 记录处理结果\n", "- 记录验证结果\n")):
+                content = CANDIDATE + extra
+                candidate = MODULE.check_candidate(policy(), CANDIDATE, content)
+                version = candidate["version_id"]
+                versions.append(version)
+                MODULE.add_candidate(registry, candidate, content, Path(tmp_dir))
+                MODULE.record_checker(registry, version, True, "independent-checker", f"validation:auto-{index}")
+                MODULE.record_canary(registry, version, canary_evidence(registry, version, f"experiment:auto-{index}"))
+
+            first, second = versions
+            MODULE.promote_candidate(registry, first, "automation", seed_id)
+            evidence = canary_evidence(registry, second, "experiment:auto-current")
+            disabled = copy.deepcopy(registry)
+            disabled["automation"]["enabled"] = False
+            before = copy.deepcopy(disabled)
+            with self.assertRaises(MODULE.StateError):
+                MODULE.record_canary(disabled, second, evidence)
+            self.assertEqual(disabled, before)
+
+            MODULE.record_canary(registry, second, evidence)
+            MODULE.promote_candidate(registry, second, "automation", first)
+            self.assertEqual(registry["current_version"], second)
+            self.assertEqual(registry["candidates"][second]["approval_mode"], "AUTOMATION_POLICY")
 
 
 if __name__ == "__main__":

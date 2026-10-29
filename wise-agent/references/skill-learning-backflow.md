@@ -146,6 +146,8 @@ python3 wise-agent/scripts/skill-learning-ledger.py revise-pattern \
 
 源仓库已有的 `scripts/skill-evolution-control.py` 继续管理不可变改动产物和 registry 版本指针。使用该控制器的试验可在 `register` 时传 `--pattern-id`；它在现有 Checker、canary、promote、rollback 动作中记录有序结果，`reject --reason --actor --evidence-ref` 记录人工拒绝。重复注册同一版本不得清空裁决或改绑问题模式。控制器不读写学习目录，也不因此放宽既有验证条件。
 
+晋升时，canary 的对照版本必须仍是当前版本；指针 CAS 通过不能代替这项核对，拒绝不改变 registry。其它候选先晋升使旧试验失效时，候选内容和原有许可未变、Checker 已通过的候选可对新当前版本重新试验，再用 `record-canary` 记录完整结果；自动化候选仍要求原自动化许可有效。旧结果保留在 outcome 的证据引用中，不能仅改旧证据的版本或哈希，也不能覆盖对当前基线仍有效的试验来挑选好结果。
+
 已获指定 registry 的回滚授权时，`VERSION_ID` 固定为本次确认要撤回的当前版本，不是 `last_known_good`；完整参数可通过 `python3 scripts/skill-evolution-control.py rollback --help` 查看：
 
 ```bash

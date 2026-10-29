@@ -20,6 +20,7 @@ RESERVED = {
     "new", "package", "private", "protected", "public", "return", "short", "static", "strictfp",
     "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void",
     "volatile", "while", "record", "var", "yield", "sealed", "permits", "non-sealed",
+    "true", "false", "null", "_",
 }
 
 CURRENCY_ENUM = "CurrencyIsoCode"
@@ -27,6 +28,7 @@ CURRENCY_ENUM_IMPORT = "com.wind.transaction.core.enums.CurrencyIsoCode"
 PACKAGE_RE = re.compile(r"^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$")
 CLASS_RE = re.compile(r"^[A-Z][A-Za-z0-9]*$")
 SQL_IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+JAVA_FIELD_RE = re.compile(r"^[A-Za-z_$][A-Za-z0-9_$]*$")
 
 
 def avoid_reserved_identifier(name: str) -> str:
@@ -46,9 +48,23 @@ def validate_generation_inputs(base_package: str, class_name: str, table: Table,
         raise ValueError(f"类名不合法：{class_name}")
     if not SQL_IDENTIFIER_RE.fullmatch(table.name):
         raise ValueError(f"表名不合法：{table.name}")
+    field_sources = {"serialVersionUID": "生成器序列化字段", "TABLE_NAME": "生成器表名常量"}
     for column in table.columns:
         if not SQL_IDENTIFIER_RE.fullmatch(column.name):
             raise ValueError(f"字段名不合法：{column.name}")
+        if not JAVA_FIELD_RE.fullmatch(column.java_name) or column.java_name in RESERVED:
+            raise ValueError(f"Java 字段名不合法：{column.name} -> {column.java_name}")
+        if column.java_name in field_sources:
+            raise ValueError(f"Java 字段名冲突：{field_sources[column.java_name]} 与 {column.name} -> {column.java_name}")
+        field_sources[column.java_name] = column.name
+    primary_columns = [column for column in table.columns if column.primary]
+    if len(primary_columns) != 1 or table.primary_keys != ["id"]:
+        raise ValueError("仅支持单一 id / Long 主键；请先适配主键契约")
+    primary = primary_columns[0]
+    if primary.name != "id" or primary.java_name != "id" or primary.java_type != "Long":
+        raise ValueError("仅支持单一 id / Long 主键；请先适配主键契约")
+    if not primary.auto_increment:
+        raise ValueError("主键生成策略不支持：当前脚手架仅支持自增 id，请先确认并适配生成策略")
     unsafe_doc = ("\x00", "\r", "\n", "*/")
     unsafe_string = (*unsafe_doc, '"', "\\")
     if any(token in author for token in unsafe_doc):
@@ -636,6 +652,8 @@ def resolve_module_layout(repo_root: Path, business_module: str, base_package: s
 
 
 def field_name_from_column(column_name: str) -> str:
+    if column_name in RESERVED:
+        return avoid_reserved_identifier(column_name)
     if column_name == "u_id":
         return "uid"
     if column_name.startswith("is_") and len(column_name) > 3:

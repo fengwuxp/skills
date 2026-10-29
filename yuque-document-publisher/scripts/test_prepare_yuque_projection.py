@@ -23,6 +23,141 @@ SPEC.loader.exec_module(MODULE)
 
 
 class YuqueProjectionTests(unittest.TestCase):
+    def test_preserves_inline_code_and_escaped_resource_syntax(self) -> None:
+        content = (
+            '`![图](x.png)` 与 ``[文](a.md) `样例` ![图][img]``\n'
+            r'\![图](https://example.com/x.png) 与 \[文](a.md)' + '\n'
+            '[img]: x.png\n'
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source_path = Path(temp_dir) / 'source.md'
+            source_path.write_text(content, encoding='utf-8')
+            projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+            self.assertIn(content, projection)
+            self.assertEqual([], manifest['images'])
+            self.assertEqual([], manifest['unresolved_local_links'])
+
+    def test_image_titles_are_not_part_of_the_local_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / 'x.png').write_bytes(b'fixture')
+            for title in ('"标题"', "'标题'", '(标题)', '"使用 `foo`"', '"单个 ` 字符"'):
+                with self.subTest(title=title):
+                    source_path = root / 'source.md'
+                    source_path.write_text(f'![图](x.png {title})\n', encoding='utf-8')
+                    projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+                    self.assertIn('【待插图：图】', projection)
+                    self.assertEqual([{'alt': '图', 'path': 'x.png'}], manifest['images'])
+                    self.assertEqual([], manifest['missing_images'])
+
+    def test_reference_resources_use_definitions_and_report_missing_images(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / 'x.png').write_bytes(b'fixture')
+            source_path = root / 'source.md'
+            definitions = '[IMG]: <x.png> "标题"\n[缺图]: missing.png\n[本地文档]: a.md "文档标题"\n'
+            source_path.write_text(
+                '![图][img] ![缺图][] ![缺图] [文档][本地文档]\n\n' + definitions,
+                encoding='utf-8',
+            )
+            projection, manifest = MODULE.prepare_projection(
+                source_path, 'v1', {'a.md': 'https://example.yuque.com/doc'}
+            )
+            self.assertEqual(3, len(manifest['images']))
+            self.assertEqual(2, len(manifest['missing_images']))
+            self.assertEqual('x.png', manifest['images'][0]['path'])
+            self.assertIn('[文档](https://example.yuque.com/doc "文档标题")', projection)
+            self.assertIn(definitions, projection)
+
+    def test_rejects_unsupported_resource_syntax_before_writing(self) -> None:
+        for content in ('![图](folder(x)/x.png)', '![图][missing]', '[img]:\n  x.png\n![图][img]', '![图[例]](x.png)'):
+            with self.subTest(content=content), tempfile.TemporaryDirectory() as temp_dir:
+                source_path = Path(temp_dir) / 'source.md'
+                source_path.write_text(content, encoding='utf-8')
+                with self.assertRaisesRegex(ValueError, '不支持|未定义'):
+                    MODULE.prepare_projection(source_path, 'v1', {})
+
+    def test_preserves_plain_nested_brackets(self) -> None:
+        content = '矩阵 [[1,2],[3,4]] 可以逐项阅读。数组 a[i][j] 中的值。\n'
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source_path = Path(temp_dir) / 'source.md'
+            source_path.write_text(content, encoding='utf-8')
+            projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+            self.assertIn(content, projection)
+            self.assertEqual([], manifest['images'])
+            self.assertEqual([], manifest['unresolved_local_links'])
+
+    def test_maps_local_link_with_code_in_its_label(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source_path = Path(temp_dir) / 'source.md'
+            source_path.write_text('请阅读 [`foo`](api.md)。\n', encoding='utf-8')
+            projection, manifest = MODULE.prepare_projection(
+                source_path, 'v1', {'api.md': 'https://example.yuque.com/api'}
+            )
+            self.assertIn('[`foo`](https://example.yuque.com/api)', projection)
+            self.assertEqual(
+                [{'label': '`foo`', 'source': 'api.md', 'target': 'https://example.yuque.com/api'}],
+                manifest['mapped_local_links'],
+            )
+            projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+            self.assertIn('请阅读 `foo`。', projection)
+            self.assertEqual(
+                [{'label': '`foo`', 'target': 'api.md'}], manifest['unresolved_local_links']
+            )
+
+    def test_reference_title_with_backticks_keeps_the_resource_intact(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / 'x.png').write_bytes(b'fixture')
+            source_path = root / 'source.md'
+            source_path.write_text(
+                '![图][img]\n[img]: x.png "使用 `foo`"\n', encoding='utf-8'
+            )
+            projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+            self.assertIn('【待插图：图】', projection)
+            self.assertEqual([{'alt': '图', 'path': 'x.png'}], manifest['images'])
+            self.assertEqual([], manifest['missing_images'])
+
+    def test_source_sha256_uses_original_bytes_for_lf_and_crlf(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source_path = Path(temp_dir) / 'source.md'
+            for source in (b'# Test\n\nBody\n', b'# Test\r\n\r\nBody\r\n'):
+                with self.subTest(source=source):
+                    source_path.write_bytes(source)
+                    projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+                    expected = hashlib.sha256(source).hexdigest()
+                    self.assertEqual(expected, manifest['source_sha256'])
+                    self.assertIn(f'SourceSHA256={expected}', projection)
+
+    def test_angle_and_escaped_paths_and_external_reference_remain_usable(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            (root / 'image (1).png').write_bytes(b'fixture')
+            (root / 'image(2).png').write_bytes(b'fixture')
+            source_path = root / 'source.md'
+            source_path.write_text(
+                '![一]( <image (1).png> "标题" )\n'
+                r'![二](image\(2\).png)' + '\n'
+                '![外图][ext]\n[ext]: https://example.com/image.png "外部标题"\n',
+                encoding='utf-8',
+            )
+            projection, manifest = MODULE.prepare_projection(source_path, 'v1', {})
+            self.assertEqual(['image (1).png', 'image(2).png'], [item['path'] for item in manifest['images']])
+            self.assertEqual([], manifest['missing_images'])
+            self.assertIn('![外图][ext]', projection)
+            self.assertIn('[ext]: https://example.com/image.png "外部标题"', projection)
+
+    def test_code_does_not_supply_reference_definitions(self) -> None:
+        for content in (
+            '```md\n[img]: x.png\n```\n![图][img]\n',
+            '`示例`[img]: x.png\n![图][img]\n',
+        ):
+            with self.subTest(content=content), tempfile.TemporaryDirectory() as temp_dir:
+                source_path = Path(temp_dir) / 'source.md'
+                source_path.write_text(content, encoding='utf-8')
+                with self.assertRaisesRegex(ValueError, '未定义'):
+                    MODULE.prepare_projection(source_path, 'v1', {})
+
     def assert_cli_rejects_collision(
         self, source_path: Path, output_dir: Path, link_map: Path | None = None
     ) -> None:

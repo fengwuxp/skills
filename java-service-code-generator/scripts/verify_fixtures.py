@@ -76,7 +76,7 @@ CASES = [
             ],
         },
         "golden_hashes": {
-            "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": "a13d32ee0a7d3e3ad5cde36ee65c97cd6bb81f140339a49bfa1fa530f24fb16d",
+            "impl/com/example/skill/codegen/dal/entities/SampleChannel.java": "847e259ed73f46964ae027e1b43df733fd8f40ba9911fd20d2b7456d1884596c",
             "impl/com/example/skill/codegen/service/mapstruct/SampleChannelConverter.java": "76c842e1b4ae4fd85417b5bebbda629554512fd090785eb0907a2ac069426733",
             "impl/com/example/skill/codegen/service/impl/SampleChannelServiceImpl.java": "bd03ace83b9491f8a63b34bc82d613077de6c6c770051a69b834fbcce60cbed6",
             "face/com/example/skill/codegen/model/query/SampleChannelQuery.java": "6ae445ced82b7eb419fab48c2b7cfe3862dad643a754df7ec25b502361b73a1e",
@@ -243,10 +243,10 @@ def run_reserved_identifier_cases(base_tmp: Path) -> None:
 
     field_table = base_tmp / "reserved_fields.md"
     field_table.write_text(
-        """| 字段名 | Java 属性名 | 类型 | 说明 | 是否主键 | 是否必填 |
-| --- | --- | --- | --- | --- | --- |
-| id | id | bigint | ID | 是 | 是 |
-| group | record | varchar(64) | 分组 | 否 | 否 |
+        """| 字段名 | Java 属性名 | 类型 | 说明 | 是否主键 | 是否必填 | 是否自增 |
+| --- | --- | --- | --- | --- | --- | --- |
+| id | id | bigint | ID | 是 | 是 | 是 |
+| group | record | varchar(64) | 分组 | 否 | 否 | 否 |
 """,
         encoding="utf-8",
     )
@@ -280,6 +280,70 @@ def run_reserved_identifier_cases(base_tmp: Path) -> None:
     if "private String record;" in table_entity:
         raise AssertionError("reserved field table entity contains forbidden record field")
     print("OK fixture reserved identifiers")
+
+
+def run_model_boundary_cases(base_tmp: Path) -> None:
+    invalid_columns = {
+        "named-primary": ("order_id bigint PRIMARY KEY AUTO_INCREMENT", "主键"),
+        "integer-primary": ("id int PRIMARY KEY AUTO_INCREMENT", "主键"),
+        "composite-primary": ("id bigint AUTO_INCREMENT, scope_id bigint, PRIMARY KEY (id, scope_id)", "主键"),
+        "missing-primary": ("id bigint", "主键"),
+        "no-key-generation": ("id bigint PRIMARY KEY", "主键生成策略"),
+        "boolean-collision": ("id bigint PRIMARY KEY AUTO_INCREMENT, is_enabled tinyint(1), enabled tinyint(1)", "冲突"),
+        "reserved-collision": ("id bigint PRIMARY KEY AUTO_INCREMENT, `true` varchar(20), true_value varchar(20)", "冲突"),
+    }
+    for name, (columns, error) in invalid_columns.items():
+        source = base_tmp / f"{name}.sql"
+        source.write_text(f"CREATE TABLE t_boundary ({columns});", encoding="utf-8")
+        output = base_tmp / name
+        emitted = base_tmp / f"{name}-emitted.sql"
+        expect_failure(name, ["--ddl-file", str(source), "--base-package", BASE_PACKAGE,
+                             "--output-dir", str(output), "--emit-ddl", str(emitted)], error)
+        if output.exists() or emitted.exists():
+            raise AssertionError(f"{name}: rejected input left generated files")
+
+    for name, java_name, error in [
+        ("invalid-field", "bad-name", "Java 字段名不合法"),
+        ("digit-field", "1name", "Java 字段名不合法"),
+        ("duplicate-field", "id", "冲突"),
+        ("generated-field", "serialVersionUID", "冲突"),
+    ]:
+        source = base_tmp / f"{name}.md"
+        source.write_text(
+            "| 字段名 | Java 属性名 | 类型 | 是否主键 | 是否自增 |\n"
+            "| --- | --- | --- | --- | --- |\n"
+            "| id | id | bigint | 是 | 是 |\n"
+            f"| other | {java_name} | varchar(20) | 否 | 否 |\n", encoding="utf-8")
+        output = base_tmp / name
+        emitted = base_tmp / f"{name}-emitted.sql"
+        expect_failure(name, ["--input-file", str(source), "--input-type", "table",
+                             "--table-name", "t_boundary", "--base-package", BASE_PACKAGE,
+                             "--output-dir", str(output), "--emit-ddl", str(emitted)], error)
+        if output.exists() or emitted.exists():
+            raise AssertionError(f"{name}: rejected input left generated files")
+
+    source = base_tmp / "UnspecifiedKey.java"
+    source.write_text("public class UnspecifiedKey { @Id private Long id; }", encoding="utf-8")
+    output = base_tmp / "unspecified-java-key"
+    expect_failure("Java key without generation strategy", ["--input-file", str(source),
+                   "--input-type", "java", "--base-package", BASE_PACKAGE,
+                   "--output-dir", str(output)], "主键生成策略")
+    if output.exists():
+        raise AssertionError("Java key rejection left generated files")
+
+    source = base_tmp / "literal-fields.sql"
+    source.write_text("CREATE TABLE t_literal (id bigint PRIMARY KEY AUTO_INCREMENT, "
+                      "`true` varchar(20), `false` varchar(20), `null` varchar(20), `_` varchar(20));",
+                      encoding="utf-8")
+    output = base_tmp / "literal-fields"
+    result = run_generator(["--ddl-file", str(source), "--base-package", BASE_PACKAGE, "--output-dir", str(output)])
+    if result.returncode != 0:
+        raise AssertionError(f"literal fields failed: {result.stderr}")
+    entity = (output / "impl/com/example/skill/codegen/dal/entities/Literal.java").read_text(encoding="utf-8")
+    for literal in ("true", "false", "null", "_"):
+        if f"private String {literal}Value;" not in entity or f'@Column("{literal}")' not in entity:
+            raise AssertionError(f"literal mapping missing: {literal}")
+    print("OK fixture normalized model boundaries")
 
 
 def create_ambiguous_module_repo(base_tmp: Path) -> Path:
@@ -398,6 +462,7 @@ def main() -> int:
         raise SystemExit(f"missing fixtures: {FIXTURE_DIR}")
     base_tmp = Path(tempfile.mkdtemp(prefix="java-service-codegen-fixtures-"))
     try:
+        run_model_boundary_cases(base_tmp)
         for case in CASES:
             run_case(case, base_tmp)
         run_reserved_identifier_cases(base_tmp)
