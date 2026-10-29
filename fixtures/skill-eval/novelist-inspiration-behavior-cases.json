@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.35,
+      "autonomy": 0.2,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "non_regression",
+    "candidate_blockers_must_be_zero": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "candidate_weighted_score_must_improve": false,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "description": "感物生意与守中的 contract-only 题集：覆盖文化日常、审美幅度、现代语体、保留原稿、因果缺口及纯发散。静态契约不证明灵感或文学提升；正文须独立连读，审美分歧可保留。",
+  "cases": [
+    {
+      "id": "inspiration-craft-humor-not-mourning",
+      "category": "cultural-life",
+      "risk": "medium",
+      "prompt": "写一小段虚构古镇里师傅带两个徒弟修木窗的场面。三人都在，关系熟，今天没有灾祸；师傅想赶在落雨前收工，徒弟各有各的性子。带一点日常趣味，直接给正文。",
+      "criteria": [
+        "从当前任务、人物回应和生活条件生出趣味，传统技艺经实际相处显出，不把人物都写成替传承命题说话。",
+        "不新增离世、秘传、救命或悲惨身世，不搬入案例的固定动作与台词；只交正文，不附灵感流程、经典讲解或守中卡。",
+        "未知工艺不冒充已核史实，使用与题面相称的细节，不为点睛密集堆砌名物和古语。"
+      ]
+    },
+    {
+      "id": "inspiration-grand-scene-may-stay-grand",
+      "category": "aesthetic-range",
+      "risk": "medium",
+      "prompt": "设定是一座临峡山城，节日里上下街巷都在放灯，夜风不大，无灾兆或隐藏阴谋。写一段开阔、欢腾的群体场景，可充分铺陈，不必用一个小动作或一句道理收尾。",
+      "criteria": [
+        "让空间、声色和不同人的兴致形成壮阔体验，不将守中等同压低情绪、削成提要或所有人物同声。",
+        "不擅加事故、预兆、神灵裁判或主线秘密，风物与热闹自身可成立。",
+        "不机械套宏景接微动作或留白金句，句段服从本场声音与节奏。"
+      ]
+    },
+    {
+      "id": "inspiration-modern-plain-voice",
+      "category": "cross-genre",
+      "risk": "low",
+      "prompt": "写两位现代朋友在车站偶遇的短场面，一个赶车却有点舍不得结束话题，另一个说话直，气氛轻松。用自然现代口语，有一点活气。不要新增离别多年、死亡或重大秘密。",
+      "criteria": [
+        "从说话、时间压力和当场关系找变化，保留现代语体与各自注意。",
+        "不用东方审美强加古代名物、古语、清冷或悲情，也不以隐晦代替人物能直说的话。",
+        "直接交付场面，文化方法退居作者侧，不展示抽象框架或所谓灵感保证。"
+      ]
+    },
+    {
+      "id": "inspiration-keep-working-original",
+      "category": "no-change-control",
+      "risk": "low",
+      "prompt": "只评这段短文是否需要再加一句点睛，可以保留原稿：小孩把碗往自己跟前挪了挪。祖父问：“还吃？”“不吃。”“那给我。”“我再想想。”不要续写，不扩背景。",
+      "criteria": [
+        "依据已有动作、问答和趣味判断，允许保持原稿，不为展示技巧加象征、回忆或总结。",
+        "无新素材或依据时不猜两人创伤、贫困或价值命题，不按句长/古语数量评判。",
+        "只给短评与必要理由，不输出创作卡或多个强制候选。"
+      ]
+    },
+    {
+      "id": "inspiration-cannot-repair-causality-with-pretty-line",
+      "category": "plot-causality",
+      "risk": "high",
+      "prompt": "故事已确认主人公从不知道暗门所在，现场也没有新线索；现稿却让他为赶在落锁前逃出，突然找对暗门并离开。请判断加一点意象或灵光是否能使这段成立；暂不改既定事实，不直接写新剧情。",
+      "criteria": [
+        "指出当前缺的是知情与行动依据，不能靠漂亮句子、预感或临时神异让结果成立。",
+        "只分析受影响的因果接口和可供作者选择的调整方向，不擅自增加前史、线索、能力或改已定结果。",
+        "保留灵感的探索空间但不把未经采用候选写成正典，不能用大量防御清单取代具体问题判断。"
+      ]
+    },
+    {
+      "id": "inspiration-pure-wonder-without-closure",
+      "category": "open-imagination",
+      "risk": "medium",
+      "prompt": "为一部尚未定世界规则的东方幻想小说想象三个奇异的街市景象，只发散，不选择、不解释原理、不安排灾祸或用途，也不写成史实。可以雄奇、诙谐或安静。",
+      "criteria": [
+        "交付具有不同感知、关系或运行方式的开放文学候选，不只换颜色/物件，同一审美母题可以保留。",
+        "不提前强制证明现实可行、代价、线索用途、道德意义或人物成长，不自动收束为一种方案。",
+        "不把东方幻想固定成古风词堆与哀伤，不冒充地方志或民俗事实，不创建分支库或长期规则。"
+      ]
+    }
+  ]
+}

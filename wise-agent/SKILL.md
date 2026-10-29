@@ -69,7 +69,7 @@ Skill 改进属于“化”阶段，不创建 `RSI Mode` 或第六个控制机�
 | SDLC | 跨产品、设计、工程、验证、发布、运行或退役阶段 | `references/delivery-lifecycle.md` |
 | 项目执行规范 | 用户或项目明确要求持久状态，或实际恢复、交接需要保存执行事实 | `references/execution-specification.md` |
 | Loop | 当前切片需反复行动、观察和验证 | `references/delivery-execution-control.md` |
-| Worker | 子任务输入可冻结、写入不重叠且并行收益明确 | `references/engineering-governance.md` |
+| Worker | 子任务输入就绪、边界可分且独立执行收益明确 | `references/engineering-governance.md` |
 | Checker | 高风险、公共契约、重要交付或发布准出 | `references/verification-review-release.md` |
 
 SDLC、项目执行规范、Loop、Worker 与 Checker 分别按实际需要选择，不要求依次经过；Goal、长任务或持续推进等措辞不自动创建运行时 Goal 或规划文档。已有计划只在需要消费或更新状态时使用，切片内部自行选择最短可验证路径。规划产物落盘、多框架冲突或文档减层，读 `references/execution-specification.md` 的“规划产物归位与减层”；Skill、Plugin 或 Harness 的默认路径不是项目权威。
@@ -100,7 +100,9 @@ reference 默认按稳定标题路径分段读取，不以固定行号作为长�
 
 用户显式要求重新定锚、指出长对话越改越偏，或连续局部纠正已经导致两极摇摆、单一坏案例泛化、成功标准 / 排除项 / 当前执行依据无法共同解释当前方案时，读取 `references/delivery-execution-control.md` 的“同会话重新定锚检查点”。先区分合法目标变更与偏航，再停止当前修改、回读权威并重述后续依据；Owner 确认或纠正前不恢复原任务。孤立且执行依据未变化的局部修复不进入该检查点。
 
-需要 Worker 时读取 `references/engineering-governance.md` 的“统一子代理任务包”，显式选择运行时角色或模型并验证路由；不得用任务名称冒充模型选择。新项目没有自定义 Agent 配置时按该节回退，不把配置工作转嫁给用户。
+用户要求按需求组队、自动拆解或分角色执行时，读取 `references/capability-routing.md` 的“按交付组队”。先定可验收结果，再按责任与依赖拆任务；已授权团队任务内自行选择必要能力与执行者，不要求用户逐个选人，也不把复杂任务一律拆开。
+
+需要 Worker 时读取 `references/engineering-governance.md` 的“统一子代理任务包”，核对实际角色与能力装载；默认沿用宿主模型设置，只有明确的模型分工要求才选择覆盖。任务名称不证明运行时角色或模型；新项目没有自定义 Agent 配置时按该节回退，不把配置工作转嫁给用户。
 
 跨上下文先正名：`Continue` 从既有状态载体续接同一任务；`Branch` 只为需要干净上下文的独立取证临时分叉并回传。不得按固定 token 阈值创建 Branch，也不得把它混成 Worker、Checker、第二状态源或新的控制机制；需要临时上下文分叉时读取 `references/context-handoff.md`。
 

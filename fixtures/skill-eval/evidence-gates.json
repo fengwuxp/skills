@@ -189,6 +189,9 @@
         "cases": "fixtures/skill-eval/novelist-literary-craft-loop-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/novelist-inspiration-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/novelist-learning-and-review-behavior-cases.json"
       }
     ],
@@ -275,6 +278,9 @@
       },
       {
         "cases": "fixtures/skill-eval/wise-agent-message-delivery-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-adaptive-team-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/wise-agent-hallmark-routing-behavior-cases.json"

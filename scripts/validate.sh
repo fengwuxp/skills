@@ -341,6 +341,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-knowledge-library-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-practice-transfer-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-literary-craft-loop-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-inspiration-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-learning-and-review-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-ensemble-world-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/novelist-planning-behavior-cases.json"
@@ -387,6 +388,7 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-jit-loading-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/codex-harness-runtime-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-message-delivery-behavior-cases.json"
+run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/wise-agent-adaptive-team-behavior-cases.json"
 
 echo "==> deliberation role configuration behavior cases"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/deliberation-role-configuration-behavior-cases.json"
