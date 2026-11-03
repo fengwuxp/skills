@@ -94,6 +94,12 @@ def docx_style_violations(path: Path) -> list[str]:
     with zipfile.ZipFile(path) as package:
         story_roots: list[ElementTree.Element] = []
         used_styles: set[str] = set()
+        default_style_types: set[str] = set()
+        style_paths = {
+            f"{W_NS}p": ("paragraph", f"{W_NS}pPr/{W_NS}pStyle"),
+            f"{W_NS}r": ("character", f"{W_NS}rPr/{W_NS}rStyle"),
+            f"{W_NS}tbl": ("table", f"{W_NS}tblPr/{W_NS}tblStyle"),
+        }
         violations: set[str] = set()
         for name in package.namelist():
             if not STORY_PART.fullmatch(name):
@@ -106,6 +112,11 @@ def docx_style_violations(path: Path) -> list[str]:
                     style_id = attribute(element, "val")
                     if style_id:
                         used_styles.add(style_id)
+                if element.tag in style_paths:
+                    style_type, style_path = style_paths[element.tag]
+                    reference = element.find(style_path)
+                    if reference is None or not attribute(reference, "val"):
+                        default_style_types.add(style_type)
 
         if "word/styles.xml" in package.namelist():
             styles_root = ElementTree.fromstring(package.read("word/styles.xml"))
@@ -116,6 +127,12 @@ def docx_style_violations(path: Path) -> list[str]:
                 for style in styles_root.findall(f"{W_NS}style")
                 if attribute(style, "styleId")
             }
+            for style_id, style in styles.items():
+                if (
+                    attribute(style, "default").casefold() in {"1", "true", "on"}
+                    and attribute(style, "type") in default_style_types
+                ):
+                    used_styles.add(style_id)
             pending = list(used_styles)
             checked: set[str] = set()
             while pending:
@@ -142,11 +159,10 @@ def style_violations(path: Path) -> list[str]:
     raise ValueError(f"unsupported format {suffix or '<none>'}; render inspection is required")
 
 
-def write_test_docx(path: Path, run_properties: str = "", styles: str = "") -> None:
-    document = (
-        f'<w:document xmlns:w="{W_NS[1:-1]}"><w:body><w:p><w:r><w:rPr>{run_properties}</w:rPr>'
-        '<w:t>Sample</w:t></w:r></w:p></w:body></w:document>'
-    )
+def write_test_docx(path: Path, run_properties: str = "", styles: str = "", body: str | None = None) -> None:
+    if body is None:
+        body = f'<w:p><w:r><w:rPr>{run_properties}</w:rPr><w:t>Sample</w:t></w:r></w:p>'
+    document = f'<w:document xmlns:w="{W_NS[1:-1]}"><w:body>{body}</w:body></w:document>'
     with zipfile.ZipFile(path, "w") as package:
         package.writestr("word/document.xml", document)
         if styles:
@@ -175,6 +191,49 @@ def run_self_test() -> int:
         expected_docx = {"docx_shading", "docx_highlight"}
         if not expected_docx.issubset(docx_style_violations(shaded)):
             failures.append("DOCX shading or highlight was not detected")
+
+        plain = '<w:p><w:r><w:t>Sample</w:t></w:r></w:p>'
+        explicit = (
+            '<w:p><w:pPr><w:pStyle w:val="Normal"/></w:pPr>'
+            '<w:r><w:t>Sample</w:t></w:r></w:p>'
+        )
+        clean_style_body = explicit.replace('w:val="Normal"', 'w:val="Clean"')
+        normal = (
+            '<w:style w:type="paragraph" w:default="1" w:styleId="Normal">'
+            '<w:pPr><w:shd w:val="clear" w:fill="FFFF00"/></w:pPr>'
+            '<w:rPr><w:color w:val="FF0000"/></w:rPr></w:style>'
+        )
+        inherited = (
+            '<w:style w:type="paragraph" w:default="true" w:styleId="Normal">'
+            '<w:basedOn w:val="Colored"/></w:style>'
+            '<w:style w:type="paragraph" w:styleId="Colored">'
+            '<w:rPr><w:color w:val="FF0000"/></w:rPr></w:style>'
+        )
+        default_character = (
+            '<w:style w:type="character" w:default="1" w:styleId="DefaultCharacter">'
+            '<w:rPr><w:color w:val="FF0000"/></w:rPr></w:style>'
+        )
+        default_table = (
+            '<w:style w:type="table" w:default="1" w:styleId="DefaultTable">'
+            '<w:tblPr><w:shd w:val="clear" w:fill="FFFF00"/></w:tblPr></w:style>'
+        )
+        cases = (
+            ("default-paragraph", normal, plain, {"docx_shading", "docx_foreground_color"}),
+            ("explicit-paragraph", normal, explicit, {"docx_shading", "docx_foreground_color"}),
+            ("default-inherited", inherited, plain, {"docx_foreground_color"}),
+            ("default-character", default_character, plain, {"docx_foreground_color"}),
+            ("default-table", default_table, f'<w:tbl><w:tr><w:tc>{plain}</w:tc></w:tr></w:tbl>', {"docx_shading"}),
+            ("unused-table", default_table, plain, set()),
+            ("unused-default-paragraph", normal + '<w:style w:type="paragraph" w:styleId="Clean"/>', clean_style_body, set()),
+            ("non-default-paragraph", normal.replace('w:default="1"', 'w:default="0"'), plain, set()),
+        )
+        for name, definitions, body, expected in cases:
+            path = root / f"{name}.docx"
+            styles = f'<w:styles xmlns:w="{W_NS[1:-1]}">{definitions}</w:styles>'
+            write_test_docx(path, styles=styles, body=body)
+            actual = set(docx_style_violations(path))
+            if actual != expected:
+                failures.append(f"{name}: 预期 {sorted(expected)}，实际 {sorted(actual)}")
 
     if failures:
         print("FAIL document style self-test", file=sys.stderr)

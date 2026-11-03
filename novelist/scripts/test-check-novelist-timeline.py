@@ -133,7 +133,7 @@ class TimelineTests(unittest.TestCase):
             project = Path(temp_dir)
             timeline = self.write_timeline(
                 project,
-                "| EV-010 | canon.md#三-初遇与伏线 | confirmed | aligned | - | "
+                "| EV-010 | canon.md#三初遇与伏线 | confirmed | aligned | - | "
                 "T010.01.010 | main | same-window | - | - | event happens | P010 |\n"
                 "| EV-020 | canon.md#不存在 | confirmed | aligned | - | "
                 "T020.01.020 | main | same-window | EV-010 | - | next event | P020 |\n",
@@ -149,6 +149,87 @@ class TimelineTests(unittest.TestCase):
             self.assertTrue(
                 any("authority heading does not exist for EV-020" in error for error in errors)
             )
+
+    def test_rejects_stale_authority_fragment_after_heading_rename(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#foo-bar | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | event happens | P010 |\n",
+            )
+            authority = project / "canon.md"
+            authority.write_text("## foo-bar\n", encoding="utf-8")
+            self.assertEqual([], MODULE.check(project, timeline, require_ready=True))
+
+            authority.write_text("## foobar\n", encoding="utf-8")
+            errors = MODULE.check(project, timeline, require_ready=True)
+            self.assertTrue(
+                any("authority heading does not exist for EV-010" in error for error in errors),
+                errors,
+            )
+
+            timeline.write_text(
+                timeline.read_text(encoding="utf-8").replace("#foo-bar", "#foobar"),
+                encoding="utf-8",
+            )
+            self.assertEqual([], MODULE.check(project, timeline, require_ready=True))
+
+    def test_accepts_exact_and_slug_authority_fragments(self) -> None:
+        examples = (
+            ("三、初遇 与伏线", "三、初遇 与伏线"),
+            ("三、初遇 与伏线", "三初遇-与伏线"),
+            ("初遇 与伏线", "%E5%88%9D%E9%81%87%20%E4%B8%8E%E4%BC%8F%E7%BA%BF"),
+            ("Scene One", "Scene One"),
+            ("Scene One", "scene-one"),
+            ("foo_bar", "foo_bar"),
+            ("C#", "C%23"),
+            ("C#", "c"),
+            ("C# ###", "C%23"),
+            ("C# ###", "c"),
+        )
+        for title, fragment in examples:
+            with self.subTest(title=title, fragment=fragment), tempfile.TemporaryDirectory() as temp_dir:
+                project = Path(temp_dir)
+                timeline = self.write_timeline(
+                    project,
+                    f"| EV-010 | canon.md#{fragment} | confirmed | aligned | - | "
+                    "T010.01.010 | main | same-window | - | - | event happens | P010 |\n",
+                )
+                (project / "canon.md").write_text(f"## {title}\n", encoding="utf-8")
+
+                self.assertEqual([], MODULE.check(project, timeline, require_ready=True))
+
+    def test_rejects_atx_closing_hashes_as_title_content(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#C%23%20%23%23%23 | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | event happens | P010 |\n",
+            )
+            (project / "canon.md").write_text("## C# ###\n", encoding="utf-8")
+
+            errors = MODULE.check(project, timeline, require_ready=True)
+
+            self.assertTrue(
+                any("authority heading does not exist for EV-010" in error for error in errors),
+                errors,
+            )
+
+    def test_accepts_numbered_slug_for_repeated_authority_heading(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            project = Path(temp_dir)
+            timeline = self.write_timeline(
+                project,
+                "| EV-010 | canon.md#scene-one-1 | confirmed | aligned | - | "
+                "T010.01.010 | main | same-window | - | - | event happens | P010 |\n",
+            )
+            (project / "canon.md").write_text(
+                "## Scene One\n\n## Scene One\n", encoding="utf-8"
+            )
+
+            self.assertEqual([], MODULE.check(project, timeline, require_ready=True))
 
     def test_resolves_explicit_authority_bases_without_fallback(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

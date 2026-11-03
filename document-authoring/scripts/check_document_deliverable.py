@@ -22,7 +22,8 @@ class RequiredGroup(NamedTuple):
 
 CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
     "report": (
-        RequiredGroup("goal_and_audience", ("目标", "目的", "读者", "受众", "用途"), 2),
+        RequiredGroup("goal", ("目标", "目的", "用途")),
+        RequiredGroup("audience", ("目标读者", "目标受众", "读者", "受众")),
         RequiredGroup("sources", ("来源", "材料", "证据", "数据", "记录")),
         RequiredGroup("facts_and_scope", ("事实", "推断", "范围", "非目标", "待确认"), 2),
         RequiredGroup("conclusion", ("结论", "判断", "摘要")),
@@ -39,7 +40,8 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
     "manual": (
         RequiredGroup("audience_and_prerequisites", ("读者", "适用对象", "前置条件", "准备"), 2),
         RequiredGroup("steps", ("步骤", "操作", "输入", "执行"), 2),
-        RequiredGroup("expected_and_validation", ("预期结果", "结果", "验证", "检查", "成功标准"), 2),
+        RequiredGroup("expected_result", ("预期结果", "结果", "成功标准")),
+        RequiredGroup("validation", ("验证", "检查")),
         RequiredGroup("troubleshooting_and_limits", ("故障", "失败", "异常", "限制", "注意", "升级"), 2),
     ),
     "research-note": (
@@ -131,20 +133,26 @@ def has_placeholder_required_field(kind: str, text: str) -> bool:
     return False
 
 
+def matching_aliases(text: str, groups: tuple[RequiredGroup, ...]) -> set[str]:
+    aliases = sorted(
+        {alias.casefold() for group in groups for alias in group.aliases}, key=len, reverse=True
+    )
+    # 同一段文字先匹配完整别名，避免其子串再次补足另一项职责。
+    pattern = "|".join(re.escape(alias) for alias in aliases)
+    return set(re.findall(pattern, normalize(text)))
+
+
 def uniquely_matches_group(
     label: str,
     group: RequiredGroup,
     groups: tuple[RequiredGroup, ...],
 ) -> bool:
-    normalized = normalize(label)
-    found = {
-        alias.casefold()
-        for candidate in groups
-        for alias in candidate.aliases
-        if alias.casefold() in normalized
-    }
     own = {alias.casefold() for alias in group.aliases}
-    return bool(found & own) and found <= own
+    for part in re.split(r"[、/／与與及和（）()]", label):
+        found = matching_aliases(part, groups)
+        if found & own and found <= own:
+            return True
+    return False
 
 
 def valued_hits(
@@ -159,8 +167,8 @@ def valued_hits(
             continue
         if is_placeholder_value(value) or len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", normalize(value))) < 2:
             continue
-        content = normalize(f"{field} {value}")
-        valued.update(alias for alias in aliases if alias in content)
+        found = matching_aliases(f"{field} {value}", groups)
+        valued.update(found.intersection(aliases))
     for heading, body in MARKDOWN_SECTION.findall(text):
         if not uniquely_matches_group(heading, group, groups):
             continue
@@ -168,16 +176,17 @@ def valued_hits(
         for alias in ALL_ALIASES:
             residue = residue.replace(alias.casefold(), "")
         if len(re.sub(r"[^0-9a-z\u4e00-\u9fff]+", "", residue)) >= 8:
-            content = normalize(f"{heading} {body}")
-            valued.update(alias for alias in aliases if alias in content)
+            found = matching_aliases(f"{heading} {body}", groups)
+            valued.update(found.intersection(aliases))
     return len(valued)
 
 
 def missing_groups(kind: str, text: str) -> list[str]:
     normalized = normalize(text)
+    found = matching_aliases(text, CHECKS[kind])
     missing: list[str] = []
     for group in CHECKS[kind]:
-        hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
+        hits = len(found.intersection(group.aliases))
         if hits < group.min_hits:
             missing.append(group.name)
         elif valued_hits(group, CHECKS[kind], text) < group.min_hits:
@@ -206,6 +215,38 @@ def run_self_test() -> int:
             failures.append(f"{kind}: valid fixture missing {', '.join(valid_missing)}")
         if not missing_groups(kind, invalid_text):
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+    for kind, required_fields in (
+        ("report", ("目标", "目标读者")),
+        ("manual", ("预期结果", "验证")),
+    ):
+        fields = [field for field in re.split(r"[。；]", SELF_TESTS[kind][0]) if field]
+        for required_field in required_fields:
+            partial = "\n".join(
+                field for field in fields if not field.startswith(f"{required_field}：")
+            )
+            if not missing_groups(kind, partial):
+                failures.append(f"{kind}: omitted field {required_field!r} unexpectedly passed")
+    combined_report = SELF_TESTS["report"][0].replace(
+        "目标：形成交付判断。目标读者：项目 owner。",
+        "目标与读者：供项目 owner 形成当前模块的交付判断。",
+    )
+    combined_manual = SELF_TESTS["manual"][0].replace(
+        "预期结果：输出 OK；验证：检查退出码。",
+        "预期结果与验证：输出 OK，检查退出码。",
+    )
+    headed_report = SELF_TESTS["report"][0].replace(
+        "目标：形成交付判断。目标读者：项目 owner。",
+        "## 目标与读者\n供项目负责人形成当前模块的交付判断。\n",
+    )
+    combined_cases = (
+        ("report", combined_report),
+        ("manual", combined_manual),
+        ("report", headed_report),
+        ("report", combined_report.replace("目标与读者", "目标（读者）")),
+    )
+    for kind, text in combined_cases:
+        if missing := missing_groups(kind, text):
+            failures.append(f"{kind}: combined field or heading rejected: {missing}")
     for kind, fixture_name, expected_missing in INVALID_FIXTURES:
         fixture_text = (FIXTURE_ROOT / fixture_name).read_text(encoding="utf-8")
         actual_missing = set(missing_groups(kind, fixture_text))

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -26,6 +27,46 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ReferenceSelectionIntegrationTests(unittest.TestCase):
+    def test_bilateral_handoff_retains_information_and_evidence_contracts(self) -> None:
+        result = MODULE.build_package(
+            ROOT / "wise-agent" / "references" / "context-handoff.md",
+            "双边契约会商",
+        )
+
+        self.assertEqual("ready", result["status"])
+        for required_contract in (
+            "Information Readiness Gate:",
+            "Contract Inquiry:",
+            "Provider Evidence Response:",
+            "Consumer Reconciliation:",
+        ):
+            with self.subTest(contract=required_contract):
+                self.assertTrue(required_contract in result["content"], required_contract)
+
+    def test_indexed_section_ranges_require_followup(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="wise-fix-range-") as temp_dir:
+            reference = Path(temp_dir) / "reference.md"
+            for separator in ("至", "到", "-", "–", "—"):
+                with self.subTest(separator=separator):
+                    requested_range = f"`2.1` {separator} `2.3`"
+                    reference.write_text(
+                        "# Reference\n\n## 按任务读取索引\n\n"
+                        "| 任务 | 优先读取 | 跳过 |\n"
+                        "| --- | --- | --- |\n"
+                        f"| 跨节读取 | {requested_range} | 不遗漏中间章节 |\n\n"
+                        "## 2. 交接\n\n### 2.1 开始\n\n确认输入。\n\n"
+                        "### 2.2 验证\n\n验证来源。\n\n"
+                        "### 2.3 完成\n\n返回证据。\n",
+                        encoding="utf-8",
+                    )
+                    result = MODULE.build_package(
+                        reference, "跨节读取", min_savings_ratio=0,
+                    )
+
+                    self.assertEqual("ambiguous", result["status"])
+                    self.assertIn(requested_range, result["followups"])
+                    self.assertEqual("", result["content"])
+
     def test_unique_heading_query_selects_section_without_task_row(self) -> None:
         result = MODULE.build_package(
             ROOT / "wise-agent" / "references" / "delivery-execution-control.md",

@@ -24,11 +24,13 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
     "character-form": (
         RequiredGroup("object_and_layer", ("研究对象", "研究對象", "所问层次", "所問層次", "字形"), 2),
         RequiredGroup("excavated_material", ("出土材料", "甲骨", "金文", "简帛", "簡帛")),
-        RequiredGroup("provenance_and_date", ("合集号", "合集號", "器号", "器號", "图版", "圖版", "出处", "出處", "时代", "時代", "年代"), 2),
+        RequiredGroup("provenance", ("合集号", "合集號", "器号", "器號", "图版", "圖版", "出处", "出處")),
+        RequiredGroup("date", ("时代", "時代", "年代")),
         RequiredGroup("form_and_usage", ("构形", "構形", "辞例", "辭例", "用例", "语境", "語境"), 2),
         RequiredGroup("traditional_glosses", ("传统训释", "傳統訓釋", "说文", "說文", "尔雅", "爾雅"), 2),
         RequiredGroup("modern_research", ("现代研究", "現代研究", "学者", "學者")),
-        RequiredGroup("conflict_and_status", ("支持", "反证", "反證", "争议", "爭議", "冲突", "衝突", "结论等级", "結論等級", "材料可证", "材料可證", "待考"), 2),
+        RequiredGroup("support_and_conflict", ("支持", "反证", "反證", "争议", "爭議", "冲突", "衝突"), 2),
+        RequiredGroup("conclusion_status", ("结论等级", "結論等級", "结论状态", "結論狀態")),
     ),
     "exegesis": (
         RequiredGroup("passage_and_edition", ("原文", "上下文", "篇章", "底本", "版本", "异文", "異文"), 3),
@@ -36,16 +38,18 @@ CHECKS: dict[str, tuple[RequiredGroup, ...]] = {
         RequiredGroup("traditional_glosses", ("传统训释", "傳統訓釋", "尔雅", "爾雅", "说文", "說文", "注疏", "训诂", "訓詁"), 2),
         RequiredGroup("phonology", ("音韵", "音韻", "读音", "讀音", "通假", "假借")),
         RequiredGroup("analysis_and_conflict", ("分析", "支持", "反证", "反證", "争议", "爭議", "异说", "異說"), 2),
-        RequiredGroup("conclusion_status", ("结论等级", "結論等級", "材料可证", "材料可證", "传统训释", "傳統訓釋", "现代通说", "現代通說", "争议", "爭議", "待考"), 2),
+        RequiredGroup("conclusion_status", ("结论等级", "結論等級", "结论状态", "結論狀態")),
     ),
     "etymology": (
-        RequiredGroup("object_and_scope", ("研究对象", "研究對象", "本义", "本義", "字源", "时代", "時代"), 2),
+        RequiredGroup("object", ("研究对象", "研究對象", "本义", "本義", "字源")),
+        RequiredGroup("date", ("时代", "時代", "年代")),
         RequiredGroup("form_evidence", ("出土材料", "甲骨", "金文", "简帛", "簡帛", "小篆"), 2),
         RequiredGroup("provenance", ("合集号", "合集號", "器号", "器號", "图版", "圖版", "出处", "出處")),
         RequiredGroup("phonology_and_context", ("音韵", "音韻", "声符", "聲符", "辞例", "辭例", "语境", "語境"), 2),
         RequiredGroup("traditional_glosses", ("传统训释", "傳統訓釋", "说文", "說文", "尔雅", "爾雅"), 2),
         RequiredGroup("modern_research", ("现代研究", "現代研究", "学者", "學者")),
-        RequiredGroup("conflict_and_status", ("支持", "反证", "反證", "争议", "爭議", "结论等级", "結論等級", "材料可证", "材料可證", "待考"), 2),
+        RequiredGroup("support_and_conflict", ("支持", "反证", "反證", "争议", "爭議"), 2),
+        RequiredGroup("conclusion_status", ("结论等级", "結論等級", "结论状态", "結論狀態")),
     ),
 }
 
@@ -163,20 +167,26 @@ def has_placeholder_required_field(kind: str, text: str) -> bool:
     return False
 
 
+def matching_aliases(text: str, groups: tuple[RequiredGroup, ...]) -> set[str]:
+    aliases = sorted(
+        {alias.casefold() for group in groups for alias in group.aliases}, key=len, reverse=True
+    )
+    # 同一段文字先匹配完整别名，避免其子串再次补足另一项职责。
+    pattern = "|".join(re.escape(alias) for alias in aliases)
+    return set(re.findall(pattern, normalize(text)))
+
+
 def uniquely_matches_group(
     label: str,
     group: RequiredGroup,
     groups: tuple[RequiredGroup, ...],
 ) -> bool:
-    normalized = normalize(label)
-    found = {
-        alias.casefold()
-        for candidate in groups
-        for alias in candidate.aliases
-        if alias.casefold() in normalized
-    }
     own = {alias.casefold() for alias in group.aliases}
-    return bool(found & own) and found <= own
+    for part in re.split(r"[、/／与與及和（）()]", label):
+        found = matching_aliases(part, groups)
+        if found & own and found <= own:
+            return True
+    return False
 
 
 def valued_hits(
@@ -191,8 +201,8 @@ def valued_hits(
             continue
         if not normalize(value) or is_placeholder_value(value):
             continue
-        content = normalize(f"{field} {value}")
-        valued.update(alias for alias in aliases if alias in content)
+        found = matching_aliases(f"{field} {value}", groups)
+        valued.update(found.intersection(aliases))
     return len(valued)
 
 
@@ -206,10 +216,10 @@ def affirmative_claim_text(text: str) -> str:
 
 
 def missing_groups(kind: str, text: str) -> list[str]:
-    normalized = normalize(text)
+    found = matching_aliases(text, CHECKS[kind])
     missing: list[str] = []
     for group in CHECKS[kind]:
-        hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
+        hits = len(found.intersection(group.aliases))
         if hits < group.min_hits:
             missing.append(group.name)
         elif valued_hits(group, CHECKS[kind], text) < group.min_hits:
@@ -275,6 +285,26 @@ def run_self_test() -> int:
             failures.append(f"{kind}: filled entrypoint template rejected: {missing}")
         if not missing_groups(kind, template):
             failures.append(f"{kind}: blank entrypoint template unexpectedly passed")
+        required_fields = ("结论等级",)
+        if kind in {"character-form", "etymology"}:
+            required_fields += ("时代", "图版或合集号", "支持与反证")
+        for field in required_fields:
+            partial = "\n".join(
+                line for line in filled.splitlines() if not line.startswith(f"{field}：")
+            )
+            if not missing_groups(kind, partial):
+                failures.append(f"{kind}: omitted field {field!r} unexpectedly passed")
+        if kind in {"character-form", "etymology"}:
+            combined = filled.replace(f"时代：{values['时代']}\n", "").replace(
+                f"图版或合集号：{values['图版或合集号']}",
+                f"时代与图版或合集号：{values['时代']}，{values['图版或合集号']}",
+            )
+            if missing := missing_groups(kind, combined):
+                failures.append(f"{kind}: combined provenance and date rejected: {missing}")
+            pending = filled.replace(f"时代：{values['时代']}", "时代：待考，断代材料仍有争议")
+            pending = pending.replace(f"结论等级：{values['结论等级']}", "结论等级：待考")
+            if missing := missing_groups(kind, pending):
+                failures.append(f"{kind}: explicit pending conclusion rejected: {missing}")
         for field in fields:
             for blank in ("", "   ", "\t"):
                 partial = filled.replace(f"{field}：{values[field]}", f"{field}：{blank}")

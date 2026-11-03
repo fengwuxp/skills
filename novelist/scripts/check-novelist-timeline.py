@@ -47,7 +47,7 @@ P_ANCHORS = re.compile(r"P[0-9]{3,}(?:\s*,\s*P[0-9]{3,})*")
 RELATION = re.compile(
     r"(?:same-window|unknown-order|overlap:EV-[0-9]{3,}|exact-sync:EV-[0-9]{3,})"
 )
-MARKDOWN_HEADING = re.compile(r"^ {0,3}#{1,6}[ \t]+(.+?)[ \t]*#*[ \t]*$")
+MARKDOWN_HEADING = re.compile(r"^ {0,3}#{1,6}[ \t]+(.+?)(?:[ \t]+#+)?[ \t]*$")
 CANON_STATUSES = {"confirmed", "candidate", "pending", "retired"}
 RECORD_STATUSES = {"aligned", "pending-writeback", "conflict"}
 LINE_ROLES = {"main", "side", "global"}
@@ -128,16 +128,24 @@ def local_authority_target(value: str) -> tuple[str, str, bool] | None:
     return path, unquote(fragment.strip()) if separator else "", markdown_link is not None
 
 
-def heading_key(value: str) -> str:
-    return "".join(character.lower() for character in value if character.isalnum())
-
-
 def markdown_heading_keys(path: Path) -> set[str]:
-    return {
-        heading_key(match.group(1))
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if (match := MARKDOWN_HEADING.fullmatch(line))
-    }
+    headings: set[str] = set()
+    used_slugs: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        match = MARKDOWN_HEADING.fullmatch(line)
+        if not match:
+            continue
+        title = match.group(1)
+        slug_base = re.sub(r"[^\w\s-]", "", title.lower())
+        slug_base = re.sub(r"\s", "-", slug_base)
+        slug = slug_base
+        suffix = 1
+        while slug in used_slugs:
+            slug = f"{slug_base}-{suffix}"
+            suffix += 1
+        used_slugs.add(slug)
+        headings.update((title, slug))
+    return headings
 
 
 def parse_events(text: str, relative: Path) -> tuple[list[Event], list[str]]:
@@ -382,7 +390,7 @@ def check(
                     if headings is None:
                         headings = markdown_heading_keys(resolved)
                         authority_headings[resolved] = headings
-                    if heading_key(authority_fragment) not in headings:
+                    if authority_fragment not in headings:
                         errors.append(
                             f"authority heading does not exist for {event.event_id}: "
                             f"{authority_path}#{authority_fragment} at "

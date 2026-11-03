@@ -26,6 +26,7 @@ TASK_INDEX_HEADING = "按任务读取索引"
 HEADING_RE = re.compile(r"^(#{2,3})\s+(.+?)\s*$")
 FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
 BACKTICK_RE = re.compile(r"`([^`]+)`")
+SECTION_RANGE_RE = re.compile(r"`[^`]+`\s*(?:至|到|[-–—])\s*`[^`]+`")
 CJK_RE = re.compile(r"[\u3400-\u9fff]")
 PRIMARY_TASK_SCORE = 0.45
 FALLBACK_TASK_SCORE = 0.3
@@ -339,6 +340,7 @@ def build_package(
         if task_row:
             matched_task = task_row["task"]
             skipped = task_row["skipped"]
+            followups.extend(SECTION_RANGE_RE.findall(task_row["preferred"]))
             for requested in task_row["headings"]:
                 if requested.lower().endswith(".md"):
                     followups.append(requested)
