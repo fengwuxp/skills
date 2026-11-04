@@ -313,7 +313,7 @@ Harness Plan 分级：
 | gsd-wave | 已获准的 Wave / 多 Agent 编排。 | 原子任务包、Wave 边界、上下文账本、阶段状态、验证矩阵和 handoff。 |
 | engineering-loop | 准备进入受控工程执行 Loop 的单个任务包或阶段切片。 | 测试策略、适用授权、反馈源、人工确认点、回写和恢复入口。 |
 
-需要正式检查 Harness Plan 时，使用 `scripts/check_harness_plan.py`。脚本只检查本地文本或显式传入的本地文件，不联网、不上传、不读取密钥、不判断方案质量。常用方式：
+需要正式检查 Harness Plan 时，使用 `scripts/check_harness_plan.py`。脚本检查本地字段、Markdown 标题或两列字段表中的实际内容，空值、纯关键词和待填占位不算完整；明确的只读无写入范围与已说明的待确认状态可以保留，结构通过不代表计划已就绪、验证已执行或执行已获授权。连续自然正文不强塞标签，按同一契约人工复核并说明脚本不适用。脚本不联网、不上传、不读取密钥、不判断方案质量。常用方式：
 
 ```bash
 senior-software-architect/scripts/check_harness_plan.py --kind lightweight --file 04-harness-plan.md

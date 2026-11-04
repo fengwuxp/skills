@@ -86,14 +86,57 @@ def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
+def plan_entries(text: str) -> list[tuple[str, str]]:
+    entries: list[tuple[str, str]] = []
+    label = ""
+    content: list[str] = []
+    for raw in re.split(r"[。；;\r\n]+", text):
+        line = raw.strip()
+        if not line or line.startswith(("```", "~~~")):
+            continue
+        if line.startswith("|") and line.endswith("|"):
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if len(cells) == 2:
+                line = f"{cells[0]}：{cells[1]}"
+        heading = re.fullmatch(r"#{1,6}\s+(.+)", line)
+        field = re.fullmatch(r"[-*\s]*([^：:]+)[：:]\s*(.*)", line)
+        if heading or field:
+            if label:
+                entries.append((label, " ".join(content)))
+            if heading:
+                label, content = heading.group(1), []
+            else:
+                label, content = field.group(1), [field.group(2)]
+        elif label:
+            content.append(line)
+    if label:
+        entries.append((label, " ".join(content)))
+    return entries
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
-    normalized = normalize(text)
-    missing: list[str] = []
-    for group in CHECKS[kind]:
-        hits = sum(1 for alias in group.aliases if alias.casefold() in normalized)
-        if hits < group.min_hits:
-            missing.append(group.name)
-    return missing
+    groups = CHECKS[kind]
+    aliases = sorted({alias.casefold() for group in groups for alias in group.aliases}, key=len, reverse=True)
+    pattern = re.compile("|".join(re.escape(alias) for alias in aliases))
+    valued = {group.name: set() for group in groups}
+    for label, value in plan_entries(text):
+        value = normalize(value).strip("`* ")
+        if re.fullmatch(r"(?:tbd|todo|待补|待填写|待完善)[.。]?", value):
+            continue
+        unresolved = value in {"pending", "待确认", "待核验", "未知"}
+        if not unresolved and not re.search(r"[^\W_]", pattern.sub("", value)):
+            continue
+        # 只把内容归给字段或标题声明的职责，正文提到 Owner 不能替代 Owner 字段。
+        label_parts = re.split(r"[、/／与與及和（）()]", normalize(label))
+        declared = [set(pattern.findall(part)) for part in label_parts]
+        for group in groups:
+            own = {alias.casefold() for alias in group.aliases}
+            for found in declared:
+                if found and found <= own:
+                    content_aliases = set(pattern.findall(normalize(f"{label} {value}")))
+                    valued[group.name].update(content_aliases & own)
+                    break
+    return [group.name for group in groups if len(valued[group.name]) < group.min_hits]
 
 
 def read_input(args: argparse.Namespace) -> str:
@@ -113,6 +156,44 @@ def run_self_test() -> int:
         invalid_missing = missing_groups(kind, invalid_text)
         if not invalid_missing:
             failures.append(f"{kind}: invalid fixture unexpectedly passed")
+        labels = list(dict.fromkeys(alias for group in CHECKS[kind] for alias in group.aliases))
+        for name, text in (
+            ("empty-fields", "\n".join(f"{label}：" for label in labels)),
+            ("keywords-only", " ".join(labels)),
+            ("empty-headings", "\n".join(f"## {label}" for label in labels)),
+            ("placeholder-fields", "\n".join(f"{label}：TODO" for label in labels)),
+        ):
+            if not missing_groups(kind, text):
+                failures.append(f"{kind}: {name} unexpectedly passed")
+        pending_draft = "\n".join(f"{label}：待确认" for label in labels)
+        if missing := missing_groups(kind, pending_draft):
+            failures.append(f"{kind}: declared pending state rejected: {missing}")
+        for old_value in ("Owner：助手。", "Owner：实现 Agent。"):
+            if old_value in valid_text and not missing_groups(kind, valid_text.replace(old_value, "Owner：。")):
+                failures.append(f"{kind}: empty owner unexpectedly passed")
+
+    valid = SELF_TESTS["lightweight"][0]
+    fields = [field.partition("：") for field in valid.replace("Task ID:", "Task ID：").split("。") if field]
+    table = "| 字段 | 内容 |\n| --- | --- |\n" + "\n".join(f"| {name} | {value} |" for name, _, value in fields)
+    headings = "\n".join(f"## {name}\n{value}\n" for name, _, value in fields)
+    for name, text in (
+        ("table", table),
+        ("headings", headings),
+        ("readonly", valid.replace("写入范围：src/test", "写入范围：无写入，仅只读核对")),
+        ("pending-draft", valid.replace("验证命令：mvn test", "验证命令：待确认；负责人需核对目标模块的构建配置")),
+        ("multiline-command", valid.replace("验证命令：mvn test。", "验证命令：\n```sh\nmvn test\n```\n")),
+        ("combined-heading", valid.replace("Owner：助手。写入范围：src/test。", "\n## Owner 与写入范围\n助手负责，仅修改 src/test。\n")),
+    ):
+        if missing := missing_groups("lightweight", text):
+            failures.append(f"{name}: valid form rejected: {missing}")
+    for name, text in (
+        ("owner-heading-empty", headings.replace("## Owner\n助手", "## Owner\n")),
+        ("owner-only-mentioned-elsewhere", valid.replace("Owner：助手。", "").replace("交接：", "交接：待 Owner 收件，")),
+        ("empty-table-cell", table.replace("| Owner | 助手 |", "| Owner | |")),
+        ("one-stuffed-field", "任务：" + " ".join(alias for group in CHECKS["lightweight"] for alias in group.aliases)),
+    ):
+        if not missing_groups("lightweight", text):
+            failures.append(f"{name}: incomplete form unexpectedly passed")
     if failures:
         print("FAIL harness plan self-test", file=sys.stderr)
         for failure in failures:
@@ -145,7 +226,7 @@ def main() -> int:
         print(f"FAIL harness plan check: kind={args.kind} missing " + ", ".join(missing), file=sys.stderr)
         return 1
 
-    print(f"OK harness plan check: kind={args.kind}")
+    print(f"OK harness plan check: kind={args.kind} (structure only; readiness and authorization not verified)")
     return 0
 
 

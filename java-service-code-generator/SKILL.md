@@ -12,7 +12,7 @@ description: 根据 DDL/schema、Java 类或字段表格生成 Wind Java Service
 ## 工作流程
 
 1. 读取用户输入：DDL/SQL、schema 文件路径、Java 类、字段说明表格、目标表名、业务模块；优先根据用户已有材料生成，不强制要求用户补 DDL。输入源与详细规程见 `references/code-generation-rules.md`。
-2. 被 `wise-agent` 分派时，先消费 Engineering Handoff Card、授权策略和写入范围；缺少结构化输入、目标模块、覆盖边界或验证命令时，只输出缺口，不直接写源码。
+2. 继承当前目标、授权策略、写入范围和已有 Engineering Handoff Card，不要求补卡。结构来源、目标模块或验证命令未在请求中重复给出时，先从已授权材料、项目规则、构建文件和 CI 自行定位；查后仍有实质歧义或缺少写入 / 覆盖授权时，只暂停依赖该缺口的动作。不凭通用经验猜构建命令，也不把验证条件尚未取得写成已验证。
 3. 生成前先检查业务模块：
    - 定位 `*-face/src/main/java` 和 `*-impl/src/main/java`。
    - 从已有 Java `package` 声明推断基础包名，例如 `com.example.skill.codegen`；无法从源码推断时必须要求用户显式提供 `--base-package`，不要使用真实项目包名兜底。
