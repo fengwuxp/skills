@@ -38,6 +38,9 @@
         "cases": "fixtures/skill-eval/senior-contract-design-behavior-cases.json"
       },
       {
+        "cases": "fixtures/skill-eval/senior-boundary-outcome-behavior-cases.json"
+      },
+      {
         "cases": "fixtures/skill-eval/senior-model-validation-behavior-cases.json"
       },
       {

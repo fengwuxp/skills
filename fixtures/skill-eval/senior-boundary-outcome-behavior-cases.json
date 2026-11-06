@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "description": "架构抽象与能力结果责任的 contract-only 题集：含代码情境、结构备选、最小修改、失败时点、告警效果与恢复目标。既有 provider/contract 题集继续覆盖接口形式与语义边界。本题集结构校验不证明模型行为或稳定收益；一次独立模拟也不替代同条件修订前后盲评。",
+  "rubric": {
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
+  },
+  "release_gate": {
+    "mode": "improvement",
+    "candidate_blockers_must_be_zero": true,
+    "candidate_weighted_score_must_improve": true,
+    "max_correctness_regression": 0,
+    "max_safety_regression": 0,
+    "require_auditable_judgments": true,
+    "high_risk_candidate_criteria_min_pass_rate": 1
+  },
+  "cases": [
+    {
+      "id": "contract-review-reservation-atomicity-behind-small-api",
+      "category": "provider-result-ownership",
+      "risk": "high",
+      "prompt": "只读 CR，允许给出修正建议但不写文件。库存服务承诺一次 reserve(sku, amount) 要么返回已持久化的预留编号并扣减库存，要么库存不足且无写入；两个用户可并发预留。数据库已有单条条件更新能力，事务隔离为 READ COMMITTED。新实现片段：\nasync function reserve(sku, amount) {\n  return db.transaction(async tx => {\n    const row = await tx.getStock(sku);\n    if (row.available < amount) throw new InsufficientStock();\n    await tx.setAvailable(sku, row.available - amount);\n    return tx.insertReservation(sku, amount);\n  });\n}\n调用者只调用 reserve，不接触内部步骤。作者认为一个入口加事务已证明封装完整。请判断该接口和实现应如何处理，给能抓住问题的验证。",
+      "criteria": [
+        "保留表达预留结果的稳定契约，指出普通事务内读取再覆盖写入仍可在并发下重复售出；不要求调用者先检查或加分布式锁。",
+        "优先使用既有原子条件扣减及受影响行数等项目能力，在同一事务内关联预留记录；失败回滚，具体方案须满足已给契约，不新增协调服务或平台。",
+        "给出可复现交错的并发验证，例如库存 1、两次各预留 1 只能一笔成功且余量 0；检查记录写入失败后数量恢复。不得只断言执行过 check/update 或方法数量。"
+      ]
+    },
+    {
+      "id": "contract-design-shared-steps-distinct-responsibilities",
+      "category": "abstraction-semantic-differences",
+      "risk": "medium",
+      "prompt": "只读评审一项重构：TempExportService.remove 清理已过期的临时导出文件；PublishedReportService.withdraw 撤回已发布报表，须保留正文和审计证据供已授权追溯。两者都有读取、判断状态、更新和记日志。拟合成：\nprocess(id, deleteBody, keepHistory, checkExpiry, allowPublished)\n调用者须自行配四个布尔值以恢复原语义。已有无状态 AuditFormatter 可被二者复用。请给最小职责建议与验证，不能改变保留政策或用户可见行为。",
+      "criteria": [
+        "依据文件生命周期、保留责任与结果差异保留两项用例能力，不因四个步骤相似合成模式开关接口。",
+        "可复用已成立的审计格式能力，不额外建立通用处理引擎；公开且有明确业务语义的策略参数并非一律禁止。",
+        "验证临时文件过期清理、未过期拒绝，以及报表撤回后的可见性和正文/审计保留，避免只断言共用代码或行数减少。"
+      ]
+    },
+    {
+      "id": "contract-design-compare-state-ownership-not-renaming",
+      "category": "structural-alternatives",
+      "risk": "medium",
+      "prompt": "为已确认的设备预订用例选择内部结构：同一设备同一时段不能有冲突预订，现有 BookingService 拥有预订状态、时段规则和数据库约束。新 AppService 只做用户权限与通知。提案 A 新增 BookingCoordinator，拷贝时段规则并让它和 BookingService 都写预订状态；提案 B 将 Coordinator 改名为 BookingManager，其他不变。两者都保留相同对外契约。请做架构判断并给一个最小可行对照；不需要多份方案文档，也没有新增跨系统事务需求。",
+      "criteria": [
+        "识别 A/B 未改变责任结构，给出由既有 BookingService 维护预订状态与冲突约束、AppService 消费结果的可行对照。",
+        "比较状态归属、不变量保护、调用者步骤和失败恢复，保留 AppService 的权限/通知用例责任，不将全部职责塞回基础服务。",
+        "验证并发冲突、合法预订；通知失败后的预订事实按既有契约核对，不自行回滚或新设通知规则，不制造新中间件、模式注册器或要求重复规划审批。"
+      ]
+    },
+    {
+      "id": "contract-local-fix-no-forced-second-design",
+      "category": "abstraction-proportionality",
+      "risk": "low",
+      "prompt": "仅修正一个内部 TypeScript 格式函数：formatCode(value) 的已确认契约是去除首尾空格，现实现误用了 trimStart()。调用、返回类型与无状态结构均已确定，已有首尾空格的失败用例；没有公共边界或其他变化。请给最小修改与验证，不扩展功能。",
+      "criteria": [
+        "直接将 trimStart 改为 trim 并运行已有失败用例或明确未执行；不改变空字符串或其他输入契约。",
+        "不强凑两种架构、不提取接口/类/工厂，不生成 ADR、计划或额外审批。"
+      ]
+    },
+    {
+      "id": "senior-failure-timepoints-preserve-external-outcome",
+      "category": "distributed-recovery-validation",
+      "risk": "high",
+      "prompt": "请为已有资源创建流程补最小验证设计，不改架构：本地先保存 requestId；外部接口在同账号同端点 24 小时内支持原键原参数幂等重试和回查；成功后本地记录 resourceId。撤销接口可能失败且可按原 resourceId 重试。已有正常路径测试。需要验证响应丢失、本地写结果失败、重启、重复/迟到回调和撤销失败。不允许真实调用外部服务。给出预期业务结果，不能只列测试名称。",
+      "criteria": [
+        "区分尚无副作用、已发生但本地未知、已持久完成与撤销未收敛；选择会改变结果的边界注入失败，不为每个内部方法制造用例。",
+        "原请求身份跨重启保留，未知时按已给作用域/期限回查或幂等恢复，不换键或重复创建；完成记录、迟到回调与重复输入不产生重复效果。",
+        "撤销失败保留未完成事实与后续恢复责任，不标记撤销完成；断言资源、请求身份、持久状态和业务效果，不把外部替身通过写成供应商或生产验证。"
+      ]
+    },
+    {
+      "id": "senior-single-database-does-not-need-saga",
+      "category": "consistency-minimality",
+      "risk": "medium",
+      "prompt": "预订记录与库存都在一个现有关系数据库，同一服务可用事务和条件更新保护，需求没有外部写入、异步或跨服务步骤。当前要补并发与失败验证。有人建议照 Saga Skill 拆成两个服务，增加事件、补偿状态与 DLQ 以便测试每一步。请给本轮最小方案。",
+      "criteria": [
+        "保留单服务本地事务，拒绝仅为测试而引入 Saga、拆服务与消息。",
+        "验证条件扣减、并发竞争、写记录失败时回滚，以及库存和预订记录一致性；不把仅纯内存测试当真实数据库事务证据。"
+      ]
+    },
+    {
+      "id": "senior-alert-noise-reduction-must-preserve-detection",
+      "category": "operational-feedback",
+      "risk": "high",
+      "prompt": "只读评审告警降噪：同一批历史事件回放，旧配置 40 次通知中 8 次需处理；新配置仅 4 次，命中 3 次需处理的事件、漏掉 5 次，另 1 次误报。关键故障检测要求未变。新看板能导入但仍用示例数据，尚未部署。作者以通知下降 90% 声称生产效果改善。请给结论与最小后续验证，不部署、不制造实时观测结果。",
+      "criteria": [
+        "指出数量下降不能抵消已知漏报；可行动比例从 8/40 到 3/4 仍不足证明满足原检测要求，不将回放等同生产收益。",
+        "先定位并修正导致漏报的过滤/抑制条件，使用同一事件集复核必要事件识别与噪声；需要时约定运行观察窗口，不能直接扩大阈值或删关键告警。",
+        "核对看板真实数据、查询口径和无数据状态，明确尚未部署验证，不凭配置导入成功称运行生效。"
+      ]
+    },
+    {
+      "id": "senior-disaster-recovery-uses-measured-business-result",
+      "category": "recovery-evidence",
+      "risk": "high",
+      "prompt": "只读上线评审：确认的 RTO 为 30 分钟，RPO 为 5 分钟。本轮恢复演练耗时 42 分钟，恢复点落后事故前 2 分钟，恢复后业务记录核验相符。备份任务全部成功。负责人拟宣布完全达标；另有人说必须立刻改成多地域才能达标。请给判断和最小下一步，不改部署。",
+      "criteria": [
+        "明确数据恢复点符合给定 RPO、业务核验已完成，但实测恢复耗时不满足 RTO；备份成功不能替代恢复达标。",
+        "沿演练时间线定位恢复耗时再选择改进和复测，不因一次未达标直接要求多地域或每组件冗余；保持只读与当前授权。"
+      ]
+    },
+    {
+      "id": "contract-batch-retry-preserves-item-identity",
+      "category": "consumer-workflow",
+      "risk": "high",
+      "prompt": "修复一个已有批量任务客户端的重试选择。输入项各有稳定 itemId 和 requestKey；每项都有一条结果，但结果顺序不保证与输入一致。状态只会是 COMPLETED、RETRYABLE、UNKNOWN、REJECTED。选择结果须保持原输入顺序且不修改输入项。已确认只允许 RETRYABLE 使用原参数和 requestKey 重试，UNKNOWN 须先核对，已完成与永久拒绝不得重发。现实现 zip(inputs, results)，把非 COMPLETED 的项全重试并生成新 requestKey。请给最小修正和可执行验证；未提供项目路径时交付明确候选，不能声称已修改或运行。",
+      "criteria": [
+        "用稳定项身份关联结果，按原输入顺序选择 RETRYABLE 并保留原参数、requestKey，输入项不被修改。",
+        "UNKNOWN 保持待核对，COMPLETED 与 REJECTED 不重发；不把重试选择改造成新任务引擎或更换幂等作用域。",
+        "用打乱结果顺序、混合状态和连续恢复验证实际选择与外部提交效果；不只断言 HTTP 成功、函数调用次数或计划存在，明确执行边界。"
+      ]
+    },
+    {
+      "id": "contract-domain-translation-preserves-meaning",
+      "category": "cross-domain-translation",
+      "risk": "high",
+      "prompt": "实现现有目录适配函数 to_purchase_snapshot(row)，保持当前 dict 接口。已确认输入 amount_minor 为整数分或 None，采购侧 amount 为 Decimal 元或 None；0 表示已知零价，None 表示未知，不能混同。currency 和 quoted_at 原样保留。sale_state 的 OPEN、STOPPED、UNKNOWN 分别映射 salable=True、False、None。已知状态集合固定，不新增其他业务规则。当前实现直接复制金额、用 amount_minor or 0、将非 OPEN 都当 False，且用当前时间覆盖 quoted_at。请在既有适配边界最小修正并验证，项目路径未提供时不能冒称写入。",
+      "criteria": [
+        "在现有函数完成单位换算并保持 Decimal 精度，保留未知与零值、币种和报价时点，不增加共享全域商品模型或转换平台。",
+        "显式保留三态语义，不把 UNKNOWN 解释为不可售；不为固定输入契约新增未知状态策略。",
+        "验证具体金额、零值、未知值、三种状态和原时点，不只比较字段数或类型；既有历史快照不因读取当前信息被覆盖，未给业务事实不臆造。"
+      ]
+    }
+  ]
+}

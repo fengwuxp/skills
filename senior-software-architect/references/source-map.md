@@ -43,6 +43,7 @@
 | 核对业务驱动架构与验证来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把通用方法论当作项目事实 |
 | 核对业务架构 / 技术架构同质性来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把技术平台当产品本身 |
 | 核对代码坏味与架构体检来源 | `已参考的公开来源：架构健康扫描与复杂度热点`、`应用记录` | 不把启发式阈值和工具输出写成 CR 结论 |
+| 核对架构能力分工、抽象与运行验证 | `已参考的公开来源：架构设计 TOP 10 Skill` | 不把仓库星数、文档能力或脚本输出当作效果证据 |
 | 新增外部来源 | `读取与归因规则`、`提炼边界` | 不把未读正文的来源标为已吸收 |
 | 审查来源是否可继续使用 | `读取与归因规则`、`已参考的公开来源` | 不用历史记录替代最新核验 |
 | 需要最新外部 API、SDK、云产品、法规或安全基线结论 | 本文确认来源历史，再回 `workflow.md` 的外部知识时效性门禁 | 不把读取日期当成当前核验日期 |
@@ -82,6 +83,28 @@
 应用记录：`architecture.md` 第 2.1 节维护类似系统调研与适配；`coding-review-deep-dive.md` 按条件路由到该节。新增架构调研行为题集覆盖场景错配、未知来源、重复抽象、简单任务、CR 与验证停止边界；题集结构通过不代表行为收益。
 
 不吸收边界：不把 AI 回答当作来源事实，不照搬案例技术栈、规模或服务数量，不把“每步 Spec 化”变成多套文档；不认为 AI 不能辅助分析瓶颈，也不允许它在没有数据时编造测量结论。既有证据足够时直接决定，不强制行业调研、额外审批或新增 Skill。
+
+## 已参考的公开来源：架构设计 TOP 10 Skill
+
+- 文章：`https://mp.weixin.qq.com/s/X16JwK7STpfnWOfgHt7HTw`，老付 / 乐说有理，2026-11-05 20:00 发布；2026-11-06 使用浏览器读取正文并完整识读两张图片。文章按概念、整体、详细及专项设计整理十个 Skill；所列星数为 2026-10-21 仓库总数，作者注明未逐项实测，不能解释为能力质量排名。
+- 一手核验：2026-11-06 读取下表固定修订的十份 `SKILL.md` 及四仓库 MIT 许可证；进一步读取 gstack 评审章节与清单、Senior Architect 的依赖分析脚本关键路径。未执行上游脚本，未审完所有 references，也未验证上游运行效果。
+
+| 仓库与固定修订 | 实读入口 / 范围 |
+| --- | --- |
+| [garrytan/gstack](https://github.com/garrytan/gstack/tree/12d18a2e1075bfe472c62f55b32f7ea10ed47275/plan-eng-review) | `plan-eng-review/SKILL.md`；`sections/review-sections.md` 中架构、共享代码、测试与性能评审段；`sections/checklist.md`。 |
+| [wshobson/agents](https://github.com/wshobson/agents/tree/4bde3168b43c0655c4d00ea2726e631719908a6d/plugins) | `backend-development/skills/` 下 `architecture-patterns`、`api-design-principles`、`saga-orchestration`，以及 `developer-essentials/skills/auth-implementation-patterns` 的入口。 |
+| [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills/tree/8f082544116fc0d014188e521ca40304cdfc86b0) | `engineering-team/skills/senior-architect`；`engineering/skills/database-schema-designer`、`observability-designer` 的入口；`senior-architect/scripts/dependency_analyzer.py` 的解析、扫描与评分路径。 |
+| [Jeffallan/claude-skills](https://github.com/Jeffallan/claude-skills/tree/078a25cc5bfd8011459be7b91d004e900c1d02d3/skills) | `architecture-designer/SKILL.md`、`cloud-architect/SKILL.md`。 |
+
+应用：复用现有概要/详细设计、REST、权限、深模块与数据库设计规则，不新增平级 Skill。`architecture.md` 明确重要边界的备选须比较责任结构；`project-governance-service-api-modeling.md` 加强共享语义与结果承责判断；`distributed-consistency.md` 补失败时点验证；`production-readiness.md` 补告警实际效果和恢复目标核验。`senior-boundary-outcome` 行为题集承载合成正反例，复用既有评测与准入入口；结构校验与一次模拟均不证明稳定收益。
+
+边界：只转述方法及适用条件，不复制文章图片、正文、上游代码或安装命令。拒绝固定人数/数据量选型、每层必设接口、默认多地域/全组件冗余、补偿必成功或一律逆序等无条件要求；不以强制文档、逐项审批或固定评审产物替代当前任务。上游依赖分析脚本未覆盖 Java/Maven，不作为 Wind 依赖验证工具；监控生成器和静态分析输出未实测，不宣称可直接生产采用。
+
+同日专题补读（沿用上表固定修订）：`api-design-principles/references/rest-best-practices.md` 的分页、批量、版本、错误与幂等；`architecture-patterns/references/advanced-patterns.md` 的跨域转换与上下文映射；`auth-implementation-patterns/references/details.md` 的刷新、撤销与资源归属；`observability-designer/references/dashboard_best_practices.md` 的受众与视图；`cloud-architect/references/cost.md` 的业务单位成本、归属与测量；`architecture-designer/references/nfr-checklist.md` 的质量与成本问题。不宣称完整审查六份专题的所有代码。
+
+补充应用：完整 API 使用与跨域保真归 `project-governance-service-api-modeling.md`，按有效结果核成本和受众观测归 `production-readiness.md`，授权变化的时点验证归 `security-architecture.md`；这些是结合现有规则的工程化提炼，不声称上游已完整实现。`clean-code.md` 收敛为职责与语义判断，能力索引只回指该权威，避免把少参数、异常或非空形式当成跨语言禁令。既有三份行为题集增加合法契约、批量恢复、模型转换、成本与权限时效正反例。
+
+专题不吸收项：不照抄云价格、固定利用率/折扣目标、面板数量和刷新频率；不把每个限界上下文固定部署成独立服务，不将目录“当前可售”推定为库存预留成功，不用字段改名证明语义等价，也不把凭证撤销一律解释为全部既有任务立即终止。代码示例、替身与一次隔离实作仅支持其明确验证范围，不证明生产效果或稳定能力提升。
 
 ## 已参考的公开来源：软件本质与非标工程问题
 

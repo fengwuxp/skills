@@ -15,9 +15,10 @@
         "senior-software-architect/references/adr-and-tradeoff.md",
         "senior-software-architect/references/production-readiness.md",
         "senior-software-architect/references/distributed-consistency.md",
-        "senior-software-architect/references/coding-review-deep-dive.md"
+        "senior-software-architect/references/coding-review-deep-dive.md",
+        "senior-software-architect/references/security-architecture.md"
       ],
-      "sha256": "60541425cff2dc2d6a07434eac9a9b5d5a98f7352d1b16b24468579fbe07afa7"
+      "sha256": "530c1445331f3703175d60671c104bea2e4c6a110b3bd7ce6dfb0b5221fac50f"
     }
   },
   "rubric": {
@@ -116,6 +117,28 @@
         "两种情况均保留 A 的未知结果；同键不代表 A/B 共享去重，当前查无记录也不证明以后不会执行。只有证明原请求未执行且不会迟到生效，或有已核验的跨入口防重复保障，才可换入口恢复。",
         "围绕 A 的原标识查询、等待通知或在其真实幂等契约允许时恢复；证据不能取得则有界停止并给人工责任与恢复条件，不关闭幂等保护。",
         "继续独立只读核对，只阻塞依赖未知结果的副作用；不把重试、退避或熔断本身当作无重复效果的证明。"
+      ]
+    },
+    {
+      "id": "senior-unit-cost-must-count-effective-results",
+      "category": "architecture-cost",
+      "risk": "medium",
+      "prompt": "只读评审降本方案。同一观察窗口、同样 1000 个提交任务、相同正确性与响应时间验收目标下，旧方案成本 1000 元，1000 个任务均成功；新方案成本 600 元，但只完成 400 个，其余失败未恢复。成本都包含当期重试，未把账单移给其他团队。作者说账单下降 40% 即可采用。请计算并给取舍，不采购或建设成本平台。",
+      "criteria": [
+        "按有效结果计算旧方案 1 元/成功任务，新方案 1.5 元/成功任务；识别账单下降伴随完成率降低，不能据此判定改进。",
+        "保持正确性、完成目标、统计窗口和负载口径，先核对失败机制及可比成本，不通过放松成功定义制造降本。",
+        "复用现有数据提出最小修正与复测，缺少成本信息保留估算边界，不自动购买资源或增加 FinOps 平台。"
+      ]
+    },
+    {
+      "id": "senior-authorization-change-respects-time-contract",
+      "category": "authorization-lifecycle",
+      "risk": "high",
+      "prompt": "为现有导出功能补权限生命周期验证，不重设计鉴权。已确认政策：撤销权限后新读取/下载最迟 60 秒内拒绝；已受理任务可继续计算，但产物下载仍须重新授权；下载链接本身不能绕过授权。缓存和后台队列已存在。请给可执行测试顺序和预期结果，不把政策改成必须立即终止全部任务。",
+      "criteria": [
+        "用可控时钟验证撤销前、撤销后允许的传播窗口、达到 60 秒时及之后的读取/下载行为，不要求窗口内必须继续允许，也不改成一律立即生效。",
+        "允许已受理任务按确认政策继续计算，但旧凭证、缓存及旧链接在期限后不能绕过下载授权；区分计算授权和产物访问。",
+        "补被正常授权的正向对照并检查实际结果与副作用，复用现有缓存/队列/鉴权机制，不新增第二权限系统或自创任务撤销政策。"
       ]
     }
   ]
