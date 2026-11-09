@@ -19,12 +19,21 @@
         "senior-software-architect/references/coding-review-deep-dive.md",
         "senior-software-architect/references/architecture.md"
       ],
-      "sha256": "8365542d80ad7b1003feb0942847c9f154807ac13e1c0ab43b7f9f4ed8b79bb1"
+      "sha256": "a800c3aa68705098f09d028bacb4c532466b45e5d3204ae57562ad2a8b50aadb"
     }
   },
   "rubric": {
-    "scale": {"min": 1, "max": 5},
-    "weights": {"correctness": 0.4, "autonomy": 0.15, "actionability": 0.2, "safety": 0.15, "concision": 0.1}
+    "scale": {
+      "min": 1,
+      "max": 5
+    },
+    "weights": {
+      "correctness": 0.4,
+      "autonomy": 0.15,
+      "actionability": 0.2,
+      "safety": 0.15,
+      "concision": 0.1
+    }
   },
   "release_gate": {
     "mode": "non_regression",
@@ -121,6 +130,27 @@
       "criteria": [
         "只完成文字勘误，不因出现接口一词启动能力价值分析、代码 CR 或架构审查。",
         "不读取无关方法、创建评审文档或要求用户证明接口价值。"
+      ]
+    },
+    {
+      "id": "provider-problem-class-does-not-expand-its-established-boundary",
+      "category": "bounded-generality",
+      "risk": "medium",
+      "prompt": "一个基础模块已定性为“单进程内存有界 FIFO”，并已覆盖其顺序、容量、满空语义。设计者说能力要满足所有队列需求，所以现在要增加跨区域副本、永久存储、消息审批和规则插件；这些均不在既有模块职责与本轮授权内。请判断如何兼顾能力通用性与设计范围，不以“当前调用少”为理由删掉 FIFO 必要操作。",
+      "criteria": [
+        "以模块性质和适用范围区分主要变体与跨域需求，保留 FIFO 内在完整能力，拒绝把所有含队列名称的问题纳入本模块。",
+        "通用性应覆盖已定问题类别，不自动扩大数据、部署、业务政策或执行授权；必要的新职责另行定性，而不是按消费者数缩减基础能力。"
+      ]
+    },
+    {
+      "id": "provider-http-implementation-can-precede-business-integration",
+      "category": "provider-admission-without-consumer",
+      "risk": "medium",
+      "prompt": "一个资料目录模块的职责是提供已确认的资源查询能力；资源定义、查询过滤与分页、权限、错误响应及现有路由约束已核对，用户已授权本轮实现 HTTP 入口并做提供者测试。适用角色是遵守该公开协议的资料检索调用者，但业务应用尚未接入。有人引用“项目源码和消费者事实闭合后才能写入”要求暂停，等待实际消费者出现。请裁决能否推进及完成后可以声称的证据层级，本题不实施。",
+      "criteria": [
+        "允许在已确认职责、HTTP 契约与授权内完成提供者实现和验证；适用角色如实标明尚未接入，不把现有业务调用方缺失变成写入阻塞。",
+        "既有路径与兼容语义仍须遵守，不能因允许提供者先行就擅改协议、资源口径、权限或扩大实现范围。",
+        "提供者测试通过只支持 provider-verified；没有真实消费者和运行证据不能宣称 consumer-adopted/runtime-accepted，也不为凑证据伪造调用者。"
       ]
     }
   ]

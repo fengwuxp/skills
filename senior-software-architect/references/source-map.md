@@ -44,6 +44,7 @@
 | 核对业务架构 / 技术架构同质性来源 | `业务驱动架构与验证公开来源组`、`应用记录` | 不把技术平台当产品本身 |
 | 核对代码坏味与架构体检来源 | `已参考的公开来源：架构健康扫描与复杂度热点`、`应用记录` | 不把启发式阈值和工具输出写成 CR 结论 |
 | 核对架构能力分工、抽象与运行验证 | `已参考的公开来源：架构设计 TOP 10 Skill` | 不把仓库星数、文档能力或脚本输出当作效果证据 |
+| 核对能力提供者、行为替代与资源生命周期 | `能力提供者：Linux 与面向对象对照` | 不将系统调用、内核对象或特权机制直接搬入业务模型 |
 | 新增外部来源 | `读取与归因规则`、`提炼边界` | 不把未读正文的来源标为已吸收 |
 | 审查来源是否可继续使用 | `读取与归因规则`、`已参考的公开来源` | 不用历史记录替代最新核验 |
 | 需要最新外部 API、SDK、云产品、法规或安全基线结论 | 本文确认来源历史，再回 `workflow.md` 的外部知识时效性门禁 | 不把读取日期当成当前核验日期 |
@@ -53,6 +54,22 @@
 - 一手核验：SICP Comparison Edition 的 [Guy L. Steele Jr. 2021 年序言](https://sicp.sourceacademy.org/chapters/foreword02.html)、[1.1.8 黑箱抽象](https://sicp.sourceacademy.org/chapters/1.1.8.html)和[2.1.2 抽象屏障](https://sicp.sourceacademy.org/chapters/2.1.2.html)相关正文已读。区分 JavaScript 版序言与原版正文，不把序言中的工作词汇论述归给原版作者；网页为本轮所读版本，未作整书核验。
 - 应用：在 `project-governance-service-api-modeling.md` 的“契约与实现对齐”核对名称承诺、调用者免于理解的内部细节与实际变化范围，复用已有设计/CR 路由；案例验证完成状态误称、机制泄露及表示替换的行为边界。
 - 不吸收：不复制文章、书中原文/代码/图像，不把常见模式自动提升为通用平台、DSL、接口类型或固定分层。文章观点只作方法线索；项目规则及可观察契约决定取舍，来源核验不等于模型行为提升。
+
+## 能力提供者：Linux 与面向对象对照
+
+2026-11-09 读取以下一手资料的指定章节，分别记录系统事实与本项目转译；华夏智慧沿用本项目已有“正名责实、察同辨异、知止有度”工程镜片，不把经典解释当作 Linux 设计来源。
+
+| 来源及实际读取范围 | 可迁移启发与边界 |
+| --- | --- |
+| [Linux VFS](https://docs.kernel.org/filesystems/vfs.html)：Introduction、Inode/File Object 与 file_operations。 | 共同访问协议与具体实现分离，资源对象和打开后的使用状态分开。只借鉴职责与分派关系；未锁定内核 tag，不复制操作表布局、目录结构或假定所有资源支持全部操作。 |
+| Linux man-pages [open(2)](https://man7.org/linux/man-pages/man2/open.2.html)、[dup(2)](https://man7.org/linux/man-pages/man2/dup.2.html)、[close(2)](https://man7.org/linux/man-pages/man2/close.2.html)：描述符、open file description、共享偏移与关闭章节。 | 路径、资源、打开状态和引用不是同一对象；重复描述符可共享使用状态，关闭一个引用不自动销毁资源或终止在途调用。业务会话和借用规则须按自身契约确定，不照搬 POSIX/Linux 细节。 |
+| [read(2)](https://man7.org/linux/man-pages/man2/read.2.html)、[write(2)](https://man7.org/linux/man-pages/man2/write.2.html)：返回值与 NOTES；[lseek(2)](https://man7.org/linux/man-pages/man2/lseek.2.html)：ERRORS。 | 短读/短写可以成功；写入返回不保证持久化；管道、socket/FIFO 的 seek 可报 ESPIPE。统一调用形式必须保留进度、适用范围和保证层级，不能推导成全部可 seek、自动事务或每个业务操作都要 fsync。 |
+| [capabilities(7)](https://man7.org/linux/man-pages/man7/capabilities.7.html)：DESCRIPTION。 | Linux capabilities 将传统超级用户特权拆分，是权限机制；本项目“能力”表示操作及保证，二者不能混同，工具存在也不产生执行授权。 |
+| Liskov / Wing，[A Behavioral Notion of Subtyping](https://www.cs.cmu.edu/~wing/publications/LiskovWing94.pdf)，1994，摘要与引言。 | 按规格与可观察行为判断替代，类型或继承关系不足以证明可替代；不声称通读全部证明，也不推导为所有实现输出逐字相同或必须使用继承。 |
+
+应用：`project-governance-service-api-modeling.md` 从模块定性与问题类别定义提供者，再区分接口、资源与授权，细化保证层级、行为替代和资源使用范围；入口提示读取该权威。具体需求作为能力组合与覆盖验证的实例，不按当前调用清单裁剪职责内必要操作；这是本项目的架构转译，不冒充 Linux 文档原句。`senior-provider-definition` 行为题集覆盖有状态/无状态、必需/可选操作、部分进展/完整结果、借用/释放、能力/授权及基础职责与需求实例的区别。类型形式、类数量或 Linux 类比不成为新的准入门槛；结构检查和隔离样例均不证明内核行为、生产效果或稳定提升。
+
+只保存方法转述和来源索引，不复制原文、论文、示例代码或图片；系统实现细节、权限行为和 ABI 用于真实项目时须按实际平台与版本重新核验。
 
 ## 读取与归因规则
 - 分析、提炼或吸收外部资料时，必须以实际读取到的正文、仓库文件或官方页面为依据。
