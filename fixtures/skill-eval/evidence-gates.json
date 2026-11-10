@@ -314,6 +314,9 @@
       },
       {
         "cases": "fixtures/skill-eval/skill-optimization-boundaries-behavior-cases.json"
+      },
+      {
+        "cases": "fixtures/skill-eval/wise-agent-handoff-closure-behavior-cases.json"
       }
     ],
     "payment-expert": [
