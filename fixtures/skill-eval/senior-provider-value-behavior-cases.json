@@ -8,7 +8,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "senior-provider-value-current",
+      "id": "senior-provider-value-entry-verification",
       "paths": [
         "AGENTS.md",
         "senior-software-architect/SKILL.md",
@@ -19,7 +19,7 @@
         "senior-software-architect/references/coding-review-deep-dive.md",
         "senior-software-architect/references/architecture.md"
       ],
-      "sha256": "a800c3aa68705098f09d028bacb4c532466b45e5d3204ae57562ad2a8b50aadb"
+      "sha256": "4f297c4d7543da1f258294a581f84ac1ebf51884d24c1b0d800e168a681f8103"
     }
   },
   "rubric": {
@@ -150,7 +150,7 @@
       "criteria": [
         "允许在已确认职责、HTTP 契约与授权内完成提供者实现和验证；适用角色如实标明尚未接入，不把现有业务调用方缺失变成写入阻塞。",
         "既有路径与兼容语义仍须遵守，不能因允许提供者先行就擅改协议、资源口径、权限或扩大实现范围。",
-        "提供者测试通过只支持 provider-verified；没有真实消费者和运行证据不能宣称 consumer-adopted/runtime-accepted，也不为凑证据伪造调用者。"
+        "裁决区分内部查询测试与从公开 HTTP 路由验证响应。只跑前者时，HTTP 行为仍待验证。入口验证通过可支持该路径的 provider-verified；没有真实消费者和运行证据不能宣称 consumer-adopted/runtime-accepted，也不为凑证据伪造调用者。"
       ]
     }
   ]

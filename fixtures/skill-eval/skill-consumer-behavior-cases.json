@@ -118,7 +118,7 @@
       "criteria": [
         "实际读取临时安装包中的工程主能力、Java 控制语句与格式、接口、测试约规和命中的 Wind 服务边界；读取消费项目的格式配置，不依赖源仓库 AGENTS.md，不仅复述能力名称。",
         "按源码与需求修复可观察行为，Controller 消费已有 OrderService 接口，基础 ServiceImpl 保留自己的 Mapper 和业务规则，不新增透传服务或强套领域层。简单值选择可用三目，嵌套业务分支改为清晰控制流。",
-        "复用现有测试，补充空值、未启用和 Controller 公开入口断言；运行 javac 与 sample.OrderLabelTests，安装包守卫无新增违例，声明式格式设置不被默认 120 行宽替换。",
+        "复用现有测试，补充空值、未启用和 Controller 公开入口断言。Checker 用同一条带前后空白的启用订单从 Controller 查询，结果必须是去空白后的名称。仅 Service 测试通过而 Controller 仍返回原值，判行为修复失败。运行 javac 与 sample.OrderLabelTests，安装包守卫无新增违例，声明式格式设置不被默认 120 行宽替换。",
         "仅修改白名单，IDEA 命令使用项目配置；格式器不可用时明确未自动验证，不用 guard 或 diff whitespace 通过冒充 IDEA 格式通过，不把此单次运行归因于 GPT 6。"
       ]
     }
