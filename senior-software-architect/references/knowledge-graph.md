@@ -104,4 +104,4 @@
 - 本文只保留导航和归档规则，不沉淀专题长知识。
 - 新增条目必须能指向一个权威 reference；没有权威 reference 时，先创建或补充专项文件。
 - 与专项 reference 重复的知识，保留专项原文，本文只保留一句定位。
-- 修改本文后运行 `scripts/audit-reference-indexes.py`、`python3 scripts/evaluate-skills.py --json` 和 `./scripts/validate.sh`。
+- 调整导航时，从变更的条目跟到目标章节，确认它仍能回答该条目指向的问题。

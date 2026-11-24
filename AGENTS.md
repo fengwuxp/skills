@@ -16,12 +16,19 @@
 - `SKILL.md` 保持精简，承载角色定位、核心流程、场景路由和必要红线。
 - 详细知识、模板、清单和方法论放入 `references/`，由 `SKILL.md` 明确何时读取。
 - 不创建无必要的 README、安装指南、变更日志等辅助文件；仓库级说明统一放在根目录 `README.md`。
-- 更新技能时同步检查 `agents/openai.yaml` 是否仍匹配技能定位。
+- 调整技能定位或调用方式时，核对 `agents/openai.yaml` 与入口是否一致。
 - Skill ID 使用小写字母、数字和连字符，并与目录名一致；frontmatter、显式调用和能力路由表使用 Skill ID，中文名称可用于标题、正文展示和 `agents/openai.yaml` 的 `display_name`。
-- 修改后至少执行 YAML、引用和同步 dry-run 等轻量校验。
 - 规则文档按最小权威原则维护：常驻入口只保留所有任务共用的边界与路由；环境或配置已有权威的信息用明确指针，不复制成易过期的缓存；分支资料写清触发条件，步骤写可观察的完成标准；删除不改变行为的空话，但不得压缩掉安全、授权、兼容和停止条件。
 - Skill 评审至少核对描述、调用策略、入口路由、按需资源和行为一致性，具体方法见 `resource-capability-distiller/references/skill-quality-review.md`；本仓库维护仍由 `skill-creator` 承接，不因此启用资源提炼流程。不把篇幅、祈使句数量或固定目录结构当作准入门槛。
 - 正式 PRD、系分、OpenSpec/SDD 等交付文档以最终标准版本为主，不保留讨论过程、迭代草稿、AI 推理轨迹或被拒方案展开；过程内容进入任务计划、评审报告、Decision Log、项目执行规范、ADR 或中间任务文档。
+
+## 源仓库维护如何验证
+
+本仓库交付可安装的能力。维护判断规则时，先说明使用者在哪个决定上需要帮助、现有规则为何会给出不合适的结果，依 `wise-agent/SKILL.md` 的“认知闭环”确定抽象范围。已有能力足够时可直接给出分析结论。
+
+- **判断或方法变化**：用实际材料选一个能区分新旧做法的场景，先推演预期决定、依据及失效条件。要检验 Agent 能否用对规则，就给它原始任务和可读的 Skill，观察它实际作出的选择。已有案例足以复核时复用；需要长期防止同一回归时才固化新例。单次推演或试用的结论限于本例。
+- **结构或执行变化**：按受影响的入口与依赖选检查。元数据变更查 YAML 与调用策略，资源改名查引用方，脚本改动运行受影响的正常与失败路径。纯文字校对以回读差异收口。对同一版本复用已有证据，失败或未决风险涉及更大范围时再扩大验证。
+- **整仓与分发**：验证仓库整体、共享机制影响范围无法可靠限定，或用户明确要求全检时，执行 `scripts/validate.sh`。实际分发的预演范围与拟同步目标相同，按下文供应链约规执行。局部维护按本次结论所需的证据收口。
 
 ## 顶层处事原则
 
@@ -61,9 +68,9 @@
 
 ## Skill 三级加载机制
 
-Skill 采用 `Metadata -> SKILL.md -> bundled resources` 三级加载：元数据只负责触发，正文承载定位、路由和必要红线，`references/`、`scripts/`、`assets/` 按任务需要读取。创建或审查时须保持 `SKILL.md` 精简、引用一层直连、确定性动作脚本化，并检查 `agents/openai.yaml`、引用和同步 dry-run；不要把长知识、模板或工具步骤塞进入口。通用创建流程见 `skill-creator`，能力归位与验证见 `resource-capability-distiller/references/distillation-contract.md`。
+Skill 采用 `Metadata -> SKILL.md -> bundled resources` 三级加载：元数据只负责触发，正文承载定位、路由和必要红线，`references/`、`scripts/`、`assets/` 按任务需要读取。创建或审查时保持入口精简、引用一层直连，确定性动作按需脚本化。通用创建流程见 `skill-creator`，能力归位与验证见 `resource-capability-distiller/references/distillation-contract.md`。
 
-`scripts/validate-trigger-paths.py` 只修复或删除既有检查，不再承接新不变量；新增约束进入对应 Skill 的 fixture、validator 或独立仓库级检查，并由 `scripts/validate.sh` 聚合，避免所有能力继续争用同一 legacy 文件。
+`scripts/validate-trigger-paths.py` 只修复或删除既有检查。需要持续执行的新增门禁进入对应 Skill 的 fixture、validator 或独立仓库级检查，由 `scripts/validate.sh` 聚合。
 
 ## Skill 类型与接入门禁
 
@@ -112,7 +119,7 @@ Skill 可以携带脚本、引用外部资料并影响 Agent 行为，因此按�
 - 任何新增脚本都应说明输入、输出、写入范围、失败行为和是否会访问网络。
 - `sync-skills.sh` 使用 `rsync --delete`，正式同步前必须先 dry-run，并确认 `CODEX_HOME`、目标技能和备份位置正确。
 - 不得把使用者学习记录、密钥、token、客户数据、内部合同、生产配置或不可公开组织信息提交到本仓库。
-- 修改技能后必须执行统一验证；新增脚本或外部资料引用时，还应执行安全审计。
+- 新增脚本或外部资料引用时，对受影响的 Skill 与来源执行安全审计。
 
 ## 外部文章读取约规
 

@@ -408,13 +408,7 @@ cd skills
 
 ## 验证与同步安全
 
-修改 Skill、reference、script、fixture 或 README 后运行：
-
-```bash
-./scripts/validate.sh
-git diff --check
-./sync-skills.sh --dry-run all
-```
+日常维护按本轮要证明的结论选择检查。需要验证整个源仓库时运行 `./scripts/validate.sh`，其中包含隔离目录的同步预演。验证范围与停止条件见[源仓库维护如何验证](./AGENTS.md#源仓库维护如何验证)。
 
 正式同步 Codex 后运行 `scripts/validate-installed-skills.sh`；也可用 `./scripts/validate.sh --require-installed-parity` 将真实 Codex 安装态纳入完整验证。默认 `./scripts/validate.sh` 只验证源仓库和隔离的同步 fixture，并会明确输出 parity 未检查。`--dry-run` 不写安装目录；正式同步需要对应授权，备份保存在目标的 `skills/.backups/` 下。Claude Code 目标使用同一份复制与备份逻辑，但当前安装一致性脚本只检查 Codex 目标，可用 `diff -qr` 对照 Claude 目标。
 
@@ -473,7 +467,7 @@ scripts/smoke-wise-agent-behavior.sh --mode security --output-dir /tmp/security-
 
 ## 维护者入口
 
-新增或修改 Skill 时遵循 [AGENTS.md](./AGENTS.md)：保持 `SKILL.md` 精简，详细知识进入 `references/`，确定性动作进入 `scripts/`，真实正负例进入 fixtures；同时检查 `agents/openai.yaml`、引用、来源边界和同步 dry-run。一个规则只保留一个权威来源。
+新增或修改 Skill 的归位、验证与分发约定见[仓库维护规则](./AGENTS.md)。
 
 公开来源、读取状态和不吸收边界统一查[仓库级来源索引](./references/source-map.md)；专题来源进入各 Skill 的 `references/source-map.md`，README 不复制外部正文。
 
