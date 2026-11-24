@@ -16,7 +16,7 @@ Usage:
 
 Environment:
   CODEX_HOME  Codex home directory. Defaults to "$HOME/.codex".
-  CLAUDE_HOME Claude Code home directory. Defaults to "$HOME/.claude".
+  CLAUDE_HOME Claude Code home (default: "$HOME/.claude"). Skills are installed under "$CLAUDE_HOME/skills".
 
 Notes:
   - Source skills are discovered from skill directories next to this script.
