@@ -54,13 +54,7 @@ CHECKS: dict[str, list[RequiredGroup]] = {
         RequiredGroup("verification", ["特征测试", "契约测试", "回归测试", "数据校验", "监控", "告警"], 3),
         RequiredGroup("handoff", ["Engineering Handoff", "第一实施切片", "停止条件", "执行 owner", "验证 owner"], 2),
     ],
-    "code-review": [
-        RequiredGroup("findings", ["发现", "P0", "P1", "P2", "P3"], 2),
-        RequiredGroup("risk", ["风险", "后果", "业务", "数据", "安全", "稳定性"], 1),
-        RequiredGroup("evidence", ["证据", "文件", "行号", "调用链", "状态流转", "测试缺口"], 2),
-        RequiredGroup("suggestion", ["建议", "修复", "整改", "替代方案"], 1),
-        RequiredGroup("verification", ["验证", "测试", "检查", "回归"], 1),
-    ],
+    "code-review": [],  # 按正式报告中有发现、零发现两种结构分别检查。
     "production-change": [
         RequiredGroup("impact", ["影响范围", "用户", "模块", "数据", "外部依赖"], 2),
         RequiredGroup("release", ["灰度", "开关", "准入条件", "退出条件"], 1),
@@ -304,36 +298,55 @@ def current_review_text(text: str) -> str:
     return "\n".join(lines)
 
 
+def missing_review_fields(text: str) -> list[str]:
+    """检查结构化 CR 的当前正文；自然语言短评由评审人直接核对。"""
+    lines = text.splitlines()
+    # 表格行和正文复用字段语法。正文可在同一行记录多项发现。
+    labels = []
+    for line in lines:
+        clauses = [line] if line.lstrip().startswith("|") else re.split(r"[。；;]", line)
+        for clause in clauses:
+            for label in ("结论", "评审结论", "发现", "问题"):
+                value = labeled_value(clause, label)
+                if value:
+                    labels.append(value.rstrip("。").strip())
+            if re.match(r"^\s*(?:(?:[-+*]|\d+[.)])\s+)?(?:\*\*|__)?(?:发现|问题)\s*\d+(?:\*\*|__)?\s*[：:]", clause):
+                labels.append(clause.strip())
+    clean = any(re.fullmatch(
+        r"零发现|无发现|(?:本次(?:评审)?)?(?:未发现|没有发现)(?:需修复的|需要修复的|可报告的|应修复的)?问题",
+        value.strip(),
+    ) for value in labels)
+    ranked_finding = re.search(
+        r"(?m)^[ \t]*(?:#{1,6}[ \t]+)?(?:(?:[-+*]|\d+[.)])[ \t]+)?"
+        r"(?:\*\*|__)?\[P[0-3]\](?:\*\*|__)?[ \t]+\S", text
+    )
+    if clean:
+        finding_heading = re.search(r"(?m)^\s*#{1,6}\s*(?:发现|问题)(?:[：:\s]|$|列表|清单)", text)
+        if len(labels) != 1 or ranked_finding or finding_heading:
+            return ["conflicting_review_conclusion"]
+
+    fields = {
+        "evidence": ("证据",),
+        "verification": ("验证", "测试"),
+        "risk": ("风险", "后果", "残余风险", "未覆盖"),
+    }
+    if clean:
+        fields["scope"] = ("范围", "评审范围")
+    elif not ranked_finding:
+        fields["findings"] = ("发现", "问题")
+    return [
+        name for name, aliases in fields.items()
+        if not any(has_meaningful_labeled_value(line, alias) for line in lines for alias in aliases)
+    ]
+
+
 def missing_groups(kind: str, text: str) -> list[str]:
-    normalized = normalize(text)
     missing: list[str] = []
-    groups = CHECKS[kind]
-    clean_review = False
-    review_text = current_review_text(text) if kind == "code-review" else ""
     if kind == "code-review":
-        conclusions = re.findall(
-            r"(?:^|[\n。；])\s*(?:(?:[-+*]|\d+[.)])\s+)?"
-            r"(?:结论|评审结论|发现|问题)(?:\s*\d+)?\s*[：:]\s*([^\n。；]+)", review_text
-        )
-        clean_conclusions = [value for value in conclusions if re.fullmatch(
-            r"未发现(?:需修复的|需要修复的|可报告的|应修复的)?问题", value.strip()
-        )]
-        if clean_conclusions:
-            has_findings = re.search(r"(?m)^\s*#{1,6}\s*(?:发现|问题)(?:[：:\s]|$|列表|清单)|\[P[0-3]\]", review_text)
-            if len(conclusions) != 1 or has_findings:
-                missing.append("conflicting_review_conclusion")
-            else:
-                clean_review = True
-    if clean_review:
-        groups = []
-        for name, labels in (
-            ("scope", ("范围", "评审范围")),
-            ("evidence", ("证据",)),
-            ("verification", ("验证", "测试")),
-            ("risk", ("风险", "残余风险", "未覆盖")),
-        ):
-            if not any(has_meaningful_labeled_value(review_text, label) for label in labels):
-                missing.append(name)
+        text = current_review_text(text)
+        missing.extend(missing_review_fields(text))
+    normalized = normalize(text)
+    groups = CHECKS[kind]
     if kind == "system-design" and all(marker.casefold() in normalized for marker in TABLE_DESIGN_MARKERS):
         groups = [*groups, *TABLE_DESIGN_CHECKS]
     for group in groups:

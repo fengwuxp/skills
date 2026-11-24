@@ -150,7 +150,15 @@ def extract_block(text: str, tag: str) -> str:
 
 
 def parse_records(body: str, kind: str, *, required: bool = True) -> list[dict[str, str]]:
-    records = [parse_key_values(match.group("body")) for match in RECORD_PATTERNS[kind].finditer(body)]
+    # 捕获组保留完整记录的正文，间隔中残留的标记意味着有记录缺少配对。
+    segments = RECORD_PATTERNS[kind].split(body)
+    for gap in segments[::2]:
+        for line in gap.splitlines():
+            if line.lstrip().startswith("#"):
+                continue
+            if f"[{kind}]" in line or f"[/{kind}]" in line:
+                raise WebsitePlanError(f"[{kind}] 与 [/{kind}] 须成对出现")
+    records = [parse_key_values(record) for record in segments[1::2]]
     if required and not records:
         raise WebsitePlanError(f"至少需要一个 [{kind}] 记录")
     return records
@@ -196,7 +204,7 @@ def validate_unique(records: list[dict[str, str]], key: str, scope: str) -> None
         seen.add(value)
 
 
-def validate_modules(modules: list[dict[str, str]]) -> None:
+def validate_modules(modules: list[dict[str, str]], plan_status: str) -> None:
     for index, module in enumerate(modules, start=1):
         scope = f"module[{module.get('id', index)}]"
         require_keys(module, MODULE_KEYS, scope)
@@ -214,12 +222,19 @@ def validate_modules(modules: list[dict[str, str]]) -> None:
     validate_unique(modules, "id", "module")
 
     module_ids = {module["id"] for module in modules}
+    removed_ids = {module["id"] for module in modules if module["overlap_disposition"] == "remove"}
     detailed_questions: dict[str, list[str]] = {}
     for module in modules:
         scope = f"module[{module['id']}]"
         handoff_to = module["handoff_to"].strip()
         if handoff_to.casefold() != "none" and handoff_to not in module_ids:
             raise WebsitePlanError(f"{scope} handoff_to unknown module id: {handoff_to}")
+        if plan_status == "ready-for-ui" and module["id"] not in removed_ids:
+            unresolved = [field for field in ("evidence", "owner") if is_empty(module[field])]
+            if unresolved:
+                raise WebsitePlanError(f"{scope} 移交 UI 前须确认 {', '.join(unresolved)}")
+            if handoff_to in removed_ids:
+                raise WebsitePlanError(f"{scope} handoff_to 指向已移除的模块 {handoff_to}")
         overlap_refs = (
             []
             if module["overlap_with"].strip().casefold() == "none"
@@ -274,15 +289,23 @@ def validate_references(reference_mode: str, references: list[dict[str, str]]) -
     validate_unique(references, "source", "reference")
 
 
-def validate_media(media: list[dict[str, str]]) -> None:
-    viewports: list[str] = []
+def validate_media(media: list[dict[str, str]], required_viewports: str | None) -> None:
+    viewports: set[str] = set()
     for index, item in enumerate(media, start=1):
         scope = f"media[{item.get('id', index)}]"
         require_keys(item, MEDIA_KEYS, scope)
         if is_empty(item["source"]):
             raise WebsitePlanError(f"{scope} source 不能为空或占位")
-        viewports.extend(part.strip().casefold() for part in item["target_viewports"].split(","))
+        viewports.update(part.strip().casefold() for part in item["target_viewports"].split(","))
     validate_unique(media, "id", "media")
+    if required_viewports is not None:
+        required = {part.strip().casefold() for part in required_viewports.split(",")}
+        if any(is_empty(item) for item in required | viewports):
+            raise WebsitePlanError("target_viewports 须列出约定的目标视口")
+        missing = required - viewports
+        if missing:
+            raise WebsitePlanError("缺少已约定的媒体视口: " + ", ".join(sorted(missing)))
+        return
     if not any("mobile" in viewport or "h5" in viewport for viewport in viewports):
         raise WebsitePlanError("responsive media target_viewports 必须包含 mobile 或 H5")
     if not any(any(size in viewport for size in ("1920", "2560", "3440", "ultrawide")) for viewport in viewports):
@@ -310,10 +333,10 @@ def parse_plan(text: str) -> WebsitePlanParts:
     )
     media = parse_records(extract_block(text, "responsive-media"), "media")
     handoff = parse_key_values(extract_block(text, "website-handoff"))
-    validate_modules(modules)
+    validate_modules(modules, contract["status"])
     validate_metrics(metrics)
     validate_references(contract["reference_mode"], references)
-    validate_media(media)
+    validate_media(media, contract.get("media_target_viewports"))
     validate_handoff(contract, handoff)
     return WebsitePlanParts(contract, modules, metrics, references, media, handoff)
 

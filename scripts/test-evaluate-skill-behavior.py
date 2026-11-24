@@ -3,12 +3,14 @@
 
 from __future__ import annotations
 
+import io
 import importlib.util
 import hashlib
 import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
@@ -97,6 +99,37 @@ class SkillBehaviorEvaluationTests(unittest.TestCase):
             "sha256": digest.hexdigest(),
         }
         return case_data
+
+    def test_validate_reports_which_profiles_were_verified(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            input_only = self.input_bound_case_data(root)
+            source_only = self.source_bound_case_data()
+            both = {**source_only, "input_profile": input_only["input_profile"]}
+            for data, sources, inputs in (
+                (self.case_data, "UNBOUND", "UNBOUND"),
+                (source_only, "MATCH", "UNBOUND"),
+                (input_only, "UNBOUND", "MATCH"),
+                (both, "MATCH", "MATCH"),
+            ):
+                with self.subTest(sources=sources, inputs=inputs):
+                    cases = root / "cases.json"
+                    MODULE.write_json(cases, data)
+                    output = io.StringIO()
+                    with redirect_stdout(output):
+                        result = MODULE.main(["validate", "--verify-sources", "--cases", str(cases)])
+                    self.assertEqual(result, 0)
+                    self.assertIn(f"source_profiles={sources} input_profile={inputs}", output.getvalue())
+
+            # 来源漂移只能得到失败结果，不能沿用上一轮的 MATCH。
+            both["source_profiles"]["candidate"]["sha256"] = "0" * 64
+            MODULE.write_json(cases, both)
+            output, errors = io.StringIO(), io.StringIO()
+            with redirect_stdout(output), redirect_stderr(errors):
+                result = MODULE.main(["validate", "--verify-sources", "--cases", str(cases)])
+            self.assertEqual(result, 2)
+            self.assertEqual(output.getvalue(), "")
+            self.assertIn("source set changed", errors.getvalue())
 
     def score_rows(self, key: dict[str, object]) -> list[dict[str, object]]:
         rows = []

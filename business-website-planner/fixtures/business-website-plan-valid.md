@@ -10,6 +10,7 @@ business_scope: campaign planning and coordination
 non_goals: media budget custody, direct ad account operation, production release
 organization_mode: core-plus-conditional
 reference_mode: public
+media_target_viewports: mobile-390, desktop-1440, desktop-1920, ultrawide-2560, ultrawide-3440
 design_carrier: figma
 design_carrier_override: none
 owner: business-owner

@@ -168,7 +168,7 @@ class DistributedSkillBundleTests(unittest.TestCase):
         result = self.run_command(command, cwd=consumer)
         self.assertEqual(0, result.returncode, result.stderr)
         review = consumer / "review.md"
-        review.write_text("发现 P2。风险：边界遗漏。证据：文件与行号。建议修复。验证：测试。\n", encoding="utf-8")
+        shutil.copyfile(self.skills_root / "senior-software-architect/fixtures/code-review-valid.md", review)
         guard = self.run_command(
             [
                 str(self.skills_root / "senior-software-architect/scripts/check_architecture_deliverable.py"),

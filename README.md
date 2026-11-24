@@ -363,25 +363,36 @@ python3 ~/.codex/skills/wise-agent/scripts/user-context-ledger.py disable
 
 支持环境为 macOS 或 Linux 的 Bash shell；同步需要 `rsync`，完整验证还需要 Python 3.11+、Ruby、`rg` 和 Git。仓库未提供 Windows 原生脚本，Windows 使用者应在 WSL 或等价 Unix 环境中运行，并自行确认工具版本兼容性。
 
+### 普通安装
+
+普通安装按任务选包，先核对各包 `admission.json` 的 `installable` 状态、`requires` 及适用的 `restrictions`。取得相应的本机使用许可后，可按下面的 Java/Wind 工程组合预演，核对目标、选包及备份位置，再运行对应的同步命令。[许可证状态](#许可证状态)
+
 ```bash
 git clone https://github.com/fengwuxp/skills.git
 cd skills
-./sync-skills.sh --dry-run all
-./sync-skills.sh all
+./sync-skills.sh --dry-run wise-agent senior-software-architect wind-coding-conventions llm-coding-hygiene
+./sync-skills.sh wise-agent senior-software-architect wind-coding-conventions llm-coding-hygiene
 ```
 
-同步指定 Skill 使用 `./sync-skills.sh document-authoring`，可同时列出多个目录；`all` 覆盖同步所有包含 `SKILL.md` 的源目录。同步只负责复制，不检查 `candidate` / `installable`、准入证据或依赖关系，不要求依赖顺序，也不自动补选依赖；目标不存在就创建，已存在就覆盖。非默认目录使用 `CODEX_HOME=/path/to/codex-home`。
+只需华夏经世智慧时，可以单独选包。同步器按列出的目录复制，依赖由调用者一并选入，非默认目录使用 `CODEX_HOME=/path/to/codex-home`。
+
+```bash
+./sync-skills.sh --dry-run huaxia-practical-wisdom
+./sync-skills.sh huaxia-practical-wisdom
+```
 
 同步到 Claude Code 使用显式目标参数，默认目录为 `$HOME/.claude`：
 
 ```bash
-./sync-skills.sh --target claude --dry-run all
-./sync-skills.sh --target claude all
+./sync-skills.sh --target claude --dry-run wise-agent senior-software-architect wind-coding-conventions llm-coding-hygiene
+./sync-skills.sh --target claude wise-agent senior-software-architect wind-coding-conventions llm-coding-hygiene
 ```
 
 也可以通过 `CLAUDE_HOME=/path/to/claude-home` 指定 Claude Code home。`--with-agents` 只适用于 Codex，不会把 Codex 专属代理配置写入 Claude Code。
 
-需要先清空本项目的安装目录再全量复制时，使用覆盖式同步：
+### 维护者全量镜像
+
+`all` 会选中每个含 `SKILL.md` 的源目录，包括候选包与有限制的包。同步器只负责复制，不检查 `candidate` / `installable`、许可或依赖。正式全量同步要求每个入选包都已获准在该目标安装或分发；仍受限时沿用上面的具名选包方式。满足全量镜像条件且确需先清理本项目旧安装时，可使用覆盖式同步：
 
 ```bash
 ./sync-skills.sh --dry-run --overwrite all
@@ -434,7 +445,7 @@ python3 scripts/evaluate-skill-behavior.py blind --responses /tmp/skill-behavior
 python3 scripts/evaluate-skill-behavior.py score --scores /tmp/skill-behavior-scores.jsonl --key /tmp/skill-behavior-key.json --blind /tmp/skill-behavior-judge.jsonl --output /tmp/skill-behavior-report.json
 ```
 
-`evaluate-skill-behavior.py validate` 默认只检查案例契约；需要同时核对 `source_profiles` / `input_profile` 的内容指纹时使用 `validate --verify-sources`，收集和评分阶段始终强制校验来源。
+`evaluate-skill-behavior.py validate` 默认只检查案例契约。使用 `validate --verify-sources` 时，输出分别报告 `source_profiles`（两组的 Skill 来源）和 `input_profile`（外部评测输入）。`MATCH` 表示已核对声明的指纹，`UNBOUND` 表示没有绑定该项。无绑定的合法案例仍可通过契约校验；已声明的指纹漂移时，命令报告具体差异并以非零退出。收集和评分阶段始终核对已声明的来源。
 
 消费场景另用 `fixtures/skill-eval/skill-consumer-behavior-cases.json`：覆盖直接修复、显式专业调用、跨阶段交付、消费项目审批、Markdown 回退和 Java 工程组合。`python3 scripts/prepare-skill-consumer-eval.py --validate` 只检查准备契约；`--case consumer-direct-repair --output-dir /tmp/skill-consumer-run` 在尚不存在的目录中调用现有同步脚本，先 dry-run 再暂存工程 Skill，并生成合成项目、任务与指纹回执。`--case consumer-java-format-and-boundaries --output-dir /tmp/java-consumer-run` 则暂存四个 Java 工程必需包，以及可编译但行为和结构检查应失败的样本；修复后分别验证公开行为、接口/Mapper 边界、三目和 IDEA 项目格式，不注入源仓库 `AGENTS.md`。准备脚本不执行 Codex、模型或任务，不读取密钥，不修改真实安装目录；失败保留日志且不生成成功回执。暂存不等于自然加载，真实评测仍待运行环境隔离、授权、加载轨迹和独立评分，详见[消费环境评估](references/skill-evaluation-methodology.md#消费环境评估)。
 

@@ -26,6 +26,8 @@
 
 关键声明必须回到业务权威、Owner 确认、真实案例、资质或其他可复核材料。`Leading`、`Global`、`Official Partner`、效果承诺、市场覆盖和客户 Logo 等强声明没有证据时删除。
 
+规划进入 `ready-for-ui` 时，每个交给 UI 的模块（含条件模块）须在 `evidence` 指明依据，在 `owner` 指明责任人。纯导航可引用已确认的站点结构或目标入口。草稿和待 Owner 审阅的规划可标记待核字段。标记为 `overlap_disposition: remove` 的模块退出交付范围，保留模块的 `handoff_to` 只能指向保留的模块。检查器拦截显式占位值，业务责任人核验依据是否支持实际文案。
+
 ### 3.1 跨页面职责契约
 
 多页官网的每个模块除基础字段外，还要声明：
@@ -68,6 +70,8 @@ overlap_disposition: none | keep-shared | summarize | deep-link | merge | remove
 
 每项媒体记录职责、真实对象、来源、许可、焦点、文字安全区、允许/禁止裁切、横竖版本、目标视口和 Owner。业务证据图片优先保留完整信息，纯装饰图才允许较自由裁切。
 
+计划块可用 `media_target_viewports` 列出本轮目标视口。各项媒体的 `target_viewports` 合计须覆盖全部约定视口。历史计划省略该字段时沿用移动端与大屏覆盖要求。
+
 多屏细则不在本 Skill 重复，交 `ui-design-expert` 的 Responsive Media Contract。
 
 ## 六、默认设计载体与交接
@@ -87,4 +91,4 @@ overlap_disposition: none | keep-shared | summarize | deep-link | merge | remove
 - `responsive-media`，包含 `[media]`
 - `website-handoff`
 
-字段和正负例以 `fixtures/` 为可执行权威；本文件不复制完整 fixture。
+每条记录的起止标记须配对。字段和正负例以 `fixtures/` 为可执行权威；本文件不复制完整 fixture。

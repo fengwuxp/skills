@@ -8,7 +8,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "business-website-planner-current",
+      "id": "business-website-planner-handoff-and-media-6de98b8",
       "paths": [
         "business-website-planner/SKILL.md",
         "business-website-planner/admission.json",
@@ -16,7 +16,7 @@
         "business-website-planner/references/business-type-patterns.md",
         "business-website-planner/references/reference-research-and-distinctiveness.md"
       ],
-      "sha256": "38a121ffc0895068ef0d85503bf9c56f7df5d923be8f8bb204c77093150da0db"
+      "sha256": "5ea3b6db78680edbc9894d4aa0b70f2a1b368f578000037bb2106a688337bbcc"
     }
   },
   "rubric": {
@@ -67,12 +67,13 @@
       "id": "bwp-should-plan-ecommerce-business-website",
       "category": "ecommerce-operations",
       "risk": "high",
-      "prompt": "使用 $business-website-planner 规划 Marketplace 运营服务官网，说明 Amazon、Walmart 和 TikTok Shop 的目录、广告、库存与履约支持；商城交易功能不在本轮。",
+      "prompt": "使用 $business-website-planner 把 Marketplace 运营服务官网的内容交给 UI。运营负责人已批准《平台服务清单》对外说明 Amazon、Walmart 和 TikTok Shop 的目录、广告、库存与履约支持。销售想在首页加 Official Partner 徽章，伙伴模块写着 evidence: none、owner: pending。本次与 UI 约定只呈现 desktop-1440 视口。请给出今天可移交的内容、商品图展示建议和仍需处理的事项。商城交易功能不在本轮。",
       "criteria": [
         "区分公司业务官网与商城交易产品，不设计购物车、订单、账户或支付流程。",
         "按平台、账户责任、目录、广告、库存、履约和案例事实组织模块。",
-        "商品图优先完整展示，生活方式图可按业务焦点准备不同裁切版本。",
-        "平台伙伴、客户、GMV、ROAS 和案例结果没有确认时不发布。"
+        "商品图在本次约定的 desktop-1440 视口内完整展示，移交范围与该约定一致。",
+        "从交给 UI 的文案和视觉要求中移除 Official Partner 声明及徽章。可在草稿单列待核事项，指出恢复该声明需要伙伴资质依据与责任人。",
+        "继续移交已确认的平台运营服务，将《平台服务清单》与运营负责人列为依据和责任方。客户、GMV、ROAS 和案例结果仅在有对应确认时使用。"
       ]
     },
     {

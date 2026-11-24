@@ -40,16 +40,49 @@ class CodeReviewConclusionTests(unittest.TestCase):
         text = "尚未发现问题，但尚未完成检查。证据：文件 a.py。风险：未完成。验证：测试未执行。"
         self.assertIn("findings", missing_groups("code-review", text))
 
-    def testFindingStillNeedsSeverity(self):
+    def testActionableFindingMayOmitSeverity(self):
         text = "发现：a.py:1 吞异常。证据：文件和调用链显示失败丢失。风险：数据错误。建议：传播错误。验证：补回归。"
-        self.assertIn("findings", missing_groups("code-review", text))
+        self.assertEqual([], missing_groups("code-review", text))
+
+    def testEquivalentCleanConclusion(self):
+        for conclusion in ("本次没有发现需要修复的问题", "零发现", "无发现"):
+            with self.subTest(conclusion=conclusion):
+                text = self.cleanReview().replace("未发现需修复的问题", conclusion)
+                self.assertEqual([], missing_groups("code-review", text))
+
+    def testReviewTableUsesSameConclusionAndFindingFields(self):
+        table = ("| 项目 | 内容 |\n| --- | --- |\n| 结论 | 零发现 |\n"
+                 "| 范围 | 已检查输入转换 |\n| 证据 | 转换在写入前完成 |\n"
+                 "| 验证 | 非法输入回归通过 |\n| 风险 | 未验证并发写入 |")
+        self.assertEqual([], missing_groups("code-review", table))
+        self.assertIn("conflicting_review_conclusion", missing_groups(
+            "code-review", table + "\n| 发现 | example.py:13 返回错误记录 |"))
+
+    def testPriorSeverityInEvidenceIsNotACurrentFinding(self):
+        report = self.cleanReview().replace("证据：", "证据：原 [P1] 回归用例已通过，")
+        self.assertEqual([], missing_groups("code-review", report))
+
+    def testKeywordsAloneCannotStandForFindingAndEvidence(self):
+        for text in ("发现 P2 风险 证据 文件 建议 验证",
+                     "发现：[P2] a.py:1 吞异常。风险：。证据：。建议：。验证：。"):
+            with self.subTest(text=text):
+                self.assertTrue(missing_groups("code-review", text))
+
+    def testHistoricalFieldsCannotCompleteCurrentFinding(self):
+        text = "发现：[P2] a.py:1 吞异常。\n## 历史记录\n风险：数据错误。证据：错误被捕获。建议：传播错误。验证：补回归。"
+        self.assertIn("evidence", missing_groups("code-review", text))
 
     def testCleanConclusionCannotHideCurrentFinding(self):
-        for finding in ("发现：example.py:12 会丢失错误。", "## 发现\nexample.py:12 会丢失错误。",
+        for finding in ("发现：example.py:12 会丢失错误。", "**发现：** example.py:12 会丢失错误。",
+                        "## 发现\nexample.py:12 会丢失错误。",
                         "- [P2] example.py:12 会丢失错误。", "- 发现：example.py:12 会丢失错误。",
                         "问题 1：example.py:12 会丢失错误。"):
             with self.subTest(finding=finding):
                 self.assertTrue(missing_groups("code-review", self.cleanReview() + "\n" + finding))
+
+    def testEmptyFieldCannotBorrowNextFieldValue(self):
+        text = self.cleanReview().replace("证据：example.py:12 的输入检查在创建输出前执行；对应非法输入回归断言没有产生文件。", "证据：")
+        self.assertIn("evidence", missing_groups("code-review", text))
 
     def testHistoricalCleanConclusionCannotReplaceCurrentConclusion(self):
         current = self.cleanReview().replace("结论：未发现需修复的问题。", "结论：存在需要修复的问题。")

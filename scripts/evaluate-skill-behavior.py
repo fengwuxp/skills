@@ -1167,7 +1167,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         case_data = load_json(args.cases)
         if args.command == "validate":
             validate_cases(case_data, verify_source_profiles=args.verify_sources)
-            print(f"OK behavior cases={len(case_data['cases'])}")
+            summary = f"OK behavior cases={len(case_data['cases'])}"
+            if args.verify_sources:
+                sources = "MATCH" if case_data.get("source_profiles") is not None else "UNBOUND"
+                inputs = "MATCH" if case_data.get("input_profile") is not None else "UNBOUND"
+                summary += f" source_profiles={sources} input_profile={inputs}"
+            print(summary)
             return 0
         if args.command == "prepare":
             write_jsonl(args.output, build_plan(case_data, args.trials))

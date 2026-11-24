@@ -89,7 +89,7 @@ check_script_patterns() {
   local distributed_test_sha
   if [[ -f scripts/test-distributed-skill-bundles.py ]]; then
     distributed_test_sha="$(shasum -a 256 scripts/test-distributed-skill-bundles.py)"
-    if [[ "${distributed_test_sha%% *}" == "c01dcd522b80562549c003c07b61ce73e2f02c2c82642c6335294de01fbcc855" ]]; then
+    if [[ "${distributed_test_sha%% *}" == "98b9ce504d228c6888268e42dfa12209eb6cee4b0ebd4128b9361b9ac29ceb22" ]]; then
       output="$(printf '%s\n' "${output}" | awk -v prefix='./scripts/test-distributed-skill-bundles.py:' 'index($0, prefix) != 1')"
     fi
   fi

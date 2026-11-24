@@ -76,6 +76,38 @@ class BusinessWebsitePlanTests(unittest.TestCase):
         parts = VALIDATOR.parse_plan(VALID.read_text(encoding="utf-8"))
         self.assertEqual({item["id"] for item in parts.modules}, {"positioning", "services", "inquiry"})
 
+    def test_ui_handoff_requires_module_evidence_and_owner(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "explain service scope, client control and documented outputs",
+            "publish the Official Partner designation",
+        )
+        for missing, original, placeholder in (
+            ("evidence", "owner-approved-business-brief-v1.md#scope", "none"),
+            ("owner", "service-owner", "pending"),
+        ):
+            plan = text.replace(f"{missing}: {original}", f"{missing}: {placeholder}")
+            with self.subTest(missing=missing), self.assertRaisesRegex(
+                VALIDATOR.WebsitePlanError, rf"module\[services\].*{missing}"
+            ):
+                VALIDATOR.parse_plan(plan)
+            for status in ("draft", "ready-for-owner"):
+                parts = VALIDATOR.parse_plan(plan.replace("status: ready-for-ui", f"status: {status}"))
+                self.assertEqual(parts.contract["status"], status)
+
+    def test_ui_handoff_checks_retained_optional_modules(self) -> None:
+        text = VALID.read_text(encoding="utf-8").replace(
+            "explain the real contact path and next response", "link to the contact page"
+        ).replace("evidence: inquiry-data-brief-v1.md", "evidence: approved-sitemap.md#contact")
+        self.assertEqual(VALIDATOR.parse_plan(text).modules[-1]["required"], "false")
+        text = text.replace("evidence: approved-sitemap.md#contact", "evidence: 待确认")
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, r"module\[inquiry\].*evidence"):
+            VALIDATOR.parse_plan(text)
+        removed = text.replace("overlap_disposition: keep-shared", "overlap_disposition: remove")
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, r"module\[services\].*handoff_to.*inquiry"):
+            VALIDATOR.parse_plan(removed)
+        removed = removed.replace("handoff_to: inquiry", "handoff_to: none")
+        self.assertEqual(VALIDATOR.parse_plan(removed).modules[-1]["overlap_disposition"], "remove")
+
     def test_figma_is_default_without_explicit_override(self) -> None:
         text = VALID.read_text(encoding="utf-8").replace("design_carrier: figma", "design_carrier: html-prototype", 1)
         with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "figma.*default"):
@@ -136,8 +168,31 @@ class BusinessWebsitePlanTests(unittest.TestCase):
         with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "ui_owner"):
             VALIDATOR.parse_plan(text)
 
+    def test_incomplete_record_among_complete_records_is_rejected(self) -> None:
+        text = VALID.read_text()
+        self.assertEqual(len(VALIDATOR.parse_plan(text).media), 2)
+        for broken in (
+            text.replace("owner: content-owner\n[/media]", "owner: content-owner"),
+            text.replace("[media]\nid: service-output-example", "id: service-output-example"),
+            text.replace("[media]\nid: service-output-example", "[media]\n[media]\nid: service-output-example"),
+        ):
+            with self.subTest(), self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "media"):
+                VALIDATOR.parse_plan(broken)
+
+    def test_media_uses_agreed_viewports(self) -> None:
+        text = VALID.read_text()
+        text = re.sub(r"(?m)^target_viewports: .+$", "target_viewports: desktop-1440", text)
+        text = re.sub(r"(?m)^media_target_viewports: .+$", "media_target_viewports: desktop-1440", text)
+        self.assertEqual(len(VALIDATOR.parse_plan(text).media), 2)
+        text = text.replace("media_target_viewports: desktop-1440", "media_target_viewports: desktop-1440, ultrawide-2560")
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "ultrawide-2560"):
+            VALIDATOR.parse_plan(text)
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "target_viewports"):
+            VALIDATOR.parse_plan(re.sub(r"(?m)^media_target_viewports:.*$", "media_target_viewports:", text))
+
     def test_responsive_media_requires_mobile_and_large_screen_viewports(self) -> None:
         text = VALID.read_text(encoding="utf-8")
+        text = re.sub(r"(?m)^media_target_viewports:.*\n", "", text)
         text = text.replace(
             "mobile-390, desktop-1440, desktop-1920, ultrawide-2560, ultrawide-3440",
             "desktop-1280, desktop-1440",

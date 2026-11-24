@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
+import shlex
 import sys
 import tempfile
 import unittest
@@ -25,6 +27,41 @@ SPEC.loader.exec_module(MODULE)
 
 
 class SkillAdmissionTests(unittest.TestCase):
+    def test_readme_regular_install_examples_select_eligible_packages(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        section = re.search(r"(?ms)^### 普通安装\s*\n(.*?)(?=^#{1,3} |\Z)", readme)
+        self.assertIsNotNone(section, "找不到普通安装示例")
+        commands = re.findall(r"(?:^\s*|`)(\./sync-skills\.sh\b[^`\n]+)", section[1], re.MULTILINE)
+        self.assertTrue(commands, "普通安装缺少可核对的选包命令")
+        previews = set()
+        installs = set()
+        for command in commands:
+            with self.subTest(command=command):
+                args = shlex.split(command)[1:]
+                target = "codex"
+                if "--target" in args:
+                    index = args.index("--target")
+                    self.assertGreater(len(args), index + 1)
+                    target = args[index + 1]
+                    self.assertIn(target, {"codex", "claude"})
+                    del args[index:index + 2]
+                selected = set(args) - {"--dry-run"}
+                self.assertTrue(selected, "普通安装须显式选择 Skill")
+                self.assertNotIn("all", selected, "普通安装不能包含全量镜像")
+                for name in selected:
+                    self.assertIsNotNone(MODULE.SKILL_ID.fullmatch(name), name)
+                    skill_dir = ROOT / name
+                    self.assertTrue((skill_dir / "SKILL.md").is_file(), name)
+                    metadata, errors = MODULE.read_metadata(skill_dir)
+                    self.assertFalse(errors, errors)
+                    self.assertEqual("installable", metadata.get("status"), name)
+                    self.assertFalse(metadata.get("restrictions"), f"普通示例含限制使用的包 {name}")
+                    self.assertFalse(set(MODULE.dependency_names(skill_dir)) - selected,
+                                     f"{name} 的声明依赖须一并选入")
+                selection = (target, frozenset(selected))
+                (previews if "--dry-run" in args else installs).add(selection)
+        self.assertEqual(previews, installs, "正式复制与预演的目标、包清单须一致")
+
     def test_candidate_policy_requires_a_real_boolean_at_the_policy_path(self) -> None:
         policies = {
             "block-scalar": "notes: |\n  allow_implicit_invocation: false\n",
