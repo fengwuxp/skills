@@ -2107,7 +2107,7 @@ def warning_groups(kind: str, text: str) -> list[str]:
     return warnings
 
 
-def missing_groups(kind: str, text: str) -> list[str]:
+def missing_groups(kind: str, text: str, *, require_all_views: bool = False) -> list[str]:
     normalized = normalize(text)
     missing: list[str] = []
     for group in CHECKS[kind]:
@@ -2131,8 +2131,7 @@ def missing_groups(kind: str, text: str) -> list[str]:
             missing.append(f"unvalued_{group.name}")
     if kind == "business-architecture":
         selected_views = selected_business_architecture_views(text)
-        declared_view_tokens = business_architecture_view_tokens(text, "选用视图")
-        if not declared_view_tokens and all(
+        if labeled_value(text, "选用视图") is None and all(
             sum(1 for alias in group.aliases if alias.casefold() in normalized) >= group.min_hits
             and valued_group_hits(kind, group, text) >= group.min_hits
             for group in BUSINESS_ARCHITECTURE_VIEW_CHECKS.values()
@@ -2149,18 +2148,10 @@ def missing_groups(kind: str, text: str) -> list[str]:
                 missing.append(group.name)
             elif valued_group_hits(kind, group, text) < group.min_hits:
                 missing.append(f"unvalued_{group.name}")
-        unselected_views = set(BUSINESS_ARCHITECTURE_VIEW_CHECKS) - selected_views
-        if unselected_views:
-            skipped_values = field_values(text, "跳过视图及理由")
-            if not skipped_values:
-                missing.append("skipped_views_rationale_missing")
-            else:
-                skipped_text = normalize(" ".join(skipped_values))
-                if any(
-                    not any(normalize(alias) in skipped_text for alias in BUSINESS_ARCHITECTURE_VIEW_NAMES[name])
-                    for name in unselected_views
-                ):
-                    missing.append("skipped_views_rationale_incomplete")
+        if require_all_views:
+            for name in BUSINESS_ARCHITECTURE_VIEW_CHECKS:
+                if name not in selected_views:
+                    missing.append(f"required_view_{name}")
     if kind in VALUED_GROUP_KINDS and is_keyword_shell(kind, text):
         missing.append("keyword_shell")
     if kind == "diagram-brief":
@@ -2243,7 +2234,6 @@ def run_self_test() -> int:
     minimal_process_architecture = (
         "战略意图：降低投诉转交时延；真实问题：客服与运营反复转交；决策场景：优化一次投诉处理；范围边界：不做系统重构。\n"
         "选用视图：业务流程、核心对象与规则。\n"
-        "跳过视图及理由：价值流、业务能力地图、能力-项目-系统映射和项目组合与本轮运营流程决策无关。\n"
         "业务流程：投诉进入后由客服受理、运营复核、责任人处置并由客服回告；触发、参与者、交接、异常、人工节点和结束条件明确。\n"
         "核心对象：投诉单；生命周期：待受理、处理中、已关闭；业务不变量：每次转交留痕；关键规则：超时升级；规则 owner：运营负责人。\n"
         "证据来源：工单日志；待确认：SLA；验收：平均转交次数下降；复审：两周后。"
@@ -2283,15 +2273,15 @@ def run_self_test() -> int:
         "business-architecture", unknown_selected_view
     ):
         failures.append("business-architecture: unknown selected view unexpectedly passed")
-    incomplete_skip_rationale = minimal_process_architecture.replace(
-        "跳过视图及理由：价值流、业务能力地图、能力-项目-系统映射和项目组合与本轮运营流程决策无关。",
-        "跳过视图及理由：价值流与本轮运营流程决策无关。",
-        1,
-    )
-    if "skipped_views_rationale_incomplete" not in missing_groups(
-        "business-architecture", incomplete_skip_rationale
-    ):
-        failures.append("business-architecture: incomplete skipped-view rationale unexpectedly passed")
+    full_scope_missing = missing_groups("business-architecture", minimal_process_architecture, require_all_views=True)
+    if "required_view_value_stream" not in full_scope_missing:
+        failures.append("business-architecture: partial work unexpectedly passed full-view contract")
+    if missing_groups("business-architecture", legacy_all_views, require_all_views=True):
+        failures.append("business-architecture: complete legacy document unexpectedly failed full-view contract")
+    for declaration in ("选用视图：待确认", "| 选用视图 | |"):
+        unresolved = legacy_all_views + "\n" + declaration
+        if "selected_views_missing" not in missing_groups("business-architecture", unresolved, require_all_views=True):
+            failures.append("business-architecture: unresolved scope incorrectly used legacy full-view fallback")
     for kind in VALUED_GROUP_KINDS:
         stuffed = " ".join(alias for group in CHECKS[kind] for alias in group.aliases) + " 内容完整"
         if not missing_groups(kind, stuffed):
@@ -2783,6 +2773,7 @@ def main() -> int:
     parser.add_argument("--kind", choices=sorted(CHECKS), help="交付物类型")
     parser.add_argument("--file", help="待检查的本地 Markdown/文本文件")
     parser.add_argument("--text", help="直接传入待检查文本")
+    parser.add_argument("--require-all-views", action="store_true", help="业务架构交付已约定六种受检视图齐备")
     parser.add_argument("--self-test", action="store_true", help="运行内置正反例自测")
     args = parser.parse_args()
 
@@ -2791,12 +2782,15 @@ def main() -> int:
     if not args.kind:
         parser.error("--kind is required unless --self-test is used")
 
+    if args.require_all_views and args.kind != "business-architecture":
+        parser.error("--require-all-views 仅用于 business-architecture")
+
     text = read_input(args)
     if not text.strip():
         print("FAIL product deliverable check: empty input", file=sys.stderr)
         return 2
 
-    missing = missing_groups(args.kind, text)
+    missing = missing_groups(args.kind, text, require_all_views=args.require_all_views)
     if missing:
         print(
             f"FAIL product deliverable check: kind={args.kind} missing " + ", ".join(missing),

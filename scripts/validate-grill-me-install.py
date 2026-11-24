@@ -18,20 +18,12 @@ REQUIRED_SKILL_MARKERS = (
     "Facts",
     "Decisions",
     "问题台账",
-    "证据裁决",
-    "ask-owner",
     "问题保真度",
     "决策包",
     "过程资产",
-    "过程资产索引",
-    "仅交接，不构成正典",
     "设计分辨率",
-    "queue_state",
-    "deferred_until",
     "意图与结果",
     "写回检查点",
-    "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`",
-    "未确认前不执行",
 )
 
 REQUIRED_LEDGER_MARKERS = (

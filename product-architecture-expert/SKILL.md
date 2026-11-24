@@ -80,7 +80,7 @@ description: |
 
 当用户提到 `pm-skills`、产品判断成流程、产品动作链、产品判断动作链、路线图取舍、发布复盘、增长实验，希望把分散材料串成“做什么、为什么做、先不做什么、交给谁”，或 PRD / Backlog / 原型任务暴露方向未定、链路未通、取舍或验证缺口时，读取 `references/product-judgment-action-chain.md`；它只做产品判断动作化和交接路由，不安装外部 Skill，不替代 PRD、Backlog 或 `wise-agent` 工程编排。
 
-当用户要求业务架构规划、业务 IT 对齐、战略落项目、项目组合治理、投资取舍或能力-项目-系统映射时，先读 `references/business-architecture-planning.md` 的“读取后必须产出”。在六种受检视图中声明选用项并逐项说明其余视图为何跳过，交付最小且完整的视图组合；价值流、业务能力和业务流程是参考性工作基线，不混成单一流程。它不替代组织设计、系统架构、Execution Grant 或上线审批。
+当用户要求业务架构规划、业务 IT 对齐、战略落项目、项目组合治理、投资取舍或能力-项目-系统映射时，先读 `references/business-architecture-planning.md` 的“读取后必须产出”。围绕当前决策选择最小且完整的视图组合。价值流、稳定能力和业务流程各有用途，已约定的完整规划按约定验收。
 
 当用户只要求评审 PRD、需求评审、评审会前 AI 预扫描、找问题或给修改建议时，优先读取 `references/product-prd-quality-gates.md` 和 `references/product-design-and-prd.md` 输出问题清单、必改项、待确认项、owner 和验收影响；不要默认重写全文。用户明确要求“按评审结论重写/整理最终版”时，再进入 PRD 产出工作流。
 

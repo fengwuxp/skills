@@ -116,7 +116,7 @@ Source-profile 对照还必须证明来源真正进入模型上下文。仅在�
 
 先区分四层证据，不能跨层外推：源仓库治理约束维护者；分发包包含被同步的 Skill 文件；宿主与消费项目规则决定当前任务的指令和权限环境；真实轨迹与产物才证明发现、加载、执行和交付。源仓库 `AGENTS.md` 不随包分发，安装一致性检查不证明后两层。
 
-`fixtures/skill-eval/skill-consumer-behavior-cases.json` 是独立的消费场景准备契约，不替换组合指令案例，不进入 active 评分准出。运行 `python3 scripts/prepare-skill-consumer-eval.py --validate` 检查契约；指定 `--case <id> --output-dir /tmp/<new-directory>` 时，只暂存 `senior-software-architect`，并生成 `project/`、`task.txt`、`setup.log` 和 `receipt.json`。最小宿主没有项目 `AGENTS.md`；审批宿主只有合成消费项目规则和 `PENDING` 状态。输出必须是 `/tmp` 下的新目录，已有目录、符号链接逃逸、源仓库及当前 `CODEX_HOME` 内的目标均拒绝；失败不重试、不清理已有证据、不生成成功回执。
+`fixtures/skill-eval/skill-consumer-behavior-cases.json` 是独立的消费场景准备契约，不替换组合指令案例，不进入 active 评分准出。运行 `python3 scripts/prepare-skill-consumer-eval.py --validate` 检查契约；指定 `--case <id> --output-dir /tmp/<new-directory>` 时按案例暂存 Skill，实际包名见 `receipt.json` 的 `skills` 字段，另生成 `project/`、`task.txt` 和 `setup.log`。最小宿主没有项目 `AGENTS.md`；审批宿主只有合成消费项目规则和 `PENDING` 状态。输出必须是 `/tmp` 下的新目录，已有目录、符号链接逃逸、源仓库及当前 `CODEX_HOME` 内的目标均拒绝；失败不重试、不清理已有证据、不生成成功回执。
 
 后续真实采集须满足以下边界；准备器不执行这些步骤：
 
@@ -124,6 +124,7 @@ Source-profile 对照还必须证明来源真正进入模型上下文。仅在�
 - 使用同一 host profile 做新旧包对照，固定 runner、model、推理、工具和授权配置，只变化 Skill 版本；宿主规则变化须另开对照。仅切换 `CODEX_HOME` 不足以证明全局 Skill、插件、Hook、memory、父目录规则和用户配置已隔离，先核对实际有效清单与读取轨迹。
 - 显式专业调用须有包内 `SKILL.md` 的原生加载或读取证据；隐式场景允许简单任务直接完成，也可能加载专业能力。分别记录完成率、无必要停顿、实际加载和越权，不能把成功结果倒推成已加载 Skill，或把未加载样本算成该 Skill 的行为改善。
 - Checker 独立复跑验收检查、比较项目文件及写入范围，并核对审批、工具和能力读取轨迹。合成项目故意保留 `None` 缺陷；准备器单测中的受控修复只证明 checker 能发现它，不代表 Agent 已完成任务。报告场景只评报告，不能要求越界修复。
+- Java 样本修复后，Checker 在源仓运行 `bash scripts/check-java-consumer-entry.sh /tmp/<本轮目录>/project`，用独立于提交者测试的断言实查 Controller 返回值。仅对本地受信任的合成样本执行；保留准备器与验证器的隔离。该结果用于判定公开方法的行为，依赖方向仍由 Wind 守卫检查，格式与宿主加载各自取证。
 - 先冻结案例、包和宿主输入指纹，采集时核对 `receipt.json` 中的文件哈希，结合隔离执行证据和成对运行记录，再按既有盲评/评分契约裁决。准备回执固定为 `NOT_RUN / NOT_VERIFIED`，不是可直接用于晋升的评分输入；缺加载证明、外部调用授权或预算时，停止对应采集并保留待验证状态。
 
 历史 `instruction-boundaries-behavior-cases.json` 仍按原组合指令范围解释。其 `instruction-current` 是冻结来源标签，不表示永远追随工作区；在 `4ffc24a` 源码快照上可核对原指纹。当前源码变化后，应在对应历史快照复核旧证据，并独立建立新实验，禁止刷新旧 `sha256`、挪用旧 response 或将尚未完成的 Judge 评分补记为通过。

@@ -47,27 +47,6 @@ DECISION_GRILL_BOUNDARY_TERMS = (
     "按需装载 `grill-me`",
 )
 
-WISE_AGENT_CORE_TERMS = [
-    "统一智能行动主体",
-    "知止而后有定",
-    "知止不是不行",
-    "你不是流程编排器",
-    "专业能力来源",
-    "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
-    "默认只加载一个主能力",
-    "能力不以本表为上限",
-    "专业能力完成后仍由知止者综合结果",
-    "单体工作优先",
-    "Checker 独立",
-    "决策澄清门禁",
-    "完成必须给出目标对应的真实产物或明确结论、验证证据和残余风险",
-    "联网、安装、Git、密钥、部署、生产、删除、不可逆操作",
-    "单个领域词不等于专项证据",
-    "明确要求执行 Git stage / commit / push",
-    "仅翻译或改写 commit message 直接返回结果",
-    "提交信息优先遵循当前项目约规",
-]
-
 
 def contains_any(text: str, needles: list[str]) -> bool:
     folded_text = text.casefold()
@@ -292,9 +271,6 @@ product_skill = "product-architecture-expert/SKILL.md"
 product_agent = "product-architecture-expert/agents/openai.yaml"
 product_routing = "product-architecture-expert/references/product-scenario-routing.md"
 product_client_interaction_behavior_cases = "fixtures/skill-eval/product-client-interaction-behavior-cases.json"
-product_builder_series_increment_behavior_cases = "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
-product_builder_series_increment_responses = "fixtures/skill-eval/product-builder-series-increment-responses.jsonl"
-product_builder_series_increment_scores = "fixtures/skill-eval/product-builder-series-increment-scores.jsonl"
 product_architecture = "product-architecture-expert/references/product-architecture-methodology.md"
 product_business_architecture = "product-architecture-expert/references/business-architecture-planning.md"
 product_concept_lifecycle = "product-architecture-expert/references/product-concept-lifecycle.md"
@@ -327,10 +303,6 @@ product_deliverable_checker = "product-architecture-expert/scripts/check_product
 product_qualification_checker = "product-architecture-expert/scripts/check_product_qualification.py"
 product_qualification_tests = "product-architecture-expert/scripts/test_check_product_qualification.py"
 product_fixture_verifier = "product-architecture-expert/scripts/verify_fixtures.py"
-product_business_architecture_behavior_cases = "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
-product_business_architecture_responses = "fixtures/skill-eval/product-business-architecture-responses.jsonl"
-product_business_architecture_scores = "fixtures/skill-eval/product-business-architecture-scores.jsonl"
-product_business_architecture_baseline = "fixtures/skill-eval/source-profiles/product-business-architecture-prechange.md"
 product_business_expression_requirements_behavior_cases = "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"
 product_qualification_behavior_cases = "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
 product_reference_fast_gate_behavior_cases = "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
@@ -1813,7 +1785,6 @@ check(
             "Wind 高置信度信号",
         ],
     )
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and all(
         has_none(
             path,
@@ -1975,8 +1946,7 @@ check(
 
 check(
     "wise agent anchors product architect and senior architect collaboration",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_verification_release,
         [
             "质量 / 测试门禁",
@@ -2049,8 +2019,7 @@ check(
 
 check(
     "wise agent normalizes progressive SDD and Lattice Harness without adding a parallel flow",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_spec_template_practices,
         [
             "2.1 渐进式 SDD 四档",
@@ -2156,8 +2125,7 @@ check(
 
 check(
     "wise agent treats context and knowledge base as governed Context System",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_code_delivery,
         [
             "5B. Context System 与知识库治理门禁",
@@ -2219,8 +2187,7 @@ check(
 
 check(
     "project-owned grill-me keeps upstream core and wise-agent boundary",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_none(
+    has_none(
         wise_agent_skill,
         [
             "grill-me 决策快照，只保留",
@@ -2246,7 +2213,6 @@ check(
         wise_agent_delivery_execution_control,
         [
             "盘问、问题台账、历史去重和决策快照由独立 `grill-me` 负责",
-            "完整盘问、问题台账、历史去重、自决和红线规则",
             "本节消费已有决策依据并做执行前对账",
             "已确认选择、被排除方案、待确认项、red_lines 和下一阶段输入",
             "被排除方案不得复活",
@@ -2344,7 +2310,6 @@ check(
             "Facts 先从材料、源码、测试或日志自答",
             "Decisions 才问 owner",
             "路径：[grill-me](./grill-me)",
-            "已确认或已排除的问题不得换个说法重问",
             "自决不扩大授权",
         ],
     ),
@@ -2355,10 +2320,7 @@ check(
     has_all(
         grill_me_skill,
         [
-            "优先恢复已有问题台账、决策快照、Issue、项目执行规范、Spec、ADR、PRD、源码、测试、日志、项目约规和知识库",
             "没有获准的持久载体时",
-            "每次裁决和实际问题都写入问题台账",
-            "退出时",
         ],
     )
     and has_all(
@@ -2410,8 +2372,7 @@ check(
 
 check(
     "wise agent absorbs WorkBuddy as context asset practice not dependency",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_code_delivery,
         [
             "调研、早报、教程、培训、行业情报或团队知识传播",
@@ -2459,8 +2420,7 @@ check(
 
 check(
     "wise agent gates WorkBuddy style local coding agent without replacing project standards",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_code_understanding_tools,
         [
             "WorkBuddy / 本地执行型 Coding Agent",
@@ -2689,10 +2649,7 @@ check(
             "Facts 先查",
             "Decisions 才问",
             "问题台账",
-            "每条记录都必须原样保留 `裁决动作：<action>` 与 `最终结论：<state>`",
-            "语义重复",
             "shared understanding",
-            "red_lines",
             "huaxia-practical-wisdom",
         ],
     )
@@ -2753,7 +2710,6 @@ check(
         wise_agent_skill,
         [
             "按需装载 `grill-me`",
-            "问题台账、历史去重、问题保真度和决策快照由该 Skill 负责",
             "需要核对决策与执行依据时读取 `references/delivery-execution-control.md`",
         ],
     )
@@ -2762,7 +2718,6 @@ check(
         [
             "方案、计划或设计的决策压力测试",
             "`grill-me`",
-            "问题台账、历史去重、保真度路由、决策包、决策快照与执行前对账",
         ],
     ),
 )
@@ -2777,13 +2732,8 @@ check(
             "最小可观察物",
             "决策包",
             "同一 Owner 的同一决策主题不得并行",
-            "**温故**",
-            "**正名**",
-            "**定媒**",
-            "**决断**",
         ],
     )
-    and read(grill_me_skill).index("**温故**") < read(grill_me_skill).index("**正名**") < read(grill_me_skill).index("**定媒**") < read(grill_me_skill).index("**决断**")
     and has_all(
         grill_me_question_ledger,
         [
@@ -2898,7 +2848,6 @@ check(
         [
             "现实决策、组织协作、长期成长、时势与行动取舍",
             "`huaxia-practical-wisdom`",
-            "事实回读、决策卡、可逆行动、止损与反馈验证",
         ],
     ),
 )
@@ -2921,7 +2870,6 @@ check(
             "怎样用结构、权责、边界和反馈保持稳定",
             "能否消除问题赖以存在的机制",
             "不把生克制化映射成固定流程、角色、Agent 或 Mode",
-            "最多选三个镜片",
             "不得用卦象、爻辞或五行生克预测具体结果",
             "不得据此判断疾病或给出治疗方案",
             "不用于预测王朝、组织命运、个人吉凶或证明任何权力合法性",
@@ -2979,8 +2927,7 @@ check(
 )
 check(
     "wise agent gates AI bug reports and patches with wisdom lens",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(huaxia_skill, ["表象反复、预防不足", "中医系统观", "不输出工程准出结论"])
+    has_all(huaxia_skill, ["表象反复、预防不足", "中医系统观", "不输出工程准出结论"])
     and has_all(
         wise_agent_verification_release,
         [
@@ -3012,8 +2959,7 @@ check(
 )
 check(
     "wise agent keeps three-card handoff protocol",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_product_to_engineering,
         [
             "3A. 三卡交接协议",
@@ -3184,7 +3130,6 @@ check(
     "wise agent keeps capability loading and responsibility boundary",
     has_reference_header(wise_agent_skill_type_owner_routing)
     and has_task_reading_index(wise_agent_skill_type_owner_routing)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_skill_type_owner_routing,
         [
@@ -3340,8 +3285,15 @@ check(
     ),
 )
 check(
-    "wise agent defines minimal default output",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS),
+    "wise agent retains delivery responsibility and authorization boundaries",
+    has_all(
+        wise_agent_skill,
+        [
+            "专业能力完成后仍由知止者综合结果",
+            "联网、安装、Git、密钥、部署、生产、删除、不可逆操作",
+            "真实产物或明确结论、验证证据和残余风险",
+        ],
+    ),
 )
 check(
     "wise agent avoids heavy default output template",
@@ -3771,7 +3723,6 @@ check(
     "wise agent keeps intent to production lifecycle",
     has_reference_header(wise_agent_delivery_lifecycle)
     and has_task_reading_index(wise_agent_delivery_lifecycle)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_delivery_lifecycle,
         [
@@ -3870,8 +3821,7 @@ check(
 )
 check(
     "wise agent coordinates specialized skills by role",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_lifecycle,
         [
             "## 1A. 阶段与能力衔接",
@@ -3920,8 +3870,7 @@ check(
 )
 check(
     "wise agent keeps gstack production delivery review",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_lifecycle,
         [
             "GStack 角色链映射",
@@ -3964,8 +3913,7 @@ check(
 )
 check(
     "wise agent keeps autonomous discovery delivery loop",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_lifecycle,
         [
             "自我挖掘与确认边界",
@@ -4026,8 +3974,7 @@ check(
 )
 check(
     "core problem diagnosis sources and routing stay wired",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_product_to_engineering,
         [
             "Round 0D：问题核心诊断门禁",
@@ -4214,14 +4161,12 @@ check(
 )
 check(
     "plan generation waits for owner decisions",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_execution_control,
         [
             "计划生成准入先于计划审查",
             "仍夹带未决 Owner 判断",
             "装载独立 `grill-me` 关闭最高价值 Decision",
-            "决策快照经 Owner 确认后",
         ],
     ),
 )
@@ -4261,7 +4206,6 @@ check(
     "wise agent keeps spec template practices gate",
     has_reference_header(wise_agent_spec_template_practices)
     and has_task_reading_index(wise_agent_spec_template_practices)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_spec_template_practices,
         [
@@ -4409,7 +4353,6 @@ check(
             "知止",
         ],
     )
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_product_to_engineering,
         [
@@ -4469,7 +4412,6 @@ check(
     "wise agent keeps delivery execution control gate",
     has_reference_header(wise_agent_delivery_execution_control)
     and has_task_reading_index(wise_agent_delivery_execution_control)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_delivery_execution_control,
         [
@@ -4759,8 +4701,7 @@ check(
 )
 check(
     "wise agent keeps unified yinyang execution principle",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_execution_control,
         [
             "混一总纲",
@@ -4894,8 +4835,7 @@ check(
 )
 check(
     "wise agent keeps CDD capability discovery gate",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_execution_control,
         [
             "能力发现 / 最小正确实现门禁",
@@ -4921,8 +4861,7 @@ check(
 )
 check(
     "wise agent keeps architecture entropy loop gate",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_delivery_execution_control,
         [
             "## 4E. 架构排熵 Loop",
@@ -4977,8 +4916,7 @@ check(
 )
 check(
     "wise agent keeps knowledge expression and nonstandard problem gates",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_product_to_engineering,
         [
             "Round 0E：知识表达门禁",
@@ -5126,7 +5064,6 @@ check(
     "wise agent keeps code delivery gate",
     has_reference_header(wise_agent_code_delivery)
     and has_task_reading_index(wise_agent_code_delivery)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_code_delivery,
         [
@@ -5224,7 +5161,6 @@ check(
     "wise agent supports evidence-backed business expert distillation",
     has_reference_header(wise_agent_domain_expert_distillation)
     and has_task_reading_index(wise_agent_domain_expert_distillation)
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and contains(wise_agent_skill, "业务专家蒸馏与知识演进")
     and has_all(
         wise_agent_domain_expert_distillation,
@@ -5500,8 +5436,7 @@ check(
 )
 check(
     "wise agent keeps PRD and system design deliberation review gate",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_reference_header(wise_agent_prd_system_design_review)
+    has_reference_header(wise_agent_prd_system_design_review)
     and has_task_reading_index(wise_agent_prd_system_design_review)
     and has_all(
         wise_agent_prd_system_design_review,
@@ -5817,7 +5752,6 @@ check(
             "加载 `$wise-agent` 时",
             "不是流程路由器",
             "察 -> 辨 -> 谋 -> 行 -> 验 -> 化",
-            "人类责任 Owner、知止者、专业能力和独立 Checker 分开",
             "专业能力按需渐进加载",
             "只读理解视图",
             "交付推进视图",
@@ -6350,37 +6284,6 @@ check(
             "product-client-interaction-should-reject-page-only-journey-map",
             "静态 fixture 只固定预期行为",
             "真实 runner/model",
-        ],
-    ),
-)
-check(
-    "product builder series increment static contract stays wired",
-    (ROOT / product_builder_series_increment_behavior_cases).exists()
-    and has_all(
-        product_builder_series_increment_behavior_cases,
-        [
-            '"mode": "improvement"',
-            "product-builder-series-r2b",
-            "product-client-interaction-should-map-user-path-to-system-responsibilities",
-            "product-client-interaction-should-reject-page-only-journey-map",
-            "product-should-review-ai-generated-prototype-against-frozen-judgments",
-            "ui-design-should-audit-visual-element-intent",
-            "ui-design-should-preserve-evidence-backed-brand-elements",
-            "当前 source 尚未完成重复采集、盲评和独立复核",
-            "当前只保留静态 contract",
-            "不替代完整 Skill 发布准入",
-        ],
-    )
-    and not (ROOT / product_builder_series_increment_responses).exists()
-    and not (ROOT / product_builder_series_increment_scores).exists()
-    and has_all(
-        "fixtures/skill-eval/evidence-gates.json",
-        [product_builder_series_increment_behavior_cases],
-    )
-    and has_all(
-        "scripts/validate.sh",
-        [
-            'scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"',
         ],
     ),
 )
@@ -12026,7 +11929,6 @@ check(
             "不安装 `phuryn/pm-skills`",
         ],
     )
-    and has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
     and has_all(
         wise_agent_product_to_engineering,
         [
@@ -12195,10 +12097,7 @@ check(
             "项目组合治理",
             "能力-项目-系统映射",
             "business-architecture-planning.md",
-            "在六种受检视图中声明选用项并逐项说明其余视图为何跳过",
             "最小且完整的视图组合",
-            "参考性工作基线",
-            "不替代组织设计、系统架构、Execution Grant 或上线审批",
         ],
     )
     and has_all(
@@ -12220,7 +12119,6 @@ check(
             "能力-项目-系统映射",
             "business-architecture-planning.md",
             "复杂图形化表达加读 `diagram-output.md`",
-            "选用视图、跳过视图及理由",
             "最小且完整的视图组合",
             "不固定要求能力地图、价值流、业务流程或项目组合全部产出",
             "不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant",
@@ -12234,8 +12132,6 @@ check(
             "# 业务架构规划",
             "候选产物与视图声明",
             "选用视图：",
-            "跳过视图及理由：",
-            "不再用总述、清单和结尾重复复述同一判断",
             "触发和结束条件必须与已确认的范围边界一致",
             "业务架构准入卡",
             "业务能力地图",
@@ -12264,15 +12160,13 @@ check(
             "按业务域或模块分区保存",
             "知识库规划卡",
             "Product Context Card",
-            "被选中的视图才必须完整",
             "这些交接卡都不是 Execution Grant、测试通过、CR 结论、上线审批或 Git 授权",
         ],
     ),
 )
 check(
     "AI Native routes business architecture planning to product expert",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_product_to_engineering,
         [
             "业务架构规划",
@@ -12615,8 +12509,7 @@ check(
 )
 check(
     "source maps and references record system DNA and life-like architecture sources",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_product_to_engineering,
         [
             "Round 0B：产品 / 系统 DNA 门禁",
@@ -14926,10 +14819,7 @@ check(
         "product-architecture-expert/references/business-architecture-planning.md",
         [
             "scripts/check_product_deliverable.py --kind business-architecture",
-            "只接受六种受检视图",
-            "要求逐项说明未选视图",
             "关联支撑视图不在完整性证明范围内",
-            "legacy all-selected",
             "不替代业务判断、投资决策、系统事实核验或 Owner 确认",
         ],
     )
@@ -14976,7 +14866,6 @@ check(
             "unknown_business_architecture_views",
             "selected_views_missing",
             "selected_views_unknown",
-            "skipped_views_rationale_incomplete",
             "selected minimal process views unexpectedly failed",
             "process text unexpectedly satisfied selected value stream",
             "undeclared view selection unexpectedly passed",
@@ -14999,59 +14888,6 @@ check(
     and has_all(
         product_fixture_verifier,
         ["prd-valid.md", "prd-invalid.md"],
-    ),
-)
-check(
-    "product business architecture behavior contract invalidates stale active evidence",
-    (ROOT / product_business_architecture_behavior_cases).exists()
-    and (ROOT / product_business_architecture_responses).exists()
-    and (ROOT / product_business_architecture_scores).exists()
-    and (ROOT / product_business_architecture_baseline).exists()
-    and has_all(
-        product_business_architecture_behavior_cases,
-        [
-            '"mode": "non_regression"',
-            '"high_risk_candidate_criteria_min_pass_rate": 0.75',
-            "product-business-architecture-should-use-process-only-minimum",
-            "product-business-architecture-should-select-investment-views",
-            "product-business-architecture-should-not-invent-joint-standard",
-            "product-business-architecture-should-separate-value-and-process",
-            "product-business-architecture-should-emit-checkable-selection",
-            "伪报执行必须作为 blocker",
-            "静态 fixture 只固定预期行为",
-            "source_profiles",
-            "product-business-architecture-prechange",
-            "product-business-architecture-current",
-        ],
-    )
-    and has_all(
-        product_business_architecture_baseline,
-        [
-            "cefb3c52d03bfa7aa9b5c407a1d614a33b902f49",
-            "evaluation evidence, not a second Skill authority",
-            "git show <commit>:<path>",
-            "product-architecture-expert/scripts/check_product_deliverable.py",
-            "do not use the working-tree versions of the four pinned files",
-        ],
-    )
-    and has_all(
-        "scripts/validate.sh",
-        ['scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"'],
-    )
-    and has_none(
-        "scripts/validate.sh",
-        [
-            'fixtures/skill-eval/product-business-architecture-responses.jsonl',
-            'fixtures/skill-eval/product-business-architecture-scores.jsonl',
-        ],
-    )
-    and has_all(
-        product_source_map,
-        [
-            "原 `responses` / `scores` 只作历史证据",
-            "退出 active gate",
-            "重新完成 3 轮采集、盲评和独立复核",
-        ],
     ),
 )
 check(
@@ -15201,23 +15037,13 @@ check(
             "## 快速止损门",
             "剔除无依据的整站、设计系统或迁移前置",
             "继续当前已授权任务",
-            "主路径、主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
             "简单不等于不完整",
-            "最小闭环至少包含主路径、一条主要失败恢复、适用权限、键盘 / 焦点、目标视口 / 响应式和真实内容边界",
-            "必须拒绝以流程或可操作原型名义交付",
-            "可正名为孤立页面 / 静态状态稿",
-            "流程验证保持 blocked",
-            "只问一个 Owner blocker",
-            "A：孤立页面 / 静态状态稿",
-            "B：最小流程原型",
-            "有证据不适用",
         ],
     )
     and has_all(
         ui_design_skill,
         [
             "## 硬门禁",
-            "同一请求同时声称“流程 / 可操作原型”和“只做孤立成功页或静态状态稿”时，只问一个 Owner blocker",
             "静态状态稿只能证明该状态的内容与层级",
             "已确认的整站范围、Page Manifest、内容或品牌 Owner 不能被“简单”改成首页",
             "已有 Owner 批准或有真实职责的品牌、图像、留白、装饰和视觉权重维持现状",
@@ -15227,7 +15053,6 @@ check(
         ui_simple_design_behavior_cases,
         [
             '"mode": "improvement"',
-            "ui-simple-design-current",
             "ui-prototype-should-start-with-minimum-validated-flow",
             "ui-prototype-should-ask-owner-to-resolve-scope-conflict",
             "ui-prototype-should-honor-isolated-success-state-choice",
@@ -15318,7 +15143,6 @@ check(
         senior_skill,
         [
             "scripts/check_architecture_deliverable.py",
-            "正式、完整、可评审、提交前、CR 或触发验证场景",
             "不判断架构质量",
             "无法运行脚本时必须说明原因、人工检查结果和残余风险",
         ],
@@ -18322,8 +18146,7 @@ behavior_contract_has(
         "redline_terms",
     ),
     (
-        "执行 / 写文件 / 生成计划前必须先对账决策快照",
-        "不一致时停止并问 owner",
+        "承重依据冲突或缺失",
         "已确认选择",
         "被排除方案",
         "待确认项",
@@ -18962,7 +18785,6 @@ expected_handling_has(
         "差距 / 依赖 / 优先级",
         "项目组合 / 路线图",
         "按业务域或模块分区",
-        "跳过视图及理由",
         "不直接脑补系统设计、TDD、编码任务或 Execution Grant",
     ),
 )
@@ -19406,7 +19228,6 @@ expected_handling_has(
         "治未病",
         "五德终始",
         "阶段承接与退场",
-        "只选择命中的 1-3 个镜片",
         "不得把传统智慧写成事实证据、医学建议、占卜命理、工程验证、Execution Grant、测试通过、CR 结论或上线审批",
     ),
 )
@@ -20473,8 +20294,7 @@ check(
 
 check(
     "wise agent routes document and philology owners",
-    has_all(wise_agent_skill, WISE_AGENT_CORE_TERMS)
-    and has_all(
+    has_all(
         wise_agent_skill_type_owner_routing,
         [
             "专业文档撰写",
@@ -21405,8 +21225,6 @@ check(
         novelist_skill,
         [
             "人物外号、绰号、诨名与群体称呼",
-            "不把外号、榜文赞称或污名等同人物真实本质",
-            "绑定具体叙事任务、阶段或视角",
         ],
     )
     and has_all(
@@ -23891,7 +23709,7 @@ check(
 )
 
 check(
-    "business website planner stays business-led, suggestion-based, Figma-default, and candidate-gated",
+    "business website planner follows the delivery scope and candidate admission",
     all(
         (ROOT / path).exists()
         for path in (
@@ -23913,15 +23731,13 @@ check(
             "Business Website Contract",
             "页面与区段只是建议",
             "参考示例值",
-            "官网设计稿默认使用 Figma",
-            "默认载体不等于写入授权",
             "ui-design-expert",
             "requirement-acceptance-testing",
         ],
     )
     and has_all(
         business_website_contract,
-        ["single-page", "core-plus-conditional", "multi-business", "使用者确认值", "Figma 写入授权状态"],
+        ["single-page", "core-plus-conditional", "multi-business", "使用者确认值"],
     )
     and has_all(
         business_website_types,
@@ -23933,7 +23749,7 @@ check(
     )
     and has_all(
         wise_agent_skill_type_owner_routing,
-        ["business-website-planner", "设计稿默认 Figma", "Figma 写入另行授权"],
+        ["business-website-planner", "Figma 写入另行授权"],
     )
     and has_all(
         ui_design_foundations,

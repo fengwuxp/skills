@@ -8,13 +8,13 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "senior-architecture-governance-current",
+      "id": "senior-architecture-governance-current-principles",
       "paths": [
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/evolutionary-architecture.md",
         "senior-software-architect/references/adr-and-tradeoff.md"
       ],
-      "sha256": "662d29317bca8c43b1b96669ba98c106eb9a302c4f26afe9b268c75164453351"
+      "sha256": "c2626aaedd5ca68d4748bd1f4472cb6843b35d114c91ddc2ab24e64c55a5e386"
     }
   },
   "rubric": {

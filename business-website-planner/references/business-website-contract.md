@@ -55,7 +55,7 @@ overlap_disposition: none | keep-shared | summarize | deep-link | merge | remove
 
 ## 四、简单指标建议
 
-按业务类型和公司成熟度给出三至六项：
+需要用数字支撑客户判断时，按业务类型和公司成熟度给出相应指标。用户需要填写参考时提供示例值，直接公布已有指标只需对应的确认值。
 
 | 字段 | 含义 |
 | --- | --- |
@@ -70,25 +70,23 @@ overlap_disposition: none | keep-shared | summarize | deep-link | merge | remove
 
 每项媒体记录职责、真实对象、来源、许可、焦点、文字安全区、允许/禁止裁切、横竖版本、目标视口和 Owner。业务证据图片优先保留完整信息，纯装饰图才允许较自由裁切。
 
-计划块可用 `media_target_viewports` 列出本轮目标视口。各项媒体的 `target_viewports` 合计须覆盖全部约定视口。历史计划省略该字段时沿用移动端与大屏覆盖要求。
-
 多屏细则不在本 Skill 重复，交 `ui-design-expert` 的 Responsive Media Contract。
 
-## 六、默认设计载体与交接
+## 六、设计载体与交接
 
-官网设计稿默认使用 Figma。使用者明确指定其他载体时记录 override；Figma 默认不构成写入授权。
+设计载体按本次交付约定填写。选用 Figma 时单独核对目标与写入授权。
 
-交接至少记录 UI Owner、design carrier、Figma 写入授权状态、工程 Owner、验收 Owner、Legal/Data 条件和停止条件。
+形成交接时，按本轮接收方记录 UI、工程或验收责任及适用的数据条件和停止条件。仅约定内容规划时可止于内容契约。
 
 ## 七、结构化格式
 
-校验器使用六个 fenced blocks：
+结构检查读取以下 fenced blocks。核心块为 `business-website-plan`、`website-modules`。
 
 - `business-website-plan`
 - `website-modules`，包含 `[module]`
-- `metric-suggestions`，包含 `[metric]`
-- `reference-dna`，包含 `[reference]`
-- `responsive-media`，包含 `[media]`
-- `website-handoff`
+- `metric-suggestions`（按需），每个 `[metric]` 保留业务意义、确认值及发布状态。
+- `reference-dna`（使用公开参考或用户提供的材料时），包含 `[reference]`
+- `responsive-media`（含媒体时），各 `[media]` 声明自己的目标视口。计划块提供 `media_target_viewports` 时须列出具体视口，媒体记录须共同覆盖全部约定视口。含媒体的旧计划省略该字段时沿用移动端与大屏覆盖要求。
+- `website-handoff`（`ready-for-ui` 或实际交接时）。计划和交接约定 `design_carrier` 时两处须一致；历史 `design_carrier_override` 可继续标记用户明确指定的载体。
 
 每条记录的起止标记须配对。字段和正负例以 `fixtures/` 为可执行权威；本文件不复制完整 fixture。

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "description": "business-website-planner 的业务官网契约行为。静态 fixture 只固定业务权威、建议模块、参考示例值、独特性、Figma 默认载体和专业交接；真实能力改善仍要求重复响应、独立盲评和真实业务试点。",
+  "description": "business-website-planner 的业务官网契约行为。静态 fixture 只固定业务权威、建议模块、参考示例值、独特性、交付范围和专业交接；真实能力改善仍要求重复响应、独立盲评和真实业务试点。",
   "source_profiles": {
     "baseline": {
       "id": "no-skill",
@@ -8,7 +8,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "business-website-planner-handoff-and-media-6de98b8",
+      "id": "business-website-planner-scoped-media-handoff",
       "paths": [
         "business-website-planner/SKILL.md",
         "business-website-planner/admission.json",
@@ -16,7 +16,7 @@
         "business-website-planner/references/business-type-patterns.md",
         "business-website-planner/references/reference-research-and-distinctiveness.md"
       ],
-      "sha256": "5ea3b6db78680edbc9894d4aa0b70f2a1b368f578000037bb2106a688337bbcc"
+      "sha256": "e80e36b778e0d5b68eae0207d1d33fff10173409652215974fb487929018aeea"
     }
   },
   "rubric": {
@@ -40,6 +40,16 @@
   },
   "cases": [
     {
+      "id": "bwp-content-only-delivery",
+      "category": "bounded-content",
+      "risk": "medium",
+      "prompt": "使用 $business-website-planner 规划一页企业服务说明。客户和公开材料均已确认，仅交付桌面文本内容，项目明确不展示数字和图片。请列页面要回答的客户问题和验收方式。",
+      "criteria": [
+        "根据客户问题安排文本模块，让公开声明有真实资料或责任方依据。",
+        "按约定交付文本内容，验收围绕客户是否能理解服务范围；不新增指标参考值、图片、移动或超宽屏交付、Figma 文件。"
+      ]
+    },
+    {
       "id": "bwp-should-plan-advertising-business-website",
       "category": "advertising-services",
       "risk": "high",
@@ -47,8 +57,8 @@
       "criteria": [
         "冻结业务 brief、客户、服务与预算/账户责任，不用现有页面反推业务。",
         "页面按建议模块组合，不固定成 Home、Business、About、Contact 四页。",
-        "指标参考示例值等待使用者确认；官网设计稿默认交 Figma，但写入仍需授权。",
-        "输出广告适配的内容、证据、素材、多屏 Brief 和 UI/工程/验收交接。"
+        "按请求给出指标参考示例值，公开数字须经使用者确认。载体按已约定的设计交接范围选择，外部写入单独获准。",
+        "为广告业务给出内容、可核验证据和设计交接；有相应媒体与视口任务时才展开素材 Brief。"
       ]
     },
     {

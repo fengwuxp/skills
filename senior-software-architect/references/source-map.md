@@ -450,8 +450,13 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 
 - 一手来源为 Lauren Tan 的 [All Code Is Slop (Except Mine)](https://ai.engineer/code/2026/talks/lauren-tan)。2026-11-23 已读大会讲稿与分章说明，重点核对 Dune 的模块边界、定时器变通被仿照和运行中验证功能三例。同日已读秋哥的[中文解读](https://mp.weixin.qq.com/s/SIwgzgl6nP_RobdJaGxV7A)，用作定位演讲的线索。
 - 应用在 `workflow.md` 的“代码修改前”和“代码修改后（必须验证）”。消费项目决定适用的接口、驱动和检查。文中团队的框架禁用项、PR 数和撤销率仅属原案例。这里仅提炼方法，未转载讲稿、配图或代码。
+- 2026-11-23 核对 [OpenAI 的工程实践](https://openai.com/index/harness-engineering/)中用结构检查约束依赖并给出可操作诊断的做法，以及 [Anthropic 的 Agent 评测方法](https://www.anthropic.com/research/demystifying-evals-for-ai-agents)对环境终态与执行轨迹的区分。[GitHub 对编码 Agent 的使用建议](https://docs.github.com/en/copilot/responsible-use/agents)强调限定任务和独立核实结果。据此在合成 Java 消费案例中单独验证用户入口，以错例与合法实现校准检查器。仅转述方法，实际合并策略由各宿主决定。
 
 ## 提炼边界
+
+- 2026-11-23 回读 Parnas 的[模块分解论文](https://www.cs.lafayette.edu/~gexia/cs301/resources/parnas.html)中 KWIC 的变更比较与结论，以及 SEI [ATAM 实践报告第三节](https://www.sei.cmu.edu/documents/2021/2003_004_001_14150.pdf)的场景优先级、敏感点和权衡点。前者支持沿用按变化原因分配职责的现有规则；后者用于完善 `adr-and-tradeoff.md` 中约束改变后的方案复验。《荀子·正名》的[同异与名实讨论](https://zh.wikisource.org/wiki/荀子/正名篇)用于反问同一术语实际承诺什么结果。此处是现代评审类比，工程结论以业务入口和测量为据。仅转述方法。
+
+- 2026-11-23 通过浏览器实读 leo令国（Leo聊系统思维）2026-10-19 发布的[《架构师必须具备的8 个底层能力》](https://mp.weixin.qq.com/s/nO4K1Fkx35HpY4UuaqTrpQ)。采用“抽象”一节对省略属性的追问，以及架构视图只覆盖特定问题的提醒。在 `project-governance-service-api-modeling.md` 的“业务语义与软件结构”中将其转成成对场景检验。聚焦、信息隐藏、契约、约束取舍与演进沿用现有规则。文中的改动处数与指标数量只作举例；本次引用限于来源与方法归纳。
 - 代码评审类来源适合沉淀为 Review 判断顺序、评论分级、协作礼仪、变更颗粒度和提交说明质量。
 - 不复制文章正文、付费内容、仓库示例、站点图像、品牌表达、组织内部流程或外部脚本。
 - 不声称技能代表外部作者、组织或云厂商观点。

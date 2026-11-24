@@ -63,9 +63,9 @@
 
 ## 当前行为证据状态（2026-08-31）
 
-- `product-business-architecture-behavior-cases.json`：2026-08-31 历史轮次使用本机配置的 `gpt-5.6-sol` 完成过 3 次 baseline/candidate 采集和盲评，原 rubric 报告为 candidate weighted score `4.8567`、criteria `45/45`、blockers `0`。本轮 CR 发现 2/3 candidate 在没有工具输出时声称检查已通过，因此题集已增加伪报执行 blocker；原 `responses` / `scores` 只作历史证据，退出 active gate。只有按新题集重新完成 3 轮采集、盲评和独立复核后才能恢复准出证据。
+- 历史题面、回答和评分在 `fixtures/skill-eval/historical/` 原样归档。当前局部投资与完整范围的行为判断由 `product-design-lifecycle-alignment-behavior-cases.json` 承接。原 `product-business-architecture-behavior-cases.json`：2026-08-31 历史轮次使用本机配置的 `gpt-5.6-sol` 完成过 3 次 baseline/candidate 采集和盲评，原 rubric 报告为 candidate weighted score `4.8567`、criteria `45/45`、blockers `0`。本轮 CR 发现 2/3 candidate 在没有工具输出时声称检查已通过，因此题集已增加伪报执行 blocker；原 `responses` / `scores` 只作历史证据，退出 active gate。只有按新题集重新完成 3 轮采集、盲评和独立复核后才能恢复准出证据。
 - `product-simple-design-behavior-cases.json`：历史轮次 `product-simple-final-blind-20260827-r6` 报告为 candidate weighted score `4.61`、criteria `41/45`、blockers `0`。本轮正式 PRD 准出路由改动了 candidate 源集，原 `product-simple-design-responses.jsonl` / `product-simple-design-scores.jsonl` 只作历史证据，退出 active gate；重新完成 3 轮采集、盲评和独立复核前，当前仅为 cases-only。
-- `product-builder-series-increment-behavior-cases.json`：该 contract 混合产品与 UI 职责，历史临时复评未通过 release gate，仓库未登记可复核 artifact，因此不保留精确分数。它只作为跨域 cases-only 审计资产，不接入 product 或 UI 的单 Skill evidence gate，也不作为单域成本证据。
+- `fixtures/skill-eval/historical/product-builder-series-increment-behavior-cases.json` 已按原内容归档；AI 原型评审题由产品客户端交互案例承接，其余四题使用相应单域版本。该 contract 混合产品与 UI 职责，历史临时复评未通过 release gate，仓库未登记可复核 artifact，因此不保留精确分数。它只作为跨域 cases-only 审计资产，不接入 product 或 UI 的单 Skill evidence gate，也不作为单域成本证据。
 - 评分文件只证明本轮指定 runner/model、题集和 rubric 下的行为样本；不证明业务事实、产品质量、工程可行性、合规或上线结果。
 
 ## 来源主题索引

@@ -8,12 +8,12 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "senior-adr-governance-current",
+      "id": "senior-adr-tradeoff-cutover-principles",
       "paths": [
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/adr-and-tradeoff.md"
       ],
-      "sha256": "9250c5d36b0203fe55634d5c13df09e48da73a94e510c72a7986964938801814"
+      "sha256": "e69ca9695938b4ae9d418aea17b0f023b591bb1efa70bdda189302e8fbbfb4da"
     }
   },
   "rubric": {
@@ -30,6 +30,28 @@
     "high_risk_candidate_criteria_min_pass_rate": 1.0
   },
   "cases": [
+    {
+      "id": "senior-tradeoff-accepted-work-cutover",
+      "category": "changed-commitment",
+      "risk": "high",
+      "prompt": "报表服务已受理一批按提交时口径统计的月报。业务确认明日起新提交的报表按运行时最新口径统计，共用一个处理队列。请评审切换方案和验收。若尚在内部开发、没有调用者或队列记录，又该怎样处理？",
+      "criteria": [
+        "区分旧调用者、已受理月报和明日起新受理的月报，确认兼容义务与生效边界；不能仅因执行较晚而把旧月报换成新口径。",
+        "依据可用的既有版本、受理时间或排空旧队列等事实选择最小切换方式，验证切换前受理且切换后执行，以及切换后新受理的结果。",
+        "在尚无消费者和在途事项的对照中允许直接切换，不为假设的历史任务建永久版本平台。"
+      ]
+    },
+    {
+      "id": "senior-tradeoff-ingest-delay-budget",
+      "category": "quality-tradeoff",
+      "risk": "medium",
+      "prompt": "单节点索引器批量提交。两次同负载测量：批量 50 时峰值内存 80 MB、入库到可搜为 7 秒；批量 500 时分别为 180 MB、2 秒。本期内存上限 120 MB，已接受 10 秒内可搜。有人要求把批量改成 500。另一个团队可能要求 3 秒内可搜，目前未确定。请给当期决定和重审条件。",
+      "criteria": [
+        "以同负载的两组实测解释批量对内存和时效的关联，保留满足当前两项约束的 50。",
+        "若 3 秒成为当前硬约束，已有两组测量均不满足全部条件；用代表负载测中间批量等最小候选，不插值承诺达标。",
+        "将结论限定于已测负载，区分可能的要求与当前承诺，不为参数选择引入常驻平台或额外审批。"
+      ]
+    },
     {
       "id": "senior-adr-should-reject-reversible-detail",
       "category": "admission-boundary",

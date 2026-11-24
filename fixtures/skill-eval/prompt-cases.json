@@ -61,7 +61,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "知止者装载产品架构能力并读取 business-architecture-planning，把价值流、业务能力和业务流程作为参考性工作基线而非普遍标准或固定交付清单，三者按决策问题选择最小视图组合并做多对多映射，不把客户旅程和部门流程合成同一视图，不要求全量视图都必须产出；按本请求明确范围直接交付业务架构准入卡，选用业务能力地图、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划，并说明跳过视图及理由；同时保持 owner、授权、验证与停止条件，材料不足时停止补证据，不直接脑补系统设计、TDD、编码任务或 Execution Grant。"
+      "expected_handling": "知止者装载产品架构能力并读取 business-architecture-planning，把价值流、业务能力和业务流程作为参考性工作基线而非普遍标准或固定交付清单，三者按决策问题选择最小视图组合并做多对多映射，不把客户旅程和部门流程合成同一视图，不要求全量视图都必须产出；按本请求明确范围直接交付业务架构准入卡，选用业务能力地图、能力-项目-系统映射、差距 / 依赖 / 优先级、项目组合 / 路线图和按业务域或模块分区的知识库回流计划，并说明这些视图如何支持本次决定；同时保持 owner、授权、验证与停止条件，材料不足时停止补证据，不直接脑补系统设计、TDD、编码任务或 Execution Grant。"
     },
     {
       "id": "wise-agent-should-classify-ambiguous-architecture-view",
@@ -676,7 +676,7 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入计划生成准入门禁；读取 delivery-execution-control，先做 Facts / Decisions 分流；只要完整方案或实施计划仍夹带需 owner 判断的关键假设，就禁止先生成长计划让 owner 审查 AI 假设；先进入 grill-me 盘问门禁，一次只关闭一个主 blocker，给出推荐答案、证据、影响和默认暂停点；形成决策快照并经 owner 确认后，才生成与已确认选择一致的最小计划；不输出完整实施计划、多分支执行清单或已授权执行结论。",
+      "expected_handling": "进入计划生成准入门禁；读取 delivery-execution-control，先做 Facts / Decisions 分流；只要完整方案或实施计划仍夹带需 owner 判断的关键假设，就禁止先生成长计划让 owner 审查 AI 假设；先进入 grill-me 盘问门禁，一次只关闭一个主 blocker，给出推荐答案、证据、影响和默认暂停点；owner 确认计划依赖的选择后直接给出最小计划，需要交接时再归纳决策快照；不输出完整实施计划、多分支执行清单或已授权执行结论。",
       "behavior_contract": {
         "plan_generation_gate": "存在未决 owner 判断时，禁止生成完整方案、长计划或执行清单。",
         "first_response_must_include": [
@@ -692,7 +692,7 @@
           "多分支执行清单",
           "已授权执行"
         ],
-        "advance_gate": "决策快照已形成且 owner 确认后，才生成与已确认选择一致的最小计划。"
+        "advance_gate": "owner 确认计划依赖的选择后即可生成最小计划；已明确要求交接时复用决策快照。"
       }
     },
     {
@@ -813,9 +813,9 @@
         "output_quality",
         "variance_check"
       ],
-      "expected_handling": "进入 grill-me 决策快照 / 执行前对账门禁；读取 delivery-lifecycle 和 verification-review-release，不新建并列流程；多轮 grill-me 退出后必须形成决策快照，字段只保留已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；执行 / 写文件 / 生成计划前必须先对账，说明本轮执行依据哪条已确认选择，是否触碰被排除方案或待确认项；被排除方案不得复活，待确认项不得脑补；如果当前执行意图和决策快照不一致，必须停止并问 owner，不能靠上下文记忆、模型推测或新一轮自说自话覆盖已确认结论；问询交互中出现红线、底线、不能碰、不可、禁止、必须等高风险字眼时，要重点关注并记录到决策快照或待确认项。",
+      "expected_handling": "进入 grill-me 决策快照 / 执行前对账门禁；读取 delivery-lifecycle 和 verification-review-release，不新建并列流程；本题发生上下文漂移，复用已确认的决定和红线，按恢复需要归纳决策快照，字段只保留已确认选择、被排除方案、待确认项、下一阶段输入和写回位置；执行 / 写文件 / 生成计划前必须先对账，说明本轮执行依据哪条已确认选择，是否触碰被排除方案或待确认项；被排除方案不得复活，待确认项不得脑补；如果执行意图与已确认选择不一致，按原裁决纠偏；只有决策依据本身冲突或缺失时才停止并问 owner，不能靠上下文记忆、模型推测或新一轮自说自话覆盖已确认结论；问询交互中出现红线、底线、不能碰、不可、禁止、必须等高风险字眼时，要重点关注并记录到决策快照或待确认项。",
       "behavior_contract": {
-        "pre_execution_gate": "执行 / 写文件 / 生成计划前必须先对账决策快照；不一致时停止并问 owner。",
+        "pre_execution_gate": "执行 / 写文件 / 生成计划前先对账已有决定和红线；明确排除的方案保持排除，承重依据冲突或缺失时停止并问 owner。",
         "snapshot_must_include": [
           "已确认选择",
           "被排除方案",
@@ -1005,7 +1005,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入 huaxia-practical-wisdom 的经典镜片补足路径，读取 classical-lenses、evidence-boundaries 和 source-map；把周易用于变与不变、时位和可逆实验，道德经与庄子用于少干预和顺纹理，儒家与法家用于正名、责任和名实，兵家用于不可胜与止损，中医系统观用于表象、结构、机制和治未病，五德终始用于阶段承接与退场；只选择命中的 1-3 个镜片并落到事实、取舍、行动和验证；不得把传统智慧写成事实证据、医学建议、占卜命理、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
+      "expected_handling": "进入 huaxia-practical-wisdom 的经典镜片补足路径，读取 classical-lenses、evidence-boundaries 和 source-map；把周易用于变与不变、时位和可逆实验，道德经与庄子用于少干预和顺纹理，儒家与法家用于正名、责任和名实，兵家用于不可胜与止损，中医系统观用于表象、结构、机制和治未病，五德终始用于阶段承接与退场；按当前未决判断选用视角，已有依据足以行动就收口，并说明反馈条件；不得把传统智慧写成事实证据、医学建议、占卜命理、工程验证、Execution Grant、测试通过、CR 结论或上线审批。"
     },
     {
       "id": "wise-agent-should-gate-ai-bug-report-and-patch-with-wisdom-lens",
@@ -2946,7 +2946,7 @@
       "difficulty": "realistic",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "baseline_comparison", "variance_check"],
-      "expected_handling": "冻结公司主体、客户、广告服务范围和账户/预算责任，选择广告业务适配器；建议模块可合并、拆分或删除，不固定四页；指标项和参考示例值等待使用者确认；输出内容、证据、Reference DNA、Asset/Responsive Media Brief，并把默认 Figma 载体交给 ui-design-expert，Figma 写入另行授权。"
+      "expected_handling": "冻结公司主体、客户、广告服务范围和账户/预算责任，选择广告业务适配器；建议模块可合并、拆分或删除，不固定四页；指标项和参考示例值等待使用者确认；输出内容、证据、Reference DNA、Asset/Responsive Media Brief，并按本次明确指定的 Figma 载体交给 ui-design-expert，Figma 写入另行授权。"
     },
     {
       "id": "business-website-planner-should-plan-sourcing-site",
@@ -2956,7 +2956,7 @@
       "difficulty": "edge",
       "hard_negative": false,
       "dimensions": ["trigger_accuracy", "output_quality", "efficiency_metrics", "variance_check"],
-      "expected_handling": "实际读取同类官网正文并记录采用/拒绝边界，围绕产品需求、供应商筛选、样品、质检、订单和物流交接规划建议模块与证明材料；为供应商、检验、品类或响应等指标给参考示例值但不直接发布；业务图片保护产品、标签、缺陷和检验文件语义，默认形成 Figma UI 交接。"
+      "expected_handling": "实际读取同类官网正文并记录采用/拒绝边界，围绕产品需求、供应商筛选、样品、质检、订单和物流交接规划建议模块与证明材料；为供应商、检验、品类或响应等指标给参考示例值但不直接发布；业务图片保护产品、标签、缺陷和检验文件语义，需要视觉交付时再按指定载体交接。"
     },
     {
       "id": "business-website-planner-negative-direct-figma-design",

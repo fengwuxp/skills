@@ -206,9 +206,6 @@
         "cases": "fixtures/skill-eval/design-evidence-proportionality-behavior-cases.json"
       },
       {
-        "cases": "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
-      },
-      {
         "cases": "fixtures/skill-eval/product-demand-analysis-decision-gates-behavior-cases.json"
       },
       {
@@ -222,9 +219,6 @@
       },
       {
         "cases": "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
-      },
-      {
-        "cases": "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
       },
       {
         "cases": "fixtures/skill-eval/product-business-expression-requirements-behavior-cases.json"

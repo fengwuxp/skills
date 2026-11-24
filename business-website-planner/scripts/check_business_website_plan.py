@@ -37,8 +37,6 @@ CONTRACT_KEYS = (
     "non_goals",
     "organization_mode",
     "reference_mode",
-    "design_carrier",
-    "design_carrier_override",
     "owner",
     "status",
 )
@@ -61,7 +59,6 @@ MODULE_KEYS = (
 METRIC_KEYS = (
     "name",
     "business_meaning",
-    "reference_example_value",
     "owner_confirmed_value",
     "publish",
 )
@@ -77,11 +74,6 @@ MEDIA_KEYS = (
     "owner",
 )
 HANDOFF_KEYS = (
-    "ui_owner",
-    "design_carrier",
-    "figma_write_authorization",
-    "engineering_owner",
-    "acceptance_owner",
     "legal_data_conditions",
     "stop_conditions",
 )
@@ -142,8 +134,10 @@ def parse_key_values(body: str) -> dict[str, str]:
     return values
 
 
-def extract_block(text: str, tag: str) -> str:
+def extract_block(text: str, tag: str, *, optional: bool = False) -> str | None:
     blocks = [match.group("body") for match in BLOCK_PATTERN.finditer(text) if match.group("tag") == tag]
+    if not blocks and optional:
+        return None
     if len(blocks) != 1:
         raise WebsitePlanError(f"必须且只能有一个 {tag} block")
     return blocks[0]
@@ -187,11 +181,8 @@ def validate_contract(contract: dict[str, str]) -> None:
         raise WebsitePlanError(f"reference_mode 不受支持: {contract['reference_mode']}")
     if contract["status"] not in PLAN_STATUSES:
         raise WebsitePlanError(f"status 不受支持: {contract['status']}")
-    override = contract["design_carrier_override"].strip().casefold()
-    if is_empty(override):
-        if contract["design_carrier"] != "figma":
-            raise WebsitePlanError("figma is the default design_carrier unless the user explicitly overrides it")
-    elif not override.startswith("user-specified-"):
+    override = contract.get("design_carrier_override", "").strip().casefold()
+    if not is_empty(override) and not override.startswith("user-specified-"):
         raise WebsitePlanError("design_carrier_override 必须使用 user-specified-* 记录使用者明确选择")
 
 
@@ -264,7 +255,7 @@ def validate_metrics(metrics: list[dict[str, str]]) -> None:
     for index, metric in enumerate(metrics, start=1):
         scope = f"metric[{metric.get('name', index)}]"
         require_keys(metric, METRIC_KEYS, scope)
-        if is_empty(metric["reference_example_value"]):
+        if "reference_example_value" in metric and is_empty(metric["reference_example_value"]):
             raise WebsitePlanError(f"metric[{metric['name']}] reference_example_value 不能为空或占位")
         if metric["publish"] not in {"true", "false"}:
             raise WebsitePlanError(f"{scope} publish 必须是 true 或 false")
@@ -289,35 +280,45 @@ def validate_references(reference_mode: str, references: list[dict[str, str]]) -
     validate_unique(references, "source", "reference")
 
 
+def viewport_set(value: str) -> set[str]:
+    viewports = {part.strip().casefold() for part in value.split(",")}
+    if any(is_empty(viewport) for viewport in viewports):
+        raise WebsitePlanError("target_viewports 须列出约定的目标视口")
+    return viewports
+
+
 def validate_media(media: list[dict[str, str]], required_viewports: str | None) -> None:
-    viewports: set[str] = set()
+    covered = set()
     for index, item in enumerate(media, start=1):
         scope = f"media[{item.get('id', index)}]"
         require_keys(item, MEDIA_KEYS, scope)
         if is_empty(item["source"]):
             raise WebsitePlanError(f"{scope} source 不能为空或占位")
-        viewports.update(part.strip().casefold() for part in item["target_viewports"].split(","))
+        covered.update(viewport_set(item["target_viewports"]))
     validate_unique(media, "id", "media")
     if required_viewports is not None:
-        required = {part.strip().casefold() for part in required_viewports.split(",")}
-        if any(is_empty(item) for item in required | viewports):
-            raise WebsitePlanError("target_viewports 须列出约定的目标视口")
-        missing = required - viewports
+        missing = viewport_set(required_viewports) - covered
         if missing:
             raise WebsitePlanError("缺少已约定的媒体视口: " + ", ".join(sorted(missing)))
-        return
-    if not any("mobile" in viewport or "h5" in viewport for viewport in viewports):
-        raise WebsitePlanError("responsive media target_viewports 必须包含 mobile 或 H5")
-    if not any(any(size in viewport for size in ("1920", "2560", "3440", "ultrawide")) for viewport in viewports):
-        raise WebsitePlanError("responsive media target_viewports 必须包含大屏或超宽屏")
+    elif media:
+        if not any("mobile" in viewport or "h5" in viewport for viewport in covered):
+            raise WebsitePlanError("responsive media target_viewports 必须包含 mobile 或 H5")
+        if not any(any(size in viewport for size in ("1920", "2560", "3440", "ultrawide")) for viewport in covered):
+            raise WebsitePlanError("responsive media target_viewports 必须包含大屏或超宽屏")
 
 
 def validate_handoff(contract: dict[str, str], handoff: dict[str, str]) -> None:
     require_keys(handoff, HANDOFF_KEYS, "website handoff")
-    for field in ("ui_owner", "engineering_owner", "acceptance_owner", "stop_conditions"):
+    owner_fields = [field for field in ("ui_owner", "engineering_owner", "acceptance_owner") if field in handoff]
+    if not owner_fields or (contract["status"] == "ready-for-ui" and "ui_owner" not in handoff):
+        raise WebsitePlanError("website handoff 缺少本轮承接人，移交 UI 时须填 ui_owner")
+    for field in (*owner_fields, "stop_conditions"):
         if is_empty(handoff[field]):
             raise WebsitePlanError(f"website handoff {field} 不能为空或占位")
-    if handoff["design_carrier"] != contract["design_carrier"]:
+    carrier = contract.get("design_carrier", "").casefold()
+    if carrier == "figma":
+        require_keys(handoff, ("figma_write_authorization",), "website handoff")
+    if handoff.get("design_carrier", "").casefold() != carrier:
         raise WebsitePlanError("website handoff design_carrier 与 contract 不一致")
 
 
@@ -325,19 +326,21 @@ def parse_plan(text: str) -> WebsitePlanParts:
     contract = parse_key_values(extract_block(text, "business-website-plan"))
     validate_contract(contract)
     modules = parse_records(extract_block(text, "website-modules"), "module")
-    metrics = parse_records(extract_block(text, "metric-suggestions"), "metric")
-    references = parse_records(
-        extract_block(text, "reference-dna"),
-        "reference",
-        required=contract["reference_mode"] != "none",
-    )
-    media = parse_records(extract_block(text, "responsive-media"), "media")
-    handoff = parse_key_values(extract_block(text, "website-handoff"))
+    metric_block = extract_block(text, "metric-suggestions", optional=True)
+    metrics = parse_records(metric_block, "metric") if metric_block is not None else []
+    references_required = contract["reference_mode"] != "none"
+    reference_block = extract_block(text, "reference-dna", optional=not references_required)
+    references = parse_records(reference_block or "", "reference", required=references_required)
+    media_block = extract_block(text, "responsive-media", optional=True)
+    media = parse_records(media_block, "media") if media_block is not None else []
+    handoff_block = extract_block(text, "website-handoff", optional=contract["status"] != "ready-for-ui")
+    handoff = parse_key_values(handoff_block) if handoff_block is not None else {}
     validate_modules(modules, contract["status"])
     validate_metrics(metrics)
     validate_references(contract["reference_mode"], references)
     validate_media(media, contract.get("media_target_viewports"))
-    validate_handoff(contract, handoff)
+    if handoff_block is not None:
+        validate_handoff(contract, handoff)
     return WebsitePlanParts(contract, modules, metrics, references, media, handoff)
 
 

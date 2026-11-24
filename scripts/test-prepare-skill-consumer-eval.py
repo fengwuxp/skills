@@ -195,14 +195,51 @@ class ConsumerPreparationTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("javac") and shutil.which("java"), "JDK is required for the executable Java fixture")
     def test_java_fixture_compiles_and_exposes_the_behavior_bug(self):
+        project = shutil.copytree(self.module.JAVA_PROJECT, self.output)
         classes = self.output.parent / "classes"
         classes.mkdir()
-        sources = sorted(str(path) for path in self.module.JAVA_PROJECT.rglob("*.java"))
-        compilation = subprocess.run(["javac", "-d", str(classes), *sources], capture_output=True, text=True)
-        self.assertEqual(compilation.returncode, 0, compilation.stderr)
-        execution = subprocess.run(["java", "-cp", str(classes), "sample.OrderLabelTests"], capture_output=True, text=True)
-        self.assertNotEqual(execution.returncode, 0, "fixture must reproduce the missing trim behavior")
-        self.assertIn("AssertionError", execution.stderr)
+        package = project / "src/main/java/sample"
+        sources = sorted(str(path) for path in project.rglob("*.java"))
+        checker = ["bash", str(ROOT / "scripts/check-java-consumer-entry.sh"), str(project)]
+
+        def run_service_tests():
+            compilation = subprocess.run(["javac", "-d", str(classes), *sources], capture_output=True, text=True)
+            self.assertEqual(compilation.returncode, 0, compilation.stderr)
+            return subprocess.run(["java", "-cp", str(classes), "sample.OrderLabelTests"],
+                                  capture_output=True, text=True)
+
+        original = run_service_tests()
+        self.assertNotEqual(original.returncode, 0)
+        self.assertIn("AssertionError", original.stderr)
+
+        # Service 单测转绿后，Controller 仍从 Mapper 读取未经处理的名称。
+        service = package / "service/impl/OrderServiceImpl.java"
+        service.write_text(service.read_text().replace("? order.getLabel() :", "? order.getLabel().trim() :"))
+        service_only = run_service_tests()
+        self.assertEqual(service_only.returncode, 0, service_only.stderr)
+        rejected = subprocess.run(checker, capture_output=True, text=True)
+        self.assertNotEqual(rejected.returncode, 0)
+        self.assertIn("AssertionError: OrderController.getOrderLabel", rejected.stderr)
+
+        controller = package / "web/OrderController.java"
+        controller.write_text("""package sample.web;
+
+import sample.face.OrderService;
+
+public final class OrderController {
+    private final OrderService orders;
+
+    public OrderController(OrderService orders) {
+        this.orders = orders;
+    }
+
+    public String getOrderLabel(long id) {
+        return orders.getOrderLabel(id);
+    }
+}
+""")
+        accepted = subprocess.run(checker, capture_output=True, text=True)
+        self.assertEqual(accepted.returncode, 0, accepted.stderr)
 
     def test_failed_sync_leaves_log_without_success_receipt(self):
         result = subprocess.CompletedProcess([], 1, "controlled failure\n")

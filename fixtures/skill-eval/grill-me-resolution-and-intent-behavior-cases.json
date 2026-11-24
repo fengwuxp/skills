@@ -10,12 +10,12 @@
       "sha256": "0b094989249f4a00d1e27f9a51c04e38f278058f0a443c0b9c446459aab49691"
     },
     "candidate": {
-      "id": "grill-me-resolution-current",
+      "id": "grill-me-scoped-record",
       "paths": [
         "grill-me/SKILL.md",
         "grill-me/references/question-ledger.md"
       ],
-      "sha256": "0a82130a78b8ad43e7b6a792196fb5313522ebadbcd054f98b120c7c3e276914"
+      "sha256": "cae23a0ee795932cc3b527017e78b5b26a0a717f44836df48e858d6a6782a57e"
     }
   },
   "rubric": {
@@ -36,11 +36,11 @@
       "id": "grill-should-defer-details-below-current-resolution",
       "category": "resolution-stop",
       "risk": "high",
-      "prompt": "我们正在确认长篇小说第一卷的卷级因果，火云虎退守、主角折返救人和最终受控已经确定。刚才已经开始问具体卸招、命中和控制媒介，但这些战斗细节到时候进入章卡再统一设计吧。请继续 grill。",
+      "prompt": "我已决定本次卷纲采用“主角返回救人”的安排。动作细节进入章卡时再由我决定。现在只需在本轮对话收口，没有交接。接下来该做什么？",
       "criteria": [
-        "识别当前交付仍是卷级因果或场景骨架，不继续追问卸招、命中、控制媒介、距离或逐招动作；明确本分支在当前设计分辨率已经知止。",
-        "把未决战斗细节保留为最终结论 pending、queue_state deferred，并给出可观察的 deferred_until，例如进入完整章卡且地形、伤势、POV 和能力边界就绪；延期不写成拒绝、确认或 superseded。",
-        "保留已经确认的上层因果和过程资产，不因延期删除细节或重开旧问题；写回只触及问题记录、过程资产和必要的唯一权威，不要求立即扇出全部派生摘要。"
+        "直接说明已确认救人安排、应继续的卷纲和进入章卡后再定的细节；本次分叉可用自然语言闭合。",
+        "保留用户指定的恢复条件；无须用户确认同一问题或登记问题编号、固定字段、完整台账或快照。",
+        "不会因为缺少动作细节而冻结卷纲，也不把尚待设计的具体效果写成定稿。"
       ]
     },
     {
@@ -72,7 +72,7 @@
       "prompt": "此前 Q-017 延期到完整章卡设计。现在已经进入该章卡，地形、双方伤势、POV 和能力边界都已确认，请恢复战斗细节 Grill。",
       "criteria": [
         "判断 deferred_until 已满足，将 Q-017 的 queue_state 从 deferred 改为 active，并沿用原问题记录而不是创建新编号。",
-        "恢复相关过程资产、已确认选择、排除项和 red_lines，只问当前设计分辨率真正需要关闭的一个主 blocker。",
+        "按原编号恢复相关过程资产、已确认选择、排除项和 red_lines；接手者应能区分未决选择与已生效约束，只问当前仍需关闭的一个主 blocker。",
         "不把重新激活本身当作最终结论变化；Q-017 在 Owner 裁决前仍为 pending。"
       ]
     },

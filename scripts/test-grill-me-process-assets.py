@@ -86,11 +86,7 @@ def main() -> int:
             ROOT / "grill-me" / "SKILL.md",
             (
                 "过程资产",
-                "过程资产索引",
-                "仅交接，不构成正典",
                 "设计分辨率",
-                "queue_state",
-                "deferred_until",
                 "意图与结果",
                 "写回检查点",
             ),

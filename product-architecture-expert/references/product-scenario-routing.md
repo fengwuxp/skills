@@ -127,7 +127,7 @@
 | --- | --- | --- |
 | 产品方向、业务目标、产品边界不清 | `product-architecture-methodology.md` | 目标、用户、范围、非目标、成功指标、关键风险 |
 | 从零构思、优化已有 PRD、既有产品增量需求 | `product-design-and-prd.md`, `product-architecture-methodology.md` | 需求分析结论卡、PRD-Lite 或既有权威 PRD 的 `ADDED / MODIFIED / REMOVED` 增量；不建立第二事实源 |
-| 业务架构规划、业务 IT 对齐、战略落项目、业务能力地图、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射 | `business-architecture-planning.md`, `product-architecture-methodology.md`；复杂图形化表达加读 `diagram-output.md` | 决策依据或已有准入卡锚点、选用视图、跳过视图及理由，以及按决策问题选择的最小完整视图组合；不固定要求能力地图、价值流、业务流程或项目组合全部产出 |
+| 业务架构规划、业务 IT 对齐、战略落项目、业务能力地图、项目组合治理、投资取舍、重复建设识别、能力-项目-系统映射 | `business-architecture-planning.md`, `product-architecture-methodology.md`；复杂图形化表达加读 `diagram-output.md` | 决策依据或已有准入卡锚点、选用视图及其如何支持决策，只交付本轮约定的最小完整组合；不固定要求能力地图、价值流、业务流程或项目组合全部产出 |
 | 写 PRD、生成 PRD、完善 PRD、补全 PRD、改写 PRD、从原型/HTML/页面截图/交互稿反推 PRD、产品方案、产品需求文档、需求说明书、需求文档模板、PRD 模板 | `product-prd-template.md`, `product-design-and-prd.md`, `product-architecture-methodology.md`；支付资金协同 `payment-expert`，运营数据发布加读 `product-prd-operations-and-data.md`，提交前自检加读 `product-prd-quality-gates.md` | 可复制 PRD、产品方案、用户故事、验收标准、待确认项 |
 | 同一需求跨运营平台 / C 端等应用，或跨浏览器 / 桌面客户端 / H5 等客户端的原型范围规划 | `product-design-and-prd.md` | 需求覆盖矩阵、页面清单、产品级页面标注、多端差异、跨应用衔接和原型覆盖追踪；不直接画界面 |
 | 按 PC / 手机设备情境与浏览器 / H5 / APP 运行载体设计交互、响应式、可用性或中断恢复 | `product-client-interaction.md`, `product-design-and-prd.md` | 客户端策略表、任务与路由图、交互状态矩阵、多端差异表和验收卡；不把桌面缩小成移动方案 |
@@ -176,7 +176,7 @@
 ## 输出路由
 
 - **用户要产品架构方案**：输出背景、目标、范围、用户、角色、能力地图、对象模型、流程、状态机、规则、权限、数据、运营、风险和验收。
-- **用户要业务架构规划**：读取 `business-architecture-planning.md`，先判断战略意图、真实问题和决策场景，声明选用视图、跳过视图及理由，再按决策问题输出最小且完整的视图组合；价值流、业务能力和业务流程只作为参考性工作基线，不宣称为普遍标准或固定交付清单。若需要图形化表达，继续读 `diagram-output.md`，正式图形化交付默认只生成 SVG；不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant。
+- **用户要业务架构规划**：读取 `business-architecture-planning.md`，先判断战略意图、真实问题和决策场景，按实际决策声明选用视图，交付最小且完整的视图组合；价值流、业务能力和业务流程只作为参考性工作基线，不宣称为普遍标准或固定交付清单。若需要图形化表达，继续读 `diagram-output.md`，正式图形化交付默认只生成 SVG；不把业务架构降级为组织架构图、系统清单、图形美观或 Execution Grant。
 - **用户要 AI Native 产品流程、Product Builder、业务 dogfooding、MVP harden 或 PRD 可执行上下文**：读取 `ai-native-product-context.md`，先判断输入是意图、问题地图、可运行 MVP、产品候选、Hardened Candidate 还是噪声，再输出产品上下文包、验收种子、风险确认和交给 AI Native 编排/架构师的产品侧条件；若用户要求端到端流程、Harness/GSD/工程执行准入或 AI 工具协作，由当前 Agent 继续负责，能力装载遵守当前消费项目实际生效的规则，不依赖 Skills 源仓库 `AGENTS.md`。
 - **用户要判断需求是否适合 AI，或直接要求 RAG、微调、小模型、AI 化 / 更智能**：读取 `ai-native-product-context.md` 的“2A. AI 适配性判断”，先输出 AI 适配性判断卡，比较非 AI 基线、候选机制、代表性评测、失败检测、人工容量和半年工作系统变化；不替架构师选择具体模型、检索、工具或训练实现。
 - **用户要交给架构师继续设计或业务驱动架构交接**：正式产品文档保持背景、目标、定性、概要、流程、规则、接口抽象和验收摘要的阅读主线；Product Context Card 或执行计划再承载参与方与 owner、详细验收矩阵、质量属性映射、待确认项和专业确认方，不把交接控制复制进 PRD 正文。

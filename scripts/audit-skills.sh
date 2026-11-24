@@ -68,10 +68,12 @@ check_script_patterns() {
   reviewed_consumer_patterns='^\./scripts/(prepare-skill-consumer-eval|test-prepare-skill-consumer-eval)\.py:[0-9]+:import subprocess$|^\./scripts/prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*(result = subprocess\.run\(command, cwd=ROOT, env=environment,|stdout=subprocess\.PIPE, stderr=subprocess\.STDOUT, text=True\))$|^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*(with (self\.subTest\(output=output\), )?patch\.object\(self\.module\.subprocess, "run"(, (return_value=result|wraps=subprocess\.run))?\) as run:|result = subprocess\.CompletedProcess\(\[\], 1, "controlled failure\\n"\)|(failed|passed) = subprocess\.run\(checker, cwd=self\.output, capture_output=True, text=True\))$'
   output="$(echo "${output}" | grep -Ev "${reviewed_consumer_patterns}" || true)"
 
-  # These two fixture commands only compile and run the checked-in Java sample.
+  # 仅限已审查的本地 Java 样本、入口检查及其 mktemp 目录清理。
+  local java_test_line='^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*'
   local reviewed_java_fixture_patterns
-  reviewed_java_fixture_patterns='^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*compilation = subprocess\.run\(\["javac", "-d", str\(classes\), \*sources\], capture_output=True, text=True\)$|^\./scripts/test-prepare-skill-consumer-eval\.py:[0-9]+:[[:space:]]*execution = subprocess\.run\(\["java", "-cp", str\(classes\), "sample\.OrderLabelTests"\], capture_output=True, text=True\)$'
+  reviewed_java_fixture_patterns="${java_test_line}"'(compilation = subprocess\.run\(\["javac", "-d", str\(classes\), \*sources\], capture_output=True, text=True\)|return subprocess\.run\(\["java", "-cp", str\(classes\), "sample\.OrderLabelTests"\],|(rejected|accepted) = subprocess\.run\(checker, capture_output=True, text=True\))$'
   output="$(echo "${output}" | grep -Ev "${reviewed_java_fixture_patterns}" || true)"
+  output="$(echo "${output}" | grep -Ev '^\./scripts/check-java-consumer-entry\.sh:[0-9]+:  rm -rf "\$\{tmp_dir\}"$' || true)"
 
   # Reviewed offline YAML reader: fixed local Ruby argv, no shell/network/writes.
   # Pin both caller and parser; any change restores the required review.

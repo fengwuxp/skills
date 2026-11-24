@@ -8,7 +8,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "product-client-interaction-current",
+      "id": "product-client-interaction-prototype-review",
       "paths": [
         "product-architecture-expert/SKILL.md",
         "product-architecture-expert/agents/openai.yaml",
@@ -17,7 +17,7 @@
         "product-architecture-expert/references/product-scenario-routing.md",
         "product-architecture-expert/references/source-map.md"
       ],
-      "sha256": "52aa63c6f78f99eef247f4c15c0083b0dc187e48b89a814949af30856d649504"
+      "sha256": "73a5281f93298797cbaa9e9c04b1b2ba3fe758469310615f48869ce562a76b5c"
     }
   },
   "rubric": {
@@ -129,6 +129,17 @@
         "显式声明原型交付形态为 standalone-html；产品级页面标注用稳定唯一的标注 ID 持有业务对象、规则、权限、状态变化、反馈异常和 AC，HTML 标注表按同一 ID、承接 ID 与 AC 引用这些事实。",
         "填写非空原型修订，并使用 experience、review-query-or-toggle、embedded-json、preserve-task-state、keyboard-and-name 规范值；默认体验模式不显示标注，审阅层不改变输入、路由或任务状态，并满足键盘、可访问名称、非颜色唯一表达和窄屏不遮挡主任务。",
         "最终 HTML 内嵌同 revision 的标注 JSON，提供非空内容、confirmed / inferred / pending 状态及可解析的元素 ID 或 data-* 目标；required 页面 / 页面状态全部覆盖，非页面能力不进入标注表，并交由 UI source checker 与真实浏览器任务走查验证。"
+      ]
+    },
+    {
+      "id": "product-should-review-ai-generated-prototype-against-frozen-judgments",
+      "category": "ai-generation-judgment",
+      "risk": "high",
+      "prompt": "我们要让 AI 为社区志愿者排班生成三个后台原型。核心任务是两分钟内补齐无人班次，非目标是不做社交动态，现有证据只有班次、技能要求和可用时间。请先固定产品判断，再说明生成后怎么选、改或删。",
+      "criteria": [
+        "生成前冻结目标用户、核心任务、非目标、已知证据、成功指标和停止条件。",
+        "生成后要求每个主要页面或区块回指被冻结的判断，并记录保留、修改或删除理由；技能冲突不能隐藏在次级页面，社交动态和活跃榜应删除。",
+        "不以多方案投票、AI 自评或视觉完成度替代产品 Owner 取舍。"
       ]
     }
   ]

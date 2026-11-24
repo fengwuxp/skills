@@ -16,7 +16,7 @@ description: |
 
 ## 核心原则
 
-本技能遵循当前任务实际生效的上位指令与项目约束；工程侧重点是先读源码、测试、日志、运行证据和真实约束，再抓问题机制和边界。
+本技能遵循当前任务实际生效的上位指令与项目约束。工程判断从调用者依赖的结果出发：由谁保证它，什么条件下必须成立，若失守会产生什么可观察后果。据此选择能承责的最小结构，在能区分正确与错误的边界取证。对范围、契约或风险有影响的差异才改变做法；同一原则可在不同项目中导出不同实现。
 
 本文中的项目规则均指消费项目；不要求继承 Skills 源仓库 `AGENTS.md`。Java 任务需要运行时可达的 `wind-coding-conventions`；缺失时只暂停依赖该规则的代码写入并说明缺口，不猜测正文或自动安装。
 
@@ -123,6 +123,6 @@ Java 设计、源码级 CR、TDD、Bug 修复和验证统一读取项目本地�
 
 ## 交付检查
 
-正式、完整、可评审、提交前、CR 或触发验证场景必须运行 `scripts/check_architecture_deliverable.py`。架构方案、代码 Review 和生产变更的用法见 `references/review-and-output-templates.md`，系分和图形 brief 见各自 reference；无法运行脚本时必须说明原因、人工检查结果和残余风险。
+普通源码 CR 直接交付有依据的发现；零发现时说明审查了什么、依据和验证局限。只有用户或项目选择正式结构化 CR 报告时才运行 `scripts/check_architecture_deliverable.py --kind code-review`。架构方案、系分、重构设计、生产变更及图形 brief 仍按各自 reference 的交付条件运行对应检查；无法运行脚本时必须说明原因、人工检查结果和残余风险。
 
 实际交付 Harness Plan 时，可用 `scripts/check_harness_plan.py`，参数与边界见 `references/ai-assisted-engineering.md`。两个脚本只检查本地文本或显式文件的结构，不写文件、不联网、不读取密钥，也不判断架构质量；脚本通过不等于执行授权、测试通过或生产审批。

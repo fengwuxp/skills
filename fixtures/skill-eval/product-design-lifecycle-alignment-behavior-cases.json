@@ -24,6 +24,16 @@
   },
   "cases": [
     {
+      "id": "product-investment-start-from-overlap-evidence",
+      "category": "business-architecture-feedback",
+      "risk": "medium",
+      "prompt": "两个团队都打算继续采购同一条门店客户资料导入能力。现有覆盖清单、客户需求对照、续费条件和责任人已知。这次只评审是否合并这项重复投入。请给出有依据的取舍；如果委员会另行确认要完整六视图规划，验收范围会如何变化？",
+      "criteria": [
+        "以当前客户需要、能力重叠、责任、依赖和成本条件作局部判断，指出能改变处置的差异；使用足够支撑该决定的证据或视图。",
+        "不为局部投资凑四视图或逐一列出未选的图。若明确约定六视图完整交付，则必须逐项验证该已确认覆盖范围。"
+      ]
+    },
+    {
       "id": "product-should-qualify-demand-before-solution",
       "category": "definition-gate",
       "risk": "high",

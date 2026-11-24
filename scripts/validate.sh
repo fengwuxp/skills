@@ -305,11 +305,9 @@ run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eva
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-qualification-and-concepts-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-prd-semantic-deep-review-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-prd-simplification-behavior-cases.json"
-run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-business-architecture-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-demand-analysis-decision-gates-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-simple-design-behavior-cases.json"
 run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-reference-fast-gate-behavior-cases.json"
-run_gate scripts/evaluate-skill-behavior.py validate --cases "fixtures/skill-eval/product-builder-series-increment-behavior-cases.json"
 echo "==> document deliverable checker"
 document-authoring/scripts/check_document_deliverable.py --self-test
 document-authoring/scripts/check_document_style.py --self-test

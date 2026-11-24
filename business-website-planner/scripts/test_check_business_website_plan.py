@@ -108,9 +108,39 @@ class BusinessWebsitePlanTests(unittest.TestCase):
         removed = removed.replace("handoff_to: inquiry", "handoff_to: none")
         self.assertEqual(VALIDATOR.parse_plan(removed).modules[-1]["overlap_disposition"], "remove")
 
-    def test_figma_is_default_without_explicit_override(self) -> None:
-        text = VALID.read_text(encoding="utf-8").replace("design_carrier: figma", "design_carrier: html-prototype", 1)
-        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "figma.*default"):
+    def test_agreed_non_figma_carrier(self) -> None:
+        text = VALID.read_text().replace("design_carrier: figma", "design_carrier: html-prototype")
+        text = text.replace("figma_write_authorization: required before file mutation", "")
+        self.assertEqual(VALIDATOR.parse_plan(text).handoff["design_carrier"], "html-prototype")
+
+    def test_handoff_carrier_must_match_plan(self) -> None:
+        text = VALID.read_text().replace("design_carrier: figma", "design_carrier: html-prototype", 1)
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "design_carrier"):
+            VALIDATOR.parse_plan(text)
+
+    def test_figma_name_case_preserves_authorization_requirement(self) -> None:
+        text = VALID.read_text().replace("design_carrier: figma", "design_carrier: Figma", 1)
+        text = text.replace("required before file mutation", "尚未授权；本轮仅交接规划")
+        self.assertEqual(VALIDATOR.parse_plan(text).handoff["design_carrier"], "figma")
+        text = text.replace("design_carrier: figma", "design_carrier: FIGMA")
+        text = re.sub(r"(?m)^figma_write_authorization:.*\n", "", text)
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "figma_write_authorization"):
+            VALIDATOR.parse_plan(text)
+
+    def test_incomplete_record_among_complete_records_is_rejected(self) -> None:
+        text = VALID.read_text()
+        self.assertEqual(len(VALIDATOR.parse_plan(text).media), 2)
+        for broken in (
+            text.replace("owner: content-owner\n[/media]", "owner: content-owner"),
+            text.replace("[media]\nid: service-output-example", "id: service-output-example"),
+            text.replace("[media]\nid: service-output-example", "[media]\n[media]\nid: service-output-example"),
+        ):
+            with self.subTest(), self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "media"):
+                VALIDATOR.parse_plan(broken)
+
+    def test_figma_handoff_needs_write_authorization_status(self) -> None:
+        text = VALID.read_text().replace("figma_write_authorization: required before file mutation", "")
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "figma_write_authorization"):
             VALIDATOR.parse_plan(text)
 
     def test_explicit_non_figma_override_is_allowed(self) -> None:
@@ -163,21 +193,16 @@ class BusinessWebsitePlanTests(unittest.TestCase):
         with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "media.*source"):
             VALIDATOR.parse_plan(text)
 
+    def test_ui_handoff_only_requires_the_ui_recipient(self) -> None:
+        text = re.sub(r"(?m)^(?:engineering_owner|acceptance_owner): .+\n", "", VALID.read_text())
+        self.assertEqual(VALIDATOR.parse_plan(text).handoff["ui_owner"], "ui-design-expert")
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "ui_owner"):
+            VALIDATOR.parse_plan(text.replace("ui_owner: ui-design-expert", ""))
+
     def test_unresolved_handoff_owner_is_rejected(self) -> None:
         text = VALID.read_text(encoding="utf-8").replace("ui_owner: ui-design-expert", "ui_owner: none")
         with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "ui_owner"):
             VALIDATOR.parse_plan(text)
-
-    def test_incomplete_record_among_complete_records_is_rejected(self) -> None:
-        text = VALID.read_text()
-        self.assertEqual(len(VALIDATOR.parse_plan(text).media), 2)
-        for broken in (
-            text.replace("owner: content-owner\n[/media]", "owner: content-owner"),
-            text.replace("[media]\nid: service-output-example", "id: service-output-example"),
-            text.replace("[media]\nid: service-output-example", "[media]\n[media]\nid: service-output-example"),
-        ):
-            with self.subTest(), self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "media"):
-                VALIDATOR.parse_plan(broken)
 
     def test_media_uses_agreed_viewports(self) -> None:
         text = VALID.read_text()
@@ -190,16 +215,24 @@ class BusinessWebsitePlanTests(unittest.TestCase):
         with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "target_viewports"):
             VALIDATOR.parse_plan(re.sub(r"(?m)^media_target_viewports:.*$", "media_target_viewports:", text))
 
-    def test_responsive_media_requires_mobile_and_large_screen_viewports(self) -> None:
-        text = VALID.read_text(encoding="utf-8")
-        text = re.sub(r"(?m)^media_target_viewports:.*\n", "", text)
-        text = text.replace(
-            "mobile-390, desktop-1440, desktop-1920, ultrawide-2560, ultrawide-3440",
-            "desktop-1280, desktop-1440",
-        )
-        text = text.replace("mobile-390, desktop-1440", "desktop-1440")
-        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "target_viewports"):
-            VALIDATOR.parse_plan(text)
+    def test_media_without_viewport_agreement_uses_legacy_coverage(self) -> None:
+        text = re.sub(r"(?m)^media_target_viewports:.*\n", "", VALID.read_text())
+        self.assertEqual(len(VALIDATOR.parse_plan(text).media), 2)
+        for only_viewport in ("mobile-390", "desktop-1920"):
+            with self.subTest(only_viewport=only_viewport), self.assertRaisesRegex(
+                VALIDATOR.WebsitePlanError, "target_viewports"
+            ):
+                VALIDATOR.parse_plan(re.sub(r"(?m)^target_viewports: .+$", f"target_viewports: {only_viewport}", text))
+
+    def test_content_only_plan(self) -> None:
+        text = VALID.read_text().replace("status: ready-for-ui", "status: ready-for-owner")
+        text = text.replace("reference_mode: public", "reference_mode: none")
+        text = re.sub(r"```(metric-suggestions|reference-dna|responsive-media|website-handoff)\n.*?```", "", text, flags=re.DOTALL)
+        text = re.sub(r"(?m)^(?:design_carrier|media_target_viewports).*$", "", text)
+        parts = VALIDATOR.parse_plan(text)
+        self.assertEqual((parts.metrics, parts.media, parts.handoff), ([], [], {}))
+        with self.assertRaisesRegex(VALIDATOR.WebsitePlanError, "website-handoff"):
+            VALIDATOR.parse_plan(text.replace("status: ready-for-owner", "status: ready-for-ui"))
 
     def test_valid_modules_have_distinct_page_roles(self) -> None:
         parts = VALIDATOR.parse_plan(VALID.read_text(encoding="utf-8"))
