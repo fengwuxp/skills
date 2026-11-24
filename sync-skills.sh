@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# 菜单可能长时间等待输入。先解析完整命令块，避免原地保存脚本后读到另一版本的函数或尾部。
+{
 usage() {
   cat <<'USAGE'
 Usage:
@@ -453,3 +455,5 @@ if [[ "${TARGET}" == "claude" ]]; then
 else
   echo "Done. Restart Codex or open a new session if skill metadata does not refresh immediately."
 fi
+exit 0
+}

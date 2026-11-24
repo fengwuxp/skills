@@ -183,6 +183,36 @@ for key in candidate caller; do
   diff -qr "${fixture_repo}/${key}" "${interactive_home}/skills/${key}"
 done
 
+menu_script="${fixture_repo}/menu-sync.sh"
+menu_home="${tmp_dir}/menu-home"
+menu_log="${tmp_dir}/menu.log"
+cp "${ROOT_DIR}/sync-skills.sh" "${menu_script}"
+: > "${menu_log}"
+save_during_menu() {
+  local deadline=$((SECONDS + 10))
+  until grep -Fq 'Available skills:' "${menu_log}"; do
+    if (( SECONDS >= deadline )); then
+      echo "FAIL sync did not display the selection menu" >&2
+      return 1
+    fi
+    sleep 0.05
+  done
+  # 原地保存另一份有效脚本，保留字节范围，以便发现仍然读取新版本尾部的进程。
+  LC_ALL=C tr -c '\n' ' ' < "${ROOT_DIR}/sync-skills.sh" > "${menu_script}" || return 1
+  printf '\nexit 73\n' >> "${menu_script}" || return 1
+  printf 'all\n'
+}
+if ! save_during_menu | CODEX_HOME="${menu_home}" "${menu_script}" >"${menu_log}" 2>&1; then
+  cat "${menu_log}" >&2
+  echo "FAIL interactive sync read the script saved during selection" >&2
+  exit 1
+fi
+grep -q '^Done\.' "${menu_log}"
+for key in candidate caller unchecked; do
+  grep -Fxq "==> ${key}" "${menu_log}"
+  diff -qr "${fixture_repo}/${key}" "${menu_home}/skills/${key}"
+done
+
 preview_home="${tmp_dir}/preview-home"
 CODEX_HOME="${preview_home}" "${fixture_repo}/sync-skills.sh" --dry-run all >"${output_file}" 2>&1
 test ! -e "${preview_home}"
