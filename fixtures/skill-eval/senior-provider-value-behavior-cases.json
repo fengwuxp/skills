@@ -8,7 +8,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "senior-provider-value-conditional-cr-principles",
+      "id": "senior-provider-value-conditional-cr",
       "paths": [
         "AGENTS.md",
         "senior-software-architect/SKILL.md",
@@ -19,7 +19,7 @@
         "senior-software-architect/references/coding-review-deep-dive.md",
         "senior-software-architect/references/architecture.md"
       ],
-      "sha256": "44045e7a9c5433dd7c075f9939d2ce375c308818ada32ba106c9eca0157d63cc"
+      "sha256": "de1959ae9515592502207ed90b41743d02b2eeafe3f5a700c6b521b149703cf4"
     }
   },
   "rubric": {

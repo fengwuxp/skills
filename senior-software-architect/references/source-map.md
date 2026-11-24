@@ -416,6 +416,16 @@ Ponytail Codex 插件：`https://github.com/DietrichGebert/ponytail`。2026-06-2
 - 不把 Codex app 功能清单写成当前会话一定可用的工具能力，也不把该微信文章当作 OpenAI 官方当前能力、产品可用性、模型、工具或路线图承诺；涉及 Codex 当前能力时必须核验 OpenAI 官方文档或当前会话工具状态。
 - 不默认创建 pinned thread、automation、goal、vault、外部 connector、长期 memory，不默认访问 Slack、Gmail、Calendar、浏览器登录态、桌面 GUI、外部 API、客户数据、生产配置或私有资料。
 - 不把 voice/transcript、thread transcript、queue 或 automation 当作规格、授权、验证结果或 Git/部署许可；不复制文章示例、提示语、目录结构、作者表达、平台宣传语或未核验的未来能力。
+### 微信公众号文章《想要团队提效？编程Agent必须统一，岗位必须融合，团队必须拆小！（很多人都不同意）》
+
+- 58沈剑，公众号“架构师之路”，2026-11-24 发布，当日通过浏览器读取正文。[原文](https://mp.weixin.qq.com/s/G615cXgE-ox-ujtnv5mitA)
+- 文中描述了编码加速后评审积压、分支冲突的现象。`evolutionary-architecture.md` 据此细化并行度的调整和复核方法。工具选型、团队编制及提效幅度仍取决于具体项目的证据。
+
+### 微信公众号文章《AI时代，架构师的角色定位》
+
+- 摩方笔记，公众号“剑桥摩方笔记”，发布于 2026-10-10。2026-11-23 通过浏览器读取全文。[原文](https://mp.weixin.qq.com/s/WnurupE4I4PGi0-DowrKJA)
+- 参考文章对决策来由、样本代表性和开发投入的区分。历史取证归入 `adr-and-tradeoff.md`，AI 产品效果评审归入 `ai-assisted-engineering.md`。低频错误的专项抽样是本仓库对评审方法的细化。参考方案的适用条件和开发收益沿用既有规则。
+
 ### 微信公众号文章：放下代码：AI Native是通往架构师的快车道
 - 来源/读取/应用：`https://mp.weixin.qq.com/s/fhEzrPbeez-_2bmJHqExCQ`；标题：`放下代码：AI Native是通往架构师的快车道`；公众号/作者：`大数据随笔`；发布时间：2026-05-23 12:00:00 Asia/Shanghai；读取日期：2026-06-02。已通过移动端微信 UA 公开 HTML 读取标题、作者、发布时间和正文；本轮未再执行 Playwright 等价浏览器取证，不归档文章全文。应用到 `ai-assisted-engineering.md` 的 AI Native 架构师工作面，覆盖 hardened 标准和 Agent 工作流设计；`ai-large-project-orchestration.md` 转成 OpenSpec、context ledger、GSD Stage/Wave/Atomic Task、验证矩阵和 CAD 候选缺口；`cad-mode.md`、`product-design.md`、`scenario-routing.md`、`README.md` 和 `scripts/validate-trigger-paths.py` 维护 Hardened Candidate 不能直接作为 Execution Grant 的边界。不把“放下代码”理解为放弃编码能力、代码审查、测试、验证或生产责任，不复制文章中的引用案例、岗位判断、作者表达、情绪化标题或传播性措辞。
 - 不把 AI 生成 PR 数量、自动化轮数或外部团队案例写成工程质量结论，不把 Agent review / Agent test 替代高风险变更中的人工确认、架构审查、测试证据和生产门禁，不把岗位转型观点写成组织制度、绩效口径、裁员建议或团队角色结论。

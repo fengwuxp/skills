@@ -8,13 +8,14 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "senior-architecture-governance-current-principles",
+      "id": "senior-architecture-governance-current",
       "paths": [
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/evolutionary-architecture.md",
-        "senior-software-architect/references/adr-and-tradeoff.md"
+        "senior-software-architect/references/adr-and-tradeoff.md",
+        "senior-software-architect/references/ai-assisted-engineering.md"
       ],
-      "sha256": "c2626aaedd5ca68d4748bd1f4472cb6843b35d114c91ddc2ab24e64c55a5e386"
+      "sha256": "0e3fac164bb3137739f9444c11845b70027651bc6d5a58cf6a1e52f07880427b"
     }
   },
   "rubric": {
@@ -40,6 +41,17 @@
     "high_risk_candidate_criteria_min_pass_rate": 1
   },
   "cases": [
+    {
+      "id": "governance-evaluate-ai-user-tasks",
+      "category": "product-evaluation",
+      "risk": "high",
+      "prompt": "客服助手准备扩大试点。随机抽取的 500 条实际咨询中 490 条正确完成，抽样里没有需主管批准的退款请求。上线范围包含退款，业务要求此类请求转给主管并在接手前避免承诺退款。开发团队还报告编码工时减半。请评审全量上线依据，给出最小验证，并说明结果能支持哪些结论。",
+      "criteria": [
+        "将常见任务的抽样表现、未经覆盖的退款风险和编码工时分别解释，不能据此判定全量上线或端到端开发收益。",
+        "为需主管审批的退款选取专项案例，检验是否作出越权承诺以及主管是否实际接到请求，分项报告通过和失败。",
+        "给出与证据相符的上线边界和重审条件，不用专项组的失败比例估算线上发生率。"
+      ]
+    },
     {
       "id": "governance-revalidate-changed-assumption",
       "category": "decision-lifecycle",

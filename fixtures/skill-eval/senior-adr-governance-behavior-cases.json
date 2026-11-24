@@ -8,12 +8,12 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "senior-adr-tradeoff-cutover-principles",
+      "id": "senior-adr-tradeoff-cutover",
       "paths": [
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/adr-and-tradeoff.md"
       ],
-      "sha256": "e69ca9695938b4ae9d418aea17b0f023b591bb1efa70bdda189302e8fbbfb4da"
+      "sha256": "65936aae9837ca7a383f5ca7348a6a6b9d821a6b22dcebf5a627ca555facf96a"
     }
   },
   "rubric": {
@@ -30,6 +30,17 @@
     "high_risk_candidate_criteria_min_pass_rate": 1.0
   },
   "cases": [
+    {
+      "id": "senior-adr-recover-original-rationale",
+      "category": "decision-history",
+      "risk": "medium",
+      "prompt": "接手通知服务。2021 年提交只写了“切换至队列”，本月压测显示开启队列后突发流量下的超时减少。请写两句交接说明。随后找到 2021 年已通过的评审纪要，明确当时选队列是为了解决下游停机期间通知丢失。现在该怎么更新交接说明？",
+      "criteria": [
+        "初次交接准确记录改动及当月实测，保留原始动因未知，不从当前效果倒推历史选择。",
+        "取得纪要后引用它说明当年的可靠性取舍，保留削峰为当前负载下的独立收益。",
+        "不把当年的设计目标写成今天已验证不会丢通知，也不因原始动因一度缺失而搁置当前评估。"
+      ]
+    },
     {
       "id": "senior-tradeoff-accepted-work-cutover",
       "category": "changed-commitment",

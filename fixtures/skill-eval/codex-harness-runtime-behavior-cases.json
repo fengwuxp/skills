@@ -8,7 +8,7 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "candidate": {
-      "id": "codex-harness-runtime-scoped-decisions-principles",
+      "id": "codex-harness-runtime-scoped-decisions",
       "paths": [
         "wise-agent/references/code-delivery.md",
         "wise-agent/references/context-handoff.md",
@@ -19,7 +19,7 @@
         "product-architecture-expert/references/ai-native-product-context.md",
         "huaxia-practical-wisdom/SKILL.md"
       ],
-      "sha256": "26cff31e70123093acbf2d08c3e600e0a68e25be5f737609b652f3317dbbadc4"
+      "sha256": "6f09a500e60fb8cbb0e82ee7892c20e025013882ed1031cf6386589bfff2aced"
     }
   },
   "rubric": {

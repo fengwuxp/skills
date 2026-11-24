@@ -15,6 +15,7 @@
         "senior-software-architect/SKILL.md",
         "senior-software-architect/references/scenario-routing.md",
         "senior-software-architect/references/architecture.md",
+        "senior-software-architect/references/evolutionary-architecture.md",
         "senior-software-architect/references/adr-and-tradeoff.md",
         "senior-software-architect/references/workflow.md",
         "senior-software-architect/references/debugging-diagnosis.md",
@@ -22,7 +23,7 @@
         "senior-software-architect/references/system-intervention-and-backcasting.md",
         "senior-software-architect/scripts/check_system_intervention_card.py"
       ],
-      "sha256": "4ca5aa56fb58bf3fdbe939f5f8f4a618bdf0132056f2be8a05e89a40635efd2a"
+      "sha256": "fcdd025b2c0efee781157ada377693e3b5f894ea96e7ae7366d47b66553fa4a6"
     }
   },
   "rubric": {
@@ -39,6 +40,17 @@
     "high_risk_candidate_criteria_min_pass_rate": 0.75
   },
   "cases": [
+    {
+      "id": "senior-review-backlog-adjust-parallelism",
+      "category": "delivery-bottleneck",
+      "risk": "medium",
+      "prompt": "连续三周每周验收的同类需求都是四项，待审变更却从三项增至十一项。最早的三项都在等导出接口确定“成功”表示已受理还是已生成文件。另一项通知变更按已定契约独立验收，有评审人可接。团队准备再开两个编码 Agent。你会怎样安排当前工作？若下次排队的都是可单独验收的小变更，则如何决定何时增加并行？",
+      "criteria": [
+        "从具体等待项定位共同的契约决定，请有权责任方明确成功语义后放行相关实现，保留通知变更独立推进。",
+        "对已经足够小的变更核实评审或集成容量，确实饱和时优先收尾、减少进入该队列的新任务；不靠继续拆 PR 或一律停工解决。",
+        "用相近需求的等待、验收完成量与返工判断效果；积压缓解且有验收余量时才逐步试增并行，不凭新增 Agent 数声称收益。"
+      ]
+    },
     {
       "id": "senior-should-find-evidence-drift-feedback-and-leverage",
       "category": "system-feedback-evidence-governance",

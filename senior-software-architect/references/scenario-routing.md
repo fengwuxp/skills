@@ -68,6 +68,7 @@
 | 代码 Review / 源码 CR / PR Review | `project-governance-service-api-modeling.md`、`review-and-output-templates.md`、`coding-review-deep-dive.md`、`clean-code.md`、`negative-constraints.md` | 先裁决能力价值、职责与契约；问题优先，按真实后果定级，给文件行号、风险、证据、建议和验证。 |
 | 系统分析设计 / 系分 | `system-analysis-design.md`、`system-analysis-template.md`、`architecture.md`、`production-readiness.md` | 产品语义输入、系统边界、运行时场景、工程规则、模块/契约/数据、规则落地、非功能、验证和 Engineering Handoff；明确要求正式成稿或 PDF 时，工程结论稳定后由当前 Agent 使用可用文档能力整理，`document-authoring` 仅在准入、可用性和调用策略均满足时协同，编辑后回本技能重新校验。 |
 | 技术选型 / 架构取舍 | `adr-and-tradeoff.md`、`architecture.md` | 备选方案、决策理由、放弃理由、代价、风险、复审条件；同时说明关键节点/通信边、复杂度从哪里转移到哪里，以及隐藏边是否可观测、可追踪和可回滚。 |
+| 追溯历史决策 | `adr-and-tradeoff.md` 的“追溯历史决策” | 有出处的原始动因写明来源，缺少依据时标为待考。需要复审时另列当前测量支持的结论。 |
 | 分布式一致性 / MQ / 对账 / 补偿 | `distributed-consistency.md`、`production-readiness.md` | 业务不变量、事务边界、幂等、去重、补偿、对账、告警和一致性窗口。 |
 | 遗留系统改造 / 迁移 | `refactoring-design-template.md`、`evolutionary-architecture.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 先判断独立重构设计准入，再固定行为不变量、MIG 切片、契约测试、双写/回填/切流、灰度、回滚和下线标准；局部行为保持重构只用任务卡和测试保护。 |
 | 架构腐朽 / 排熵 / 可删除性评审 / 不敢删 / 承重 bug | `evolutionary-architecture.md`、`coding-review-deep-dive.md`、`adr-and-tradeoff.md`、`production-readiness.md` | 可删除性、局部推理边界、承重行为、废弃 API / dead path、概念膨胀、事实源分裂、治理自腐、守卫自检、下线候选和最小排熵计划。 |
@@ -77,6 +78,7 @@
 | 数据库迁移 / 修数 / 回填 | `production-readiness.md`、`review-and-output-templates.md`、`negative-constraints.md` | dry-run、备份、分批、校验、审计、回滚和新旧版本兼容。 |
 | 外部 API / SDK / 云产品 / 第三方服务 / 版本升级 | `workflow.md`、`adr-and-tradeoff.md`、`production-readiness.md`、`negative-constraints.md` | 先过外部知识时效性门禁，核验官方文档、release notes、项目 lockfile 或本地依赖树，再说明兼容、安全、许可、成本、回滚和 owner。 |
 | 微服务拆分判断 | `evolutionary-architecture.md`、`architecture.md`、`adr-and-tradeoff.md` | 业务边界、数据归属、团队运维能力、故障隔离；边界不清优先模块化单体。 |
+| AI 产品效果评审 | `ai-assisted-engineering.md` 的“AI 产品效果评审” | 按用户任务、失败后果和接手结果判断已验证的上线范围。 |
 | 性能与容量问题 | `production-readiness.md`、`language-agnostic-architecture.md` | SLO、容量基线、压测、瓶颈、限流降级、观测指标和回滚阈值。 |
 | AI 编码协作 / OpenSpec 到代码 / 多 Agent 编排 / 上下文衰减治理 | `ai-assisted-engineering.md`；真实恢复、交接或已获准的多 Agent/Wave 编排才读 `ai-large-project-orchestration.md`，实际采用受控工程执行 Loop 才读 `cad-mode.md`；按 `SKILL.md` 工作原则核对任务契约，不因流程跨度自动展开协调流程 | 使用项目已选择的规格、测试和评审方法，不要求补齐 OpenSpec / Superpowers。来自业务 MVP 或 AI Native 产品上下文时消费已确认的 Hardened Candidate、AI Native 交接结论或等价用户与项目事实；受控工程执行 Loop 只消费已满足门禁的单个任务包或阶段切片，并服从授权、Git、用户中断和停止条件。 |
 | AI 生成代码审查 | `coding-review-deep-dive.md`，出现依赖或权限风险时补 `negative-constraints.md` | 查幻觉、越界修改、缺失测试、无主依赖、Git 操作和高风险擅自决策；不因代码由 AI 生成加载能力地图或编排。 |
