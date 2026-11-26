@@ -75,9 +75,9 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="${SCRIPT_DIR}"
 SKILLS_DIR="${REPO_ROOT}"
 
-if find "${SKILLS_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | grep -q .; then
+if find "${SKILLS_DIR}" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | grep . >/dev/null; then
   :
-elif [[ -d "${SCRIPT_DIR}/skills" ]] && find "${SCRIPT_DIR}/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | grep -q .; then
+elif [[ -d "${SCRIPT_DIR}/skills" ]] && find "${SCRIPT_DIR}/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type f | grep . >/dev/null; then
   SKILLS_DIR="${SCRIPT_DIR}/skills"
 else
   echo "Cannot locate skills: no */SKILL.md found under ${SCRIPT_DIR} or ${SCRIPT_DIR}/skills" >&2
@@ -263,6 +263,78 @@ fi
 if [[ "${WITH_AGENTS}" == "true" ]] && ! selected_index "wise-agent" >/dev/null; then
   echo "--with-agents requires wise-agent to be selected" >&2
   exit 1
+fi
+
+# 解析已有父目录的真实位置，再接上尚不存在的路径；不为预检创建目录。
+resolve_directory() {
+  local directory="$1" parent name
+  if [[ -d "${directory}" ]]; then
+    (cd -- "${directory}" && pwd -P)
+    return
+  fi
+  if [[ -L "${directory}" || -e "${directory}" ]]; then
+    echo "Cannot resolve directory: ${directory}" >&2
+    return 1
+  fi
+  parent="$(dirname -- "${directory}")"
+  name="$(basename -- "${directory}")"
+  parent="$(resolve_directory "${parent}")" || return 1
+  case "${name}" in
+    .) printf '%s\n' "${parent}" ;;
+    ..) dirname -- "${parent}" ;;
+    *) printf '%s/%s\n' "${parent%/}" "${name}" ;;
+  esac
+}
+
+source_directories=()
+for key in "${skill_dirs[@]}"; do
+  source_directories+=("$(resolve_directory "${SKILLS_DIR}/${key}")")
+done
+if [[ -d "${AGENT_SOURCE_DIR}" ]]; then
+  source_directories+=("$(resolve_directory "${AGENT_SOURCE_DIR}")")
+fi
+
+# pwd -P 在部分文件系统上仍保留大小写别名；沿祖先核对真实目录身份。
+directory_contains() {
+  local directory="$1" ancestor="$2"
+  [[ -d "${directory}" ]] || return 1
+  while true; do
+    [[ "${directory}" -ef "${ancestor}" ]] && return 0
+    [[ "${ancestor}" == "/" ]] && return 1
+    ancestor="${ancestor%/*}"
+    [[ -n "${ancestor}" ]] || ancestor="/"
+  done
+}
+
+refuse_source_overlap() {
+  local requested="$1" target source
+  target="$(resolve_directory "${requested}")" || exit 1
+  for source in "${source_directories[@]}"; do
+    if [[ "${target}" == "${source}" || "${target}" == "${source}/"* ||
+          "${source}" == "${target%/}/"* ]] ||
+        directory_contains "${source}" "${target}" ||
+        directory_contains "${target}" "${source}"; then
+      echo "Refusing overlapping source and target paths: ${source} -> ${requested}" >&2
+      exit 1
+    fi
+  done
+}
+
+# 核对所有将写入、清理或退役的位置，避免先同步部分包后才发现源目录被包含。
+write_keys=("${selected[@]}")
+for mapping in "${SKILL_REPLACEMENTS[@]}"; do
+  if [[ "${OVERWRITE}" == "true" ]] || selected_index "${mapping#*:}" >/dev/null; then
+    write_keys+=("${mapping%%:*}")
+  fi
+done
+for key in "${write_keys[@]}"; do
+  refuse_symbolic_link "${TARGET_ROOT}/${key}" "Skill target"
+  refuse_source_overlap "${TARGET_ROOT}/${key}"
+  refuse_source_overlap "${BACKUP_ROOT}/${key}-${TIMESTAMP}"
+done
+if [[ "${WITH_AGENTS}" == "true" ]]; then
+  refuse_source_overlap "${AGENT_TARGET_DIR}"
+  refuse_source_overlap "${AGENT_BACKUP_ROOT}/agents-${TIMESTAMP}"
 fi
 
 echo "Repository root: ${REPO_ROOT}"

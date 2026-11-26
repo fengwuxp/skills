@@ -244,11 +244,13 @@ public final class OrderController {
     def test_failed_sync_leaves_log_without_success_receipt(self):
         result = subprocess.CompletedProcess([], 1, "controlled failure\n")
         with patch.object(self.module.subprocess, "run", return_value=result) as run:
-            with self.assertRaises(RuntimeError):
+            with self.assertRaises(RuntimeError) as failure:
                 self.module.prepare_case(self.cases, "consumer-direct-repair", self.output)
             run.assert_called_once()
         self.assertIn("controlled failure", (self.output / "setup.log").read_text())
         self.assertFalse((self.output / "receipt.json").exists())
+        self.temporary.cleanup()
+        self.assertIn("controlled failure", str(failure.exception))
 
     def test_checker_detects_fixture_bug_and_accepts_minimal_fix(self):
         fixture = ROOT / "fixtures/skill-eval/consumer-project"

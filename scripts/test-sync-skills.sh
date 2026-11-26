@@ -220,6 +220,24 @@ printf '%s\n' unchanged > "${direct_home}/skills/candidate/SKILL.md"
 CODEX_HOME="${direct_home}" "${fixture_repo}/sync-skills.sh" --dry-run candidate >"${output_file}" 2>&1
 test "$(cat "${direct_home}/skills/candidate/SKILL.md")" = unchanged
 
+large_repo="${tmp_dir}/large-repository"
+large_preview_home="${tmp_dir}/large-preview-home"
+mkdir -p "${large_repo}"
+cp "${ROOT_DIR}/sync-skills.sh" "${large_repo}/sync-skills.sh"
+for ((index = 0; index < 600; index++)); do
+  key="$(printf 'skill-%04d' "${index}")"
+  mkdir -p "${large_repo}/${key}"
+  printf '%s\n' '---' "name: ${key}" '---' "# ${key}" > "${large_repo}/${key}/SKILL.md"
+done
+if ! CODEX_HOME="${large_preview_home}" "${large_repo}/sync-skills.sh" --dry-run skill-0000 >"${output_file}" 2>&1; then
+  cat "${output_file}" >&2
+  echo "FAIL sync could not discover a Skill in a large repository" >&2
+  exit 1
+fi
+grep -Fxq '==> skill-0000' "${output_file}"
+test "$(grep -c '^==> ' "${output_file}")" = 1
+test ! -e "${large_preview_home}"
+
 unknown_home="${tmp_dir}/unknown-home"
 if CODEX_HOME="${unknown_home}" "${fixture_repo}/sync-skills.sh" candidate missing >"${output_file}" 2>&1; then
   echo "FAIL sync accepted an unknown Skill" >&2
@@ -293,5 +311,105 @@ if CODEX_HOME="${self_home}" "${self_home}/sync-skills.sh" --overwrite all >"${o
 fi
 cmp "${fixture_repo}/candidate/SKILL.md" "${self_home}/skills/candidate/SKILL.md"
 grep -Fq 'Refusing to clear the source Skill root' "${output_file}"
+
+expect_overlap_rejected() {
+  local install_home="$1" source_script="$2"
+  shift 2
+  if CODEX_HOME="${install_home}" "${source_script}" --dry-run "$@" >"${output_file}" 2>&1; then
+    echo "FAIL preview accepted overlapping source and target paths" >&2
+    exit 1
+  fi
+  grep -Fq 'Refusing overlapping source and target paths' "${output_file}"
+  if CODEX_HOME="${install_home}" "${source_script}" "$@" >"${output_file}" 2>&1; then
+    echo "FAIL sync accepted overlapping source and target paths" >&2
+    exit 1
+  fi
+  grep -Fq 'Refusing overlapping source and target paths' "${output_file}"
+}
+
+# 实际清理目标可以包含整个源码仓；预演和同步都必须在移动前拒绝。
+ancestor_home="${tmp_dir}/ancestor-home"
+ancestor_repo="${ancestor_home}/skills/candidate"
+mkdir -p "${ancestor_repo}/candidate"
+cp "${ROOT_DIR}/sync-skills.sh" "${ancestor_repo}/sync-skills.sh"
+cp "${fixture_repo}/candidate/SKILL.md" "${ancestor_repo}/candidate/SKILL.md"
+expect_overlap_rejected "${ancestor_home}" "${ancestor_repo}/sync-skills.sh" --overwrite all
+expect_overlap_rejected "${ancestor_home}" "${ancestor_repo}/sync-skills.sh" candidate
+cmp "${fixture_repo}/candidate/SKILL.md" "${ancestor_repo}/candidate/SKILL.md"
+test ! -e "${ancestor_home}/skills/.backups"
+
+# 尚不存在的后代目标、相对路径及父目录链接都应解析到同一个源目录。
+expect_overlap_rejected "${fixture_repo}/candidate/new-home" "${fixture_repo}/sync-skills.sh" candidate
+test ! -e "${fixture_repo}/candidate/new-home"
+(
+  cd "${fixture_repo}"
+  expect_overlap_rejected "candidate/../candidate/new-home" "./sync-skills.sh" --overwrite all
+)
+test ! -e "${fixture_repo}/candidate/new-home"
+ln -s "${fixture_repo}/candidate" "${tmp_dir}/source-alias"
+expect_overlap_rejected "${tmp_dir}/source-alias/new-home" "${fixture_repo}/sync-skills.sh" candidate
+test ! -e "${fixture_repo}/candidate/new-home"
+
+# 文件系统可能把大小写不同的路径解析为同一目录，不能仅按字符串判断包含。
+case_home="${tmp_dir}/case-home"
+case_alias="${tmp_dir}/CASE-HOME"
+case_repo="${case_home}/skills/candidate"
+mkdir -p "${case_repo}/candidate"
+cp "${ROOT_DIR}/sync-skills.sh" "${case_repo}/sync-skills.sh"
+cp "${fixture_repo}/candidate/SKILL.md" "${case_repo}/candidate/SKILL.md"
+if [[ "${case_home}" -ef "${case_alias}" ]]; then
+  expect_overlap_rejected "${case_alias}" "${case_repo}/sync-skills.sh" --overwrite all
+  expect_overlap_rejected "${fixture_repo}/CANDIDATE/new-home" "${fixture_repo}/sync-skills.sh" candidate
+  test ! -e "${case_home}/skills/.backups"
+  test ! -e "${fixture_repo}/candidate/new-home"
+else
+  # 大小写敏感文件系统上的同名异大小写目录是合法独立目标。
+  CODEX_HOME="${case_alias}" "${case_repo}/sync-skills.sh" --dry-run candidate >"${output_file}" 2>&1
+  test ! -e "${case_alias}"
+  CODEX_HOME="${case_alias}" "${case_repo}/sync-skills.sh" candidate >"${output_file}" 2>&1
+  diff -qr "${case_repo}/candidate" "${case_alias}/skills/candidate"
+fi
+cmp "${fixture_repo}/candidate/SKILL.md" "${case_repo}/candidate/SKILL.md"
+
+# 普通同步也拒绝相同源目标，退役旧名称的移动同样不能吞入源码仓。
+expect_overlap_rejected "${self_home}" "${self_home}/sync-skills.sh" candidate
+retired_home="${tmp_dir}/retired-source-home"
+retired_repo="${retired_home}/skills/delivery-collab"
+mkdir -p "${retired_repo}/wise-agent"
+cp "${ROOT_DIR}/sync-skills.sh" "${retired_repo}/sync-skills.sh"
+cp "${fixture_repo}/candidate/SKILL.md" "${retired_repo}/wise-agent/SKILL.md"
+expect_overlap_rejected "${retired_home}" "${retired_repo}/sync-skills.sh" wise-agent
+test -f "${retired_repo}/wise-agent/SKILL.md"
+test ! -e "${retired_home}/skills/wise-agent"
+test ! -e "${retired_home}/skills/.backups"
+
+# 备份路径落在源码仓时，在创建安装目录前拒绝。
+backup_source_home="${tmp_dir}/backup-source-home"
+backup_source_repo="${backup_source_home}/skills/.backups/candidate-20260904-000000"
+mkdir -p "${backup_source_repo}/candidate"
+cp "${ROOT_DIR}/sync-skills.sh" "${backup_source_repo}/sync-skills.sh"
+cp "${fixture_repo}/candidate/SKILL.md" "${backup_source_repo}/candidate/SKILL.md"
+PATH="${fake_bin}:${PATH}" expect_overlap_rejected "${backup_source_home}" "${backup_source_repo}/sync-skills.sh" candidate
+cmp "${fixture_repo}/candidate/SKILL.md" "${backup_source_repo}/candidate/SKILL.md"
+test ! -e "${backup_source_home}/skills/candidate"
+
+# --with-agents 共用写入前检查，独立的 Skill 目标不能掩盖 Agent 源目标重叠。
+agent_source_repo="${tmp_dir}/agent-source-repository"
+mkdir -p "${agent_source_repo}/wise-agent" "${agent_source_repo}/.codex/agents"
+cp "${ROOT_DIR}/sync-skills.sh" "${agent_source_repo}/sync-skills.sh"
+cp "${fixture_repo}/candidate/SKILL.md" "${agent_source_repo}/wise-agent/SKILL.md"
+printf '%s\n' source-profile > "${agent_source_repo}/.codex/agents/implementer.toml"
+expect_overlap_rejected "${agent_source_repo}/.codex" "${agent_source_repo}/sync-skills.sh" --with-agents wise-agent
+test "$(cat "${agent_source_repo}/.codex/agents/implementer.toml")" = source-profile
+test ! -e "${agent_source_repo}/.codex/skills"
+test ! -e "${agent_source_repo}/.codex/.agent-backups"
+
+# 仓内独立安装目录及路径同前缀的兄弟目录仍可使用。
+for safe_home in "${fixture_repo}/.codex" "${fixture_repo}/candidate-other"; do
+  CODEX_HOME="${safe_home}" "${fixture_repo}/sync-skills.sh" --dry-run candidate >"${output_file}" 2>&1
+  test ! -e "${safe_home}"
+  CODEX_HOME="${safe_home}" "${fixture_repo}/sync-skills.sh" candidate >"${output_file}" 2>&1
+  diff -qr "${fixture_repo}/candidate" "${safe_home}/skills/candidate"
+done
 
 echo "OK direct sync, overwrite-all, selection, dry-run and target safety"

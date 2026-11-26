@@ -102,7 +102,9 @@ def prepare_case(data, case_id, output_dir):
             log.write(result.stdout)
             log.flush()
             if result.returncode:
-                raise RuntimeError(f"sync failed ({result.returncode}); see {output / 'setup.log'}")
+                raise RuntimeError(
+                    f"sync failed ({result.returncode}); see {output / 'setup.log'}\n{result.stdout.rstrip()}"
+                )
     project = output / "project"
     shutil.copytree(JAVA_PROJECT if java_project else PROJECT, project,
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))

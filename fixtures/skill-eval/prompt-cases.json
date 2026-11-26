@@ -286,7 +286,7 @@
         "baseline_comparison",
         "variance_check"
       ],
-      "expected_handling": "进入自主挖掘到交付的产研协同，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle、delivery-execution-control、code-delivery 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品语义、PRD 和验收种子回到 product-architecture-expert，Web UI、交互、可操作原型和可用性回到 ui-design-expert，代码实现和工程验证回到 senior-software-architect；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规、不可逆动作和多方案取舍必须人工确认。"
+      "expected_handling": "进入自主挖掘到交付的产研协同，按默认最小输出给出结论、当前阶段、owner、交接物、授权策略、验证与停止条件；需要时补角色视角、能力/约规来源、证据边界和残余风险；读取 delivery-lifecycle、delivery-execution-control、code-delivery 和 verification-review-release；先输出自主交付控制卡，覆盖已读事实源、候选需求/问题、可自我挖掘、可自我规划、可自动执行、必须人工确认、置信度、状态回写位置和停止条件；阶段链覆盖自我挖掘与确认边界、产品/交互设计、需求 CR/设计评审、TDD/测试设计、编码实现、代码 CR、可用性/安全性/可靠性评估、验证发布和反馈回流；产品语义、PRD 和验收种子回到 product-architecture-expert，Web UI、交互、可操作原型和可用性回到 ui-design-expert，代码实现和工程验证回到 senior-software-architect；完成判断使用 Complete / Loop / Stop / Human handoff，不能把自我规划当授权、不能把 Agent 自述完成当证据，公共契约、生产、Git、联网、部署、安全合规及不可逆动作缺少所需授权，或多方案涉及未定的业务取舍时才询问责任人；已确认契约和授权内的技术选择自行推进。"
     },
     {
       "id": "wise-agent-should-prd-system-design-deliberation-review",
